@@ -17,7 +17,7 @@ comp = cfg.Component(
 
 from heppySampleList import *
 
-selectedComponents = [
+'''selectedComponents = [
     pp_ll012j_5f_HT_0_200,
     pp_ll012j_5f_HT_200_700,
     pp_ll012j_5f_HT_700_1500,
@@ -38,7 +38,6 @@ selectedComponents = [
     pp_Zprime_40TeV_ll
                        ]
 
-selectedComponents = [comp]
 
 pp_ll012j_5f_HT_0_200.splitFactor = 10
 pp_ll012j_5f_HT_200_700.splitFactor = 10
@@ -58,6 +57,9 @@ pp_Zprime_25TeV_ll.splitFactor = 10
 pp_Zprime_30TeV_ll.splitFactor = 10
 pp_Zprime_35TeV_ll.splitFactor = 10
 pp_Zprime_40TeV_ll.splitFactor = 10
+'''
+
+selectedComponents = [comp]
 
 from heppy.analyzers.fcc.Reader import Reader
 source = cfg.Analyzer(
@@ -91,21 +93,6 @@ source = cfg.Analyzer(
 from ROOT import gSystem
 gSystem.Load("libdatamodelDict")
 from EventStore import EventStore as Events
-
-#############################
-##   Gen Level Analysis    ##
-#############################
-
-# select stable electrons and muons
-from heppy.analyzers.Selector import Selector
-gen_leptons = cfg.Analyzer(
-    Selector,
-    'gen_leptons',
-    output = 'gen_leptons',
-    input_objects = 'gen_particles',
-    filter_func = lambda ptc: (abs(ptc.pdgid()) == 11 or (abs(ptc.pdgid()) == 13) ) and ptc.status() == 1
-)
-
 
 #############################
 ##   Reco Level Analysis   ##
@@ -193,6 +180,12 @@ zprime_muon = cfg.Analyzer(
       output = 'zprime_muon',
       leg_collection = 'selected_muons',
       pdgid = 32
+
+# apply event selection. 
+from heppy.FCChhAnalyses.Zprime_ll.selection import Selection
+selection = cfg.Analyzer(
+    Selection,
+    instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
