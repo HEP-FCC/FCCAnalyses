@@ -49,7 +49,6 @@ class TreeProducer(Analyzer):
         zprimes_ele.sort(key=lambda x: x.m(), reverse=True)
         zprimes_muon.sort(key=lambda x: x.m(), reverse=True)
 
-        print zprimes_ele
 
         if len(zprimes_ele)>0 and len(zprimes_muon)==0:
             fillParticle(self.tree, 'zprime_ele', zprimes_ele[0])
