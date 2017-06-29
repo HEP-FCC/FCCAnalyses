@@ -12,7 +12,7 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
-     files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_5f_zz/events997.root"]
+     files = ["root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_Zprime_10TeV_ll/events80.root"]
 )
 
 from heppySampleList import *
@@ -38,7 +38,7 @@ selectedComponents = [
     pp_Zprime_40TeV_ll
                        ]
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 pp_ll012j_5f_HT_0_200.splitFactor = 10
 pp_ll012j_5f_HT_200_700.splitFactor = 10
@@ -120,6 +120,8 @@ selected_muons = cfg.Analyzer(
     output = 'selected_muons',
     input_objects = 'muons',
     filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
+    #filter_func = lambda ptc: ptc.pt()>5
+
 )
 
 # select electrons with pT > 50 GeV and relIso < 0.4
@@ -129,6 +131,8 @@ selected_electrons = cfg.Analyzer(
     output = 'selected_electrons',
     input_objects = 'electrons',
     filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
+    #filter_func = lambda ptc: ptc.pt()>5
+
 )
 
 # merge electrons and muons into a single lepton collection
@@ -165,64 +169,58 @@ jets_nolepton = cfg.Analyzer(
     filter_func = lambda jet: jet.match is None
 )
 
-# select lights with pT > 30 GeV and relIso < 0.4
-selected_lights = cfg.Analyzer(
-    Selector,
-    'selected_lights',
-    output = 'selected_lights',
-    input_objects = 'jets_nolepton',
-    filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] == 0
-)
 
-# create Z boson candidates with leptons
-from heppy.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
-zeds = cfg.Analyzer(
-      LeptonicZedBuilder,
-      output = 'zeds',
-      leptons = 'selected_leptons',
-)
 
-# create H boson candidates
-from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
-higgses = cfg.Analyzer(
-      ResonanceBuilder,
-      output = 'higgses',
-      leg_collection = 'zeds',
-      pdgid = 25
-)
-
-# apply event selection. Defined in "analyzers/examples/h4l/selection.py"
-from heppy.analyzers.examples.h4l.selection import Selection
+from heppy.FCChhAnalyses.Zprime_ll.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
+# create Z' boson candidates
+from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
+zprime_ele = cfg.Analyzer(
+      ResonanceBuilder,
+      output = 'zprime_ele',
+      leg_collection = 'selected_electrons',
+      pdgid = 32
+)
+
+# create Z' boson candidates
+from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
+zprime_muon = cfg.Analyzer(
+      ResonanceBuilder,
+      output = 'zprime_muon',
+      leg_collection = 'selected_muons',
+      pdgid = 32
+)
+
 # store interesting quantities into flat ROOT tree
-from heppy.analyzers.examples.h4l.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.Zprime_ll.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
-    zeds = 'zeds',
-    higgses = 'higgses',
+    jets='jets_nolepton',
+    leptons='selected_leptons',
+    met='met',
+    zprime_ele='zprime_ele',
+    zprime_muon='zprime_muon',
+
 )
+
 
 # definition of a sequence of analyzers,
 # the analyzers will process each event in this order
 sequence = cfg.Sequence( [
     source,
-    #gen_leptons,
-    #gen_tree,
     selected_muons,
     selected_electrons,
     selected_leptons,
     jets_30,
     match_lepton_jets,
     jets_nolepton,
-    selected_lights,
-    selected_bs,
-    zeds,
-    higgses,
     selection,
+    zprime_ele,
+    zprime_muon,
     reco_tree,
     ] )
 
