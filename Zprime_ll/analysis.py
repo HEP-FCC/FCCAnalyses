@@ -180,6 +180,7 @@ zprime_muon = cfg.Analyzer(
       output = 'zprime_muon',
       leg_collection = 'selected_muons',
       pdgid = 32
+)
 
 # apply event selection. 
 from heppy.FCChhAnalyses.Zprime_ll.selection import Selection
