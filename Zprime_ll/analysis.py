@@ -15,9 +15,10 @@ comp = cfg.Component(
      files = ["root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_Zprime_10TeV_ll/events80.root"]
 )
 
-from heppySampleList import *
+#from heppySampleList_fcc_v01 import *
+from heppySampleList_cms import *
 
-'''selectedComponents = [
+selectedComponents = [
     pp_ll012j_5f_HT_0_200,
     pp_ll012j_5f_HT_200_700,
     pp_ll012j_5f_HT_700_1500,
@@ -35,9 +36,16 @@ from heppySampleList import *
     pp_Zprime_25TeV_ll,
     pp_Zprime_30TeV_ll,
     pp_Zprime_35TeV_ll,
-    pp_Zprime_40TeV_ll
+    pp_Zprime_40TeV_ll,
+    pp_Zprime_45TeV_ll, 
+    pp_Zprime_50TeV_ll, 
                        ]
 
+
+#selectedComponents = [
+#    pp_Zprime_45TeV_ll,
+#    pp_Zprime_50TeV_ll,
+#                       ]
 
 pp_ll012j_5f_HT_0_200.splitFactor = 10
 pp_ll012j_5f_HT_200_700.splitFactor = 10
@@ -57,9 +65,10 @@ pp_Zprime_25TeV_ll.splitFactor = 10
 pp_Zprime_30TeV_ll.splitFactor = 10
 pp_Zprime_35TeV_ll.splitFactor = 10
 pp_Zprime_40TeV_ll.splitFactor = 10
-'''
+pp_Zprime_45TeV_ll.splitFactor = 10
+pp_Zprime_50TeV_ll.splitFactor = 10
 
-selectedComponents = [comp]
+#selectedComponents = [comp]
 
 from heppy.analyzers.fcc.Reader import Reader
 source = cfg.Analyzer(
