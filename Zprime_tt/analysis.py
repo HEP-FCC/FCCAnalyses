@@ -75,7 +75,7 @@ pp_jj012j_5f_HT_15000_25000.splitFactor = 5
 pp_jj012j_5f_HT_25000_35000.splitFactor = 5
 pp_jj012j_5f_HT_35000_100000.splitFactor = 5
 
-selectedComponents = [comp]
+#selectedComponents = [comp]
 
 from heppy.analyzers.fcc.Reader import Reader
 source = cfg.Analyzer(
