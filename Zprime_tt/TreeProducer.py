@@ -19,18 +19,18 @@ class TreeProducer(Analyzer):
         
 	self.tree.var('weight', float)
         
-	self.tree.var('tau1_1', float)	
-	self.tree.var('tau2_1', float)
-        self.tree.var('tau3_1', float)
-        self.tree.var('tau1_2', float)
-        self.tree.var('tau2_2', float)
-        self.tree.var('tau3_2', float)
-	self.tree.var('tau32_1', float)
-        self.tree.var('tau31_1', float)
-        self.tree.var('tau21_1', float)
-        self.tree.var('tau32_2', float)
-        self.tree.var('tau31_2', float)
-        self.tree.var('tau21_2', float)
+	self.tree.var('Jet1_tau1', float)	
+	self.tree.var('Jet1_tau2', float)
+        self.tree.var('Jet1_tau3', float)
+        self.tree.var('Jet2_tau1', float)
+        self.tree.var('Jet2_tau2', float)
+        self.tree.var('Jet2_tau3', float)
+	self.tree.var('Jet1_tau32', float)
+        self.tree.var('Jet1_tau31', float)
+        self.tree.var('Jet1_tau21', float)
+        self.tree.var('Jet2_tau32', float)
+        self.tree.var('Jet2_tau31', float)
+        self.tree.var('Jet2_tau21', float)
 
         bookParticle(self.tree, 'Jet1')
         bookParticle(self.tree, 'Jet2')
@@ -57,36 +57,36 @@ class TreeProducer(Analyzer):
 	
 	    self.tree.fill('weight' , event.weight )
 
-	    self.tree.fill('tau1_1' , jets[0].tau1 )
-            self.tree.fill('tau2_1' , jets[0].tau2 )
-            self.tree.fill('tau3_1' , jets[0].tau3 )
-            self.tree.fill('tau1_2' , jets[1].tau1 )
-            self.tree.fill('tau2_2' , jets[1].tau2 )
-            self.tree.fill('tau3_2' , jets[1].tau3 )
+	    self.tree.fill('Jet1_tau1' , jets[0].tau1 )
+            self.tree.fill('Jet1_tau2' , jets[0].tau2 )
+            self.tree.fill('Jet1_tau3' , jets[0].tau3 )
+            self.tree.fill('Jet2_tau1' , jets[1].tau1 )
+            self.tree.fill('Jet2_tau2' , jets[1].tau2 )
+            self.tree.fill('Jet2_tau3' , jets[1].tau3 )
 
 	    if (jets[0].tau1 != 0.0):
-	        self.tree.fill('tau31_1' , jets[0].tau3/jets[0].tau1 )
-                self.tree.fill('tau21_1' , jets[0].tau2/jets[0].tau1 )
+	        self.tree.fill('Jet1_tau31' , jets[0].tau3/jets[0].tau1 )
+                self.tree.fill('Jet1_tau21' , jets[0].tau2/jets[0].tau1 )
             else:
-		self.tree.fill('tau31_1' , -99)
-                self.tree.fill('tau21_1' , -99)
+		self.tree.fill('Jet1_tau31' , -99)
+                self.tree.fill('Jet1_tau21' , -99)
 
             if (jets[0].tau2 != 0.0):
-		self.tree.fill('tau32_1', jets[0].tau3/jets[0].tau2)
+		self.tree.fill('Jet1_tau32', jets[0].tau3/jets[0].tau2)
 	    else:
-		self.tree.fill('tau32_1', -99)
+		self.tree.fill('Jet1_tau32', -99)
 
 	    if (jets[1].tau1 != 0.0):
-                self.tree.fill('tau31_2' , jets[1].tau3/jets[1].tau1 )
-                self.tree.fill('tau21_2' , jets[1].tau2/jets[1].tau1 )
+                self.tree.fill('Jet2_tau31' , jets[1].tau3/jets[1].tau1 )
+                self.tree.fill('Jet2_tau21' , jets[1].tau2/jets[1].tau1 )
             else:
-                self.tree.fill('tau31_2' , -99)
-                self.tree.fill('tau21_2' , -99)
+                self.tree.fill('Jet2_tau31' , -99)
+                self.tree.fill('Jet2_tau21' , -99)
 
 	    if (jets[1].tau2 != 0.0):
-                self.tree.fill('tau32_2', jets[1].tau3/jets[1].tau2)
+                self.tree.fill('Jet2_tau32', jets[1].tau3/jets[1].tau2)
             else:
-                self.tree.fill('tau32_2', -99)
+                self.tree.fill('Jet2_tau32', -99)
 
             fillParticle(self.tree, 'Jet1', jets[0])
 	    fillParticle(self.tree, 'Jet2', jets[1])
