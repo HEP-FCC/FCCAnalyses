@@ -25,7 +25,8 @@ selectedComponents = [
 			pp_jj012j_5f_HT_15000_25000,
 			pp_jj012j_5f_HT_25000_35000,
 			pp_jj012j_5f_HT_35000_100000,
-                        pp_Zprime_5TeV_ttbar,
+                        pp_Zprime_2TeV_ttbar,
+			pp_Zprime_5TeV_ttbar,
                         pp_Zprime_10TeV_ttbar,
                         pp_Zprime_15TeV_ttbar,
                         pp_Zprime_20TeV_ttbar,
@@ -45,35 +46,36 @@ selectedComponents = [
 			pp_tt012j_5f_HT_35000_100000,
 		     ]
 
-pp_Zprime_5TeV_ttbar.splitFactor = 5
-pp_Zprime_10TeV_ttbar.splitFactor = 5
-pp_Zprime_15TeV_ttbar.splitFactor = 5
-pp_Zprime_20TeV_ttbar.splitFactor = 5
-pp_Zprime_25TeV_ttbar.splitFactor = 5
-pp_Zprime_30TeV_ttbar.splitFactor = 5
-pp_Zprime_35TeV_ttbar.splitFactor = 5
-pp_Zprime_40TeV_ttbar.splitFactor = 5
+pp_Zprime_2TeV_ttbar.splitFactor = 10
+pp_Zprime_5TeV_ttbar.splitFactor = 10
+pp_Zprime_10TeV_ttbar.splitFactor = 10
+pp_Zprime_15TeV_ttbar.splitFactor = 10
+pp_Zprime_20TeV_ttbar.splitFactor = 10
+pp_Zprime_25TeV_ttbar.splitFactor = 10
+pp_Zprime_30TeV_ttbar.splitFactor = 10
+pp_Zprime_35TeV_ttbar.splitFactor = 10
+pp_Zprime_40TeV_ttbar.splitFactor = 10
 
-pp_tt012j_5f_HT_0_600.splitFactor = 5
-pp_tt012j_5f_HT_600_1200.splitFactor = 5
-pp_tt012j_5f_HT_1200_2100.splitFactor = 5
-pp_tt012j_5f_HT_2100_3400.splitFactor = 5
-pp_tt012j_5f_HT_3400_5300.splitFactor = 5
-pp_tt012j_5f_HT_5300_8100.splitFactor = 5
-pp_tt012j_5f_HT_8100_15000.splitFactor = 5
-pp_tt012j_5f_HT_15000_25000.splitFactor = 5
-pp_tt012j_5f_HT_25000_35000.splitFactor = 5
-pp_tt012j_5f_HT_35000_100000.splitFactor = 5
+pp_tt012j_5f_HT_0_600.splitFactor = 10
+pp_tt012j_5f_HT_600_1200.splitFactor = 10
+pp_tt012j_5f_HT_1200_2100.splitFactor = 10
+pp_tt012j_5f_HT_2100_3400.splitFactor = 10
+pp_tt012j_5f_HT_3400_5300.splitFactor = 10
+pp_tt012j_5f_HT_5300_8100.splitFactor = 10
+pp_tt012j_5f_HT_8100_15000.splitFactor = 10
+pp_tt012j_5f_HT_15000_25000.splitFactor = 10
+pp_tt012j_5f_HT_25000_35000.splitFactor = 10
+pp_tt012j_5f_HT_35000_100000.splitFactor = 10
 
-pp_jj012j_5f_HT_0_500.splitFactor = 5
-pp_jj012j_5f_HT_500_1000.splitFactor = 5
-pp_jj012j_5f_HT_1000_2000.splitFactor = 5
-pp_jj012j_5f_HT_2000_4000.splitFactor = 5
-pp_jj012j_5f_HT_4000_7200.splitFactor = 5
-pp_jj012j_5f_HT_7200_15000.splitFactor = 5
-pp_jj012j_5f_HT_15000_25000.splitFactor = 5
-pp_jj012j_5f_HT_25000_35000.splitFactor = 5
-pp_jj012j_5f_HT_35000_100000.splitFactor = 5
+pp_jj012j_5f_HT_0_500.splitFactor = 10
+pp_jj012j_5f_HT_500_1000.splitFactor = 10
+pp_jj012j_5f_HT_1000_2000.splitFactor = 10
+pp_jj012j_5f_HT_2000_4000.splitFactor = 10
+pp_jj012j_5f_HT_4000_7200.splitFactor = 10
+pp_jj012j_5f_HT_7200_15000.splitFactor = 10
+pp_jj012j_5f_HT_15000_25000.splitFactor = 10
+pp_jj012j_5f_HT_25000_35000.splitFactor = 10
+pp_jj012j_5f_HT_35000_100000.splitFactor = 10
 
 #selectedComponents = [comp]
 
