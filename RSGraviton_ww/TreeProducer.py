@@ -60,17 +60,18 @@ class TreeProducer(Analyzer):
 	self.tree.var('Jet2_Flow55',float)
 
 	self.tree.var('rapiditySeparation', float)
-        self.tree.var('tranverseMomentumAsymmetry', float)
+        self.tree.var('transverseMomentumAsymmetry', float)
 
     def process(self, event):
         self.tree.reset()
 	jets = getattr(event, self.cfg_ana.fatjets)
 
-	if (len(jets)>1):
+	if (len(jets) > 1):
+
 		self.tree.fill('weight' , event.weight )
 
-		self.tree.fill('rapiditySeparation', abs(jets[0].eta - jets[1].eta))
-	        self.tree.fill('transverseMomentumAsymmetry', (jets[0].pt - jets[1].pt)/(jets[0].pt + jets[1].pt))	
+		self.tree.fill('rapiditySeparation', abs(jets[0].eta() - jets[1].eta()))
+	        self.tree.fill('transverseMomentumAsymmetry', (jets[0].pt() - jets[1].pt())/(jets[0].pt() + jets[1].pt()))	
 
 		self.tree.fill('Jet1_tau1' , jets[0].tau1 )
 		self.tree.fill('Jet1_tau2' , jets[0].tau2 )
@@ -143,7 +144,7 @@ class TreeProducer(Analyzer):
 		
 		#Flow n,5
 		#############################################################################
-                #REQIRES THE FOLLOWING IN heppy/analyzers/fcc/Reader.py AFTER LINE 151:
+                #REQUIRES THE FOLLOWING IN heppy/analyzers/fcc/Reader.py AFTER LINE 151:
 		
 		#	particle_relations = defaultdict(list)
         	#       for tjet in store.get(self.cfg_ana.fatjets):
@@ -153,7 +154,7 @@ class TreeProducer(Analyzer):
                 # 		fatjets[fatjet].jetConstituents = particles 
 
 		#############################################################################
-
+		
 		R = 0.8
 
 		flow_Jet1 = [0]*5
@@ -178,7 +179,7 @@ class TreeProducer(Analyzer):
 		self.tree.fill('Jet1_Flow45', flow_Jet1[3]); self.tree.fill('Jet2_Flow45', flow_Jet2[3])
 		self.tree.fill('Jet1_Flow55', flow_Jet1[4]); self.tree.fill('Jet2_Flow55', flow_Jet2[4])
 		
-	self.tree.tree.Fill()
+		self.tree.tree.Fill()
 
     def write(self, setup):
         self.rootfile.Write()

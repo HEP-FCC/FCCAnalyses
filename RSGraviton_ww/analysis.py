@@ -10,18 +10,7 @@ logging.basicConfig(level=logging.WARNING)
 sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 comp = cfg.Component(
     'example',
-     #files = ["root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_RSGraviton_30TeV_ww/events0.root"]
-     files = ["root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events0.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events1.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events2.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events3.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events5.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events6.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events7.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events8.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events9.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events10.root",
-              "root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_jj012j_5f_HT_15000_25000/events11.root",]
+     files = ["root://eospublic.cern.ch///eos/fcc/hh/generation/DelphesEvents/fcc_v01/pp_RSGraviton_30TeV_ww/events0.root"]
 )
 
 from heppySampleList_fcc_v01 import *
@@ -63,7 +52,7 @@ selectedComponents = [
 			pp_vv012j_4f_HT_8800_15000,
 			pp_vv012j_4f_HT_15000_25000,
 			pp_vv012j_4f_HT_25000_35000,
-			#pp_vv012j_4f_HT_35000_100000,
+			pp_vv012j_4f_HT_35000_100000,
 		     ]
 
 
@@ -106,7 +95,7 @@ pp_vv012j_4f_HT_5300_8800.splitFactor = 10
 pp_vv012j_4f_HT_8800_15000.splitFactor = 10
 pp_vv012j_4f_HT_15000_25000.splitFactor = 10
 pp_vv012j_4f_HT_25000_35000.splitFactor = 10
-#pp_vv012j_4f_HT_35000_100000.splitFactor = 10
+pp_vv012j_4f_HT_35000_100000.splitFactor = 10
 
 #selectedComponents = [comp]
 
