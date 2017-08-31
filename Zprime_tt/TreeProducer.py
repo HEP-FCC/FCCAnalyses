@@ -1,6 +1,7 @@
 from heppy.framework.analyzer import Analyzer
 from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
+from numpy import sign
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 
 import ROOT
@@ -56,7 +57,7 @@ class TreeProducer(Analyzer):
 
 	if (len(jets) > 1):
 	
-	    self.tree.fill('weight' , event.weight )
+            self.tree.fill('weight' , sign(event.weight) )
 
 	    self.tree.fill('rapiditySeparation', abs(jets[0].eta() - jets[1].eta()))
 	    self.tree.fill('transverseMomentumAsymmetry', (jets[0].pt() - jets[1].pt())/(jets[0].pt() + jets[1].pt()))
