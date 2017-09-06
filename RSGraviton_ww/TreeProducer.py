@@ -4,6 +4,7 @@ from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 from numpy import sign
+import sys
 
 import ROOT
 from ROOT import *
