@@ -1,12 +1,11 @@
 from heppy.framework.analyzer import Analyzer
 from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
+from numpy import sign
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 
 import ROOT
 from ROOT import *
-#from ROOT import TFile
-#from ROOT import TLorentzVector
 
 class TreeProducer(Analyzer):
 
@@ -49,13 +48,19 @@ class TreeProducer(Analyzer):
 	self.tree.var('zPrimeReconstructedMass_softDropped', float)
 	self.tree.var('zPrimeReconstructedMass_pruned', float)
 
+	self.tree.var('rapiditySeparation', float)
+	self.tree.var('transverseMomentumAsymmetry', float)
+
     def process(self, event):
         self.tree.reset()
         jets = getattr(event, self.cfg_ana.fatjets)
 
 	if (len(jets) > 1):
 	
-	    self.tree.fill('weight' , event.weight )
+            self.tree.fill('weight' , sign(event.weight) )
+
+	    self.tree.fill('rapiditySeparation', abs(jets[0].eta() - jets[1].eta()))
+	    self.tree.fill('transverseMomentumAsymmetry', (jets[0].pt() - jets[1].pt())/(jets[0].pt() + jets[1].pt()))
 
 	    self.tree.fill('Jet1_tau1' , jets[0].tau1 )
             self.tree.fill('Jet1_tau2' , jets[0].tau2 )

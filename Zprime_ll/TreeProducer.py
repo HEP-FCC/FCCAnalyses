@@ -1,7 +1,7 @@
 from heppy.framework.analyzer import Analyzer
 from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
-
+from numpy import sign
 from ROOT import TFile
 
 class TreeProducer(Analyzer):
@@ -39,8 +39,7 @@ class TreeProducer(Analyzer):
                 break
             fillParticle(self.tree, 'jet{ijet}'.format(ijet=ijet+1), jet)
 
-
-        self.tree.fill('weight' , event.weight )
+        self.tree.fill('weight' , sign(event.weight) )
 
         met = getattr(event, self.cfg_ana.met)
         fillMet(self.tree, 'met', met)
