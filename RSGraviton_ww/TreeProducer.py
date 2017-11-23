@@ -4,9 +4,12 @@ from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 from numpy import sign
+import sys
 
 import ROOT
 from ROOT import *
+
+ROOT.gROOT.ProcessLine(".L /afs/cern.ch/work/i/iarts/FCCSW/heppy/FCChhAnalyses/RSGraviton_ww/BDT_QCD.class.C+")
 
 class TreeProducer(Analyzer):
 
@@ -18,7 +21,13 @@ class TreeProducer(Analyzer):
         self.tree = Tree( 'events', '')
         
 	self.tree.var('weight', float)
-        
+	self.tree.var('nelectrons', float)
+	self.tree.var('nmuons', float)
+
+	bookParticle(self.tree, 'electron')
+	bookParticle(self.tree, 'muon')
+        bookMet(self.tree, 'met') 
+
 	self.tree.var('Jet1_tau1', float)	
 	self.tree.var('Jet1_tau2', float)
         self.tree.var('Jet1_tau3', float)
@@ -59,6 +68,8 @@ class TreeProducer(Analyzer):
 	self.tree.var('Jet2_Flow35',float)
 	self.tree.var('Jet2_Flow45',float)
 	self.tree.var('Jet2_Flow55',float)
+	
+	self.tree.var('BDTvariable_qcd', float)
 
 	self.tree.var('rapiditySeparation', float)
         self.tree.var('transverseMomentumAsymmetry', float)
@@ -66,11 +77,11 @@ class TreeProducer(Analyzer):
     def process(self, event):
         self.tree.reset()
 	jets = getattr(event, self.cfg_ana.fatjets)
+	muons = getattr(event, self.cfg_ana.muons)
+	electrons = getattr(event, self.cfg_ana.electrons)
 
-	if (len(jets) > 1):
-
-                self.tree.fill('weight' , event.weight )
-
+	if (len(jets)>1 and jets[0].pt() > 2000.):
+		self.tree.fill('weight' , event.weight )
 		self.tree.fill('rapiditySeparation', abs(jets[0].eta() - jets[1].eta()))
 	        self.tree.fill('transverseMomentumAsymmetry', (jets[0].pt() - jets[1].pt())/(jets[0].pt() + jets[1].pt()))	
 
@@ -80,18 +91,30 @@ class TreeProducer(Analyzer):
 		self.tree.fill('Jet2_tau1' , jets[1].tau1 )
 		self.tree.fill('Jet2_tau2' , jets[1].tau2 )
 		self.tree.fill('Jet2_tau3' , jets[1].tau3 )
+		self.tree.fill('nelectrons' , len(electrons) )
+                self.tree.fill('nmuons' , len(muons) )
+                fillMet(self.tree, 'met', event.met)
+		if (len(electrons) >= 1):
+			fillParticle(self.tree, 'electron', electrons[0])
+		if (len(muons) >= 1):
+			fillParticle(self.tree, 'muon', muons[0])
+
 
 		if (jets[0].tau1 != 0.0):
+			Jet1_tau21 = jets[0].tau2/jets[0].tau1
 			self.tree.fill('Jet1_tau31' , jets[0].tau3/jets[0].tau1 )
-			self.tree.fill('Jet1_tau21' , jets[0].tau2/jets[0].tau1 )
 		else:
+			Jet1_tau21 = -99
 			self.tree.fill('Jet1_tau31' , -99)
-			self.tree.fill('Jet1_tau21' , -99)
+
+		self.tree.fill('Jet1_tau21' , Jet1_tau21)
 
 		if (jets[0].tau2 != 0.0):
-			self.tree.fill('Jet1_tau32', jets[0].tau3/jets[0].tau2)
+			Jet1_tau32 = jets[0].tau3/jets[0].tau2
 		else:
-			self.tree.fill('Jet1_tau32', -99)
+			Jet1_tau32 = -99
+
+		self.tree.fill('Jet1_tau32', Jet1_tau32)
 
 		if (jets[1].tau1 != 0.0):
 			self.tree.fill('Jet2_tau31' , jets[1].tau3/jets[1].tau1 )
@@ -180,7 +203,41 @@ class TreeProducer(Analyzer):
 		self.tree.fill('Jet1_Flow45', flow_Jet1[3]); self.tree.fill('Jet2_Flow45', flow_Jet2[3])
 		self.tree.fill('Jet1_Flow55', flow_Jet1[4]); self.tree.fill('Jet2_Flow55', flow_Jet2[4])
 		
-		self.tree.tree.Fill()
+		varlist = [ 
+				"Jet1_pt",
+				"Jet1_tau21",
+				"Jet1_tau32",
+				"Jet1_Flow15",
+				"Jet1_Flow25",
+				"Jet1_Flow35",
+				"Jet1_Flow45",
+				"Jet1_Flow55",
+				"softDroppedJet1_m",
+		]
+
+		inputs = ROOT.vector('string')()
+		for v in varlist:
+			inputs.push_back(v)
+
+		mva = ROOT.ReadQCD(inputs)
+		values = ROOT.vector('double')()
+
+		values.push_back(jets[0].pt())
+		values.push_back(Jet1_tau21)
+		values.push_back(Jet1_tau32)
+		values.push_back(flow_Jet1[0]) 
+		values.push_back(flow_Jet1[1])
+		values.push_back(flow_Jet1[2])
+		values.push_back(flow_Jet1[3])
+		values.push_back(flow_Jet1[4])        
+		values.push_back(jets[0].subjetsSoftDrop[0].m())
+         
+   
+		mva_value=mva.GetMvaValue(values)
+		self.tree.fill('BDTvariable_qcd', mva_value)
+
+                self.tree.tree.Fill()
+
 
     def write(self, setup):
         self.rootfile.Write()
