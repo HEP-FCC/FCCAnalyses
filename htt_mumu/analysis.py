@@ -8,12 +8,15 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
+# for the sample lists
 sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
+
+# pre-produced input files
 comp = cfg.Component(
     'example',
      #files = ["root://eospublic.cern.ch///eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_ll012j_5f_HT_15000_25000/events100.root"]
-     files = ["events100.root"]
+     files = ["events100.root"] # try analysis locally with one file
 )
 
 #from heppySampleList_fcc_v01 import *
@@ -27,6 +30,8 @@ selectedComponents = [
 
 pp_ll012j_5f_HT_15000_25000.splitFactor = 10
 
+
+# uncomment to try with local file 
 selectedComponents = [comp]
 
 from heppy.analyzers.fcc.Reader import Reader
@@ -66,16 +71,42 @@ from EventStore import EventStore as Events
 ##   Reco Level Analysis   ##
 #############################
 
+from heppy.analyzers.Selector import Selector
+jets_nomuon = cfg.Analyzer(
+    Selector,
+    'jets_nomuon',
+    output = 'jets_nomuon',
+    input_objects = 'jets_30',
+    filter_func = lambda jet: jet.match is None
+)
+
+# select lights with pT > 30 GeV and relIso < 0.4
+selected_lights = cfg.Analyzer(
+    Selector,
+    'selected_lights',
+    output = 'selected_lights',
+    input_objects = 'jets_nomuon',
+    filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] == 0
+)
+
+# select b's with pT > 30 GeV
+selected_bs = cfg.Analyzer(
+    Selector,
+    'selected_bs',
+    output = 'selected_bs',
+    input_objects = 'jets_nomuon',
+    filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] > 0
+)
+
 
 # select isolated muons with pT > 50 GeV and relIso < 0.4
-from heppy.analyzers.Selector import Selector
 selected_muons = cfg.Analyzer(
     Selector,
     'selected_muons',
     output = 'selected_muons',
     input_objects = 'muons',
     filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
-    #filter_func = lambda ptc: ptc.pt()>5
+    #filter_func = lambda ptc: ptc.pt()>5 and ptc.status() == 1
 
 )
 
@@ -116,6 +147,7 @@ match_lepton_jets = cfg.Analyzer(
     particles = 'jets_30'
 )
 
+from heppy.analyzers.Selector import Selector
 jets_nolepton = cfg.Analyzer(
     Selector,
     'jets_nolepton',
@@ -168,6 +200,9 @@ sequence = cfg.Sequence( [
     jets_30,
     match_lepton_jets,
     jets_nolepton,
+    jets_nomuon,
+    selected_lights,
+    selected_bs,
     selection,
     higgses,
     reco_tree,

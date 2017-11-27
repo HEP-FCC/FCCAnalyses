@@ -14,10 +14,10 @@ class TreeProducer(Analyzer):
                               'recreate')
         self.tree = Tree( 'events', '')
         self.tree.var('weight', float)
-        #self.tree.var('met', float)
         self.tree.var('nljets', float)
         self.tree.var('nbjets', float)
         self.tree.var('njets', float)
+        self.tree.var('DiMuonInvMass', float)
 
         bookParticle(self.tree, 'higgs')
         bookParticle(self.tree, 'mu1')
@@ -38,6 +38,11 @@ class TreeProducer(Analyzer):
 
             fillLepton(self.tree, 'mu1', higgses[0].legs[0])
             fillLepton(self.tree, 'mu2', higgses[0].legs[1])
+
+            self.tree.fill("DiMuonInvMass", higgses[0]._tlv.M())
+            self.tree.fill('nbjets' , len(event.selected_bs) )
+            self.tree.fill('nljets' , len(event.selected_lights) )
+            self.tree.fill('njets' , len(event.selected_lights) + len(event.selected_bs))
 
 
             self.tree.tree.Fill()
