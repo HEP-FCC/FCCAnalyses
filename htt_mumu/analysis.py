@@ -16,7 +16,7 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 comp = cfg.Component(
     'example',
      #files = ["root://eospublic.cern.ch///eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_ll012j_5f_HT_15000_25000/events100.root"]
-     files = ["events100.root"] # try analysis locally with one file
+     files = ["/home/vavolkl/FCC/pp_tth01j_5f_hmumu/events%i.root" % i for i in range(12)] # try analysis locally with one file
 )
 
 #from heppySampleList_fcc_v01 import *
@@ -105,8 +105,8 @@ selected_muons = cfg.Analyzer(
     'selected_muons',
     output = 'selected_muons',
     input_objects = 'muons',
-    filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
-    #filter_func = lambda ptc: ptc.pt()>5 and ptc.status() == 1
+    #filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
+    filter_func = lambda ptc: ptc.pt()>5
 
 )
 
@@ -116,8 +116,8 @@ selected_electrons = cfg.Analyzer(
     'selected_electrons',
     output = 'selected_electrons',
     input_objects = 'electrons',
-    filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
-    #filter_func = lambda ptc: ptc.pt()>5
+    #filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
+    filter_func = lambda ptc: ptc.pt()>5
 
 )
 
@@ -166,7 +166,7 @@ selection = cfg.Analyzer(
 
 
 # create H boson candidates with bs
-from FCChhAnalyses.htt_mumu.LeptonicHiggsBuilder import LeptonicHiggsBuilder
+from heppy.analyzers.LeptonicHiggsBuilder import LeptonicHiggsBuilder
 higgses = cfg.Analyzer(
       LeptonicHiggsBuilder,
       output = 'higgses',
@@ -195,14 +195,14 @@ reco_tree = cfg.Analyzer(
 sequence = cfg.Sequence( [
     source,
     selected_muons,
-    selected_electrons,
-    selected_leptons,
-    jets_30,
-    match_lepton_jets,
-    jets_nolepton,
-    jets_nomuon,
-    selected_lights,
-    selected_bs,
+    #selected_electrons,
+    #selected_leptons,
+    #jets_30,
+    #match_lepton_jets,
+    #jets_nolepton,
+    #jets_nomuon,
+    #selected_lights,
+    #selected_bs,
     selection,
     higgses,
     reco_tree,
