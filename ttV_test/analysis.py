@@ -127,7 +127,26 @@ jets_nolepton = cfg.Analyzer(
 )
 
 
-from FCChhAnalyses.ttV_test.selection import Selection
+# select lights with pT > 30 GeV and relIso < 0.4
+selected_lights = cfg.Analyzer(
+    Selector,
+    'selected_lights',
+    output = 'selected_lights',
+    input_objects = 'jets_nolepton',
+    filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] == 0
+)
+
+
+# select b's with pT > 30 GeV
+selected_bs = cfg.Analyzer(
+    Selector,
+    'selected_bs',
+    output = 'selected_bs',
+    input_objects = 'jets_nolepton',
+    filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] > 0
+)
+
+from heppy.FCChhAnalyses.ttV_test.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -144,7 +163,7 @@ zeds = cfg.Analyzer(
 
 
 # store interesting quantities into flat ROOT tree
-from FCChhAnalyses.ttV_test.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.ttV_test.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds="zeds",
@@ -162,6 +181,8 @@ sequence = cfg.Sequence( [
     jets_30,
     match_lepton_jets,
     jets_nolepton,
+    selected_lights,
+    selected_bs,
     selection,
     zeds,
     reco_tree,

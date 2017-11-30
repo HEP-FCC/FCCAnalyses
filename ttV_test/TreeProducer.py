@@ -39,6 +39,10 @@ class TreeProducer(Analyzer):
             fillLepton(self.tree, 'l1', z.legs[0])
             fillLepton(self.tree, 'l2', z.legs[1])
 
+            self.tree.fill('nbjets' , len(event.selected_bs) )
+            self.tree.fill('nljets' , len(event.selected_lights) )
+            self.tree.fill('njets' , len(event.selected_lights) + len(event.selected_bs))
+
 
             self.tree.tree.Fill()
         
