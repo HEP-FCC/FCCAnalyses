@@ -16,7 +16,7 @@ comp = cfg.Component(
      files = ["FCChhAnalyses/tth_4l/events0.root"]
 )
 
-from heppySampleList import *
+from heppySampleList_fcc_v01 import *
 
 '''selectedComponents = [
                       pp_h012j_5f_HT_0_100_hllll,
@@ -209,7 +209,7 @@ selected_muons = cfg.Analyzer(
     'selected_muons',
     output = 'selected_muons',
     input_objects = 'muons',
-    filter_func = lambda ptc: True #ptc.pt()>5 and ptc.iso.sumpt/ptc.pt()<0.4
+    filter_func = lambda ptc: ptc.pt()>20 and ptc.iso.sumpt/ptc.pt()<0.4
 )
 
 # select electrons with pT > 7 GeV and relIso < 0.4
@@ -218,7 +218,7 @@ selected_electrons = cfg.Analyzer(
     'selected_electrons',
     output = 'selected_electrons',
     input_objects = 'electrons',
-    filter_func = lambda ptc: True #ptc.pt()>7 and ptc.iso.sumpt/ptc.pt()<0.4
+    filter_func = lambda ptc: ptc.pt()>20 and ptc.iso.sumpt/ptc.pt()<0.4
 )
 
 # merge electrons and muons into a single lepton collection
@@ -291,14 +291,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/h4l/selection.py"
-from FCChhAnalyses.tth_4l.selection import Selection
+from heppy.FCChhAnalyses.tth_4l.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from FCChhAnalyses.tth_4l.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.tth_4l.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',
@@ -306,7 +306,7 @@ reco_tree = cfg.Analyzer(
     leptons = "selected_leptons"
 )
 
-from FCChhAnalyses.analyzers.ExtraLeptons import ExtraLeptons
+from heppy.FCChhAnalyses.analyzers.ExtraLeptons import ExtraLeptons
 extra_leptons = cfg.Analyzer(
     ExtraLeptons,
     inputA = "selected_leptons",
