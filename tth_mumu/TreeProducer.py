@@ -40,9 +40,9 @@ class TreeProducer(Analyzer):
             fillLepton(self.tree, 'mu2', higgses[0].legs[1])
 
             self.tree.fill("DiMuonInvMass", higgses[0]._tlv.M())
-            #self.tree.fill('nbjets' , len(event.selected_bs) )
-            #self.tree.fill('nljets' , len(event.selected_lights) )
-            #self.tree.fill('njets' , len(event.selected_lights) + len(event.selected_bs))
+            self.tree.fill('nbjets' , len(event.selected_bs) )
+            self.tree.fill('nljets' , len(event.selected_lights) )
+            self.tree.fill('njets' , len(event.selected_lights) + len(event.selected_bs))
 
 
             self.tree.tree.Fill()
