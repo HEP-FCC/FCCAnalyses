@@ -273,7 +273,7 @@ selected_bs = cfg.Analyzer(
 )
 
 # create Z boson candidates with leptons
-from heppy.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
+from heppy.FCChhAnalyses.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
 zeds = cfg.Analyzer(
       LeptonicZedBuilder,
       output = 'zeds',
