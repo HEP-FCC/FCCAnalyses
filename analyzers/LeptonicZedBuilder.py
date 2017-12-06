@@ -11,7 +11,7 @@ class LeptonicZedBuilder(Analyzer):
 
     Example:
 
-    from heppy.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
+    from heppy.FCChhAnalyses.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
     zeds = cfg.Analyzer(
       LeptonicZedBuilder,
       output = 'zeds',
