@@ -35,7 +35,10 @@ pp_tth01j_5f_hmumu.splitFactor = 10
 # uncomment to try with local file 
 selectedComponents = [comp]
 
-from heppy.analyzers.fcc.Reader import Reader
+#from heppy.analyzers.fcc.Reader import Reader
+#for fcc_v02
+from heppy.FCChhAnalyses.Reader import Reader
+
 source = cfg.Analyzer(
     Reader,
 
@@ -157,7 +160,7 @@ jets_nolepton = cfg.Analyzer(
 
 
 
-from FCChhAnalyses.tth_mumu.selection import Selection
+from heppy.FCChhAnalyses.tth_mumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -174,14 +177,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. 
-from FCChhAnalyses.tth_mumu.selection import Selection
+from heppy.FCChhAnalyses.tth_mumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from FCChhAnalyses.tth_mumu.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.tth_mumu.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     higgses="higgses",
