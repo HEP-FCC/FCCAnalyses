@@ -15,14 +15,15 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 #    'example',
 #     #files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_5f_zz/events997.root"]
 #     files = ["heppy/FCChhAnalyses/tth_4l/events0.root"]
-)
+#)
 
-from heppySampleList_fcc_v01 import *
+from heppySampleList_fcc_v02 import *
 
 selectedComponents = [
                 pp_tth01j_5f_hllll,
                 pp_tt4l_4f,
                       ]
+#selectedComponents = [ comp ] # n files only ,play in comp above
 
 
 pp_tth01j_5f_hllll,.splitFactor = 10
