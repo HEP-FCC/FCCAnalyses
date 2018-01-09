@@ -119,7 +119,10 @@ pp_aj012j_5f.splitFactor = 10
 '''
 selectedComponents = [comp]
 
-from heppy.analyzers.fcc.Reader import Reader
+#from heppy.analyzers.fcc.Reader import Reader
+#for fcc_v02
+from heppy.FCChhAnalyses.Reader import Reader
+
 source = cfg.Analyzer(
     Reader,
 
