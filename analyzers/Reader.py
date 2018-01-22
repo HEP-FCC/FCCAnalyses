@@ -131,14 +131,17 @@ class Reader(Analyzer):
         algos = ['pf', 'calo', 'trk', '']
         cones = ['02', '04', '08', '']
         
+
         for algo in algos:
             for cone in cones:
+                jets = dict()
+
                 if hasattr(self.cfg_ana, '{}jets{}'.format(algo,cone)):
                    jetcoll = get_collection(Jet, '{}jets{}'.format(algo,cone))
                    if jetcoll:
-                       jets = dict()
                        for jet in jetcoll:
                            jets[jet] = jet
+
                        if hasattr(self.cfg_ana, '{}bTags{}'.format(algo,cone)):
                            for bjet in get_tag('{}bTags{}'.format(algo,cone)):
                                jets[Jet(bjet.jet())].tags['bf'] = bjet.tag()
@@ -163,10 +166,9 @@ class Reader(Analyzer):
                            for tjet in get_tag('{}jetsThreeSubJettiness{}'.format(algo,cone)):
                                jets[Jet(tjet.jet())].tau3 = tjet.tag()
 
-                       from collections import defaultdict
                        # store subjets according to various algorithms
                        # the first entry of subjets list is the "cleaned" fastjet itself
-
+                       from collections import defaultdict
                        # trimming
                        if hasattr(self.cfg_ana, '{}subjetsTrimming{}'.format(algo,cone)) and hasattr(self.cfg_ana, '{}subjetsTrimmingTagged{}'.format(algo,cone)):
                             relations = defaultdict(list)
@@ -194,6 +196,14 @@ class Reader(Analyzer):
                             for jet, subjets in relations.items():
                                 jets[jet].subjetsSoftDrop = subjets
 
+                if hasattr(self.cfg_ana, '{}jetConst{}'.format(algo,cone)) and hasattr(self.cfg_ana, '{}jets{}'.format(algo,cone)):
+                    from collections import defaultdict
+                    particle_relations = defaultdict(list)
+                    for tjet in store.get('{}jets{}'.format(algo,cone)):
+                        for i in range(tjet.particles_size()):
+                            particle_relations[Jet(tjet)].append(Particle(tjet.particles(i)))
+                    for jet, particles in particle_relations.items():
+                        jets[jet].jetConstituents = particles 
 
         class Iso(object):
             def __init__(self):
