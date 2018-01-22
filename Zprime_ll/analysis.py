@@ -12,8 +12,10 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
-     #files = ["root://eospublic.cern.ch//eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_mumu_nlo/events0.root"]
-    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_Zprime_10TeV_ll/events80.root"]
+#    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_Zprime_30TeV_ll/events1.root"]
+#    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_ee_lo/events1.root"]
+    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_mumu_lo/events1.root"]
+
 )
 
 #from heppySampleList_fcc_v01 import *
@@ -22,19 +24,7 @@ from heppySampleList_fcc_v02 import *
 
 
 selectedComponents = [
-#    pp_ll012j_5f_HT_0_200,
-#    pp_ll012j_5f_HT_200_700,
-#    pp_ll012j_5f_HT_700_1500,
-#    pp_ll012j_5f_HT_1500_2700,
-#    pp_ll012j_5f_HT_2700_4200,
-#    pp_ll012j_5f_HT_4200_8000,
-#    pp_ll012j_5f_HT_8000_15000,
-#    pp_ll012j_5f_HT_15000_25000,
-#    pp_ll012j_5f_HT_25000_35000,
-#    pp_ll012j_5f_HT_35000_100000,
-#    pp_ee_nlo,
-#    pp_mumu_nlo,
-#    pp_Zprime_5TeV_ll,
+    pp_Zprime_5TeV_ll,
     pp_Zprime_10TeV_ll,
     pp_Zprime_15TeV_ll,
     pp_Zprime_20TeV_ll,
@@ -44,25 +34,10 @@ selectedComponents = [
     pp_Zprime_40TeV_ll,
     pp_Zprime_45TeV_ll, 
     pp_Zprime_50TeV_ll, 
+    pp_ee_lo,
+    pp_mumu_lo,  
+    ]
 
-    pp_ll_Pt5000toInf,
-
-                       ]
-
-
-
-#pp_ll012j_5f_HT_0_200.splitFactor = 10
-#pp_ll012j_5f_HT_200_700.splitFactor = 10
-#pp_ll012j_5f_HT_700_1500.splitFactor = 10
-#pp_ll012j_5f_HT_1500_2700.splitFactor = 10
-#pp_ll012j_5f_HT_2700_4200.splitFactor = 10
-#pp_ll012j_5f_HT_4200_8000.splitFactor = 10
-#pp_ll012j_5f_HT_8000_15000.splitFactor = 10
-#pp_ll012j_5f_HT_15000_25000.splitFactor = 10
-#pp_ll012j_5f_HT_25000_35000.splitFactor = 10
-#pp_ll012j_5f_HT_35000_100000.splitFactor = 10
-#pp_Zprime_5TeV_ll.splitFactor = 10
-pp_Zprime_10TeV_ll.splitFactor = 10
 pp_Zprime_15TeV_ll.splitFactor = 10
 pp_Zprime_20TeV_ll.splitFactor = 10
 pp_Zprime_25TeV_ll.splitFactor = 10
@@ -71,16 +46,13 @@ pp_Zprime_35TeV_ll.splitFactor = 10
 pp_Zprime_40TeV_ll.splitFactor = 10
 pp_Zprime_45TeV_ll.splitFactor = 10
 pp_Zprime_50TeV_ll.splitFactor = 10
-#pp_ee_nlo.splitFactor = 10
-#pp_mumu_nlo.splitFactor = 10
-pp_ll_Pt5000toInf.splitFactor = 10
+pp_ee_lo.splitFactor = 70
+pp_mumu_lo.splitFactor = 70
 
-selectedComponents = [comp]
+#selectedComponents = [comp]
 
-#for fccv_01
-#from heppy.analyzers.fcc.Reader import Reader
-#for fcc_v02
-from heppy.FCChhAnalyses.Reader import Reader
+
+from heppy.FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -97,8 +69,8 @@ source = cfg.Analyzer(
     muonITags = 'muonITags',
     muonsToMC = 'muonsToMC',
 
-    jets = 'jets',
-    bTags = 'bTags',
+    jets = 'pfjets04',
+    bTags = 'pfbTags04',
 
     photons = 'photons',
     
