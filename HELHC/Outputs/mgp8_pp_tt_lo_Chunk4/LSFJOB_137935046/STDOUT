@@ -1,0 +1,1291 @@
+@(#)CERN job starter $Date: 2010/06/23 14:22:16 $
+Working directory is </pool/lsf/helsens/137935046> on <b6557ca48da0.cern.ch>
+
+copying job dir to worker
+Platform detected: x86_64-slc6-gcc62
+Software taken from /cvmfs/fcc.cern.ch/sw/0.8.3 and /cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt
+Take podio: /cvmfs/fcc.cern.ch/sw/0.8.3/podio/0.7/x86_64-slc6-gcc62-opt
+Take fcc-edm: /cvmfs/fcc.cern.ch/sw/0.8.3/fcc-edm/0.5.1/x86_64-slc6-gcc62-opt
+environment:
+
+}
+ATLAS_LOCAL_AREA=/afs/cern.ch/project/gd/apps/atlas/local
+ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
+BASH_FUNC_module()=() {  eval `/usr/bin/modulecmd sh $*`
+BINARY_TAG=x86_64-slc6-gcc62-opt
+_=/bin/env
+BSUB_BLOCK_EXEC_HOST=
+CASTOR_HOME=/castor/cern.ch/user/h/helsens
+CC=/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/bin/gcc
+CERN_STARTER_ORIGINAL_CWD=/afs/cern.ch/work/h/helsens/FCC/soft/heppy/FCChhAnalyses/HELHC/Outputs/mgp8_pp_tt_lo_Chunk4
+CLHEP_DIR=
+CLHEP_LIBRARY_PATH=
+CLHEP_ROOT_DIR=
+CMAKE_BUILD_TYPE=ReleaseWithDebInfo
+CMAKE_PREFIX_PATH=/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt:/cvmfs/fcc.cern.ch/sw/0.8.3/delphes/3.4.2pre10/x86_64-slc6-gcc62-opt:/cvmfs/fcc.cern.ch/sw/0.8.3/dag/0.1/x86_64-slc6-gcc62-opt:/cvmfs/fcc.cern.ch/sw/0.8.3/papas/1.2.0/x86_64-slc6-gcc62-opt:/cvmfs/fcc.cern.ch/sw/0.8.3/podio/0.7/x86_64-slc6-gcc62-opt:/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-edm/0.5.1/x86_64-slc6-gcc62-opt:/cvmfs/fcc.cern.ch/sw/0.8.3/gaudi/v28r2/x86_64-slc6-gcc62-opt:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt
+COLUMNS=234
+COMPILER_PATH=/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/6.2.0native
+CVS_RSH=ssh
+CXX=/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/bin/g++
+DD4hep_DIR=/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt
+DD4hepINSTALL=/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt
+DD4HEP_LIBRARY_PATH=/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/releases/XercesC/3.1.3-05808/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt/lib64:/cvmfs/sft.cern.ch/lcg/releases/clhep/2.3.1.1-6ba0c/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt/lib64:/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib64:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/lib64
+DD4hep_ROOT=/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt
+DELPHES_DIR=/cvmfs/fcc.cern.ch/sw/0.8.3/delphes/3.4.2pre10/x86_64-slc6-gcc62-opt
+DISPLAY=lxplus051.cern.ch:21.0
+DYLD_LIBRARY_PATH=/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/lib
+EDITOR=/bin/nano -w
+ENVIRONMENT=BATCH
+EOS_MGM_URL=root://eosatlas.cern.ch
+FCCDAG=/cvmfs/fcc.cern.ch/sw/0.8.3/dag/0.1/x86_64-slc6-gcc62-opt
+FCCEDM=/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-edm/0.5.1/x86_64-slc6-gcc62-opt
+FCCPAPASCPP=/cvmfs/fcc.cern.ch/sw/0.8.3/papas/1.2.0/x86_64-slc6-gcc62-opt
+FCCPHYSICS=/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-physics/0.2.1/x86_64-slc6-gcc62-opt
+FCCSWPATH=/cvmfs/fcc.cern.ch/sw/0.8.3
+FC=/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/bin/gfortran
+FRONTIER_SERVER=(serverurl=http://atlasfrontier-local.cern.ch:8000/atlr)(serverurl=http://atlasfrontier-ai.cern.ch:8000/atlr)(serverurl=http://lcgft-atlas.gridpp.rl.ac.uk:3128/frontierATLAS)(serverurl=http://ccfrontier.in2p3.fr:23128/ccin2p3-AtlasFrontier)(proxyurl=http://ca-proxy.cern.ch:3128)(proxyurl=http://ca-proxy-meyrin.cern.ch:3128)(proxyurl=http://ca-proxy-wigner.cern.ch:3128)
+G4ABLADATA=/cvmfs/geant4.cern.ch/share/data/G4ABLA3.0
+G4ENSDFSTATEDATA=/cvmfs/geant4.cern.ch/share/data/G4ENSDFSTATE1.2
+G4INSTALL=/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt
+G4LEDATA=/cvmfs/geant4.cern.ch/share/data/G4EMLOW6.48
+G4LEVELGAMMADATA=/cvmfs/geant4.cern.ch/share/data/PhotonEvaporation3.2
+G4NEUTRONHPDATA=/cvmfs/geant4.cern.ch/share/data/G4NDL4.5
+G4NEUTRONXSDATA=/cvmfs/geant4.cern.ch/share/data/G4NEUTRONXS1.4
+G4PIIDATA=/cvmfs/geant4.cern.ch/share/data/G4PII1.3
+G4RADIOACTIVEDATA=/cvmfs/geant4.cern.ch/share/data/RadioactiveDecay4.3
+G4REALSURFACEDATA=/cvmfs/geant4.cern.ch/share/data/RealSurface1.0
+G4SAIDXSDATA=/cvmfs/geant4.cern.ch/share/data/G4SAIDDATA1.1
+G_BROKEN_FILENAMES=1
+Geant4_DIR=/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt/lib64/Geant4-10.2.2
+GITPYTHON=/cvmfs/fcc.cern.ch/sw/0.8.3/gitpython
+GLEXEC_LOCATION=/usr
+GLITE_ENV_SET=TRUE
+GLITE_LOCATION=/usr
+GLITE_LOCATION_VAR=/var
+GRID_ENV_LOCATION=/usr/libexec
+GRIDMAPDIR=/etc/grid-security/gridmapdir
+GRID_VO_ENV_SET=true
+GROUP_DIR=/afs/cern.ch/group/zp
+HBASE_HOME=/cvmfs/sft.cern.ch/lcg/releases/hbase/1.2.0-b5698/x86_64-slc6-gcc62-opt
+HEPMC_PREFIX=/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt
+HEPPY=/afs/cern.ch/user/h/helsens/FCCsoft/heppy
+HISTCONTROL=ignoredups
+HISTSIZE=1000
+HOME=/afs/cern.ch/user/h/helsens
+HOSTNAME=b6557ca48da0.cern.ch
+inithere=/pool/lsf/helsens/137935046
+JAVA_HOME=/cvmfs/sft.cern.ch/lcg/releases/java/8u91-ae32f/x86_64-slc6-gcc62-opt
+JOB_TERMINATE_INTERVAL=10
+JUPYTER_PATH=/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/etc/notebook:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/share/jupyter:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/etc/notebook:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/share/jupyter:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/etc/notebook
+KDEDIRS=/usr
+KRB5CCNAME=FILE:/tmp/krb5cc_p1105204561d
+KRBTKFILE=/tmp/tkt_-_1105204561
+LANG=en_US.UTF-8
+LCG_GFAL_INFOSYS=lcg-bdii.cern.ch:2170
+LCG_LOCATION=/usr
+LCGPATH=/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt
+lcg_version=LCG_88
+LD_LIBRARY_PATH=/cvmfs/fcc.cern.ch/sw/0.8.3/papas/1.2.0/x86_64-slc6-gcc62-opt/lib:/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-physics/0.2.1/x86_64-slc6-gcc62-opt/lib:/cvmfs/fcc.cern.ch/sw/0.8.3/podio/0.7/x86_64-slc6-gcc62-opt/lib:/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-edm/0.5.1/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/releases/XercesC/3.1.3-05808/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt/lib64:/cvmfs/sft.cern.ch/lcg/releases/clhep/2.3.1.1-6ba0c/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt/lib64:/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib64:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/lib64
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+LIBPATH=/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/lib
+LINES=59
+LOADEDMODULES=
+LOGNAME=helsens
+LSB_ACCT_FILE=/tmp/137935046.tmpdir/.1516813913.137935046.acct
+LSB_BATCH_JID=137935046
+LSB_CHKFILENAME=/pool/spool/1516813913.137935046
+LSB_DJOB_ENV_SCRIPT=
+LSB_DJOB_HOSTFILE=/pool/spool/1516813913.137935046.hostfile
+LSB_DJOB_NUMPROC=1
+LSB_DJOB_RANKFILE=/pool/spool/1516813913.137935046.hostfile
+LSB_ECHKPNT_RSH_CMD=/usr/bin/ssh
+LSB_EEXEC_REAL_GID=
+LSB_EEXEC_REAL_UID=
+LSB_EFFECTIVE_RSRCREQ=select[( (lftm>3201&&swp>1300)) && (type == local)] order[joblong] 
+LSB_EXEC_CLUSTER=batch
+LSB_EXEC_HOSTTYPE=SLC6_64
+LSB_EXIT_PRE_ABORT=99
+LSB_EXIT_REQUEUE=EXCLUDE( 240 )
+LSB_HOSTS=b6557ca48da0
+LSB_JOB_EXECUSER=helsens
+LSB_JOBEXIT_STAT=0
+LSB_JOBFILENAME=/pool/spool/1516813913.137935046
+LSB_JOBID=137935046
+LSB_JOBINDEX=0
+LSB_JOBNAME=LSFJOB_137935046
+LSB_JOBRES_CALLBACK=52844@b6557ca48da0.cern.ch
+LSB_JOBRES_PID=7325
+LSB_JOB_STARTER=/usr/local/lsf/etc/job_starter '%USRCMD'
+LSB_MAX_NUM_PROCESSORS=1
+LSB_MCPU_HOSTS=b6557ca48da0 1 
+LSB_OUTDIR=/afs/cern.ch/work/h/helsens/FCC/soft/heppy/FCChhAnalyses/HELHC/Outputs/mgp8_pp_tt_lo_Chunk4
+LSB_PROJECT_NAME=default
+LSB_QUEUE=8nh
+LSB_SHAREDIR=/usr/local/lsf/nfs/work
+LSB_SUB_HOST=lxplus051.cern.ch
+LSB_SUB_USER=helsens
+LSB_TRAPSIGS=trap # 15 10 12 2 1
+LSB_UNIXGROUP_INT=zp
+LSB_USRCMD=$LSB_JOBFILENAME.shell
+LSB_XFER_OP=
+LS_COLORS=rs=0:di=38;5;27:ln=38;5;51:mh=44;38;5;15:pi=40;38;5;11:so=38;5;13:do=38;5;5:bd=48;5;232;38;5;11:cd=48;5;232;38;5;3:or=48;5;232;38;5;9:mi=05;48;5;232;38;5;15:su=48;5;196;38;5;15:sg=48;5;11;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;21;38;5;15:ex=38;5;34:*.tar=38;5;9:*.tgz=38;5;9:*.arj=38;5;9:*.taz=38;5;9:*.lzh=38;5;9:*.lzma=38;5;9:*.tlz=38;5;9:*.txz=38;5;9:*.zip=38;5;9:*.z=38;5;9:*.Z=38;5;9:*.dz=38;5;9:*.gz=38;5;9:*.lz=38;5;9:*.xz=38;5;9:*.bz2=38;5;9:*.tbz=38;5;9:*.tbz2=38;5;9:*.bz=38;5;9:*.tz=38;5;9:*.deb=38;5;9:*.rpm=38;5;9:*.jar=38;5;9:*.rar=38;5;9:*.ace=38;5;9:*.zoo=38;5;9:*.cpio=38;5;9:*.7z=38;5;9:*.rz=38;5;9:*.jpg=38;5;13:*.jpeg=38;5;13:*.gif=38;5;13:*.bmp=38;5;13:*.pbm=38;5;13:*.pgm=38;5;13:*.ppm=38;5;13:*.tga=38;5;13:*.xbm=38;5;13:*.xpm=38;5;13:*.tif=38;5;13:*.tiff=38;5;13:*.png=38;5;13:*.svg=38;5;13:*.svgz=38;5;13:*.mng=38;5;13:*.pcx=38;5;13:*.mov=38;5;13:*.mpg=38;5;13:*.mpeg=38;5;13:*.m2v=38;5;13:*.mkv=38;5;13:*.ogm=38;5;13:*.mp4=38;5;13:*.m4v=38;5;13:*.mp4v=38;5;13:*.vob=38;5;13:*.qt=38;5;13:*.nuv=38;5;13:*.wmv=38;5;13:*.asf=38;5;13:*.rm=38;5;13:*.rmvb=38;5;13:*.flc=38;5;13:*.avi=38;5;13:*.fli=38;5;13:*.flv=38;5;13:*.gl=38;5;13:*.dl=38;5;13:*.xcf=38;5;13:*.xwd=38;5;13:*.yuv=38;5;13:*.cgm=38;5;13:*.emf=38;5;13:*.axv=38;5;13:*.anx=38;5;13:*.ogv=38;5;13:*.ogx=38;5;13:*.aac=38;5;45:*.au=38;5;45:*.flac=38;5;45:*.mid=38;5;45:*.midi=38;5;45:*.mka=38;5;45:*.mp3=38;5;45:*.mpc=38;5;45:*.ogg=38;5;45:*.ra=38;5;45:*.wav=38;5;45:*.axa=38;5;45:*.oga=38;5;45:*.spx=38;5;45:*.xspf=38;5;45:
+LS_EXECCWD=/afs/cern.ch/work/h/helsens/FCC/soft/heppy/FCChhAnalyses/HELHC/Outputs/mgp8_pp_tt_lo_Chunk4
+LS_EXEC_T=START
+LSF_BINDIR=/usr/bin
+LSF_CGROUP_TOPDIR_KEY=batch
+LSF_CONFDIR=/usr/local/lsf/mnt/conf
+LSF_EAUTH_AUX_PASS=yes
+LSF_EAUTH_CLIENT=user
+LSF_EAUTH_SERVER=mbatchd@batch
+LSF_EGO_ENVDIR=/usr/local/lsf/mnt/conf
+LSF_ENVDIR=/etc
+LSF_INVOKE_CMD=bsub
+LSF_JOB_TIMESTAMP_VALUE=1516813929
+__LSF_JOB_TMPDIR__=/tmp/137935046.tmpdir
+LSF_LIBDIR=/usr/lsf/lib64
+LSF_LIM_API_NTRIES=1
+LSF_LOGDIR=/var/log/lsf
+LSF_SERVERDIR=/usr/lsf/etc
+LSF_STARTEPOCH=1516813935
+LSFUSER=helsens
+LSF_VERSION=9.1
+LS_JOBPID=7325
+LS_SUBCWD=/afs/cern.ch/work/h/helsens/FCC/soft/heppy/FCChhAnalyses/HELHC/Outputs/mgp8_pp_tt_lo_Chunk4
+MAIL=/var/spool/mail/helsens
+MANPATH=/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/man:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/man:/opt/glite/share/man:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/man::
+MODULEPATH=/usr/share/Modules/modulefiles:/etc/modulefiles
+MODULESHOME=/usr/share/Modules
+MYPROXY_SERVER=myproxy.cern.ch
+NLS_LANG=AMERICAN_AMERICA.WE8ISO8859P1
+OLDPWD=/pool/lsf/helsens/137935046
+OS_AUTH_TYPE=v3kerberos
+OS_AUTH_URL=https://keystone.cern.ch/krb/v3
+OS_IDENTITY_API_VERSION=3
+OS_MUTUAL_AUTH=disabled
+OS_PROJECT_DOMAIN_ID=default
+OS_PROJECT_NAME=Personal helsens
+OS_VOLUME_API_VERSION=2
+PATH=/afs/cern.ch/user/h/helsens/FCCsoft/heppy/bin:/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/bin:/afs/cern.ch/atlas/scripts:/afs/cern.ch/user/h/helsens/scripts:/bin:/usr/bin:/afs/cern.ch/user/h/helsens/FCCsoft/heppy/bin:/cvmfs/fcc.cern.ch/sw/0.8.3/papas/1.2.0/x86_64-slc6-gcc62-opt/bin:/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-physics/0.2.1/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/Geant4/10.02.p02-31b2c/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/bin:/cvmfs/sft.cern.ch/lcg/contrib/gcc/6.2/x86_64-slc6/bin:/usr/sue/bin:/usr/lib64/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/afs/cern.ch/work/h/helsens/FCC/soft/heppy/FCChhAnalyses/HELHC/Outputs/mgp8_pp_tt_lo_Chunk4
+PODIO=/cvmfs/fcc.cern.ch/sw/0.8.3/podio/0.7/x86_64-slc6-gcc62-opt
+PWD=/afs/cern.ch/user/h/helsens/FCCsoft/heppy
+PYTHIA8DATA=/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/share/Pythia8/xmldoc
+PYTHIA8_DIR=/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt
+PYTHIA8_XML=/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/share/Pythia8/xmldoc
+PYTHONHOME=/cvmfs/sft.cern.ch/lcg/releases/Python/2.7.13-597a5/x86_64-slc6-gcc62-opt
+PYTHONPATH=/afs/cern.ch/user/h/helsens/FCCsoft/heppy/..:/cvmfs/fcc.cern.ch/sw/0.8.3/gitpython/lib/python2.7/site-packages:/cvmfs/fcc.cern.ch/sw/0.8.3/podio/0.7/x86_64-slc6-gcc62-opt/python:/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt/python:/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib/python2.6/site-packages:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib/python2.7/site-packages::/afs/cern.ch/work/h/helsens/FCC/soft/heppy
+QTDIR=/usr/lib64/qt-3.3
+QTINC=/usr/lib64/qt-3.3/include
+QTLIB=/usr/lib64/qt-3.3/lib
+RFIO_USE_CASTOR_V2=YES
+R_HOME=/cvmfs/sft.cern.ch/lcg/releases/R/3.2.5-0dae9/x86_64-slc6-gcc62-opt/lib64/R
+ROOT_INCLUDE_PATH=/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt/include:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/include:/cvmfs/fcc.cern.ch/sw/0.8.3/papas/1.2.0/x86_64-slc6-gcc62-opt/include:/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-physics/0.2.1/x86_64-slc6-gcc62-opt/include:/cvmfs/fcc.cern.ch/sw/0.8.3/fcc-edm/0.5.1/x86_64-slc6-gcc62-opt/include/datamodel:/cvmfs/fcc.cern.ch/sw/0.8.3/podio/0.7/x86_64-slc6-gcc62-opt/include:/cvmfs/sft.cern.ch/lcg/releases/LCG_88/DD4hep/00-20/x86_64-slc6-gcc62-opt/include:/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/include:/cvmfs/sft.cern.ch/lcg/releases/R/3.2.5-0dae9/x86_64-slc6-gcc62-opt/lib64/R/include:/cvmfs/sft.cern.ch/lcg/releases/R/3.2.5-0dae9/x86_64-slc6-gcc62-opt/lib64/R/library/RInside/include:/cvmfs/sft.cern.ch/lcg/releases/R/3.2.5-0dae9/x86_64-slc6-gcc62-opt/lib64/R/library/Rcpp/include:/cvmfs/sft.cern.ch/lcg/releases/R/3.2.5-0dae9/x86_64-slc6-gcc62-opt/lib64/R/include:/cvmfs/sft.cern.ch/lcg/releases/R/3.2.5-0dae9/x86_64-slc6-gcc62-opt/lib64/R/library/RInside/include:/cvmfs/sft.cern.ch/lcg/releases/R/3.2.5-0dae9/x86_64-slc6-gcc62-opt/lib64/R/library/Rcpp/include
+ROOTSYS=/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt
+RUCIO_ACCOUNT=helsens
+SBD_KRB5CCNAME_VAL=
+SELINUX_LEVEL_REQUESTED=
+SELINUX_ROLE_REQUESTED=
+SELINUX_USE_CURRENT_RANGE=
+SHELL=/bin/bash
+SHLIB_PATH=/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.08.06-c8fb4/x86_64-slc6-gcc62-opt/lib
+SHLVL=5
+SITE_NAME=CERN-PROD
+SPARK_HOME=/cvmfs/sft.cern.ch/lcg/releases/spark/2.1.0-96b20/x86_64-slc6-gcc62-opt
+SRM_PATH=/opt/d-cache/srm
+SSH_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
+SSH_CLIENT=128.141.127.197 51017 22
+SSH_CONNECTION=128.141.127.197 51017 137.138.121.148 22
+SSH_TTY=/dev/pts/2
+STAGE_HOST=castoratlas
+STAGE_SVCCLASS=default
+TMPDIR=/pool/lsf/helsens/137935046
+USER=helsens
+VALGRIND_LIB=/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/lib/valgrind
+VO_ALICE_DEFAULT_SE=srm-alice.cern.ch
+VO_ALICE_SW_DIR=/afs/cern.ch/project/gd/apps/alice
+VO_ATLAS_DEFAULT_SE=srm-atlas.cern.ch
+VO_ATLAS_SW_DIR=/cvmfs/atlas.cern.ch/repo/sw
+VO_CMS_DEFAULT_SE=srm-cms.cern.ch
+VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
+VO_DTEAM_DEFAULT_SE=srm-public.cern.ch
+VO_DTEAM_SW_DIR=/afs/cern.ch/project/gd/apps/dteam
+VO_GEANT4_DEFAULT_SE=lxdpm101.cern.ch
+VO_GEANT4_SW_DIR=/afs/cern.ch/project/gd/apps/geant4
+VO_ILC_DEFAULT_SE=srm-public.cern.ch
+VO_ILC_SW_DIR=/cvmfs/ilc.desy.de
+VO_LHCB_DEFAULT_SE=srm-lhcb.cern.ch
+VO_LHCB_SW_DIR=/cvmfs/lhcb.cern.ch
+VO_NA48_DEFAULT_SE=srm-public.cern.ch
+VO_NA48_SW_DIR=/afs/cern.ch/project/gd/apps/na48
+VO_OPS_DEFAULT_SE=srm-public.cern.ch
+VO_OPS_SW_DIR=/afs/cern.ch/project/gd/apps/ops
+VO_UNOSAT_DEFAULT_SE=srm-public.cern.ch
+VO_UNOSAT_SW_DIR=/afs/cern.ch/project/gd/apps/unosat
+VO_VO_ALEPH_CERN_CH_DEFAULT_SE=srm-public.cern.ch
+VO_VO_ALEPH_CERN_CH_SW_DIR=/afs/cern.ch/aleph
+VO_VO_DELPHI_CERN_CH_DEFAULT_SE=srm-public.cern.ch
+VO_VO_DELPHI_CERN_CH_SW_DIR=/afs/cern.ch/delphi
+VO_VO_GEAR_CERN_CH_DEFAULT_SE=lxdpm104.cern.ch
+VO_VO_GEAR_CERN_CH_SW_DIR=/afs/cern.ch/project/gd/apps/gear
+VO_VO_L3_CERN_CH_DEFAULT_SE=srm-public.cern.ch
+VO_VO_L3_CERN_CH_SW_DIR=/afs/cern.ch/l3
+VO_VO_OPAL_CERN_CH_DEFAULT_SE=srm-public.cern.ch
+VO_VO_OPAL_CERN_CH_SW_DIR=/afs/cern.ch/opal
+VO_VO_SIXT_CERN_CH_DEFAULT_SE=srm-public.cern.ch
+VO_VO_SIXT_CERN_CH_SW_DIR=/afs/cern.ch/project/gd/apps/sixt
+WORKDIR=/pool/lsf/helsens/137935046
+XERCESCINSTALL=/cvmfs/sft.cern.ch/lcg/releases/XercesC/3.1.3-05808/x86_64-slc6-gcc62-opt
+
+/cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/bin/python
+/pool/lsf/helsens/137935046
+1516813913.137935046.out
+mgp8_pp_tt_lo_Chunk4
+running
+event 100 (29.7 ev/s)
+event 200 (41.0 ev/s)
+event 300 (49.3 ev/s)
+event 400 (53.0 ev/s)
+event 500 (57.2 ev/s)
+event 600 (60.0 ev/s)
+event 700 (62.2 ev/s)
+event 800 (63.4 ev/s)
+event 900 (64.9 ev/s)
+event 1000 (66.0 ev/s)
+event 1100 (66.3 ev/s)
+event 1200 (67.2 ev/s)
+event 1300 (67.9 ev/s)
+event 1400 (64.6 ev/s)
+event 1500 (61.8 ev/s)
+event 1600 (63.3 ev/s)
+event 1700 (64.7 ev/s)
+event 1800 (65.9 ev/s)
+event 1900 (67.2 ev/s)
+event 2000 (68.3 ev/s)
+event 2100 (69.4 ev/s)
+event 2200 (70.4 ev/s)
+event 2300 (71.4 ev/s)
+event 2400 (72.3 ev/s)
+event 2500 (73.1 ev/s)
+event 2600 (73.8 ev/s)
+event 2700 (74.6 ev/s)
+event 2800 (75.2 ev/s)
+event 2900 (75.5 ev/s)
+event 3000 (73.8 ev/s)
+event 3100 (74.4 ev/s)
+event 3200 (75.0 ev/s)
+event 3300 (75.5 ev/s)
+event 3400 (76.1 ev/s)
+event 3500 (76.7 ev/s)
+event 3600 (77.2 ev/s)
+event 3700 (77.8 ev/s)
+event 3800 (78.2 ev/s)
+event 3900 (78.7 ev/s)
+event 4000 (79.1 ev/s)
+event 4100 (79.5 ev/s)
+event 4200 (79.9 ev/s)
+event 4300 (80.3 ev/s)
+event 4400 (80.7 ev/s)
+event 4500 (77.0 ev/s)
+event 4600 (77.4 ev/s)
+event 4700 (77.7 ev/s)
+event 4800 (78.0 ev/s)
+event 4900 (78.4 ev/s)
+event 5000 (78.7 ev/s)
+event 5100 (79.0 ev/s)
+event 5200 (79.3 ev/s)
+event 5300 (79.6 ev/s)
+event 5400 (79.8 ev/s)
+event 5500 (80.1 ev/s)
+event 5600 (80.3 ev/s)
+event 5700 (80.6 ev/s)
+event 5800 (80.9 ev/s)
+event 5900 (81.1 ev/s)
+event 6000 (79.4 ev/s)
+event 6100 (79.7 ev/s)
+event 6200 (79.9 ev/s)
+event 6300 (80.1 ev/s)
+event 6400 (80.3 ev/s)
+event 6500 (80.6 ev/s)
+event 6600 (80.8 ev/s)
+event 6700 (81.1 ev/s)
+event 6800 (81.3 ev/s)
+event 6900 (81.6 ev/s)
+event 7000 (81.8 ev/s)
+event 7100 (82.0 ev/s)
+event 7200 (82.2 ev/s)
+event 7300 (82.4 ev/s)
+event 7400 (82.6 ev/s)
+event 7500 (81.4 ev/s)
+event 7600 (81.6 ev/s)
+event 7700 (81.8 ev/s)
+event 7800 (82.0 ev/s)
+event 7900 (82.2 ev/s)
+event 8000 (82.3 ev/s)
+event 8100 (82.5 ev/s)
+event 8200 (82.7 ev/s)
+event 8300 (82.9 ev/s)
+event 8400 (83.0 ev/s)
+event 8500 (83.2 ev/s)
+event 8600 (83.4 ev/s)
+event 8700 (83.5 ev/s)
+event 8800 (83.7 ev/s)
+event 8900 (83.8 ev/s)
+event 9000 (83.0 ev/s)
+event 9100 (83.1 ev/s)
+event 9200 (83.2 ev/s)
+event 9300 (83.4 ev/s)
+event 9400 (83.5 ev/s)
+event 9500 (83.6 ev/s)
+event 9600 (83.7 ev/s)
+event 9700 (83.8 ev/s)
+event 9800 (84.0 ev/s)
+event 9900 (84.0 ev/s)
+event 10000 (84.2 ev/s)
+event 10100 (84.0 ev/s)
+event 10200 (84.0 ev/s)
+event 10300 (84.1 ev/s)
+event 10400 (84.0 ev/s)
+event 10500 (84.1 ev/s)
+event 10600 (84.2 ev/s)
+event 10700 (84.2 ev/s)
+event 10800 (84.3 ev/s)
+event 10900 (84.3 ev/s)
+event 11000 (84.4 ev/s)
+event 11100 (84.4 ev/s)
+event 11200 (84.4 ev/s)
+event 11300 (84.5 ev/s)
+event 11400 (84.5 ev/s)
+event 11500 (84.2 ev/s)
+event 11600 (84.3 ev/s)
+event 11700 (84.4 ev/s)
+event 11800 (84.5 ev/s)
+event 11900 (84.6 ev/s)
+event 12000 (84.7 ev/s)
+event 12100 (84.8 ev/s)
+event 12200 (84.9 ev/s)
+event 12300 (85.0 ev/s)
+event 12400 (85.0 ev/s)
+event 12500 (85.2 ev/s)
+event 12600 (85.2 ev/s)
+event 12700 (85.3 ev/s)
+event 12800 (85.4 ev/s)
+event 12900 (85.5 ev/s)
+event 13000 (85.3 ev/s)
+event 13100 (85.4 ev/s)
+event 13200 (85.5 ev/s)
+event 13300 (85.6 ev/s)
+event 13400 (85.7 ev/s)
+event 13500 (85.8 ev/s)
+event 13600 (85.8 ev/s)
+event 13700 (85.9 ev/s)
+event 13800 (86.0 ev/s)
+event 13900 (86.0 ev/s)
+event 14000 (86.1 ev/s)
+event 14100 (86.2 ev/s)
+event 14200 (86.2 ev/s)
+event 14300 (86.3 ev/s)
+event 14400 (86.4 ev/s)
+event 14500 (86.1 ev/s)
+event 14600 (86.2 ev/s)
+event 14700 (86.3 ev/s)
+event 14800 (86.4 ev/s)
+event 14900 (86.4 ev/s)
+event 15000 (86.4 ev/s)
+event 15100 (86.5 ev/s)
+event 15200 (86.6 ev/s)
+event 15300 (86.6 ev/s)
+event 15400 (86.7 ev/s)
+event 15500 (86.8 ev/s)
+event 15600 (86.8 ev/s)
+event 15700 (86.9 ev/s)
+event 15800 (86.9 ev/s)
+event 15900 (87.0 ev/s)
+event 16000 (86.8 ev/s)
+event 16100 (86.9 ev/s)
+event 16200 (86.9 ev/s)
+event 16300 (87.0 ev/s)
+event 16400 (87.1 ev/s)
+event 16500 (87.1 ev/s)
+event 16600 (87.1 ev/s)
+event 16700 (87.2 ev/s)
+event 16800 (87.3 ev/s)
+event 16900 (87.3 ev/s)
+event 17000 (87.4 ev/s)
+event 17100 (87.4 ev/s)
+event 17200 (87.5 ev/s)
+event 17300 (87.5 ev/s)
+event 17400 (87.6 ev/s)
+event 17500 (87.4 ev/s)
+event 17600 (87.4 ev/s)
+event 17700 (87.5 ev/s)
+event 17800 (87.5 ev/s)
+event 17900 (87.5 ev/s)
+event 18000 (87.6 ev/s)
+event 18100 (87.6 ev/s)
+event 18200 (87.6 ev/s)
+event 18300 (87.7 ev/s)
+event 18400 (87.7 ev/s)
+event 18500 (87.8 ev/s)
+event 18600 (87.8 ev/s)
+event 18700 (87.9 ev/s)
+event 18800 (88.0 ev/s)
+event 18900 (88.0 ev/s)
+event 19000 (87.9 ev/s)
+event 19100 (87.9 ev/s)
+event 19200 (87.9 ev/s)
+event 19300 (88.0 ev/s)
+event 19400 (88.0 ev/s)
+event 19500 (88.1 ev/s)
+event 19600 (88.1 ev/s)
+event 19700 (88.1 ev/s)
+event 19800 (88.2 ev/s)
+event 19900 (88.2 ev/s)
+event 20000 (88.2 ev/s)
+event 20100 (88.1 ev/s)
+event 20200 (88.2 ev/s)
+event 20300 (88.0 ev/s)
+event 20400 (87.9 ev/s)
+event 20500 (87.7 ev/s)
+event 20600 (87.4 ev/s)
+event 20700 (87.3 ev/s)
+event 20800 (87.0 ev/s)
+event 20900 (86.9 ev/s)
+event 21000 (86.7 ev/s)
+event 21100 (86.6 ev/s)
+event 21200 (86.5 ev/s)
+event 21300 (86.5 ev/s)
+event 21400 (86.4 ev/s)
+event 21500 (86.3 ev/s)
+event 21600 (86.1 ev/s)
+event 21700 (86.2 ev/s)
+event 21800 (86.2 ev/s)
+event 21900 (86.2 ev/s)
+event 22000 (86.0 ev/s)
+event 22100 (86.0 ev/s)
+event 22200 (86.1 ev/s)
+event 22300 (86.1 ev/s)
+event 22400 (86.2 ev/s)
+event 22500 (86.2 ev/s)
+event 22600 (86.3 ev/s)
+event 22700 (86.3 ev/s)
+event 22800 (86.4 ev/s)
+event 22900 (86.5 ev/s)
+event 23000 (86.5 ev/s)
+event 23100 (86.4 ev/s)
+event 23200 (86.5 ev/s)
+event 23300 (86.5 ev/s)
+event 23400 (86.6 ev/s)
+event 23500 (86.6 ev/s)
+event 23600 (86.7 ev/s)
+event 23700 (86.7 ev/s)
+event 23800 (86.8 ev/s)
+event 23900 (86.8 ev/s)
+event 24000 (86.9 ev/s)
+event 24100 (86.9 ev/s)
+event 24200 (87.0 ev/s)
+event 24300 (87.0 ev/s)
+event 24400 (87.0 ev/s)
+event 24500 (87.1 ev/s)
+event 24600 (87.0 ev/s)
+event 24700 (87.1 ev/s)
+event 24800 (87.1 ev/s)
+event 24900 (87.2 ev/s)
+event 25000 (87.2 ev/s)
+event 25100 (87.3 ev/s)
+event 25200 (87.3 ev/s)
+event 25300 (87.4 ev/s)
+event 25400 (87.4 ev/s)
+event 25500 (87.4 ev/s)
+event 25600 (87.5 ev/s)
+event 25700 (87.5 ev/s)
+event 25800 (87.6 ev/s)
+event 25900 (87.6 ev/s)
+event 26000 (87.6 ev/s)
+event 26100 (87.5 ev/s)
+event 26200 (87.5 ev/s)
+event 26300 (87.6 ev/s)
+event 26400 (87.6 ev/s)
+event 26500 (87.7 ev/s)
+event 26600 (87.7 ev/s)
+event 26700 (87.7 ev/s)
+event 26800 (87.8 ev/s)
+event 26900 (87.8 ev/s)
+event 27000 (87.8 ev/s)
+event 27100 (87.9 ev/s)
+event 27200 (87.9 ev/s)
+event 27300 (88.0 ev/s)
+event 27400 (88.0 ev/s)
+event 27500 (88.1 ev/s)
+event 27600 (88.0 ev/s)
+event 27700 (88.0 ev/s)
+event 27800 (88.0 ev/s)
+event 27900 (88.1 ev/s)
+event 28000 (88.1 ev/s)
+event 28100 (88.2 ev/s)
+event 28200 (88.2 ev/s)
+event 28300 (88.2 ev/s)
+event 28400 (88.3 ev/s)
+event 28500 (88.3 ev/s)
+event 28600 (88.4 ev/s)
+event 28700 (88.4 ev/s)
+event 28800 (88.4 ev/s)
+event 28900 (88.5 ev/s)
+event 29000 (88.5 ev/s)
+event 29100 (88.5 ev/s)
+event 29200 (88.5 ev/s)
+event 29300 (88.5 ev/s)
+event 29400 (88.5 ev/s)
+event 29500 (88.6 ev/s)
+event 29600 (88.6 ev/s)
+event 29700 (88.6 ev/s)
+event 29800 (88.7 ev/s)
+event 29900 (88.7 ev/s)
+event 30000 (88.7 ev/s)
+event 30100 (88.7 ev/s)
+event 30200 (88.7 ev/s)
+event 30300 (88.7 ev/s)
+event 30400 (88.7 ev/s)
+event 30500 (88.7 ev/s)
+event 30600 (88.7 ev/s)
+event 30700 (88.7 ev/s)
+event 30800 (88.7 ev/s)
+event 30900 (88.6 ev/s)
+event 31000 (88.6 ev/s)
+event 31100 (88.6 ev/s)
+event 31200 (88.6 ev/s)
+event 31300 (88.7 ev/s)
+event 31400 (88.7 ev/s)
+event 31500 (88.7 ev/s)
+event 31600 (88.6 ev/s)
+event 31700 (88.6 ev/s)
+event 31800 (88.7 ev/s)
+event 31900 (88.7 ev/s)
+event 32000 (88.7 ev/s)
+event 32100 (88.7 ev/s)
+event 32200 (88.7 ev/s)
+event 32300 (88.8 ev/s)
+event 32400 (88.8 ev/s)
+event 32500 (88.8 ev/s)
+event 32600 (88.9 ev/s)
+event 32700 (88.9 ev/s)
+event 32800 (88.9 ev/s)
+event 32900 (88.9 ev/s)
+event 33000 (89.0 ev/s)
+event 33100 (88.9 ev/s)
+event 33200 (88.9 ev/s)
+event 33300 (88.9 ev/s)
+event 33400 (89.0 ev/s)
+event 33500 (89.0 ev/s)
+event 33600 (89.0 ev/s)
+event 33700 (89.0 ev/s)
+event 33800 (89.0 ev/s)
+event 33900 (89.1 ev/s)
+event 34000 (89.1 ev/s)
+event 34100 (89.1 ev/s)
+event 34200 (89.1 ev/s)
+event 34300 (89.2 ev/s)
+event 34400 (89.2 ev/s)
+event 34500 (89.2 ev/s)
+event 34600 (89.1 ev/s)
+event 34700 (89.1 ev/s)
+event 34800 (89.1 ev/s)
+event 34900 (89.1 ev/s)
+event 35000 (89.2 ev/s)
+event 35100 (89.2 ev/s)
+event 35200 (89.2 ev/s)
+event 35300 (89.3 ev/s)
+event 35400 (89.3 ev/s)
+event 35500 (89.3 ev/s)
+event 35600 (89.3 ev/s)
+event 35700 (89.4 ev/s)
+event 35800 (89.4 ev/s)
+event 35900 (89.4 ev/s)
+event 36000 (89.4 ev/s)
+event 36100 (89.4 ev/s)
+event 36200 (89.4 ev/s)
+event 36300 (89.4 ev/s)
+event 36400 (89.5 ev/s)
+event 36500 (89.5 ev/s)
+event 36600 (89.5 ev/s)
+event 36700 (89.5 ev/s)
+event 36800 (89.6 ev/s)
+event 36900 (89.6 ev/s)
+event 37000 (89.6 ev/s)
+event 37100 (89.6 ev/s)
+event 37200 (89.7 ev/s)
+event 37300 (89.7 ev/s)
+event 37400 (89.7 ev/s)
+event 37500 (89.7 ev/s)
+event 37600 (89.7 ev/s)
+event 37700 (89.7 ev/s)
+event 37800 (89.7 ev/s)
+event 37900 (89.7 ev/s)
+event 38000 (89.7 ev/s)
+event 38100 (89.8 ev/s)
+event 38200 (89.8 ev/s)
+event 38300 (89.8 ev/s)
+event 38400 (89.8 ev/s)
+event 38500 (89.8 ev/s)
+event 38600 (89.9 ev/s)
+event 38700 (89.9 ev/s)
+event 38800 (89.9 ev/s)
+event 38900 (89.9 ev/s)
+event 39000 (89.9 ev/s)
+event 39100 (90.0 ev/s)
+event 39200 (89.9 ev/s)
+event 39300 (90.0 ev/s)
+event 39400 (90.0 ev/s)
+event 39500 (90.0 ev/s)
+event 39600 (90.0 ev/s)
+event 39700 (90.1 ev/s)
+event 39800 (90.1 ev/s)
+event 39900 (90.1 ev/s)
+event 40000 (90.1 ev/s)
+event 40100 (90.1 ev/s)
+event 40200 (90.1 ev/s)
+event 40300 (90.1 ev/s)
+event 40400 (90.1 ev/s)
+event 40500 (90.1 ev/s)
+event 40600 (90.1 ev/s)
+event 40700 (90.1 ev/s)
+event 40800 (90.1 ev/s)
+event 40900 (90.1 ev/s)
+event 41000 (90.2 ev/s)
+event 41100 (90.2 ev/s)
+event 41200 (90.2 ev/s)
+event 41300 (90.2 ev/s)
+event 41400 (90.2 ev/s)
+event 41500 (90.1 ev/s)
+event 41600 (90.1 ev/s)
+event 41700 (90.1 ev/s)
+event 41800 (90.2 ev/s)
+event 41900 (90.2 ev/s)
+event 42000 (90.2 ev/s)
+event 42100 (90.2 ev/s)
+event 42200 (90.2 ev/s)
+event 42300 (90.3 ev/s)
+event 42400 (90.3 ev/s)
+event 42500 (90.3 ev/s)
+event 42600 (90.3 ev/s)
+event 42700 (90.3 ev/s)
+event 42800 (90.3 ev/s)
+event 42900 (90.4 ev/s)
+event 43000 (90.3 ev/s)
+event 43100 (90.3 ev/s)
+event 43200 (90.3 ev/s)
+event 43300 (90.3 ev/s)
+event 43400 (90.4 ev/s)
+event 43500 (90.4 ev/s)
+event 43600 (90.4 ev/s)
+event 43700 (90.4 ev/s)
+event 43800 (90.4 ev/s)
+event 43900 (90.5 ev/s)
+event 44000 (90.5 ev/s)
+event 44100 (90.5 ev/s)
+event 44200 (90.5 ev/s)
+event 44300 (90.5 ev/s)
+event 44400 (90.5 ev/s)
+event 44500 (90.5 ev/s)
+event 44600 (90.5 ev/s)
+event 44700 (90.5 ev/s)
+event 44800 (90.5 ev/s)
+event 44900 (90.5 ev/s)
+event 45000 (90.5 ev/s)
+event 45100 (90.5 ev/s)
+event 45200 (90.5 ev/s)
+event 45300 (90.5 ev/s)
+event 45400 (90.6 ev/s)
+event 45500 (90.6 ev/s)
+event 45600 (90.6 ev/s)
+event 45700 (90.6 ev/s)
+event 45800 (90.6 ev/s)
+event 45900 (90.6 ev/s)
+event 46000 (90.5 ev/s)
+event 46100 (90.6 ev/s)
+event 46200 (90.6 ev/s)
+event 46300 (90.6 ev/s)
+event 46400 (90.6 ev/s)
+event 46500 (90.6 ev/s)
+event 46600 (90.6 ev/s)
+event 46700 (90.7 ev/s)
+event 46800 (90.7 ev/s)
+event 46900 (90.7 ev/s)
+event 47000 (90.7 ev/s)
+event 47100 (90.7 ev/s)
+event 47200 (90.7 ev/s)
+event 47300 (90.7 ev/s)
+event 47400 (90.7 ev/s)
+event 47500 (90.7 ev/s)
+event 47600 (90.7 ev/s)
+event 47700 (90.7 ev/s)
+event 47800 (90.7 ev/s)
+event 47900 (90.7 ev/s)
+event 48000 (90.8 ev/s)
+event 48100 (90.8 ev/s)
+event 48200 (90.8 ev/s)
+event 48300 (90.8 ev/s)
+event 48400 (90.8 ev/s)
+event 48500 (90.9 ev/s)
+event 48600 (90.9 ev/s)
+event 48700 (90.9 ev/s)
+event 48800 (90.9 ev/s)
+event 48900 (90.9 ev/s)
+event 49000 (90.8 ev/s)
+event 49100 (90.9 ev/s)
+event 49200 (90.9 ev/s)
+event 49300 (90.9 ev/s)
+event 49400 (90.9 ev/s)
+event 49500 (90.9 ev/s)
+event 49600 (90.9 ev/s)
+event 49700 (90.9 ev/s)
+event 49800 (91.0 ev/s)
+event 49900 (91.0 ev/s)
+event 50000 (91.0 ev/s)
+event 50100 (90.9 ev/s)
+event 50200 (90.9 ev/s)
+event 50300 (90.9 ev/s)
+event 50400 (90.9 ev/s)
+event 50500 (90.9 ev/s)
+event 50600 (90.9 ev/s)
+event 50700 (90.9 ev/s)
+event 50800 (90.9 ev/s)
+event 50900 (90.9 ev/s)
+event 51000 (90.9 ev/s)
+event 51100 (90.9 ev/s)
+event 51200 (90.9 ev/s)
+event 51300 (90.9 ev/s)
+event 51400 (90.9 ev/s)
+event 51500 (90.9 ev/s)
+event 51600 (90.9 ev/s)
+event 51700 (90.9 ev/s)
+event 51800 (90.9 ev/s)
+event 51900 (90.9 ev/s)
+event 52000 (90.9 ev/s)
+event 52100 (91.0 ev/s)
+event 52200 (91.0 ev/s)
+event 52300 (91.0 ev/s)
+event 52400 (91.0 ev/s)
+event 52500 (91.0 ev/s)
+event 52600 (91.0 ev/s)
+event 52700 (91.1 ev/s)
+event 52800 (91.1 ev/s)
+event 52900 (91.1 ev/s)
+event 53000 (91.0 ev/s)
+event 53100 (91.0 ev/s)
+event 53200 (91.1 ev/s)
+event 53300 (91.1 ev/s)
+event 53400 (91.1 ev/s)
+event 53500 (91.1 ev/s)
+event 53600 (91.1 ev/s)
+event 53700 (91.1 ev/s)
+event 53800 (91.1 ev/s)
+event 53900 (91.1 ev/s)
+event 54000 (91.1 ev/s)
+event 54100 (91.2 ev/s)
+event 54200 (91.2 ev/s)
+event 54300 (91.2 ev/s)
+event 54400 (91.2 ev/s)
+event 54500 (91.2 ev/s)
+event 54600 (91.2 ev/s)
+event 54700 (91.2 ev/s)
+event 54800 (91.2 ev/s)
+event 54900 (91.2 ev/s)
+event 55000 (91.2 ev/s)
+event 55100 (91.2 ev/s)
+event 55200 (91.3 ev/s)
+event 55300 (91.3 ev/s)
+event 55400 (91.3 ev/s)
+event 55500 (91.3 ev/s)
+event 55600 (91.3 ev/s)
+event 55700 (91.3 ev/s)
+event 55800 (91.4 ev/s)
+event 55900 (91.4 ev/s)
+event 56000 (91.3 ev/s)
+event 56100 (91.3 ev/s)
+event 56200 (91.4 ev/s)
+event 56300 (91.4 ev/s)
+event 56400 (91.4 ev/s)
+event 56500 (91.4 ev/s)
+event 56600 (91.4 ev/s)
+event 56700 (91.4 ev/s)
+event 56800 (91.4 ev/s)
+event 56900 (91.5 ev/s)
+event 57000 (91.5 ev/s)
+event 57100 (91.5 ev/s)
+event 57200 (91.5 ev/s)
+event 57300 (91.5 ev/s)
+event 57400 (91.5 ev/s)
+event 57500 (91.5 ev/s)
+event 57600 (91.5 ev/s)
+event 57700 (91.5 ev/s)
+event 57800 (91.5 ev/s)
+event 57900 (91.5 ev/s)
+event 58000 (91.5 ev/s)
+event 58100 (91.5 ev/s)
+event 58200 (91.5 ev/s)
+event 58300 (91.5 ev/s)
+event 58400 (91.6 ev/s)
+event 58500 (91.6 ev/s)
+event 58600 (91.6 ev/s)
+event 58700 (91.6 ev/s)
+event 58800 (91.6 ev/s)
+event 58900 (91.6 ev/s)
+event 59000 (91.6 ev/s)
+event 59100 (91.6 ev/s)
+event 59200 (91.6 ev/s)
+event 59300 (91.6 ev/s)
+event 59400 (91.6 ev/s)
+event 59500 (91.6 ev/s)
+event 59600 (91.7 ev/s)
+event 59700 (91.7 ev/s)
+event 59800 (91.7 ev/s)
+event 59900 (91.7 ev/s)
+event 60000 (91.7 ev/s)
+event 60100 (91.5 ev/s)
+event 60200 (91.4 ev/s)
+event 60300 (91.4 ev/s)
+event 60400 (91.3 ev/s)
+event 60500 (91.3 ev/s)
+event 60600 (91.3 ev/s)
+event 60700 (91.2 ev/s)
+event 60800 (91.2 ev/s)
+event 60900 (91.2 ev/s)
+event 61000 (91.2 ev/s)
+event 61100 (91.2 ev/s)
+event 61200 (91.1 ev/s)
+event 61300 (91.1 ev/s)
+event 61400 (91.1 ev/s)
+event 61500 (91.1 ev/s)
+event 61600 (91.0 ev/s)
+event 61700 (91.0 ev/s)
+event 61800 (91.0 ev/s)
+event 61900 (91.0 ev/s)
+event 62000 (91.0 ev/s)
+event 62100 (91.0 ev/s)
+event 62200 (91.0 ev/s)
+event 62300 (91.0 ev/s)
+event 62400 (91.1 ev/s)
+event 62500 (91.1 ev/s)
+event 62600 (91.1 ev/s)
+event 62700 (91.1 ev/s)
+event 62800 (91.1 ev/s)
+event 62900 (91.1 ev/s)
+event 63000 (91.1 ev/s)
+event 63100 (91.0 ev/s)
+event 63200 (91.1 ev/s)
+event 63300 (91.1 ev/s)
+event 63400 (91.1 ev/s)
+event 63500 (91.1 ev/s)
+event 63600 (91.1 ev/s)
+event 63700 (91.1 ev/s)
+event 63800 (91.1 ev/s)
+event 63900 (91.1 ev/s)
+event 64000 (91.1 ev/s)
+event 64100 (91.2 ev/s)
+event 64200 (91.2 ev/s)
+event 64300 (91.2 ev/s)
+event 64400 (91.2 ev/s)
+event 64500 (91.2 ev/s)
+event 64600 (91.1 ev/s)
+event 64700 (91.1 ev/s)
+event 64800 (91.1 ev/s)
+event 64900 (91.1 ev/s)
+event 65000 (91.1 ev/s)
+event 65100 (91.1 ev/s)
+event 65200 (91.2 ev/s)
+event 65300 (91.2 ev/s)
+event 65400 (91.2 ev/s)
+event 65500 (91.2 ev/s)
+event 65600 (91.2 ev/s)
+event 65700 (91.2 ev/s)
+event 65800 (91.2 ev/s)
+event 65900 (91.2 ev/s)
+event 66000 (91.2 ev/s)
+event 66100 (91.2 ev/s)
+event 66200 (91.2 ev/s)
+event 66300 (91.2 ev/s)
+event 66400 (91.2 ev/s)
+event 66500 (91.2 ev/s)
+event 66600 (91.2 ev/s)
+event 66700 (91.2 ev/s)
+event 66800 (91.2 ev/s)
+event 66900 (91.3 ev/s)
+event 67000 (91.3 ev/s)
+event 67100 (91.3 ev/s)
+event 67200 (91.3 ev/s)
+event 67300 (91.3 ev/s)
+event 67400 (91.3 ev/s)
+event 67500 (91.3 ev/s)
+event 67600 (91.2 ev/s)
+event 67700 (91.2 ev/s)
+event 67800 (91.2 ev/s)
+event 67900 (91.3 ev/s)
+event 68000 (91.3 ev/s)
+event 68100 (91.3 ev/s)
+event 68200 (91.3 ev/s)
+event 68300 (91.3 ev/s)
+event 68400 (91.3 ev/s)
+event 68500 (91.3 ev/s)
+event 68600 (91.3 ev/s)
+event 68700 (91.4 ev/s)
+event 68800 (91.4 ev/s)
+event 68900 (91.4 ev/s)
+event 69000 (91.4 ev/s)
+event 69100 (91.3 ev/s)
+event 69200 (91.3 ev/s)
+event 69300 (91.3 ev/s)
+event 69400 (91.3 ev/s)
+event 69500 (91.3 ev/s)
+event 69600 (91.3 ev/s)
+event 69700 (91.3 ev/s)
+event 69800 (91.3 ev/s)
+event 69900 (91.4 ev/s)
+event 70000 (91.4 ev/s)
+event 70100 (91.3 ev/s)
+event 70200 (91.3 ev/s)
+event 70300 (91.3 ev/s)
+event 70400 (91.3 ev/s)
+event 70500 (91.3 ev/s)
+event 70600 (91.3 ev/s)
+event 70700 (91.3 ev/s)
+event 70800 (91.3 ev/s)
+event 70900 (91.3 ev/s)
+event 71000 (91.3 ev/s)
+event 71100 (91.3 ev/s)
+event 71200 (91.3 ev/s)
+event 71300 (91.3 ev/s)
+event 71400 (91.3 ev/s)
+event 71500 (91.3 ev/s)
+event 71600 (91.3 ev/s)
+event 71700 (91.3 ev/s)
+event 71800 (91.3 ev/s)
+event 71900 (91.3 ev/s)
+event 72000 (91.3 ev/s)
+event 72100 (91.3 ev/s)
+event 72200 (91.3 ev/s)
+event 72300 (91.3 ev/s)
+event 72400 (91.3 ev/s)
+event 72500 (91.3 ev/s)
+event 72600 (91.3 ev/s)
+event 72700 (91.3 ev/s)
+event 72800 (91.3 ev/s)
+event 72900 (91.4 ev/s)
+event 73000 (91.3 ev/s)
+event 73100 (91.3 ev/s)
+event 73200 (91.3 ev/s)
+event 73300 (91.3 ev/s)
+event 73400 (91.4 ev/s)
+event 73500 (91.4 ev/s)
+event 73600 (91.4 ev/s)
+event 73700 (91.4 ev/s)
+event 73800 (91.4 ev/s)
+event 73900 (91.4 ev/s)
+event 74000 (91.4 ev/s)
+event 74100 (91.4 ev/s)
+event 74200 (91.4 ev/s)
+event 74300 (91.4 ev/s)
+event 74400 (91.5 ev/s)
+event 74500 (91.4 ev/s)
+event 74600 (91.4 ev/s)
+event 74700 (91.4 ev/s)
+event 74800 (91.4 ev/s)
+event 74900 (91.4 ev/s)
+event 75000 (91.4 ev/s)
+event 75100 (91.4 ev/s)
+event 75200 (91.4 ev/s)
+event 75300 (91.5 ev/s)
+event 75400 (91.5 ev/s)
+event 75500 (91.5 ev/s)
+event 75600 (91.5 ev/s)
+event 75700 (91.5 ev/s)
+event 75800 (91.5 ev/s)
+event 75900 (91.5 ev/s)
+event 76000 (91.4 ev/s)
+event 76100 (91.4 ev/s)
+event 76200 (91.4 ev/s)
+event 76300 (91.4 ev/s)
+event 76400 (91.4 ev/s)
+event 76500 (91.4 ev/s)
+event 76600 (91.4 ev/s)
+event 76700 (91.4 ev/s)
+event 76800 (91.4 ev/s)
+event 76900 (91.5 ev/s)
+event 77000 (91.5 ev/s)
+event 77100 (91.5 ev/s)
+event 77200 (91.5 ev/s)
+event 77300 (91.5 ev/s)
+event 77400 (91.4 ev/s)
+event 77500 (91.5 ev/s)
+event 77600 (91.5 ev/s)
+event 77700 (91.5 ev/s)
+event 77800 (91.5 ev/s)
+event 77900 (91.5 ev/s)
+event 78000 (91.5 ev/s)
+event 78100 (91.5 ev/s)
+event 78200 (91.5 ev/s)
+event 78300 (91.5 ev/s)
+event 78400 (91.5 ev/s)
+event 78500 (91.5 ev/s)
+event 78600 (91.5 ev/s)
+event 78700 (91.5 ev/s)
+event 78800 (91.5 ev/s)
+event 78900 (91.5 ev/s)
+event 79000 (91.5 ev/s)
+event 79100 (91.5 ev/s)
+event 79200 (91.5 ev/s)
+event 79300 (91.5 ev/s)
+event 79400 (91.5 ev/s)
+event 79500 (91.5 ev/s)
+event 79600 (91.5 ev/s)
+event 79700 (91.6 ev/s)
+event 79800 (91.6 ev/s)
+event 79900 (91.6 ev/s)
+event 80000 (91.6 ev/s)
+event 80100 (91.6 ev/s)
+event 80200 (91.6 ev/s)
+event 80300 (91.6 ev/s)
+event 80400 (91.6 ev/s)
+event 80500 (91.6 ev/s)
+event 80600 (91.6 ev/s)
+event 80700 (91.6 ev/s)
+event 80800 (91.6 ev/s)
+event 80900 (91.6 ev/s)
+event 81000 (91.6 ev/s)
+event 81100 (91.5 ev/s)
+event 81200 (91.5 ev/s)
+event 81300 (91.5 ev/s)
+event 81400 (91.5 ev/s)
+event 81500 (91.5 ev/s)
+event 81600 (91.5 ev/s)
+event 81700 (91.5 ev/s)
+event 81800 (91.5 ev/s)
+event 81900 (91.5 ev/s)
+event 82000 (91.5 ev/s)
+event 82100 (91.6 ev/s)
+event 82200 (91.6 ev/s)
+event 82300 (91.6 ev/s)
+event 82400 (91.6 ev/s)
+event 82500 (91.6 ev/s)
+event 82600 (91.6 ev/s)
+event 82700 (91.6 ev/s)
+event 82800 (91.6 ev/s)
+event 82900 (91.6 ev/s)
+event 83000 (91.5 ev/s)
+event 83100 (91.5 ev/s)
+event 83200 (91.5 ev/s)
+event 83300 (91.5 ev/s)
+event 83400 (91.5 ev/s)
+event 83500 (91.5 ev/s)
+event 83600 (91.5 ev/s)
+event 83700 (91.5 ev/s)
+event 83800 (91.5 ev/s)
+event 83900 (91.5 ev/s)
+event 84000 (91.6 ev/s)
+event 84100 (91.6 ev/s)
+event 84200 (91.6 ev/s)
+event 84300 (91.6 ev/s)
+event 84400 (91.6 ev/s)
+event 84500 (91.5 ev/s)
+event 84600 (91.5 ev/s)
+event 84700 (91.5 ev/s)
+event 84800 (91.5 ev/s)
+event 84900 (91.5 ev/s)
+event 85000 (91.5 ev/s)
+event 85100 (91.5 ev/s)
+event 85200 (91.5 ev/s)
+event 85300 (91.5 ev/s)
+event 85400 (91.6 ev/s)
+event 85500 (91.6 ev/s)
+event 85600 (91.6 ev/s)
+event 85700 (91.6 ev/s)
+event 85800 (91.6 ev/s)
+event 85900 (91.6 ev/s)
+event 86000 (91.5 ev/s)
+event 86100 (91.6 ev/s)
+event 86200 (91.6 ev/s)
+event 86300 (91.6 ev/s)
+event 86400 (91.6 ev/s)
+event 86500 (91.6 ev/s)
+event 86600 (91.6 ev/s)
+event 86700 (91.6 ev/s)
+event 86800 (91.6 ev/s)
+event 86900 (91.6 ev/s)
+event 87000 (91.6 ev/s)
+event 87100 (91.6 ev/s)
+event 87200 (91.6 ev/s)
+event 87300 (91.6 ev/s)
+event 87400 (91.6 ev/s)
+event 87500 (91.6 ev/s)
+event 87600 (91.6 ev/s)
+event 87700 (91.6 ev/s)
+event 87800 (91.6 ev/s)
+event 87900 (91.6 ev/s)
+event 88000 (91.6 ev/s)
+event 88100 (91.6 ev/s)
+event 88200 (91.6 ev/s)
+event 88300 (91.6 ev/s)
+event 88400 (91.6 ev/s)
+event 88500 (91.6 ev/s)
+event 88600 (91.6 ev/s)
+event 88700 (91.7 ev/s)
+event 88800 (91.6 ev/s)
+event 88900 (91.6 ev/s)
+event 89000 (91.6 ev/s)
+event 89100 (91.6 ev/s)
+event 89200 (91.7 ev/s)
+event 89300 (91.7 ev/s)
+event 89400 (91.7 ev/s)
+event 89500 (91.7 ev/s)
+event 89600 (91.7 ev/s)
+event 89700 (91.7 ev/s)
+event 89800 (91.7 ev/s)
+event 89900 (91.7 ev/s)
+event 90000 (91.7 ev/s)
+event 90100 (91.7 ev/s)
+event 90200 (91.7 ev/s)
+event 90300 (91.7 ev/s)
+event 90400 (91.7 ev/s)
+event 90500 (91.7 ev/s)
+event 90600 (91.7 ev/s)
+event 90700 (91.7 ev/s)
+event 90800 (91.7 ev/s)
+event 90900 (91.7 ev/s)
+event 91000 (91.7 ev/s)
+event 91100 (91.7 ev/s)
+event 91200 (91.7 ev/s)
+event 91300 (91.7 ev/s)
+event 91400 (91.7 ev/s)
+event 91500 (91.6 ev/s)
+event 91600 (91.6 ev/s)
+event 91700 (91.6 ev/s)
+event 91800 (91.6 ev/s)
+event 91900 (91.6 ev/s)
+event 92000 (91.6 ev/s)
+event 92100 (91.6 ev/s)
+event 92200 (91.7 ev/s)
+event 92300 (91.7 ev/s)
+event 92400 (91.7 ev/s)
+event 92500 (91.7 ev/s)
+event 92600 (91.7 ev/s)
+event 92700 (91.7 ev/s)
+event 92800 (91.7 ev/s)
+event 92900 (91.7 ev/s)
+event 93000 (91.7 ev/s)
+event 93100 (91.7 ev/s)
+event 93200 (91.7 ev/s)
+event 93300 (91.7 ev/s)
+event 93400 (91.7 ev/s)
+event 93500 (91.7 ev/s)
+event 93600 (91.7 ev/s)
+event 93700 (91.7 ev/s)
+event 93800 (91.7 ev/s)
+event 93900 (91.7 ev/s)
+event 94000 (91.7 ev/s)
+event 94100 (91.7 ev/s)
+event 94200 (91.7 ev/s)
+event 94300 (91.7 ev/s)
+event 94400 (91.7 ev/s)
+event 94500 (91.7 ev/s)
+event 94600 (91.7 ev/s)
+event 94700 (91.7 ev/s)
+event 94800 (91.7 ev/s)
+event 94900 (91.7 ev/s)
+event 95000 (91.7 ev/s)
+event 95100 (91.7 ev/s)
+event 95200 (91.7 ev/s)
+event 95300 (91.7 ev/s)
+event 95400 (91.7 ev/s)
+event 95500 (91.7 ev/s)
+event 95600 (91.7 ev/s)
+event 95700 (91.8 ev/s)
+event 95800 (91.8 ev/s)
+event 95900 (91.8 ev/s)
+event 96000 (91.7 ev/s)
+event 96100 (91.7 ev/s)
+event 96200 (91.8 ev/s)
+event 96300 (91.8 ev/s)
+event 96400 (91.8 ev/s)
+event 96500 (91.8 ev/s)
+event 96600 (91.8 ev/s)
+event 96700 (91.8 ev/s)
+event 96800 (91.8 ev/s)
+event 96900 (91.8 ev/s)
+event 97000 (91.8 ev/s)
+event 97100 (91.8 ev/s)
+event 97200 (91.8 ev/s)
+event 97300 (91.8 ev/s)
+event 97400 (91.8 ev/s)
+event 97500 (91.8 ev/s)
+event 97600 (91.8 ev/s)
+event 97700 (91.8 ev/s)
+event 97800 (91.8 ev/s)
+event 97900 (91.8 ev/s)
+event 98000 (91.8 ev/s)
+event 98100 (91.8 ev/s)
+event 98200 (91.8 ev/s)
+event 98300 (91.8 ev/s)
+event 98400 (91.8 ev/s)
+event 98500 (91.8 ev/s)
+event 98600 (91.9 ev/s)
+event 98700 (91.9 ev/s)
+event 98800 (91.9 ev/s)
+event 98900 (91.9 ev/s)
+event 99000 (91.8 ev/s)
+event 99100 (91.8 ev/s)
+event 99200 (91.9 ev/s)
+event 99300 (91.9 ev/s)
+event 99400 (91.9 ev/s)
+event 99500 (91.9 ev/s)
+event 99600 (91.9 ev/s)
+event 99700 (91.9 ev/s)
+event 99800 (91.9 ev/s)
+event 99900 (91.9 ev/s)
+
+MCComponent: mgp8_pp_tt_lo_Chunk4
+	addWeight      :   1.0
+	dataset_entries:   0
+	effCorrFactor  :   1
+	files          :   ['root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_022587925.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_022912179.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_023391064.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_023583096.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_024102890.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_024920428.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_024959805.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_025251205.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_025502120.root', 'root://eospublic.cern.ch//eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_lo/events_026242719.root']
+	intLumi        :   1.0
+	isData         :   False
+	isEmbed        :   False
+	isMC           :   True
+	nGenEvents     :   None
+	splitFactor    :   10
+	tree_name      :   None
+	triggers       :   []
+	xSection       :   1
+
+
+      ---- TimeReport (all times in ms; first evt is skipped) ---- 
+processed    all evts    time/proc    time/all   [%]    analyer
+---------    --------    ---------   ---------  -----   -------------
+   100000      100000        10.24       10.24  97.8%   heppy.FCChhAnalyses.analyzers.Reader.Reader_1
+   100000      100000         0.04        0.04   0.3%   heppy.analyzers.Selector.Selector_jets_pf02_1500
+   100000      100000         0.02        0.02   0.2%   heppy.analyzers.Selector.Selector_jets_pf08_1500
+   100000      100000         0.02        0.02   0.2%   heppy.analyzers.Selector.Selector_jets_pf04_1000
+   100000      100000         0.02        0.02   0.2%   heppy.analyzers.Selector.Selector_jets_trk02_1000
+   100000      100000         0.02        0.02   0.2%   heppy.analyzers.Selector.Selector_electrons_100
+   100000      100000         0.01        0.01   0.1%   heppy.analyzers.Selector.Selector_muons_100
+   100000      100000         0.09        0.09   0.8%   heppy.FCChhAnalyses.Zprime_tt.TreeProducer.TreeProducer_1
+---------    --------    ---------   ---------   -------------
+   100000      100000        10.47       10.47 100.0%   TOTAL
+
+Counter analyzers :
+	 heppy.FCChhAnalyses.analyzers.Reader.Reader_1                   100000 	 1.00 	 1.0000
+	 heppy.analyzers.Selector.Selector_jets_pf02_1500                100000 	 1.00 	 1.0000
+	 heppy.analyzers.Selector.Selector_jets_pf08_1500                100000 	 1.00 	 1.0000
+	 heppy.analyzers.Selector.Selector_jets_pf04_1000                100000 	 1.00 	 1.0000
+	 heppy.analyzers.Selector.Selector_jets_trk02_1000               100000 	 1.00 	 1.0000
+	 heppy.analyzers.Selector.Selector_electrons_100                 100000 	 1.00 	 1.0000
+	 heppy.analyzers.Selector.Selector_muons_100                     100000 	 1.00 	 1.0000
+	 heppy.FCChhAnalyses.Zprime_tt.TreeProducer.TreeProducer_1       100000 	 1.00 	 1.0000
+
+
+sending the logs back
+job directory copy succeeded
+
+Job finished at Wed Jan 24 18:31:24 CET 2018 on node 
+ under linux version Scientific Linux CERN SLC release 6.9 (Carbon)
+
+CERN statistics: This process used approximately : 0:45:08 KSI2K hours (2708 KSI2K seconds)
+                 This process corresponds to     : 2:56:01 HS06  hours (10561 HS06  seconds)
