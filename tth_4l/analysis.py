@@ -13,7 +13,7 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 #comp = cfg.Component(
 #    'example',
-#     #files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_5f_zz/events997.root"]
+#     #files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_
 #     files = ["heppy/FCChhAnalyses/tth_4l/events0.root"]
 #)
 
@@ -23,12 +23,10 @@ selectedComponents = [
                 pp_tth01j_5f_hllll,
                 pp_tt4l_4f,
                       ]
-#selectedComponents = [ comp ] # n files only ,play in comp above
-
-
-pp_tth01j_5f_hllll,.splitFactor = 10
+pp_tth01j_5f_hllll.splitFactor = 10
 pp_tt4l_4f.splitFactor = 10
 
+#selectedComponents = [ comp ]
 
 #from heppy.analyzers.fcc.Reader import Reader
 #for fcc_v02
