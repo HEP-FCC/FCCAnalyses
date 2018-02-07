@@ -1,53 +1,53 @@
 import os
 import copy
 import heppy.framework.config as cfg
-import sys
 import logging
+import imp
 # next 2 lines necessary to deal with reimports from ipython
 logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
+
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_Zprime_10TeV_ttbar/events377.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ttbar/events_000000001.root"]
 )
 
-#from heppySampleList_cms import *
-from heppySampleList_fcc_v02 import *
-
 selectedComponents = [
-
-    
-                        pp_Zprime_5TeV_ttbar,
-#                        pp_Zprime_10TeV_ttbar,
-                        pp_Zprime_15TeV_ttbar,
-                        pp_Zprime_20TeV_ttbar,
-                        pp_Zprime_25TeV_ttbar,
-                        pp_Zprime_30TeV_ttbar,
-                        pp_Zprime_35TeV_ttbar,
-                        pp_Zprime_40TeV_ttbar,  
-                        pp_jj_lo,
-                        pp_tt_lo,
-                        pp_vv_lo,
-                        pp_vj_4f_M_5000_inf,
+                        #sample.p8_pp_Zprime_5TeV_ttbar,
+                        sample.p8_pp_Zprime_10TeV_ttbar,
+                        sample.p8_pp_Zprime_15TeV_ttbar,
+                        sample.p8_pp_Zprime_20TeV_ttbar,
+                        sample.p8_pp_Zprime_25TeV_ttbar,
+                        sample.p8_pp_Zprime_30TeV_ttbar,
+                        sample.p8_pp_Zprime_35TeV_ttbar,
+                        #sample.p8_pp_Zprime_40TeV_ttbar,  
+                        sample.mgp8_pp_jj_lo,
+                        sample.mgp8_pp_tt_lo,
+                        sample.mgp8_pp_vv_lo,
+                        sample.mgp8_pp_vj_4f_M_5000_inf,
+                        #sample.p8_pp_Zprime_20TeV_ttbar_qcdBDTtrain,
+                        #sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV,
                      ]
 
-
-
 splitFac = 20
-pp_Zprime_5TeV_ttbar.splitFactor = splitFac
-pp_Zprime_10TeV_ttbar.splitFactor = splitFac
-pp_Zprime_15TeV_ttbar.splitFactor = splitFac
-pp_Zprime_20TeV_ttbar.splitFactor = splitFac
-pp_Zprime_25TeV_ttbar.splitFactor = splitFac
-pp_Zprime_30TeV_ttbar.splitFactor = splitFac
-pp_Zprime_35TeV_ttbar.splitFactor = splitFac
-pp_Zprime_40TeV_ttbar.splitFactor = splitFac
-pp_jj_lo.splitFactor = 80
-pp_tt_lo.splitFactor = 80
-pp_vv_lo.splitFactor = 80
-pp_vj_4f_M_5000_inf.splitFactor = 80
+sample.p8_pp_Zprime_5TeV_ttbar.splitFactor = splitFac
+sample.p8_pp_Zprime_10TeV_ttbar.splitFactor = splitFac
+sample.p8_pp_Zprime_15TeV_ttbar.splitFactor = splitFac
+sample.p8_pp_Zprime_20TeV_ttbar.splitFactor = splitFac
+sample.p8_pp_Zprime_25TeV_ttbar.splitFactor = splitFac
+sample.p8_pp_Zprime_30TeV_ttbar.splitFactor = splitFac
+sample.p8_pp_Zprime_35TeV_ttbar.splitFactor = splitFac
+sample.p8_pp_Zprime_40TeV_ttbar.splitFactor = splitFac
+sample.mgp8_pp_jj_lo.splitFactor = 80
+sample.mgp8_pp_tt_lo.splitFactor = 80
+sample.mgp8_pp_vv_lo.splitFactor = 80
+sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 80
+comp.splitFactor = 10
+#sample.p8_pp_Zprime_20TeV_ttbar_qcdBDTtrain.splitFactor = 10
+#sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV.splitFactor = 10
 
 #selectedComponents = [comp]
 
