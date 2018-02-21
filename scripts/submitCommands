@@ -1,0 +1,40 @@
+# submit
+
+rm -rf  /eos/user/s/selvaggi/heppyTrees/hhbbaa ; heppy_batch.py -o /eos/user/s/selvaggi/heppyTrees/hhbbaa heppy/FCChhAnalyses/hhbbaa_fcc/analysis.py  -b 'bsub -q 8nh < batchScript.sh'
+rm -rf  /eos/user/s/selvaggi/heppyTrees/hhbbaa_fakes ; heppy_batch.py -o /eos/user/s/selvaggi/heppyTrees/hhbbaa_fakes heppy/FCChhAnalyses/hhbbaa_fcc/analysis_fakes.py  -b 'bsub -q 8nh < batchScript.sh'
+rm -rf  /eos/user/s/selvaggi/heppyTrees/hh_boosted ; heppy_batch.py -o /eos/user/s/selvaggi/heppyTrees/hh_boosted heppy/FCChhAnalyses/hh_boosted/analysis.py  -b 'bsub -q 8nh < batchScript.sh'
+rm -rf  /eos/user/s/selvaggi/heppyTrees/h4l ; heppy_batch.py -o /eos/user/s/selvaggi/heppyTrees/h4l heppy/FCChhAnalyses/h4l/analysis.py  -b 'bsub -q 8nh < batchScript.sh'
+rm -rf  /eos/user/s/selvaggi/heppyTrees/hmumu ; heppy_batch.py -o /eos/user/s/selvaggi/heppyTrees/hmumu heppy/FCChhAnalyses/hmumu/analysis.py  -b 'bsub -q 8nh < batchScript.sh'
+rm -rf  /eos/user/s/selvaggi/heppyTrees/haa ; heppy_batch.py -o /eos/user/s/selvaggi/heppyTrees/haa heppy/FCChhAnalyses/haa/analysis.py  -b 'bsub -q 8nh < batchScript.sh'
+rm -rf  /eos/user/s/selvaggi/heppyTrees/hza ; heppy_batch.py -o /eos/user/s/selvaggi/heppyTrees/hza heppy/FCChhAnalyses/hza/analysis.py  -b 'bsub -q 8nh < batchScript.sh'
+
+# check
+
+heppy_check.py /eos/user/s/selvaggi/heppyTrees/hhbbaa/*Chunk* -b 'bsub -q 1nd'
+heppy_check.py /eos/user/s/selvaggi/heppyTrees/hhbbaa_fakes/*Chunk* -b 'bsub -q 1nd'
+heppy_check.py /eos/user/s/selvaggi/heppyTrees/hh_boosted/*Chunk* -b 'bsub -q 1nd'
+heppy_check.py /eos/user/s/selvaggi/heppyTrees/h4l/*Chunk* -b 'bsub -q 1nd'
+heppy_check.py /eos/user/s/selvaggi/heppyTrees/hmumu/*Chunk* -b 'bsub -q 1nd'
+heppy_check.py /eos/user/s/selvaggi/heppyTrees/haa/*Chunk* -b 'bsub -q 1nd'
+heppy_check.py /eos/user/s/selvaggi/heppyTrees/hza/*Chunk* -b 'bsub -q 1nd'
+
+# hadd
+
+heppy_hadd.py /eos/user/s/selvaggi/heppyTrees/hhbbaa
+heppy_hadd.py /eos/user/s/selvaggi/heppyTrees/hhbbaa_fakes
+heppy_hadd.py /eos/user/s/selvaggi/heppyTrees/hh_boosted
+heppy_hadd.py /eos/user/s/selvaggi/heppyTrees/h4l
+heppy_hadd.py /eos/user/s/selvaggi/heppyTrees/hmumu
+heppy_hadd.py /eos/user/s/selvaggi/heppyTrees/haa
+heppy_hadd.py /eos/user/s/selvaggi/heppyTrees/hza
+
+
+# clean 
+
+rm -rf /eos/user/s/selvaggi/heppyTrees/hhbbaa/*Chunk*
+rm -rf /eos/user/s/selvaggi/heppyTrees/hhbbaa_fakes/*Chunk*
+rm -rf /eos/user/s/selvaggi/heppyTrees/hh_boosted/*Chunk*
+rm -rf /eos/user/s/selvaggi/heppyTrees/h4l/*Chunk*
+rm -rf /eos/user/s/selvaggi/heppyTrees/hmumu/*Chunk*
+rm -rf /eos/user/s/selvaggi/heppyTrees/haa/*Chunk*
+rm -rf /eos/user/s/selvaggi/heppyTrees/hza/*Chunk*
