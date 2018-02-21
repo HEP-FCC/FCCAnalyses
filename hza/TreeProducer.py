@@ -36,7 +36,7 @@ class TreeProducer(Analyzer):
 	    higgs = Resonance(zeds[0], photons[0], 25)
 
             self.tree.fill('weight' , event.weight )
-
+            #print event.weight
             # Reco Higgs
             fillParticle(self.tree, 'higgs', higgs)
             fillParticle(self.tree, 'zed', zeds[0])
