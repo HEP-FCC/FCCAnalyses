@@ -59,9 +59,9 @@ mgp8_pp_tth01j_5f_haa.splitFactor = 50
 mgp8_pp_jjja_5f.splitFactor = 1000
 
 
-selectedComponents = [comp]
+#selectedComponents = [comp]
 
-from heppy.analyzers.fcc.Reader import Reader
+from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
