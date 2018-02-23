@@ -31,7 +31,7 @@ pp_tt4l_4f.splitFactor = 10
 
 #from heppy.analyzers.fcc.Reader import Reader
 #for fcc_v02
-from heppy.FCChhAnalyses.Reader import Reader
+from heppy.FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
