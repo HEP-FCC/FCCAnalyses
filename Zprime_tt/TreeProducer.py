@@ -9,7 +9,9 @@ import math
 import ROOT
 from ROOT import *
 import collections
-from array import array
+#from array import array
+import array
+import os
 
 #For TMVA >>>>>>>>>>>>>>>>>>>>>
 #ROOT.gROOT.ProcessLine('.L /afs/cern.ch/user/r/rasmith/fcc/heppy/FCChhAnalyses/Zprime_tt/BDT_QCD.class.C+')
@@ -94,6 +96,37 @@ class TreeProducer(Analyzer):
         self.tree.var('Jet1_trk02_dR_lep', float)
         self.tree.var('Jet2_trk02_dR_lep', float)
 
+        # for MVA
+        self.reader = ROOT.TMVA.Reader()
+        self.bdt_Jet1_trk02_tau32 = array.array('f',[0])
+        self.bdt_Jet1_trk02_tau31 = array.array('f',[0])
+        self.bdt_Jet1_trk02_tau21 = array.array('f',[0])
+        self.bdt_Jet1_trk02_SD_Corr_m = array.array('f',[0])
+        self.bdt_Jet1_trk02_SD_Corr_pt = array.array('f',[0])
+        self.bdt_Jet2_trk02_tau32 = array.array('f',[0])
+        self.bdt_Jet2_trk02_tau31 = array.array('f',[0])
+        self.bdt_Jet2_trk02_tau21 = array.array('f',[0])
+        self.bdt_Jet2_trk02_SD_Corr_m = array.array('f',[0])
+        self.bdt_Jet2_trk02_SD_Corr_pt = array.array('f',[0])
+        self.bdt_missingET = array.array('f',[0])
+        self.bdt_rapiditySeparation_trk02 = array.array('f',[0]) 
+        self.bdt_transverseMomentumAsymmetry_trk02 = array.array('f',[0])
+        self.reader.AddVariable("Jet1_trk02_tau32",         self.bdt_Jet1_trk02_tau32        )
+        self.reader.AddVariable("Jet1_trk02_tau31",         self.bdt_Jet1_trk02_tau31        )
+        self.reader.AddVariable("Jet1_trk02_tau21",         self.bdt_Jet1_trk02_tau21        )
+        self.reader.AddVariable("Jet1_trk02_SD_Corr_m",     self.bdt_Jet1_trk02_SD_Corr_m    )
+        self.reader.AddVariable("Jet1_trk02_SD_Corr_pt",    self.bdt_Jet1_trk02_SD_Corr_pt   )
+        self.reader.AddVariable("Jet2_trk02_tau32",         self.bdt_Jet2_trk02_tau32        )
+        self.reader.AddVariable("Jet2_trk02_tau31",         self.bdt_Jet2_trk02_tau31        )
+        self.reader.AddVariable("Jet2_trk02_tau21",         self.bdt_Jet2_trk02_tau21        )
+        self.reader.AddVariable("Jet2_trk02_SD_Corr_m",     self.bdt_Jet2_trk02_SD_Corr_m    )
+        self.reader.AddVariable("Jet2_trk02_SD_Corr_pt",    self.bdt_Jet2_trk02_SD_Corr_pt   )
+        self.reader.AddVariable("missingET",                self.bdt_missingET               )
+        self.reader.AddVariable("rapiditySeparation_trk02", self.bdt_rapiditySeparation_trk02)
+        self.reader.AddVariable("transverseMomentumAsymmetry_trk02",self.bdt_transverseMomentumAsymmetry_trk02)
+        path = "/afs/cern.ch/user/d/djamin/fcc_work/BDT_trains/20180207_MVAqcd/"
+        self.reader.BookMVA("BDT",str(path)+"BDT_BDT_Zp_M_20TeV.weights.xml")
+        self.tree.var('BDTvariable_qcd', float)
 
     def corrMET(self, jet1, pdg1 , jet2, pdg2, met):
         dphi1 = abs(jet1.p4().DeltaPhi(met.p4()))
@@ -380,7 +413,26 @@ class TreeProducer(Analyzer):
             ###################################
             #TMVA Stuff Ends!
             ###################################
-            
+            jet1_sdcorr = Particle(pdg1, 0, p4sd1, 1)
+            jet2_sdcorr = Particle(pdg2, 0, p4sd2, 1)
+            #
+            self.bdt_Jet1_trk02_tau32[0] = Jet1_trk02_tau32
+            self.bdt_Jet1_trk02_tau31[0] = Jet1_trk02_tau31
+            self.bdt_Jet1_trk02_tau21[0] = Jet1_trk02_tau21
+            self.bdt_Jet1_trk02_SD_Corr_m[0]  = jet1_sdcorr.p4().M()
+            self.bdt_Jet1_trk02_SD_Corr_pt[0] = jet1_sdcorr.p4().Pt()
+            self.bdt_Jet2_trk02_tau32[0] = Jet2_trk02_tau32
+            self.bdt_Jet2_trk02_tau31[0] = Jet2_trk02_tau31
+            self.bdt_Jet2_trk02_tau21[0] = Jet2_trk02_tau21
+            self.bdt_Jet2_trk02_SD_Corr_m[0]  = jet2_sdcorr.p4().M()
+            self.bdt_Jet2_trk02_SD_Corr_pt[0] = jet2_sdcorr.p4().Pt()
+            self.bdt_missingET[0] = event.met.pt()
+            self.bdt_rapiditySeparation_trk02[0] = abs(jets_trk02[0].eta() - jets_trk02[1].eta())
+            self.bdt_transverseMomentumAsymmetry_trk02[0] = (jets_trk02[0].pt() - jets_trk02[1].pt())/(jets_trk02[0].pt() + jets_trk02[1].pt())
+            #
+            mva_value = self.reader.EvaluateMVA("BDT")
+            self.tree.fill( 'BDTvariable_qcd', mva_value)
+
             self.tree.tree.Fill()
 
     def write(self, setup):

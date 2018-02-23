@@ -1,45 +1,51 @@
 import os
 import copy
 import heppy.framework.config as cfg
-import sys
 import logging
+import imp
 # next 2 lines necessary to deal with reimports from ipython
 logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
+
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_RSGraviton_10TeV_ww/events10.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_RSGraviton_20TeV_ww/events_000000001.root"]
 )
 
-from heppySampleList_fcc_v02 import *
-
 selectedComponents = [
-			pp_RSGraviton_10TeV_ww,
-			pp_RSGraviton_15TeV_ww,
-			pp_RSGraviton_20TeV_ww,
-			pp_RSGraviton_25TeV_ww,
-			pp_RSGraviton_30TeV_ww,
-			pp_RSGraviton_35TeV_ww,
-                        pp_jj_lo,
-                        pp_tt_lo,
-                        pp_vv_lo,
-                        pp_vj_4f_M_5000_inf,
+			sample.p8_pp_RSGraviton_10TeV_ww,
+			sample.p8_pp_RSGraviton_15TeV_ww,
+			sample.p8_pp_RSGraviton_20TeV_ww,
+			sample.p8_pp_RSGraviton_25TeV_ww,
+			sample.p8_pp_RSGraviton_30TeV_ww,
+			sample.p8_pp_RSGraviton_35TeV_ww,
+                        sample.mgp8_pp_jj_lo,
+                        sample.mgp8_pp_tt_lo,
+                        sample.mgp8_pp_vv_lo,
+                        sample.mgp8_pp_vj_4f_M_5000_inf,
+                        #sample.p8_pp_RSGraviton_20TeV_ww_qcdBDTtrain,
+                        #sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV,
 		     ]
 
 
-pp_RSGraviton_10TeV_ww.splitFactor = 20
-pp_RSGraviton_15TeV_ww.splitFactor = 20
-pp_RSGraviton_20TeV_ww.splitFactor = 20
-pp_RSGraviton_25TeV_ww.splitFactor = 20
-pp_RSGraviton_30TeV_ww.splitFactor = 20
-pp_RSGraviton_35TeV_ww.splitFactor = 20
-pp_RSGraviton_40TeV_ww.splitFactor = 20
-pp_jj_lo.splitFactor = 80
-pp_tt_lo.splitFactor = 80
-pp_vv_lo.splitFactor = 80
-pp_vj_4f_M_5000_inf.splitFactor = 80
+splitFac = 20
+sample.p8_pp_RSGraviton_10TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_15TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_20TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_25TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_30TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_35TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_40TeV_ww.splitFactor = splitFac
+sample.mgp8_pp_jj_lo.splitFactor = 80
+sample.mgp8_pp_tt_lo.splitFactor = 80
+sample.mgp8_pp_vv_lo.splitFactor = 80
+sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 80
+comp.splitFactor = 10
+#sample.p8_pp_RSGraviton_20TeV_ww_qcdBDTtrain.splitFactor = 10
+#sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV.splitFactor = 10
 
 #selectedComponents = [comp]
 

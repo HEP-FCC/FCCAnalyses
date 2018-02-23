@@ -1,53 +1,78 @@
-import os, sys
+import os
 import copy
 import heppy.framework.config as cfg
-
 import logging
+import imp
 # next 2 lines necessary to deal with reimports from ipython
 logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
 
 comp = cfg.Component(
     'example',
-#    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_Zprime_30TeV_ll/events1.root"]
-#    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_ee_lo/events1.root"]
-    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/pp_mumu_lo/events1.root"]
+    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_mumu_lo/events_000000001.root"]
 
 )
 
-#from heppySampleList_fcc_v01 import *
-from heppySampleList_fcc_v02 import *
-#from heppySampleList_cms import *
-
-
 selectedComponents = [
-    pp_Zprime_5TeV_ll,
-    pp_Zprime_10TeV_ll,
-    pp_Zprime_15TeV_ll,
-    pp_Zprime_20TeV_ll,
-    pp_Zprime_25TeV_ll,
-    pp_Zprime_30TeV_ll,
-    pp_Zprime_35TeV_ll,
-    pp_Zprime_40TeV_ll,
-    pp_Zprime_45TeV_ll, 
-    pp_Zprime_50TeV_ll, 
-    pp_ee_lo,
-    pp_mumu_lo,  
-    ]
+                        #sample.p8_pp_Zprime_5TeV_ll,
+                        #sample.p8_pp_Zprime_10TeV_ll,
+                        #sample.p8_pp_Zprime_15TeV_ll,
+                        #sample.p8_pp_Zprime_20TeV_ll,
+                        #sample.p8_pp_Zprime_25TeV_ll,
+                        #sample.p8_pp_Zprime_30TeV_ll,
+                        #sample.p8_pp_Zprime_35TeV_ll,
+                        #sample.p8_pp_Zprime_40TeV_ll,
+                        #sample.p8_pp_Zprime_45TeV_ll, 
+                        #sample.p8_pp_Zprime_50TeV_ll, 
+                        #sample.mgp8_pp_ee_lo,
+                        #sample.mgp8_pp_mumu_lo,  
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_6TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_8TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_10TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_12TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_14TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_15TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_16TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_18TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_20TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_25TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_30TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_35TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_40TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_45TeV,
+                        sample.mgp8_pp_mumu_lo_2TeV,
+                     ]
 
-pp_Zprime_15TeV_ll.splitFactor = 10
-pp_Zprime_20TeV_ll.splitFactor = 10
-pp_Zprime_25TeV_ll.splitFactor = 10
-pp_Zprime_30TeV_ll.splitFactor = 10
-pp_Zprime_35TeV_ll.splitFactor = 10
-pp_Zprime_40TeV_ll.splitFactor = 10
-pp_Zprime_45TeV_ll.splitFactor = 10
-pp_Zprime_50TeV_ll.splitFactor = 10
-pp_ee_lo.splitFactor = 70
-pp_mumu_lo.splitFactor = 70
+sample.p8_pp_Zprime_15TeV_ll.splitFactor = 10
+sample.p8_pp_Zprime_20TeV_ll.splitFactor = 10
+sample.p8_pp_Zprime_25TeV_ll.splitFactor = 10
+sample.p8_pp_Zprime_30TeV_ll.splitFactor = 10
+sample.p8_pp_Zprime_35TeV_ll.splitFactor = 10
+sample.p8_pp_Zprime_40TeV_ll.splitFactor = 10
+sample.p8_pp_Zprime_45TeV_ll.splitFactor = 10
+sample.p8_pp_Zprime_50TeV_ll.splitFactor = 10
+sample.mgp8_pp_ee_lo.splitFactor = 70
+sample.mgp8_pp_mumu_lo.splitFactor = 70
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_6TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_8TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_10TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_12TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_14TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_15TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_16TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_18TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_20TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_25TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_30TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_35TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_40TeV.splitFactor = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_45TeV.splitFactor = 10
+sample.mgp8_pp_mumu_lo_2TeV.splitFactor = 40
 
 #selectedComponents = [comp]
 
@@ -219,7 +244,7 @@ config = cfg.Config(
 )
 
 if __name__ == '__main__':
-    import sys
+	    import sys
     from heppy.framework.looper import Looper
 
     def next():
