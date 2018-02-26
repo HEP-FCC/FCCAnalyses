@@ -129,7 +129,7 @@ class Reader(Analyzer):
         
         # last empty entries allows for bk compatibility
         algos = ['pf', 'calo', 'trk', '']
-        cones = ['02', '04', '08', '']
+        cones = ['02', '04', '08', '15', '']
         
 
         for algo in algos:
