@@ -10,6 +10,8 @@ from ROOT import TFile
 # read the list of corrupted tree.root files in ./diagnostic.txt
 # it has been found that Chunk are OK but hadd is making the issue
 
+useChunk=False
+
 ####################
 # make trees list
 ####################
@@ -20,6 +22,7 @@ for subdir, dirs, files in os.walk(path) :
   for file in files :
     if file.find("tree.root") >= 0 :
       the_file = os.path.join(subdir, file)
+      if useChunk==False and the_file.find("Chunk") >= 0 : continue
       Trees.append(the_file)
 
 ####################
