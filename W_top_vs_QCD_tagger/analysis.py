@@ -12,41 +12,22 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_jj_lo_tagger/events_001556815.root"]
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_RSGraviton_20TeV_ww_tagger/events_002015707.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_jj_lo_tagger/events_001556815.root"]
+     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ttbar_tagger/events_000260643.root"]
+     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_RSGraviton_20TeV_ww_tagger/events_002015707.root"]
 )
 
 selectedComponents = [
-			sample.p8_pp_RSGraviton_10TeV_ww,
-			sample.p8_pp_RSGraviton_15TeV_ww,
-			sample.p8_pp_RSGraviton_20TeV_ww,
-			sample.p8_pp_RSGraviton_25TeV_ww,
-			sample.p8_pp_RSGraviton_30TeV_ww,
-			sample.p8_pp_RSGraviton_35TeV_ww,
-                        sample.mgp8_pp_jj_lo,
-                        sample.mgp8_pp_tt_lo,
-                        sample.mgp8_pp_vv_lo,
-                        sample.mgp8_pp_vj_4f_M_5000_inf,
-                        #sample.p8_pp_RSGraviton_20TeV_ww_qcdBDTtrain,
-                        #sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV,
+                        sample.p8_pp_Zprime_20TeV_ttbar_tagger,
+                        sample.p8_pp_RSGraviton_20TeV_ww_tagger,
+                        sample.p8_pp_jj_lo_tagger,
 		     ]
 
 
 splitFac = 20
-sample.p8_pp_RSGraviton_10TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_15TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_20TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_25TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_30TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_35TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_40TeV_ww.splitFactor = splitFac
-sample.mgp8_pp_jj_lo.splitFactor = 80
-sample.mgp8_pp_tt_lo.splitFactor = 80
-sample.mgp8_pp_vv_lo.splitFactor = 80
-sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 80
-comp.splitFactor = 10
-#sample.p8_pp_RSGraviton_20TeV_ww_qcdBDTtrain.splitFactor = 10
-#sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV.splitFactor = 10
+sample.p8_pp_RSGraviton_20TeV_ww_tagger.splitFactor = splitFac
+sample.p8_pp_Zprime_20TeV_ttbar_tagger.splitFactor = splitFac
+sample.p8_pp_jj_lo_tagger.splitFactor = splitFac
 
 #selectedComponents = [comp]
 
@@ -181,27 +162,26 @@ jets_pf08_1500 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>1500
 )
 
-# select electrons above 500 GeV
-electrons_500 = cfg.Analyzer(
+# select electrons above 150 GeV
+electrons_150 = cfg.Analyzer(
     Selector,
-    'electrons_500',
-    output = 'electrons_500',
+    'electrons_150',
+    output = 'electrons_150',
     input_objects = 'electrons',
-    filter_func = lambda electron: electron.pt()>500. and electron.iso.sumpt/electron.pt()<0.4
-
+    filter_func = lambda electron: electron.pt()>150.
 )
 
-# select muons above 500 GeV
-muons_500 = cfg.Analyzer(
+# select muons above 150 GeV
+muons_150 = cfg.Analyzer(
     Selector,
-    'muons_500',
-    output = 'muons_500',
+    'muons_150',
+    output = 'muons_150',
     input_objects = 'muons',
-    filter_func = lambda muon: muon.pt()>500. and muon.iso.sumpt/muon.pt()<0.4
+    filter_func = lambda muon: muon.pt()>150.
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.RSGraviton_ww.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.W_top_vs_QCD_tagger.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_trk02_1000 = 'jets_trk02_1000',
@@ -213,8 +193,8 @@ tree = cfg.Analyzer(
     jets_pf04_1500  = 'jets_pf04_1500',
     jets_pf08_1500  = 'jets_pf08_1500',
 
-    electrons = 'electrons_500',
-    muons = 'muons_500',
+    electrons = 'electrons_150',
+    muons = 'muons_150',
 )
 
 
@@ -231,8 +211,8 @@ sequence = cfg.Sequence( [
     jets_trk04_1000,
     jets_trk08_1000,
 
-    electrons_500,
-    muons_500,
+    electrons_150,
+    muons_150,
     tree,
     ] )
 
