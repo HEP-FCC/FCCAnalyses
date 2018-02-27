@@ -13,7 +13,6 @@ from ROOT import *
 import array
 import os
 
-#ROOT.gROOT.ProcessLine(".L /afs/cern.ch/work/s/selvaggi/private/FCCSW/heppy/FCChhAnalyses/RSGraviton_ww/BDT_QCD.class.C+")
 
 class TreeProducer(Analyzer):
 
@@ -87,41 +86,12 @@ class TreeProducer(Analyzer):
 	self.tree.var('rapiditySeparation', float)
         self.tree.var('transverseMomentumAsymmetry', float)
 
-        # for MVA
-        self.reader = ROOT.TMVA.Reader()
-        self.bdt_Jet_trk02_tau1 = array.array('f',[0])
-        self.bdt_Jet_trk02_tau2 = array.array('f',[0])
-        self.bdt_Jet_trk02_tau3 = array.array('f',[0])
-        self.bdt_Jet_trk02_tau21 = array.array('f',[0])
-        self.bdt_Jet_trk02_tau31 = array.array('f',[0])
-        self.bdt_Jet_trk02_tau32 = array.array('f',[0])
-        self.bdt_Jet_trk02_SD_Corr_m = array.array('f',[0])
-        self.bdt_Jet_trk04_SD_Corr_m = array.array('f',[0])
-        self.bdt_Jet_trk08_SD_Corr_m = array.array('f',[0])
-        self.bdt_Jet_Flow15 = array.array('f',[0])
-        self.bdt_Jet_Flow25 = array.array('f',[0])
-        self.bdt_Jet_Flow35 = array.array('f',[0])
-        self.bdt_Jet_Flow45 = array.array('f',[0])
-        self.bdt_Jet_Flow55 = array.array('f',[0])
-        self.reader.AddVariable("Jet_trk02_tau1",      self.bdt_Jet_trk02_tau1     )
-        self.reader.AddVariable("Jet_trk02_tau2",      self.bdt_Jet_trk02_tau2     )
-        self.reader.AddVariable("Jet_trk02_tau3",      self.bdt_Jet_trk02_tau3     )
-        self.reader.AddVariable("Jet_trk02_tau21",     self.bdt_Jet_trk02_tau21    )
-        self.reader.AddVariable("Jet_trk02_tau31",     self.bdt_Jet_trk02_tau31    )
-        self.reader.AddVariable("Jet_trk02_tau32",     self.bdt_Jet_trk02_tau32    )
-        self.reader.AddVariable("Jet_trk02_SD_Corr_m", self.bdt_Jet_trk02_SD_Corr_m)
-        self.reader.AddVariable("Jet_trk04_SD_Corr_m", self.bdt_Jet_trk04_SD_Corr_m)
-        self.reader.AddVariable("Jet_trk08_SD_Corr_m", self.bdt_Jet_trk08_SD_Corr_m)
-        self.reader.AddVariable("Jet_Flow15",          self.bdt_Jet_Flow15         )
-        self.reader.AddVariable("Jet_Flow25",          self.bdt_Jet_Flow25         )
-        self.reader.AddVariable("Jet_Flow35",          self.bdt_Jet_Flow35         )
-        self.reader.AddVariable("Jet_Flow45",          self.bdt_Jet_Flow45         )
-        self.reader.AddVariable("Jet_Flow55",          self.bdt_Jet_Flow55         )
-        #path = "/eos/experiment/fcc/hh/analyses/W_top_vs_QCD_tagger/heppy_outputs/fcc_v02/TMVA_trainings/"
-        path = "/afs/cern.ch/user/d/djamin/fcc_work/BDT_trains/20180223_tagger/"
-        self.reader.BookMVA("BDT",str(path)+"BDT_BDT_Whad_vs_QCD.weights.xml")
-        self.tree.var('Jet1_Whad_vs_QCD_tagger', float)
-        self.tree.var('Jet2_Whad_vs_QCD_tagger', float)
+        ######################
+        # event categorization
+        # -> 0 fully hadronic decay
+        # -> 1 fully hadronic decay (semi-leptonic decays)
+        # -> 2 leptonic decay
+        self.tree.var('fullhad_fullhadsemilep_lep_decays', float)
 
     def fillMass(self, jet1, jet2):
         mj1j2 = ROOT.TLorentzVector()
@@ -148,6 +118,29 @@ class TreeProducer(Analyzer):
 
         if ( len(jets_trk02)>=2 and  len(jets_pf02)>=2):
 
+            	j1 = ROOT.TLorentzVector(); j2 = ROOT.TLorentzVector()
+            	j1.SetPtEtaPhiE(jets_trk02[0].pt(), jets_trk02[0].eta(), jets_trk02[0].phi(), jets_trk02[0].e())
+            	j2.SetPtEtaPhiE(jets_trk02[1].pt(), jets_trk02[1].eta(), jets_trk02[1].phi(), jets_trk02[1].e())
+            	n_had=0
+            	n_hadsemilep=0
+            	n_lep=0
+            	if ( len(electrons)==0 and len(muons)==0 ): n_had+=1
+            	for i in range(len(electrons)):
+            	    e = ROOT.TLorentzVector()
+            	    e.SetPtEtaPhiE(electrons[i].pt(), electrons[i].eta(), electrons[i].phi(), electrons[i].e())
+            	    if j1.DeltaR(e)<=0.2 or j2.DeltaR(e)<=0.2 : n_hadsemilep+=1
+            	    if j1.DeltaR(e)>0.2 and j2.DeltaR(e)>0.2  : n_lep+=1
+            	for i in range(len(muons)):
+            	    m = ROOT.TLorentzVector()
+            	    m.SetPtEtaPhiE(muons[i].pt(), muons[i].eta(), muons[i].phi(), muons[i].e())
+            	    if j1.DeltaR(m)<=0.2 or j2.DeltaR(m)<=0.2 : n_hadsemilep+=1
+            	    if j1.DeltaR(m)>0.2 and j2.DeltaR(m)>0.2  : n_lep+=1
+            	fullhad_fullhadsemilep_lep_decays=-1
+            	if   n_had>0  and n_hadsemilep==0 and n_lep==0 : fullhad_fullhadsemilep_lep_decays=0.
+            	elif n_had==0 and n_hadsemilep>0  and n_lep==0 : fullhad_fullhadsemilep_lep_decays=1.
+            	elif n_had==0 and n_hadsemilep>=0 and n_lep>0  : fullhad_fullhadsemilep_lep_decays=2.
+            	#print "n_had="+str(n_had)+" , n_hadsemilep="+str(n_hadsemilep)+" , n_lep="+str(n_lep)+" -> had_hadsemilep_lep_decays="+str(fullhad_fullhadsemilep_lep_decays)
+            	self.tree.fill('fullhad_fullhadsemilep_lep_decays' , fullhad_fullhadsemilep_lep_decays )
 
 		self.tree.fill('weight' , event.weight )
                 self.tree.fill('rapiditySeparation_trk02', abs(jets_trk02[0].eta() - jets_trk02[1].eta()))
@@ -363,7 +356,6 @@ class TreeProducer(Analyzer):
 		#############################################################################
 		
 				
-		#R = 0.8 # init
                 R = 0.05
 
 		flow_Jet1 = [0]*5
@@ -391,49 +383,6 @@ class TreeProducer(Analyzer):
 		self.tree.fill('Jet1_Flow35', flow_Jet1[2]); self.tree.fill('Jet2_Flow35', flow_Jet2[2])
 		self.tree.fill('Jet1_Flow45', flow_Jet1[3]); self.tree.fill('Jet2_Flow45', flow_Jet2[3])
 		self.tree.fill('Jet1_Flow55', flow_Jet1[4]); self.tree.fill('Jet2_Flow55', flow_Jet2[4])
-		
-                ###################################
-                #TMVA Stuff Starts!
-                ###################################
-
-                self.bdt_Jet_trk02_tau1[0] = jets_trk02[0].tau1
-                self.bdt_Jet_trk02_tau2[0] = jets_trk02[0].tau2
-                self.bdt_Jet_trk02_tau3[0] = jets_trk02[0].tau3
-                self.bdt_Jet_trk02_tau21[0] = Jet1_trk02_tau21
-                self.bdt_Jet_trk02_tau31[0] = Jet1_trk02_tau31
-                self.bdt_Jet_trk02_tau32[0] = Jet1_trk02_tau32
-                self.bdt_Jet_trk02_SD_Corr_m[0] = sdjet1_corr.p4().M()
-                if len(jets_trk04)>=1 : self.bdt_Jet_trk04_SD_Corr_m[0] = sdjet1_corr_04.p4().M()
-                else                  : self.bdt_Jet_trk04_SD_Corr_m[0] = -1000.
-                if len(jets_trk08)>=1 : self.bdt_Jet_trk08_SD_Corr_m[0] = sdjet1_corr_08.p4().M()
-                else                  : self.bdt_Jet_trk08_SD_Corr_m[0] = -1000.
-                self.bdt_Jet_Flow15[0] = flow_Jet1[0]
-                self.bdt_Jet_Flow25[0] = flow_Jet1[1]
-                self.bdt_Jet_Flow35[0] = flow_Jet1[2]
-                self.bdt_Jet_Flow45[0] = flow_Jet1[3]
-                self.bdt_Jet_Flow55[0] = flow_Jet1[4]
-                mva_value = self.reader.EvaluateMVA("BDT")
-                self.tree.fill( 'Jet1_Whad_vs_QCD_tagger', mva_value)
-                #
-                self.bdt_Jet_trk02_tau1[0] = jets_trk02[1].tau1
-                self.bdt_Jet_trk02_tau2[0] = jets_trk02[1].tau2
-                self.bdt_Jet_trk02_tau3[0] = jets_trk02[1].tau3
-                self.bdt_Jet_trk02_tau21[0] = Jet2_trk02_tau21
-                self.bdt_Jet_trk02_tau31[0] = Jet2_trk02_tau31
-                self.bdt_Jet_trk02_tau32[0] = Jet2_trk02_tau32
-                self.bdt_Jet_trk02_SD_Corr_m[0]  = sdjet2_corr.p4().M()
-                if len(jets_trk04)>=2 : self.bdt_Jet_trk04_SD_Corr_m[0] = sdjet2_corr_04.p4().M()
-                else                  : self.bdt_Jet_trk04_SD_Corr_m[0] = -1000.
-                if len(jets_trk08)>=2 : self.bdt_Jet_trk08_SD_Corr_m[0] = sdjet2_corr_08.p4().M()
-                else                  : self.bdt_Jet_trk08_SD_Corr_m[0] = -1000.
-                self.bdt_Jet_Flow15[0] = flow_Jet2[0]
-                self.bdt_Jet_Flow25[0] = flow_Jet2[1]
-                self.bdt_Jet_Flow35[0] = flow_Jet2[2]
-                self.bdt_Jet_Flow45[0] = flow_Jet2[3]
-                self.bdt_Jet_Flow55[0] = flow_Jet2[4]
-                mva_value = self.reader.EvaluateMVA("BDT")
-                self.tree.fill( 'Jet2_Whad_vs_QCD_tagger', mva_value)
-
 
                 self.tree.tree.Fill()
 
