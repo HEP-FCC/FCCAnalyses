@@ -4,8 +4,9 @@ from heppy.analyzers.ntuple import *
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 from heppy.utils.deltar import matchObjectCollection, deltaR
 
-from ROOT import TFile, TLorentzVector
+from ROOT import TFile, TLorentzVector, TMVA
 import itertools
+import array
 
 class TreeProducer(Analyzer):
 
@@ -16,43 +17,71 @@ class TreeProducer(Analyzer):
                               'recreate')
         self.tree = Tree( 'events', '')
         self.tree.var('weight', float)
+        self.tree.var('nbjets', float)
+
+        bookParticle(self.tree, 'l')
+        bookMet(self.tree, 'met')
+	
+        # fatjet stuff
+        for flavour in ['higgs', 'top']:
+
+            bookParticle(self.tree, '{}jet'.format(flavour))
+            bookParticle(self.tree, 'softDropped_{}jet'.format(flavour))
+
+            self.tree.var('{}jet_tau1'.format(flavour), float)       
+            self.tree.var('{}jet_tau2'.format(flavour), float)
+            self.tree.var('{}jet_tau3'.format(flavour), float)
+            self.tree.var('{}jet_tau32'.format(flavour), float)
+            self.tree.var('{}jet_tau31'.format(flavour), float)
+            self.tree.var('{}jet_tau21'.format(flavour), float)
+
+            self.tree.var('{}jet_flow15'.format(flavour), float)
+            self.tree.var('{}jet_flow25'.format(flavour), float)
+            self.tree.var('{}jet_flow35'.format(flavour), float)
+            self.tree.var('{}jet_flow45'.format(flavour), float)
+            self.tree.var('{}jet_flow55'.format(flavour), float)
+
+            self.tree.var('{}jet_nbs'.format(flavour), float)
+            self.tree.var('{}jet_mbs'.format(flavour), float)
+            self.tree.var('{}jet_bdt_th'.format(flavour), float)
+
+        # for MVA
+        self.reader            = TMVA.Reader()
         
-        bookParticle(self.tree, 'higgsjet')
-        bookParticle(self.tree, 'softDropped_higgsjet')
+        self.bdt_tau1              = array.array('f',[0])
+        self.bdt_tau2              = array.array('f',[0])
+        self.bdt_tau3              = array.array('f',[0])
+        self.bdt_tau21             = array.array('f',[0])
+        self.bdt_tau31             = array.array('f',[0])
+        self.bdt_tau32             = array.array('f',[0])
+        self.bdt_flow15            = array.array('f',[0])
+        self.bdt_flow25            = array.array('f',[0])
+        self.bdt_flow35            = array.array('f',[0])
+        self.bdt_flow45            = array.array('f',[0])
+        self.bdt_flow55            = array.array('f',[0])
+        self.bdt_jet_m             = array.array('f',[0])
+        self.bdt_softDropped_jet_m = array.array('f',[0])
+        self.bdt_jet_nbs           = array.array('f',[0])
+
+        self.reader.AddVariable('jet_m',             self.bdt_jet_m )
+        self.reader.AddVariable('softDropped_jet_m', self.bdt_softDropped_jet_m)
+        self.reader.AddVariable('jet_tau1',          self.bdt_tau1          )
+        self.reader.AddVariable('jet_tau2',          self.bdt_tau2          )
+        self.reader.AddVariable('jet_tau3',          self.bdt_tau3          )
+        self.reader.AddVariable('jet_tau32',         self.bdt_tau32         )
+        self.reader.AddVariable('jet_tau31',         self.bdt_tau31         )
+        self.reader.AddVariable('jet_tau21',         self.bdt_tau21         )
+        self.reader.AddVariable('jet_flow15',        self.bdt_flow15        )
+        self.reader.AddVariable('jet_flow25',        self.bdt_flow25        )
+        self.reader.AddVariable('jet_flow35',        self.bdt_flow35        )
+        self.reader.AddVariable('jet_flow45',        self.bdt_flow45        )
+        self.reader.AddVariable('jet_flow55',        self.bdt_flow55        )
+        self.reader.AddVariable('jet_nbs',           self.bdt_jet_nbs       )
         
-        self.tree.var('higgsjet_tau1', float)       
-        self.tree.var('higgsjet_tau2', float)
-        self.tree.var('higgsjet_tau3', float)
-        self.tree.var('higgsjet_tau32', float)
-        self.tree.var('higgsjet_tau31', float)
-        self.tree.var('higgsjet_tau21', float)
-
-        self.tree.var('higgsjet_flow15', float)
-        self.tree.var('higgsjet_flow25', float)
-        self.tree.var('higgsjet_flow35', float)
-        self.tree.var('higgsjet_flow45', float)
-        self.tree.var('higgsjet_flow55', float)
-
-        self.tree.var('higgsjet_nbs', float)
-
-        bookParticle(self.tree, 'topjet')
-        bookParticle(self.tree, 'softDropped_topjet')
-
-        self.tree.var('topjet_tau1', float)       
-        self.tree.var('topjet_tau2', float)
-        self.tree.var('topjet_tau3', float)
-        self.tree.var('topjet_tau32', float)
-        self.tree.var('topjet_tau31', float)
-        self.tree.var('topjet_tau21', float)
-
-        self.tree.var('topjet_flow15', float)
-        self.tree.var('topjet_flow25', float)
-        self.tree.var('topjet_flow35', float)
-        self.tree.var('topjet_flow45', float)
-        self.tree.var('topjet_flow55', float)
-
-        self.tree.var('topjet_nbs', float)
-
+        #path = "/afs/cern.ch/work/s/selvaggi/private/FCCSW/heppy/FCChhAnalyses/tth_boosted/"
+        path = "/eos/experiment/fcc/hh/analyses/Higgs/ttH/BDT/"
+        self.reader.BookMVA("BDT",str(path)+"BDT_BDT_Higgs_vs_Top.weights.xml")
+    
     def process(self, event):
         self.tree.reset()
         gen_bs = getattr(event, self.cfg_ana.gen_bs)
@@ -60,40 +89,44 @@ class TreeProducer(Analyzer):
         gen_higgses.sort(key=lambda x: x.pt(), reverse = True)
         gen_tops = getattr(event, self.cfg_ana.gen_tops)
         gen_tops.sort(key=lambda x: x.pt(), reverse = True)
-        jets = getattr(event, self.cfg_ana.fatjets)
+        fatjets = getattr(event, self.cfg_ana.fatjets)
         leptons = getattr(event, self.cfg_ana.selected_leptons)
         bjets = event.selected_bs
 
-        if len(gen_higgses) > 1:
-            hh_gen = Resonance(gen_higgses[0], gen_higgses[1], 25)
-
-        #bjets = []
-        ljets = []
-        # do b-tagging on the fly ...
-        
-        #print '---------------------------------------------------'
-        #print len(bjets)
-        
-        
         #_________________________________________________________________
-        # count number of bjets inside jet
-        for jet in jets:
-            is_light = True
-            setattr(jet, 'nbs', 0)
-            for b in bjets:
-                drjb = deltaR(b, jet)
-                if drjb < 1.5: 
-                    jet.nbs += 1
-        
-        #_________________________________________________________________
-        # compute eflow variables
+        # compute eflow, tau_ij and bdt variables
         
         R = 1.5
         
-        for jet in jets:
+        for jet in fatjets:
             
+            setattr(jet, 'nbs', 0)
             setattr(jet, 'flow', [0]*5)
+            setattr(jet, 'p4_bs', TLorentzVector())
+
+            setattr(jet, 'tau32', -9.)
+            setattr(jet, 'tau31', -9.)
+            setattr(jet, 'tau21', -9.)
+            
+            setattr(jet, 'bdt_th', -99.)
+            
+            if (jet.tau1 != 0.0):
+                jet.tau31 = jet.tau3/jet.tau1
+                jet.tau21 = jet.tau2/jet.tau1
+            if (jet.tau2 != 0.0):
+                jet.tau32 = jet.tau3/jet.tau2
+
+            # counting the number of bjets inside (R = 1.5 - 0.4 = 1.1) fatjet
+	    for b in bjets:
+                drjb = deltaR(b, jet)
+                if drjb < 1.1: 
+                    jet.nbs += 1
+                    jet.p4_bs += b.p4()
+		    
+            
+            # do eflow with constituents here
             constituent_vector = TLorentzVector()
+            
             #print jet.pt, jet.flow
             for n in range(1,5+1):
                  #print n 
@@ -103,111 +136,74 @@ class TreeProducer(Analyzer):
                      if ((dR >= (n-1)/5.*R) and (dR < n/5.*R)):
                          #print 'in ring', dR
                          jet.flow[n-1] += abs(constituent.pt())/abs(jet.pt())
-        
+            
             #print jet.flow
-        
-        
+
+            # do what is needed to evaluate bdt here
+            self.bdt_tau1              [0] = jet.tau1
+            self.bdt_tau2              [0] = jet.tau2
+            self.bdt_tau3              [0] = jet.tau3
+            self.bdt_tau31             [0] = jet.tau31
+            self.bdt_tau21             [0] = jet.tau21
+            self.bdt_tau32             [0] = jet.tau32
+            self.bdt_flow15            [0] = jet.flow[0]
+            self.bdt_flow25            [0] = jet.flow[1]
+            self.bdt_flow35            [0] = jet.flow[2]
+            self.bdt_flow45            [0] = jet.flow[3]
+            self.bdt_flow55            [0] = jet.flow[4]
+            self.bdt_jet_m             [0] = jet.p4().M()
+            self.bdt_softDropped_jet_m [0] = jet.subjetsSoftDrop[0].p4().M()
+            self.bdt_jet_nbs           [0] = float(jet.nbs)
+
+            jet.bdt_th = self.reader.EvaluateMVA("BDT")
+            
+        # highest bdt score is more higgs like
+        fatjets.sort(key=lambda x: x.bdt_th, reverse = True)
+            
         
         #print '--------------- new event --------------------------------'
         
-        if len(leptons) > 0 and len(jets) > 1:
-
-            #print len(jets), len(leptons)
+        if len(leptons) > 0 and len(fatjets) > 1:
             
-            #print deltaR(jets[0], leptons[0]), deltaR(jets[1], leptons[0])
-            
-            selected_higgs_jets = []
-            selected_top_jets = []
-
-            # to decide wheather top or higgs jet will be done with MVA
-            # for now just cheat by checking MC truth
-            
-            for jet in jets:
-                drmin_h = 999.
-                drmin_t = 999.
-
-                for higgs in gen_higgses:
-                    drjh = deltaR(higgs, jet)
-                    if drjh < drmin_h: 
-                        drmin_h = drjh
-
-                for top in gen_tops:
-                    drjt = deltaR(top, jet)
-                    if drjt < drmin_t: 
-                        drmin_t = drjt
-
-                if  drmin_h < drmin_t and drmin_h < 1.0:   
-                    selected_higgs_jets.append(jet)
-
-                elif  drmin_t < drmin_h and drmin_t < 1.0:   
-                    selected_top_jets.append(jet)
-
-            if len(selected_higgs_jets) > 0 and len(selected_top_jets) > 0 :
-
-                higgsjet =  selected_higgs_jets[0]
-                topjet   =  selected_top_jets[0]
+            self.tree.fill('weight' , event.weight )
+            fillLepton(self.tree, 'l',leptons[0] )
+            fillMet(self.tree, 'met', event.met)
+            self.tree.fill('nbjets', len(bjets))
+	    
+	    '''higgsjet = fatjets[1]
+	    if higgsjet.nbs > 1:
+	        print higgsjet.p4_bs.M(), higgsjet.subjetsSoftDrop[0].p4().M()'''
+	    
+	    for flavour in ['higgs', 'top']:
                 
-                fillParticle(self.tree, 'higgsjet', higgsjet)
-                fillParticle(self.tree, 'softDropped_higgsjet', higgsjet.subjetsSoftDrop[0])
-                
-                self.tree.fill('higgsjet_tau1' , higgsjet.tau1 )
-                self.tree.fill('higgsjet_tau2' , higgsjet.tau2 )
-                self.tree.fill('higgsjet_tau3' , higgsjet.tau3 )
-                
-                higgsjet_tau31 = -9.0
-                higgsjet_tau21 = -9.0
-                higgsjet_tau32 = -9.0
-     
-                if (higgsjet.tau1 != 0.0):
-                    higgsjet_tau31 = higgsjet.tau3/higgsjet.tau1
-                    higgsjet_tau21 = higgsjet.tau2/higgsjet.tau1 
-                if (higgsjet.tau2 != 0.0):
-                    higgsjet_tau32 = higgsjet.tau3/higgsjet.tau2
+                if flavour == 'higgs':
+                    jet = fatjets[1]
+                else:
+                    jet = fatjets[0]
 
-                self.tree.fill('higgsjet_tau31' , higgsjet_tau31 )
-                self.tree.fill('higgsjet_tau32' , higgsjet_tau32 )
-                self.tree.fill('higgsjet_tau21' , higgsjet_tau21 )
+                fillParticle(self.tree, '{}jet'.format(flavour), jet)
+                fillParticle(self.tree, 'softDropped_{}jet'.format(flavour), jet.subjetsSoftDrop[0])
 
-                #print 'filling: ',higgsjet.flow[0], higgsjet.flow[1], higgsjet.flow[2], higgsjet.flow[3], higgsjet.flow[4]
+                self.tree.fill('{}jet_tau1'.format(flavour) , jet.tau1 )
+                self.tree.fill('{}jet_tau2'.format(flavour) , jet.tau2 )
+                self.tree.fill('{}jet_tau3'.format(flavour) , jet.tau3 )
+                self.tree.fill('{}jet_tau31'.format(flavour) , jet.tau31 )
+                self.tree.fill('{}jet_tau32'.format(flavour) , jet.tau32 )
+                self.tree.fill('{}jet_tau21'.format(flavour) , jet.tau21 )
 
-                self.tree.fill('higgsjet_flow15', higgsjet.flow[0])
-                self.tree.fill('higgsjet_flow25', higgsjet.flow[1])
-                self.tree.fill('higgsjet_flow35', higgsjet.flow[2])
-                self.tree.fill('higgsjet_flow45', higgsjet.flow[3])
-                self.tree.fill('higgsjet_flow55', higgsjet.flow[4])
+                #print 'filling: ',jet.flow[0], jet.flow[1], jet.flow[2], jet.flow[3], jet.flow[4]
 
-                self.tree.fill('higgsjet_nbs', higgsjet.nbs)
+                self.tree.fill('{}jet_flow15'.format(flavour), jet.flow[0])
+                self.tree.fill('{}jet_flow25'.format(flavour), jet.flow[1])
+                self.tree.fill('{}jet_flow35'.format(flavour), jet.flow[2])
+                self.tree.fill('{}jet_flow45'.format(flavour), jet.flow[3])
+                self.tree.fill('{}jet_flow55'.format(flavour), jet.flow[4])
 
-                fillParticle(self.tree, 'topjet', topjet)
-                fillParticle(self.tree, 'softDropped_topjet', topjet.subjetsSoftDrop[0])
+                self.tree.fill('{}jet_nbs'.format(flavour), jet.nbs)
+                self.tree.fill('{}jet_mbs'.format(flavour), jet.p4_bs.M())
+                self.tree.fill('{}jet_bdt_th'.format(flavour), jet.bdt_th)
 
-                self.tree.fill('topjet_tau1' , topjet.tau1 )
-                self.tree.fill('topjet_tau2' , topjet.tau2 )
-                self.tree.fill('topjet_tau3' , topjet.tau3 )
-
-                topjet_tau31 = -9.0
-                topjet_tau21 = -9.0
-                topjet_tau32 = -9.0
-     
-                if (topjet.tau1 != 0.0):
-                    topjet_tau31 = topjet.tau3/topjet.tau1
-                    topjet_tau21 = topjet.tau2/topjet.tau1 
-                if (topjet.tau2 != 0.0):
-                    topjet_tau32 = topjet.tau3/topjet.tau2
-
-                self.tree.fill('topjet_tau31' , topjet_tau31 )
-                self.tree.fill('topjet_tau32' , topjet_tau32 )
-                self.tree.fill('topjet_tau21' , topjet_tau21 )
-
-                self.tree.fill('topjet_flow15', topjet.flow[0])
-                self.tree.fill('topjet_flow25', topjet.flow[1])
-                self.tree.fill('topjet_flow35', topjet.flow[2])
-                self.tree.fill('topjet_flow45', topjet.flow[3])
-                self.tree.fill('topjet_flow55', topjet.flow[4])
-
-                self.tree.fill('topjet_nbs', topjet.nbs)
-
-                self.tree.tree.Fill()
+            self.tree.tree.Fill()
         
 
         
