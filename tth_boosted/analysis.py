@@ -19,15 +19,15 @@ from FCC_heppySampleList_fcc_v02 import *
 
 selectedComponents = [
                        mgp8_pp_tth01j_5f_hbb,
-		       #mgp8_pp_ttj_4f,
-		       #mgp8_pp_ttbb_4f,
-		       #mgp8_pp_ttz_5f_zbb,
-		        ]
+                       mgp8_pp_ttj_4f,
+                       mgp8_pp_ttbb_4f,
+                       mgp8_pp_ttz_5f_zbb,
+                        ]
 
-#mgp8_pp_ttbb_4f.splitFactor = 3
-#mgp8_pp_ttj_4f.splitFactor = 8
-mgp8_pp_tth01j_5f_hbb.splitFactor = 600
-#mgp8_pp_ttz_5f_zbb.splitFactor = 6
+mgp8_pp_ttbb_4f.splitFactor = 60
+mgp8_pp_ttj_4f.splitFactor = 320
+mgp8_pp_tth01j_5f_hbb.splitFactor = 200
+mgp8_pp_ttz_5f_zbb.splitFactor = 140
 
 #selectedComponents = [comp]
 
