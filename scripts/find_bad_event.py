@@ -36,7 +36,13 @@ for tree in Trees :
   t = rf.Get("events")
   numberOfEntries = t.GetEntries()
   bad_status = False
+  show_every=5
+  count=1
   for entry in xrange(numberOfEntries) :
+      ratio=100.*float(entry)/float(numberOfEntries)
+      if ratio>show_every*count :
+        print "Done "+str(int(ratio))+"% ("+str(entry)+"/"+str(numberOfEntries)+")"
+        count+=1
       bad_event_status = t.GetEntry(entry)
       if bad_event_status == -1 :
         bad_status = True
