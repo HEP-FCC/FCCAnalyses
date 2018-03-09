@@ -12,7 +12,8 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_RSGraviton_20TeV_ww/events_000000001.root"]
+     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_jj_lo_tagger/events_001556815.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_RSGraviton_20TeV_ww_tagger/events_002015707.root"]
 )
 
 selectedComponents = [
@@ -39,7 +40,7 @@ sample.p8_pp_RSGraviton_25TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_30TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_35TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_40TeV_ww.splitFactor = splitFac
-sample.mgp8_pp_jj_lo.splitFactor = 80
+sample.mgp8_pp_jj_lo.splitFactor = 250
 sample.mgp8_pp_tt_lo.splitFactor = 80
 sample.mgp8_pp_vv_lo.splitFactor = 80
 sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 80
@@ -68,6 +69,11 @@ source = cfg.Analyzer(
     trkjetsThreeSubJettiness02  = 'trkjetsThreeSubJettiness02',
     trksubjetsSoftDropTagged02  = 'trksubjetsSoftDropTagged02',
     trksubjetsSoftDrop02        = 'trksubjetsSoftDrop02',
+    #
+    trksubjetsSoftDropTagged04  = 'trksubjetsSoftDropTagged04',
+    trksubjetsSoftDrop04        = 'trksubjetsSoftDrop04',
+    trksubjetsSoftDropTagged08  = 'trksubjetsSoftDropTagged08',
+    trksubjetsSoftDrop08        = 'trksubjetsSoftDrop08',
   
     #pf jets pf02 for correction
     pfjets02  = 'pfjets02',
@@ -89,6 +95,7 @@ source = cfg.Analyzer(
     pfbTags08 = 'pfbTags08',
     pfjetConst08 = 'pfjetConst08',
 
+    trkjets04  = 'trkjets04',
     trkjets08  = 'trkjets08',
     trkjetConst08 = 'trkjetConst08',
 
@@ -113,7 +120,7 @@ from EventStore import EventStore as Events
 
 
 from heppy.analyzers.Selector import Selector
-# select pf02 jets above 2000 GeV
+# select pf02 jets above 1500 GeV
 jets_pf02_1500 = cfg.Analyzer(
     Selector,
     'jets_pf02_1500',
@@ -127,6 +134,14 @@ jets_trk02_1000 = cfg.Analyzer(
     'jets_trk02_1000',
     output = 'jets_trk02_1000',
     input_objects = 'trkjets02',
+    filter_func = lambda jet: jet.pt()>1000
+)
+
+jets_trk04_1000 = cfg.Analyzer(
+    Selector,
+    'jets_trk04_1000',
+    output = 'jets_trk04_1000',
+    input_objects = 'trkjets04',
     filter_func = lambda jet: jet.pt()>1000
 )
 
@@ -148,7 +163,16 @@ jets_pf04_1000 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>1000
 )
 
-# select pf04 jets above 1000 GeV for b-tagging
+# select pf04 jets above 1500 GeV for jet correction
+jets_pf04_1500 = cfg.Analyzer(
+    Selector,
+    'jets_pf04_1500',
+    output = 'jets_pf04_1500',
+    input_objects = 'pfjets04',
+    filter_func = lambda jet: jet.pt()>1500
+)
+
+# select pf08 jets above 1500 GeV
 jets_pf08_1500 = cfg.Analyzer(
     Selector,
     'jets_pf08_1500',
@@ -157,7 +181,7 @@ jets_pf08_1500 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>1500
 )
 
-# select electrons above 100 GeV
+# select electrons above 500 GeV
 electrons_500 = cfg.Analyzer(
     Selector,
     'electrons_500',
@@ -167,7 +191,7 @@ electrons_500 = cfg.Analyzer(
 
 )
 
-# select muons above 100 GeV
+# select muons above 500 GeV
 muons_500 = cfg.Analyzer(
     Selector,
     'muons_500',
@@ -181,11 +205,14 @@ from heppy.FCChhAnalyses.RSGraviton_ww.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_trk02_1000 = 'jets_trk02_1000',
+    jets_trk04_1000 = 'jets_trk04_1000',
     jets_trk08_1000 = 'jets_trk08_1000',
 
     jets_pf02_1500  = 'jets_pf02_1500',
-    jets_pf08_1500  = 'jets_pf08_1500',
     jets_pf04_1000  = 'jets_pf04_1000',
+    jets_pf04_1500  = 'jets_pf04_1500',
+    jets_pf08_1500  = 'jets_pf08_1500',
+
     electrons = 'electrons_500',
     muons = 'muons_500',
 )
@@ -196,9 +223,12 @@ tree = cfg.Analyzer(
 sequence = cfg.Sequence( [
     source,
     jets_pf02_1500,
-    jets_pf08_1500,
     jets_pf04_1000,
+    jets_pf04_1500,
+    jets_pf08_1500,
+
     jets_trk02_1000,
+    jets_trk04_1000,
     jets_trk08_1000,
 
     electrons_500,
