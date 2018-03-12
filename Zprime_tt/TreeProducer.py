@@ -271,19 +271,20 @@ class TreeProducer(Analyzer):
                 pdg2 = 5
 
             # TRF / truth b-tagging -> need at least 2 jets_pf04
-            if "mgp8_pp_jj_lo"  in self.cfg_comp.files[0]:
-              weight_1tagex=0.
-              weight_2tagex=0.
-              # want only mistag rate now
-              jet1_pdg=0
-              jet2_pdg=0
-              if (len(jets_pf04)>1):
-                weight_1tagex=getOnebTagEx(jets_pf04[0],jet1_pdg,jets_pf04[1],jet2_pdg)
-                weight_2tagex=getTwobTagEx(jets_pf04[0],jet1_pdg,jets_pf04[1],jet2_pdg)
-              weight_1tagin=weight_1tagex+weight_2tagex
-              self.tree.fill('weight_1tagex', weight_1tagex)
-              self.tree.fill('weight_2tagex', weight_2tagex)
-              self.tree.fill('weight_1tagin', weight_1tagin)
+            weight_1tagex=0.
+            weight_2tagex=0.
+            # want only mistag rate now
+            ipdg=0
+            jet=[]
+            if (len(jets_pf04)>1):
+              for i in range(len(jets_pf04)):
+                jet.append([jets_pf04[i],ipdg])
+              weight_1tagex=getNbTagEx(1,jet,2)
+              weight_2tagex=getNbTagEx(2,jet,2)
+            weight_1tagin=weight_1tagex+weight_2tagex
+            self.tree.fill('weight_1tagex', weight_1tagex)
+            self.tree.fill('weight_2tagex', weight_2tagex)
+            self.tree.fill('weight_1tagin', weight_1tagin)
 
             #MATCHING PF02 and trk02 for CORRECTION
             Jet1_trk02_dR_pf02 = 999
