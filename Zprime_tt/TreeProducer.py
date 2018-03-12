@@ -4,6 +4,7 @@ from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 from heppy.particles.tlv.particle import Particle
+from heppy.FCChhAnalyses.analyzers.TRFbtag import *
 
 import math
 import ROOT
@@ -26,6 +27,9 @@ class TreeProducer(Analyzer):
         self.tree = Tree( 'events', '')
         
         self.tree.var('weight', float)
+        self.tree.var('weight_1tagex', float)
+        self.tree.var('weight_2tagex', float)
+        self.tree.var('weight_1tagin', float)
         self.tree.var('missingET', float)
         self.tree.var('numberOfElectrons', int)
         self.tree.var('numberOfMuons', int)
@@ -266,7 +270,20 @@ class TreeProducer(Analyzer):
             if Jet2_trk02_dR_pf04 < 0.3:
                 pdg2 = 5
 
-
+            # TRF / truth b-tagging -> need at least 2 jets_pf04
+            if "mgp8_pp_jj_lo"  in self.cfg_comp.files[0]:
+              weight_1tagex=0.
+              weight_2tagex=0.
+              # want only mistag rate now
+              jet1_pdg=0
+              jet2_pdg=0
+              if (len(jets_pf04)>1):
+                weight_1tagex=getOnebTagEx(jets_pf04[0],jet1_pdg,jets_pf04[1],jet2_pdg)
+                weight_2tagex=getTwobTagEx(jets_pf04[0],jet1_pdg,jets_pf04[1],jet2_pdg)
+              weight_1tagin=weight_1tagex+weight_2tagex
+              self.tree.fill('weight_1tagex', weight_1tagex)
+              self.tree.fill('weight_2tagex', weight_2tagex)
+              self.tree.fill('weight_1tagin', weight_1tagin)
 
             #MATCHING PF02 and trk02 for CORRECTION
             Jet1_trk02_dR_pf02 = 999
