@@ -53,6 +53,7 @@ class FlavourTagger(Analyzer):
 
         drMax = self.cfg_ana.dr_match
         pdgTags = self.cfg_ana.pdg_tags
+        ptratio = self.cfg_ana.ptr_min
 
         # need to be specified in order of priority (taus need to be fixed by including visible decay products, 
         # right now includes all decays)
@@ -68,7 +69,7 @@ class FlavourTagger(Analyzer):
 
                 dR = jet.p4().DeltaR(part.p4())
 
-                if dR < drMax and pdg in pdgTags:
+                if dR < drMax and pdg in pdgTags and part.pt() > ptratio*jet.pt() :
                     matched_partons.append(pdg)
             # put 0 as a default (even when no match is found)
             pdgBest = 0
