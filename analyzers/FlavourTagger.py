@@ -70,7 +70,6 @@ class FlavourTagger(Analyzer):
 
                 if dR < drMax and pdg in pdgTags:
                     matched_partons.append(pdg)
-            
             # put 0 as a default (even when no match is found)
             pdgBest = 0
             
