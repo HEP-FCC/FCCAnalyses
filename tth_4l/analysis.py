@@ -1,4 +1,5 @@
 import os, sys
+import imp
 import copy
 import heppy.framework.config as cfg
 
@@ -9,32 +10,40 @@ reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
 sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
 
 
-comp = cfg.Component(
-    'example',
-     #files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_5f_zz/events997.root"]
-     files = ["heppy/FCChhAnalyses/tth_4l/events_000001000.root"]
+comps = cfg.Component(
+    'mgp8_pp_tth01j_5f_hllll',
+     # copied from eos, change according to needs
+     files = ["heppy/FCChhAnalyses/tth_4l/local/mgp8_pp_tth01j_5f_hllll/events_000001000.root"]
+)
+compb1 = cfg.Component(
+    'mgp8_pp_wwww_4f',
+     # copied from eos, change according to needs
+     files = ["heppy/FCChhAnalyses/tth_4l/local/mgp8_pp_wwww_4f/events_000000021.root"]
+)
+compb2 = cfg.Component(
+    'mgp8_pp_ttv01j_5f',
+     # copied from eos, change according to needs
+     files = ["heppy/FCChhAnalyses/tth_4l/local/mgp8_pp_ttv01j_5f/events_000000176.root"]
 )
 
 
-from heppySampleList_fcc_v02 import *
 
 selectedComponents = [
-                mgp8_pp_tth01j_5f_hllll,
-                mgp8_pp_llll01j_5f,
-                mgp8_pp_wwww_4f,
+                sample.mgp8_pp_tth01j_5f_hllll,
+                sample.mgp8_pp_ttv01j_5f,
+                #mgp8_pp_wwww_4f,
                       ]
 
 
-mgp8_pp_tth01j_5f_hllll.splitFactor = 10
-mgp8_pp_llll01j_5f.splitFactor = 10
-mgp8_pp_wwww_4f.splitFactor = 10
+sample.mgp8_pp_tth01j_5f_hllll.splitFactor = 10
+sample.mgp8_pp_ttv01j_5f.splitFactor = 10
 
-#selectedComponents = [comp]
+# to run locally
+#selectedComponents = [comps, compb2]
 
-#from heppy.analyzers.fcc.Reader import Reader
-#for fcc_v02
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
