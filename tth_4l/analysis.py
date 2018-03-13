@@ -17,7 +17,8 @@ comp = cfg.Component(
      files = ["heppy/FCChhAnalyses/tth_4l/events_000001000.root"]
 )
 
-from FCC_heppySampleList_fcc_v02 import *
+
+from heppySampleList_fcc_v02 import *
 
 selectedComponents = [
                 mgp8_pp_tth01j_5f_hllll,
@@ -31,7 +32,6 @@ mgp8_pp_llll01j_5f.splitFactor = 10
 mgp8_pp_wwww_4f.splitFactor = 10
 
 #selectedComponents = [comp]
-
 
 #from heppy.analyzers.fcc.Reader import Reader
 #for fcc_v02

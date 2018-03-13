@@ -12,125 +12,40 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
-     files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_5f_za/events997.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_h012j_5f_hlla/events_000001296.root"]
 )
 
-from heppySampleList import *
+from FCC_heppySampleList_fcc_v02 import *
 
-'''selectedComponents = [
-                      pp_h012j_5f_HT_0_100_hlla,
-                      pp_h012j_5f_HT_100_400_hlla,
-                      pp_h012j_5f_HT_400_1000_hlla,
-                      pp_h012j_5f_HT_1000_1900_hlla,
-                      pp_h012j_5f_HT_1900_4400_hlla,
-                      pp_h012j_5f_HT_4400_8500_hlla,
-                      pp_h012j_5f_HT_8500_100000_hlla,
-                      pp_h012j_5f_hlla,
-                      pp_tth01j_5f_HT_0_1100_hlla,
-                      pp_tth01j_5f_HT_1100_2700_hlla,
-                      pp_tth01j_5f_HT_2700_4900_hlla,
-                      pp_tth01j_5f_HT_4900_8100_hlla,
-                      pp_tth01j_5f_HT_8100_100000_hlla,
-                      pp_tth01j_5f_hlla,
-                      pp_vbf_h01j_5f_HT_0_2000_hlla,
-                      pp_vbf_h01j_5f_HT_2000_4000_hlla,
-                      pp_vbf_h01j_5f_HT_4000_7200_hlla,
-                      pp_vbf_h01j_5f_HT_7200_100000_hlla,
-                      pp_vbf_h01j_5f_hlla,
-                      pp_vh012j_5f_HT_0_300_hlla,
-                      pp_vh012j_5f_HT_300_1400_hlla,
-                      pp_vh012j_5f_HT_1400_2900_hlla,
-                      pp_vh012j_5f_HT_2900_5300_hlla,
-                      pp_vh012j_5f_HT_5300_8800_hlla,
-                      pp_vh012j_5f_HT_8800_100000_hlla,
-                      pp_vh012j_5f_hlla,
-                      pp_llv01j_5f_HT_0_800,
-                      pp_llv01j_5f_HT_800_2000,
-                      pp_llv01j_5f_HT_2000_4000,
-                      pp_llv01j_5f_HT_4000_100000,
-                      pp_llv01j_5f,
-                      pp_vv012j_5f_HT_0_300,
-                      pp_vv012j_5f_HT_300_1400,
-                      pp_vv012j_5f_HT_1400_2900,
-                      pp_vv012j_5f_HT_2900_5300,
-                      pp_vv012j_5f_HT_5300_8800,
-                      pp_vv012j_5f_HT_8800_100000,
-                      pp_vv012j_5f,
-                      pp_tt012j_5f_HT_0_600,
-                      pp_tt012j_5f_HT_600_1200,
-                      pp_tt012j_5f_HT_1200_2100,
-                      pp_tt012j_5f_HT_2100_3400,
-                      pp_tt012j_5f_HT_3400_5300,
-                      pp_tt012j_5f_HT_5300_8100,
-                      pp_tt012j_5f_HT_8100_100000,
-                      pp_tt012j_5f,
-                      pp_vvv01j_5f_HT_0_1200,
-                      pp_vvv01j_5f_HT_1200_3000,
-                      pp_vvv01j_5f_HT_3000_6000,
-                      pp_vvv01j_5f_HT_6000_100000,
-                      pp_vvv01j_5f,
+selectedComponents = [
+                      mgp8_pp_h012j_5f_hlla,
+                      mgp8_pp_tth01j_5f_hlla,
+                      mgp8_pp_vbf_h01j_5f_hlla,
+                      mgp8_pp_vh012j_5f_hlla,
+                      #mgp8_pp_lla01j_mhcut_5f
+                      mgp8_pp_lla01j_mhcut_5f_HT_0_100,
+                      mgp8_pp_lla01j_mhcut_5f_HT_100_300, 
+                      mgp8_pp_lla01j_mhcut_5f_HT_300_500, 
+                      mgp8_pp_lla01j_mhcut_5f_HT_500_100000,
+                      mgp8_pp_lla01j_mhcut_5f_HT_300_100000,
                       ]
+
+mgp8_pp_h012j_5f_hlla.splitFactor = 50
+mgp8_pp_vbf_h01j_5f_hlla.splitFactor = 50
+mgp8_pp_tth01j_5f_hlla.splitFactor = 50
+mgp8_pp_vh012j_5f_hlla.splitFactor = 50
+#mgp8_pp_lla01j_mhcut_5f.splitFactor = 50
+mgp8_pp_lla01j_mhcut_5f_HT_0_100.splitFactor = 4
+mgp8_pp_lla01j_mhcut_5f_HT_100_300.splitFactor = 4
+mgp8_pp_lla01j_mhcut_5f_HT_300_500.splitFactor = 2 
+mgp8_pp_lla01j_mhcut_5f_HT_500_100000.splitFactor = 2
+mgp8_pp_lla01j_mhcut_5f_HT_300_100000.splitFactor = 2
+
 
 #selectedComponents = [comp]
 
-pp_h012j_5f_HT_0_100_hlla.splitFactor = 20
-pp_h012j_5f_HT_100_400_hlla.splitFactor = 20
-pp_h012j_5f_HT_400_1000_hlla.splitFactor = 20
-pp_h012j_5f_HT_1000_1900_hlla.splitFactor = 20
-pp_h012j_5f_HT_1900_4400_hlla.splitFactor = 20
-pp_h012j_5f_HT_4400_8500_hlla.splitFactor = 20
-pp_h012j_5f_HT_8500_100000_hlla.splitFactor = 20
-pp_h012j_5f_hlla.splitFactor = 20
-pp_tth01j_5f_HT_0_1100_hlla.splitFactor = 20
-pp_tth01j_5f_HT_1100_2700_hlla.splitFactor = 20
-pp_tth01j_5f_HT_2700_4900_hlla.splitFactor = 20
-pp_tth01j_5f_HT_4900_8100_hlla.splitFactor = 20
-pp_tth01j_5f_HT_8100_100000_hlla.splitFactor = 20
-pp_tth01j_5f_hlla.splitFactor = 20
-pp_vbf_h01j_5f_HT_0_2000_hlla.splitFactor = 20
-pp_vbf_h01j_5f_HT_2000_4000_hlla.splitFactor = 20
-pp_vbf_h01j_5f_HT_4000_7200_hlla.splitFactor = 20
-pp_vbf_h01j_5f_HT_7200_100000_hlla.splitFactor = 20
-pp_vbf_h01j_5f_hlla.splitFactor = 20
-pp_vh012j_5f_HT_0_300_hlla.splitFactor = 20
-pp_vh012j_5f_HT_300_1400_hlla.splitFactor = 20
-pp_vh012j_5f_HT_1400_2900_hlla.splitFactor = 20
-pp_vh012j_5f_HT_2900_5300_hlla.splitFactor = 20
-pp_vh012j_5f_HT_5300_8800_hlla.splitFactor = 20
-pp_vh012j_5f_HT_8800_100000_hlla.splitFactor = 20
-pp_vh012j_5f_hlla.splitFactor = 20
-pp_llv01j_5f_HT_0_800.splitFactor = 20
-pp_llv01j_5f_HT_800_2000.splitFactor = 20
-pp_llv01j_5f_HT_2000_4000.splitFactor = 20
-pp_llv01j_5f_HT_4000_100000.splitFactor = 20
-pp_llv01j_5f.splitFactor = 20
-pp_vv012j_5f_HT_0_300.splitFactor = 20
-pp_vv012j_5f_HT_300_1400.splitFactor = 20
-pp_vv012j_5f_HT_1400_2900.splitFactor = 20
-pp_vv012j_5f_HT_2900_5300.splitFactor = 20
-pp_vv012j_5f_HT_5300_8800.splitFactor = 20
-pp_vv012j_5f_HT_8800_100000.splitFactor = 20
-pp_vv012j_5f.splitFactor = 20
-pp_tt012j_5f_HT_0_600.splitFactor = 20
-pp_tt012j_5f_HT_600_1200.splitFactor = 20
-pp_tt012j_5f_HT_1200_2100.splitFactor = 20
-pp_tt012j_5f_HT_2100_3400.splitFactor = 20
-pp_tt012j_5f_HT_3400_5300.splitFactor = 20
-pp_tt012j_5f_HT_5300_8100.splitFactor = 20
-pp_tt012j_5f_HT_8100_100000.splitFactor = 20
-pp_tt012j_5f.splitFactor = 20
-pp_vvv01j_5f_HT_0_1200.splitFactor = 20
-pp_vvv01j_5f_HT_1200_3000.splitFactor = 20
-pp_vvv01j_5f_HT_3000_6000.splitFactor = 20
-pp_vvv01j_5f_HT_6000_100000.splitFactor = 20
-pp_vvv01j_5f.splitFactor = 20
-'''
-selectedComponents = [comp]
 
-#from heppy.analyzers.fcc.Reader import Reader
-#for fcc_v02
-from heppy.FCChhAnalyses.Reader import Reader
-
+from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -146,8 +61,8 @@ source = cfg.Analyzer(
     muonITags = 'muonITags',
     muonsToMC = 'muonsToMC',
 
-    jets = 'jets',
-    bTags = 'bTags',
+    jets = 'pfjets04',
+    bTags = 'pfbTags04',
 
     photons = 'photons',
     
@@ -208,7 +123,7 @@ selected_leptons = cfg.Analyzer(
 )
 
 # create Z boson candidates with leptons
-from heppy.FCChhAnalyses.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
+from heppy.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
 zeds = cfg.Analyzer(
       LeptonicZedBuilder,
       output = 'zeds',

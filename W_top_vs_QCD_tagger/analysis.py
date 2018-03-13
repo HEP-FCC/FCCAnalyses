@@ -12,55 +12,31 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_jj_lo_tagger/events_001556815.root"]
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ttbar_tagger/events_000260643.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_jj_lo_tagger/events_001556815.root"]
+     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ttbar_tagger/events_000260643.root"]
+     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_RSGraviton_20TeV_ww_tagger/events_002015707.root"]
 )
 
 selectedComponents = [
-                        #sample.p8_pp_Zprime_5TeV_ttbar,
-                        sample.p8_pp_Zprime_10TeV_ttbar,
-                        sample.p8_pp_Zprime_15TeV_ttbar,
-                        sample.p8_pp_Zprime_20TeV_ttbar,
-                        sample.p8_pp_Zprime_25TeV_ttbar,
-                        sample.p8_pp_Zprime_30TeV_ttbar,
-                        sample.p8_pp_Zprime_35TeV_ttbar,
-                        #sample.p8_pp_Zprime_40TeV_ttbar,  
-                        sample.mgp8_pp_jj_lo,
-                        sample.mgp8_pp_tt_lo,
-                        sample.mgp8_pp_vv_lo,
-                        sample.mgp8_pp_vj_4f_M_5000_inf,
-                        #sample.p8_pp_Zprime_20TeV_ttbar_qcdBDTtrain,
-                        #sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV,
-                     ]
+                        sample.p8_pp_Zprime_20TeV_ttbar_tagger,
+                        sample.p8_pp_RSGraviton_20TeV_ww_tagger,
+                        sample.p8_pp_jj_lo_tagger,
+		     ]
+
 
 splitFac = 20
-sample.p8_pp_Zprime_5TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_10TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_15TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_20TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_25TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_30TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_35TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_40TeV_ttbar.splitFactor = splitFac
-sample.mgp8_pp_jj_lo.splitFactor = 250
-sample.mgp8_pp_tt_lo.splitFactor = 80
-sample.mgp8_pp_vv_lo.splitFactor = 80
-sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 80
-comp.splitFactor = 10
-#sample.p8_pp_Zprime_20TeV_ttbar_qcdBDTtrain.splitFactor = 10
-#sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV.splitFactor = 10
+sample.p8_pp_RSGraviton_20TeV_ww_tagger.splitFactor = splitFac
+sample.p8_pp_Zprime_20TeV_ttbar_tagger.splitFactor = splitFac
+sample.p8_pp_jj_lo_tagger.splitFactor = splitFac
 
 #selectedComponents = [comp]
-
-
-
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
     weights = 'mcEventWeights',
-    met = 'met',   
+    
 
     electrons = 'electrons',
     muons = 'muons',
@@ -95,14 +71,22 @@ source = cfg.Analyzer(
     pfjets04  = 'pfjets04',
     pfbTags04 = 'pfbTags04',
 
-
     # used for mreco
     pfjets08  = 'pfjets08',
     pfbTags08 = 'pfbTags08',
+    pfjetConst08 = 'pfjetConst08',
 
     trkjets04  = 'trkjets04',
     trkjets08  = 'trkjets08',
+    trkjetConst08 = 'trkjetConst08',
 
+    electronITags = 'electronITags',
+    electronsToMC = 'electronsToMC',
+
+
+    muonITags = 'muonITags',
+    muonsToMC = 'muonsToMC',
+    met = 'met',
 )
 
 
@@ -114,10 +98,10 @@ from EventStore import EventStore as Events
 ##   Reco Level Analysis   ##
 #############################
 
-#uncomment the following to go back to normal
+
 
 from heppy.analyzers.Selector import Selector
-# select pf02 jets above 2000 GeV
+# select pf02 jets above 1500 GeV
 jets_pf02_1500 = cfg.Analyzer(
     Selector,
     'jets_pf02_1500',
@@ -150,6 +134,7 @@ jets_trk08_1000 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>1000
 )
 
+
 # select pf04 jets above 1000 GeV for b-tagging
 jets_pf04_1000 = cfg.Analyzer(
     Selector,
@@ -177,26 +162,26 @@ jets_pf08_1500 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>1500
 )
 
-# select electrons above 100 GeV
-electrons_100 = cfg.Analyzer(
+# select electrons above 150 GeV
+electrons_150 = cfg.Analyzer(
     Selector,
-    'electrons_100',
-    output = 'electrons_100',
+    'electrons_150',
+    output = 'electrons_150',
     input_objects = 'electrons',
-    filter_func = lambda electron: electron.pt()>100.
+    filter_func = lambda electron: electron.pt()>150.
 )
 
-# select muons above 100 GeV
-muons_100 = cfg.Analyzer(
+# select muons above 150 GeV
+muons_150 = cfg.Analyzer(
     Selector,
-    'muons_100',
-    output = 'muons_100',
+    'muons_150',
+    output = 'muons_150',
     input_objects = 'muons',
-    filter_func = lambda muon: muon.pt()>100.
+    filter_func = lambda muon: muon.pt()>150.
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.Zprime_tt.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.W_top_vs_QCD_tagger.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_trk02_1000 = 'jets_trk02_1000',
@@ -208,9 +193,8 @@ tree = cfg.Analyzer(
     jets_pf04_1500  = 'jets_pf04_1500',
     jets_pf08_1500  = 'jets_pf08_1500',
 
-    electrons = 'electrons_100',
-    muons = 'muons_100',
-
+    electrons = 'electrons_150',
+    muons = 'muons_150',
 )
 
 
@@ -227,10 +211,11 @@ sequence = cfg.Sequence( [
     jets_trk04_1000,
     jets_trk08_1000,
 
-    electrons_100,
-    muons_100,
+    electrons_150,
+    muons_150,
     tree,
     ] )
+
 
 config = cfg.Config(
     components = selectedComponents,

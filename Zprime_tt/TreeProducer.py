@@ -9,7 +9,9 @@ import math
 import ROOT
 from ROOT import *
 import collections
-from array import array
+#from array import array
+import array
+import os
 
 #For TMVA >>>>>>>>>>>>>>>>>>>>>
 #ROOT.gROOT.ProcessLine('.L /afs/cern.ch/user/r/rasmith/fcc/heppy/FCChhAnalyses/Zprime_tt/BDT_QCD.class.C+')
@@ -68,6 +70,12 @@ class TreeProducer(Analyzer):
         
         bookParticle(self.tree, 'Jet1_trk02_SD_Corr_MetCorr')
         bookParticle(self.tree, 'Jet2_trk02_SD_Corr_MetCorr')
+
+        self.tree.var('Jet1_trk04_SD_Corr_m', float)
+        self.tree.var('Jet2_trk04_SD_Corr_m', float)
+
+        self.tree.var('Jet1_trk08_SD_Corr_m', float)
+        self.tree.var('Jet2_trk08_SD_Corr_m', float)
  
         bookParticle(self.tree, 'Electron1')
         bookParticle(self.tree, 'Electron2')
@@ -94,6 +102,31 @@ class TreeProducer(Analyzer):
         self.tree.var('Jet1_trk02_dR_lep', float)
         self.tree.var('Jet2_trk02_dR_lep', float)
 
+        # for MVA
+        self.reader = ROOT.TMVA.Reader()
+        self.bdt_Jet_trk02_tau1 = array.array('f',[0])
+        self.bdt_Jet_trk02_tau2 = array.array('f',[0])
+        self.bdt_Jet_trk02_tau3 = array.array('f',[0])
+        self.bdt_Jet_trk02_tau21 = array.array('f',[0])
+        self.bdt_Jet_trk02_tau31 = array.array('f',[0])
+        self.bdt_Jet_trk02_tau32 = array.array('f',[0])
+        self.bdt_Jet_trk02_SD_Corr_m = array.array('f',[0])
+        self.bdt_Jet_trk04_SD_Corr_m = array.array('f',[0])
+        self.bdt_Jet_trk08_SD_Corr_m = array.array('f',[0])
+        self.reader.AddVariable("Jet_trk02_tau1",      self.bdt_Jet_trk02_tau1     )
+        self.reader.AddVariable("Jet_trk02_tau2",      self.bdt_Jet_trk02_tau2     )
+        self.reader.AddVariable("Jet_trk02_tau3",      self.bdt_Jet_trk02_tau3     )
+        self.reader.AddVariable("Jet_trk02_tau21",     self.bdt_Jet_trk02_tau21    )
+        self.reader.AddVariable("Jet_trk02_tau31",     self.bdt_Jet_trk02_tau31    )
+        self.reader.AddVariable("Jet_trk02_tau32",     self.bdt_Jet_trk02_tau32    )
+        self.reader.AddVariable("Jet_trk02_SD_Corr_m", self.bdt_Jet_trk02_SD_Corr_m)
+        self.reader.AddVariable("Jet_trk04_SD_Corr_m", self.bdt_Jet_trk04_SD_Corr_m)
+        self.reader.AddVariable("Jet_trk08_SD_Corr_m", self.bdt_Jet_trk08_SD_Corr_m)
+        #path = "/eos/experiment/fcc/hh/analyses/W_top_vs_QCD_tagger/heppy_outputs/fcc_v02/TMVA_trainings/"
+        path = "/afs/cern.ch/user/d/djamin/fcc_work/BDT_trains/20180223_tagger/"
+        self.reader.BookMVA("BDT",str(path)+"BDT_BDT_thad_vs_QCD.weights.xml")
+        self.tree.var('Jet1_thad_vs_QCD_tagger', float)
+        self.tree.var('Jet2_thad_vs_QCD_tagger', float)
 
     def corrMET(self, jet1, pdg1 , jet2, pdg2, met):
         dphi1 = abs(jet1.p4().DeltaPhi(met.p4()))
@@ -133,6 +166,9 @@ class TreeProducer(Analyzer):
         jets_pf04 = getattr(event, self.cfg_ana.jets_pf04_1000)
         jets_pf08 = getattr(event, self.cfg_ana.jets_pf08_1500)
 
+        jets_pf04_1500 = getattr(event, self.cfg_ana.jets_pf04_1500)
+        jets_trk04 = getattr(event, self.cfg_ana.jets_trk04_1000)
+        jets_trk08 = getattr(event, self.cfg_ana.jets_trk08_1000)
         
         electrons = getattr(event, self.cfg_ana.electrons)
         muons = getattr(event, self.cfg_ana.muons)
@@ -166,6 +202,7 @@ class TreeProducer(Analyzer):
             
             self.tree.fill('Jet1_trk02_dR_lep' , Jet1_trk02_dR_lep )
             self.tree.fill('Jet2_trk02_dR_lep' , Jet2_trk02_dR_lep )
+#had_hadsemilep_lep_decays
 
             self.tree.fill('weight' , event.weight )
             self.tree.fill('missingET', event.met.pt())
@@ -296,6 +333,95 @@ class TreeProducer(Analyzer):
             fillParticle(self.tree, 'Jet2_trk02_SD_Corr_MetCorr', sdjetmet2)
 
 
+            ######################
+            # trkjet04 mass info #
+            ######################
+            #MATCHING PF04 and trk04 for CORRECTION
+            Jet1_trk04_dR_pf04 = 999
+            Jet2_trk04_dR_pf04 = 999
+            Jet1_pf04 = None
+            Jet2_pf04 = None
+            for j in jets_pf04_1500:
+                pf04= ROOT.TLorentzVector()
+                pf04.SetPtEtaPhiE(j.pt(), j.eta(), j.phi(), j.e())
+                if pf04.DeltaR(j1)<Jet1_trk04_dR_pf04:
+                    Jet1_trk04_dR_pf04=pf04.DeltaR(j1)
+                    Jet1_pf04=j
+                if pf04.DeltaR(j2)<Jet2_trk04_dR_pf04:
+                    Jet2_trk04_dR_pf04=pf04.DeltaR(j2)
+                    Jet2_pf04=j
+            corr1_04 = Jet1_pf04.p4().Pt()/j1.Pt()
+            corr2_04 = Jet2_pf04.p4().Pt()/j2.Pt()
+
+            #NORMAL TRK04 SD corrected jet
+            p4sd1_04 = ROOT.TLorentzVector(); p4sd2_04 = ROOT.TLorentzVector()
+            Jet1_trk04_SD_Corr_m = -1000.   ; Jet2_trk04_SD_Corr_m = -1000.
+
+            if len(jets_trk04)>=1 :
+                p4sd1_04.SetPtEtaPhiM(jets_trk04[0].subjetsSoftDrop[0].p4().Pt()*corr1_04,
+                                      jets_trk04[0].eta(),
+                                      jets_trk04[0].phi(),
+                                      jets_trk04[0].subjetsSoftDrop[0].p4().M()*corr1_04)
+                pdg1 = 0
+                sdjet1_corr_04 = Particle(pdg1, 0, p4sd1_04, 1)
+                Jet1_trk04_SD_Corr_m = sdjet1_corr_04.p4().M()
+
+            if len(jets_trk04)>=2 :
+                p4sd2_04.SetPtEtaPhiM(jets_trk04[1].subjetsSoftDrop[0].p4().Pt()*corr2_04,
+                                      jets_trk04[1].eta(),
+                                      jets_trk04[1].phi(),
+                                      jets_trk04[1].subjetsSoftDrop[0].p4().M()*corr2_04)
+                pdg2 = 0
+                sdjet2_corr_04 = Particle(pdg2, 0, p4sd2_04, 1)
+                Jet2_trk04_SD_Corr_m = sdjet2_corr_04.p4().M()
+
+            self.tree.fill('Jet1_trk04_SD_Corr_m', Jet1_trk04_SD_Corr_m)
+            self.tree.fill('Jet2_trk04_SD_Corr_m', Jet2_trk04_SD_Corr_m)
+
+            ######################
+            # trkjet08 mass info #
+            ######################
+            #MATCHING PF08 and trk08 for CORRECTION
+            Jet1_trk08_dR_pf08 = 999
+            Jet2_trk08_dR_pf08 = 999
+            Jet1_pf08 = None
+            Jet2_pf08 = None
+            for j in jets_pf08:
+                pf08= ROOT.TLorentzVector()
+                pf08.SetPtEtaPhiE(j.pt(), j.eta(), j.phi(), j.e())
+                if pf08.DeltaR(j1)<Jet1_trk08_dR_pf08:
+                    Jet1_trk08_dR_pf08=pf08.DeltaR(j1)
+                    Jet1_pf08=j
+                if pf08.DeltaR(j2)<Jet2_trk08_dR_pf08:
+                    Jet2_trk08_dR_pf08=pf08.DeltaR(j2)
+                    Jet2_pf08=j
+            corr1_08 = Jet1_pf08.p4().Pt()/j1.Pt()
+            corr2_08 = Jet2_pf08.p4().Pt()/j2.Pt()
+
+            #NORMAL TRK08 SD corrected jet
+            p4sd1_08 = ROOT.TLorentzVector(); p4sd2_08 = ROOT.TLorentzVector()
+            Jet1_trk08_SD_Corr_m = -1000.   ; Jet2_trk08_SD_Corr_m = -1000.
+
+            if len(jets_trk08)>=1 :
+                p4sd1_08.SetPtEtaPhiM(jets_trk08[0].subjetsSoftDrop[0].p4().Pt()*corr1_08,
+                                      jets_trk08[0].eta(),
+                                      jets_trk08[0].phi(),
+                                      jets_trk08[0].subjetsSoftDrop[0].p4().M()*corr1_08)
+                pdg1 = 0
+                sdjet1_corr_08 = Particle(pdg1, 0, p4sd1_08, 1)
+                Jet1_trk08_SD_Corr_m = sdjet1_corr_08.p4().M()
+
+            if len(jets_trk08)>=2 :
+                p4sd2_08.SetPtEtaPhiM(jets_trk08[1].subjetsSoftDrop[0].p4().Pt()*corr2_08,
+                                      jets_trk08[1].eta(),
+                                      jets_trk08[1].phi(),
+                                      jets_trk08[1].subjetsSoftDrop[0].p4().M()*corr2_08)
+                pdg2 = 0
+                sdjet2_corr_08 = Particle(pdg2, 0, p4sd2_08, 1)
+                Jet2_trk08_SD_Corr_m = sdjet2_corr_08.p4().M()
+
+            self.tree.fill('Jet1_trk08_SD_Corr_m', Jet1_trk08_SD_Corr_m)
+            self.tree.fill('Jet2_trk08_SD_Corr_m', Jet2_trk08_SD_Corr_m)
 
             if (len(jets_trk02)>1): 
                 self.tree.fill( 'Mj1j2_trk02',self.fillMass(jets_trk02[0],jets_trk02[1]))
@@ -339,48 +465,34 @@ class TreeProducer(Analyzer):
             #TMVA Stuff Starts!
             ###################################
 
-            ###################################
-            #qcd Background >>>>>>>>>>>>>>>>>
-            ###################################
-            
-#            varlist = [
-#                                "Jet1_tau32",
-#                                "Jet2_tau32",
-#                                "Jet1_tau21",
-#                                "Jet2_tau21",
-#                                "softDroppedJet1_m",
-#                                "softDroppedJet2_m",
-#                                "Jet1_trimmedProngMaxPtRatio",
-#                                "Jet1_trimmedProngMinPtRatio",
-#                                "Jet2_trimmedProngMaxPtRatio",
-#                                "Jet2_trimmedProngMinPtRatio",
-#            ]            
-#            
-#            inputs = ROOT.vector('string')()
-#            for v in varlist:
-#                inputs.push_back(v)
-#
-#            mva = ROOT.ReadQCD(inputs)
-#            values = ROOT.vector('double')()
-#        
-#            values.push_back(Jet1_tau32)
-#            values.push_back(Jet2_tau32)
-#            values.push_back(Jet1_tau21)
-#            values.push_back(Jet2_tau21)
-#            values.push_back(jets[0].subjetsSoftDrop[0].m())
-#            values.push_back(jets[1].subjetsSoftDrop[0].m())
-#            values.push_back(Jet1_trimmedProngMaxPtRatio)
-#            values.push_back(Jet1_trimmedProngMinPtRatio)
-#            values.push_back(Jet2_trimmedProngMaxPtRatio)
-#            values.push_back(Jet2_trimmedProngMinPtRatio)
-#   
-#            mva_value=mva.GetMvaValue(values)
-#            self.tree.fill('BDTvariable_qcd', mva_value)
-            
-            ###################################
-            #TMVA Stuff Ends!
-            ###################################
-            
+            self.bdt_Jet_trk02_tau1[0] = jets_trk02[0].tau1
+            self.bdt_Jet_trk02_tau2[0] = jets_trk02[0].tau2
+            self.bdt_Jet_trk02_tau3[0] = jets_trk02[0].tau3
+            self.bdt_Jet_trk02_tau21[0] = Jet1_trk02_tau21
+            self.bdt_Jet_trk02_tau31[0] = Jet1_trk02_tau31
+            self.bdt_Jet_trk02_tau32[0] = Jet1_trk02_tau32
+            self.bdt_Jet_trk02_SD_Corr_m[0]  = sdjet1_corr.p4().M()
+            if len(jets_trk04)>=1 : self.bdt_Jet_trk04_SD_Corr_m[0] = sdjet1_corr_04.p4().M()
+            else                  : self.bdt_Jet_trk04_SD_Corr_m[0] = -1000.
+            if len(jets_trk08)>=1 : self.bdt_Jet_trk08_SD_Corr_m[0] = sdjet1_corr_08.p4().M()
+            else                  : self.bdt_Jet_trk08_SD_Corr_m[0] = -1000.
+            mva_value = self.reader.EvaluateMVA("BDT")
+            self.tree.fill( 'Jet1_thad_vs_QCD_tagger', mva_value)
+            #
+            self.bdt_Jet_trk02_tau1[0] = jets_trk02[1].tau1
+            self.bdt_Jet_trk02_tau2[0] = jets_trk02[1].tau2
+            self.bdt_Jet_trk02_tau3[0] = jets_trk02[1].tau3
+            self.bdt_Jet_trk02_tau21[0] = Jet2_trk02_tau21
+            self.bdt_Jet_trk02_tau31[0] = Jet2_trk02_tau31
+            self.bdt_Jet_trk02_tau32[0] = Jet2_trk02_tau32
+            self.bdt_Jet_trk02_SD_Corr_m[0]  = sdjet2_corr.p4().M()
+            if len(jets_trk04)>=2 : self.bdt_Jet_trk04_SD_Corr_m[0] = sdjet2_corr_04.p4().M()
+            else                  : self.bdt_Jet_trk04_SD_Corr_m[0] = -1000.
+            if len(jets_trk08)>=2 : self.bdt_Jet_trk08_SD_Corr_m[0] = sdjet2_corr_08.p4().M()
+            else                  : self.bdt_Jet_trk08_SD_Corr_m[0] = -1000.
+            mva_value = self.reader.EvaluateMVA("BDT")
+            self.tree.fill( 'Jet2_thad_vs_QCD_tagger', mva_value)
+
             self.tree.tree.Fill()
 
     def write(self, setup):
