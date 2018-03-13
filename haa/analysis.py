@@ -60,6 +60,7 @@ mgp8_gg_aa01j_mhcut_5f_HT_200_100000.splitFactor = 10
 #selectedComponents = [comp]
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
+
 source = cfg.Analyzer(
     Reader,
 

@@ -19,32 +19,32 @@ comp = cfg.Component(
 selectedComponents = [
                         #sample.p8_pp_Zprime_5TeV_ll,
                         #sample.p8_pp_Zprime_10TeV_ll,
-                        #sample.p8_pp_Zprime_15TeV_ll,
-                        #sample.p8_pp_Zprime_20TeV_ll,
-                        #sample.p8_pp_Zprime_25TeV_ll,
-                        #sample.p8_pp_Zprime_30TeV_ll,
-                        #sample.p8_pp_Zprime_35TeV_ll,
-                        #sample.p8_pp_Zprime_40TeV_ll,
-                        #sample.p8_pp_Zprime_45TeV_ll, 
-                        #sample.p8_pp_Zprime_50TeV_ll, 
+                        sample.p8_pp_Zprime_15TeV_ll,
+                        sample.p8_pp_Zprime_20TeV_ll,
+                        sample.p8_pp_Zprime_25TeV_ll,
+                        sample.p8_pp_Zprime_30TeV_ll,
+                        sample.p8_pp_Zprime_35TeV_ll,
+                        sample.p8_pp_Zprime_40TeV_ll,
+                        sample.p8_pp_Zprime_45TeV_ll, 
+                        sample.p8_pp_Zprime_50TeV_ll, 
                         #sample.mgp8_pp_ee_lo,
                         #sample.mgp8_pp_mumu_lo,  
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_6TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_8TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_10TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_12TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_14TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_15TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_16TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_18TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_20TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_25TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_30TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_35TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_40TeV,
-                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_45TeV,
-                        sample.mgp8_pp_mumu_lo_2TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_6TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_8TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_10TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_12TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_14TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_15TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_16TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_18TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_20TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_25TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_30TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_35TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_40TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_45TeV,
+                        #sample.mgp8_pp_mumu_lo_2TeV,
                      ]
 
 sample.p8_pp_Zprime_15TeV_ll.splitFactor = 10
@@ -244,7 +244,7 @@ config = cfg.Config(
 )
 
 if __name__ == '__main__':
-	    import sys
+    import sys
     from heppy.framework.looper import Looper
 
     def next():

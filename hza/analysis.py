@@ -41,7 +41,9 @@ mgp8_pp_lla01j_mhcut_5f_HT_300_500.splitFactor = 2
 mgp8_pp_lla01j_mhcut_5f_HT_500_100000.splitFactor = 2
 mgp8_pp_lla01j_mhcut_5f_HT_300_100000.splitFactor = 2
 
+
 #selectedComponents = [comp]
+
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(

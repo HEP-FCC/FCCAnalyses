@@ -32,7 +32,6 @@ mgp8_pp_h012j_5f_hllll.splitFactor = 50
 mgp8_pp_vbf_h01j_5f_hllll.splitFactor = 50
 mgp8_pp_tth01j_5f_hllll.splitFactor = 50
 mgp8_pp_vh012j_5f_hllll.splitFactor = 50
-
 mgp8_pp_llll01j_mhcut_5f_HT_0_200.splitFactor = 5
 mgp8_pp_llll01j_mhcut_5f_HT_200_500.splitFactor = 5
 mgp8_pp_llll01j_mhcut_5f_HT_500_1100.splitFactor = 5
