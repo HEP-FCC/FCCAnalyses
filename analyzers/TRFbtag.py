@@ -1,3 +1,5 @@
+# https://github.com/delphes/delphes/blob/master/cards/FCC/FCChh.tcl#L1018
+
 def getbTagEff(pt, eta, pdg):
     if pdg==0:
       if pt <= 10.: return 0.
@@ -93,9 +95,10 @@ def getNbTagEx(Nbtag, jet, njets_used):
         # not valid if 2 jets have exactly same TRF value -> check done above
         if len(wtag)>0:
           for i_wtag in range(len(wtag)):
+            # found that requesting equality can fail due to fluctuations in automatic rounding numbers
             if abs(wtag[i_wtag]-p_wtag)<1E-10 : found=True
         if found==False: wtag.append(p_wtag)
-      # compute TRF weight if this tag level
+      # compute TRF weight of this tag level
       wtag_level=0.
       for i_wtag in range(len(wtag)): wtag_level+=wtag[i_wtag]
       # and store it in final list of exclusive level tag weight
