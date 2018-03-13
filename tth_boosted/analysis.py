@@ -16,7 +16,7 @@ comp = cfg.Component(
 )
 
 from FCC_heppySampleList_fcc_v02 import *
-
+'''
 selectedComponents = [
                        mgp8_pp_tth01j_5f_hbb,
                        mgp8_pp_ttj_4f,
@@ -28,8 +28,8 @@ mgp8_pp_ttbb_4f.splitFactor = 60
 mgp8_pp_ttj_4f.splitFactor = 320
 mgp8_pp_tth01j_5f_hbb.splitFactor = 200
 mgp8_pp_ttz_5f_zbb.splitFactor = 140
-
-#selectedComponents = [comp]
+'''
+selectedComponents = [comp]
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
@@ -156,12 +156,25 @@ selected_leptons = cfg.Analyzer(
 )
 
 # select jet above 30 GeV
-jets_30 = cfg.Analyzer(
+untagged_jets = cfg.Analyzer(
     Selector,
-    'jets_30',
-    output = 'jets_30',
+    'untagged_jets',
+    output = 'untagged_jets',
     input_objects = 'jets',
     filter_func = lambda jet: jet.pt()>30.
+)
+
+# apply jet flavour tagging
+
+from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+jets_30 = cfg.Analyzer(
+    FlavourTagger,
+    'jets_30',
+    input_jets = 'untagged_jets',
+    input_genparticles = 'gen_particles',
+    output_jets = 'jets_30',
+    dr_match = 0.4,
+    pdg_tags = [5, 4, 0],
 )
 
 from heppy.analyzers.Matcher import Matcher
@@ -254,6 +267,7 @@ sequence = cfg.Sequence( [
     selected_muons,
     selected_electrons,
     selected_leptons,
+    untagged_jets,
     jets_30,
     match_lepton_jets,
     jets_nolepton,

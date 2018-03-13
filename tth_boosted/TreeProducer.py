@@ -21,7 +21,7 @@ class TreeProducer(Analyzer):
 
         bookParticle(self.tree, 'l')
         bookMet(self.tree, 'met')
-	
+        
         # fatjet stuff
         for flavour in ['higgs', 'top']:
 
@@ -92,10 +92,11 @@ class TreeProducer(Analyzer):
         fatjets = getattr(event, self.cfg_ana.fatjets)
         leptons = getattr(event, self.cfg_ana.selected_leptons)
         bjets = event.selected_bs
+        jets = event.jets_30
 
         #_________________________________________________________________
         # compute eflow, tau_ij and bdt variables
-        
+
         R = 1.5
         
         for jet in fatjets:
@@ -117,12 +118,15 @@ class TreeProducer(Analyzer):
                 jet.tau32 = jet.tau3/jet.tau2
 
             # counting the number of bjets inside (R = 1.5 - 0.4 = 1.1) fatjet
-	    for b in bjets:
+            for b in bjets:
+                
+                #print b.flavour
+                
                 drjb = deltaR(b, jet)
                 if drjb < 1.1: 
                     jet.nbs += 1
                     jet.p4_bs += b.p4()
-		    
+                    
             
             # do eflow with constituents here
             constituent_vector = TLorentzVector()
@@ -169,12 +173,12 @@ class TreeProducer(Analyzer):
             fillLepton(self.tree, 'l',leptons[0] )
             fillMet(self.tree, 'met', event.met)
             self.tree.fill('nbjets', len(bjets))
-	    
-	    '''higgsjet = fatjets[1]
-	    if higgsjet.nbs > 1:
-	        print higgsjet.p4_bs.M(), higgsjet.subjetsSoftDrop[0].p4().M()'''
-	    
-	    for flavour in ['higgs', 'top']:
+            
+            '''higgsjet = fatjets[1]
+            if higgsjet.nbs > 1:
+                print higgsjet.p4_bs.M(), higgsjet.subjetsSoftDrop[0].p4().M()'''
+            
+            for flavour in ['higgs', 'top']:
                 
                 if flavour == 'higgs':
                     jet = fatjets[1]
