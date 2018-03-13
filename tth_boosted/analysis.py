@@ -175,6 +175,7 @@ jets_30 = cfg.Analyzer(
     output_jets = 'jets_30',
     dr_match = 0.4,
     pdg_tags = [5, 4, 0],
+    ptr_min = 0.1,
 )
 
 from heppy.analyzers.Matcher import Matcher
