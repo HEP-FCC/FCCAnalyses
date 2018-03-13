@@ -11,27 +11,31 @@ logging.basicConfig(level=logging.WARNING)
 sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 
-#comp = cfg.Component(
-#    'example',
-#     #files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_5f_zz/events997.root"]
-#     files = ["heppy/FCChhAnalyses/tth_4l/events0.root"]
+comp = cfg.Component(
+    'example',
+     #files = ["root://eospublic.cern.ch//eos/fcc/hh/generation/DelphesEvents/decay/pp_h012j_5f_zz/events997.root"]
+     files = ["heppy/FCChhAnalyses/tth_4l/events_000001000.root"]
 )
 
-from heppySampleList_fcc_v01 import *
+from FCC_heppySampleList_fcc_v02 import *
 
 selectedComponents = [
-                pp_tth01j_5f_hllll,
-                pp_tt4l_4f,
+                mgp8_pp_tth01j_5f_hllll,
+                mgp8_pp_llll01j_5f,
+                mgp8_pp_wwww_4f,
                       ]
 
 
-pp_tth01j_5f_hllll,.splitFactor = 10
-pp_tt4l_4f.splitFactor = 10
+mgp8_pp_tth01j_5f_hllll.splitFactor = 10
+mgp8_pp_llll01j_5f.splitFactor = 10
+mgp8_pp_wwww_4f.splitFactor = 10
+
+#selectedComponents = [comp]
 
 
 #from heppy.analyzers.fcc.Reader import Reader
 #for fcc_v02
-from heppy.FCChhAnalyses.Reader import Reader
+from heppy.FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -48,8 +52,8 @@ source = cfg.Analyzer(
     muonITags = 'muonITags',
     muonsToMC = 'muonsToMC',
 
-    jets = 'jets',
-    bTags = 'bTags',
+    jets = 'calojets08',
+    bTags = 'calobTags08',
 
     photons = 'photons',
     
