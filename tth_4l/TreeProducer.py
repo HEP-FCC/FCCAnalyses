@@ -25,6 +25,9 @@ class TreeProducer(Analyzer):
         bookParticle(self.tree, 'l4')
         bookMet(self.tree, 'met')
 
+        self.tree.var('4mu', int)
+        self.tree.var('4e', int)
+        self.tree.var('2mu2e', int)
         self.tree.var('nljets', float)
         self.tree.var('nbjets', float)
         self.tree.var('njets', float)
@@ -64,6 +67,11 @@ class TreeProducer(Analyzer):
             fillLepton(self.tree, 'l3', leptons[2])
             fillLepton(self.tree, 'l4', leptons[3])
 
+            lepton_pdgs = set([abs(l.pdgid()) for l in leptons])
+            
+            self.tree.fill("4mu", lepton_pdgs == set([13]))
+            self.tree.fill("4e", lepton_pdgs == set([11]))
+            self.tree.fill("2mu2e", lepton_pdgs == set([11, 13]))
             self.tree.fill('nleptons' , len(all_leptons) )
             self.tree.fill('nextraleptons' , len(event.extra_leptons))
             self.tree.fill('nbjets' , len(event.selected_bs) )
