@@ -61,8 +61,8 @@ source = cfg.Analyzer(
     muonITags = 'muonITags',
     muonsToMC = 'muonsToMC',
 
-    jets = 'calojets08',
-    bTags = 'calobTags08',
+    jets = 'pfjets04',
+    bTags = 'pfbTags04',
 
     photons = 'photons',
     
