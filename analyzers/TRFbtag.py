@@ -1,3 +1,36 @@
+#############################################
+# example usage :
+# ----------------
+# weight_1tagex=0.
+# weight_2tagex=0.
+# ipdg=0
+# jet=[]
+# if (len(jets_pf04)>1):
+#   for i in range(len(jets_pf04)):
+#     ipdg = jets_pf04_pdg[i].flavour
+#     jet.append([jets_pf04[i],ipdg])
+#   weight_1tagex=getNbTagEx(1,jet,2)
+#   weight_2tagex=getNbTagEx(2,jet,2)
+# weight_1tagin=weight_1tagex+weight_2tagex
+# ----------------
+# gen_particles = 'skimmedGenParticles',
+# ...
+# from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+# jets_pf04_1000_pdg = cfg.Analyzer(
+#     FlavourTagger,
+#     'jets_pf04_1000_pdg',
+#     input_jets = 'jets_pf04_1000',
+#     input_genparticles = 'gen_particles',
+#     output_jets = 'jets_pf04_1000_pdg',
+#     dr_match = 0.4,
+#     pdg_tags = [5, 4, 0],
+#     ptr_min = 0.1,
+# )
+#############################################
+
+
+#############################################
+# eff tables taken from here :
 # https://github.com/delphes/delphes/blob/master/cards/FCC/FCChh.tcl#L1018
 
 def getbTagEff(pt, eta, pdg):
