@@ -168,6 +168,7 @@ class TreeProducer(Analyzer):
         jets_trk02 = getattr(event, self.cfg_ana.jets_trk02_1000)
         jets_pf02 = getattr(event, self.cfg_ana.jets_pf02_1500)
         jets_pf04 = getattr(event, self.cfg_ana.jets_pf04_1000)
+        jets_pf04_pdg = event.jets_pf04_1000_pdg
         jets_pf08 = getattr(event, self.cfg_ana.jets_pf08_1500)
 
         jets_pf04_1500 = getattr(event, self.cfg_ana.jets_pf04_1500)
@@ -273,11 +274,10 @@ class TreeProducer(Analyzer):
             # TRF / truth b-tagging -> need at least 2 jets_pf04
             weight_1tagex=0.
             weight_2tagex=0.
-            # want only mistag rate now
-            ipdg=0
             jet=[]
             if (len(jets_pf04)>1):
               for i in range(len(jets_pf04)):
+                ipdg = jets_pf04_pdg[i].flavour
                 jet.append([jets_pf04[i],ipdg])
               weight_1tagex=getNbTagEx(1,jet,2)
               weight_2tagex=getNbTagEx(2,jet,2)
