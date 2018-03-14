@@ -46,6 +46,7 @@ class FlavourTagger(Analyzer):
            These objects must be usable by the filtering function
            self.cfg_ana.filter_func.
         '''
+
         output_jets = []
 
         jet_collection = getattr(event, self.cfg_ana.input_jets)

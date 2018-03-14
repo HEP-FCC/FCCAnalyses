@@ -60,6 +60,7 @@ source = cfg.Analyzer(
     Reader,
 
     weights = 'mcEventWeights',
+    gen_particles = 'skimmedGenParticles',
     met = 'met',   
 
     electrons = 'electrons',
@@ -159,6 +160,19 @@ jets_pf04_1000 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>1000
 )
 
+# apply jet flavour tagging
+from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+jets_pf04_1000_pdg = cfg.Analyzer(
+    FlavourTagger,
+    'jets_pf04_1000_pdg',
+    input_jets = 'jets_pf04_1000',
+    input_genparticles = 'gen_particles',
+    output_jets = 'jets_pf04_1000_pdg',
+    dr_match = 0.4,
+    pdg_tags = [5, 4, 0],
+    ptr_min = 0.1,
+)
+
 # select pf04 jets above 1500 GeV for jet correction
 jets_pf04_1500 = cfg.Analyzer(
     Selector,
@@ -220,6 +234,7 @@ sequence = cfg.Sequence( [
     source,
     jets_pf02_1500,
     jets_pf04_1000,
+    jets_pf04_1000_pdg,
     jets_pf04_1500,
     jets_pf08_1500,
 
