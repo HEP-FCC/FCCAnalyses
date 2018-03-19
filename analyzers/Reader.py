@@ -142,6 +142,10 @@ class Reader(Analyzer):
                        for jet in jetcoll:
                            jets[jet] = jet
 
+                       if hasattr(self.cfg_ana, '{}jetsFlavor{}'.format(algo,cone)):
+                           for flav in get_tag('{}jetsFlavor{}'.format(algo,cone)):
+                               jets[Jet(flav.jet())].tags['flav'] = flav.tag()
+
                        if hasattr(self.cfg_ana, '{}bTags{}'.format(algo,cone)):
                            for bjet in get_tag('{}bTags{}'.format(algo,cone)):
                                jets[Jet(bjet.jet())].tags['bf'] = bjet.tag()
