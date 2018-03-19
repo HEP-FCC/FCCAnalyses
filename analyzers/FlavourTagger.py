@@ -52,6 +52,9 @@ class FlavourTagger(Analyzer):
         jet_collection = getattr(event, self.cfg_ana.input_jets)
         gen_collection = getattr(event, self.cfg_ana.input_genparticles)
 
+        pt_ordered = self.cfg_ana.pt_ordered
+        leading_pt = self.cfg_ana.leading_pt
+
         drMax = self.cfg_ana.dr_match
         pdgTags = self.cfg_ana.pdg_tags
         ptratio = self.cfg_ana.ptr_min
@@ -60,7 +63,11 @@ class FlavourTagger(Analyzer):
         # right now includes all decays)
         
         for jet in jet_collection:
+           # print jet
             matched_partons = []
+            matched_pt = []
+            matched_status = []
+
             for part in gen_collection:
                 pdg = abs(part.pdgid())
 
@@ -72,9 +79,21 @@ class FlavourTagger(Analyzer):
 
                 if dR < drMax and pdg in pdgTags and part.pt() > ptratio*jet.pt() :
                     matched_partons.append(pdg)
+                    matched_pt.append(part.pt())
+                    matched_status.append(part.status())
+                    #print part
             # put 0 as a default (even when no match is found)
             pdgBest = 0
             
+            #print 'matched parton   ',matched_partons
+            #print 'matched pt       ',matched_pt
+            #print 'matched status   ',matched_status
+
+            if len(matched_pt)>0 and pt_ordered:
+                matched_pt , matched_partons = zip(*sorted(zip(matched_pt, matched_partons), reverse=True))
+                #print 'matched parton ord  ',matched_partons
+                #print 'matched pt     ord  ',matched_pt
+
             # set pdgBest to highest rank tag number
             for pdg in pdgTags:
                 for part_pdg in matched_partons:
@@ -82,6 +101,9 @@ class FlavourTagger(Analyzer):
                         pdgBest = pdg
                         break
             
+            if leading_pt and len(matched_pt)>0:
+                pdgBest = matched_partons[0]
+
             #print matched_partons
             #print 'best match', pdgBest
             
