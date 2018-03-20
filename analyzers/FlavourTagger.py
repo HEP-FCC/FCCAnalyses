@@ -60,6 +60,7 @@ class FlavourTagger(Analyzer):
         # right now includes all decays)
         
         for jet in jet_collection:
+            
             matched_partons = []
             for part in gen_collection:
                 pdg = abs(part.pdgid())
@@ -82,9 +83,7 @@ class FlavourTagger(Analyzer):
                     if part_pdg == pdg:
                         pdgBest = pdg
                         break
-            
-            #print matched_partons
-            #print 'best match', pdgBest
+                break
             
             setattr(jet, 'flavour', pdgBest)
             output_jets.append(jet)
