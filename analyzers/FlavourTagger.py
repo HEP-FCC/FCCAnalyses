@@ -81,18 +81,9 @@ class FlavourTagger(Analyzer):
                     matched_partons.append(pdg)
                     matched_pt.append(part.pt())
                     matched_status.append(part.status())
-                    #print part
+                   
             # put 0 as a default (even when no match is found)
             pdgBest = 0
-            
-            #print 'matched parton   ',matched_partons
-            #print 'matched pt       ',matched_pt
-            #print 'matched status   ',matched_status
-
-            if len(matched_pt)>0 and pt_ordered:
-                matched_pt , matched_partons = zip(*sorted(zip(matched_pt, matched_partons), reverse=True))
-                #print 'matched parton ord  ',matched_partons
-                #print 'matched pt     ord  ',matched_pt
 
             # set pdgBest to highest rank tag number
             for pdg in pdgTags:
@@ -105,9 +96,6 @@ class FlavourTagger(Analyzer):
             if leading_pt and len(matched_pt)>0:
                 pdgBest = matched_partons[0]
 
-            #print matched_partons
-            #print 'best match', pdgBest
-            
             setattr(jet, 'flavour', pdgBest)
             output_jets.append(jet)
         
