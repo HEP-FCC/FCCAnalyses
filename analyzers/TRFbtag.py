@@ -1,3 +1,6 @@
+import math
+import itertools
+
 #############################################
 # example usage :
 # ----------------
@@ -80,61 +83,78 @@ def getcTagEff(pt, eta, pdg):
     else: print "Not supported jet pdg="+str(pdg)+" -> CHECK!!!!!!!!!!!"
 
 
-def permute(num):
-    if len(num) == 2:
-        # get the permutations of the last 2 numbers by swapping them
-        yield num
-        num[0], num[1] = num[1], num[0]
-        yield num
-    else:
-        for i in range(0, len(num)):
-            # fix the first number and get the permutations of the rest of numbers
-            for perm in permute(num[0:i] + num[i+1:len(num)]):
-                yield [num[i]] + perm
-
 def getNbTagEx(Nbtag, jet, njets_used):
+
+    #-----------------------------
+    # init
+    #-----------------------------
     nj=len(jet)
     if njets_used>0 and njets_used<nj: nj=njets_used
     wj=[]
+    wj_idx=[]
     # security
     if Nbtag>len(jet) :
       print "ERROR : Nbtag>njets"
       return -1
-    # form eff table
-    for i in range(nj):
-      jpt= jet[i][0].pt()
-      jeta=jet[i][0].eta()
-      jpdg=jet[i][1]
-      wj.append(getbTagEff(jpt,jeta,jpdg))
-      #print "len(jet)="+str(len(jet))+", nj="+str(nj)+" , Nbtag="+str(Nbtag)+" -> jpt="+str(jpt)+" , jeta="+str(jeta)+" , jpdg="+str(jpdg)+" -----> wj="+str(wj[i])
-    # check unicity of TRFs
-    for i in range(len(wj)):
-     for j in range(len(wj)):
-      if i<j and wj[i]==wj[j]: print "DANGER : 2 jets have same TRF and destroy the method to compute btag TRF weight"
 
-    final_wtag=[]
-    # loop on Nbtag to handle every exclusive btag level cases
-    for ntag in range(Nbtag+1):
-      # compute permutations
-      wtag=[]
-      for p in permute(wj):
-        # tag weight of a permutation
+    #-----------------------------
+    # form eff table
+    #-----------------------------
+    for i in range(nj):
+      wj.append( getbTagEff(jet[i][0].pt(), jet[i][0].eta(), jet[i][1]) )
+      wj_idx.append(i)
+      #print "len(jet)="+str(len(jet))+", nj="+str(nj)+" , Nbtag="+str(Nbtag)+" -> jpt="+str(jet[i][0].pt())+" , jeta="+str(jet[i][0].eta())+" , jpdg="+str(jet[i][1])+" -----> wj="+str(wj[i])
+
+    #-----------------------------
+    # compute permutations list
+    #-----------------------------
+    perm_list=list(itertools.combinations(wj_idx,Nbtag))
+
+    # check
+    #-----------------------------
+    cnk=math.factorial(nj)/(math.factorial(Nbtag)*math.factorial(nj-Nbtag))
+    if len(perm_list)!=cnk: print "WARNING : TRFbtag found wrong number of permutation combinations :"+str(len(perm_list))+" , expect cnk="+str(cnk)+" for nj="+str(nj)+" and Nbtag="+str(Nbtag)
+
+    #-----------------------------
+    # compute weight of a permutation
+    #-----------------------------
+    wtag=[]
+
+    # >=1 tag cases
+    #-----------------------------
+    if len(perm_list)>1 :
+      for i_perm in perm_list:
+        # loop on jets
         p_wtag=1.
-        for j in range(len(p)):
-          if j<ntag: p_wtag*=p[j]
-          else     : p_wtag*=1.-p[j]
-        found=False
-        # avoid double counting due to the way of forming permutations
-        # not valid if 2 jets have exactly same TRF value -> check done above
-        if len(wtag)>0:
-          for i_wtag in range(len(wtag)):
-            # found that requesting equality can fail due to fluctuations in automatic rounding numbers
-            if abs(wtag[i_wtag]-p_wtag)<1E-10 : found=True
-        if found==False: wtag.append(p_wtag)
-      # compute TRF weight of this tag level
-      wtag_level=0.
-      for i_wtag in range(len(wtag)): wtag_level+=wtag[i_wtag]
-      # and store it in final list of exclusive level tag weight
-      final_wtag.append([ntag,wtag_level])
-    for i in final_wtag:
-      if i[0]==Nbtag: return i[1]
+        for j_idx in wj_idx:
+          j = wj[j_idx]
+          TRF=False
+          # check if TRF or 1-TRF
+          for i in i_perm:
+            if i==j_idx: TRF=True
+          # compute
+          if TRF: p_wtag*=j
+          else  : p_wtag*=1.-j
+        wtag.append(p_wtag)
+
+    # 0 tag case perm_list has only 1 empty item
+    #-----------------------------
+    else :
+      p_wtag=1.
+      for j in wj:
+        p_wtag*=1.-j
+      wtag.append(p_wtag)
+      
+    # check again
+    #-----------------------------
+    if len(wtag)!=cnk: print "WARNING : TRFbtag found wrong number of permutation combinations after filling proper weigths:"+str(len(wtag))+" , expect cnk="+str(cnk)+" for nj="+str(nj)+" and Nbtag="+str(Nbtag)
+
+    #-----------------------------
+    # compute TRF weight of this tag level
+    #-----------------------------
+    final_wtag=0.
+    for i_wtag in range(len(wtag)): final_wtag+=wtag[i_wtag]
+    #print "wj="+str(wj)
+    #print "wtag="+str(wtag)
+    #print "final_wtag="+str(final_wtag)
+    return final_wtag
