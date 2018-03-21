@@ -100,6 +100,7 @@ class FlavourTagger(Analyzer):
                     if part_pdg == pdg:
                         pdgBest = pdg
                         break
+                break
             
             if leading_pt and len(matched_pt)>0:
                 pdgBest = matched_partons[0]
