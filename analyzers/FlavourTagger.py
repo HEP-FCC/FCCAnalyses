@@ -7,45 +7,8 @@ import math
 import random
 
 class FlavourTagger(Analyzer):
-    '''Select objects from the input_objects collection 
-    and store them in the output collection. The objects are not copied
-    in the process. 
-
-    Example:
-    
-    from heppy.analyzers.Selector import Selector
-    def is_lepton(ptc):
-      """Returns true if the particle energy is larger than 5 GeV
-      and if its pdgid is +-11 (electrons) or +-13 (muons)
-      return ptc.e()> 5. and abs(ptc.pdgid()) in [11, 13]
-
-    leptons = cfg.Analyzer(
-      Selector,
-      'sel_leptons',
-      output = 'leptons',
-      input_objects = 'rec_particles',
-      filter_func = is_lepton 
-      )
-
-    * input_objects : the input collection.
-        If a dictionary, the filtering function is applied to the dictionary values,
-        and not to the keys.
-
-    * output : the output collection
-
-    * filter_func : a function object.
-    IMPORTANT NOTE: lambda statements should not be used, as they
-    do not work in multiprocessing mode. looking for a solution...
-    
-    '''
 
     def process(self, event):
-        '''event must contain
-        
-        * self.cfg_ana.input_objects: collection of objects to be selected
-           These objects must be usable by the filtering function
-           self.cfg_ana.filter_func.
-        '''
 
         output_jets = []
 
@@ -55,6 +18,7 @@ class FlavourTagger(Analyzer):
         drMax = self.cfg_ana.dr_match
         pdgTags = self.cfg_ana.pdg_tags
         ptratio = self.cfg_ana.ptr_min
+        ptratio = 0.01
 
         # need to be specified in order of priority (taus need to be fixed by including visible decay products, 
         # right now includes all decays)
@@ -75,18 +39,10 @@ class FlavourTagger(Analyzer):
             
             # put 0 as a default (even when no match is found)
             pdgBest = 0
-            
-            # set pdgBest to highest rank tag number
-            for pdg in pdgTags:
-                for part_pdg in matched_partons:
-                    if part_pdg == pdg:
-                        pdgBest = pdg
-                        break
-                break
-            
-            #print matched_partons
-            #print 'best match', pdgBest
-            
+            matched_partons.sort(key=lambda x: pdgTags.index(x))
+            if len(matched_partons) > 0:
+               pdgBest = matched_partons[0]
+
             setattr(jet, 'flavour', pdgBest)
             output_jets.append(jet)
         
