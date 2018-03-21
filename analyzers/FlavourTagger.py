@@ -18,7 +18,6 @@ class FlavourTagger(Analyzer):
         drMax = self.cfg_ana.dr_match
         pdgTags = self.cfg_ana.pdg_tags
         ptratio = self.cfg_ana.ptr_min
-        ptratio = 0.01
 
         # need to be specified in order of priority (taus need to be fixed by including visible decay products, 
         # right now includes all decays)
