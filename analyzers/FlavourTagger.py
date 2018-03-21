@@ -51,9 +51,9 @@ class FlavourTagger(Analyzer):
 
         jet_collection = getattr(event, self.cfg_ana.input_jets)
         gen_collection = getattr(event, self.cfg_ana.input_genparticles)
-
-        pt_ordered = self.cfg_ana.pt_ordered
-        leading_pt = self.cfg_ana.leading_pt
+        leading_pt=False
+        if hasattr(self.cfg_ana, 'leading_pt'):
+            leading_pt = self.cfg_ana.leading_pt
 
         drMax = self.cfg_ana.dr_match
         pdgTags = self.cfg_ana.pdg_tags
