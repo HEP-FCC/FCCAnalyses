@@ -82,6 +82,7 @@ class FlavourTagger(Analyzer):
                     if part_pdg == pdg:
                         pdgBest = pdg
                         break
+                break
             
             #print matched_partons
             #print 'best match', pdgBest
