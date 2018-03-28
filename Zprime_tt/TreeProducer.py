@@ -272,15 +272,20 @@ class TreeProducer(Analyzer):
                 pdg2 = 5
 
             # TRF / truth b-tagging -> need at least 2 jets_pf04
+            use_DELPHES=False
             weight_1tagex=0.
             weight_2tagex=0.
             jet=[]
-            if (len(jets_pf04)>1):
-              for i in range(len(jets_pf04)):
+            ipdg=0
+            for i in range(len(jets_pf04)):
+              if use_DELPHES==True:
+                ipdg = jets_pf04[i].tags['flav']
+                if ipdg!=4 and ipdg!=5 : ipdg=0
+              else:
                 ipdg = jets_pf04_pdg[i].flavour
-                jet.append([jets_pf04[i],ipdg])
-              weight_1tagex=getNbTagEx(1,jet,2)
-              weight_2tagex=getNbTagEx(2,jet,2)
+              jet.append([jets_pf04[i],ipdg])
+            if (len(jet)>0): weight_1tagex=getNbTagEx(1,jet,2)
+            if (len(jet)>1): weight_2tagex=getNbTagEx(2,jet,2)
             weight_1tagin=weight_1tagex+weight_2tagex
             self.tree.fill('weight_1tagex', weight_1tagex)
             self.tree.fill('weight_2tagex', weight_2tagex)
