@@ -26,13 +26,13 @@ selectedComponents = [
                        mgp8_pp_zzjj_4l_TL,
                       ]
 
-mgp8_pp_wwjj_2l2v_LL.splitFactor = 3
-mgp8_pp_wwjj_2l2v_TT.splitFactor = 3
-mgp8_pp_wwjj_2l2v_TL.splitFactor = 3
+mgp8_pp_wwjj_2l2v_LL.splitFactor = 2
+mgp8_pp_wwjj_2l2v_TT.splitFactor = 2
+mgp8_pp_wwjj_2l2v_TL.splitFactor = 2
 
-mgp8_pp_zzjj_4l_LL.splitFactor = 3
-mgp8_pp_zzjj_4l_TT.splitFactor = 5
-mgp8_pp_zzjj_4l_TL.splitFactor = 1
+mgp8_pp_zzjj_4l_LL.splitFactor = 6
+mgp8_pp_zzjj_4l_TT.splitFactor = 10 
+mgp8_pp_zzjj_4l_TL.splitFactor = 2
 
 #selectedComponents = [comp]
 
@@ -133,14 +133,14 @@ jets_nolepton = cfg.Analyzer(
     filter_func = lambda jet: jet.match is None
 )
 
-from heppy.FCChhAnalyses.vbs_ww.selection import Selection
+from heppy.FCChhAnalyses.vbs.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.vbs_ww.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.vbs.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
 )
