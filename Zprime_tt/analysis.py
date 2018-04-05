@@ -13,7 +13,8 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 comp = cfg.Component(
     'example',
      #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_jj_lo_tagger/events_001556815.root"]
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ttbar_tagger/events_000260643.root"]
+     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ttbar_tagger/events_000260643.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_jj_lo_5f/events_052659188.root"]
 )
 
 selectedComponents = [
@@ -25,7 +26,7 @@ selectedComponents = [
                         sample.p8_pp_Zprime_30TeV_ttbar,
                         sample.p8_pp_Zprime_35TeV_ttbar,
                         #sample.p8_pp_Zprime_40TeV_ttbar,  
-                        sample.mgp8_pp_jj_lo,
+                        sample.mgp8_pp_jj_lo_5f,
                         sample.mgp8_pp_tt_lo,
                         sample.mgp8_pp_vv_lo,
                         sample.mgp8_pp_vj_4f_M_5000_inf,
@@ -33,7 +34,7 @@ selectedComponents = [
                         #sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV,
                      ]
 
-splitFac = 20
+splitFac = 25
 sample.p8_pp_Zprime_5TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_10TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_15TeV_ttbar.splitFactor = splitFac
@@ -42,11 +43,11 @@ sample.p8_pp_Zprime_25TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_30TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_35TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_40TeV_ttbar.splitFactor = splitFac
-sample.mgp8_pp_jj_lo.splitFactor = 350
-sample.mgp8_pp_tt_lo.splitFactor = 80
-sample.mgp8_pp_vv_lo.splitFactor = 80
-sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 80
-comp.splitFactor = 10
+sample.mgp8_pp_jj_lo_5f.splitFactor = 200
+sample.mgp8_pp_tt_lo.splitFactor = 90
+sample.mgp8_pp_vv_lo.splitFactor = 90
+sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 90
+#comp.splitFactor = 10
 #sample.p8_pp_Zprime_20TeV_ttbar_qcdBDTtrain.splitFactor = 10
 #sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV.splitFactor = 10
 
@@ -95,7 +96,7 @@ source = cfg.Analyzer(
     # used for b-tagging
     pfjets04  = 'pfjets04',
     pfbTags04 = 'pfbTags04',
-
+    pfjetsFlavor04  = 'pfjetsFlavor04',
 
     # used for mreco
     pfjets08  = 'pfjets08',

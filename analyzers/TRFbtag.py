@@ -122,11 +122,7 @@ def getNbTagEx(Nbtag, jet, njets_used):
 
     # check if we are in the 0tag case
     case_tag0 = False
-    if len(perm_list)==1 :
-      count=0
-      for i_perm in perm_list:
-        for i in i_perm : count+=1
-      if count==0: case_tag0 = True
+    if len(perm_list)==1 and len(perm_list[0])==0: case_tag0 = True
 
     # >=1 tag cases
     #-----------------------------
