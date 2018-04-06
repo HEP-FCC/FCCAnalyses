@@ -33,12 +33,12 @@ def getTauTagEff(pt, eta, pdgid):
         elif abs(eta) > 4.0:                                                     return 0.
         return 0
 
-def getOneTagEx(jet1, jet2, pdgid):
-    eff1=getTauTagEff(jet1.pt(), jet1.eta(), pdgid)
-    eff2=getTauTagEff(jet2.pt(), jet2.eta(), pdgid)
+def getOneTagEx(jet1, jet2):
+    eff1=getTauTagEff(jet1.pt(), jet1.eta(), jet1.flavour)
+    eff2=getTauTagEff(jet2.pt(), jet2.eta(), jet2.flavour)
     return eff1*(1-eff2)+eff2*(1-eff1)
 
-def getTwoTagEx(jet1, jet2, pdgid):
-    eff1=getTauTagEff(jet1.pt(), jet1.eta(), pdgid)
-    eff2=getTauTagEff(jet2.pt(), jet2.eta(), pdgid)
+def getTwoTagEx(jet1, jet2):
+    eff1=getTauTagEff(jet1.pt(), jet1.eta(), jet1.flavour)
+    eff2=getTauTagEff(jet2.pt(), jet2.eta(), jet2.flavour)
     return eff1*eff2
