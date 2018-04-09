@@ -9,11 +9,12 @@ reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
 sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
+#sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_cms.py')
 
 comp = cfg.Component(
     'example',
     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_mumu_lo/events_000000001.root"]
-
+    #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/cms/p8_pp_Zprime_20TeV_ll/events_014349043.root"]
 )
 
 selectedComponents = [
@@ -182,7 +183,7 @@ selection = cfg.Analyzer(
 )
 
 # create Z' boson candidates
-from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
+from heppy.FCChhAnalyses.analyzers.ResonanceBuilder import ResonanceBuilder
 zprime_ele = cfg.Analyzer(
       ResonanceBuilder,
       output = 'zprime_ele',
@@ -191,7 +192,7 @@ zprime_ele = cfg.Analyzer(
 )
 
 # create Z' boson candidates
-from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
+from heppy.FCChhAnalyses.analyzers.ResonanceBuilder import ResonanceBuilder
 zprime_muon = cfg.Analyzer(
       ResonanceBuilder,
       output = 'zprime_muon',
