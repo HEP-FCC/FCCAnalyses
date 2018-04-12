@@ -93,9 +93,7 @@ def getNbTagEx(Nbtag, jet, njets_used):
     wj=[]
     wj_idx=[]
     # security
-    if Nbtag>len(jet) :
-      print "ERROR : Nbtag>njets"
-      return -1
+    if Nbtag>len(jet) or len(jet)==0: return 0.
 
     #-----------------------------
     # form eff table
