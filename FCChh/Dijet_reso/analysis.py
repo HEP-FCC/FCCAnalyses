@@ -96,7 +96,7 @@ jets_calo04_2000 = cfg.Analyzer(
 
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.Dijet_reso.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.Dijet_reso.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_pf04_2000    = 'jets_pf04_2000',

@@ -117,7 +117,7 @@ gen_bs = cfg.Analyzer(
 )
 
 # produce flat root tree containing information about stable leptons in the event
-from heppy.FCChhAnalyses.hh_boosted.GenTreeProducer import GenTreeProducer
+from heppy.FCChhAnalyses.FCChh.hh_boosted.GenTreeProducer import GenTreeProducer
 gen_tree = cfg.Analyzer(
     GenTreeProducer,
     gen_higgses = 'gen_higgses',
@@ -233,7 +233,7 @@ fatjets_nolepton = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.tth_boosted.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.tth_boosted.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     gen_bs = 'gen_bs',
@@ -245,7 +245,7 @@ reco_tree = cfg.Analyzer(
 
 
 # produce flat root tree containing jet substructure information for training
-from heppy.FCChhAnalyses.tth_boosted.TreeProducerBDT import TreeProducerBDT
+from heppy.FCChhAnalyses.FCChh.tth_boosted.TreeProducerBDT import TreeProducerBDT
 reco_tree_bdt = cfg.Analyzer(
     TreeProducerBDT,
     gen_bs = 'gen_bs',

@@ -133,14 +133,14 @@ jets_nolepton = cfg.Analyzer(
     filter_func = lambda jet: jet.match is None
 )
 
-from heppy.FCChhAnalyses.vbs.selection import Selection
+from heppy.FCChhAnalyses.FCChh.vbs.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.vbs.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.vbs.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
 )

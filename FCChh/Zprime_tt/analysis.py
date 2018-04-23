@@ -42,7 +42,7 @@ sample.mgp8_pp_tt_lo.splitFactor = 90
 sample.mgp8_pp_vv_lo.splitFactor = 90
 sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 90
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 
 
@@ -202,7 +202,7 @@ muons_100 = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.Zprime_tt.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.Zprime_tt.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_trk02_1000 = 'jets_trk02_1000',

@@ -144,7 +144,7 @@ jets_nolepton = cfg.Analyzer(
 
 
 
-from heppy.FCChhAnalyses.Zprime_ll.selection import Selection
+from heppy.FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -169,14 +169,14 @@ zprime_muon = cfg.Analyzer(
 )
 
 # apply event selection. 
-from heppy.FCChhAnalyses.Zprime_ll.selection import Selection
+from heppy.FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.Zprime_ll.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.Zprime_ll.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     jets='jets_nolepton',

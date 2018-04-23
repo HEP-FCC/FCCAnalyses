@@ -173,14 +173,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/h4l/selection.py"
-from heppy.FCChhAnalyses.tth_4l.selection import Selection
+from heppy.FCChhAnalyses.FCChh.tth_4l.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.tth_4l.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.tth_4l.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',

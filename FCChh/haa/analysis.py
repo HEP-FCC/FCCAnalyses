@@ -158,14 +158,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/haa/selection.py"
-from heppy.FCChhAnalyses.haa.selection import Selection
+from heppy.FCChhAnalyses.FCChh.haa.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.haa.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.haa.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     higgses = 'higgses',

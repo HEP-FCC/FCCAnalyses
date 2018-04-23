@@ -146,7 +146,7 @@ selected_bs = cfg.Analyzer(
     filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] > 0
 )
 
-from heppy.FCChhAnalyses.ttV_test.selection import Selection
+from heppy.FCChhAnalyses.FCChh.ttV_test.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -163,7 +163,7 @@ zeds = cfg.Analyzer(
 
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.ttV_test.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.ttV_test.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds="zeds",

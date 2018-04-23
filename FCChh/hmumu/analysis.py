@@ -249,14 +249,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/hmumu/selection.py"
-from heppy.FCChhAnalyses.hmumu.selection import Selection
+from heppy.FCChhAnalyses.FCChh.hmumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.hmumu.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.hmumu.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     higgses = 'higgses',

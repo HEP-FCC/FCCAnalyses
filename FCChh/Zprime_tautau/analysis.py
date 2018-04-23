@@ -186,7 +186,7 @@ jets_pf04_rew = cfg.Analyzer(
 
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.Zprime_tautau.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.Zprime_tautau.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     jets_pf04_trf  = 'jets_pf04_trf',

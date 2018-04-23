@@ -160,7 +160,7 @@ jets_nolepton = cfg.Analyzer(
 
 
 
-from heppy.FCChhAnalyses.tth_mumu.selection import Selection
+from heppy.FCChhAnalyses.FCChh.tth_mumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -177,14 +177,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. 
-from heppy.FCChhAnalyses.tth_mumu.selection import Selection
+from heppy.FCChhAnalyses.FCChh.tth_mumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.tth_mumu.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.tth_mumu.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     higgses="higgses",

@@ -199,14 +199,14 @@ b_higgses = cfg.Analyzer(
       pdgid = 25
 )
 
-from heppy.FCChhAnalyses.hhbbaa_cms.selection import Selection
+from heppy.FCChhAnalyses.FCChh.hhbbaa_cms.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # produce flat root tree containing information after pre-selection
-from heppy.FCChhAnalyses.hhbbaa_cms.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.hhbbaa_cms.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     photons = 'selected_photons',

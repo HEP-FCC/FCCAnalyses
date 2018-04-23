@@ -132,7 +132,7 @@ zeds = cfg.Analyzer(
 
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.hza.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.FCChh.hza.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',
