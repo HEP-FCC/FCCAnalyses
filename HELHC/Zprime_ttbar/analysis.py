@@ -143,7 +143,7 @@ muons_100 = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.Zprime_tt.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.Zprime_tt.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_trk02_1000 = 'jets_trk02_1000',
