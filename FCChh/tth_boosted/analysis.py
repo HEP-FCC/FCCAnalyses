@@ -2,34 +2,38 @@ import os, sys
 import copy, math
 import heppy.framework.config as cfg
 import logging
-
+import imp
 # next 2 lines necessary to deal with reimports from ipython
 logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
 
 comp = cfg.Component(
     'example',
      files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_tth01j_5f_hbb/events_000000100.root"]
 )
 
-from FCC_heppySampleList_fcc_v02 import *
-'''
 selectedComponents = [
-                       mgp8_pp_tth01j_5f_hbb,
-                       mgp8_pp_ttj_4f,
-                       mgp8_pp_ttbb_4f,
-                       mgp8_pp_ttz_5f_zbb,
+                       sample.mgp8_pp_tth01j_5f_hbb,
+                       sample.mgp8_pp_ttj_4f,
+                       sample.mgp8_pp_ttbb_4f,
+                       sample.mgp8_pp_ttz_5f_zbb,
                         ]
 
-mgp8_pp_ttbb_4f.splitFactor = 60
-mgp8_pp_ttj_4f.splitFactor = 320
-mgp8_pp_tth01j_5f_hbb.splitFactor = 200
-mgp8_pp_ttz_5f_zbb.splitFactor = 140
-'''
-selectedComponents = [comp]
+sample.mgp8_pp_ttbb_4f.splitFactor = 60
+sample.mgp8_pp_ttj_4f.splitFactor = 320
+sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 200
+sample.mgp8_pp_ttz_5f_zbb.splitFactor = 140
+### more split
+#sample.mgp8_pp_ttbb_4f.splitFactor = 200
+#sample.mgp8_pp_ttj_4f.splitFactor = 600
+#sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 400
+#sample.mgp8_pp_ttz_5f_zbb.splitFactor = 300
+
+#selectedComponents = [comp]
+
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
@@ -49,6 +53,7 @@ source = cfg.Analyzer(
 
     jets = 'pfjets04',
     bTags = 'pfbTags04',
+    jetsFlavor  = 'pfjetsFlavor04',
  
     photons = 'photons',
     
@@ -192,7 +197,7 @@ jets_nolepton = cfg.Analyzer(
     'jets_nolepton',
     output = 'jets_nolepton',
     input_objects = 'jets_30',
-    filter_func = lambda jet: jet.match is None
+    filter_func = lambda jet: jet.match is None and jet.pt()>30
 )
 
 # select b's with pT > 30 GeV
