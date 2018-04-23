@@ -33,7 +33,6 @@ selectedComponents = [
                         sample.mgp8_pp_Zprime_mumu_5f_Mzp_35TeV,
                         sample.mgp8_pp_Zprime_mumu_5f_Mzp_40TeV,
                         sample.mgp8_pp_Zprime_mumu_5f_Mzp_45TeV,
-                        sample.mgp8_pp_mumu_lo_2TeV,
                      ]
 
 sample.mgp8_pp_mumu_lo_2_5TeV.splitFactor = 70
