@@ -26,11 +26,6 @@ sample.mgp8_pp_ttbb_4f.splitFactor = 60
 sample.mgp8_pp_ttj_4f.splitFactor = 320
 sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 200
 sample.mgp8_pp_ttz_5f_zbb.splitFactor = 140
-### more split
-#sample.mgp8_pp_ttbb_4f.splitFactor = 200
-#sample.mgp8_pp_ttj_4f.splitFactor = 600
-#sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 400
-#sample.mgp8_pp_ttz_5f_zbb.splitFactor = 300
 
 #selectedComponents = [comp]
 
