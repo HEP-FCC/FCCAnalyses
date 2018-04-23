@@ -23,12 +23,10 @@ selectedComponents = [
 			sample.p8_pp_RSGraviton_25TeV_ww,
 			sample.p8_pp_RSGraviton_30TeV_ww,
 			sample.p8_pp_RSGraviton_35TeV_ww,
-                        sample.mgp8_pp_jj_lo,
+                        sample.mgp8_pp_jj_lo_5f,
                         sample.mgp8_pp_tt_lo,
                         sample.mgp8_pp_vv_lo,
                         sample.mgp8_pp_vj_4f_M_5000_inf,
-                        #sample.p8_pp_RSGraviton_20TeV_ww_qcdBDTtrain,
-                        #sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV,
 		     ]
 
 
@@ -40,13 +38,11 @@ sample.p8_pp_RSGraviton_25TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_30TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_35TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_40TeV_ww.splitFactor = splitFac
-sample.mgp8_pp_jj_lo.splitFactor = 350
+sample.mgp8_pp_jj_lo_5f.splitFactor = 200
 sample.mgp8_pp_tt_lo.splitFactor = 80
 sample.mgp8_pp_vv_lo.splitFactor = 80
 sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 80
 comp.splitFactor = 10
-#sample.p8_pp_RSGraviton_20TeV_ww_qcdBDTtrain.splitFactor = 10
-#sample.mgp8_pp_jj_lo_filter_pTjet7_5TeV.splitFactor = 10
 
 #selectedComponents = [comp]
 
