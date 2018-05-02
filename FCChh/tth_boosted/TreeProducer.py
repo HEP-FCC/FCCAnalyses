@@ -26,12 +26,6 @@ class TreeProducer(Analyzer):
         self.tree.var('weight_3tagex', float)
         self.tree.var('weight_4tagex', float)
 
-        #self.tree.var('weight_0tagex_in', float)
-        #self.tree.var('weight_1tagex_in', float)
-        #self.tree.var('weight_2tagex_in', float)
-        #self.tree.var('weight_3tagex_in', float)
-        #self.tree.var('weight_4tagex_in', float)
-
         bookParticle(self.tree, 'l')
         bookMet(self.tree, 'met')
         
@@ -60,7 +54,6 @@ class TreeProducer(Analyzer):
             self.tree.var('{}jet_nls'.format(flavour), float)
             self.tree.var('{}jet_mjs'.format(flavour), float)
             self.tree.var('{}jet_mbs'.format(flavour), float)
-            #self.tree.var('{}jet_nbjets'.format(flavour), float)
             ##self.tree.var('{}jet_bdt_th'.format(flavour), float)
 
         ## for MVA
@@ -138,7 +131,6 @@ class TreeProducer(Analyzer):
             setattr(jet, 'nbs', 0)
             setattr(jet, 'ncs', 0)
             setattr(jet, 'nls', 0)
-            #setattr(jet, 'nbjets', 0)
             setattr(jet, 'flow', [0]*5)
             setattr(jet, 'p4_js', TLorentzVector())
             setattr(jet, 'p4_bs', TLorentzVector())
@@ -179,11 +171,6 @@ class TreeProducer(Analyzer):
                       jet.ncs += 1
                   else :
                       jet.nls += 1
-
-                  # fill matched jet collection to compute TRF
-                  #jetin_forTRF.append([j,ipdg])
-            
-                  #if j.tags['bf'] > 0 : jet.nbjets +=1
 
             # do eflow with constituents here
             constituent_vector = TLorentzVector()
@@ -227,13 +214,7 @@ class TreeProducer(Analyzer):
         # 2/ lowest mass is more higgs like 
         if len(fatjets)>1 and fatjets[0].njs==fatjets[1].njs:
           fatjets.sort(key=lambda x: x.subjetsSoftDrop[0].p4().M(), reverse = True)
-          #fatjets.sort(key=lambda x: x.p4().M(), reverse = True)
 
-        #print "###################"
-        #for x in fatjets : print "nbjet="+str(x.njs)+" , m="+str(x.subjetsSoftDrop[0].p4().M())
-        
-        #print '--------------- new event --------------------------------'
-        
         if len(leptons) > 0 and len(fatjets) > 1:
             
             self.tree.fill('weight' , event.weight )
@@ -247,12 +228,6 @@ class TreeProducer(Analyzer):
             self.tree.fill('weight_2tagex', getNbTagEx(2,jet_forTRF,-1))
             self.tree.fill('weight_3tagex', getNbTagEx(3,jet_forTRF,-1))
             self.tree.fill('weight_4tagex', getNbTagEx(4,jet_forTRF,-1))
-
-            #self.tree.fill('weight_0tagex_in', getNbTagEx(0,jetin_forTRF,-1))
-            #self.tree.fill('weight_1tagex_in', getNbTagEx(1,jetin_forTRF,-1))
-            #self.tree.fill('weight_2tagex_in', getNbTagEx(2,jetin_forTRF,-1))
-            #self.tree.fill('weight_3tagex_in', getNbTagEx(3,jetin_forTRF,-1))
-            #self.tree.fill('weight_4tagex_in', getNbTagEx(4,jetin_forTRF,-1))
 
             '''higgsjet = fatjets[1]
             if higgsjet.nbs > 1:
@@ -283,14 +258,12 @@ class TreeProducer(Analyzer):
                 self.tree.fill('{}jet_flow45'.format(flavour), jet.flow[3])
                 self.tree.fill('{}jet_flow55'.format(flavour), jet.flow[4])
 
-                #print "flavour="+flavour+" , njs="+str(jet.njs)+" , nbs="+str(jet.nbs)+" , mSD="+str(jet.subjetsSoftDrop[0].p4().M())
                 self.tree.fill('{}jet_njs'.format(flavour), jet.njs)
                 self.tree.fill('{}jet_nbs'.format(flavour), jet.nbs)
                 self.tree.fill('{}jet_ncs'.format(flavour), jet.ncs)
                 self.tree.fill('{}jet_nls'.format(flavour), jet.nls)
                 self.tree.fill('{}jet_mjs'.format(flavour), jet.p4_js.M())
                 self.tree.fill('{}jet_mbs'.format(flavour), jet.p4_bs.M())
-                #self.tree.fill('{}jet_nbjets'.format(flavour), jet.nbjets)
                 ##self.tree.fill('{}jet_bdt_th'.format(flavour), jet.bdt_th)
 
             #Hjet = fatjets[1]

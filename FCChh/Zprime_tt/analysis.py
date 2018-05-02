@@ -12,9 +12,7 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_jj_lo_tagger/events_001556815.root"]
-     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ttbar_tagger/events_000260643.root"]
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_jj_lo_5f/events_052659188.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_10TeV_ttbar/events_195727522.root"]
 )
 
 selectedComponents = [
@@ -24,25 +22,67 @@ selectedComponents = [
                         sample.p8_pp_Zprime_25TeV_ttbar,
                         sample.p8_pp_Zprime_30TeV_ttbar,
                         sample.p8_pp_Zprime_35TeV_ttbar,
-                        sample.mgp8_pp_jj_lo_5f,
-                        sample.mgp8_pp_tt_lo,
-                        sample.mgp8_pp_vv_lo,
-                        sample.mgp8_pp_vj_4f_M_5000_inf,
+                        sample.mgp8_pp_jj_5f_HT_500_1000,
+                        sample.mgp8_pp_jj_5f_HT_1000_2000,
+                        sample.mgp8_pp_jj_5f_HT_2000_5000,
+                        sample.mgp8_pp_jj_5f_HT_5000_10000,
+                        sample.mgp8_pp_jj_5f_HT_10000_27000,
+                        sample.mgp8_pp_jj_5f_HT_27000_100000,
+                        sample.mgp8_pp_tt_5f_HT_500_1000,
+                        sample.mgp8_pp_tt_5f_HT_1000_2000,
+                        sample.mgp8_pp_tt_5f_HT_2000_5000,
+                        sample.mgp8_pp_tt_5f_HT_5000_10000,
+                        sample.mgp8_pp_tt_5f_HT_10000_27000,
+                        sample.mgp8_pp_tt_5f_HT_27000_100000,
+                        sample.mgp8_pp_vv_5f_HT_500_1000,
+                        sample.mgp8_pp_vv_5f_HT_1000_2000,
+                        sample.mgp8_pp_vv_5f_HT_2000_5000,
+                        sample.mgp8_pp_vv_5f_HT_5000_10000,
+                        sample.mgp8_pp_vv_5f_HT_10000_27000,
+                        sample.mgp8_pp_vv_5f_HT_27000_100000,
+                        sample.mgp8_pp_vj_5f_HT_500_1000,
+                        sample.mgp8_pp_vj_5f_HT_1000_2000,
+                        sample.mgp8_pp_vj_5f_HT_2000_5000,
+                        sample.mgp8_pp_vj_5f_HT_5000_10000,
+                        sample.mgp8_pp_vj_5f_HT_10000_27000,
+                        sample.mgp8_pp_vj_5f_HT_27000_100000,
                      ]
 
-splitFac = 25
+splitFac = 10
 sample.p8_pp_Zprime_10TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_15TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_20TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_25TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_30TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_35TeV_ttbar.splitFactor = splitFac
-sample.mgp8_pp_jj_lo_5f.splitFactor = 200
-sample.mgp8_pp_tt_lo.splitFactor = 90
-sample.mgp8_pp_vv_lo.splitFactor = 90
-sample.mgp8_pp_vj_4f_M_5000_inf.splitFactor = 90
 
-selectedComponents = [comp]
+splitFrac2 = 60
+sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor     = splitFrac2
+sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor    = splitFrac2
+sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor    = splitFrac2
+sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor   = splitFrac2
+sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor  = splitFrac2
+sample.mgp8_pp_jj_5f_HT_27000_100000.splitFactor = splitFrac2
+sample.mgp8_pp_tt_5f_HT_500_1000.splitFactor     = splitFrac2
+sample.mgp8_pp_tt_5f_HT_1000_2000.splitFactor    = splitFrac2
+sample.mgp8_pp_tt_5f_HT_2000_5000.splitFactor    = splitFrac2
+sample.mgp8_pp_tt_5f_HT_5000_10000.splitFactor   = splitFrac2
+sample.mgp8_pp_tt_5f_HT_10000_27000.splitFactor  = splitFrac2
+sample.mgp8_pp_tt_5f_HT_27000_100000.splitFactor = splitFrac2
+sample.mgp8_pp_vv_5f_HT_500_1000.splitFactor     = splitFrac2
+sample.mgp8_pp_vv_5f_HT_1000_2000.splitFactor    = splitFrac2
+sample.mgp8_pp_vv_5f_HT_2000_5000.splitFactor    = splitFrac2
+sample.mgp8_pp_vv_5f_HT_5000_10000.splitFactor   = splitFrac2
+sample.mgp8_pp_vv_5f_HT_10000_27000.splitFactor  = splitFrac2
+sample.mgp8_pp_vv_5f_HT_27000_100000.splitFactor = splitFrac2
+sample.mgp8_pp_vj_5f_HT_500_1000.splitFactor     = splitFrac2
+sample.mgp8_pp_vj_5f_HT_1000_2000.splitFactor    = splitFrac2
+sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor    = splitFrac2
+sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor   = splitFrac2
+sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor  = splitFrac2
+sample.mgp8_pp_vj_5f_HT_27000_100000.splitFactor = splitFrac2
+
+#selectedComponents = [comp]
 
 
 
