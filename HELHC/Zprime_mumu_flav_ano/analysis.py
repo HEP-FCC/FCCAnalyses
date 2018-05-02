@@ -8,59 +8,30 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/HELHC_heppySampleList_helhc_v01.py')
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/cms/p8_pp_Zprime_20TeV_ll/events_014349043.root"]
+    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_mumu_5f_HT_5000_10000/events_198758027.root"]
 )
 
 selectedComponents = [
-                        sample.p8_pp_Zprime_15TeV_ll,
-                        sample.p8_pp_Zprime_20TeV_ll,
-                        sample.p8_pp_Zprime_25TeV_ll,
-                        sample.p8_pp_Zprime_30TeV_ll,
-                        sample.p8_pp_Zprime_35TeV_ll,
-                        sample.p8_pp_Zprime_40TeV_ll,
-                        sample.p8_pp_Zprime_45TeV_ll, 
-                        sample.p8_pp_Zprime_50TeV_ll, 
-                        sample.mgp8_pp_ee_5f_HT_500_1000,
-                        sample.mgp8_pp_ee_5f_HT_1000_2000,
-                        sample.mgp8_pp_ee_5f_HT_2000_5000,
-                        sample.mgp8_pp_ee_5f_HT_5000_10000,
-                        sample.mgp8_pp_ee_5f_HT_10000_27000,
-                        sample.mgp8_pp_ee_5f_HT_27000_10000,
+                        # no signal found yet
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV,
                         sample.mgp8_pp_mumu_5f_HT_500_1000,
                         sample.mgp8_pp_mumu_5f_HT_1000_2000,
                         sample.mgp8_pp_mumu_5f_HT_2000_5000,
                         sample.mgp8_pp_mumu_5f_HT_5000_10000,
                         sample.mgp8_pp_mumu_5f_HT_10000_27000,
-                        sample.mgp8_pp_mumu_5f_HT_27000_100000,
                      ]
-
-splitFac = 10
-sample.p8_pp_Zprime_15TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_20TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_25TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_30TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_35TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_40TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_45TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_50TeV_ll.splitFactor = splitFac
+#sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV.splitFactor = 10
 
 splitFac2 = 60
-sample.mgp8_pp_ee_5f_HT_500_1000.splitFactor       = splitFac2
-sample.mgp8_pp_ee_5f_HT_1000_2000.splitFactor      = splitFac2
-sample.mgp8_pp_ee_5f_HT_2000_5000.splitFactor      = splitFac2
-sample.mgp8_pp_ee_5f_HT_5000_10000.splitFactor     = splitFac2
-sample.mgp8_pp_ee_5f_HT_10000_27000.splitFactor    = splitFac2
-sample.mgp8_pp_ee_5f_HT_27000_100000.splitFactor   = splitFac2
-sample.mgp8_pp_mumu_5f_HT_500_1000.splitFactor     = splitFac2
-sample.mgp8_pp_mumu_5f_HT_1000_2000.splitFactor    = splitFac2
-sample.mgp8_pp_mumu_5f_HT_2000_5000.splitFactor    = splitFac2
-sample.mgp8_pp_mumu_5f_HT_5000_10000.splitFactor   = splitFac2
-sample.mgp8_pp_mumu_5f_HT_10000_27000.splitFactor  = splitFac2
-sample.mgp8_pp_mumu_5f_HT_27000_100000.splitFactor = splitFac2
+sample.mgp8_pp_mumu_5f_HT_500_1000.splitFactor    = splitFac2
+sample.mgp8_pp_mumu_5f_HT_1000_2000.splitFactor   = splitFac2
+sample.mgp8_pp_mumu_5f_HT_2000_5000.splitFactor   = splitFac2
+sample.mgp8_pp_mumu_5f_HT_5000_10000.splitFactor  = splitFac2
+sample.mgp8_pp_mumu_5f_HT_10000_27000.splitFactor = splitFac2
 
 #selectedComponents = [comp]
 
@@ -163,7 +134,7 @@ jets_nolepton = cfg.Analyzer(
 
 
 
-from heppy.FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
+from heppy.FCChhAnalyses.HELHC.Zprime_mumu_flav_ano.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -188,14 +159,14 @@ zprime_muon = cfg.Analyzer(
 )
 
 # apply event selection. 
-from heppy.FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
+from heppy.FCChhAnalyses.HELHC.Zprime_mumu_flav_ano.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.Zprime_ll.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.Zprime_mumu_flav_ano.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     jets='jets_nolepton',

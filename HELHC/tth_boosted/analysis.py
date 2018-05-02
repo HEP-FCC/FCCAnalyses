@@ -8,24 +8,24 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/HELHC_heppySampleList_helhc_v01.py')
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_tth01j_5f_hbb/events_000000100.root"]
+     files = [""]
 )
 
-selectedComponents = [
+selectedComponents = [ # from 100 TeV
                        sample.mgp8_pp_tth01j_5f_hbb,
-                       sample.mgp8_pp_ttj_4f,
-                       sample.mgp8_pp_ttbb_4f,
-                       sample.mgp8_pp_ttz_5f_zbb,
+                       sample.mg_pp_ttj_4f,
+                       sample.mg_pp_ttbb_4f,
+                       sample.mg_pp_ttz_5f,
                      ]
 
-sample.mgp8_pp_ttbb_4f.splitFactor = 30
-sample.mgp8_pp_ttj_4f.splitFactor = 25
-sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 30
-sample.mgp8_pp_ttz_5f_zbb.splitFactor = 40
+sample.mgp8_pp_ttbb_4f.splitFactor = 60
+sample.mg_pp_ttj_4f                = 150
+sample.mg_pp_ttbb_4f               = 70
+sample.mg_pp_ttz_5f                = 150
 
 #selectedComponents = [comp]
 
@@ -117,7 +117,7 @@ gen_bs = cfg.Analyzer(
 )
 
 # produce flat root tree containing information about stable leptons in the event
-from heppy.FCChhAnalyses.FCChh.hh_boosted.GenTreeProducer import GenTreeProducer
+from heppy.FCChhAnalyses.HELHC.hh_boosted.GenTreeProducer import GenTreeProducer
 gen_tree = cfg.Analyzer(
     GenTreeProducer,
     gen_higgses = 'gen_higgses',
@@ -233,7 +233,7 @@ fatjets_nolepton = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.FCChh.tth_boosted.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.tth_boosted.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     gen_bs = 'gen_bs',
@@ -245,7 +245,7 @@ reco_tree = cfg.Analyzer(
 
 
 # produce flat root tree containing jet substructure information for training
-from heppy.FCChhAnalyses.FCChh.tth_boosted.TreeProducerBDT import TreeProducerBDT
+from heppy.FCChhAnalyses.HELHC.tth_boosted.TreeProducerBDT import TreeProducerBDT
 reco_tree_bdt = cfg.Analyzer(
     TreeProducerBDT,
     gen_bs = 'gen_bs',

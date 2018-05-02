@@ -8,83 +8,76 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
+sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/HELHC_heppySampleList_helhc_v01.py')
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_RSGraviton_10TeV_ww/events_193939464.root"]
+     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_RSGraviton_10TeV_ww/events_194679426.root"]
 )
 
 selectedComponents = [
+			sample.p8_pp_RSGraviton_2TeV_ww,
+			sample.p8_pp_RSGraviton_4TeV_ww,
+			sample.p8_pp_RSGraviton_6TeV_ww,
+			sample.p8_pp_RSGraviton_8TeV_ww,
 			sample.p8_pp_RSGraviton_10TeV_ww,
-			sample.p8_pp_RSGraviton_15TeV_ww,
-			sample.p8_pp_RSGraviton_20TeV_ww,
-			sample.p8_pp_RSGraviton_25TeV_ww,
-			sample.p8_pp_RSGraviton_30TeV_ww,
-			sample.p8_pp_RSGraviton_35TeV_ww,
+			sample.p8_pp_RSGraviton_12TeV_ww,
+                        sample.p8_pp_RSGraviton_14TeV_ww,
                         sample.mgp8_pp_jj_5f_HT_500_1000,
                         sample.mgp8_pp_jj_5f_HT_1000_2000,
                         sample.mgp8_pp_jj_5f_HT_2000_5000,
                         sample.mgp8_pp_jj_5f_HT_5000_10000,
                         sample.mgp8_pp_jj_5f_HT_10000_27000,
-                        sample.mgp8_pp_jj_5f_HT_27000_100000,
                         sample.mgp8_pp_tt_5f_HT_500_1000,
                         sample.mgp8_pp_tt_5f_HT_1000_2000,
                         sample.mgp8_pp_tt_5f_HT_2000_5000,
                         sample.mgp8_pp_tt_5f_HT_5000_10000,
                         sample.mgp8_pp_tt_5f_HT_10000_27000,
-                        sample.mgp8_pp_tt_5f_HT_27000_100000,
                         sample.mgp8_pp_vv_5f_HT_500_1000,
                         sample.mgp8_pp_vv_5f_HT_1000_2000,
                         sample.mgp8_pp_vv_5f_HT_2000_5000,
                         sample.mgp8_pp_vv_5f_HT_5000_10000,
                         sample.mgp8_pp_vv_5f_HT_10000_27000,
-                        sample.mgp8_pp_vv_5f_HT_27000_100000,
                         sample.mgp8_pp_vj_5f_HT_500_1000,
                         sample.mgp8_pp_vj_5f_HT_1000_2000,
                         sample.mgp8_pp_vj_5f_HT_2000_5000,
                         sample.mgp8_pp_vj_5f_HT_5000_10000,
                         sample.mgp8_pp_vj_5f_HT_10000_27000,
-                        sample.mgp8_pp_vj_5f_HT_27000_100000,
 		     ]
 
 
-splitFac = 10
+splitFac = 20
+sample.p8_pp_RSGraviton_2TeV_ww.splitFactor  = splitFac
+sample.p8_pp_RSGraviton_4TeV_ww.splitFactor  = splitFac
+sample.p8_pp_RSGraviton_6TeV_ww.splitFactor  = splitFac
+sample.p8_pp_RSGraviton_8TeV_ww.splitFactor  = splitFac
 sample.p8_pp_RSGraviton_10TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_15TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_20TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_25TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_30TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_35TeV_ww.splitFactor = splitFac
-sample.p8_pp_RSGraviton_40TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_12TeV_ww.splitFactor = splitFac
+sample.p8_pp_RSGraviton_14TeV_ww.splitFactor = splitFac
 
 splitFrac2 = 60
-sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor     = splitFrac2
-sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor    = splitFrac2
-sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor    = splitFrac2
-sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor   = splitFrac2
-sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor  = splitFrac2
-sample.mgp8_pp_jj_5f_HT_27000_100000.splitFactor = splitFrac2
-sample.mgp8_pp_tt_5f_HT_500_1000.splitFactor     = splitFrac2
-sample.mgp8_pp_tt_5f_HT_1000_2000.splitFactor    = splitFrac2
-sample.mgp8_pp_tt_5f_HT_2000_5000.splitFactor    = splitFrac2
-sample.mgp8_pp_tt_5f_HT_5000_10000.splitFactor   = splitFrac2
-sample.mgp8_pp_tt_5f_HT_10000_27000.splitFactor  = splitFrac2
-sample.mgp8_pp_tt_5f_HT_27000_100000.splitFactor = splitFrac2
-sample.mgp8_pp_vv_5f_HT_500_1000.splitFactor     = splitFrac2
-sample.mgp8_pp_vv_5f_HT_1000_2000.splitFactor    = splitFrac2
-sample.mgp8_pp_vv_5f_HT_2000_5000.splitFactor    = splitFrac2
-sample.mgp8_pp_vv_5f_HT_5000_10000.splitFactor   = splitFrac2
-sample.mgp8_pp_vv_5f_HT_10000_27000.splitFactor  = splitFrac2
-sample.mgp8_pp_vv_5f_HT_27000_100000.splitFactor = splitFrac2
-sample.mgp8_pp_vj_5f_HT_500_1000.splitFactor     = splitFrac2
-sample.mgp8_pp_vj_5f_HT_1000_2000.splitFactor    = splitFrac2
-sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor    = splitFrac2
-sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor   = splitFrac2
-sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor  = splitFrac2
-sample.mgp8_pp_vj_5f_HT_27000_100000.splitFactor = splitFrac2
+sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor    = splitFrac2
+sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor   = splitFrac2
+sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor   = splitFrac2
+sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor  = splitFrac2
+sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor = splitFrac2
+sample.mgp8_pp_tt_5f_HT_500_1000.splitFactor    = splitFrac2
+sample.mgp8_pp_tt_5f_HT_1000_2000.splitFactor   = splitFrac2
+sample.mgp8_pp_tt_5f_HT_2000_5000.splitFactor   = splitFrac2
+sample.mgp8_pp_tt_5f_HT_5000_10000.splitFactor  = splitFrac2
+sample.mgp8_pp_tt_5f_HT_10000_27000.splitFactor = splitFrac2
+sample.mgp8_pp_vv_5f_HT_500_1000.splitFactor    = splitFrac2
+sample.mgp8_pp_vv_5f_HT_1000_2000.splitFactor   = splitFrac2
+sample.mgp8_pp_vv_5f_HT_2000_5000.splitFactor   = splitFrac2
+sample.mgp8_pp_vv_5f_HT_5000_10000.splitFactor  = splitFrac2
+sample.mgp8_pp_vv_5f_HT_10000_27000.splitFactor = splitFrac2
+sample.mgp8_pp_vj_5f_HT_500_1000.splitFactor    = splitFrac2
+sample.mgp8_pp_vj_5f_HT_1000_2000.splitFactor   = splitFrac2
+sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor   = splitFrac2
+sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor  = splitFrac2
+sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor = splitFrac2
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
@@ -162,7 +155,7 @@ jets_pf02_1500 = cfg.Analyzer(
     'jets_pf02_1500',
     output = 'jets_pf02_1500',
     input_objects = 'pfjets02',
-    filter_func = lambda fatjet: fatjet.pt()>1500.
+    filter_func = lambda fatjet: fatjet.pt()>1000.
 )
 
 jets_trk02_1000 = cfg.Analyzer(
@@ -170,7 +163,7 @@ jets_trk02_1000 = cfg.Analyzer(
     'jets_trk02_1000',
     output = 'jets_trk02_1000',
     input_objects = 'trkjets02',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>750
 )
 
 jets_trk04_1000 = cfg.Analyzer(
@@ -178,7 +171,7 @@ jets_trk04_1000 = cfg.Analyzer(
     'jets_trk04_1000',
     output = 'jets_trk04_1000',
     input_objects = 'trkjets04',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>750
 )
 
 jets_trk08_1000 = cfg.Analyzer(
@@ -186,7 +179,7 @@ jets_trk08_1000 = cfg.Analyzer(
     'jets_trk08_1000',
     output = 'jets_trk08_1000',
     input_objects = 'trkjets08',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>750
 )
 
 
@@ -196,7 +189,7 @@ jets_pf04_1000 = cfg.Analyzer(
     'jets_pf04_1000',
     output = 'jets_pf04_1000',
     input_objects = 'pfjets04',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>750
 )
 
 # select pf04 jets above 1500 GeV for jet correction
@@ -205,7 +198,7 @@ jets_pf04_1500 = cfg.Analyzer(
     'jets_pf04_1500',
     output = 'jets_pf04_1500',
     input_objects = 'pfjets04',
-    filter_func = lambda jet: jet.pt()>1500
+    filter_func = lambda jet: jet.pt()>1000
 )
 
 # select pf08 jets above 1500 GeV
@@ -214,7 +207,7 @@ jets_pf08_1500 = cfg.Analyzer(
     'jets_pf08_1500',
     output = 'jets_pf08_1500',
     input_objects = 'pfjets08',
-    filter_func = lambda jet: jet.pt()>1500
+    filter_func = lambda jet: jet.pt()>1000
 )
 
 # select electrons above 500 GeV
@@ -237,7 +230,7 @@ muons_500 = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.FCChh.RSGraviton_ww.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.RSGraviton_ww.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_trk02_1000 = 'jets_trk02_1000',
