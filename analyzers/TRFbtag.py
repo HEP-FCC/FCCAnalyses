@@ -85,6 +85,9 @@ def getcTagEff(pt, eta, pdg):
 
 def getNbTagEx(Nbtag, jet, njets_used):
 
+    # ensure sorting in jet pT
+    jet.sort(key=lambda x: x[0].pt(), reverse = True)
+
     #-----------------------------
     # init
     #-----------------------------
@@ -156,6 +159,7 @@ def getNbTagEx(Nbtag, jet, njets_used):
     #-----------------------------
     final_wtag=0.
     for i_wtag in range(len(wtag)): final_wtag+=wtag[i_wtag]
+    #print "wtags computed :\n---------------------"
     #print "wj="+str(wj)
     #print "wtag="+str(wtag)
     #print "final_wtag="+str(final_wtag)
