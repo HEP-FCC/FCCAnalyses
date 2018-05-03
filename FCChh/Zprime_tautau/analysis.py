@@ -12,7 +12,7 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/cms/p8_pp_Zprime_20TeV_ll/events_014349043.root"]
+    files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_Zprime_20TeV_ll/events_135275618.root"]
 )
 
 selectedComponents = [
@@ -67,12 +67,12 @@ sample.mgp8_pp_tautau_5f_HT_2000_5000.splitFactor    = splitFac2
 sample.mgp8_pp_tautau_5f_HT_5000_10000.splitFactor   = splitFac2
 sample.mgp8_pp_tautau_5f_HT_10000_27000.splitFactor  = splitFac2
 sample.mgp8_pp_tautau_5f_HT_27000_100000.splitFactor = splitFac2
-sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor     = splitFrac2
-sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor    = splitFrac2
-sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor    = splitFrac2
-sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor   = splitFrac2
-sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor  = splitFrac2
-sample.mgp8_pp_jj_5f_HT_27000_100000.splitFactor = splitFrac2
+sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor     = splitFac2
+sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor    = splitFac2
+sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor    = splitFac2
+sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor   = splitFac2
+sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor  = splitFac2
+sample.mgp8_pp_jj_5f_HT_27000_100000.splitFactor = splitFac2
 
 
 #selectedComponents = [comp]
