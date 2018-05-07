@@ -12,7 +12,12 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_10TeV_ll/events_188309160.root"]
+    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_6TeV_ll/events_074651276.root"]
+    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeCHI_6TeV_ll/events_154257133.root"]
+    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimePSI_6TeV_ll/events_046561140.root"]
+    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeETA_6TeV_ll/events_087131940.root"]
+    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeLRM_6TeV_ll/events_171676473.root"]
+    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeI_6TeV_ll/events_109444482.root"]
 )
 
 selectedComponents = [

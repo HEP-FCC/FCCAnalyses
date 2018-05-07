@@ -2,6 +2,8 @@ from heppy.framework.analyzer import Analyzer
 from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
 from heppy.FCChhAnalyses.analyzers.TRFtautag import *
+from heppy.particles.tlv.particle import Particle
+
 from numpy import sign
 import ROOT
 from ROOT import *
@@ -22,6 +24,7 @@ class TreeProducer(Analyzer):
         bookParticle(self.tree, 'Jet1_pf04')
         bookParticle(self.tree, 'Jet2_pf04')
         self.tree.var('Mj1j2_pf04', float)
+        self.tree.var('Mj1j2_pf04_METCor', float)
         self.tree.var('mt', float)
         self.tree.var('mr', float)
         self.tree.var('mr2', float)
@@ -32,6 +35,26 @@ class TreeProducer(Analyzer):
         self.tree.var('ntau', int)
 
         bookMet(self.tree, 'met')
+
+    def corrMET(self, jet1, pdg1 , jet2, pdg2, met):
+ 
+        metp4 = ROOT.TLorentzVector()
+        px = met.p4().Px()
+        py = met.p4().Py()
+            
+        if (jet1.p4().Pt()>jet2.p4().Pt()):
+            pz = jet2.p4().Pz()/2.
+            e = math.sqrt(px**2 + py**2 + pz**2)
+            metp4.SetPxPyPzE(px, py, pz, e) 
+            jetcorr2   = Particle(pdg1, 0, jet1.p4() + metp4, 1)
+            jetcorr1   = Particle(pdg2, 0, jet2.p4(), 1)
+        else:
+            pz = jet2.p4().Pz()/2.
+            e = math.sqrt(px**2 + py**2 + pz**2)
+            metp4.SetPxPyPzE(px, py, pz, e) 
+            jetcorr2  = Particle(pdg1, 0, jet1.p4(), 1)
+            jetcorr1  = Particle(pdg2, 0, jet2.p4() + metp4, 1)
+        return jetcorr1,jetcorr2
 
 
     def fillMass(self, jet1, jet2):
@@ -64,6 +87,11 @@ class TreeProducer(Analyzer):
 
         mtautau= self.fillMass(jets_pf04[0],jets_pf04[1])
         self.tree.fill( 'Mj1j2_pf04', mtautau)
+
+        jetmet1, jetmet2 = self.corrMET(jets_pf04[0], 15, jets_pf04[1], 15, event.met)
+        mtautau_metcor= self.fillMass(jetmet1, jetmet2)
+        self.tree.fill( 'Mj1j2_pf04_METCor', mtautau_metcor)
+
 
         Zprime=ROOT.TLorentzVector()
         j1 = ROOT.TLorentzVector(); j2 = ROOT.TLorentzVector()
