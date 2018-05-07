@@ -12,18 +12,18 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_Zprime_10TeV_ll/events_188309160.root"]
+    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_10TeV_ll/events_188309160.root"]
 )
 
 selectedComponents = [
-                        sample.p8_pp_Zprime_2TeV_ll,
-                        sample.p8_pp_Zprime_4TeV_ll,
-                        sample.p8_pp_Zprime_5TeV_ll,
-                        sample.p8_pp_Zprime_6TeV_ll,
-                        sample.p8_pp_Zprime_8TeV_ll,
-                        sample.p8_pp_Zprime_10TeV_ll,
-                        sample.p8_pp_Zprime_12TeV_ll,
-                        sample.p8_pp_Zprime_14TeV_ll,
+                        sample.p8_pp_ZprimeSSM_2TeV_ll,
+                        sample.p8_pp_ZprimeSSM_4TeV_ll,
+                        sample.p8_pp_ZprimeSSM_5TeV_ll,
+                        sample.p8_pp_ZprimeSSM_6TeV_ll,
+                        sample.p8_pp_ZprimeSSM_8TeV_ll,
+                        sample.p8_pp_ZprimeSSM_10TeV_ll,
+                        sample.p8_pp_ZprimeSSM_12TeV_ll,
+                        sample.p8_pp_ZprimeSSM_14TeV_ll,
                         sample.mgp8_pp_ee_5f_HT_500_1000,
                         sample.mgp8_pp_ee_5f_HT_1000_2000,
                         sample.mgp8_pp_ee_5f_HT_2000_5000,
@@ -37,14 +37,14 @@ selectedComponents = [
                      ]
 
 splitFac = 10
-sample.p8_pp_Zprime_2TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_4TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_5TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_6TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_8TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_10TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_12TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_14TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_2TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_4TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_5TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_6TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_8TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_10TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_12TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_14TeV_ll.splitFactor = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_ee_5f_HT_500_1000.splitFactor      = splitFac2
