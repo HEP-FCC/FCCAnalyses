@@ -31,6 +31,25 @@ selectedComponents = [
                         sample.mgp8_pp_Zprime_mumu_5f_Mzp_35TeV,
                         sample.mgp8_pp_Zprime_mumu_5f_Mzp_40TeV,
                         sample.mgp8_pp_Zprime_mumu_5f_Mzp_45TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_4TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_6TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_8TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_10TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_12TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_14TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_16TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_18TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_20TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_22TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_24TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_26TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_28TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_30TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_32TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_34TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_36TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_38TeV,
+                        sample.mgp8_pp_LQ_mumu_5f_MLQ_40TeV,
                         sample.mgp8_pp_mumu_5f_HT_500_1000,
                         sample.mgp8_pp_mumu_5f_HT_1000_2000,
                         sample.mgp8_pp_mumu_5f_HT_2000_5000,
@@ -55,6 +74,25 @@ sample.mgp8_pp_Zprime_mumu_5f_Mzp_30TeV.splitFactor = splitFac
 sample.mgp8_pp_Zprime_mumu_5f_Mzp_35TeV.splitFactor = splitFac
 sample.mgp8_pp_Zprime_mumu_5f_Mzp_40TeV.splitFactor = splitFac
 sample.mgp8_pp_Zprime_mumu_5f_Mzp_45TeV.splitFactor = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_4TeV  = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_6TeV  = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_8TeV  = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_10TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_12TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_14TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_16TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_18TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_20TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_22TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_24TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_26TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_28TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_30TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_32TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_34TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_36TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_38TeV = splitFac
+sample.mgp8_pp_LQ_mumu_5f_MLQ_40TeV = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_mumu_5f_HT_500_1000.splitFactor     = splitFac2
