@@ -16,6 +16,8 @@ comp = cfg.Component(
 )
 
 selectedComponents = [
+                        sample.p8_pp_Zprime_2TeV_ttbar,
+                        sample.p8_pp_Zprime_5TeV_ttbar,
                         sample.p8_pp_Zprime_10TeV_ttbar,
                         sample.p8_pp_Zprime_15TeV_ttbar,
                         sample.p8_pp_Zprime_20TeV_ttbar,
@@ -49,6 +51,8 @@ selectedComponents = [
                      ]
 
 splitFac = 10
+sample.p8_pp_Zprime_2TeV_ttbar.splitFactor  = splitFac
+sample.p8_pp_Zprime_5TeV_ttbar.splitFactor  = splitFac
 sample.p8_pp_Zprime_10TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_15TeV_ttbar.splitFactor = splitFac
 sample.p8_pp_Zprime_20TeV_ttbar.splitFactor = splitFac

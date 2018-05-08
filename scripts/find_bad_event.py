@@ -47,6 +47,8 @@ for tree in Trees :
       if bad_event_status == -1 :
         bad_status = True
         break
-  if bad_status == True : out_file.write(tree+"\n")
+  txt_OK="OK"
+  if bad_status == True : txt_OK="bad"
+  out_file.write(tree+" is "+txt_OK+" ("+str(numberOfEntries)+" entries)\n")
 out_file.close()
 
