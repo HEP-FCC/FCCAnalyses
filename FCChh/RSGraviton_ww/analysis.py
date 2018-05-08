@@ -16,6 +16,8 @@ comp = cfg.Component(
 )
 
 selectedComponents = [
+                        sample.p8_pp_RSGraviton_2TeV_ww,
+                        sample.p8_pp_RSGraviton_5TeV_ww,
 			sample.p8_pp_RSGraviton_10TeV_ww,
 			sample.p8_pp_RSGraviton_15TeV_ww,
 			sample.p8_pp_RSGraviton_20TeV_ww,
@@ -50,6 +52,8 @@ selectedComponents = [
 
 
 splitFac = 10
+sample.p8_pp_RSGraviton_2TeV_ww.splitFactor  = splitFac
+sample.p8_pp_RSGraviton_5TeV_ww.splitFactor  = splitFac
 sample.p8_pp_RSGraviton_10TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_15TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_20TeV_ww.splitFactor = splitFac
