@@ -45,20 +45,20 @@ selectedComponents = [
                      ]
 
 splitFac = 10
-sample.p8_pp_Zprime_2TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_4TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_5TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_6TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_8TeV_ll.splitFactor  = splitFac
-sample.p8_pp_Zprime_10TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_12TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_14TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_15TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_16TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_18TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_20TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_25TeV_ll.splitFactor = splitFac
-sample.p8_pp_Zprime_30TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_2TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_4TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_5TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_6TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_8TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_10TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_12TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_14TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_15TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_16TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_18TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_20TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_25TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_30TeV_ll.splitFactor = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_tautau_5f_HT_500_1000.splitFactor     = splitFac2
