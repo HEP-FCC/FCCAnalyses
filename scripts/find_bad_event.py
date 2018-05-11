@@ -29,7 +29,6 @@ for subdir, dirs, files in os.walk(path) :
 # check the trees
 ####################
 out_file = open("diagnostic.txt","w")
-out_file.write("The tree list with event issue found :\n")
 for tree in Trees :
   print "check tree "+str(Trees.index(tree)+1)+"/"+str(len(Trees))
   rf = TFile(tree)
@@ -49,6 +48,6 @@ for tree in Trees :
         break
   txt_OK="OK"
   if bad_status == True : txt_OK="bad"
-  out_file.write(tree+" is "+txt_OK+" ("+str(numberOfEntries)+" entries)\n")
+  out_file.write(txt_OK+" "+tree+" ("+str(numberOfEntries)+" entries)\n")
 out_file.close()
 
