@@ -17,15 +17,15 @@ comp = cfg.Component(
 
 selectedComponents = [ # from 100 TeV
                        sample.mgp8_pp_tth01j_5f_hbb,
-                       sample.mg_pp_ttj_4f,
-                       sample.mg_pp_ttbb_4f,
-                       sample.mg_pp_ttz_5f,
+                       sample.mgp8_pp_ttj_4f,
+                       sample.mgp8_pp_ttbb_4f,
+                       sample.mgp8_pp_ttz_5f,
                      ]
 
-sample.mgp8_pp_ttbb_4f.splitFactor = 60
-sample.mg_pp_ttj_4f                = 150
-sample.mg_pp_ttbb_4f               = 70
-sample.mg_pp_ttz_5f                = 150
+sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 60
+sample.mgp8_pp_ttj_4f.splitFactor = 150
+sample.mgp8_pp_ttbb_4f.splitFactor = 70
+sample.mgp8_pp_ttz_5f.splitFactor = 150
 
 #selectedComponents = [comp]
 
