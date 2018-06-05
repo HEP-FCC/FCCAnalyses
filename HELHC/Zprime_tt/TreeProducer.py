@@ -363,8 +363,6 @@ class TreeProducer(Analyzer):
             Jet2_trk04_dR_pf04 = 999
             Jet1_pf04 = None
             Jet2_pf04 = None
-            corr1_04 = 1.
-            corr2_04 = 1.
             for j in jets_pf04_1500:
                 pf04= ROOT.TLorentzVector()
                 pf04.SetPtEtaPhiE(j.pt(), j.eta(), j.phi(), j.e())
@@ -410,8 +408,6 @@ class TreeProducer(Analyzer):
             Jet2_trk08_dR_pf08 = 999
             Jet1_pf08 = None
             Jet2_pf08 = None
-            corr1_08 = 1.
-            corr2_08 = 1.
             for j in jets_pf08:
                 pf08= ROOT.TLorentzVector()
                 pf08.SetPtEtaPhiE(j.pt(), j.eta(), j.phi(), j.e())

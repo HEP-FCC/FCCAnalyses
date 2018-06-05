@@ -80,7 +80,7 @@ sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor   = splitFrac2
 sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor  = splitFrac2
 sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor = splitFrac2
 
-selectedComponents = [comp]
+#selectedComponents = [comp]
 
 
 

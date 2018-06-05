@@ -16,9 +16,10 @@ class JetCorrector(Analyzer):
             #print "#################\nini-> "+str(jetfix)
             for extra in corr_collection:
                 dR = jet.p4().DeltaR(extra.p4())
+                #print "extra-> "+str(extra)+" , dR="+str(dR)
                 if dR < drMax :
                     jet_tmp += extra.p4()
-                    #print "extra-> "+str(extra)
+                    #print "extra dR-> "+str(extra)
 
             jetfix.p4().SetPtEtaPhiM(jet_tmp.Pt(),jet_tmp.Eta(),jet_tmp.Phi(),jet_tmp.M())
             output_jets.append(jetfix)
