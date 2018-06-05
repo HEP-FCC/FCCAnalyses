@@ -236,12 +236,6 @@ class TreeProducer(Analyzer):
                 fillParticle(self.tree, 'Jet1_trk02_SD_Corr', sdjet1_corr)
                 fillParticle(self.tree, 'Jet2_trk02_SD_Corr', sdjet2_corr)
 
-                if len(jets_pf04_1500) < 2 or len(jets_pf08) < 2 :
-                  print "#######################"
-                  print "jets_pf02_1500="+str(jets_pf02)
-                  print "jets_pf04_1500="+str(jets_pf04_1500)
-                  print "jets_pf08_1500="+str(jets_pf08)
-
                 ######################
                 # trkjet04 mass info #
                 ######################
@@ -250,8 +244,6 @@ class TreeProducer(Analyzer):
                 Jet2_trk04_dR_pf04 = 999
                 Jet1_pf04 = None
                 Jet2_pf04 = None
-                corr1_04 = 1.
-                corr2_04 = 1.
                 for j in jets_pf04_1500:
                     pf04= ROOT.TLorentzVector()
                     pf04.SetPtEtaPhiE(j.pt(), j.eta(), j.phi(), j.e())
@@ -261,10 +253,8 @@ class TreeProducer(Analyzer):
                     if pf04.DeltaR(j2)<Jet2_trk04_dR_pf04:
                         Jet2_trk04_dR_pf04=pf04.DeltaR(j2)
                         Jet2_pf04=j
-                if len(jets_pf04_1500) > 0 : corr1_04 = Jet1_pf04.p4().Pt()/j1.Pt()
-                if len(jets_pf04_1500) > 1 : corr2_04 = Jet2_pf04.p4().Pt()/j2.Pt()
-                if len(jets_pf04_1500) == 0 : print "jets_pf04_1500 empty !!!"
-                if len(jets_pf04_1500) == 1 : print "only 1 jets_pf04_1500 !!!"
+                corr1_04 = Jet1_pf04.p4().Pt()/j1.Pt()
+                corr2_04 = Jet2_pf04.p4().Pt()/j2.Pt()
 
                 #NORMAL TRK04 SD corrected jet
                 p4sd1_04 = ROOT.TLorentzVector(); p4sd2_04 = ROOT.TLorentzVector()
@@ -299,8 +289,6 @@ class TreeProducer(Analyzer):
                 Jet2_trk08_dR_pf08 = 999
                 Jet1_pf08 = None
                 Jet2_pf08 = None
-                corr1_08 =1.
-                corr2_08 =1.
                 for j in jets_pf08:
                     pf08= ROOT.TLorentzVector()
                     pf08.SetPtEtaPhiE(j.pt(), j.eta(), j.phi(), j.e())
@@ -310,10 +298,8 @@ class TreeProducer(Analyzer):
                     if pf08.DeltaR(j2)<Jet2_trk08_dR_pf08:
                         Jet2_trk08_dR_pf08=pf08.DeltaR(j2)
                         Jet2_pf08=j
-                if len(jets_pf08) > 0 : corr1_08 = Jet1_pf08.p4().Pt()/j1.Pt()
-                if len(jets_pf08) > 1 : corr2_08 = Jet2_pf08.p4().Pt()/j2.Pt()
-                if len(jets_pf08) == 0 : print "jets_pf08_1500 empty !!!"
-                if len(jets_pf08) == 1 : print "only 1 jets_pf08_1500 !!!"
+                corr1_08 = Jet1_pf08.p4().Pt()/j1.Pt()
+                corr2_08 = Jet2_pf08.p4().Pt()/j2.Pt()
 
                 #NORMAL TRK08 SD corrected jet
                 p4sd1_08 = ROOT.TLorentzVector(); p4sd2_08 = ROOT.TLorentzVector()

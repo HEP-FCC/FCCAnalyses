@@ -13,6 +13,7 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 comp = cfg.Component(
     'example',
      files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_Zprime_10TeV_ttbar/events_198227905.root"]
+#     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_1000_2000/events_096768951.root"]
 )
 
 selectedComponents = [
@@ -79,7 +80,7 @@ sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor   = splitFrac2
 sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor  = splitFrac2
 sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor = splitFrac2
 
-selectedComponents = [comp]
+#selectedComponents = [comp]
 
 
 
@@ -146,6 +147,17 @@ from EventStore import EventStore as Events
 
 #uncomment the following to go back to normal
 
+# fix pf04 jets (get muon back in)
+from heppy.FCChhAnalyses.analyzers.JetCorrector import JetCorrector
+pfjets04_fix = cfg.Analyzer(
+    JetCorrector,
+    'pfjets04_fix',
+    output = 'pfjets04_fix',
+    input_jets = 'pfjets04',
+    input_extra = 'muons',
+    dr_match = 0.4,
+)
+
 from heppy.analyzers.Selector import Selector
 # select pf02 jets above 2000 GeV
 jets_pf02_1500 = cfg.Analyzer(
@@ -185,7 +197,7 @@ jets_pf04_1000 = cfg.Analyzer(
     Selector,
     'jets_pf04_1000',
     output = 'jets_pf04_1000',
-    input_objects = 'pfjets04',
+    input_objects = 'pfjets04_fix',
     filter_func = lambda jet: jet.pt()>750
 )
 
@@ -207,7 +219,7 @@ jets_pf04_1500 = cfg.Analyzer(
     Selector,
     'jets_pf04_1500',
     output = 'jets_pf04_1500',
-    input_objects = 'pfjets04',
+    input_objects = 'pfjets04_fix',
     filter_func = lambda jet: jet.pt()>1000
 )
 
@@ -242,6 +254,8 @@ muons_100 = cfg.Analyzer(
 from heppy.FCChhAnalyses.HELHC.Zprime_tt.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
+    pfjets04_fix    = 'pfjets04_fix',
+
     jets_trk02_1000 = 'jets_trk02_1000',
     jets_trk04_1000 = 'jets_trk04_1000',
     jets_trk08_1000 = 'jets_trk08_1000',
@@ -261,6 +275,7 @@ tree = cfg.Analyzer(
 # the analyzers will process each event in this order
 sequence = cfg.Sequence( [
     source,
+    pfjets04_fix,
     jets_pf02_1500,
     jets_pf04_1000,
     jets_pf04_1000_pdg,
