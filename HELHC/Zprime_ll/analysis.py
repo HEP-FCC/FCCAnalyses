@@ -12,7 +12,7 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_6TeV_ll/events_074651276.root"]
+    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_12TeV_ll/events_058350789.root"]
 )
 
 selectedComponents = [
@@ -62,7 +62,14 @@ selectedComponents = [
                         sample.p8_pp_ZprimeI_8TeV_ll,
                         sample.p8_pp_ZprimeI_10TeV_ll,
                         sample.p8_pp_ZprimeI_12TeV_ll,
-                        sample.p8_pp_ZprimeI_14TeV_ll,
+                        sample.p8_pp_ZprimeI_14TeV_ll, 
+
+                        sample.p8_pp_ZprimeSSM_Interf_6TeV_ll,
+                        sample.p8_pp_ZprimeCHI_Interf_6TeV_ll,
+                        sample.p8_pp_ZprimePSI_Interf_6TeV_ll,
+                        sample.p8_pp_ZprimeLRM_Interf_6TeV_ll,
+                        sample.p8_pp_ZprimeETA_Interf_6TeV_ll,
+                        sample.p8_pp_ZprimeI_Interf_6TeV_ll,
 
                         sample.mgp8_pp_ee_5f_HT_500_1000,
                         sample.mgp8_pp_ee_5f_HT_1000_2000,
@@ -109,13 +116,13 @@ sample.p8_pp_ZprimeETA_10TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeETA_12TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeETA_14TeV_ll.splitFactor = splitFac
 
-#sample.p8_pp_ZprimeLRM_2TeV_ll.splitFactor  = splitFac
-#sample.p8_pp_ZprimeLRM_4TeV_ll.splitFactor  = splitFac
-#sample.p8_pp_ZprimeLRM_6TeV_ll.splitFactor  = splitFac
-#sample.p8_pp_ZprimeLRM_8TeV_ll.splitFactor  = splitFac
-#sample.p8_pp_ZprimeLRM_10TeV_ll.splitFactor = splitFac
-#sample.p8_pp_ZprimeLRM_12TeV_ll.splitFactor = splitFac
-#sample.p8_pp_ZprimeLRM_14TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeLRM_2TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeLRM_4TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeLRM_6TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeLRM_8TeV_ll.splitFactor  = splitFac
+sample.p8_pp_ZprimeLRM_10TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeLRM_12TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeLRM_14TeV_ll.splitFactor = splitFac
 
 sample.p8_pp_ZprimeI_2TeV_ll.splitFactor  = splitFac
 sample.p8_pp_ZprimeI_4TeV_ll.splitFactor  = splitFac
@@ -124,6 +131,14 @@ sample.p8_pp_ZprimeI_8TeV_ll.splitFactor  = splitFac
 sample.p8_pp_ZprimeI_10TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeI_12TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeI_14TeV_ll.splitFactor = splitFac
+
+
+sample.p8_pp_ZprimeSSM_Interf_6TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeCHI_Interf_6TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimePSI_Interf_6TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeLRM_Interf_6TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeETA_Interf_6TeV_ll.splitFactor = splitFac
+sample.p8_pp_ZprimeI_Interf_6TeV_ll.splitFactor = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_ee_5f_HT_500_1000.splitFactor      = splitFac2
@@ -137,7 +152,7 @@ sample.mgp8_pp_mumu_5f_HT_2000_5000.splitFactor   = splitFac2
 sample.mgp8_pp_mumu_5f_HT_5000_10000.splitFactor  = splitFac2
 sample.mgp8_pp_mumu_5f_HT_10000_27000.splitFactor = splitFac2
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
@@ -198,6 +213,7 @@ selected_electrons = cfg.Analyzer(
     output = 'selected_electrons',
     input_objects = 'electrons',
     filter_func = lambda ptc: ptc.pt()>50 and ptc.iso.sumpt/ptc.pt()<0.4
+    #filter_func = lambda ptc: ptc.pt()>50
     #filter_func = lambda ptc: ptc.pt()>5
 
 )
