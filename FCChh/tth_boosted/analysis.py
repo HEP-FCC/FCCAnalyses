@@ -22,10 +22,10 @@ selectedComponents = [
                        sample.mgp8_pp_ttz_5f_zbb,
                      ]
 
-sample.mgp8_pp_ttbb_4f.splitFactor = 30
-sample.mgp8_pp_ttj_4f.splitFactor = 25
-sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 30
-sample.mgp8_pp_ttz_5f_zbb.splitFactor = 40
+sample.mgp8_pp_ttbb_4f.splitFactor = 330
+sample.mgp8_pp_ttj_4f.splitFactor = 390
+sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 230
+sample.mgp8_pp_ttz_5f_zbb.splitFactor = 390
 
 #selectedComponents = [comp]
 
