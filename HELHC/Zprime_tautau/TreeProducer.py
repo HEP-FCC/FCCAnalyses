@@ -24,7 +24,8 @@ class TreeProducer(Analyzer):
         bookParticle(self.tree, 'Jet1_pf04')
         bookParticle(self.tree, 'Jet2_pf04')
         self.tree.var('Mj1j2_pf04', float)
-        self.tree.var('Mj1j2_pf04_METCor', float)
+        self.tree.var('Mj1j2_pf04_MetCorr', float)
+        self.tree.var('Mj1j2_pf04_MetCorr2', float)
         self.tree.var('mt', float)
         self.tree.var('mr', float)
         self.tree.var('mr2', float)
@@ -36,8 +37,32 @@ class TreeProducer(Analyzer):
 
         bookMet(self.tree, 'met')
 
-    def corrMET(self, jet1, pdg1 , jet2, pdg2, met):
- 
+
+    def corrMET(self, jet1, jet2, met):
+        dphi1 = abs(jet1.p4().DeltaPhi(met.p4()))
+        dphi2 = abs(jet2.p4().DeltaPhi(met.p4()))
+
+        metp4 = ROOT.TLorentzVector()
+        px = met.p4().Px()
+        py = met.p4().Py()
+            
+        if (dphi1 < dphi2):
+            pz = jet1.p4().Pz()/2.
+            e = math.sqrt(px**2 + py**2 + pz**2)
+            metp4.SetPxPyPzE(px, py, pz, e) 
+            jetcorr1   = Particle(15, 0, jet1.p4() + metp4, 1)
+            jetcorr2   = Particle(15, 0, jet2.p4(), 1)
+        else:
+            pz = jet2.p4().Pz()/2.
+            e = math.sqrt(px**2 + py**2 + pz**2)
+            metp4.SetPxPyPzE(px, py, pz, e) 
+            jetcorr1  = Particle(15, 0, jet1.p4(), 1)
+            jetcorr2  = Particle(15, 0, jet2.p4() + metp4, 1)
+        return jetcorr1,jetcorr2
+
+
+    def corrMET2(self, jet1 , jet2, met):
+
         metp4 = ROOT.TLorentzVector()
         px = met.p4().Px()
         py = met.p4().Py()
@@ -46,16 +71,15 @@ class TreeProducer(Analyzer):
             pz = jet2.p4().Pz()/2.
             e = math.sqrt(px**2 + py**2 + pz**2)
             metp4.SetPxPyPzE(px, py, pz, e) 
-            jetcorr2   = Particle(pdg1, 0, jet1.p4() + metp4, 1)
-            jetcorr1   = Particle(pdg2, 0, jet2.p4(), 1)
+            jetcorr2   = Particle(15, 0, jet1.p4() + metp4, 1)
+            jetcorr1   = Particle(15, 0, jet2.p4(), 1)
         else:
             pz = jet2.p4().Pz()/2.
             e = math.sqrt(px**2 + py**2 + pz**2)
             metp4.SetPxPyPzE(px, py, pz, e) 
-            jetcorr2  = Particle(pdg1, 0, jet1.p4(), 1)
-            jetcorr1  = Particle(pdg2, 0, jet2.p4() + metp4, 1)
+            jetcorr2  = Particle(15, 0, jet1.p4(), 1)
+            jetcorr1  = Particle(15, 0, jet2.p4() + metp4, 1)
         return jetcorr1,jetcorr2
-
 
     def fillMass(self, jet1, jet2):
         mj1j2 = ROOT.TLorentzVector()
@@ -88,10 +112,13 @@ class TreeProducer(Analyzer):
         mtautau= self.fillMass(jets_pf04[0],jets_pf04[1])
         self.tree.fill( 'Mj1j2_pf04', mtautau)
 
-        jetmet1, jetmet2 = self.corrMET(jets_pf04[0], 15, jets_pf04[1], 15, event.met)
-        mtautau_metcor= self.fillMass(jetmet1, jetmet2)
-        self.tree.fill( 'Mj1j2_pf04_METCor', mtautau_metcor)
+        jetmet1, jetmet2 = self.corrMET(jets_pf04[0], jets_pf04[1], event.met)
+        mtautaumet= self.fillMass(jetmet1,jetmet2)
+        self.tree.fill( 'Mj1j2_pf04_MetCorr', mtautaumet)
 
+        jetmet1, jetmet2 = self.corrMET2(jets_pf04[0], jets_pf04[1], event.met)
+        mtautaumet= self.fillMass(jetmet1,jetmet2)
+        self.tree.fill( 'Mj1j2_pf04_MetCorr2', mtautaumet)
 
         Zprime=ROOT.TLorentzVector()
         j1 = ROOT.TLorentzVector(); j2 = ROOT.TLorentzVector()
@@ -129,31 +156,7 @@ class TreeProducer(Analyzer):
         pl2.SetPtEtaPhiM(jets_pf04[1].pt(), jets_pf04[1].eta(), jets_pf04[1].phi(), jets_pf04[1].m())
         pMet.SetPtEtaPhi(event.met.pt(), 0.0, event.met.phi())
 
-
-        def calcMR(L1, L2):
-            E = L1.P()+L2.P()
-            Pz = L1.Pz()+L2.Pz()
-            MR = math.sqrt(E*E-Pz*Pz)
-            return MR
-
-        def calcMRNEW(L1, L2, M):
-            vI = M + L1.Vect() + L2.Vect()
-            vI.SetZ(0.0)
-            PpQ = calcMR(L1,L2)
-            vptx = (L1+L2).Px()
-            vpty = (L1+L2).Py()
-            vpt = ROOT.TVector3()
-            vpt.SetXYZ(vptx,vpty,0.0)
-            MR2 = 0.5*(PpQ*PpQ-vpt.Dot(vI)+PpQ*math.sqrt(PpQ*PpQ+vI.Dot(vI)-2.*vI.Dot(vpt)))
-            return MR2
-
-	mr3 = 2*math.sqrt(calcMRNEW(pl1, pl2, pMet))
-        mr2 = calcMR(pl1, pl2)
-
         self.tree.fill('mt' , mt )
-        self.tree.fill('mr' , mr )
-        self.tree.fill('mr2' , mr2 )
-        self.tree.fill('mr3' , mr3 )
         self.tree.fill('dr',pl1.DeltaR(pl2))
 
         fillParticle(self.tree, 'Jet1_pf04', jets_pf04[0])
