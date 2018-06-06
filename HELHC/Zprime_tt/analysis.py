@@ -12,8 +12,9 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_Zprime_10TeV_ttbar/events_198227905.root"]
+#    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_Zprime_10TeV_ttbar/events_198227905.root"]
 #     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_1000_2000/events_096768951.root"]
+     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_2000_5000/events_163309325.root"]
 )
 
 selectedComponents = [
@@ -158,6 +159,15 @@ pfjets04_fix = cfg.Analyzer(
     dr_match = 0.4,
 )
 
+from heppy.analyzers.Matcher import Matcher
+lepton_jets = cfg.Analyzer(
+    Matcher,
+    'lepton_jets',
+    delta_r = 0.2,
+    match_particles = 'muons',
+    particles = 'pfjets02'
+)
+
 from heppy.analyzers.Selector import Selector
 # select pf02 jets above 2000 GeV
 jets_pf02_1500 = cfg.Analyzer(
@@ -165,7 +175,7 @@ jets_pf02_1500 = cfg.Analyzer(
     'jets_pf02_1500',
     output = 'jets_pf02_1500',
     input_objects = 'pfjets02',
-    filter_func = lambda fatjet: fatjet.pt()>1000.
+    filter_func = lambda fatjet: fatjet.pt()>1000. and fatjet.match is None
 )
 
 jets_trk02_1000 = cfg.Analyzer(
@@ -215,12 +225,13 @@ jets_pf04_1000_pdg = cfg.Analyzer(
 )
 
 # select pf04 jets above 1500 GeV for jet correction
+# -> avoid rare crashes when pf04 jet is a little bit smaller than pf02
 jets_pf04_1500 = cfg.Analyzer(
     Selector,
     'jets_pf04_1500',
     output = 'jets_pf04_1500',
     input_objects = 'pfjets04_fix',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>800
 )
 
 # select pf08 jets above 1500 GeV
@@ -276,6 +287,7 @@ tree = cfg.Analyzer(
 sequence = cfg.Sequence( [
     source,
     pfjets04_fix,
+    lepton_jets,
     jets_pf02_1500,
     jets_pf04_1000,
     jets_pf04_1000_pdg,
