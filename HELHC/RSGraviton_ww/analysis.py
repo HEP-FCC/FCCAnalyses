@@ -211,12 +211,13 @@ jets_pf04_1000 = cfg.Analyzer(
 )
 
 # select pf04 jets above 1500 GeV for jet correction
+# -> avoid rare crashes when pf04 jet is a little bit smaller than pf02
 jets_pf04_1500 = cfg.Analyzer(
     Selector,
     'jets_pf04_1500',
     output = 'jets_pf04_1500',
     input_objects = 'pfjets04_fix',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>800
 )
 
 # select pf08 jets above 1500 GeV
