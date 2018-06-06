@@ -27,12 +27,17 @@ selectedComponents = [
     sample.p8_pp_ExcitedQ_40TeV_qq,
     sample.p8_pp_ExcitedQ_45TeV_qq,
     sample.p8_pp_ExcitedQ_50TeV_qq,
-    sample.mgp8_pp_jj_lo,
+    sample.mgp8_pp_jj_5f_HT_500_1000,
+    sample.mgp8_pp_jj_5f_HT_1000_2000,
+    sample.mgp8_pp_jj_5f_HT_2000_5000,
+    sample.mgp8_pp_jj_5f_HT_5000_10000,
+    sample.mgp8_pp_jj_5f_HT_10000_27000,
+    sample.mgp8_pp_jj_5f_HT_27000_100000,
                      ]
 
 
 
-splitFac = 20
+splitFac = 10
 sample.p8_pp_ExcitedQ_15TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_20TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_25TeV_qq.splitFactor = splitFac
@@ -41,7 +46,14 @@ sample.p8_pp_ExcitedQ_35TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_40TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_45TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_50TeV_qq.splitFactor = splitFac
-sample.mgp8_pp_jj_lo.splitFactor = 200
+
+splitFac2 = 60
+sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor     = splitFac2
+sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor    = splitFac2
+sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor    = splitFac2
+sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor   = splitFac2
+sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor  = splitFac2
+sample.mgp8_pp_jj_5f_HT_27000_100000.splitFactor = splitFac2
 
 #selectedComponents = [comp]
 
