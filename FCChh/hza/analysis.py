@@ -22,24 +22,14 @@ selectedComponents = [
                       mgp8_pp_tth01j_5f_hlla,
                       mgp8_pp_vbf_h01j_5f_hlla,
                       mgp8_pp_vh012j_5f_hlla,
-                      #mgp8_pp_lla01j_mhcut_5f
-                      mgp8_pp_lla01j_mhcut_5f_HT_0_100,
-                      mgp8_pp_lla01j_mhcut_5f_HT_100_300, 
-                      mgp8_pp_lla01j_mhcut_5f_HT_300_500, 
-                      mgp8_pp_lla01j_mhcut_5f_HT_500_100000,
-                      mgp8_pp_lla01j_mhcut_5f_HT_300_100000,
+                      mgp8_pp_llaj_mhcut_5f
                       ]
 
 mgp8_pp_h012j_5f_hlla.splitFactor = 50
 mgp8_pp_vbf_h01j_5f_hlla.splitFactor = 50
 mgp8_pp_tth01j_5f_hlla.splitFactor = 50
 mgp8_pp_vh012j_5f_hlla.splitFactor = 50
-#mgp8_pp_lla01j_mhcut_5f.splitFactor = 50
-mgp8_pp_lla01j_mhcut_5f_HT_0_100.splitFactor = 4
-mgp8_pp_lla01j_mhcut_5f_HT_100_300.splitFactor = 4
-mgp8_pp_lla01j_mhcut_5f_HT_300_500.splitFactor = 2 
-mgp8_pp_lla01j_mhcut_5f_HT_500_100000.splitFactor = 2
-mgp8_pp_lla01j_mhcut_5f_HT_300_100000.splitFactor = 2
+mgp8_pp_llaj_mhcut_5f.splitFactor = 100
 
 
 #selectedComponents = [comp]

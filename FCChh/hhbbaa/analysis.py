@@ -34,7 +34,10 @@ selectedComponents = [
                       mgp8_pp_hh_lambda105_5f_haa,
                       mgp8_pp_hh_lambda110_5f_haa,
                       mgp8_pp_tth01j_5f_haa,
-                     ]
+                      mgp8_pp_bbh_haa,
+                      mgp8_pp_vh012j_5f_haa,
+		      mgp8_pp_h012j_5f_haa
+		      ]
 
 
 mgp8_pp_jjaa_5f.splitFactor = 400
@@ -52,8 +55,9 @@ mgp8_pp_hh_lambda104_5f_haa.splitFactor = 20
 mgp8_pp_hh_lambda105_5f_haa.splitFactor = 20
 mgp8_pp_hh_lambda110_5f_haa.splitFactor = 20
 mgp8_pp_tth01j_5f_haa.splitFactor = 50
-
-
+mgp8_pp_bbh_haa.splitFactor = 40
+mgp8_pp_vh012j_5f_haa.splitFactor = 40
+mgp8_pp_h012j_5f_haa.splitFactor = 40
 
 # dummy, needs to be here FlatTreeAnalyzer
 mgp8_pp_jjja_5f.splitFactor = 1000

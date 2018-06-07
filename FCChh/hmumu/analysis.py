@@ -22,14 +22,17 @@ selectedComponents = [
                       mgp8_pp_tth01j_5f_hmumu,
                       mgp8_pp_vbf_h01j_5f_hmumu,
                       mgp8_pp_vh012j_5f_hmumu,
-                      mgp8_pp_mumu012j_mhcut_5f_HT_0_100,
-		      mgp8_pp_mumu012j_mhcut_5f_HT_100_300,
-		      mgp8_pp_mumu012j_mhcut_5f_HT_1100_100000,
-		      mgp8_pp_mumu012j_mhcut_5f_HT_300_500,
-		      mgp8_pp_mumu012j_mhcut_5f_HT_500_700,
-		      mgp8_pp_mumu012j_mhcut_5f_HT_700_900,
-		      mgp8_pp_mumu012j_mhcut_5f_HT_900_1100,
-		      ]
+                      #mgp8_pp_mumu012j_mhcut_5f_HT_0_100,
+		      #mgp8_pp_mumu012j_mhcut_5f_HT_100_300,
+		      #mgp8_pp_mumu012j_mhcut_5f_HT_1100_100000,
+		      #mgp8_pp_mumu012j_mhcut_5f_HT_300_500,
+		      #mgp8_pp_mumu012j_mhcut_5f_HT_500_700,
+		      #mgp8_pp_mumu012j_mhcut_5f_HT_700_900,
+		      #mgp8_pp_mumu012j_mhcut_5f_HT_900_1100,
+		      mgp8_pp_mumuj_mhcut_5f_HT_0_100,
+		      mgp8_pp_mumuj_mhcut_5f_HT_100_500,
+		      mgp8_pp_mumuj_mhcut_5f_HT_500_100000,
+                      ]
 
 mgp8_pp_h012j_5f_hmumu.splitFactor = 10
 mgp8_pp_tth01j_5f_hmumu.splitFactor = 10
@@ -37,13 +40,16 @@ mgp8_pp_vbf_h01j_5f_hmumu.splitFactor = 10
 mgp8_pp_vh012j_5f_hmumu.splitFactor = 10
 #mgp8_pp_mumu012j_mhcut_5f.splitFactor = 10
 
-mgp8_pp_mumu012j_mhcut_5f_HT_0_100.splitFactor = 10
-mgp8_pp_mumu012j_mhcut_5f_HT_100_300.splitFactor = 3
-mgp8_pp_mumu012j_mhcut_5f_HT_1100_100000.splitFactor = 2
-mgp8_pp_mumu012j_mhcut_5f_HT_300_500.splitFactor = 2
-mgp8_pp_mumu012j_mhcut_5f_HT_500_700.splitFactor = 2
-mgp8_pp_mumu012j_mhcut_5f_HT_700_900.splitFactor = 2
-mgp8_pp_mumu012j_mhcut_5f_HT_900_1100.splitFactor = 2
+#mgp8_pp_mumu012j_mhcut_5f_HT_0_100.splitFactor = 10
+#mgp8_pp_mumu012j_mhcut_5f_HT_100_300.splitFactor = 3
+#mgp8_pp_mumu012j_mhcut_5f_HT_1100_100000.splitFactor = 2
+#mgp8_pp_mumu012j_mhcut_5f_HT_300_500.splitFactor = 2
+#mgp8_pp_mumu012j_mhcut_5f_HT_500_700.splitFactor = 2
+#mgp8_pp_mumu012j_mhcut_5f_HT_700_900.splitFactor = 2
+#mgp8_pp_mumu012j_mhcut_5f_HT_900_1100.splitFactor = 2
+mgp8_pp_mumuj_mhcut_5f_HT_0_100.splitFactor = 100
+mgp8_pp_mumuj_mhcut_5f_HT_100_500.splitFactor = 100
+mgp8_pp_mumuj_mhcut_5f_HT_500_100000.splitFactor = 100
 
 #selectedComponents = [comp]
 

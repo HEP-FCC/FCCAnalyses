@@ -74,6 +74,12 @@ class TreeProducer(Analyzer):
             fillParticle(self.tree, 'a2', photons[1])
             fillParticle(self.tree, 'b1', bs[0])
             fillParticle(self.tree, 'b2', bs[1])
+          
+            drbb = deltaR(bs[0], bs[1])
+            draa = deltaR(photons[0], photons[1])
+     
+            self.tree.fill('draa' , draa)
+            self.tree.fill('drbb' , drbb)
 
             self.tree.tree.Fill()
         
