@@ -18,21 +18,37 @@ comp = cfg.Component(
 from FCC_heppySampleList_fcc_v02 import *
 
 selectedComponents = [
-                       mgp8_pp_wwjj_2l2v_LL,
-                       mgp8_pp_wwjj_2l2v_TT,
-                       mgp8_pp_wwjj_2l2v_TL,
-                       mgp8_pp_zzjj_4l_LL,
-                       mgp8_pp_zzjj_4l_TT,
-                       mgp8_pp_zzjj_4l_TL,
-                      ]
+		       mgp8_pp_tt012j_5f,
+		       mgp8_pp_vv012j_5f,
+		       mgp8_pp_zzjj_4l_QED4_QCD0_LL,
+		       mgp8_pp_zzjj_4l_QED4_QCD0_TL,
+		       mgp8_pp_zzjj_4l_QED4_QCD0_TT,
+		       mgp8_pp_zzjj_4l_QED2_QCD2_LL,
+		       mgp8_pp_zzjj_4l_QED2_QCD2_TL,
+		       mgp8_pp_zzjj_4l_QED2_QCD2_TT,
+		       mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_LL,
+		       mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TL,
+		       mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TT,
+		       mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_LL,
+		       mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TL,
+		       mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TT,
+                     ]
 
-mgp8_pp_wwjj_2l2v_LL.splitFactor = 2
-mgp8_pp_wwjj_2l2v_TT.splitFactor = 2
-mgp8_pp_wwjj_2l2v_TL.splitFactor = 2
+mgp8_pp_zzjj_4l_QED4_QCD0_LL.splitFactor = 1
+mgp8_pp_zzjj_4l_QED4_QCD0_TL.splitFactor = 4
+mgp8_pp_zzjj_4l_QED4_QCD0_TT.splitFactor = 6
+mgp8_pp_zzjj_4l_QED2_QCD2_LL.splitFactor = 1
+mgp8_pp_zzjj_4l_QED2_QCD2_TL.splitFactor = 4
+mgp8_pp_zzjj_4l_QED2_QCD2_TT.splitFactor = 6
+mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_LL.splitFactor = 1
+mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TL.splitFactor = 4
+mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TT.splitFactor = 6
+mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_LL.splitFactor = 1
+mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TL.splitFactor = 4
+mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TT.splitFactor = 6
 
-mgp8_pp_zzjj_4l_LL.splitFactor = 6
-mgp8_pp_zzjj_4l_TT.splitFactor = 10 
-mgp8_pp_zzjj_4l_TL.splitFactor = 2
+mgp8_pp_tt012j_5f.splitFactor = 50
+mgp8_pp_vv012j_5f.splitFactor = 50
 
 #selectedComponents = [comp]
 
@@ -133,6 +149,22 @@ jets_nolepton = cfg.Analyzer(
     filter_func = lambda jet: jet.match is None
 )
 
+selected_bs = cfg.Analyzer(
+    Selector,
+    'selected_bs',
+    output = 'selected_bs',
+    input_objects = 'jets_nolepton',
+    filter_func = lambda ptc: ptc.tags['bf'] > 0
+)
+
+selected_lights = cfg.Analyzer(
+    Selector,
+    'selected_lights',
+    output = 'selected_lights',
+    input_objects = 'jets_nolepton',
+    filter_func = lambda ptc: ptc.tags['bf'] == 0
+)
+
 from heppy.FCChhAnalyses.FCChh.vbs.selection import Selection
 selection = cfg.Analyzer(
     Selection,
@@ -155,6 +187,8 @@ sequence = cfg.Sequence( [
     jets_30,
     match_lepton_jets,
     jets_nolepton,
+    selected_bs,
+    selected_lights,
     reco_tree,
     ] )
 
