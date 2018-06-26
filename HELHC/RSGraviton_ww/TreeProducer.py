@@ -83,6 +83,16 @@ class TreeProducer(Analyzer):
 	self.tree.var('Jet2_Flow45',float)
 	self.tree.var('Jet2_Flow55',float)
 	
+        self.tree.var('Jet1_log10Flow15',float)
+        self.tree.var('Jet1_log10Flow25',float)
+        self.tree.var('Jet1_log10Flow35',float)
+        self.tree.var('Jet1_log10Flow45',float)
+        self.tree.var('Jet1_log10Flow55',float)
+        self.tree.var('Jet2_log10Flow15',float)
+        self.tree.var('Jet2_log10Flow25',float)
+        self.tree.var('Jet2_log10Flow35',float)
+        self.tree.var('Jet2_log10Flow45',float)
+        self.tree.var('Jet2_log10Flow55',float)
 
 	self.tree.var('rapiditySeparation', float)
         self.tree.var('transverseMomentumAsymmetry', float)
@@ -390,6 +400,17 @@ class TreeProducer(Analyzer):
 		self.tree.fill('Jet1_Flow35', flow_Jet1[2]); self.tree.fill('Jet2_Flow35', flow_Jet2[2])
 		self.tree.fill('Jet1_Flow45', flow_Jet1[3]); self.tree.fill('Jet2_Flow45', flow_Jet2[3])
 		self.tree.fill('Jet1_Flow55', flow_Jet1[4]); self.tree.fill('Jet2_Flow55', flow_Jet2[4])
+
+                log10flow_Jet1 = [-20.,-20.,-20.,-20.,-20.]
+                log10flow_Jet2 = [-20.,-20.,-20.,-20.,-20.]
+                for ilog in range(5) :
+                  if flow_Jet1[ilog]!=0. : log10flow_Jet1[ilog]=math.log(flow_Jet1[ilog],10)
+                  if flow_Jet2[ilog]!=0. : log10flow_Jet2[ilog]=math.log(flow_Jet2[ilog],10)
+                self.tree.fill('Jet1_log10Flow15', log10flow_Jet1[0]); self.tree.fill('Jet2_log10Flow15', log10flow_Jet2[0])
+                self.tree.fill('Jet1_log10Flow25', log10flow_Jet1[1]); self.tree.fill('Jet2_log10Flow25', log10flow_Jet2[1])
+                self.tree.fill('Jet1_log10Flow35', log10flow_Jet1[2]); self.tree.fill('Jet2_log10Flow35', log10flow_Jet2[2])
+                self.tree.fill('Jet1_log10Flow45', log10flow_Jet1[3]); self.tree.fill('Jet2_log10Flow45', log10flow_Jet2[3])
+                self.tree.fill('Jet1_log10Flow55', log10flow_Jet1[4]); self.tree.fill('Jet2_log10Flow55', log10flow_Jet2[4])
 		
                 ###################################
                 #TMVA Stuff Starts!
