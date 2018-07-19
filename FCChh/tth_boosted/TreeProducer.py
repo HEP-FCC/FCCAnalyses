@@ -53,7 +53,10 @@ class TreeProducer(Analyzer):
             self.tree.var('{}jet_ncs'.format(flavour), float)
             self.tree.var('{}jet_nls'.format(flavour), float)
             self.tree.var('{}jet_mjs'.format(flavour), float)
+            self.tree.var('{}jet_mj'.format(flavour), float)
+            self.tree.var('{}jet_mjj'.format(flavour), float)
             self.tree.var('{}jet_mbs'.format(flavour), float)
+            self.tree.var('{}jet_dRjj'.format(flavour), float)
             ##self.tree.var('{}jet_bdt_th'.format(flavour), float)
 
         ## for MVA
@@ -133,7 +136,10 @@ class TreeProducer(Analyzer):
             setattr(jet, 'nls', 0)
             setattr(jet, 'flow', [0]*5)
             setattr(jet, 'p4_js', TLorentzVector())
+            setattr(jet, 'p4_j', TLorentzVector())
+            setattr(jet, 'p4_jj', TLorentzVector())
             setattr(jet, 'p4_bs', TLorentzVector())
+            setattr(jet, 'dRjj', 0)
 
             setattr(jet, 'tau32', -9.)
             setattr(jet, 'tau31', -9.)
@@ -148,6 +154,8 @@ class TreeProducer(Analyzer):
                 jet.tau32 = jet.tau3/jet.tau2
 
             # counting the number of jets inside (R = 1.5 - 0.4 = 1.1) fatjet
+            j_for_dR = []
+            dRjj = 0.
             for j in for_jets:
 
                 # fill different jets matched with fatjet
@@ -155,7 +163,10 @@ class TreeProducer(Analyzer):
                 if drjjet < 1.1: 
                   jet.njs += 1
                   jet.p4_js += j.p4()
- 
+                  if jet.njs < 2 : jet.p4_j += j.p4()
+                  if jet.njs < 3 : jet.p4_jj += j.p4()
+                  if jet.njs < 3 : j_for_dR.append(j)
+
                   # get pdgID to compute TRF
                   ipdg=0
                   if use_DELPHES==True:
@@ -171,6 +182,10 @@ class TreeProducer(Analyzer):
                       jet.ncs += 1
                   else :
                       jet.nls += 1
+
+            # compute dR of the 2 leading jets in fatjet (investigate ttZ, ttH mjj tail)
+            if jet.njs > 1 : dRjj = deltaR(j_for_dR[0], j_for_dR[1])
+            jet.dRjj = dRjj
 
             # do eflow with constituents here
             constituent_vector = TLorentzVector()
@@ -263,7 +278,10 @@ class TreeProducer(Analyzer):
                 self.tree.fill('{}jet_ncs'.format(flavour), jet.ncs)
                 self.tree.fill('{}jet_nls'.format(flavour), jet.nls)
                 self.tree.fill('{}jet_mjs'.format(flavour), jet.p4_js.M())
+                self.tree.fill('{}jet_mj'.format(flavour), jet.p4_j.M())
+                self.tree.fill('{}jet_mjj'.format(flavour), jet.p4_jj.M())
                 self.tree.fill('{}jet_mbs'.format(flavour), jet.p4_bs.M())
+                self.tree.fill('{}jet_dRjj'.format(flavour), jet.dRjj)
                 ##self.tree.fill('{}jet_bdt_th'.format(flavour), jet.bdt_th)
 
             #Hjet = fatjets[1]
