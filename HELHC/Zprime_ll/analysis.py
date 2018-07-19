@@ -12,7 +12,7 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_12TeV_ll/events_058350789.root"]
+    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_6TeV_ll/events_181976876.root"]
 )
 
 selectedComponents = [
@@ -71,16 +71,16 @@ selectedComponents = [
                         sample.p8_pp_ZprimeETA_Interf_6TeV_ll,
                         sample.p8_pp_ZprimeI_Interf_6TeV_ll,
 
-                        sample.mgp8_pp_ee_5f_HT_500_1000,
-                        sample.mgp8_pp_ee_5f_HT_1000_2000,
-                        sample.mgp8_pp_ee_5f_HT_2000_5000,
-                        sample.mgp8_pp_ee_5f_HT_5000_10000,
-                        sample.mgp8_pp_ee_5f_HT_10000_27000,
-                        sample.mgp8_pp_mumu_5f_HT_500_1000,
-                        sample.mgp8_pp_mumu_5f_HT_1000_2000,
-                        sample.mgp8_pp_mumu_5f_HT_2000_5000,
-                        sample.mgp8_pp_mumu_5f_HT_5000_10000,
-                        sample.mgp8_pp_mumu_5f_HT_10000_27000,
+#                        sample.mgp8_pp_ee_5f_HT_500_1000,
+#                        sample.mgp8_pp_ee_5f_HT_1000_2000,
+#                        sample.mgp8_pp_ee_5f_HT_2000_5000,
+#                        sample.mgp8_pp_ee_5f_HT_5000_10000,
+#                        sample.mgp8_pp_ee_5f_HT_10000_27000,
+#                        sample.mgp8_pp_mumu_5f_HT_500_1000,
+#                        sample.mgp8_pp_mumu_5f_HT_1000_2000,
+#                        sample.mgp8_pp_mumu_5f_HT_2000_5000,
+#                        sample.mgp8_pp_mumu_5f_HT_5000_10000,
+#                        sample.mgp8_pp_mumu_5f_HT_10000_27000,
                      ]
 
 splitFac = 10
@@ -152,7 +152,7 @@ sample.mgp8_pp_mumu_5f_HT_2000_5000.splitFactor   = splitFac2
 sample.mgp8_pp_mumu_5f_HT_5000_10000.splitFactor  = splitFac2
 sample.mgp8_pp_mumu_5f_HT_10000_27000.splitFactor = splitFac2
 
-selectedComponents = [comp]
+#selectedComponents = [comp]
 
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
