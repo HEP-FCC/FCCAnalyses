@@ -19,20 +19,32 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 selectedComponents = [
 
-    sample.p8_pp_ExcitedQ_15TeV_qq,
-    sample.p8_pp_ExcitedQ_20TeV_qq,
-    sample.p8_pp_ExcitedQ_25TeV_qq,
-    sample.p8_pp_ExcitedQ_30TeV_qq,
-    sample.p8_pp_ExcitedQ_35TeV_qq,
-    sample.p8_pp_ExcitedQ_40TeV_qq,
-    sample.p8_pp_ExcitedQ_45TeV_qq,
-    sample.p8_pp_ExcitedQ_50TeV_qq,
-    sample.mgp8_pp_jj_5f_HT_500_1000,
-    sample.mgp8_pp_jj_5f_HT_1000_2000,
-    sample.mgp8_pp_jj_5f_HT_2000_5000,
-    sample.mgp8_pp_jj_5f_HT_5000_10000,
-    sample.mgp8_pp_jj_5f_HT_10000_27000,
-    sample.mgp8_pp_jj_5f_HT_27000_100000,
+#    sample.p8_pp_ExcitedQ_15TeV_qq,
+#    sample.p8_pp_ExcitedQ_20TeV_qq,
+#    sample.p8_pp_ExcitedQ_25TeV_qq,
+#    sample.p8_pp_ExcitedQ_30TeV_qq,
+#    sample.p8_pp_ExcitedQ_35TeV_qq,
+#    sample.p8_pp_ExcitedQ_40TeV_qq,
+#    sample.p8_pp_ExcitedQ_45TeV_qq,
+#    sample.p8_pp_ExcitedQ_50TeV_qq,
+
+    sample.p8_pp_ZprimeSSM_10TeV_jj,
+    sample.p8_pp_ZprimeSSM_15TeV_jj,
+    sample.p8_pp_ZprimeSSM_20TeV_jj,
+    sample.p8_pp_ZprimeSSM_25TeV_jj,
+    sample.p8_pp_ZprimeSSM_30TeV_jj,
+    sample.p8_pp_ZprimeSSM_35TeV_jj,
+    sample.p8_pp_ZprimeSSM_40TeV_jj,
+    sample.p8_pp_ZprimeSSM_45TeV_jj,
+    sample.p8_pp_ZprimeSSM_50TeV_jj,
+
+
+#    sample.mgp8_pp_jj_5f_HT_500_1000,
+#    sample.mgp8_pp_jj_5f_HT_1000_2000,
+#    sample.mgp8_pp_jj_5f_HT_2000_5000,
+#    sample.mgp8_pp_jj_5f_HT_5000_10000,
+#    sample.mgp8_pp_jj_5f_HT_10000_27000,
+#    sample.mgp8_pp_jj_5f_HT_27000_100000,
                      ]
 
 
@@ -46,6 +58,16 @@ sample.p8_pp_ExcitedQ_35TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_40TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_45TeV_qq.splitFactor = splitFac
 sample.p8_pp_ExcitedQ_50TeV_qq.splitFactor = splitFac
+
+sample.p8_pp_ZprimeSSM_10TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_15TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_20TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_25TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_30TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_35TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_40TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_45TeV_jj.splitFactor = splitFac
+sample.p8_pp_ZprimeSSM_50TeV_jj.splitFactor = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor     = splitFac2
