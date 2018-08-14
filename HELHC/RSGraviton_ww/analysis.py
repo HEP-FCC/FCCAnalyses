@@ -56,29 +56,29 @@ sample.p8_pp_RSGraviton_10TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_12TeV_ww.splitFactor = splitFac
 sample.p8_pp_RSGraviton_14TeV_ww.splitFactor = splitFac
 
-splitFrac2 = 60
-sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor    = splitFrac2
-sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor   = splitFrac2
-sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor   = splitFrac2
-sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor  = splitFrac2
-sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor = splitFrac2
-sample.mgp8_pp_tt_5f_HT_500_1000.splitFactor    = splitFrac2
-sample.mgp8_pp_tt_5f_HT_1000_2000.splitFactor   = splitFrac2
-sample.mgp8_pp_tt_5f_HT_2000_5000.splitFactor   = splitFrac2
-sample.mgp8_pp_tt_5f_HT_5000_10000.splitFactor  = splitFrac2
-sample.mgp8_pp_tt_5f_HT_10000_27000.splitFactor = splitFrac2
-sample.mgp8_pp_vv_5f_HT_500_1000.splitFactor    = splitFrac2
-sample.mgp8_pp_vv_5f_HT_1000_2000.splitFactor   = splitFrac2
-sample.mgp8_pp_vv_5f_HT_2000_5000.splitFactor   = splitFrac2
-sample.mgp8_pp_vv_5f_HT_5000_10000.splitFactor  = splitFrac2
-sample.mgp8_pp_vv_5f_HT_10000_27000.splitFactor = splitFrac2
-sample.mgp8_pp_vj_5f_HT_500_1000.splitFactor    = splitFrac2
-sample.mgp8_pp_vj_5f_HT_1000_2000.splitFactor   = splitFrac2
-sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor   = splitFrac2
-sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor  = splitFrac2
-sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor = splitFrac2
+splitFac2 = 60
+sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor    = splitFac2
+sample.mgp8_pp_jj_5f_HT_1000_2000.splitFactor   = splitFac2
+sample.mgp8_pp_jj_5f_HT_2000_5000.splitFactor   = splitFac2
+sample.mgp8_pp_jj_5f_HT_5000_10000.splitFactor  = splitFac2
+sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor = splitFac2
+sample.mgp8_pp_tt_5f_HT_500_1000.splitFactor    = splitFac2
+sample.mgp8_pp_tt_5f_HT_1000_2000.splitFactor   = splitFac2
+sample.mgp8_pp_tt_5f_HT_2000_5000.splitFactor   = splitFac2
+sample.mgp8_pp_tt_5f_HT_5000_10000.splitFactor  = splitFac2
+sample.mgp8_pp_tt_5f_HT_10000_27000.splitFactor = splitFac2
+sample.mgp8_pp_vv_5f_HT_500_1000.splitFactor    = splitFac2
+sample.mgp8_pp_vv_5f_HT_1000_2000.splitFactor   = splitFac2
+sample.mgp8_pp_vv_5f_HT_2000_5000.splitFactor   = splitFac2
+sample.mgp8_pp_vv_5f_HT_5000_10000.splitFactor  = splitFac2
+sample.mgp8_pp_vv_5f_HT_10000_27000.splitFactor = splitFac2
+sample.mgp8_pp_vj_5f_HT_500_1000.splitFactor    = splitFac2
+sample.mgp8_pp_vj_5f_HT_1000_2000.splitFactor   = splitFac2
+sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor   = splitFac2
+sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor  = splitFac2
+sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor = splitFac2
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
@@ -211,12 +211,13 @@ jets_pf04_1000 = cfg.Analyzer(
 )
 
 # select pf04 jets above 1500 GeV for jet correction
+# -> avoid rare crashes when pf04 jet is a little bit smaller than pf02
 jets_pf04_1500 = cfg.Analyzer(
     Selector,
     'jets_pf04_1500',
     output = 'jets_pf04_1500',
     input_objects = 'pfjets04_fix',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>800
 )
 
 # select pf08 jets above 1500 GeV
