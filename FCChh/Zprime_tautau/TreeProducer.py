@@ -25,7 +25,6 @@ class TreeProducer(Analyzer):
         self.tree.var('Mj1j2_pf04', float)
         self.tree.var('Mj1j2_pf04_MetCorr', float)
         self.tree.var('Mj1j2_pf04_MetCorr2', float)
-
         self.tree.var('mt', float)
         self.tree.var('mr', float)
         self.tree.var('mr2', float)
@@ -60,24 +59,24 @@ class TreeProducer(Analyzer):
             jetcorr2  = Particle(15, 0, jet2.p4() + metp4, 1)
         return jetcorr1,jetcorr2
 
-    def corrMET2(self, jet1, jet2, met):
+    def corrMET2(self, jet1 , jet2, met):
 
         metp4 = ROOT.TLorentzVector()
         px = met.p4().Px()
         py = met.p4().Py()
             
-        if (jet1.p4().Pt() < jet2.p4().Pt()):
-            pz = jet1.p4().Pz()/2.
+        if (jet1.p4().Pt()>jet2.p4().Pt()):
+            pz = jet2.p4().Pz()/2.
             e = math.sqrt(px**2 + py**2 + pz**2)
             metp4.SetPxPyPzE(px, py, pz, e) 
-            jetcorr1   = Particle(15, 0, jet1.p4() + metp4, 1)
-            jetcorr2   = Particle(15, 0, jet2.p4(), 1)
+            jetcorr2   = Particle(15, 0, jet1.p4() + metp4, 1)
+            jetcorr1   = Particle(15, 0, jet2.p4(), 1)
         else:
             pz = jet2.p4().Pz()/2.
             e = math.sqrt(px**2 + py**2 + pz**2)
             metp4.SetPxPyPzE(px, py, pz, e) 
-            jetcorr1  = Particle(15, 0, jet1.p4(), 1)
-            jetcorr2  = Particle(15, 0, jet2.p4() + metp4, 1)
+            jetcorr2  = Particle(15, 0, jet1.p4(), 1)
+            jetcorr1  = Particle(15, 0, jet2.p4() + metp4, 1)
         return jetcorr1,jetcorr2
 
     def fillMass(self, jet1, jet2):

@@ -3,7 +3,6 @@ from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
 from numpy import sign
 from ROOT import TFile, TLorentzVector
-
 class TreeProducer(Analyzer):
 
     def beginLoop(self, setup):
@@ -24,6 +23,12 @@ class TreeProducer(Analyzer):
         bookLepton(self.tree, 'lep1', pflow=False)
         bookLepton(self.tree, 'lep2', pflow=False)
         bookLepton(self.tree, 'lep3', pflow=False)
+
+        bookLepton(self.tree, 'lep1_gen_1', pflow=False)
+        bookLepton(self.tree, 'lep2_gen_1', pflow=False)
+
+        bookLepton(self.tree, 'lep1_gen_23', pflow=False)
+        bookLepton(self.tree, 'lep2_gen_23', pflow=False)
 
         bookMet(self.tree, 'met')
 
@@ -79,6 +84,19 @@ class TreeProducer(Analyzer):
                 fillLepton(self.tree, 'lep2', zprimes_muon[0].legs[1])
                 Zp.SetPtEtaPhiM(zprimes_muon[0].pt(),zprimes_muon[0].eta(),zprimes_muon[0].phi(),zprimes_muon[0].m())
                 self.tree.fill('zprime_y' ,  Zp.Rapidity())
+
+        for g in event.gen_particles:
+            if g.pt()<50.:continue
+            if g.pdgid()==11 or g.pdgid()==13 and g.status()==1:
+                fillLepton(self.tree, 'lep1_gen_1', g)
+            if g.pdgid()==-11 or g.pdgid()==-13 and g.status()==1:
+                fillLepton(self.tree, 'lep2_gen_1', g)
+            if g.pdgid()==11 or g.pdgid()==13 and g.status()==23:
+                fillLepton(self.tree, 'lep1_gen_23', g)
+            if g.pdgid()==-11 or g.pdgid()==-13 and g.status()==23:
+                fillLepton(self.tree, 'lep2_gen_23', g)
+
+
 
         self.tree.tree.Fill()
 
