@@ -12,19 +12,47 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_mumu_5f_HT_5000_10000/events_198758027.root"]
+    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_mumu_5f_HT_5000_10000/events_198758027.root"]
+    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_Zprime_mumu_5f_Mzp_6TeV/events_152450043.root"]
 )
 
 selectedComponents = [
-                        # no signal found yet
-                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_1TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_2TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_3TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_5TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_6TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_7TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_8TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_9TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_10TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_11TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_12TeV,
+                        #sample.mgp8_pp_Zprime_mumu_5f_Mzp_13TeV,
+                        sample.mgp8_pp_Zprime_mumu_5f_Mzp_14TeV,
                         sample.mgp8_pp_mumu_5f_HT_500_1000,
                         sample.mgp8_pp_mumu_5f_HT_1000_2000,
                         sample.mgp8_pp_mumu_5f_HT_2000_5000,
                         sample.mgp8_pp_mumu_5f_HT_5000_10000,
                         sample.mgp8_pp_mumu_5f_HT_10000_27000,
                      ]
-#sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV.splitFactor = 10
+
+splitFac = 10
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_1TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_2TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_3TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_4TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_5TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_6TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_7TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_8TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_9TeV.splitFactor  = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_10TeV.splitFactor = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_11TeV.splitFactor = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_12TeV.splitFactor = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_13TeV.splitFactor = splitFac
+sample.mgp8_pp_Zprime_mumu_5f_Mzp_14TeV.splitFactor = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_mumu_5f_HT_500_1000.splitFactor    = splitFac2
