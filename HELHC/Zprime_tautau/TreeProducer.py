@@ -23,6 +23,8 @@ class TreeProducer(Analyzer):
 
         bookParticle(self.tree, 'Jet1_pf04')
         bookParticle(self.tree, 'Jet2_pf04')
+        self.tree.var('Jet1_pf04_flav', int)
+        self.tree.var('Jet2_pf04_flav', int)
         self.tree.var('Mj1j2_pf04', float)
         self.tree.var('Mj1j2_pf04_MetCorr', float)
         self.tree.var('Mj1j2_pf04_MetCorr2', float)
@@ -36,7 +38,6 @@ class TreeProducer(Analyzer):
         self.tree.var('ntau', int)
 
         bookMet(self.tree, 'met')
-
 
     def corrMET(self, jet1, jet2, met):
         dphi1 = abs(jet1.p4().DeltaPhi(met.p4()))
@@ -161,6 +162,9 @@ class TreeProducer(Analyzer):
 
         fillParticle(self.tree, 'Jet1_pf04', jets_pf04[0])
         fillParticle(self.tree, 'Jet2_pf04', jets_pf04[1])
+
+        self.tree.fill('Jet1_pf04_flav', jets_pf04[0].flavour)
+        self.tree.fill('Jet2_pf04_flav', jets_pf04[1].flavour)
 
         self.tree.fill('weight' , sign(event.weight) )
         met = getattr(event, self.cfg_ana.met)

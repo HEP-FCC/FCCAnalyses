@@ -112,7 +112,9 @@ selected_electrons = cfg.Analyzer(
     'selected_electrons',
     output = 'selected_electrons',
     input_objects = 'electrons',
-    filter_func = lambda ptc: ptc.pt()>100 and ptc.iso.sumpt/ptc.pt()<0.4
+    #filter_func = lambda ptc: ptc.pt()>100 and ptc.iso.sumpt/ptc.pt()<0.4
+    # issue with bad reconstruted electrons (photons around from DELPH card)
+    filter_func = lambda ptc: ptc.pt()>100
 
 )
 
@@ -144,7 +146,6 @@ match_lepton_jets = cfg.Analyzer(
     particles = 'jets_pf04'
 )
 
-
 jets_nolepton = cfg.Analyzer(
     Selector,
     'jets_nolepton',
@@ -154,7 +155,6 @@ jets_nolepton = cfg.Analyzer(
     #filter_func = lambda jet: 1
 
 )
-
 
 
 from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
