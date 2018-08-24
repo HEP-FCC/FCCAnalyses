@@ -25,8 +25,8 @@ class FlavourTagger(Analyzer):
         for jet in jet_collection:
            # print jet
             matched_partons = []
-            matched_pt = []
-            matched_status = []
+            #matched_pt = []
+            #matched_status = []
 
             for part in gen_collection:
                 pdg = abs(part.pdgid())
@@ -39,6 +39,7 @@ class FlavourTagger(Analyzer):
 
                 if dR < drMax and pdg in pdgTags and part.pt() > ptratio*jet.pt() :
                     matched_partons.append(pdg)
+                    #print "--found : pT=",part.pt()," eta=",part.eta()," phi=",part.phi()," dR=",dR," pdg=",pdg," status=",part.status()
                    
             # put 0 as a default (even when no match is found)
             pdgBest = 0

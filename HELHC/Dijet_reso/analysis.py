@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.WARNING)
 sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ExcitedQ_10TeV_qq/events_194205708.root"]
+     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ExcitedQ_10TeV_qq/events_145027450.root"]
      #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_2000_5000/events_163309325.root"]
 )
 
