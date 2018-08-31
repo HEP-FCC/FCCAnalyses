@@ -65,6 +65,12 @@ selectedComponents = [
                         #sample.p8_pp_ZprimeLRM_6TeV_jj,
                         #sample.p8_pp_ZprimeSSM_6TeV_jj,
                         #sample.p8_pp_ZprimeETA_6TeV_jj,
+                        #sample.p8_pp_ZprimePSI_8TeV_jj,
+                        #sample.p8_pp_ZprimeI_8TeV_jj,
+                        #sample.p8_pp_ZprimeCHI_8TeV_jj,
+                        #sample.p8_pp_ZprimeLRM_8TeV_jj,
+                        #sample.p8_pp_ZprimeSSM_8TeV_jj,
+                        #sample.p8_pp_ZprimeETA_8TeV_jj,
                      ]
 
 
@@ -119,6 +125,12 @@ sample.p8_pp_ZprimeCHI_6TeV_jj.splitFactor = splitFac3
 sample.p8_pp_ZprimeLRM_6TeV_jj.splitFactor = splitFac3
 sample.p8_pp_ZprimeSSM_6TeV_jj.splitFactor = splitFac3
 sample.p8_pp_ZprimeETA_6TeV_jj.splitFactor = splitFac3
+sample.p8_pp_ZprimePSI_8TeV_jj.splitFactor = splitFac3
+sample.p8_pp_ZprimeI_8TeV_jj.splitFactor   = splitFac3
+sample.p8_pp_ZprimeCHI_8TeV_jj.splitFactor = splitFac3
+sample.p8_pp_ZprimeLRM_8TeV_jj.splitFactor = splitFac3
+sample.p8_pp_ZprimeSSM_8TeV_jj.splitFactor = splitFac3
+sample.p8_pp_ZprimeETA_8TeV_jj.splitFactor = splitFac3
 
 #selectedComponents = [comp]
 
