@@ -31,6 +31,101 @@ import itertools
 # )
 #############################################
 
+#_______________________________________________
+def getbTagEff_degrade1(pt, eta, pdg):
+    if pdg==0:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.01
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 15000.                 : return 0.01*(1.-pt/15000.)
+      if abs(eta) <= 2.5 and pt > 15000.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.0075
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 15000.: return 0.0075*(1.-pt/15000.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 15000.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    elif pdg==4:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.05
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 15000.                 : return 0.05*(1.-pt/15000.)
+      if abs(eta) <= 2.5 and pt > 15000.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.03
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 15000.: return 0.03*(1.-pt/15000.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 15000.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    elif pdg==5:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.85
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 12500.                 : return 0.85*(1.-pt/12500.)
+      if abs(eta) <= 2.5 and pt > 12500.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.64
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 12500.: return 0.64*(1.-pt/12500.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 12500.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    else: print "Not supported jet pdg="+str(pdg)+" -> CHECK!!!!!!!!!!!"
+
+
+#_______________________________________________
+def getbTagEff_degrade2(pt, eta, pdg):
+    if pdg==0:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.01
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 15000.                 : return 0.01*(1.-pt/15000.)
+      if abs(eta) <= 2.5 and pt > 15000.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.0075
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 15000.: return 0.0075*(1.-pt/15000.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 15000.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    elif pdg==4:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.05
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 15000.                 : return 0.05*(1.-pt/15000.)
+      if abs(eta) <= 2.5 and pt > 15000.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.03
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 15000.: return 0.03*(1.-pt/15000.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 15000.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    elif pdg==5:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.85
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 10000.                 : return 0.85*(1.-pt/10000.)
+      if abs(eta) <= 2.5 and pt > 10000.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.64
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 10000.: return 0.64*(1.-pt/10000.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 10000.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    else: print "Not supported jet pdg="+str(pdg)+" -> CHECK!!!!!!!!!!!"
+
+#_______________________________________________
+def getbTagEff_degrade3(pt, eta, pdg):
+    if pdg==0:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.01
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 15000.                 : return 0.01*(1.-pt/15000.)
+      if abs(eta) <= 2.5 and pt > 15000.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.0075
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 15000.: return 0.0075*(1.-pt/15000.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 15000.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    elif pdg==4:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.05
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 15000.                 : return 0.05*(1.-pt/15000.)
+      if abs(eta) <= 2.5 and pt > 15000.                                     : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.03
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 15000.: return 0.03*(1.-pt/15000.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 15000.                  : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    elif pdg==5:
+      if pt <= 10.: return 0.
+      if abs(eta) <= 2.5 and pt > 10.       and pt <= 500.                   : return 0.85
+      if abs(eta) <= 2.5 and pt > 500.      and pt <= 7500.                  : return 0.85*(1.-pt/7500.)
+      if abs(eta) <= 2.5 and pt > 7500.                                      : return 0.
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 10.     and pt <= 500.  : return 0.64
+      if abs(eta)  > 2.5 and abs(eta) <= 4. and pt > 500.    and pt <= 7500. : return 0.64*(1.-pt/7500.)
+      if abs(eta)  < 2.5 and abs(eta) <= 4. and pt > 7500.                   : return 0.
+      if abs(eta)  > 4.                                                      : return 0.
+    else: print "Not supported jet pdg="+str(pdg)+" -> CHECK!!!!!!!!!!!"
+
+
 
 #############################################
 # eff tables taken from here :
@@ -180,7 +275,7 @@ def getcTagEff(pt, eta, pdg):
     else: print "Not supported jet pdg="+str(pdg)+" -> CHECK!!!!!!!!!!!"
 
 
-def getNbTagEx(Nbtag, jet, njets_used):
+def getNbTagEx(Nbtag, jet, njets_used, jet_to_use=None):
 
     # ensure sorting in jet pT
     jet.sort(key=lambda x: x[0].pt(), reverse = True)
@@ -194,12 +289,22 @@ def getNbTagEx(Nbtag, jet, njets_used):
     wj_idx=[]
     # security
     if Nbtag>len(jet) or len(jet)==0: return 0.
+    # security again : for example when user ask to compute 1 btag on the second jet of an event with only 1 jet
+    if jet_to_use is not None and jet_to_use>=len(jet): return 0.
 
     #-----------------------------
     # form eff table
     #-----------------------------
+    degrade=0
+    #degrade=1
+    #degrade=2
+    #degrade=3
+    #
     for i in range(nj):
-      wj.append( getbTagEff(jet[i][0].pt(), jet[i][0].eta(), jet[i][1]) )
+      if degrade==0: wj.append( getbTagEff(jet[i][0].pt(), jet[i][0].eta(), jet[i][1]) )
+      if degrade==1: wj.append( getbTagEff_degrade1(jet[i][0].pt(), jet[i][0].eta(), jet[i][1]) )
+      if degrade==2: wj.append( getbTagEff_degrade2(jet[i][0].pt(), jet[i][0].eta(), jet[i][1]) )
+      if degrade==3: wj.append( getbTagEff_degrade3(jet[i][0].pt(), jet[i][0].eta(), jet[i][1]) )
       wj_idx.append(i)
       #print "len(jet)="+str(len(jet))+", nj="+str(nj)+" , Nbtag="+str(Nbtag)+" -> jpt="+str(jet[i][0].pt())+" , jeta="+str(jet[i][0].eta())+" , jpdg="+str(jet[i][1])+" -----> wj="+str(wj[i])
 
@@ -255,8 +360,12 @@ def getNbTagEx(Nbtag, jet, njets_used):
     # compute TRF weight of this tag level
     #-----------------------------
     final_wtag=0.
-    for i_wtag in range(len(wtag)): final_wtag+=wtag[i_wtag]
-    #print "wtags computed :\n---------------------"
+    if jet_to_use is None :
+      for i_wtag in range(len(wtag)): final_wtag+=wtag[i_wtag]
+    else :
+      final_wtag=wtag[jet_to_use]
+    #print "\n---------------- wtags computed (",Nbtag,"btag) ---------------------"
+    #if jet_to_use is not None : print "-> computed only on jet",jet_to_use
     #print "wj="+str(wj)
     #print "wtag="+str(wtag)
     #print "final_wtag="+str(final_wtag)

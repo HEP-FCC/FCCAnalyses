@@ -126,11 +126,15 @@ class TreeProducer(Analyzer):
         self.reader.AddVariable("Jet_trk02_SD_Corr_m", self.bdt_Jet_trk02_SD_Corr_m)
         self.reader.AddVariable("Jet_trk04_SD_Corr_m", self.bdt_Jet_trk04_SD_Corr_m)
         self.reader.AddVariable("Jet_trk08_SD_Corr_m", self.bdt_Jet_trk08_SD_Corr_m)
-        #path = "/eos/experiment/fcc/hh/analyses/W_top_vs_QCD_tagger/heppy_outputs/fcc_v02/TMVA_trainings/"
-        path = "/afs/cern.ch/user/d/djamin/fcc_work/BDT_trains/20180223_tagger/"
+        path = "/eos/experiment/fcc/hh/analyses/W_top_vs_QCD_tagger/heppy_outputs/fcc_v02/TMVA_trainings/"
+        #path = "/afs/cern.ch/user/d/djamin/fcc_work/BDT_trains/20180223_tagger/"
         self.reader.BookMVA("BDT",str(path)+"BDT_BDT_thad_vs_QCD.weights.xml")
         self.tree.var('Jet1_thad_vs_QCD_tagger', float)
         self.tree.var('Jet2_thad_vs_QCD_tagger', float)
+
+        #self.tree.var('label', int)
+        #self.tree2 = Tree( 'all_events', '')
+        #self.tree2.var('label', int)
 
     def corrMET(self, jet1, pdg1 , jet2, pdg2, met):
         dphi1 = abs(jet1.p4().DeltaPhi(met.p4()))
@@ -170,6 +174,7 @@ class TreeProducer(Analyzer):
         jets_pf04 = getattr(event, self.cfg_ana.jets_pf04_1000)
         jets_pf04_pdg = event.jets_pf04_1000_pdg
         jets_pf08 = getattr(event, self.cfg_ana.jets_pf08_1500)
+        #gen_particles = event.all_particles
 
         jets_pf04_1500 = getattr(event, self.cfg_ana.jets_pf04_1500)
         jets_trk04 = getattr(event, self.cfg_ana.jets_trk04_1000)
@@ -178,9 +183,48 @@ class TreeProducer(Analyzer):
         electrons = getattr(event, self.cfg_ana.electrons)
         muons = getattr(event, self.cfg_ana.muons)
 
+        #self.tree2.reset()
+        ##
+        #label = -1
+        #part1 = -10000
+        #part2 = -10000
+        #index = 0
+        #part_index = -1
+        #count = 0
+        #for j in gen_particles :
+        #  # 1st part
+        #  if (j.status()==22 or j.status()==23) and count==0:
+        #    part1 = j.pdgid()
+        #    count += 1
+        #    part_index = index
+        #  # 2nd part
+        #  if (j.status()==22 or j.status()==23) and count==1 and j.q()+gen_particles[part_index].q()==0:
+        #    part2 = j.pdgid()
+        #    count += 1
+        #  index += 1
+        #if abs(part1)==6 and abs(part2)==6 : label = 6
+        #if abs(part1)==5 and abs(part2)==5 : label = 5
+        #if abs(part1)==4 and abs(part2)==4 : label = 4
+        #if abs(part1)==3 and abs(part2)==3 : label = 0
+        #if abs(part1)==2 and abs(part2)==2 : label = 0
+        #if abs(part1)==1 and abs(part2)==1 : label = 0
+        ## missed cases
+        #if label == -1 :
+        #  count = 0
+        #  for j in gen_particles :
+        #    if count<10 and abs(j.pdgid())==6 :
+        #      label = 6
+        #    count += 1
+        #if label==-1 : print "issue label==-1"
+        ##
+        #self.tree2.fill('label' , label )
+        #self.tree2.tree.Fill()
+
         Jet1_trk02_dR_lep = 999
         Jet2_trk02_dR_lep  = 999
         if ( len(jets_trk02)>=2 and  len(jets_pf02)>=2):
+
+            #self.tree.fill('label' , label )
 
             j1 = ROOT.TLorentzVector(); j2 = ROOT.TLorentzVector()
             j1.SetPtEtaPhiE(jets_trk02[0].pt(), jets_trk02[0].eta(), jets_trk02[0].phi(), jets_trk02[0].e())
