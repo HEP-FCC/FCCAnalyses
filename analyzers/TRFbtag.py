@@ -198,10 +198,10 @@ def getNbTagEx(Nbtag, jet, njets_used, jet_to_use=None):
     #-----------------------------
     # form eff table
     #-----------------------------
-    #degrade=0
+    degrade=0
     #degrade=1
     #degrade=2
-    degrade=3
+    #degrade=3
     #
     for i in range(nj):
       if degrade==0: wj.append( getbTagEff(jet[i][0].pt(), jet[i][0].eta(), jet[i][1]) )
