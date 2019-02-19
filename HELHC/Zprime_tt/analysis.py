@@ -12,7 +12,8 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_Zprime_10TeV_ttbar/events_198227905.root"]
+    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_Zprime_10TeV_ttbar/events_198227905.root"]
+    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_4TeV_jj//events_087545417.root"]
 #     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_1000_2000/events_096768951.root"]
 #     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_2000_5000/events_163309325.root"]
 )
@@ -46,13 +47,13 @@ selectedComponents = [
                         sample.mgp8_pp_vj_5f_HT_2000_5000,
                         sample.mgp8_pp_vj_5f_HT_5000_10000,
                         sample.mgp8_pp_vj_5f_HT_10000_27000,
-                        ## extra signals
-                        #sample.p8_pp_ZprimePSI_2TeV_jj,
-                        #sample.p8_pp_ZprimeI_2TeV_jj,
-                        #sample.p8_pp_ZprimeCHI_2TeV_jj,
-                        #sample.p8_pp_ZprimeLRM_2TeV_jj,
-                        #sample.p8_pp_ZprimeSSM_2TeV_jj,
-                        #sample.p8_pp_ZprimeETA_2TeV_jj,
+                        ### extra signals
+                        ##sample.p8_pp_ZprimePSI_2TeV_jj,
+                        ##sample.p8_pp_ZprimeI_2TeV_jj,
+                        ##sample.p8_pp_ZprimeCHI_2TeV_jj,
+                        ##sample.p8_pp_ZprimeLRM_2TeV_jj,
+                        ##sample.p8_pp_ZprimeSSM_2TeV_jj,
+                        ##sample.p8_pp_ZprimeETA_2TeV_jj,
                         #sample.p8_pp_ZprimePSI_4TeV_jj,
                         #sample.p8_pp_ZprimeI_4TeV_jj,
                         #sample.p8_pp_ZprimeCHI_4TeV_jj,
@@ -285,6 +286,14 @@ jets_pf04_1500 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>800
 )
 
+#all_particles = cfg.Analyzer(
+#    Selector,
+#    'all_particles',
+#    output = 'all_particles',
+#    input_objects = 'gen_particles',
+#    filter_func = lambda part: part.pt()>0
+#)
+
 # select pf08 jets above 1500 GeV
 jets_pf08_1500 = cfg.Analyzer(
     Selector,
@@ -332,6 +341,23 @@ tree = cfg.Analyzer(
 
 )
 
+#tree2 = cfg.Analyzer(
+#    TreeProducer,
+#    pfjets04_fix    = 'pfjets04_fix',
+#
+#    jets_trk02_1000 = 'jets_trk02_1000',
+#    jets_trk04_1000 = 'jets_trk04_1000',
+#    jets_trk08_1000 = 'jets_trk08_1000',
+#
+#    jets_pf02_1500  = 'jets_pf02_1500',
+#    jets_pf04_1000  = 'jets_pf04_1000',
+#    jets_pf04_1500  = 'jets_pf04_1500',
+#    jets_pf08_1500  = 'jets_pf08_1500',
+#
+#    electrons = 'electrons_100',
+#    muons = 'muons_100',
+#
+#)
 
 # definition of a sequence of analyzers,
 # the analyzers will process each event in this order
@@ -342,6 +368,7 @@ sequence = cfg.Sequence( [
     jets_pf02_1500,
     jets_pf04_1000,
     jets_pf04_1000_pdg,
+    #all_particles,
     jets_pf04_1500,
     jets_pf08_1500,
 
@@ -352,6 +379,7 @@ sequence = cfg.Sequence( [
     electrons_100,
     muons_100,
     tree,
+#    tree2,
     ] )
 
 config = cfg.Config(

@@ -126,8 +126,8 @@ class TreeProducer(Analyzer):
         self.reader.AddVariable("Jet_trk02_SD_Corr_m", self.bdt_Jet_trk02_SD_Corr_m)
         self.reader.AddVariable("Jet_trk04_SD_Corr_m", self.bdt_Jet_trk04_SD_Corr_m)
         self.reader.AddVariable("Jet_trk08_SD_Corr_m", self.bdt_Jet_trk08_SD_Corr_m)
-        #path = "/eos/experiment/fcc/hh/analyses/W_top_vs_QCD_tagger/heppy_outputs/fcc_v02/TMVA_trainings/"
-        path = "/afs/cern.ch/user/d/djamin/fcc_work/BDT_trains/20180223_tagger/"
+        path = "/eos/experiment/fcc/hh/analyses/W_top_vs_QCD_tagger/heppy_outputs/fcc_v02/TMVA_trainings/"
+        #path = "/afs/cern.ch/user/d/djamin/fcc_work/BDT_trains/20180223_tagger/"
         self.reader.BookMVA("BDT",str(path)+"BDT_BDT_thad_vs_QCD.weights.xml")
         self.tree.var('Jet1_thad_vs_QCD_tagger', float)
         self.tree.var('Jet2_thad_vs_QCD_tagger', float)
