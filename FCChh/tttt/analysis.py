@@ -54,14 +54,25 @@ selectedComponents = [
 #mgp8_pp_ttww_4f                     570,000
 #mgp8_pp_ttwz_5f                     500,000
 
-sample.mgp8_pp_tttt_5f.splitFactor       = 15
-sample.mgp8_pp_bbbbj_QCD.splitFactor     = 140
-sample.mgp8_pp_ttz_5f_zbb.splitFactor    = 390
-sample.mgp8_pp_ttbb_4f.splitFactor       = 230
-sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 320
-sample.mgp8_pp_ttzz_5f.splitFactor       = 14
-sample.mgp8_pp_ttww_4f.splitFactor       = 6
-sample.mgp8_pp_ttwz_5f.splitFactor       = 5
+## batch
+#sample.mgp8_pp_tttt_5f.splitFactor       = 15
+#sample.mgp8_pp_bbbbj_QCD.splitFactor     = 140
+#sample.mgp8_pp_ttz_5f_zbb.splitFactor    = 390
+#sample.mgp8_pp_ttbb_4f.splitFactor       = 230
+#sample.mgp8_pp_tth01j_5f_hbb.splitFactor = 320
+#sample.mgp8_pp_ttzz_5f.splitFactor       = 14
+#sample.mgp8_pp_ttww_4f.splitFactor       = 6
+#sample.mgp8_pp_ttwz_5f.splitFactor       = 5
+## local test
+splitFac = 10
+sample.mgp8_pp_tttt_5f.splitFactor       = splitFac
+sample.mgp8_pp_bbbbj_QCD.splitFactor     = splitFac
+sample.mgp8_pp_ttz_5f_zbb.splitFactor    = splitFac
+sample.mgp8_pp_ttbb_4f.splitFactor       = splitFac
+sample.mgp8_pp_tth01j_5f_hbb.splitFactor = splitFac
+sample.mgp8_pp_ttzz_5f.splitFactor       = splitFac
+sample.mgp8_pp_ttww_4f.splitFactor       = splitFac
+sample.mgp8_pp_ttwz_5f.splitFactor       = splitFac
 
 selectedComponents = [comp]
 
