@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 import glob
 
 setup(name='FCChhAnalyses',
-      version='1.0',
+      version='0.1.0',
       description='Produce flat ROOT trees using FCCSW EDM in heppy',
       author='Clement Helsens',
       author_email='clement.helsens@cern.ch',
