@@ -39,7 +39,7 @@ mgp8_pp_llll01j_mhcut_5f_HT_1100_100000.splitFactor = 5
 
 #selectedComponents = [comp]
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -167,14 +167,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/h4l/selection.py"
-from heppy.FCChhAnalyses.FCChh.h4l.selection import Selection
+from FCChhAnalyses.FCChh.h4l.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.h4l.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.h4l.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',

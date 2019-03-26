@@ -48,7 +48,7 @@ mgp8_pp_mumu012j_mhcut_5f_HT_900_1100.splitFactor = 2
 #selectedComponents = [comp]
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -240,7 +240,7 @@ selected_bs = cfg.Analyzer(
 )
 
 # create H boson candidates with bs
-from heppy.FCChhAnalyses.analyzers.LeptonicHiggsBuilder import LeptonicHiggsBuilder
+from FCChhAnalyses.analyzers.LeptonicHiggsBuilder import LeptonicHiggsBuilder
 higgses = cfg.Analyzer(
       LeptonicHiggsBuilder,
       output = 'higgses',
@@ -249,14 +249,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/hmumu/selection.py"
-from heppy.FCChhAnalyses.FCChh.hmumu.selection import Selection
+from FCChhAnalyses.FCChh.hmumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.hmumu.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.hmumu.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     higgses = 'higgses',

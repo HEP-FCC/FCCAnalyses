@@ -80,7 +80,7 @@ sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor = splitFac2
 
 selectedComponents = [comp]
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -147,7 +147,7 @@ from EventStore import EventStore as Events
 #############################
 
 # fix pf04 jets (get muon back in)
-from heppy.FCChhAnalyses.analyzers.JetCorrector import JetCorrector
+from FCChhAnalyses.analyzers.JetCorrector import JetCorrector
 pfjets04_fix = cfg.Analyzer(
     JetCorrector,
     'pfjets04_fix',
@@ -249,7 +249,7 @@ muons_500 = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.HELHC.RSGraviton_ww.TreeProducer import TreeProducer
+from FCChhAnalyses.HELHC.RSGraviton_ww.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     pfjets04_fix    = 'pfjets04_fix',

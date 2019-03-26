@@ -3,7 +3,7 @@ from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 from heppy.utils.deltar import matchObjectCollection, deltaR
-from heppy.FCChhAnalyses.analyzers.TRFbtag import *
+from FCChhAnalyses.analyzers.TRFbtag import *
 
 from ROOT import TFile, TLorentzVector, TMVA
 import itertools
@@ -92,7 +92,7 @@ class TreeProducer(Analyzer):
         #self.reader.AddVariable('jet_flow55',        self.bdt_flow55        )
         #self.reader.AddVariable('jet_nbs',           self.bdt_jet_nbs       )
         #
-        ##path = "/afs/cern.ch/work/s/selvaggi/private/FCCSW/heppy/FCChhAnalyses/tth_boosted/"
+        ##path = "/afs/cern.ch/work/s/selvaggi/private/FCCSW/FCChhAnalyses.tth_boosted/"
         #path = "/eos/experiment/fcc/hh/analyses/Higgs/ttH/BDT/"
         #self.reader.BookMVA("BDT",str(path)+"BDT_BDT_Higgs_vs_Top.weights.xml")
     

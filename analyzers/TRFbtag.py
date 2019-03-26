@@ -18,7 +18,7 @@ import itertools
 # ----------------
 # gen_particles = 'skimmedGenParticles',
 # ...
-# from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+# from FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
 # jets_pf04_1000_pdg = cfg.Analyzer(
 #     FlavourTagger,
 #     'jets_pf04_1000_pdg',

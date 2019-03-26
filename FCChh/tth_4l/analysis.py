@@ -16,17 +16,17 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 comps = cfg.Component(
     'mgp8_pp_tth01j_5f_hllll',
      # copied from eos, change according to needs
-     files = ["heppy/FCChhAnalyses/tth_4l/local/mgp8_pp_tth01j_5f_hllll/events_000001000.root"]
+     files = ["FCChhAnalyses.tth_4l/local/mgp8_pp_tth01j_5f_hllll/events_000001000.root"]
 )
 compb1 = cfg.Component(
     'mgp8_pp_wwww_4f',
      # copied from eos, change according to needs
-     files = ["heppy/FCChhAnalyses/tth_4l/local/mgp8_pp_wwww_4f/events_000000021.root"]
+     files = ["FCChhAnalyses.tth_4l/local/mgp8_pp_wwww_4f/events_000000021.root"]
 )
 compb2 = cfg.Component(
     'mgp8_pp_ttv01j_5f',
      # copied from eos, change according to needs
-     files = ["heppy/FCChhAnalyses/tth_4l/local/mgp8_pp_ttv01j_5f/events_000000176.root"]
+     files = ["FCChhAnalyses.tth_4l/local/mgp8_pp_ttv01j_5f/events_000000176.root"]
 )
 
 
@@ -44,7 +44,7 @@ sample.mgp8_pp_ttv01j_5f.splitFactor = 10
 # to run locally
 #selectedComponents = [comps, compb2]
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -156,7 +156,7 @@ selected_bs = cfg.Analyzer(
 )
 
 # create Z boson candidates with leptons
-from heppy.FCChhAnalyses.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
+from FCChhAnalyses.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
 zeds = cfg.Analyzer(
       LeptonicZedBuilder,
       output = 'zeds',
@@ -173,14 +173,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/h4l/selection.py"
-from heppy.FCChhAnalyses.FCChh.tth_4l.selection import Selection
+from FCChhAnalyses.FCChh.tth_4l.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.tth_4l.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.tth_4l.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',
@@ -188,7 +188,7 @@ reco_tree = cfg.Analyzer(
     leptons = "selected_leptons"
 )
 
-from heppy.FCChhAnalyses.analyzers.ExtraLeptons import ExtraLeptons
+from FCChhAnalyses.analyzers.ExtraLeptons import ExtraLeptons
 extra_leptons = cfg.Analyzer(
     ExtraLeptons,
     inputA = "selected_leptons",

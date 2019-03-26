@@ -25,7 +25,7 @@ mgp8_pp_jjja_5f.splitFactor = 1000
 
 #selectedComponents = [comp]
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -160,7 +160,7 @@ jets_nophoton = cfg.Analyzer(
 )
 
 # convert jets into fake photons
-from heppy.FCChhAnalyses.analyzers.FakeParticleBuilder import FakeParticleBuilder
+from FCChhAnalyses.analyzers.FakeParticleBuilder import FakeParticleBuilder
 fake_photons = cfg.Analyzer(
     FakeParticleBuilder,
     'fake_photons',
@@ -218,7 +218,7 @@ b_higgses = cfg.Analyzer(
 )
 
 # produce flat root tree containing information after pre-selection
-from heppy.FCChhAnalyses.FCChh.hhbbaa.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.hhbbaa.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     photons = 'merged_photons',

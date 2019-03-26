@@ -4,7 +4,7 @@ from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
 from heppy.particles.tlv.resonance import Resonance2 as Resonance
 from heppy.particles.tlv.particle import Particle
-from heppy.FCChhAnalyses.analyzers.TRFbtag import *
+from FCChhAnalyses.analyzers.TRFbtag import *
 
 import math
 import ROOT
@@ -15,7 +15,7 @@ import array
 import os
 
 #For TMVA >>>>>>>>>>>>>>>>>>>>>
-#ROOT.gROOT.ProcessLine('.L /afs/cern.ch/user/r/rasmith/fcc/heppy/FCChhAnalyses/Zprime_tt/BDT_QCD.class.C+')
+#ROOT.gROOT.ProcessLine('.L /afs/cern.ch/user/r/rasmith/fcc/FCChhAnalyses.Zprime_tt/BDT_QCD.class.C+')
 
 class TreeProducer(Analyzer):
 

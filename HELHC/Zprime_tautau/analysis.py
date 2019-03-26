@@ -61,7 +61,7 @@ sample.mgp8_pp_jj_5f_HT_10000_27000.splitFactor = splitFac2
 #selectedComponents = [comp]
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -157,7 +157,7 @@ jets_nolepton = cfg.Analyzer(
 )
 
 
-from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+from FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
 jets_pf04_trf = cfg.Analyzer(
     FlavourTagger,
     'jets_pf04_trf',
@@ -169,7 +169,7 @@ jets_pf04_trf = cfg.Analyzer(
     pdg_tags = [15, 11, 0],
     )
 
-from heppy.FCChhAnalyses.analyzers.FlavourReweighter import FlavourReweighter
+from FCChhAnalyses.analyzers.FlavourReweighter import FlavourReweighter
 jets_pf04_rew = cfg.Analyzer(
     FlavourReweighter,
     'jets_pf04_rew',
@@ -181,7 +181,7 @@ jets_pf04_rew = cfg.Analyzer(
 
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.HELHC.Zprime_tautau.TreeProducer import TreeProducer
+from FCChhAnalyses.HELHC.Zprime_tautau.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     jets_pf04_trf  = 'jets_pf04_trf',

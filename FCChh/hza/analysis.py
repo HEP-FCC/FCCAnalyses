@@ -45,7 +45,7 @@ mgp8_pp_lla01j_mhcut_5f_HT_300_100000.splitFactor = 2
 #selectedComponents = [comp]
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -132,7 +132,7 @@ zeds = cfg.Analyzer(
 
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.hza.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.hza.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',

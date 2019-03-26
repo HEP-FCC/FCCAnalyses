@@ -85,7 +85,7 @@ sample.mgp8_pp_mumu_5f_HT_27000_100000.splitFactor = splitFac2
 #selectedComponents = [comp]
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -183,14 +183,14 @@ jets_nolepton = cfg.Analyzer(
 
 
 
-from heppy.FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
+from FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # create Z' boson candidates
-from heppy.FCChhAnalyses.analyzers.ResonanceBuilder import ResonanceBuilder
+from FCChhAnalyses.analyzers.ResonanceBuilder import ResonanceBuilder
 zprime_ele = cfg.Analyzer(
       ResonanceBuilder,
       output = 'zprime_ele',
@@ -199,7 +199,7 @@ zprime_ele = cfg.Analyzer(
 )
 
 # create Z' boson candidates
-from heppy.FCChhAnalyses.analyzers.ResonanceBuilder import ResonanceBuilder
+from FCChhAnalyses.analyzers.ResonanceBuilder import ResonanceBuilder
 zprime_muon = cfg.Analyzer(
       ResonanceBuilder,
       output = 'zprime_muon',
@@ -208,14 +208,14 @@ zprime_muon = cfg.Analyzer(
 )
 
 # apply event selection. 
-from heppy.FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
+from FCChhAnalyses.FCChh.Zprime_ll.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.Zprime_ll.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.Zprime_ll.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     jets='jets_nolepton',

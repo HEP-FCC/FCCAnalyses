@@ -31,7 +31,7 @@ mgp8_pp_wwjj_2l2v_TL.splitFactor = 3
 selectedComponents = [comp]
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -127,14 +127,14 @@ jets_nolepton = cfg.Analyzer(
     filter_func = lambda jet: jet.match is None
 )
 
-from heppy.FCChhAnalyses.FCChh.vbs_ww.selection import Selection
+from FCChhAnalyses.FCChh.vbs_ww.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.vbs_ww.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.vbs_ww.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
 )

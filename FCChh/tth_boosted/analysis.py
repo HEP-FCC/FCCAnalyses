@@ -30,7 +30,7 @@ sample.mgp8_pp_ttz_5f_zbb.splitFactor = 390
 #selectedComponents = [comp]
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -117,7 +117,7 @@ gen_bs = cfg.Analyzer(
 )
 
 # produce flat root tree containing information about stable leptons in the event
-from heppy.FCChhAnalyses.FCChh.hh_boosted.GenTreeProducer import GenTreeProducer
+from FCChhAnalyses.FCChh.hh_boosted.GenTreeProducer import GenTreeProducer
 gen_tree = cfg.Analyzer(
     GenTreeProducer,
     gen_higgses = 'gen_higgses',
@@ -166,7 +166,7 @@ untagged_jets = cfg.Analyzer(
 
 # apply jet flavour tagging
 
-from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+from FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
 jets_30 = cfg.Analyzer(
     FlavourTagger,
     'jets_30',
@@ -233,7 +233,7 @@ fatjets_nolepton = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.FCChh.tth_boosted.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.tth_boosted.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     gen_bs = 'gen_bs',
@@ -245,7 +245,7 @@ reco_tree = cfg.Analyzer(
 
 
 # produce flat root tree containing jet substructure information for training
-from heppy.FCChhAnalyses.FCChh.tth_boosted.TreeProducerBDT import TreeProducerBDT
+from FCChhAnalyses.FCChh.tth_boosted.TreeProducerBDT import TreeProducerBDT
 reco_tree_bdt = cfg.Analyzer(
     TreeProducerBDT,
     gen_bs = 'gen_bs',

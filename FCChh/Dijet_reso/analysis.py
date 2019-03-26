@@ -82,7 +82,7 @@ sample.mgp8_pp_jj_5f_HT_27000_100000.splitFactor = splitFac2
 
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -130,7 +130,7 @@ jets_calo04_2000 = cfg.Analyzer(
 
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.FCChh.Dijet_reso.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.Dijet_reso.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_pf04_2000    = 'jets_pf04_2000',

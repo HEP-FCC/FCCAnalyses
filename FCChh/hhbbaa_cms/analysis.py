@@ -28,8 +28,8 @@ pp_jjja_5f_14TeV.splitFactor = 20
 
 selectedComponents = [comp]
 
-#from heppy.FCChhAnalyses.analyzers.OldReader import Reader
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+#from FCChhAnalyses.analyzers.OldReader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -199,14 +199,14 @@ b_higgses = cfg.Analyzer(
       pdgid = 25
 )
 
-from heppy.FCChhAnalyses.FCChh.hhbbaa_cms.selection import Selection
+from FCChhAnalyses.FCChh.hhbbaa_cms.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # produce flat root tree containing information after pre-selection
-from heppy.FCChhAnalyses.FCChh.hhbbaa_cms.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.hhbbaa_cms.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     photons = 'selected_photons',

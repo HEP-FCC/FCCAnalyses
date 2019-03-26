@@ -138,7 +138,7 @@ sample.p8_pp_ZprimeETA_8TeV_jj.splitFactor = splitFac3
 
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -201,7 +201,7 @@ from EventStore import EventStore as Events
 #uncomment the following to go back to normal
 
 # fix pf04 jets (get muon back in)
-from heppy.FCChhAnalyses.analyzers.JetCorrector import JetCorrector
+from FCChhAnalyses.analyzers.JetCorrector import JetCorrector
 pfjets04_fix = cfg.Analyzer(
     JetCorrector,
     'pfjets04_fix',
@@ -264,7 +264,7 @@ jets_pf04_1000 = cfg.Analyzer(
 )
 
 # apply jet flavour tagging
-from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+from FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
 jets_pf04_1000_pdg = cfg.Analyzer(
     FlavourTagger,
     'jets_pf04_1000_pdg',
@@ -322,7 +322,7 @@ muons_100 = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.HELHC.Zprime_tt.TreeProducer import TreeProducer
+from FCChhAnalyses.HELHC.Zprime_tt.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     pfjets04_fix    = 'pfjets04_fix',

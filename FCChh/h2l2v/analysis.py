@@ -165,7 +165,7 @@ pp_vvv01j_5f.splitFactor = 10
 
 selectedComponents = [comp]
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -378,14 +378,14 @@ higgses = cfg.Analyzer(
 )
 
 # apply event selection. Defined in "analyzers/examples/h2l2v/selection.py"
-from heppy.FCChhAnalyses.FCChh.h2l2v.selection import Selection
+from FCChhAnalyses.FCChh.h2l2v.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.h2l2v.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.h2l2v.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     higgses = 'higgses',

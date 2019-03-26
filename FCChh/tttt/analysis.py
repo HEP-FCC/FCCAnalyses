@@ -79,7 +79,7 @@ selectedComponents = [comp]
 
 
 
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -157,7 +157,7 @@ jets_pf04_20 = cfg.Analyzer(
 )
 
 # apply jet flavour tagging
-from heppy.FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
+from FCChhAnalyses.analyzers.FlavourTagger import FlavourTagger
 jets_pf04_20_pdg = cfg.Analyzer(
     FlavourTagger,
     'jets_pf04_20_pdg',
@@ -188,7 +188,7 @@ muons_100 = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.FCChh.tttt.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.tttt.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     jets_trk08_20 = 'jets_trk08_20',

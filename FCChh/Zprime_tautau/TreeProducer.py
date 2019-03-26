@@ -1,7 +1,7 @@
 from heppy.framework.analyzer import Analyzer
 from heppy.statistics.tree import Tree
 from heppy.analyzers.ntuple import *
-from heppy.FCChhAnalyses.analyzers.TRFtautag import *
+from FCChhAnalyses.analyzers.TRFtautag import *
 from heppy.particles.tlv.particle import Particle
 from numpy import sign
 import ROOT

@@ -15,8 +15,8 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 # pre-produced input files
 comp = cfg.Component(
     'example',
-     files = ["root://eospublic.cern.ch///eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_ll012j_5f/events100.root"]
-     files = ["root://eospublic.cern.ch///eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_tth01j_5f_hmumu/events0.root"]
+     files = ["root://eospublic.cern.ch///eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_ll012j_5f/events100.root"],
+     #files = ["root://eospublic.cern.ch///eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/pp_tth01j_5f_hmumu/events0.root"]
 )
 
 from heppySampleList_fcc_v01 import *
@@ -32,12 +32,12 @@ pp_ll012j_5f.splitFactor = 10
 pp_tth01j_5f_hmumu.splitFactor = 10
 
 
-# uncomment to try with local file 
-selectedComponents = [comp]
+# uncomment to try with local file
+# selectedComponents = [comp]
 
 #from heppy.analyzers.fcc.Reader import Reader
 #for fcc_v02
-from heppy.FCChhAnalyses.analyzers.Reader import Reader
+from FCChhAnalyses.analyzers.Reader import Reader
 
 source = cfg.Analyzer(
     Reader,
@@ -58,7 +58,7 @@ source = cfg.Analyzer(
     bTags = 'bTags',
 
     photons = 'photons',
-    
+
     pfphotons = 'pfphotons',
     pfcharged = 'pfcharged',
     pfneutrals = 'pfneutrals',
@@ -127,7 +127,7 @@ selected_electrons = cfg.Analyzer(
 from heppy.analyzers.Merger import Merger
 selected_leptons = cfg.Analyzer(
       Merger,
-      instance_label = 'selected_leptons', 
+      instance_label = 'selected_leptons',
       inputs = ['selected_electrons','selected_muons'],
       output = 'selected_leptons'
 )
@@ -160,7 +160,7 @@ jets_nolepton = cfg.Analyzer(
 
 
 
-from heppy.FCChhAnalyses.FCChh.tth_mumu.selection import Selection
+from FCChhAnalyses.FCChh.tth_mumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -168,7 +168,7 @@ selection = cfg.Analyzer(
 
 
 # create H boson candidates with bs
-from heppy.FCChhAnalyses.analyzers.LeptonicHiggsBuilder import LeptonicHiggsBuilder
+from FCChhAnalyses.analyzers.LeptonicHiggsBuilder import LeptonicHiggsBuilder
 higgses = cfg.Analyzer(
       LeptonicHiggsBuilder,
       output = 'higgses',
@@ -176,15 +176,15 @@ higgses = cfg.Analyzer(
       pdgid = 25
 )
 
-# apply event selection. 
-from heppy.FCChhAnalyses.FCChh.tth_mumu.selection import Selection
+# apply event selection.
+from FCChhAnalyses.FCChh.tth_mumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from heppy.FCChhAnalyses.FCChh.tth_mumu.TreeProducer import TreeProducer
+from FCChhAnalyses.FCChh.tth_mumu.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     higgses="higgses",
