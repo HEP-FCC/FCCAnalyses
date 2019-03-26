@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
-from distutils.core import setup
+from setuptools import setup, find_packages
+import glob
 
 setup(name='FCChhAnalyses',
       version='1.0',
@@ -9,36 +10,7 @@ setup(name='FCChhAnalyses',
       author_email='clement.helsens@cern.ch',
       url='https://github.com/HEP-FCC/FCChhAnalyses',
       requires=['heppy'], # heppyfwk if installed with pip
-      packages=['FCChhAnalyses',
-                'FCChhAnalyses.analyzers',
-                'FCChhAnalyses.FCChh',
-                'FCChhAnalyses.FCChh.Dijet_reso', 
-                'FCChhAnalyses.FCChh.RSGraviton_ww',
-                'FCChhAnalyses.FCChh.W_top_vs_QCD_tagger',
-                'FCChhAnalyses.FCChh.Zprime_ll',
-                'FCChhAnalyses.FCChh.Zprime_mumu_flav_ano',
-                'FCChhAnalyses.FCChh.Zprime_tautau',
-                'FCChhAnalyses.FCChh.Zprime_tt',
-                'FCChhAnalyses.FCChh.h2l2v',
-                'FCChhAnalyses.FCChh.h4l',
-                'FCChhAnalyses.FCChh.haa',
-                'FCChhAnalyses.FCChh.hh_boosted',
-                'FCChhAnalyses.FCChh.hmumu',
-                'FCChhAnalyses.FCChh.hza',
-                'FCChhAnalyses.FCChh.ttV_test',
-                'FCChhAnalyses.FCChh.tth_4l',
-                'FCChhAnalyses.FCChh.tth_boosted',
-                'FCChhAnalyses.FCChh.tth_mumu',
-                'FCChhAnalyses.FCChh.tttt',
-                'FCChhAnalyses.FCChh.vbs',
-                'FCChhAnalyses.FCChh.vbs_ww',
-                'FCChhAnalyses.HELHC',
-                'FCChhAnalyses.HELHC.Dijet_reso',
-                'FCChhAnalyses.HELHC.RSGraviton_ww',
-                'FCChhAnalyses.HELHC.Zprime_ll',
-                'FCChhAnalyses.HELHC.Zprime_mumu_flav_ano',
-                'FCChhAnalyses.HELHC.Zprime_tautau',
-                'FCChhAnalyses.HELHC.Zprime_tt',
-                'FCChhAnalyses.HELHC.tth_boosted',
-                ]
-     )
+      packages=find_packages(),
+      package_dir={"FCChhAnalyses": "../FCChhAnalyses"},
+      scripts=glob.glob('scripts/*')
+    )

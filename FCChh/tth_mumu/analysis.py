@@ -32,8 +32,8 @@ pp_ll012j_5f.splitFactor = 10
 pp_tth01j_5f_hmumu.splitFactor = 10
 
 
-# uncomment to try with local file 
-selectedComponents = [comp]
+# uncomment to try with local file
+# selectedComponents = [comp]
 
 #from heppy.analyzers.fcc.Reader import Reader
 #for fcc_v02
@@ -58,7 +58,7 @@ source = cfg.Analyzer(
     bTags = 'bTags',
 
     photons = 'photons',
-    
+
     pfphotons = 'pfphotons',
     pfcharged = 'pfcharged',
     pfneutrals = 'pfneutrals',
@@ -127,7 +127,7 @@ selected_electrons = cfg.Analyzer(
 from heppy.analyzers.Merger import Merger
 selected_leptons = cfg.Analyzer(
       Merger,
-      instance_label = 'selected_leptons', 
+      instance_label = 'selected_leptons',
       inputs = ['selected_electrons','selected_muons'],
       output = 'selected_leptons'
 )
@@ -176,7 +176,7 @@ higgses = cfg.Analyzer(
       pdgid = 25
 )
 
-# apply event selection. 
+# apply event selection.
 from FCChhAnalyses.FCChh.tth_mumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
