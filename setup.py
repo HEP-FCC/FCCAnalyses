@@ -11,6 +11,5 @@ setup(name='FCChhAnalyses',
       url='https://github.com/HEP-FCC/FCChhAnalyses',
       requires=['heppy', 'ROOT'], # heppy is called heppyfwk if installed with pip
       packages=find_packages(),
-      package_dir={"FCChhAnalyses": "../FCChhAnalyses"},
       scripts=glob.glob('scripts/*')
     )

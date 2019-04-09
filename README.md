@@ -45,7 +45,7 @@ See the official documentation for further information about [conda](https://con
 Once `root` and `heppy` are present on our system, either through CVMFS or a manual installation, `FCChhAnalyses` can be installed with the following command:
 
 ```
-python setup.py install
+python setup.py install --user
 ```
 
 Now you are ready to run an existing analysis or make your own one.
