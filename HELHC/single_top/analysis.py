@@ -12,21 +12,13 @@ sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts
 
 comp = cfg.Component(
     'example',
-    #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_Zprime_10TeV_ttbar/events_198227905.root"]
-    files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ZprimeSSM_4TeV_jj//events_087545417.root"]
-#     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_1000_2000/events_096768951.root"]
+     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tt_5f_HT_5000_10000/events_089436160.root"]
 #     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_2000_5000/events_163309325.root"]
+#     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tj_5f//events_048843027.root"]
+#     files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_tvj_5f//events_085461659.root"]
 )
 
 selectedComponents = [
-                        sample.p8_pp_Zprime_2TeV_ttbar,
-                        sample.p8_pp_Zprime_4TeV_ttbar,
-                        sample.p8_pp_Zprime_5TeV_ttbar,
-                        sample.p8_pp_Zprime_6TeV_ttbar,
-                        sample.p8_pp_Zprime_8TeV_ttbar,
-                        sample.p8_pp_Zprime_10TeV_ttbar,
-                        sample.p8_pp_Zprime_12TeV_ttbar,
-                        sample.p8_pp_Zprime_14TeV_ttbar,
                         sample.mgp8_pp_jj_5f_HT_500_1000,
                         sample.mgp8_pp_jj_5f_HT_1000_2000,
                         sample.mgp8_pp_jj_5f_HT_2000_5000,
@@ -47,43 +39,14 @@ selectedComponents = [
                         sample.mgp8_pp_vj_5f_HT_2000_5000,
                         sample.mgp8_pp_vj_5f_HT_5000_10000,
                         sample.mgp8_pp_vj_5f_HT_10000_27000,
-                        ### extra signals
-                        ##sample.p8_pp_ZprimePSI_2TeV_jj,
-                        ##sample.p8_pp_ZprimeI_2TeV_jj,
-                        ##sample.p8_pp_ZprimeCHI_2TeV_jj,
-                        ##sample.p8_pp_ZprimeLRM_2TeV_jj,
-                        ##sample.p8_pp_ZprimeSSM_2TeV_jj,
-                        ##sample.p8_pp_ZprimeETA_2TeV_jj,
-                        #sample.p8_pp_ZprimePSI_4TeV_jj,
-                        #sample.p8_pp_ZprimeI_4TeV_jj,
-                        #sample.p8_pp_ZprimeCHI_4TeV_jj,
-                        #sample.p8_pp_ZprimeLRM_4TeV_jj,
-                        #sample.p8_pp_ZprimeSSM_4TeV_jj,
-                        #sample.p8_pp_ZprimeETA_4TeV_jj,
-                        #sample.p8_pp_ZprimePSI_6TeV_jj,
-                        #sample.p8_pp_ZprimeI_6TeV_jj,
-                        #sample.p8_pp_ZprimeCHI_6TeV_jj,
-                        #sample.p8_pp_ZprimeLRM_6TeV_jj,
-                        #sample.p8_pp_ZprimeSSM_6TeV_jj,
-                        #sample.p8_pp_ZprimeETA_6TeV_jj,
-                        #sample.p8_pp_ZprimePSI_8TeV_jj,
-                        #sample.p8_pp_ZprimeI_8TeV_jj,
-                        #sample.p8_pp_ZprimeCHI_8TeV_jj,
-                        #sample.p8_pp_ZprimeLRM_8TeV_jj,
-                        #sample.p8_pp_ZprimeSSM_8TeV_jj,
-                        #sample.p8_pp_ZprimeETA_8TeV_jj,
+                        sample.mgp8_pp_tj_5f,
+                        sample.mgp8_pp_tvj_5f,
                      ]
 
 
-splitFac = 10
-sample.p8_pp_Zprime_2TeV_ttbar.splitFactor  = splitFac
-sample.p8_pp_Zprime_4TeV_ttbar.splitFactor  = splitFac
-sample.p8_pp_Zprime_5TeV_ttbar.splitFactor  = splitFac
-sample.p8_pp_Zprime_6TeV_ttbar.splitFactor  = splitFac
-sample.p8_pp_Zprime_8TeV_ttbar.splitFactor  = splitFac
-sample.p8_pp_Zprime_10TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_12TeV_ttbar.splitFactor = splitFac
-sample.p8_pp_Zprime_14TeV_ttbar.splitFactor = splitFac
+splitFac = 40
+sample.mgp8_pp_tj_5f.splitFactor  = splitFac
+sample.mgp8_pp_tvj_5f.splitFactor = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_jj_5f_HT_500_1000.splitFactor    = splitFac2
@@ -106,32 +69,6 @@ sample.mgp8_pp_vj_5f_HT_1000_2000.splitFactor   = splitFac2
 sample.mgp8_pp_vj_5f_HT_2000_5000.splitFactor   = splitFac2
 sample.mgp8_pp_vj_5f_HT_5000_10000.splitFactor  = splitFac2
 sample.mgp8_pp_vj_5f_HT_10000_27000.splitFactor = splitFac2
-
-splitFac3 = 20
-sample.p8_pp_ZprimePSI_2TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeI_2TeV_jj.splitFactor   = splitFac3
-sample.p8_pp_ZprimeCHI_2TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeLRM_2TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeSSM_2TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeETA_2TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimePSI_4TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeI_4TeV_jj.splitFactor   = splitFac3
-sample.p8_pp_ZprimeCHI_4TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeLRM_4TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeSSM_4TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeETA_4TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimePSI_6TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeI_6TeV_jj.splitFactor   = splitFac3
-sample.p8_pp_ZprimeCHI_6TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeLRM_6TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeSSM_6TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeETA_6TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimePSI_8TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeI_8TeV_jj.splitFactor   = splitFac3
-sample.p8_pp_ZprimeCHI_8TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeLRM_8TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeSSM_8TeV_jj.splitFactor = splitFac3
-sample.p8_pp_ZprimeETA_8TeV_jj.splitFactor = splitFac3
 
 #selectedComponents = [comp]
 
@@ -198,8 +135,6 @@ from EventStore import EventStore as Events
 ##   Reco Level Analysis   ##
 #############################
 
-#uncomment the following to go back to normal
-
 # fix pf04 jets (get muon back in)
 from heppy.FCChhAnalyses.analyzers.JetCorrector import JetCorrector
 pfjets04_fix = cfg.Analyzer(
@@ -227,7 +162,7 @@ jets_pf02_1500 = cfg.Analyzer(
     'jets_pf02_1500',
     output = 'jets_pf02_1500',
     input_objects = 'pfjets02',
-    filter_func = lambda fatjet: fatjet.pt()>1000. and fatjet.match is None
+    filter_func = lambda fatjet: fatjet.pt()>500. and fatjet.match is None
 )
 
 jets_trk02_1000 = cfg.Analyzer(
@@ -235,7 +170,7 @@ jets_trk02_1000 = cfg.Analyzer(
     'jets_trk02_1000',
     output = 'jets_trk02_1000',
     input_objects = 'trkjets02',
-    filter_func = lambda jet: jet.pt()>750
+    filter_func = lambda jet: jet.pt()>250
 )
 
 jets_trk04_1000 = cfg.Analyzer(
@@ -243,7 +178,7 @@ jets_trk04_1000 = cfg.Analyzer(
     'jets_trk04_1000',
     output = 'jets_trk04_1000',
     input_objects = 'trkjets04',
-    filter_func = lambda jet: jet.pt()>750
+    filter_func = lambda jet: jet.pt()>250
 )
 
 jets_trk08_1000 = cfg.Analyzer(
@@ -251,7 +186,7 @@ jets_trk08_1000 = cfg.Analyzer(
     'jets_trk08_1000',
     output = 'jets_trk08_1000',
     input_objects = 'trkjets08',
-    filter_func = lambda jet: jet.pt()>750
+    filter_func = lambda jet: jet.pt()>250
 )
 
 # select pf04 jets above 1000 GeV for b-tagging
@@ -260,7 +195,7 @@ jets_pf04_1000 = cfg.Analyzer(
     'jets_pf04_1000',
     output = 'jets_pf04_1000',
     input_objects = 'pfjets04_fix',
-    filter_func = lambda jet: jet.pt()>750
+    filter_func = lambda jet: jet.pt()>250
 )
 
 # apply jet flavour tagging
@@ -283,16 +218,8 @@ jets_pf04_1500 = cfg.Analyzer(
     'jets_pf04_1500',
     output = 'jets_pf04_1500',
     input_objects = 'pfjets04_fix',
-    filter_func = lambda jet: jet.pt()>800
+    filter_func = lambda jet: jet.pt()>300
 )
-
-#all_particles = cfg.Analyzer(
-#    Selector,
-#    'all_particles',
-#    output = 'all_particles',
-#    input_objects = 'gen_particles',
-#    filter_func = lambda part: part.pt()>0
-#)
 
 # select pf08 jets above 1500 GeV
 jets_pf08_1500 = cfg.Analyzer(
@@ -300,7 +227,7 @@ jets_pf08_1500 = cfg.Analyzer(
     'jets_pf08_1500',
     output = 'jets_pf08_1500',
     input_objects = 'pfjets08',
-    filter_func = lambda jet: jet.pt()>1000
+    filter_func = lambda jet: jet.pt()>500
 )
 
 # select electrons above 100 GeV
@@ -322,7 +249,7 @@ muons_100 = cfg.Analyzer(
 )
 
 # produce flat root tree containing jet substructure information
-from heppy.FCChhAnalyses.HELHC.Zprime_tt.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.single_top.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     pfjets04_fix    = 'pfjets04_fix',
@@ -341,24 +268,6 @@ tree = cfg.Analyzer(
 
 )
 
-#tree2 = cfg.Analyzer(
-#    TreeProducer,
-#    pfjets04_fix    = 'pfjets04_fix',
-#
-#    jets_trk02_1000 = 'jets_trk02_1000',
-#    jets_trk04_1000 = 'jets_trk04_1000',
-#    jets_trk08_1000 = 'jets_trk08_1000',
-#
-#    jets_pf02_1500  = 'jets_pf02_1500',
-#    jets_pf04_1000  = 'jets_pf04_1000',
-#    jets_pf04_1500  = 'jets_pf04_1500',
-#    jets_pf08_1500  = 'jets_pf08_1500',
-#
-#    electrons = 'electrons_100',
-#    muons = 'muons_100',
-#
-#)
-
 # definition of a sequence of analyzers,
 # the analyzers will process each event in this order
 sequence = cfg.Sequence( [
@@ -368,7 +277,6 @@ sequence = cfg.Sequence( [
     jets_pf02_1500,
     jets_pf04_1000,
     jets_pf04_1000_pdg,
-    #all_particles,
     jets_pf04_1500,
     jets_pf08_1500,
 
@@ -379,7 +287,6 @@ sequence = cfg.Sequence( [
     electrons_100,
     muons_100,
     tree,
-#    tree2,
     ] )
 
 config = cfg.Config(

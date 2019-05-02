@@ -10,12 +10,8 @@ import math
 import ROOT
 from ROOT import *
 import collections
-#from array import array
 import array
 import os
-
-#For TMVA >>>>>>>>>>>>>>>>>>>>>
-#ROOT.gROOT.ProcessLine('.L /afs/cern.ch/user/r/rasmith/fcc/heppy/FCChhAnalyses/Zprime_tt/BDT_QCD.class.C+')
 
 class TreeProducer(Analyzer):
 
@@ -29,7 +25,8 @@ class TreeProducer(Analyzer):
         self.tree.var('weight', float)
         self.tree.var('weight_1tagex', float)
         self.tree.var('weight_2tagex', float)
-        self.tree.var('weight_1tagin', float)
+        self.tree.var('weight_1tagexJet1', float)
+        self.tree.var('weight_1tagexJet2', float)
         self.tree.var('missingET', float)
         self.tree.var('numberOfElectrons', int)
         self.tree.var('numberOfMuons', int)
@@ -105,6 +102,11 @@ class TreeProducer(Analyzer):
 
         self.tree.var('Jet1_trk02_dR_lep', float)
         self.tree.var('Jet2_trk02_dR_lep', float)
+        self.tree.var('Jet1_trk02_dR_Jet2_trk02', float)
+
+        self.tree.var('Jet1_lepclose', int)
+        self.tree.var('Jet2_lepclose', int)
+        self.tree.var('lepton_iso', int)
 
         # for MVA
         self.reader = ROOT.TMVA.Reader()
@@ -131,6 +133,7 @@ class TreeProducer(Analyzer):
         self.reader.BookMVA("BDT",str(path)+"BDT_BDT_thad_vs_QCD.weights.xml")
         self.tree.var('Jet1_thad_vs_QCD_tagger', float)
         self.tree.var('Jet2_thad_vs_QCD_tagger', float)
+
 
     def corrMET(self, jet1, pdg1 , jet2, pdg2, met):
         dphi1 = abs(jet1.p4().DeltaPhi(met.p4()))
@@ -170,6 +173,7 @@ class TreeProducer(Analyzer):
         jets_pf04 = getattr(event, self.cfg_ana.jets_pf04_1000)
         jets_pf04_pdg = event.jets_pf04_1000_pdg
         jets_pf08 = getattr(event, self.cfg_ana.jets_pf08_1500)
+        #gen_particles = event.all_particles
 
         jets_pf04_1500 = getattr(event, self.cfg_ana.jets_pf04_1500)
         jets_trk04 = getattr(event, self.cfg_ana.jets_trk04_1000)
@@ -180,8 +184,8 @@ class TreeProducer(Analyzer):
 
         Jet1_trk02_dR_lep = 999
         Jet2_trk02_dR_lep  = 999
+        Jet1_trk02_dR_Jet2_trk02 = 999
         if ( len(jets_trk02)>=2 and  len(jets_pf02)>=2):
-
             j1 = ROOT.TLorentzVector(); j2 = ROOT.TLorentzVector()
             j1.SetPtEtaPhiE(jets_trk02[0].pt(), jets_trk02[0].eta(), jets_trk02[0].phi(), jets_trk02[0].e())
             j2.SetPtEtaPhiE(jets_trk02[1].pt(), jets_trk02[1].eta(), jets_trk02[1].phi(), jets_trk02[1].e())
@@ -207,7 +211,54 @@ class TreeProducer(Analyzer):
             
             self.tree.fill('Jet1_trk02_dR_lep' , Jet1_trk02_dR_lep )
             self.tree.fill('Jet2_trk02_dR_lep' , Jet2_trk02_dR_lep )
-#had_hadsemilep_lep_decays
+
+            Jet1_trk02_dR_Jet2_trk02 = j1.DeltaR(j2)
+            self.tree.fill('Jet1_trk02_dR_Jet2_trk02' , Jet1_trk02_dR_Jet2_trk02 )
+
+
+            # jets and leptons
+            Jet1_lepclose = False
+            Jet2_lepclose = False
+            dR_close = 0.7
+            for i in xrange(len(electrons)) :
+              l = ROOT.TLorentzVector()
+              l.SetPtEtaPhiE(electrons[i].pt(), electrons[i].eta(), electrons[i].phi(), electrons[i].e())
+              # do not use leptons with pTl/pTj<0.15 (our definiton of a semi-lep decay)
+              if j1.DeltaR(l)<dR_close and l.Pt()/j1.Pt()>0.15 : Jet1_lepclose = True
+              if j2.DeltaR(l)<dR_close and l.Pt()/j2.Pt()>0.15 : Jet2_lepclose = True
+            for i in xrange(len(muons)) :
+              l = ROOT.TLorentzVector()
+              l.SetPtEtaPhiE(muons[i].pt(), muons[i].eta(), muons[i].phi(), muons[i].e())
+              # do not use leptons with pTl/pTj<0.15 (our definiton of a semi-lep decay)
+              if j1.DeltaR(l)<dR_close and l.Pt()/j1.Pt()>0.15 : Jet1_lepclose = True
+              if j2.DeltaR(l)<dR_close and l.Pt()/j2.Pt()>0.15 : Jet2_lepclose = True
+            #
+            lepton_iso = False
+            dR_match = 0.2
+            for i in xrange(len(electrons)) :
+              l = ROOT.TLorentzVector()
+              l.SetPtEtaPhiE(electrons[i].pt(), electrons[i].eta(), electrons[i].phi(), electrons[i].e())
+              if lepton_iso == False :
+                n_match = 0
+                for j in xrange(len(jets_trk02)) :
+                  j1 = ROOT.TLorentzVector()
+                  j1.SetPtEtaPhiE(jets_trk02[j].pt(), jets_trk02[j].eta(), jets_trk02[j].phi(), jets_trk02[j].e())
+                  if j1.DeltaR(l)<dR_match : n_match += 1
+                if n_match == 0 : lepton_iso = True
+            for i in xrange(len(muons)) :
+              l = ROOT.TLorentzVector()
+              l.SetPtEtaPhiE(muons[i].pt(), muons[i].eta(), muons[i].phi(), muons[i].e())
+              if lepton_iso == False :
+                n_match = 0
+                for j in xrange(len(jets_trk02)) :
+                  j1 = ROOT.TLorentzVector()
+                  j1.SetPtEtaPhiE(jets_trk02[j].pt(), jets_trk02[j].eta(), jets_trk02[j].phi(), jets_trk02[j].e())
+                  if j1.DeltaR(l)<dR_match : n_match += 1
+                if n_match == 0 : lepton_iso = True
+            #
+            self.tree.fill('Jet1_lepclose', Jet1_lepclose)
+            self.tree.fill('Jet2_lepclose', Jet2_lepclose)
+            self.tree.fill('lepton_iso', lepton_iso)
 
             self.tree.fill('weight' , event.weight )
             self.tree.fill('missingET', event.met.pt())
@@ -273,8 +324,6 @@ class TreeProducer(Analyzer):
 
             # TRF / truth b-tagging -> need at least 2 jets_pf04
             use_DELPHES=False
-            weight_1tagex=0.
-            weight_2tagex=0.
             jet=[]
             ipdg=0
             for i in range(len(jets_pf04)):
@@ -284,12 +333,14 @@ class TreeProducer(Analyzer):
               else:
                 ipdg = jets_pf04_pdg[i].flavour
               jet.append([jets_pf04[i],ipdg])
-            if (len(jet)>0): weight_1tagex=getNbTagEx(1,jet,2)
-            if (len(jet)>1): weight_2tagex=getNbTagEx(2,jet,2)
-            weight_1tagin=weight_1tagex+weight_2tagex
+            weight_1tagex=getNbTagEx(1,jet,2)
+            weight_1tagexJet1=getNbTagEx(1,jet,2,0)
+            weight_1tagexJet2=getNbTagEx(1,jet,2,1)
+            weight_2tagex=getNbTagEx(2,jet,2)
             self.tree.fill('weight_1tagex', weight_1tagex)
             self.tree.fill('weight_2tagex', weight_2tagex)
-            self.tree.fill('weight_1tagin', weight_1tagin)
+            self.tree.fill('weight_1tagexJet1', weight_1tagexJet1)
+            self.tree.fill('weight_1tagexJet2', weight_1tagexJet2)
 
             #MATCHING PF02 and trk02 for CORRECTION
             Jet1_trk02_dR_pf02 = 999
@@ -316,13 +367,13 @@ class TreeProducer(Analyzer):
 	    p4sd1 = ROOT.TLorentzVector(); p4sd2 = ROOT.TLorentzVector()
 	    p4sd1.SetPtEtaPhiM(jets_trk02[0].subjetsSoftDrop[0].p4().Pt()*corr1, 
 	    			jets_trk02[0].eta(), 
-				jets_trk02[0].phi(), 
-				jets_trk02[0].subjetsSoftDrop[0].p4().M()*corr1)
+	        		jets_trk02[0].phi(), 
+	        		jets_trk02[0].subjetsSoftDrop[0].p4().M()*corr1)
 	    
 	    p4sd2.SetPtEtaPhiM(jets_trk02[1].subjetsSoftDrop[0].p4().Pt()*corr2, 
 	    			jets_trk02[1].eta(), 
-				jets_trk02[1].phi(), 
-				jets_trk02[1].subjetsSoftDrop[0].p4().M()*corr2)
+	        		jets_trk02[1].phi(), 
+	        		jets_trk02[1].subjetsSoftDrop[0].p4().M()*corr2)
 	    
             sdjet1_corr = Particle(pdg1, 0, p4sd1, 1)
             sdjet2_corr = Particle(pdg2, 0, p4sd2, 1)
@@ -354,7 +405,6 @@ class TreeProducer(Analyzer):
             sdjetmet1, sdjetmet2 = self.corrMET(sdjet1_corr, pdg1, sdjet2_corr, pdg2, event.met)
             fillParticle(self.tree, 'Jet1_trk02_SD_Corr_MetCorr', sdjetmet1)
             fillParticle(self.tree, 'Jet2_trk02_SD_Corr_MetCorr', sdjetmet2)
-
 
             ######################
             # trkjet04 mass info #
