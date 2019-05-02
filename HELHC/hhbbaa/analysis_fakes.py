@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, math
 import copy
 import heppy.framework.config as cfg
 
@@ -12,56 +12,16 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
-     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/mgp8_pp_hh01j_5f/events0.root"]
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_hh_lambda100_5f_haa/events_000000127.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_jjja_5f/events_000014779.root"]
 )
 
-from FCC_heppySampleList_fcc_v02 import *
+from HELHC_heppySampleList_helhc_v01 import *
 
 selectedComponents = [
-                      mgp8_pp_jjaa_5f,
-                      mgp8_pp_hh_lambda090_5f_haa,
-                      mgp8_pp_hh_lambda095_5f_haa,
-                      mgp8_pp_hh_lambda096_5f_haa,
-                      mgp8_pp_hh_lambda097_5f_haa,
-                      mgp8_pp_hh_lambda098_5f_haa,
-                      mgp8_pp_hh_lambda099_5f_haa,
-                      mgp8_pp_hh_lambda100_5f_haa,
-                      mgp8_pp_hh_lambda101_5f_haa,
-                      mgp8_pp_hh_lambda102_5f_haa,
-                      mgp8_pp_hh_lambda103_5f_haa,
-                      mgp8_pp_hh_lambda104_5f_haa,
-                      mgp8_pp_hh_lambda105_5f_haa,
-                      mgp8_pp_hh_lambda110_5f_haa,
-                      mgp8_pp_tth01j_5f_haa,
-                      mgp8_pp_bbh_haa,
-                      mgp8_pp_vh012j_5f_haa,
-		      mgp8_pp_h012j_5f_haa
-		      ]
-
-
-mgp8_pp_jjaa_5f.splitFactor = 400
-mgp8_pp_hh_lambda090_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda095_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda096_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda097_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda098_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda099_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda100_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda101_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda102_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda103_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda104_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda105_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda110_5f_haa.splitFactor = 20
-mgp8_pp_tth01j_5f_haa.splitFactor = 50
-mgp8_pp_bbh_haa.splitFactor = 40
-mgp8_pp_vh012j_5f_haa.splitFactor = 40
-mgp8_pp_h012j_5f_haa.splitFactor = 40
-
-# dummy, needs to be here FlatTreeAnalyzer
+                      mgp8_pp_jjja_5f,
+                     ]
+                     
 mgp8_pp_jjja_5f.splitFactor = 1000
-
 
 #selectedComponents = [comp]
 
@@ -99,6 +59,18 @@ from EventStore import EventStore as Events
 #############################
 ##   Reco Level Analysis   ##
 #############################
+
+# fix pf04 jets (get muon back in)
+from heppy.FCChhAnalyses.analyzers.JetCorrector import JetCorrector
+jets_fix = cfg.Analyzer(
+    JetCorrector,
+    'jets_fix',
+    output = 'jets_fix',
+    input_jets = 'jets',
+    input_extra = 'muons',
+    scale = 1.19,
+    dr_match = 0.4,
+)
 
 # select isolated muons with pT > 25 GeV and relIso < 0.2
 from heppy.analyzers.Selector import Selector
@@ -144,7 +116,7 @@ jets_25 = cfg.Analyzer(
     Selector,
     'jets_25',
     output = 'jets_25',
-    input_objects = 'jets',
+    input_objects = 'jets_fix',
     filter_func = lambda jet: jet.pt()>30.
 )
 
@@ -199,12 +171,34 @@ jets_nophoton = cfg.Analyzer(
     filter_func = lambda jet: jet.match is None
 )
 
+# convert jets into fake photons
+from heppy.FCChhAnalyses.analyzers.FakeParticleBuilder import FakeParticleBuilder
+fake_photons = cfg.Analyzer(
+    FakeParticleBuilder,
+    'fake_photons',
+    input_objects = 'jets_nophoton',
+    input_weights = 'weights',
+    output_jets = 'jets_nofakes',
+    output_fakes = 'fake_photons',
+    output_weights = 'fake_weights',
+    fake_prob = lambda pt: 0.002*math.exp(-pt/30.)
+)
+
+# merge prompt and fake photons into a single collection
+from heppy.analyzers.Merger import Merger
+merged_photons = cfg.Analyzer(
+      Merger,
+      instance_label = 'merged_photons', 
+      inputs = ['selected_photons','fake_photons'],
+      output = 'merged_photons'
+)
+
 # select lights with pT > 30 GeV and relIso < 0.4
 selected_lights = cfg.Analyzer(
     Selector,
     'selected_lights',
     output = 'selected_lights',
-    input_objects = 'jets_nophoton',
+    input_objects = 'jets_nofakes',
     filter_func = lambda ptc: ptc.tags['bf'] == 0
 )
 
@@ -213,7 +207,7 @@ selected_bs = cfg.Analyzer(
     Selector,
     'selected_bs',
     output = 'selected_bs',
-    input_objects = 'jets_nophoton',
+    input_objects = 'jets_nofakes',
     filter_func = lambda ptc: ptc.tags['bf'] > 0
 )
 
@@ -222,7 +216,7 @@ from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
 photon_higgses = cfg.Analyzer(
       ResonanceBuilder,
       output = 'photon_higgses',
-      leg_collection = 'selected_photons',
+      leg_collection = 'merged_photons',
       pdgid = 25
 )
 
@@ -235,26 +229,22 @@ b_higgses = cfg.Analyzer(
       pdgid = 25
 )
 
-from heppy.FCChhAnalyses.FCChh.hhbbaa.selection import Selection
-selection = cfg.Analyzer(
-    Selection,
-    instance_label='cuts'
-)
-
 # produce flat root tree containing information after pre-selection
-from heppy.FCChhAnalyses.FCChh.hhbbaa.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.hhbbaa.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
-    photons = 'selected_photons',
+    photons = 'merged_photons',
     bs = 'selected_bs',
     haas = 'photon_higgses',
     hbbs = 'b_higgses',
 )
 
+
 # definition of a sequence of analyzers,
 # the analyzers will process each event in this order
 sequence = cfg.Sequence( [
     source,
+    jets_fix,
     selected_muons,
     selected_electrons,
     selected_leptons,
@@ -266,14 +256,14 @@ sequence = cfg.Sequence( [
     jets_nomuon,
     match_photon_jets,
     jets_nophoton,
+    fake_photons,
+    merged_photons,
     selected_bs,
     selected_lights,
     photon_higgses,
     b_higgses,
     tree
     ] )
-
-
 
 
 config = cfg.Config(

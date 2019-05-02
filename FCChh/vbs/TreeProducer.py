@@ -15,7 +15,8 @@ class TreeProducer(Analyzer):
         self.tree = Tree( 'events', '')
         self.tree.var('weight', float)
         
-        self.tree.var('njets', float)
+        self.tree.var('nljets', float)
+        self.tree.var('nbjets', float)
         self.tree.var('nleptons', float)
 
         bookParticle(self.tree, 'l1')
@@ -34,6 +35,9 @@ class TreeProducer(Analyzer):
         bookParticle(self.tree, 'gl2')
         bookParticle(self.tree, 'gv1')
         bookParticle(self.tree, 'gv2')
+
+        self.tree.var('ngenw', float)
+        self.tree.var('ngenz', float)
         
         bookMet(self.tree, 'met')
 
@@ -62,9 +66,11 @@ class TreeProducer(Analyzer):
         genneus = []
         genleps = []
         genws   = []
+        genzs   = []
 
         for gen in genparts:
-            if gen.status() > 20 and gen.status() < 30:
+            
+	    if gen.status() > 20 and gen.status() < 30:
                 if abs(gen.pdgid())<5 and gen.pt() > 0.:
                     genjets.append(gen)
                 if abs(gen.pdgid()) == 11 or abs(gen.pdgid()) == 13 or abs(gen.pdgid()) == 15:
@@ -73,6 +79,8 @@ class TreeProducer(Analyzer):
                     genneus.append(gen)
                 if abs(gen.pdgid()) == 24:
                     genws.append(gen)
+                if abs(gen.pdgid()) == 23:
+                    genzs.append(gen)
                     
         if len(genleps) < 2:
             
@@ -140,12 +148,17 @@ class TreeProducer(Analyzer):
         leptons.sort(key=lambda x: x.pt(), reverse = True)
 
         jets = event.jets_nolepton
-        jets.sort(key=lambda x: x.pt(), reverse = True)
+        #jets.sort(key=lambda x: x.pt(), reverse = True)
+        jets.sort(key=lambda x: abs(x.eta()), reverse = True)
         
         met = event.met
+
+        self.tree.fill('ngenw' , len(genws) )
+        self.tree.fill('ngenz' , len(genzs) )
         
         self.tree.fill('weight' , event.weight )
-        self.tree.fill('njets' , len(jets))
+        self.tree.fill('nbjets' , len(event.selected_bs) )
+        self.tree.fill('nljets' , len(event.selected_lights) )
         self.tree.fill('nleptons' , len(leptons))
         fillMet(self.tree, 'met', met)
 
@@ -166,8 +179,7 @@ class TreeProducer(Analyzer):
                     fillParticle(self.tree, 'j3', jets[2])
                     if len(jets) > 3:
                         fillParticle(self.tree, 'j4', jets[3])
-
-
+        
         self.tree.tree.Fill()
         
     def write(self, setup):

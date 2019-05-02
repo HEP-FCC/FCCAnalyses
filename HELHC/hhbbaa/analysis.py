@@ -16,48 +16,59 @@ comp = cfg.Component(
      files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_hh_lambda100_5f_haa/events_000000127.root"]
 )
 
-from FCC_heppySampleList_fcc_v02 import *
+from HELHC_heppySampleList_helhc_v01 import *
 
 selectedComponents = [
-                      mgp8_pp_jjaa_5f,
-                      mgp8_pp_hh_lambda090_5f_haa,
-                      mgp8_pp_hh_lambda095_5f_haa,
-                      mgp8_pp_hh_lambda096_5f_haa,
-                      mgp8_pp_hh_lambda097_5f_haa,
-                      mgp8_pp_hh_lambda098_5f_haa,
-                      mgp8_pp_hh_lambda099_5f_haa,
-                      mgp8_pp_hh_lambda100_5f_haa,
-                      mgp8_pp_hh_lambda101_5f_haa,
-                      mgp8_pp_hh_lambda102_5f_haa,
-                      mgp8_pp_hh_lambda103_5f_haa,
-                      mgp8_pp_hh_lambda104_5f_haa,
-                      mgp8_pp_hh_lambda105_5f_haa,
-                      mgp8_pp_hh_lambda110_5f_haa,
-                      mgp8_pp_tth01j_5f_haa,
-                      mgp8_pp_bbh_haa,
-                      mgp8_pp_vh012j_5f_haa,
-		      mgp8_pp_h012j_5f_haa
-		      ]
+
+                       mgp8_pp_hh_5f_kl_0500_haa,
+                       mgp8_pp_hh_5f_kl_0750_haa,
+                       mgp8_pp_hh_5f_kl_0800_haa,
+                       mgp8_pp_hh_5f_kl_0850_haa,
+                       mgp8_pp_hh_5f_kl_0875_haa,
+                       mgp8_pp_hh_5f_kl_0900_haa,
+                       mgp8_pp_hh_5f_kl_0925_haa,
+                       mgp8_pp_hh_5f_kl_0950_haa,
+                       mgp8_pp_hh_5f_kl_0975_haa,
+                       mgp8_pp_hh_5f_kl_1000_haa,
+                       mgp8_pp_hh_5f_kl_1025_haa,
+                       mgp8_pp_hh_5f_kl_1050_haa,
+                       mgp8_pp_hh_5f_kl_1075_haa,
+                       mgp8_pp_hh_5f_kl_1100_haa,
+                       mgp8_pp_hh_5f_kl_1125_haa,
+                       mgp8_pp_hh_5f_kl_1150_haa,
+                       mgp8_pp_hh_5f_kl_1200_haa,
+                       mgp8_pp_hh_5f_kl_1250_haa,
+                       mgp8_pp_hh_5f_kl_1500_haa,
+		       mgp8_pp_tth01j_5f_haa,
+                       mgp8_pp_bbh_4f_haa,
+                       mgp8_pp_vh012j_5f_haa,
+                       mgp8_pp_jjaa_5f
+                   ]
 
 
-mgp8_pp_jjaa_5f.splitFactor = 400
-mgp8_pp_hh_lambda090_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda095_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda096_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda097_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda098_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda099_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda100_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda101_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda102_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda103_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda104_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda105_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda110_5f_haa.splitFactor = 20
-mgp8_pp_tth01j_5f_haa.splitFactor = 50
-mgp8_pp_bbh_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0500_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0750_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0800_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0850_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0875_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0900_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0925_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0950_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_0975_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1000_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1025_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1050_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1075_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1100_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1125_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1150_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1200_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1250_haa.splitFactor = 40
+mgp8_pp_hh_5f_kl_1500_haa.splitFactor = 40
+mgp8_pp_tth01j_5f_haa.splitFactor = 120
+mgp8_pp_bbh_4f_haa.splitFactor = 160
 mgp8_pp_vh012j_5f_haa.splitFactor = 40
-mgp8_pp_h012j_5f_haa.splitFactor = 40
+mgp8_pp_jjaa_5f.splitFactor = 160
 
 # dummy, needs to be here FlatTreeAnalyzer
 mgp8_pp_jjja_5f.splitFactor = 1000
@@ -99,6 +110,18 @@ from EventStore import EventStore as Events
 #############################
 ##   Reco Level Analysis   ##
 #############################
+
+# fix pf04 jets (get muon back in)
+from heppy.FCChhAnalyses.analyzers.JetCorrector import JetCorrector
+jets_fix = cfg.Analyzer(
+    JetCorrector,
+    'jets_fix',
+    output = 'jets_fix',
+    input_jets = 'jets',
+    input_extra = 'muons',
+    scale = 1.19,
+    dr_match = 0.4,
+)
 
 # select isolated muons with pT > 25 GeV and relIso < 0.2
 from heppy.analyzers.Selector import Selector
@@ -144,7 +167,7 @@ jets_25 = cfg.Analyzer(
     Selector,
     'jets_25',
     output = 'jets_25',
-    input_objects = 'jets',
+    input_objects = 'jets_fix',
     filter_func = lambda jet: jet.pt()>30.
 )
 
@@ -235,14 +258,14 @@ b_higgses = cfg.Analyzer(
       pdgid = 25
 )
 
-from heppy.FCChhAnalyses.FCChh.hhbbaa.selection import Selection
+from heppy.FCChhAnalyses.HELHC.hhbbaa.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # produce flat root tree containing information after pre-selection
-from heppy.FCChhAnalyses.FCChh.hhbbaa.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.hhbbaa.TreeProducer import TreeProducer
 tree = cfg.Analyzer(
     TreeProducer,
     photons = 'selected_photons',
@@ -255,6 +278,7 @@ tree = cfg.Analyzer(
 # the analyzers will process each event in this order
 sequence = cfg.Sequence( [
     source,
+    jets_fix,
     selected_muons,
     selected_electrons,
     selected_leptons,
