@@ -19,7 +19,7 @@ from FCC_heppySampleList_fcc_v02 import *
 
 selectedComponents = [
 		       mgp8_pp_tt012j_5f,
-		       mgp8_pp_vv012j_5f,
+		       mgp8_pp_wz012j_4f,
 		       mgp8_pp_zzjj_4l_QED4_QCD0_LL,
 		       mgp8_pp_zzjj_4l_QED4_QCD0_TL,
 		       mgp8_pp_zzjj_4l_QED4_QCD0_TT,
@@ -47,10 +47,10 @@ mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_LL.splitFactor = 1
 mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TL.splitFactor = 4
 mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TT.splitFactor = 6
 
-mgp8_pp_tt012j_5f.splitFactor = 50
-mgp8_pp_vv012j_5f.splitFactor = 50
+mgp8_pp_tt012j_5f.splitFactor = 150
+mgp8_pp_wz012j_4f.splitFactor = 30
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 
 from heppy.FCChhAnalyses.analyzers.Reader import Reader

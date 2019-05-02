@@ -148,7 +148,8 @@ class TreeProducer(Analyzer):
         leptons.sort(key=lambda x: x.pt(), reverse = True)
 
         jets = event.jets_nolepton
-        jets.sort(key=lambda x: x.pt(), reverse = True)
+        #jets.sort(key=lambda x: x.pt(), reverse = True)
+        jets.sort(key=lambda x: abs(x.eta()), reverse = True)
         
         met = event.met
 
@@ -178,8 +179,7 @@ class TreeProducer(Analyzer):
                     fillParticle(self.tree, 'j3', jets[2])
                     if len(jets) > 3:
                         fillParticle(self.tree, 'j4', jets[3])
-
-
+        
         self.tree.tree.Fill()
         
     def write(self, setup):
