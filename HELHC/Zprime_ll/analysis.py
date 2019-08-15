@@ -16,60 +16,115 @@ comp = cfg.Component(
 )
 
 selectedComponents = [
-                        sample.p8_pp_ZprimeSSM_2TeV_ll,
-                        sample.p8_pp_ZprimeSSM_4TeV_ll,
-                        sample.p8_pp_ZprimeSSM_6TeV_ll,
-                        sample.p8_pp_ZprimeSSM_8TeV_ll,
-                        sample.p8_pp_ZprimeSSM_10TeV_ll,
-                        sample.p8_pp_ZprimeSSM_12TeV_ll,
-                        sample.p8_pp_ZprimeSSM_14TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_2TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_4TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_6TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_8TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_10TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_12TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_14TeV_ll,
  
-                        sample.p8_pp_ZprimeCHI_2TeV_ll,
-                        sample.p8_pp_ZprimeCHI_4TeV_ll,
-                        sample.p8_pp_ZprimeCHI_6TeV_ll,
-                        sample.p8_pp_ZprimeCHI_8TeV_ll,
-                        sample.p8_pp_ZprimeCHI_10TeV_ll,
-                        sample.p8_pp_ZprimeCHI_12TeV_ll,
-                        sample.p8_pp_ZprimeCHI_14TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_2TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_4TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_6TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_8TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_10TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_12TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_14TeV_ll,
 
-                        sample.p8_pp_ZprimePSI_2TeV_ll,
-                        sample.p8_pp_ZprimePSI_4TeV_ll,
-                        sample.p8_pp_ZprimePSI_6TeV_ll,
-                        sample.p8_pp_ZprimePSI_8TeV_ll,
-                        sample.p8_pp_ZprimePSI_10TeV_ll,
-                        sample.p8_pp_ZprimePSI_12TeV_ll,
-                        sample.p8_pp_ZprimePSI_14TeV_ll,
+#                        sample.p8_pp_ZprimePSI_2TeV_ll,
+#                        sample.p8_pp_ZprimePSI_4TeV_ll,
+#                        sample.p8_pp_ZprimePSI_6TeV_ll,
+#                        sample.p8_pp_ZprimePSI_8TeV_ll,
+#                        sample.p8_pp_ZprimePSI_10TeV_ll,
+#                        sample.p8_pp_ZprimePSI_12TeV_ll,
+#                        sample.p8_pp_ZprimePSI_14TeV_ll,
 
-                        sample.p8_pp_ZprimeETA_2TeV_ll,
-                        sample.p8_pp_ZprimeETA_4TeV_ll,
-                        sample.p8_pp_ZprimeETA_6TeV_ll,
-                        sample.p8_pp_ZprimeETA_8TeV_ll,
-                        sample.p8_pp_ZprimeETA_10TeV_ll,
-                        sample.p8_pp_ZprimeETA_12TeV_ll,
-                        sample.p8_pp_ZprimeETA_14TeV_ll,
+#                        sample.p8_pp_ZprimeETA_2TeV_ll,
+#                        sample.p8_pp_ZprimeETA_4TeV_ll,
+#                        sample.p8_pp_ZprimeETA_6TeV_ll,
+#                        sample.p8_pp_ZprimeETA_8TeV_ll,
+#                        sample.p8_pp_ZprimeETA_10TeV_ll,
+#                        sample.p8_pp_ZprimeETA_12TeV_ll,
+#                        sample.p8_pp_ZprimeETA_14TeV_ll,
 
-                        sample.p8_pp_ZprimeLRM_2TeV_ll,
-                        sample.p8_pp_ZprimeLRM_4TeV_ll,
-                        sample.p8_pp_ZprimeLRM_6TeV_ll,
-                        sample.p8_pp_ZprimeLRM_8TeV_ll,
-                        sample.p8_pp_ZprimeLRM_10TeV_ll,
-                        sample.p8_pp_ZprimeLRM_12TeV_ll,
-                        sample.p8_pp_ZprimeLRM_14TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_2TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_4TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_6TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_8TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_10TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_12TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_14TeV_ll,
 
-                        sample.p8_pp_ZprimeI_2TeV_ll,
-                        sample.p8_pp_ZprimeI_4TeV_ll,
-                        sample.p8_pp_ZprimeI_6TeV_ll,
-                        sample.p8_pp_ZprimeI_8TeV_ll,
-                        sample.p8_pp_ZprimeI_10TeV_ll,
-                        sample.p8_pp_ZprimeI_12TeV_ll,
-                        sample.p8_pp_ZprimeI_14TeV_ll, 
+#                        sample.p8_pp_ZprimeI_2TeV_ll,
+#                        sample.p8_pp_ZprimeI_4TeV_ll,
+#                        sample.p8_pp_ZprimeI_6TeV_ll,
+#                        sample.p8_pp_ZprimeI_8TeV_ll,
+#                        sample.p8_pp_ZprimeI_10TeV_ll,
+#                        sample.p8_pp_ZprimeI_12TeV_ll,
+#                        sample.p8_pp_ZprimeI_14TeV_ll, 
 
-                        sample.p8_pp_ZprimeSSM_Interf_6TeV_ll,
-                        sample.p8_pp_ZprimeCHI_Interf_6TeV_ll,
-                        sample.p8_pp_ZprimePSI_Interf_6TeV_ll,
-                        sample.p8_pp_ZprimeLRM_Interf_6TeV_ll,
-                        sample.p8_pp_ZprimeETA_Interf_6TeV_ll,
-                        sample.p8_pp_ZprimeI_Interf_6TeV_ll,
+#                        sample.p8_pp_ZprimeSSM_2TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeSSM_4TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeSSM_6TeV_ll_PDF19,
+ #                       sample.p8_pp_ZprimeSSM_8TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeSSM_10TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeSSM_12TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeSSM_14TeV_ll_PDF19,
+ 
+#                        sample.p8_pp_ZprimeCHI_2TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeCHI_4TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeCHI_6TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeCHI_8TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeCHI_10TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeCHI_12TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeCHI_14TeV_ll_PDF19,
+
+#                        sample.p8_pp_ZprimePSI_2TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimePSI_4TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimePSI_6TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimePSI_8TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimePSI_10TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimePSI_12TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimePSI_14TeV_ll_PDF19,
+
+#                        sample.p8_pp_ZprimeETA_2TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeETA_4TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeETA_6TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeETA_8TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeETA_10TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeETA_12TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeETA_14TeV_ll_PDF19,
+
+#                        sample.p8_pp_ZprimeLRM_2TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeLRM_4TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeLRM_6TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeLRM_8TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeLRM_10TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeLRM_12TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeLRM_14TeV_ll_PDF19,
+
+#                        sample.p8_pp_ZprimeI_2TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeI_4TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeI_6TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeI_8TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeI_10TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeI_12TeV_ll_PDF19,
+#                        sample.p8_pp_ZprimeI_14TeV_ll_PDF19, 
+
+#                        sample.p8_pp_ZprimeSSM_Interf_6TeV_ll,
+#                        sample.p8_pp_ZprimeCHI_Interf_6TeV_ll,
+#                        sample.p8_pp_ZprimePSI_Interf_6TeV_ll,
+#                        sample.p8_pp_ZprimeLRM_Interf_6TeV_ll,
+#                        sample.p8_pp_ZprimeETA_Interf_6TeV_ll,
+#                        sample.p8_pp_ZprimeI_Interf_6TeV_ll,
+
+                        sample.p8_pp_ZprimeSSM_Interf_6TeV_ll_PDF19,
+                        sample.p8_pp_ZprimeCHI_Interf_6TeV_ll_PDF19,
+                        sample.p8_pp_ZprimePSI_Interf_6TeV_ll_PDF19,
+                        sample.p8_pp_ZprimeLRM_Interf_6TeV_ll_PDF19,
+                        sample.p8_pp_ZprimeETA_Interf_6TeV_ll_PDF19,
+                        sample.p8_pp_ZprimeI_Interf_6TeV_ll_PDF19,
 
 #                        sample.mgp8_pp_ee_5f_HT_500_1000,
 #                        sample.mgp8_pp_ee_5f_HT_1000_2000,
@@ -133,12 +188,68 @@ sample.p8_pp_ZprimeI_12TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeI_14TeV_ll.splitFactor = splitFac
 
 
+#sample.p8_pp_ZprimeSSM_2TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_4TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_6TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeSSM_8TeV_ll_PDF19.splitFactor  = splitFac
+#sample.p8_pp_ZprimeSSM_10TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeSSM_12TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeSSM_14TeV_ll_PDF19.splitFactor = splitFac
+
+#sample.p8_pp_ZprimeCHI_2TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeCHI_4TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeCHI_6TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeCHI_8TeV_ll_PDF19.splitFactor  = splitFac
+#sample.p8_pp_ZprimeCHI_10TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeCHI_12TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeCHI_14TeV_ll_PDF19.splitFactor = splitFac
+
+#sample.p8_pp_ZprimePSI_2TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimePSI_4TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimePSI_6TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimePSI_8TeV_ll_PDF19.splitFactor  = splitFac
+#sample.p8_pp_ZprimePSI_10TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimePSI_12TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimePSI_14TeV_ll_PDF19.splitFactor = splitFac
+
+#sample.p8_pp_ZprimeETA_2TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeETA_4TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeETA_6TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeETA_8TeV_ll_PDF19.splitFactor  = splitFac
+#sample.p8_pp_ZprimeETA_10TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeETA_12TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeETA_14TeV_ll_PDF19.splitFactor = splitFac
+
+#sample.p8_pp_ZprimeLRM_2TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeLRM_4TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeLRM_6TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeLRM_8TeV_ll_PDF19.splitFactor  = splitFac
+#sample.p8_pp_ZprimeLRM_10TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeLRM_12TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeLRM_14TeV_ll_PDF19.splitFactor = splitFac
+
+#sample.p8_pp_ZprimeI_2TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeI_4TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeI_6TeV_ll_PDF19.splitFactor  = splitFac
+sample.p8_pp_ZprimeI_8TeV_ll_PDF19.splitFactor  = splitFac
+#sample.p8_pp_ZprimeI_10TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeI_12TeV_ll_PDF19.splitFactor = splitFac
+#sample.p8_pp_ZprimeI_14TeV_ll_PDF19.splitFactor = splitFac
+
+
 sample.p8_pp_ZprimeSSM_Interf_6TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeCHI_Interf_6TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimePSI_Interf_6TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeLRM_Interf_6TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeETA_Interf_6TeV_ll.splitFactor = splitFac
 sample.p8_pp_ZprimeI_Interf_6TeV_ll.splitFactor = splitFac
+
+sample.p8_pp_ZprimeSSM_Interf_6TeV_ll_PDF19.splitFactor = splitFac
+sample.p8_pp_ZprimeCHI_Interf_6TeV_ll_PDF19.splitFactor = splitFac
+sample.p8_pp_ZprimePSI_Interf_6TeV_ll_PDF19.splitFactor = splitFac
+sample.p8_pp_ZprimeLRM_Interf_6TeV_ll_PDF19.splitFactor = splitFac
+sample.p8_pp_ZprimeETA_Interf_6TeV_ll_PDF19.splitFactor = splitFac
+sample.p8_pp_ZprimeI_Interf_6TeV_ll_PDF19.splitFactor = splitFac
 
 splitFac2 = 60
 sample.mgp8_pp_ee_5f_HT_500_1000.splitFactor      = splitFac2
