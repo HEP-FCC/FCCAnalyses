@@ -1,50 +1,51 @@
 FCChhAnalyses
 =============
 
-This package is used inside [heppy](https://github.com/HEP-FCC/heppy) to produce flat ROOT trees using FCCSW EDM root files produced with the [EventProducer](https://github.com/FCC-hh-framework/EventProducer)
+This package produce flat ROOT trees using FCCSW EDM root files produced with the [EventProducer](https://github.com/FCC-hh-framework/EventProducer)
 
 
 Table of contents
 =================
   * [FCChhAnalyses](#fcchhanalyses)
   * [Table of contents](#table-of-contents)
-  * [Clone and initialisation](#clone-and-initilisation)
- 
+  * [Requirements](#requirements)
+  * [Getting Started](#getting-started)
 
-Clone and initialisation
-========================
 
-If you do not attempt to contribute to the heppy repository, simply clone it:
-```
-git clone git@github.com:HEP-FCC/heppy.git
-```
+Requirements
+============
 
-If you aim at contributing to the heppy repository, you need to fork and then clone the forked repository:
-```
-git clone git@github.com:YOURGITUSERNAME/heppy.git
-```
+`FCChhAnalyses` depends on the following packages:
 
-Then go to the ```heppy``` directory ```cd heppy```.
+- [`heppy`](https://github.com/cbernet/heppy)
+- [`ROOT`](https://github.com/root-project/root)
 
-Source the FCCSW software stack
-```
-source /cvmfs/fcc.cern.ch/sw/0.8.3/init_fcc_stack.sh
-```
 
-and source the heppy
+Getting Started
+===============
+
+Above-mentioned packages are provided through CVMFS in the stack of FCC external software dependencies, which can be sourced as follows:
 
 ```
-source ./init.sh
+source /cvmfs/fcc.cern.ch/sw/views/releases/externals/latest/setup.sh
 ```
 
-If you do not attempt to contribute to the FCChhAnalyses repository, simply clone it:
+Otherwise, both packages can be easily installed using `conda` and `pip`:
+
 ```
-git clone git@github.com:FCC-hh-framework/FCChhAnalyses.git
+# Install ROOT
+conda install -c conda-forge root
+
+# Install heppy
+pip install heppyfwk
 ```
 
-If you aim at contributing to the heppy repository, you need to fork and then clone the forked repository:
+See the official documentation for further information about [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) and [pip](https://pip.pypa.io/en/stable/installing/)
+
+Once `root` and `heppy` are present on our system, either through CVMFS or a manual installation, `FCChhAnalyses` can be installed with the following command:
+
 ```
-git clone git@github.com:YOURGITUSERNAME/FCChhAnalyses.git
+python setup.py install --user
 ```
 
 Now you are ready to run an existing analysis or make your own one.
