@@ -12,7 +12,7 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZH_ecm240/events_015318981.root"]
+     files = ["/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZH_ecm240/events_033829802.root"]
 )
 
 from FCCee_heppySampleList_fcc_v01 import *
@@ -239,7 +239,7 @@ recoil = cfg.Analyzer(
     to_remove = 'zeds'
 ) 
 
-# apply event selection. Defined in "analyzers/examples/hmumu/selection.py"
+# apply event selection. Defined in "selection.py"
 from FCCeeAnalyses.ZH_Zmumu.selection import Selection
 selection = cfg.Analyzer(
     Selection,
