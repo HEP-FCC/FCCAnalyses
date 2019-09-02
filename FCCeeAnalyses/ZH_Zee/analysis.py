@@ -27,7 +27,7 @@ p8_ee_ZH_ecm240.splitFactor = 10
 p8_ee_ZZ_ecm240.splitFactor = 10
 p8_ee_WW_ecm240.splitFactor = 10
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 
 from FCCeeAnalyses.analyzers.Reader import Reader
@@ -39,9 +39,9 @@ source = cfg.Analyzer(
 
     gen_particles = 'skimmedGenParticles',
     
-    muons = 'muons',
-    muonITags = 'muonITags',
-    muonsToMC = 'muonsToMC',
+    electrons = 'electrons',
+    electronITags = 'electronITags',
+    electronsToMC = 'electronsToMC',
 
     jets = 'pfjets',
     bTags = 'pfbTags',
@@ -157,22 +157,22 @@ dressed_muons = cfg.Analyzer(
 
 ######################## SIMPLE ANALYSIS #####################
 
-# select muons with pT > 10
+# select electrons with pT > 10
 from heppy.analyzers.Selector import Selector
-sel_muons = cfg.Analyzer(
+sel_electrons = cfg.Analyzer(
     Selector,
-    'sel_muons',
-    output = 'sel_muons',
-    input_objects = 'muons',
+    'sel_electrons',
+    output = 'sel_electrons',
+    input_objects = 'electrons',
     filter_func = lambda ptc: ptc.pt()>10
 )
 
-# select isolated muons
-dressed_muons = cfg.Analyzer(
+# select isolated electrons
+dressed_electrons = cfg.Analyzer(
     Selector,
-    'dressed_muons',
-    output = 'dressed_muons',
-    input_objects = 'sel_muons',
+    'dressed_electrons',
+    output = 'dressed_electrons',
+    input_objects = 'sel_electrons',
     filter_func = lambda ptc: ptc.iso.sumpt/ptc.pt()<0.4
 )
 
@@ -188,18 +188,18 @@ jets_10 = cfg.Analyzer(
     filter_func = lambda jet: jet.pt()>10.
 )
 from heppy.analyzers.Matcher import Matcher
-match_muon_jets = cfg.Analyzer(
+match_electron_jets = cfg.Analyzer(
     Matcher,
-    'muon_jets',
+    'electron_jets',
     delta_r = 0.2,
-    match_particles = 'dressed_muons',
+    match_particles = 'dressed_electrons',
     particles = 'jets_10'
 )
 
-jets_nomuon = cfg.Analyzer(
+jets_noelectron = cfg.Analyzer(
     Selector,
-    'jets_nomuon',
-    output = 'jets_nomuon',
+    'jets_noelectron',
+    output = 'jets_noelectron',
     input_objects = 'jets_10',
     filter_func = lambda jet: jet.match is None
 )
@@ -209,7 +209,7 @@ selected_lights = cfg.Analyzer(
     Selector,
     'selected_lights',
     output = 'selected_lights',
-    input_objects = 'jets_nomuon',
+    input_objects = 'jets_noelectron',
     filter_func = lambda ptc: ptc.pt()>1 and ptc.tags['bf'] == 0
 )
 
@@ -218,7 +218,7 @@ selected_bs = cfg.Analyzer(
     Selector,
     'selected_bs',
     output = 'selected_bs',
-    input_objects = 'jets_nomuon',
+    input_objects = 'jets_noelectron',
     filter_func = lambda ptc: ptc.pt()>10 and ptc.tags['bf'] > 0
 )
 
@@ -227,7 +227,7 @@ from FCCeeAnalyses.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
 zeds = cfg.Analyzer(
       LeptonicZedBuilder,
       output = 'zeds',
-      leptons = 'dressed_muons',
+      leptons = 'dressed_electrons',
       pdgid = 23
 )
 
@@ -240,14 +240,14 @@ recoil = cfg.Analyzer(
 ) 
 
 # apply event selection. Defined in "selection.py"
-from FCCeeAnalyses.ZH_Zmumu.selection import Selection
+from FCCeeAnalyses.ZH_Zee.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from FCCeeAnalyses.ZH_Zmumu.TreeProducer import TreeProducer
+from FCCeeAnalyses.ZH_Zee.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',
@@ -261,11 +261,11 @@ reco_tree = cfg.Analyzer(
 # the analyzers will process each event in this order
 sequence = cfg.Sequence( [
     source,
-    sel_muons,
-    dressed_muons,
+    sel_electrons,
+    dressed_electrons,
     jets_10,
-    match_muon_jets,
-    jets_nomuon,
+    match_electron_jets,
+    jets_noelectron,
     selected_lights,
     selected_bs,
     zeds,
