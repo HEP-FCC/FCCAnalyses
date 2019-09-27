@@ -12,7 +12,7 @@ sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZH_ecm240/events_033829802.root"]
+     files = ["/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZH_ecm240/events_086259737.root"]
 )
 
 from FCCee_heppySampleList_fcc_v01 import *
@@ -23,9 +23,9 @@ selectedComponents = [
                       p8_ee_WW_ecm240
 		      ]
 
-p8_ee_ZH_ecm240.splitFactor = 10
-p8_ee_ZZ_ecm240.splitFactor = 10
-p8_ee_WW_ecm240.splitFactor = 10
+p8_ee_ZH_ecm240.splitFactor = 100
+p8_ee_ZZ_ecm240.splitFactor = 100
+p8_ee_WW_ecm240.splitFactor = 100
 
 #selectedComponents = [comp]
 
@@ -43,15 +43,23 @@ source = cfg.Analyzer(
     muonITags = 'muonITags',
     muonsToMC = 'muonsToMC',
 
-    jets = 'pfjets',
-    bTags = 'pfbTags',
-    cTags = 'pfcTags',
+    electrons = 'electrons',
+    electronITags = 'electronITags',
+    electronsToMC = 'electronsToMC',
+
+
+    jets = 'efjets',
+    bTags = 'efbTags',
+    cTags = 'efcTags',
+    tauTags = 'eftauTags',
 
     photons = 'photons',
-    
-    pfphotons = 'pfphotons',
-    pfcharged = 'pfcharged',
-    pfneutrals = 'pfneutrals',
+    photonITags = 'photonITags',
+    photonsToMC = 'photonsToMC',
+
+    pfphotons = 'efphotons',
+    pfcharged = 'efcharged',
+    pfneutrals = 'efneutrals',
 
     met = 'met',
 
@@ -176,6 +184,46 @@ dressed_muons = cfg.Analyzer(
     filter_func = lambda ptc: ptc.iso.sumpt/ptc.pt()<0.4
 )
 
+
+# select electrons with pT > 10
+from heppy.analyzers.Selector import Selector
+sel_electrons = cfg.Analyzer(
+    Selector,
+    'sel_electrons',
+    output = 'sel_electrons',
+    input_objects = 'electrons',
+    filter_func = lambda ptc: ptc.pt()>10
+)
+
+# select isolated electrons
+dressed_electrons = cfg.Analyzer(
+    Selector,
+    'dressed_electrons',
+    output = 'dressed_electrons',
+    input_objects = 'sel_electrons',
+    filter_func = lambda ptc: ptc.iso.sumpt/ptc.pt()<0.4
+)
+
+# select photons with pT > 10
+from heppy.analyzers.Selector import Selector
+sel_photons = cfg.Analyzer(
+    Selector,
+    'sel_photons',
+    output = 'sel_photons',
+    input_objects = 'photons',
+    filter_func = lambda ptc: ptc.pt()>10
+)
+
+# select isolated photons
+dressed_photons = cfg.Analyzer(
+    Selector,
+    'dressed_photons',
+    output = 'dressed_photons',
+    input_objects = 'sel_photons',
+    filter_func = lambda ptc: ptc.iso.sumpt/ptc.pt()<0.4
+)
+
+
 ###############################################################
 
 
@@ -210,7 +258,7 @@ selected_lights = cfg.Analyzer(
     'selected_lights',
     output = 'selected_lights',
     input_objects = 'jets_nomuon',
-    filter_func = lambda ptc: ptc.pt()>1 and ptc.tags['bf'] == 0
+    filter_func = lambda ptc: ptc.pt()>1 and ptc.tags['bf'] == 0 and ptc.tags['cf'] == 0 
 )
 
 # select b's with pT > 10 GeV
@@ -221,6 +269,25 @@ selected_bs = cfg.Analyzer(
     input_objects = 'jets_nomuon',
     filter_func = lambda ptc: ptc.pt()>10 and ptc.tags['bf'] > 0
 )
+
+# select c's with pT > 10 GeV
+selected_cs = cfg.Analyzer(
+    Selector,
+    'selected_cs',
+    output = 'selected_cs',
+    input_objects = 'jets_nomuon',
+    filter_func = lambda ptc: ptc.pt()>10 and ptc.tags['cf'] > 0
+)
+
+# select tau's with pT > 10 GeV
+selected_taus = cfg.Analyzer(
+    Selector,
+    'selected_taus',
+    output = 'selected_taus',
+    input_objects = 'jets_10',
+    filter_func = lambda ptc: ptc.pt()>10 and ptc.tags['tauf'] > 0
+)
+
 
 # create H boson candidates with bs
 from FCCeeAnalyses.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
@@ -262,12 +329,19 @@ reco_tree = cfg.Analyzer(
 sequence = cfg.Sequence( [
     source,
     sel_muons,
+    sel_electrons,
+    sel_photons,
+
     dressed_muons,
+    dressed_electrons,
+    dressed_photons,
     jets_10,
     match_muon_jets,
     jets_nomuon,
     selected_lights,
     selected_bs,
+    selected_cs,
+    selected_taus,
     zeds,
     recoil,
     selection,
