@@ -2,10 +2,22 @@
 cmake_minimum_required(VERSION 2.8)
 
 
-project(FCCAnalyses)
+project(FCCAnalyses CXX)
 
+# Define basic build settings
+# Use GNU-style hierarchy for installing build products
+include(GNUInstallDirs)
+
+# Offer the user the choice of overriding the installation directories
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
+set(INSTALL_INCLUDE_DIR include CACHE PATH
+  "Installation directory for header files")
+
+option(INSTALL_PYTHON "Flag for CMake to attempt to run python setup.py install" OFF)
+
+if(INSTALL_PYTHON)
 find_program(PYTHON "python")
-
 if (PYTHON)
     set(SETUP_PY    "${CMAKE_CURRENT_SOURCE_DIR}/setup.py")
     set(OUTPUT      "${CMAKE_CURRENT_BINARY_DIR}")
@@ -20,3 +32,6 @@ if (PYTHON)
 
     install(CODE "execute_process(COMMAND ${PYTHON} ${SETUP_PY} install --prefix ${CMAKE_INSTALL_PREFIX})")
 endif()
+endif()
+
+add_subdirectory(analyzers/dataframe)
