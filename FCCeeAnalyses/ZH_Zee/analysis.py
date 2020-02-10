@@ -30,7 +30,7 @@ p8_ee_WW_ecm240.splitFactor = 100
 #selectedComponents = [comp]
 
 
-from FCCeeAnalyses.analyzers.Reader import Reader
+from FCCeeAnalyses.analyzers.eeReader import Reader
 
 source = cfg.Analyzer(
     Reader,
