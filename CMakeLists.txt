@@ -2,11 +2,20 @@
 cmake_minimum_required(VERSION 2.8)
 
 
+
+
 project(FCCAnalyses CXX)
+
+find_package(ROOT COMPONENTS ROOTDataFrame)
+include(${ROOT_USE_FILE})
+
+find_package(fccedm)
 
 # Define basic build settings
 # Use GNU-style hierarchy for installing build products
 include(GNUInstallDirs)
+
+
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
@@ -35,3 +44,5 @@ endif()
 endif()
 
 add_subdirectory(analyzers/dataframe)
+
+add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
