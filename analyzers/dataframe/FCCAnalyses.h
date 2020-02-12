@@ -12,6 +12,7 @@ namespace fcc {
   class LorentzVector;
 
   class MCParticleData;
+  class ParticleData;
 }
 
 /// good luck charm against segfaults
@@ -26,5 +27,14 @@ std::vector<TLorentzVector> tlv(std::vector<fcc::LorentzVector> in);
 std::vector<float> r (std::vector<fcc::Point> in); 
 
 double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2);
+
+
+struct recoil {
+  recoil(float arg_sqrts);
+  float m_sqrts = 240.0;
+  std::vector<fcc::ParticleData> operator() (std::vector<fcc::ParticleData> in) ;
+};
+
+
 
 #endif
