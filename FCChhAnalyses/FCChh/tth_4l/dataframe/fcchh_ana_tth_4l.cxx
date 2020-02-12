@@ -11,21 +11,11 @@
 #include "datamodel/TaggedParticleData.h"
 #include "datamodel/TaggedJetData.h"
 
+#include "FCCAnalyses.h"
+
 
 auto _m = fcc::ParticleData();
 
-double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2) {
-  TLorentzVector tv1;
-  tv1.SetXYZM(v1.px, v1.py, v1.pz, v1.mass);
-
-  TLorentzVector tv2;
-  tv2.SetXYZM(v2.px, v2.py, v2.pz, v2.mass);
-
-  double deltaPhi = M_PI - std::abs(std::abs(tv1.Phi() - tv2.Phi()) - M_PI);
-  double deltaEta = std::abs(tv1.Eta() - tv2.Eta());
-  double result = std::sqrt(deltaPhi * deltaPhi + deltaEta * deltaEta);
-  return result;
-}
 
 
 

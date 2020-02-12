@@ -19,14 +19,12 @@ fcc::MCParticleData __magicParticle();
 
 std::vector<float> pt (std::vector<fcc::MCParticleData> in);
 
-
 std::vector<float> eta(std::vector<fcc::MCParticleData> in);
 
 std::vector<TLorentzVector> tlv(std::vector<fcc::LorentzVector> in);
 
 std::vector<float> r (std::vector<fcc::Point> in); 
 
-std::vector<float> r (std::vector<fcc::Point> in); 
-
+double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2);
 
 #endif
