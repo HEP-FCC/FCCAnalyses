@@ -81,3 +81,58 @@ double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2) {
       result.push_back(recoil_fcc);
       return result;
   };
+
+std::vector<float> get_pt_lv(std::vector<fcc::LorentzVector> in){
+ std::vector<float> result;
+ for (size_t i = 0; i < in.size(); ++i) {
+   result.push_back(sqrt(in[i].px * in[i].px + in[i].py * in[i].py));
+ }
+ return result;
+}
+
+std::vector<float> get_pt(std::vector<fcc::ParticleData> in){
+ std::vector<float> result;
+ for (size_t i = 0; i < in.size(); ++i) {
+   result.push_back(sqrt(in[i].core.p4.px * in[i].core.p4.px + in[i].core.p4.py * in[i].core.p4.py));
+ }
+ return result;
+}
+
+std::vector<fcc::ParticleData> mergeParticles(std::vector<fcc::ParticleData> x, std::vector<fcc::ParticleData> y) {
+  std::vector<fcc::ParticleData> result;
+  result.reserve(x.size() + y.size());
+  result.insert( result.end(), x.begin(), x.end() );
+  result.insert( result.end(), y.begin(), y.end() );
+  return result;
+}
+
+std::vector<float> id_float(std::vector<fcc::FloatValueData> x) {
+  std::vector<float> result;
+  for (auto & p: x) {
+    result.push_back(p.value);
+  }
+  return result;
+}
+
+std::vector<float> get_mass(std::vector<fcc::ParticleData> x) {
+  std::vector<float> result;
+  for (auto & p: x) {
+    result.push_back(p.core.p4.mass);
+  }
+  return result;
+}
+
+int get_nparticles(std::vector<fcc::ParticleData> x) {
+  int result =  x.size();
+  return result;
+}
+
+int get_njets(std::vector<fcc::JetData> x) {
+  int result =  x.size();
+  return result;
+}
+
+int get_njets2(std::vector<fcc::JetData> x, std::vector<fcc::JetData> y) {
+  int result =  x.size() + y.size();
+  return result;
+}
