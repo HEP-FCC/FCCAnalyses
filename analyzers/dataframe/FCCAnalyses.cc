@@ -114,6 +114,14 @@ std::vector<float> id_float(std::vector<fcc::FloatValueData> x) {
   return result;
 }
 
+std::vector<float> id_float_legacy(std::vector<fcc::FloatData> x) {
+  std::vector<float> result;
+  for (auto & p: x) {
+    result.push_back(p.value);
+  }
+  return result;
+}
+
 std::vector<float> get_mass(std::vector<fcc::ParticleData> x) {
   std::vector<float> result;
   for (auto & p: x) {
@@ -247,3 +255,34 @@ std::vector<fcc::ParticleData> ResonanceBuilder::operator()(std::vector<fcc::Par
     return result;
   }
 }
+
+std::vector<fcc::ParticleData> LeptonicZBuilder (std::vector<fcc::ParticleData> leptons) {
+
+        std::vector<fcc::ParticleData> result;
+        int n = leptons.size();
+        if (n >2) {
+          std::vector<bool> v(n);
+          std::fill(v.end() - 2, v.end(), true);
+          do {
+            fcc::ParticleData zed;
+            zed.core.pdgId = 23;
+            TLorentzVector zed_lv; 
+            for (int i = 0; i < n; ++i) {
+                if (v[i]) {
+                  zed.core.charge += leptons[i].core.charge;
+                  TLorentzVector lepton_lv;
+                  lepton_lv.SetXYZM(leptons[i].core.p4.px, leptons[i].core.p4.py, leptons[i].core.p4.pz, leptons[i].core.p4.mass);
+                  zed_lv += lepton_lv;
+                }
+            }
+            zed.core.p4.px = zed_lv.Px();
+            zed.core.p4.py = zed_lv.Py();
+            zed.core.p4.pz = zed_lv.Pz();
+            zed.core.p4.mass = zed_lv.M();
+            result.emplace_back(zed);
+          
+          } while (std::next_permutation(v.begin(), v.end()));
+        }
+
+    return result;
+  };
