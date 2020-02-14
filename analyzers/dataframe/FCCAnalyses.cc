@@ -6,16 +6,16 @@
 #include "datamodel/Point.h"
 #include "datamodel/LorentzVector.h"
 
-std::vector<float> pt (std::vector<fcc::MCParticleData> in){
- std::vector<float> result;
+ROOT::VecOps::RVec<float> pt (ROOT::VecOps::RVec<fcc::MCParticleData> in){
+ ROOT::VecOps::RVec<float> result;
 	 for (size_t i = 0; i < in.size(); ++i) {
 		 result.push_back(std::sqrt(in[i].core.p4.px * in[i].core.p4.px + in[i].core.p4.py * in[i].core.p4.py));
 	 }
 	 return result;
 }
 
-std::vector<float> eta(std::vector<fcc::MCParticleData> in){
- std::vector<float> result;
+ROOT::VecOps::RVec<float> eta(ROOT::VecOps::RVec<fcc::MCParticleData> in){
+ ROOT::VecOps::RVec<float> result;
    TLorentzVector lv;
 	 for (size_t i = 0; i < in.size(); ++i) {
      lv.SetXYZM(in[i].core.p4.px, in[i].core.p4.py, in[i].core.p4.pz, in[i].core.p4.mass);
@@ -24,8 +24,8 @@ std::vector<float> eta(std::vector<fcc::MCParticleData> in){
 	 return result;
 }
 
-std::vector<TLorentzVector> tlv(std::vector<fcc::LorentzVector> in){
- std::vector<TLorentzVector> result;
+ROOT::VecOps::RVec<TLorentzVector> tlv(ROOT::VecOps::RVec<fcc::LorentzVector> in){
+ ROOT::VecOps::RVec<TLorentzVector> result;
    TLorentzVector lv;
 	 for (size_t i = 0; i < in.size(); ++i) {
      lv.SetXYZM(in[i].px, in[i].py, in[i].pz, in[i].mass);
@@ -34,8 +34,8 @@ std::vector<TLorentzVector> tlv(std::vector<fcc::LorentzVector> in){
 	 return result;
 }
 
-std::vector<float> r (std::vector<fcc::Point> in) {
- std::vector<float> result;
+ROOT::VecOps::RVec<float> r (ROOT::VecOps::RVec<fcc::Point> in) {
+ ROOT::VecOps::RVec<float> result;
 	 for (size_t i = 0; i < in.size(); ++i) {
      result.push_back(std::sqrt(in[i].x*in[i].x + in[i].y*in[i].y));
    }
@@ -43,8 +43,8 @@ std::vector<float> r (std::vector<fcc::Point> in) {
 }
 
 
-std::vector<float> norm (std::vector<fcc::Point> in) {
- std::vector<float> result;
+ROOT::VecOps::RVec<float> norm (ROOT::VecOps::RVec<fcc::Point> in) {
+ ROOT::VecOps::RVec<float> result;
 	 for (size_t i = 0; i < in.size(); ++i) {
      result.push_back(std::sqrt(in[i].x*in[i].x + in[i].y*in[i].y + in[i].z*in[i].z));
    }
@@ -65,8 +65,8 @@ double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2) {
 }
 
   recoil::recoil(float arg_sqrts) : m_sqrts(arg_sqrts) {};
-  std::vector<fcc::ParticleData>  recoil::operator() (std::vector<fcc::ParticleData> in) {
-      std::vector<fcc::ParticleData> result;
+  ROOT::VecOps::RVec<fcc::ParticleData>  recoil::operator() (ROOT::VecOps::RVec<fcc::ParticleData> in) {
+      ROOT::VecOps::RVec<fcc::ParticleData> result;
       auto recoil_p4 = TLorentzVector(0, 0, 0, m_sqrts);
       for (auto & v1: in) {
         TLorentzVector tv1;
@@ -82,73 +82,74 @@ double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2) {
       return result;
   };
 
-std::vector<float> get_pt_lv(std::vector<fcc::LorentzVector> in){
- std::vector<float> result;
+ROOT::VecOps::RVec<float> get_pt_lv(ROOT::VecOps::RVec<fcc::LorentzVector> in){
+ ROOT::VecOps::RVec<float> result;
  for (size_t i = 0; i < in.size(); ++i) {
    result.push_back(sqrt(in[i].px * in[i].px + in[i].py * in[i].py));
  }
  return result;
 }
 
-std::vector<float> get_pt(std::vector<fcc::ParticleData> in){
- std::vector<float> result;
+ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<fcc::ParticleData> in){
+ ROOT::VecOps::RVec<float> result;
  for (size_t i = 0; i < in.size(); ++i) {
    result.push_back(sqrt(in[i].core.p4.px * in[i].core.p4.px + in[i].core.p4.py * in[i].core.p4.py));
  }
  return result;
 }
 
-std::vector<fcc::ParticleData> mergeParticles(std::vector<fcc::ParticleData> x, std::vector<fcc::ParticleData> y) {
+ROOT::VecOps::RVec<fcc::ParticleData> mergeParticles(ROOT::VecOps::RVec<fcc::ParticleData> x, ROOT::VecOps::RVec<fcc::ParticleData> y) {
   std::vector<fcc::ParticleData> result;
   result.reserve(x.size() + y.size());
   result.insert( result.end(), x.begin(), x.end() );
   result.insert( result.end(), y.begin(), y.end() );
-  return result;
+  return ROOT::VecOps::RVec(result);
 }
 
-std::vector<float> id_float(std::vector<fcc::FloatValueData> x) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> id_float(ROOT::VecOps::RVec<fcc::FloatValueData> x) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: x) {
     result.push_back(p.value);
   }
   return result;
 }
 
-std::vector<float> id_float_legacy(std::vector<fcc::FloatData> x) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> id_float_legacy(ROOT::VecOps::RVec<fcc::FloatData> x) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: x) {
     result.push_back(p.value);
   }
   return result;
 }
 
-std::vector<float> get_mass(std::vector<fcc::ParticleData> x) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<fcc::ParticleData> x) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: x) {
     result.push_back(p.core.p4.mass);
   }
   return result;
 }
 
-int get_nparticles(std::vector<fcc::ParticleData> x) {
+int get_nparticles(ROOT::VecOps::RVec<fcc::ParticleData> x) {
   int result =  x.size();
   return result;
 }
 
-int get_njets(std::vector<fcc::JetData> x) {
+
+int get_njets(ROOT::VecOps::RVec<fcc::JetData> x) {
   int result =  x.size();
   return result;
 }
 
-int get_njets2(std::vector<fcc::JetData> x, std::vector<fcc::JetData> y) {
+int get_njets2(ROOT::VecOps::RVec<fcc::JetData> x, ROOT::VecOps::RVec<fcc::JetData> y) {
   int result =  x.size() + y.size();
   return result;
 }
 
 noMatchJets::noMatchJets(float arg_max_rel_iso) {m_max_rel_iso = arg_max_rel_iso;}
 
-std::vector<fcc::JetData> noMatchJets::operator() (std::vector<fcc::JetData> in, std::vector<fcc::ParticleData> matchParticles) {
-  std::vector<fcc::JetData> result;
+ROOT::VecOps::RVec<fcc::JetData> noMatchJets::operator() (ROOT::VecOps::RVec<fcc::JetData> in, ROOT::VecOps::RVec<fcc::ParticleData> matchParticles) {
+  ROOT::VecOps::RVec<fcc::JetData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
@@ -168,8 +169,8 @@ std::vector<fcc::JetData> noMatchJets::operator() (std::vector<fcc::JetData> in,
 
 selectJets::selectJets(float arg_min_pt, bool arg_btag_must_be_zero) {m_min_pt = arg_min_pt; m_btag_must_be_zero = arg_btag_must_be_zero;}
 
-std::vector<fcc::JetData> selectJets::operator()(std::vector<fcc::JetData> in, std::vector<fcc::TaggedJetData> btags) {
-  std::vector<fcc::JetData> result;
+ROOT::VecOps::RVec<fcc::JetData> selectJets::operator()(ROOT::VecOps::RVec<fcc::JetData> in, ROOT::VecOps::RVec<fcc::TaggedJetData> btags) {
+  ROOT::VecOps::RVec<fcc::JetData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
@@ -189,8 +190,8 @@ std::vector<fcc::JetData> selectJets::operator()(std::vector<fcc::JetData> in, s
 }
 selectParticlesPtIso::selectParticlesPtIso(float arg_min_pt, float arg_max_iso) : m_min_pt(arg_min_pt), m_max_iso(arg_max_iso) {};
 
-std::vector<fcc::ParticleData>  selectParticlesPtIso::operator() (std::vector<fcc::ParticleData> in, std::vector<fcc::TaggedParticleData> iso) {
-  std::vector<fcc::ParticleData> result;
+ROOT::VecOps::RVec<fcc::ParticleData>  selectParticlesPtIso::operator() (ROOT::VecOps::RVec<fcc::ParticleData> in, ROOT::VecOps::RVec<fcc::TaggedParticleData> iso) {
+  ROOT::VecOps::RVec<fcc::ParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
@@ -205,8 +206,8 @@ std::vector<fcc::ParticleData>  selectParticlesPtIso::operator() (std::vector<fc
 
 selectParticlesPt::selectParticlesPt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
 
-std::vector<fcc::ParticleData>  selectParticlesPt::operator() (std::vector<fcc::ParticleData> in) {
-  std::vector<fcc::ParticleData> result;
+ROOT::VecOps::RVec<fcc::ParticleData>  selectParticlesPt::operator() (ROOT::VecOps::RVec<fcc::ParticleData> in) {
+  ROOT::VecOps::RVec<fcc::ParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
@@ -219,11 +220,11 @@ std::vector<fcc::ParticleData>  selectParticlesPt::operator() (std::vector<fcc::
 
 ResonanceBuilder::ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass) {m_resonance_pdgid = arg_resonance_pdgid; m_resonance_mass = arg_resonance_mass;}
 
-std::vector<fcc::ParticleData> ResonanceBuilder::operator()(std::vector<fcc::ParticleData> leptons) {
-  std::vector<fcc::ParticleData> result;
+ROOT::VecOps::RVec<fcc::ParticleData> ResonanceBuilder::operator()(ROOT::VecOps::RVec<fcc::ParticleData> leptons) {
+  ROOT::VecOps::RVec<fcc::ParticleData> result;
   int n = leptons.size();
   if (n >2) {
-    std::vector<bool> v(n);
+    ROOT::VecOps::RVec<bool> v(n);
     std::fill(v.end() - 2, v.end(), true);
     do {
       fcc::ParticleData zed;
@@ -247,21 +248,21 @@ std::vector<fcc::ParticleData> ResonanceBuilder::operator()(std::vector<fcc::Par
   if (result.size() > 1) {
     auto  higgsresonancesort = [&] (fcc::ParticleData i ,fcc::ParticleData j) { return (abs( m_resonance_mass -i.core.p4.mass)<abs(m_resonance_mass-j.core.p4.mass)); };
     std::sort(result.begin(), result.end(), higgsresonancesort);
-    std::vector<fcc::ParticleData>::const_iterator first = result.begin();
-    std::vector<fcc::ParticleData>::const_iterator last = result.begin() + 1;
-    std::vector<fcc::ParticleData> onlyBestHiggs(first, last);
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator first = result.begin();
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator last = result.begin() + 1;
+    ROOT::VecOps::RVec<fcc::ParticleData> onlyBestHiggs(first, last);
     return onlyBestHiggs;
   } else {
     return result;
   }
 }
 
-std::vector<fcc::ParticleData> LeptonicZBuilder (std::vector<fcc::ParticleData> leptons) {
+ROOT::VecOps::RVec<fcc::ParticleData> LeptonicZBuilder (ROOT::VecOps::RVec<fcc::ParticleData> leptons) {
 
-        std::vector<fcc::ParticleData> result;
+        ROOT::VecOps::RVec<fcc::ParticleData> result;
         int n = leptons.size();
         if (n >2) {
-          std::vector<bool> v(n);
+          ROOT::VecOps::RVec<bool> v(n);
           std::fill(v.end() - 2, v.end(), true);
           do {
             fcc::ParticleData zed;
