@@ -6,6 +6,46 @@
 #include "datamodel/Point.h"
 #include "datamodel/LorentzVector.h"
 
+ROOT::VecOps::RVec<fcc::ParticleData> M3Builder (ROOT::VecOps::RVec<fcc::JetData> in_jet, ROOT::VecOps::RVec<fcc::MET> in_met) {
+ ROOT::VecOps::RVec<fcc::ParticleData> result;
+  int n = in_jet.size();
+  if (n > 2) {
+    /// iterate over permutations
+    ROOT::VecOps::RVec<bool> v(n);
+    std::fill(v.end() - 3, v.end(), true);
+    do {
+      fcc::ParticleData m3;
+      m3.core.pdgId = 6; //pdgid of top quark
+      TLorentzVector m3_lv; 
+      for (int i = 0; i < n; ++i) {
+          if (v[i]) {
+            TLorentzVector jet_lv;
+            jet_lv.SetXYZM(in_jet[i].core.p4.px, in_jet[i].core.p4.py, in_jet[i].core.p4.pz, in_jet[i].core.p4.mass);
+            m3_lv += jet_lv;
+          }
+      }
+      m3.core.p4.px = m3_lv.Px();
+      m3.core.p4.py = m3_lv.Py();
+      m3.core.p4.pz = m3_lv.Pz();
+      m3.core.p4.mass = m3_lv.M();
+      result.emplace_back(m3);
+    } while (std::next_permutation(v.begin(), v.end()));
+  }
+  if (result.size() > 1) {
+    auto  ptsort = [&] (fcc::ParticleData i ,fcc::ParticleData j) { return (abs( pow(i.core.p4.px,2)+pow(i.core.p4.py,2))<abs(pow(j.core.p4.px,2) + pow(j.core.p4.py,2))); };
+    std::sort(result.begin(), result.end(), ptsort);
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator first = result.begin();
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator last = result.begin() + 1;
+    ROOT::VecOps::RVec<fcc::ParticleData> highestPtRes(first, last);
+    return highestPtRes;
+  } else {
+    return result;
+  }
+ return result;
+  
+  
+  };
+
 ROOT::VecOps::RVec<float> pt (ROOT::VecOps::RVec<fcc::MCParticleData> in){
  ROOT::VecOps::RVec<float> result;
 	 for (size_t i = 0; i < in.size(); ++i) {

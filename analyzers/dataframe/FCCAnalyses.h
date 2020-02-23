@@ -5,16 +5,6 @@
 #include <cmath>
 #include <vector>
 
-//class TLorentzVector;
-//
-//namespace fcc {
-//  class Point;
-//  class LorentzVector;
-//
-//  class MCParticleData;
-//  class ParticleData;
-//}
-
 #include "TLorentzVector.h"
 #include "ROOT/RVec.hxx"
 #include "datamodel/MCParticleData.h"
@@ -22,6 +12,7 @@
 #include "datamodel/JetData.h"
 #include "datamodel/TaggedJetData.h"
 #include "datamodel/TaggedParticleData.h"
+#include "datamodel/MET.h"
 
 #include "datamodel/Point.h"
 #include "datamodel/LorentzVector.h"
@@ -32,7 +23,21 @@
 
 
 /// good luck charm against segfaults
-fcc::MCParticleData __magicParticle();
+//fcc::MCParticleData __magicParticle();
+//
+
+
+/*** @M3Builder
+ * Computes the event variable M3
+ *   
+ *   All combinations of 3 jets are tested to retain
+ *   the one with highest pT (transverse momentum of the 3-jet system).
+ *   This combination of three jets is used to build an "M3" particle,
+ *   with the pdgid of the top quark. 
+ *   
+ **/
+ROOT::VecOps::RVec<fcc::ParticleData> M3Builder (ROOT::VecOps::RVec<fcc::JetData> in_jets, ROOT::VecOps::RVec<fcc::MET> in_met);
+
 
 ROOT::VecOps::RVec<float> pt (ROOT::VecOps::RVec<fcc::MCParticleData> in);
 
