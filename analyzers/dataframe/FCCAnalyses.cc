@@ -6,6 +6,40 @@
 #include "datamodel/Point.h"
 #include "datamodel/LorentzVector.h"
 
+///todo: review
+ROOT::VecOps::RVec<float> MTW (ROOT::VecOps::RVec<fcc::ParticleData> in_electrons, ROOT::VecOps::RVec<fcc::ParticleData> in_muons , ROOT::VecOps::RVec<fcc::METData> in_met) {
+
+  ROOT::VecOps::RVec<float> result;
+
+  /// original author in heppy: "this logic is bad"
+
+  TLorentzVector lepton_lv;
+
+  float met_pt;
+  float met_phi;
+  if (in_met.size() > 0) {
+      met_pt = in_met[0].scalarSum;
+      met_phi = in_met[0].phi;
+  }
+  
+  if (in_electrons.size() == 1) {
+
+    lepton_lv.SetXYZM(in_electrons[0].core.p4.px, in_electrons[0].core.p4.py, in_electrons[0].core.p4.pz, in_electrons[0].core.p4.mass);
+
+
+  } else if (in_muons.size() > 0) {
+
+    lepton_lv.SetXYZM(in_muons[0].core.p4.px, in_muons[0].core.p4.py, in_muons[0].core.p4.pz, in_muons[0].core.p4.mass);
+
+  }
+  float mtw = sqrt(2. * lepton_lv.Pt() * met_pt * (1. - cos(lepton_lv.Phi() - met_phi)));
+  result.push_back(mtw);
+ 
+  
+  return result; 
+  
+};
+
 ROOT::VecOps::RVec<fcc::ParticleData> M3Builder (ROOT::VecOps::RVec<fcc::JetData> in_jet, ROOT::VecOps::RVec<fcc::MET> in_met) {
  ROOT::VecOps::RVec<fcc::ParticleData> result;
   int n = in_jet.size();

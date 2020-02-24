@@ -25,6 +25,13 @@
 /// good luck charm against segfaults
 //fcc::MCParticleData __magicParticle();
 //
+//
+//
+//
+
+
+
+ROOT::VecOps::RVec<float> MTW (ROOT::VecOps::RVec<fcc::ParticleData> in_electrons, ROOT::VecOps::RVec<fcc::ParticleData> in_muons , ROOT::VecOps::RVec<fcc::METData> in_met);
 
 
 /*** @M3Builder
