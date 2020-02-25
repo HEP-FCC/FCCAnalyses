@@ -12,6 +12,31 @@ Table of contents
   * [Getting Started](#getting-started)
 
 
+RDF analyzers [WIP]
+=============
+
+In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (happens in `setup.sh`)
+
+```
+source setup.sh
+mkdir build install
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=../install
+make install
+```
+
+To test:
+
+```
+# python
+python FCChhAnalyses/FCChh/tth_4l/dataframe/fcchh_ana_tth_4l.py root://eospublic.cern.ch//eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_tth01j_5f_hllll/events_000000492.root
+# C++
+./build/FCChhAnalyses/FCChh/tth_4l/dataframe/fcchh_ana_tth_4l tree.root root://eospublic.cern.ch//eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_tth01j_5f_hllll/events_000000492.root
+```
+
+both commands should produce the same output file `tree.root`
+
+
 Requirements
 ============
 

@@ -26,7 +26,7 @@ mgp8_ee_tt_ecm350.splitFactor = 10
 selectedComponents = [comp]
 
 
-from FCCeeAnalyses.analyzers.Reader import Reader
+from FCCeeAnalyses.analyzers.eeReader import Reader
 
 source = cfg.Analyzer(
     Reader,
