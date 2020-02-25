@@ -102,7 +102,14 @@ struct ResonanceBuilder {
   int m_resonance_pdgid;
   float m_resonance_mass;
   ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass);
-ROOT::VecOps::RVec<fcc::ParticleData> operator()(ROOT::VecOps::RVec<fcc::ParticleData> leptons);
+ROOT::VecOps::RVec<fcc::ParticleData> operator()(ROOT::VecOps::RVec<fcc::ParticleData> legs);
+};
+
+struct JetResonanceBuilder {
+  int m_resonance_pdgid;
+  float m_resonance_mass;
+  JetResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass);
+ROOT::VecOps::RVec<fcc::ParticleData> operator()(ROOT::VecOps::RVec<fcc::JetData> legs);
 };
 
 ROOT::VecOps::RVec<float> id_float(ROOT::VecOps::RVec<fcc::FloatValueData> x);
