@@ -297,7 +297,7 @@ ResonanceBuilder::ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_
 ROOT::VecOps::RVec<fcc::ParticleData> ResonanceBuilder::operator()(ROOT::VecOps::RVec<fcc::ParticleData> legs) {
   ROOT::VecOps::RVec<fcc::ParticleData> result;
   int n = legs.size();
-  if (n >2) {
+  if (n >1) {
     ROOT::VecOps::RVec<bool> v(n);
     std::fill(v.end() - 2, v.end(), true);
     do {
@@ -320,22 +320,63 @@ ROOT::VecOps::RVec<fcc::ParticleData> ResonanceBuilder::operator()(ROOT::VecOps:
     } while (std::next_permutation(v.begin(), v.end()));
   }
   if (result.size() > 1) {
-    auto  higgsresonancesort = [&] (fcc::ParticleData i ,fcc::ParticleData j) { return (abs( m_resonance_mass -i.core.p4.mass)<abs(m_resonance_mass-j.core.p4.mass)); };
-    std::sort(result.begin(), result.end(), higgsresonancesort);
+    auto resonancesort = [&] (fcc::ParticleData i ,fcc::ParticleData j) { return (abs( m_resonance_mass -i.core.p4.mass)<abs(m_resonance_mass-j.core.p4.mass)); };
+    std::sort(result.begin(), result.end(), resonancesort);
     ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator first = result.begin();
     ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator last = result.begin() + 1;
-    ROOT::VecOps::RVec<fcc::ParticleData> onlyBestHiggs(first, last);
-    return onlyBestHiggs;
+    ROOT::VecOps::RVec<fcc::ParticleData> onlyBestReso(first, last);
+    return onlyBestReso;
   } else {
     return result;
   }
 }
 
+
+JetResonanceBuilder::JetResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass) {m_resonance_pdgid = arg_resonance_pdgid; m_resonance_mass = arg_resonance_mass;}
+
+ROOT::VecOps::RVec<fcc::ParticleData> JetResonanceBuilder::operator()(ROOT::VecOps::RVec<fcc::JetData> legs) {
+  ROOT::VecOps::RVec<fcc::ParticleData> result;
+  int n = legs.size();
+  if (n >1) {
+    ROOT::VecOps::RVec<bool> v(n);
+    std::fill(v.end() - 2, v.end(), true);
+    do {
+      fcc::ParticleData reso;
+      reso.core.pdgId = m_resonance_pdgid;
+      TLorentzVector reso_lv; 
+      for (int i = 0; i < n; ++i) {
+          if (v[i]) {
+            ///reso.core.charge += legs[i].core.charge;
+            TLorentzVector leg_lv;
+            leg_lv.SetXYZM(legs[i].core.p4.px, legs[i].core.p4.py, legs[i].core.p4.pz, legs[i].core.p4.mass);
+            reso_lv += leg_lv;
+          }
+      }
+      reso.core.p4.px = reso_lv.Px();
+      reso.core.p4.py = reso_lv.Py();
+      reso.core.p4.pz = reso_lv.Pz();
+      reso.core.p4.mass = reso_lv.M();
+      result.emplace_back(reso);
+    } while (std::next_permutation(v.begin(), v.end()));
+  }
+  if (result.size() > 1) {
+    auto resonancesort = [&] (fcc::ParticleData i ,fcc::ParticleData j) { return (abs( m_resonance_mass -i.core.p4.mass)<abs(m_resonance_mass-j.core.p4.mass)); };
+    std::sort(result.begin(), result.end(), resonancesort);
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator first = result.begin();
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator last = result.begin() + 1;
+    ROOT::VecOps::RVec<fcc::ParticleData> onlyBestReso(first, last);
+    return onlyBestReso;
+  } else {
+    return result;
+  }
+}
+
+
 ROOT::VecOps::RVec<fcc::ParticleData> LeptonicZBuilder (ROOT::VecOps::RVec<fcc::ParticleData> leptons) {
 
         ROOT::VecOps::RVec<fcc::ParticleData> result;
         int n = leptons.size();
-        if (n >2) {
+        if (n >1) {
           ROOT::VecOps::RVec<bool> v(n);
           std::fill(v.end() - 2, v.end(), true);
           do {
