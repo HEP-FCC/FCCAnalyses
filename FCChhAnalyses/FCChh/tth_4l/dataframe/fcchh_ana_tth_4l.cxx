@@ -62,7 +62,7 @@ int main(int argc, char* argv[]){
                       .Define("higgs_m", get_mass, {{"higgs"}})
                       .Define("higgs_pt", get_pt, {"higgs"})
                       .Define("jets_30_bs", selectJets(30, true), {"pfjets04", "pfbTags04"})
-                      .Define("jets_30_lights", selectJets(30, true), {"pfjets04", "pfbTags04"})
+                      .Define("jets_30_lights", selectJets(30, false), {"pfjets04", "pfbTags04"})
                       .Define("selected_bs", noMatchJets(0.2), {"jets_30_bs", "selected_leptons"})
                       .Define("selected_lights", noMatchJets(0.2), {"jets_30_lights", "selected_leptons"})
                       .Define("nbjets", get_njets, {"selected_bs"})
