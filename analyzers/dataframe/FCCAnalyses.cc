@@ -402,3 +402,53 @@ ROOT::VecOps::RVec<fcc::ParticleData> LeptonicZBuilder (ROOT::VecOps::RVec<fcc::
 
     return result;
   };
+
+  /// @todo: refactor to remove code duplication with leptonicZBuilder
+ROOT::VecOps::RVec<fcc::ParticleData> LeptonicHiggsBuilder(ROOT::VecOps::RVec<fcc::ParticleData> leptons) {
+        ROOT::VecOps::RVec<fcc::ParticleData> result;
+        int n = leptons.size();
+        if (n > 1) {
+          ROOT::VecOps::RVec<bool> v(n);
+          std::fill(v.end() - 2, v.end(), true);
+          do {
+            fcc::ParticleData zed;
+            zed.core.pdgId = 25;
+            TLorentzVector zed_lv; 
+            for (int i = 0; i < n; ++i) {
+                if (v[i]) {
+                  zed.core.charge += leptons[i].core.charge;
+                  TLorentzVector lepton_lv;
+                  lepton_lv.SetXYZM(leptons[i].core.p4.px, leptons[i].core.p4.py, leptons[i].core.p4.pz, leptons[i].core.p4.mass);
+                  zed_lv += lepton_lv;
+                }
+            }
+            zed.core.p4.px = zed_lv.Px();
+            zed.core.p4.py = zed_lv.Py();
+            zed.core.p4.pz = zed_lv.Pz();
+            zed.core.p4.mass = zed_lv.M();
+            result.emplace_back(zed);
+
+          
+          } while (std::next_permutation(v.begin(), v.end()));
+        }
+
+    if (result.size() > 1) {
+    auto  higgsresonancesort = [] (fcc::ParticleData i ,fcc::ParticleData j) { return (abs( 125. -i.core.p4.mass)<abs(125.-j.core.p4.mass)); };
+    std::sort(result.begin(), result.end(), higgsresonancesort);
+
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator first = result.begin();
+    ROOT::VecOps::RVec<fcc::ParticleData>::const_iterator last = result.begin() + 1;
+    ROOT::VecOps::RVec<fcc::ParticleData> onlyBestHiggs(first, last);
+    return onlyBestHiggs;
+    } else {
+    return result;
+    }
+  };
+
+ROOT::VecOps::RVec<fcc::ParticleData> mergeElectronsAndMuons(ROOT::VecOps::RVec<fcc::ParticleData> x, ROOT::VecOps::RVec<fcc::ParticleData> y) {
+  std::vector<fcc::ParticleData> result;
+  result.reserve(x.size() + y.size());
+  result.insert( result.end(), x.begin(), x.end() );
+  result.insert( result.end(), y.begin(), y.end() );
+  return ROOT::VecOps::RVec(result);
+};
