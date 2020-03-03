@@ -36,8 +36,6 @@ class runDataFrame():
                 tmplist=[]
                 nevents_target=int(doc['merge']['nevents']*fraction)
                 nevents_real=0
-                print 'nevents_target  ',nevents_target
-                print 'nevents_target  ',doc['merge']['nevents']*fraction
 
                 for ev in range(len(eventlist)):
                     if nevents_real>nevents_target:break
@@ -67,11 +65,11 @@ class runDataFrame():
             print  'elapsed time (H:M:S) ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
             print  'events per second: ',nevents_real/elapsed_time
 
-        outf = ROOT.TFile( pr+'.root', 'update' )
-        meta = ROOT.TTree( 'metadata', 'metadata informations' )
-        n = array( 'i', [ 0 ] )
-        meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
-        n[0]=nevents_real
-        meta.Fill()
-        outf.Write()
-        outf.Close()
+            outf = ROOT.TFile( pr+'.root', 'update' )
+            meta = ROOT.TTree( 'metadata', 'metadata informations' )
+            n = array( 'i', [ 0 ] )
+            meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
+            n[0]=nevents_real
+            meta.Fill()
+            outf.Write()
+            outf.Close()
