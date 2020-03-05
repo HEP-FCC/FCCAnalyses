@@ -2,7 +2,8 @@ import yaml
 import ROOT 
 import sys
 from array import array
-
+import os.path
+   
 class runDataFrame():
 
     #__________________________________________________________
@@ -12,12 +13,18 @@ class runDataFrame():
 
 
     #__________________________________________________________
-    def run(self,ncpu=10, fraction=1):
+    def run(self,ncpu=10, fraction=1, outDir=''):
+        print "EnableImplicitMT: {}".format(ncpu)
+
+        if not os.path.exists(outDir) and outDir!='': 
+            os.system("mkdir -p {}".format(outDir))
+        if outDir!='' and outDir[-1]!='/':
+            outDir+='/'
 
         for pr in self.process_list:
             doc = None
-            outfile=self.basedir+pr+'/merge.yaml'
-            with open(outfile) as ftmp:
+            yamlfile=self.basedir+pr+'/merge.yaml'
+            with open(yamlfile) as ftmp:
                 try:
                     doc = yaml.load(ftmp, Loader=yaml.FullLoader)
                 except yaml.YAMLError as exc:
@@ -59,17 +66,19 @@ class runDataFrame():
             import analysis as ana
             import time
             start_time = time.time()
-            myana=ana.analysis(fileListRoot,pr+'.root',ncpu)
+            myana=ana.analysis(fileListRoot,outDir+pr+'.root',ncpu)
             myana.run()
             elapsed_time = time.time() - start_time
             print  'elapsed time (H:M:S) ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
             print  'events per second: ',nevents_real/elapsed_time
 
-            outf = ROOT.TFile( pr+'.root', 'update' )
+            outf = ROOT.TFile( outDir+pr+'.root', 'update' )
             meta = ROOT.TTree( 'metadata', 'metadata informations' )
             n = array( 'i', [ 0 ] )
             meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
             n[0]=nevents_real
             meta.Fill()
+            p = ROOT.TParameter(int)( "eventsProcessed", n[0])
+            p.Write()
             outf.Write()
             outf.Close()
