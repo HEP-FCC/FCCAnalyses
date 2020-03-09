@@ -95,6 +95,20 @@ ROOT::VecOps::RVec<float> get_pt_lv(ROOT::VecOps::RVec<fcc::LorentzVector> in);
 /// return the transverse momenta of the input particles
 ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<fcc::ParticleData> in);
 
+/// return the momenta of the input particles
+ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<fcc::ParticleData> in);
+
+/// return the pseudo-rapidity of the input particles
+ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<fcc::ParticleData> in);
+
+/// return the rapidity of the input particles
+ROOT::VecOps::RVec<float> get_y(ROOT::VecOps::RVec<fcc::ParticleData> in);
+
+/// return the phi of the input particles
+ROOT::VecOps::RVec<float> get_phi(ROOT::VecOps::RVec<fcc::ParticleData> in);
+
+/// return the energy of the input particles
+ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<fcc::ParticleData> in);
 
 /// concatenate both input vectors and return the resulting vector
 ROOT::VecOps::RVec<fcc::ParticleData> mergeParticles(ROOT::VecOps::RVec<fcc::ParticleData> x, ROOT::VecOps::RVec<fcc::ParticleData> y);
