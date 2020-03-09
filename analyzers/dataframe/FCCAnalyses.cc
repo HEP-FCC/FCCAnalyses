@@ -138,23 +138,23 @@ double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2) {
   return result;
 }
 
-  recoil::recoil(float arg_sqrts) : m_sqrts(arg_sqrts) {};
-  ROOT::VecOps::RVec<fcc::ParticleData>  recoil::operator() (ROOT::VecOps::RVec<fcc::ParticleData> in) {
-      ROOT::VecOps::RVec<fcc::ParticleData> result;
-      auto recoil_p4 = TLorentzVector(0, 0, 0, m_sqrts);
-      for (auto & v1: in) {
-        TLorentzVector tv1;
-        tv1.SetXYZM(v1.core.p4.px, v1.core.p4.py, v1.core.p4.pz, v1.core.p4.mass);
-        recoil_p4 -= tv1;
-      }
-      auto recoil_fcc = fcc::ParticleData();
-      recoil_fcc.core.p4.px = recoil_p4.Px();
-      recoil_fcc.core.p4.py = recoil_p4.Py();
-      recoil_fcc.core.p4.pz = recoil_p4.Pz();
-      recoil_fcc.core.p4.mass = recoil_p4.M();
-      result.push_back(recoil_fcc);
-      return result;
-  };
+recoil::recoil(float arg_sqrts) : m_sqrts(arg_sqrts) {};
+ROOT::VecOps::RVec<fcc::ParticleData>  recoil::operator() (ROOT::VecOps::RVec<fcc::ParticleData> in) {
+  ROOT::VecOps::RVec<fcc::ParticleData> result;
+  auto recoil_p4 = TLorentzVector(0, 0, 0, m_sqrts);
+  for (auto & v1: in) {
+    TLorentzVector tv1;
+    tv1.SetXYZM(v1.core.p4.px, v1.core.p4.py, v1.core.p4.pz, v1.core.p4.mass);
+    recoil_p4 -= tv1;
+  }
+  auto recoil_fcc = fcc::ParticleData();
+  recoil_fcc.core.p4.px = recoil_p4.Px();
+  recoil_fcc.core.p4.py = recoil_p4.Py();
+  recoil_fcc.core.p4.pz = recoil_p4.Pz();
+  recoil_fcc.core.p4.mass = recoil_p4.M();
+  result.push_back(recoil_fcc);
+  return result;
+};
 
 ROOT::VecOps::RVec<float> get_pt_lv(ROOT::VecOps::RVec<fcc::LorentzVector> in){
  ROOT::VecOps::RVec<float> result;
