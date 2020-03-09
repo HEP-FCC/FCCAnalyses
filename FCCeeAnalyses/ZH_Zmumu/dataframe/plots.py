@@ -12,11 +12,17 @@ yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
 outdir         = 'FCCee/ZH_Zmumu/plots/'
 
-variables = ['mz','mz_zoom','nbjets']
+variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m']
 
 selections = {}
 selections['ZH']   = ["sel0","sel1","sel2"]
 selections['ZH_2'] = ["sel0","sel2"]
+
+extralabel = {}
+extralabel['sel0'] = "Selection: N_{Z} = 1"
+extralabel['sel1'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV"
+extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
+
 
 colors = {}
 colors['ZH'] = ROOT.kRed
