@@ -131,10 +131,6 @@ int get_njets(ROOT::VecOps::RVec<fcc::JetData> x);
 /// return the sum of the  sizes of the input collections collection 
 int get_njets2(ROOT::VecOps::RVec<fcc::JetData> x, ROOT::VecOps::RVec<fcc::JetData> y);
 
-/// return the ith element of a collection
-float get_flat(ROOT::VecOps::RVec<float> x, int i);
-
-
 ROOT::VecOps::RVec<fcc::ParticleData> LeptonicZBuilder (ROOT::VecOps::RVec<fcc::ParticleData> leptons);
 
   /// @todo: refactor to remove code duplication with leptonicZBuilder
