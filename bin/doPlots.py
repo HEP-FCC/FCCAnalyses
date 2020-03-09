@@ -66,7 +66,7 @@ def mapHistos(var, label, sel, param):
     return hsignal,hbackgrounds
 
 #__________________________________________________________
-def runPlots(var,param,hsignal,hbackgrounds):
+def runPlots(var,param,hsignal,hbackgrounds,extralab):
     legsize = 0.04*(len(hbackgrounds)+len(hsignal))
     leg = ROOT.TLegend(0.58,0.86 - legsize,0.86,0.88)
     leg.SetFillColor(0)
@@ -98,20 +98,19 @@ def runPlots(var,param,hsignal,hbackgrounds):
     lt = "FCC-ee Simulation (Delphes)"
     rt = "#sqrt{{s}} = {:.1f} GeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
 
-
     if 'stack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , True , histos, colors, param.ana_tex)
+            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , True , histos, colors, param.ana_tex, extralab)
         if 'log' in param.yaxis:
-            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , True , histos, colors, param.ana_tex)
+            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , True , histos, colors, param.ana_tex, extralab)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print 'unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats)
 
     if 'nostack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , False , histos, colors, param.ana_tex)
+            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , False , histos, colors, param.ana_tex, extralab)
         if 'log' in param.yaxis:
-            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , False , histos, colors, param.ana_tex)
+            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , False , histos, colors, param.ana_tex, extralab)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print 'unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats)
     if 'stack' not in param.stacksig and 'nostack' not in param.stacksig:
@@ -119,7 +118,7 @@ def runPlots(var,param,hsignal,hbackgrounds):
 
 
 #_____________________________________________________________________________________________________________
-def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex):
+def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab):
 
     canvas = ROOT.TCanvas(name, name, 600, 600) 
     canvas.SetLogy(logY)
@@ -318,12 +317,14 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     text = '#bf{#it{' + rightText[1] +'}}'
     Text.SetTextSize(0.035) 
     Text.DrawLatex(0.18, 0.78, text)
-    #Text.DrawLatex(0.18, 0.78, rightText[1])
 
     text = '#bf{#it{' + ana_tex +'}}'
     Text.SetTextSize(0.04)
     Text.DrawLatex(0.18, 0.73, text)
 
+    text = '#bf{#it{' + extralab +'}}'
+    Text.SetTextSize(0.025)
+    Text.DrawLatex(0.18, 0.68, text)
 
     canvas.RedrawAxis()
     #canvas.Update()
@@ -367,4 +368,4 @@ if __name__=="__main__":
         for label, sels in param.selections.iteritems():
             for sel in sels:
                 hsignal,hbackgrounds=mapHistos(var,label,sel, param)
-                runPlots(var+"_"+label+"_"+sel,param,hsignal,hbackgrounds)
+                runPlots(var+"_"+label+"_"+sel,param,hsignal,hbackgrounds,param.extralabel[sel])
