@@ -156,18 +156,18 @@ ROOT::VecOps::RVec<fcc::ParticleData>  recoil::operator() (ROOT::VecOps::RVec<fc
   return result;
 };
 
-ROOT::VecOps::RVec<float> get_pt_lv(ROOT::VecOps::RVec<fcc::LorentzVector> in){
+ROOT::VecOps::RVec<float> get_pt_lv(ROOT::VecOps::RVec<fcc::LorentzVector> x){
  ROOT::VecOps::RVec<float> result;
- for (size_t i = 0; i < in.size(); ++i) {
-   result.push_back(sqrt(in[i].px * in[i].px + in[i].py * in[i].py));
+ for (size_t i = 0; i < x.size(); ++i) {
+   result.push_back(sqrt(x[i].px * x[i].px + x[i].py * x[i].py));
  }
  return result;
 }
 
-ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<fcc::ParticleData> in){
+ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<fcc::ParticleData> x){
  ROOT::VecOps::RVec<float> result;
- for (size_t i = 0; i < in.size(); ++i) {
-   result.push_back(sqrt(in[i].core.p4.px * in[i].core.p4.px + in[i].core.p4.py * in[i].core.p4.py));
+ for (size_t i = 0; i < x.size(); ++i) {
+   result.push_back(sqrt(x[i].core.p4.px * x[i].core.p4.px + x[i].core.p4.py * x[i].core.p4.py));
  }
  return result;
 }
@@ -200,6 +200,56 @@ ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<fcc::ParticleData> x) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: x) {
     result.push_back(p.core.p4.mass);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<fcc::ParticleData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.core.p4.px, p.core.p4.py, p.core.p4.pz, p.core.p4.mass);
+    result.push_back(tlv.Eta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_phi(ROOT::VecOps::RVec<fcc::ParticleData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.core.p4.px, p.core.p4.py, p.core.p4.pz, p.core.p4.mass);
+    result.push_back(tlv.Phi());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<fcc::ParticleData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.core.p4.px, p.core.p4.py, p.core.p4.pz, p.core.p4.mass);
+    result.push_back(tlv.E());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<fcc::ParticleData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.core.p4.px, p.core.p4.py, p.core.p4.pz, p.core.p4.mass);
+    result.push_back(tlv.P());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_y(ROOT::VecOps::RVec<fcc::ParticleData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.core.p4.px, p.core.p4.py, p.core.p4.pz, p.core.p4.mass);
+    result.push_back(tlv.Rapidity());
   }
   return result;
 }
