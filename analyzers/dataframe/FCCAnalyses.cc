@@ -220,16 +220,6 @@ int get_njets2(ROOT::VecOps::RVec<fcc::JetData> x, ROOT::VecOps::RVec<fcc::JetDa
   return result;
 }
 
-float get_flat(ROOT::VecOps::RVec<float> x, int i)
-{
-  if (x.size()>i)
-    return x[i];
-  else
-    return 0.;
-}
-
-
-
 noMatchJets::noMatchJets(float arg_max_rel_iso) {m_max_rel_iso = arg_max_rel_iso;}
 
 ROOT::VecOps::RVec<fcc::JetData> noMatchJets::operator() (ROOT::VecOps::RVec<fcc::JetData> in, ROOT::VecOps::RVec<fcc::ParticleData> matchParticles) {
