@@ -56,9 +56,15 @@ This will output 3 files in ```FCCee/ZH_Zmumu/``` following the parameter ```out
 
 Final selection
 ============
-The final selection runs on the pre-selection files that we produced in the [Pre-selection (from FCCSW EDM to flat ntuples)](#from-fccsw-EDM-to-flat-ntuples) step
-In this example it should be run like: python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py which calls a common code bin/runDataFrameFinal.py to run dataframe.
+The final selection runs on the pre-selection files that we produced in the [Pre-selection](#pre-selection) step. 
+In the configuration file ```finalSel.py``` we define the various cuts to run on and the final variables to be stored in both a ```TTree``` and histograms. This is why the variables needs extra fields like ```title```, number of bins and range for the histogram creation.
+In this example it should run like: 
 
+```
+python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py
+```
+
+This will create 2 files per selection ```_final_sel0histo.root```
 Plotting
 ============
 In this example just run like: python bin/doPlots.py FCCeeAnalyses/ZH_Zmumu/dataframe/plots.py
