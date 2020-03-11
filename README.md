@@ -47,12 +47,16 @@ Each analysis is hosted in a single directory, for example ```FCCeeAnalyses/ZH_Z
 
 Pre-selection (from FCCSW EDM to flat ntuples)
 ============
- in this examplepython FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py
-The dataset names can be found [here](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_v01.php). 
+The pre-selection runs over already existing and properly registered FCCSW EDM events. The dataset names with the corresponding statistics can be found [here](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_v01.php). One important parameter is the fraction of the total dataset to run. It can be found in the ```preSel.py``` file by setting a value between ]0,1]. For example ```fraction=0.1``` will run over 10% of the statistics. Reading the files on ```eos```, and with 15 CPUs we observe processing speeds between 3000 and 10000 events per seconds depending on the number of files. Only run full statistics after having done all the proper testing and analysis design as it can take some time (that of course depends on the sample total statistics). To run the pre-selection of the ```ZH_Zmumu``` analysis, just run:
+```
+python FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py
+```
+This will output 3 files in ```FCCee/ZH_Zmumu/``` following the parameter ```outdir``` in the ```preSel.py``` configuration file.
 
 
 Final selection
 ============
+The final selection runs on the pre-selection files that we produced in [Final selection](#final-selection)
 In this example it should be run like: python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py which calls a common code bin/runDataFrameFinal.py to run dataframe.
 
 Plotting
@@ -65,7 +69,7 @@ Heppy based (no long term support)
 Requirements
 ============
 
-`FCChhAnalyses` depends on the following packages:
+`FCCAnalyses` depends on the following packages:
 
 - [`heppy`](https://github.com/cbernet/heppy)
 - [`ROOT`](https://github.com/root-project/root)
