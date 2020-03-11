@@ -9,17 +9,23 @@ Table of contents
   * [FCCAnalyses](#fcchhanalyses)
   * [Table of contents](#table-of-contents)
   * [RootDataFrame based](#rootdataframe-based)
-    * [Requirements](#requirements)
     * [Getting Started](#getting-started)
-  * [Heppy based](#heppy-based)
+    * [Generalities](#generalities)
+    * [Pre-selection (from FCCSW EDM to flat ntuples)](#from-fccsw-EDM-to-flat-ntuples)
+    * [Final selection](#final-selection)
+    * [Plotting](#plotting)
+  * [Heppy based (no long term support)](#heppy-based-no-long-term-support)
     * [Requirements](#requirements)
     * [Getting Started](#getting-started)
 
 
-RDF analyzers [WIP]
+RootDataFrame based
 =============
+Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained.
 
-In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (happens in `setup.sh`)
+Getting Started
+============
+In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (this happens in `setup.sh`)
 
 ```
 source setup.sh
@@ -28,18 +34,33 @@ cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make install
 ```
+Each time changes are made in ```analyzers/dataframe/``` please re-compile!
 
-To test:
+Generalities
+============
+Each analysis is hosted in a single directory, for example ```FCCeeAnalyses/ZH_Zmumu/dataframe/``` and contains the same kind of files, please use the same naming convention for all analysis. 
 
-```
-# python
-python FCChhAnalyses/FCChh/tth_4l/dataframe/fcchh_ana_tth_4l.py root://eospublic.cern.ch//eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_tth01j_5f_hllll/events_000000492.root
-# C++
-./build/FCChhAnalyses/FCChh/tth_4l/dataframe/fcchh_ana_tth_4l tree.root root://eospublic.cern.ch//eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_tth01j_5f_hllll/events_000000492.root
-```
+1. ```analysis.py```: This class that is used to define the list of analysers and filters to run on as well as the output variables. 
+2. ```preSel.py```: This configuration file is used to define how to run the ```analysis.py```. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the ```analysis.py``` with a common code ```bin/runDataFrame.py``` (this last file is common to all analyses and should not be touched). 
+3. ```finalSel.py```: This configuration file contains the final selections and it runs over the locally produced flat ntuples from the ```preSel.py```. It contains a link to the ```procDict.json``` for getting cross section etc...(this might be removed later to include everything in the yaml, closer to the sample), the list of processes, the number of CPU, the cut list, and the variables (that will be both written in a ```TTree``` and in the form of ```TH1``` properly normalised to an integrated luminosity of 1pb-1. 
+4. ```plots.py```: This configuration files is used to select the final selections from running ```finalSel.py``` to plot. Informations about how to merge processes, write some extra text, normalise to a given integrated luminosity etc... For the moment it is possible to only plot one signal at the time, but several backgrounds. 
 
-both commands should produce the same output file `tree.root`
+Pre-selection (from FCCSW EDM to flat ntuples)
+============
+ in this examplepython FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py
+The dataset names can be found [here](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_v01.php). 
 
+
+Final selection
+============
+In this example it should be run like: python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py which calls a common code bin/runDataFrameFinal.py to run dataframe.
+
+Plotting
+============
+In this example just run like: python bin/doPlots.py FCCeeAnalyses/ZH_Zmumu/dataframe/plots.py
+
+Heppy based (no long term support)
+============
 
 Requirements
 ============
