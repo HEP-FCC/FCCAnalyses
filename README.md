@@ -1,15 +1,19 @@
-FCChhAnalyses
+FCCAnalyses
 =============
 
-This package produce flat ROOT trees using FCCSW EDM root files produced with the [EventProducer](https://github.com/FCC-hh-framework/EventProducer)
+This package produce flat ROOT trees using FCCSW EDM root files produced with the [EventProducer](https://github.com/HEP-FCC/EventProducer)
 
 
 Table of contents
 =================
-  * [FCChhAnalyses](#fcchhanalyses)
+  * [FCCAnalyses](#fcchhanalyses)
   * [Table of contents](#table-of-contents)
-  * [Requirements](#requirements)
-  * [Getting Started](#getting-started)
+  * [RootDataFrame based](#rootdataframe-based)
+    * [Requirements](#requirements)
+    * [Getting Started](#getting-started)
+  * [Heppy based](#heppy-based)
+    * [Requirements](#requirements)
+    * [Getting Started](#getting-started)
 
 
 RDF analyzers [WIP]
