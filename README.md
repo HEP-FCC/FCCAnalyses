@@ -6,12 +6,12 @@ This package produce flat ROOT trees using FCCSW EDM root files produced with th
 
 Table of contents
 =================
-  * [FCCAnalyses](#fcchhanalyses)
+  * [FCCAnalyses](#fccanalyses)
   * [Table of contents](#table-of-contents)
   * [RootDataFrame based](#rootdataframe-based)
     * [Getting Started](#getting-started)
     * [Generalities](#generalities)
-    * [Pre-selection (from FCCSW EDM to flat ntuples)](#from-fccsw-EDM-to-flat-ntuples)
+    * [Pre selection](#pre-selection)
     * [Final selection](#final-selection)
     * [Plotting](#plotting)
   * [Heppy based (no long term support)](#heppy-based-no-long-term-support)
@@ -56,7 +56,7 @@ This will output 3 files in ```FCCee/ZH_Zmumu/``` following the parameter ```out
 
 Final selection
 ============
-The final selection runs on the pre-selection files that we produced in [Final selection](#final-selection)
+The final selection runs on the pre-selection files that we produced in the [Pre-selection (from FCCSW EDM to flat ntuples)](#from-fccsw-EDM-to-flat-ntuples) step
 In this example it should be run like: python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py which calls a common code bin/runDataFrameFinal.py to run dataframe.
 
 Plotting
