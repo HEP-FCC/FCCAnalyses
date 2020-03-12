@@ -6,14 +6,15 @@ ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow #mu^{+}#mu^{-} + X"
 delphesVersion = "3.4.2"
 energy         = 240.0
 collider       = "FCC-ee"
-inputDir       = "FCCee/ZH_Zmumu/"
+inputDir       = "Outputs/FCCee/ZH_Zmumu/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
-outdir         = 'FCCee/ZH_Zmumu/plots/'
+outdir         = 'Outputs/FCCee/ZH_Zmumu/plots/'
 
 variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m']
 
+###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
 selections['ZH']   = ["sel0","sel1","sel2"]
 selections['ZH_2'] = ["sel0","sel2"]

@@ -69,9 +69,11 @@ class runDataFrame():
             myana=ana.analysis(fileListRoot,outDir+pr+'.root',ncpu)
             myana.run()
             elapsed_time = time.time() - start_time
-            print  'elapsed time (H:M:S) ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
-            print  'events per second: ',nevents_real/elapsed_time
-
+            print  '==============================SUMMARY=============================='
+            print  'Elapsed time (H:M:S)     :  ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
+            print  'Events Processed/Second  :  ',int(nevents_real/elapsed_time)
+            print  'Total Events Processed   :  ',int(nevents_real/elapsed_time)
+            print  '==================================================================='
             outf = ROOT.TFile( outDir+pr+'.root', 'update' )
             meta = ROOT.TTree( 'metadata', 'metadata informations' )
             n = array( 'i', [ 0 ] )
