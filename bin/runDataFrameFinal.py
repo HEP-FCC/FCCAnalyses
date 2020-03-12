@@ -47,7 +47,9 @@ class runDataFrameFinal():
         ROOT.gSystem.Load("libdatamodel")
         ROOT.gSystem.Load("libFCCAnalyses")
         ROOT.gErrorIgnoreLevel = ROOT.kFatal
-        count=0
+        nevents_real=0
+        import time
+        start_time = time.time()
 
         processEvents={}
         for pr in self.processes:
@@ -59,21 +61,22 @@ class runDataFrameFinal():
             tfin.Close()
 
         for cut in self.cuts:
-            print 'running over cut : ',cut
-
+            print 'running over cut : ',self.cuts[cut]
             for pr in self.processes:
                 print '   running over process : ',pr
                 fin    = self.baseDir+pr+'.root' #input file
-                fout   = self.baseDir+pr+'_final_sel{}.root'.format(count) #output file for tree
-                fhisto = self.baseDir+pr+'_final_sel{}histo.root'.format(count) #output file for histograms
+                fout   = self.baseDir+pr+'_'+cut+'.root' #output file for tree
+                fhisto = self.baseDir+pr+'_'+cut+'_histo.root' #output file for histograms
 
                 RDF = ROOT.ROOT.RDataFrame
                 df  = RDF(self.treename,fin )
-                df_cut = df.Filter(cut)
+                df_cut = df.Filter(self.cuts[cut])
                 snapshot_tdf = df_cut.Snapshot(self.treename, fout)
 
                 validfile = self.testfile(fout)
                 if not validfile: continue
+
+                nevents_real+=df_cut.Count().GetValue()
 
                 tf    = ROOT.TFile.Open(fhisto,'RECREATE')
                 for v in self.variables:
@@ -82,5 +85,10 @@ class runDataFrameFinal():
                     h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
                     h.Write()
                 tf.Close()
-            count+=1
 
+        elapsed_time = time.time() - start_time
+        print  '==============================SUMMARY=============================='
+        print  'Elapsed time (H:M:S)     :  ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
+        print  'Events Processed/Second  :  ',int(nevents_real/elapsed_time)
+        print  'Total Events Processed   :  ',nevents_real
+        print  '==================================================================='

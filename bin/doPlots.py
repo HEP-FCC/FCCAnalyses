@@ -22,7 +22,7 @@ def mapHistos(var, label, sel, param):
     for s in signal:
         hsignal[s]=[]
         for f in signal[s]:
-            fin=param.inputDir+f+'_final_'+sel+'histo.root'
+            fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
                 print 'file {} does not exist, skipp'.format(fin)
             else:
@@ -41,7 +41,7 @@ def mapHistos(var, label, sel, param):
     for b in backgrounds:
         hbackgrounds[b]=[]
         for f in backgrounds[b]:
-            fin=param.inputDir+f+'_final_'+sel+'histo.root'
+            fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
                 print 'file {} does not exist, skipp'.format(fin)
             else:
