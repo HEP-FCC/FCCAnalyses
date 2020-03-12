@@ -51,7 +51,7 @@ The pre-selection runs over already existing and properly registered FCCSW EDM e
 ```
 python FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py
 ```
-This will output 3 files in ```FCCee/ZH_Zmumu/``` following the parameter ```outdir``` in the ```preSel.py``` configuration file.
+This will output 3 files in ```Outpurts/FCCee/ZH_Zmumu/``` following the parameter ```outdir``` in the ```preSel.py``` configuration file.
 
 
 Final selection
