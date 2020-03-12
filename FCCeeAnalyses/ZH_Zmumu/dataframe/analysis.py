@@ -8,6 +8,7 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 _p = ROOT.fcc.ParticleData()
 _s = ROOT.selectParticlesPtIso
+print _s
 
 class analysis():
 
@@ -17,39 +18,64 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print " done"
     #__________________________________________________________
     def run(self):
-        df2 = self.df.Define("selected_muons", "selectParticlesPtIso(10, 0.4)(muons, muonITags)") \
-                     .Define("selected_muons_pt", "get_pt(selected_muons)") \
-                     .Define("selected_muons_y", "get_y(selected_muons)") \
-                     .Define("selected_muons_p", "get_p(selected_muons)") \
-                     .Define("selected_muons_e", "get_e(selected_muons)") \
-                     .Define("jets_10_bs", "selectJets(10, true)(efjets, efbTags)") \
-                     .Define("jets_10_lights", "selectJets(10, false)(efjets, efbTags)") \
-                     .Define("selected_bs", "noMatchJets(0.2)(jets_10_bs, selected_muons)") \
-                     .Define("selected_lights", "noMatchJets(0.2)(jets_10_lights, selected_muons)") \
-                     .Define("nbjets", "get_njets(selected_bs)") \
-                     .Define("njets", "get_njets2(selected_bs, selected_lights)") \
-                     .Define("weight"," id_float(mcEventWeights)") \
-                     .Define("zed_leptonic","ResonanceBuilder(23, 91)(selected_muons)") \
-                     .Define("zed_leptonic_m", "get_mass(zed_leptonic)") \
-                     .Define("zed_leptonic_pt","get_pt(zed_leptonic)") \
-                     .Define("zed_hadronic_light","JetResonanceBuilder(23, 91)(jets_10_lights)") \
-                     .Define("zed_hadronic_light_m", "get_mass(zed_hadronic_light)") \
-                     .Define("zed_hadronic_light_pt","get_pt(zed_hadronic_light)") \
-                     .Define("zed_hadronic_b","JetResonanceBuilder(23, 91)(jets_10_bs)") \
-                     .Define("zed_hadronic_b_m", "get_mass(zed_hadronic_b)") \
-                     .Define("zed_hadronic_b_pt","get_pt(zed_hadronic_b)") \
-                     .Define("zed_leptonic_recoil","recoil(240)(zed_leptonic)") \
-                     .Define("zed_leptonic_recoil_m","get_mass(zed_leptonic_recoil)") \
+        # select isolated muons with pt > 10 GeV
+        df2 = (self.df.Define("selected_muons",  "selectParticlesPtIso(10, 0.4)(muons, muonITags)") 
+                     # create branch with muon transverse momentum
+                     .Define("selected_muons_pt",    "get_pt(selected_muons)") 
+                     # create branch with muon rapidity
+                     .Define("selected_muons_y",     "get_y(selected_muons)") 
+                     # create branch with muon total momentum
+                     .Define("selected_muons_p",     "get_p(selected_muons)")
+                      # create branch with muon energy 
+                     .Define("selected_muons_e",     "get_e(selected_muons)")
+                      # select b-tagged jets with pt > 10 GeV
+                     .Define("jets_10_bs",           "selectJets(10, true)(efjets, efbTags)")
+                      # select light jets  with pt > 10 Gev
+                     .Define("jets_10_lights",       "selectJets(10, false)(efjets, efbTags)")
+                      # final b-jet selection: unmatched jets_10_bs  
+                     .Define("selected_bs",          "noMatchJets(0.2)(jets_10_bs, selected_muons)")
+                      # final light-jet selection: unmatched jets_10_lights
+                     .Define("selected_lights",      "noMatchJets(0.2)(jets_10_lights, selected_muons)")
+                      # create branch with number of selected b-jets
+                     .Define("nbjets",               "get_njets(selected_bs)")
+                      # create branch with number of all selected jets
+                     .Define("njets",                "get_njets2(selected_bs, selected_lights)")
+                      # create branch with event weights (just a renaming operation)
+                     .Define("weight",               "id_float(mcEventWeights)")
+                      # find zed candidates from  di-muon resonances  
+                     .Define("zed_leptonic",         "ResonanceBuilder(23, 91)(selected_muons)")
+                      # write branch with zed mass
+                     .Define("zed_leptonic_m",       "get_mass(zed_leptonic)")
+                      # write branch with zed transverse momenta
+                     .Define("zed_leptonic_pt",      "get_pt(zed_leptonic)")
+                      # find zed candidates from light jet resonances
+                     .Define("zed_hadronic_light",   "JetResonanceBuilder(23, 91)(jets_10_lights)")
+                      # write branch with zed mass
+                     .Define("zed_hadronic_light_m", "get_mass(zed_hadronic_light)")
+                      # write branch with zed transverse momenta
+                     .Define("zed_hadronic_light_pt","get_pt(zed_hadronic_light)")
+                      # find zed candidates from b-jet resonances
+                     .Define("zed_hadronic_b",       "JetResonanceBuilder(23, 91)(jets_10_bs)")
+                      # write branch with zed mass
+                     .Define("zed_hadronic_b_m",     "get_mass(zed_hadronic_b)")
+                      # write branch with zed transverse momenta
+                     .Define("zed_hadronic_b_pt",    "get_pt(zed_hadronic_b)")
+                      # calculate recoil of zed_leptonic
+                     .Define("zed_leptonic_recoil",  "recoil(240)(zed_leptonic)")
+                      # write branch with recoil mass
+                     .Define("zed_leptonic_recoil_m","get_mass(zed_leptonic_recoil)") 
+                     )
 
         
 
 
+        # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
                 "selected_muons_pt",
@@ -66,6 +92,18 @@ class analysis():
                 "nbjets",
                 "njets",
                 "weight",
-        ]:
+                ]:
             branchList.push_back(branchName)
-            df2.Snapshot("events", self.outname, branchList)
+        df2.Snapshot("events", self.outname, branchList)
+
+# example call
+# python FCCeeAnalyses/ZH_Zmumu/dataframe/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
+if __name__ == "__main__":
+
+  outfile = "tree.root"
+  infile = sys.argv[1]
+  ncpus = 0
+  analysis = analysis(infile, outfile, ncpus)
+  analysis.run()
+
+
