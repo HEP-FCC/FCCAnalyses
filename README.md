@@ -64,11 +64,17 @@ In this example it should run like:
 python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py
 ```
 
-This will create 2 files per selection ```_final_sel0histo.root```
+This will create 2 files per selection ```SAMPLENAME_SELECTIONNAME.root``` for the ```TTree``` and ```SAMPLENAME_SELECTIONNAME_histo.root``` for the histograms. ```SAMPLENAME``` and ```SELECTIONNAME``` corresponds to the name of the sample and selection respectively in the configuration file.
+
 Plotting
 ============
-In this example just run like: python bin/doPlots.py FCCeeAnalyses/ZH_Zmumu/dataframe/plots.py
+The plotting configuration file ```plots.py``` contains informations about plotting details for plots rendering but also ways of combining samples for plotting. 
+In this example just run like: 
+```
+python bin/doPlots.py FCCeeAnalyses/ZH_Zmumu/dataframe/plots.py
+```
 
+This will produce the plots in the ```outdir``` defined in the configuration file.
 Heppy based (no long term support)
 ============
 
