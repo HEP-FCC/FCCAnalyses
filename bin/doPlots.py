@@ -24,7 +24,7 @@ def mapHistos(var, label, sel, param):
         for f in signal[s]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print 'file {} does not exist, skipp'.format(fin)
+                print 'file {} does not exist, skip'.format(fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -43,7 +43,7 @@ def mapHistos(var, label, sel, param):
         for f in backgrounds[b]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print 'file {} does not exist, skipp'.format(fin)
+                print 'file {} does not exist, skip'.format(fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -141,7 +141,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         if bwidth.is_integer():
             ylabel+=' / {} {}'.format(int(bwidth), unit)
         else:
-            ylabel+=' / {:.1f} {}'.format(bwidth, unit)
+            ylabel+=' / {:.2f} {}'.format(bwidth, unit)
 
     for h in iterh:
       sumhistos.Add(h)
