@@ -12,7 +12,7 @@ yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
 outdir         = 'Outputs/FCCee/ZH_Zmumu/plots/'
 
-variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m']
+variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m','leptonic_recoil_m_zoom']
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
@@ -43,9 +43,9 @@ plots['ZH_2'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
              }
 
 legend = {}
-legend['ZH'] = 'ZH boson'
-legend['WW'] = 'WW boson'
-legend['ZZ'] = 'ZZ boson'
+legend['ZH'] = 'ZH'
+legend['WW'] = 'WW'
+legend['ZZ'] = 'ZZ'
 legend['VV'] = 'VV boson'
 
 
