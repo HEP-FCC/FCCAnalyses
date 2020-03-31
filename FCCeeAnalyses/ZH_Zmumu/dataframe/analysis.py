@@ -18,7 +18,7 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print " done"
