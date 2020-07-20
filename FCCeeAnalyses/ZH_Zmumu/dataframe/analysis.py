@@ -70,6 +70,12 @@ class analysis():
                      .Define("zed_leptonic_recoil",  "recoil(240)(zed_leptonic)")
                       # write branch with recoil mass
                      .Define("zed_leptonic_recoil_m","get_mass(zed_leptonic_recoil)") 
+
+                      # find Higgs candidates from b jets resonances
+                     .Define("higgs_hadronic_b",   "JetResonanceBuilder(25, 125)(selected_bs)")
+                      # write branch with zed mass
+                     .Define("higgs_hadronic_b_m", "get_mass(higgs_hadronic_b)")
+ 
                      )
 
         
@@ -89,6 +95,7 @@ class analysis():
                 "zed_hadronic_b_pt",
                 "zed_hadronic_b_m",
                 "zed_leptonic_recoil_m",
+                "higgs_hadronic_b_m",
                 "nbjets",
                 "njets",
                 "weight",
