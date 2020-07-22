@@ -35,9 +35,9 @@ class analysis():
                       # create branch with muon energy 
                      .Define("selected_muons_e",     "get_e(selected_muons)")
                       # select b-tagged jets with pt > 10 GeV
-                     .Define("jets_10_bs",           "selectJets(10, true)(efjets, efbTags)")
+                     .Define("jets_10_bs",           "selectJets(10, true)(jets, bTags)")
                       # select light jets  with pt > 10 Gev
-                     .Define("jets_10_lights",       "selectJets(10, false)(efjets, efbTags)")
+                     .Define("jets_10_lights",       "selectJets(10, false)(jets, bTags)")
                       # final b-jet selection: unmatched jets_10_bs  
                      .Define("selected_bs",          "noMatchJets(0.2)(jets_10_bs, selected_muons)")
                       # final light-jet selection: unmatched jets_10_lights
@@ -103,14 +103,18 @@ class analysis():
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
 
-# example call
+# example call for standalone file
 # python FCCeeAnalyses/ZH_Zmumu/dataframe/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
 if __name__ == "__main__":
 
-  outfile = "tree.root"
-  infile = sys.argv[1]
-  ncpus = 0
-  analysis = analysis(infile, outfile, ncpus)
-  analysis.run()
+    if len(sys.argv)==1:
+        print "usage:"
+        print "python ",sys.argv[0]," file.root"
+        sys.exit(3)
+    infile = sys.argv[1]
+    outfile = infile.split('/')[-1].replace('.root','_presel.root')
+    ncpus = 0
+    analysis = analysis(infile, outfile, ncpus)
+    analysis.run()
 
 
