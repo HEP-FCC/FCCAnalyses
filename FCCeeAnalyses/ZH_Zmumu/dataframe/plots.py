@@ -6,23 +6,24 @@ ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow #mu^{+}#mu^{-} + X"
 delphesVersion = "3.4.2"
 energy         = 240.0
 collider       = "FCC-ee"
-inputDir       = "Outputs/FCCee/ZH_Zmumu/"
+inputDir       = "FCCee/ZH_Zmumu/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
-outdir         = 'Outputs/FCCee/ZH_Zmumu/plots/'
+outdir         = 'FCCee/ZH_Zmumu/plots/'
 
-variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m','leptonic_recoil_m_zoom']
+variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m','leptonic_recoil_m_zoom','higgs_hadronic_b_mass']
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['ZH']   = ["sel0","sel1","sel2"]
+selections['ZH']   = ["sel0","sel1","sel2","sel3"]
 selections['ZH_2'] = ["sel0","sel2"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: N_{Z} = 1"
 extralabel['sel1'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV"
 extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
+extralabel['sel3'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
 
 
 colors = {}

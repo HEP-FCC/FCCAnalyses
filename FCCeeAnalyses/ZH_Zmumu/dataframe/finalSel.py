@@ -2,7 +2,7 @@
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "/afs/cern.ch/user/h/helsens/FCCsoft/FCCAnalyses/Outputs/FCCee/ZH_Zmumu/"
+baseDir  = "FCCee/ZH_Zmumu/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = "/afs/cern.ch/work/h/helsens/public/FCCDicts/FCCee_procDict_fcc_v01.json"
@@ -12,7 +12,8 @@ process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
 cut_list = {"sel0":"zed_leptonic_m.size() == 1",
             "sel1":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100",
-            "sel2":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100 && nbjets==2"
+            "sel2":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100 && nbjets==2",
+            "sel3":"zed_leptonic_m.size() == 1 && higgs_hadronic_b_m.size() ==1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100 && nbjets==2"
             }
 
 
@@ -24,6 +25,7 @@ variables = {
     "leptonic_recoil_m":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":0,"xmax":200},
     "leptonic_recoil_m_zoom":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":120,"xmax":140},
     "leptonic_recoil_m_zoom2":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":200,"xmin":120,"xmax":140},
+    "higgs_hadronic_b_mass":{"name":"higgs_hadronic_b_m","title":"Higgs hadronic bb mass [GeV]","bin":100,"xmin":0,"xmax":200},
 }
 
 ###Number of CPUs to use

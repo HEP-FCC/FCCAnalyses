@@ -60,8 +60,14 @@ class runDataFrameFinal():
                 exit(3)
             tfin = ROOT.TFile.Open(fin)
             tfin.cd()
-            events = tfin.eventsProcessed.GetVal()
-            processEvents[pr]=events
+            found=False
+            for key in tfin.GetListOfKeys():
+                if 'eventsProcessed' == key.GetName():
+                    events = tfin.eventsProcessed.GetVal()
+                    processEvents[pr]=events
+                    found=True
+            if not found:
+                processEvents[pr]=1
             tfin.Close()
 
         for cut in self.cuts:
@@ -86,7 +92,10 @@ class runDataFrameFinal():
                 for v in self.variables:
                     model = ROOT.RDF.TH1DModel(v, ";{};".format(self.variables[v]["title"]), self.variables[v]["bin"], self.variables[v]["xmin"],  self.variables[v]["xmax"])
                     h     = snapshot_tdf.Histo1D(model,self.variables[v]["name"])
-                    h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
+                    try :
+                        h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
+                    except KeyError:
+                        h.Scale(1./h.Integral(0,-1))
                     h.Write()
                 tf.Close()
 

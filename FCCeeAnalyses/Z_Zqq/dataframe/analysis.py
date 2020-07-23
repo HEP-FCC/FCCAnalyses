@@ -62,3 +62,17 @@ for branchName in [
                   ]:
     branchList.push_back(branchName)
 df2.Snapshot("events", "tree.root", branchList)
+
+# example call for standalone file
+# python FCCeeAnalyses/ZH_Zmumu/dataframe/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
+if __name__ == "__main__":
+
+    if len(sys.argv)==1:
+        print "usage:"
+        print "python ",sys.argv[0]," file.root"
+        sys.exit(3)
+    infile = sys.argv[1]
+    outfile = infile.split('/')[-1].replace('.root','_presel.root')
+    ncpus = 0
+    analysis = analysis(infile, outfile, ncpus)
+    analysis.run()
