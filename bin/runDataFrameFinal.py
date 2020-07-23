@@ -58,7 +58,7 @@ class runDataFrameFinal():
             tfin.cd()
             found=False
             for key in tfin.GetListOfKeys():
-                if 'eventsProcessed' == key:
+                if 'eventsProcessed' == key.GetName():
                     events = tfin.eventsProcessed.GetVal()
                     processEvents[pr]=events
                     found=True

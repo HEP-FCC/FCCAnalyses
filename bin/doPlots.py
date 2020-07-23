@@ -342,7 +342,7 @@ def printCanvas(canvas, name, formats, directory):
 
     if format != "":
         if not os.path.exists(directory) :
-                os.system("mkdir "+directory)
+                os.system("mkdir -p "+directory)
         for f in formats:
             outFile = os.path.join(directory, name) + "." + f
             canvas.SaveAs(outFile)
