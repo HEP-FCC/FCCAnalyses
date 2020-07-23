@@ -1,6 +1,7 @@
 import ROOT
 import json
 import sys
+import os
 
 class runDataFrameFinal():
 
@@ -54,6 +55,9 @@ class runDataFrameFinal():
         processEvents={}
         for pr in self.processes:
             fin    = self.baseDir+pr+'.root' #input file
+            if not os.path.isfile(fin):
+                print ('file ',fin,'  does not exist. exit')
+                exit(3)
             tfin = ROOT.TFile.Open(fin)
             tfin.cd()
             found=False
