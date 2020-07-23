@@ -112,9 +112,16 @@ if __name__ == "__main__":
         print "python ",sys.argv[0]," file.root"
         sys.exit(3)
     infile = sys.argv[1]
-    outfile = infile.split('/')[-1].replace('.root','_presel.root')
+    outDir = 'FCCee/'+sys.argv[0].split('/')[1]+'/'
+    import os
+    os.system("mkdir -p {}".format(outDir))
+    outfile = outDir+infile.split('/')[-1]
     ncpus = 0
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 
-
+    tf = ROOT.TFile(infile)
+    entries = tf.events.GetEntries()
+    p = ROOT.TParameter(int)( "eventsProcessed", entries)
+    outf=ROOT.TFile(outfile,"UPDATE")
+    p.Write()
