@@ -1,3 +1,5 @@
+from common_defaults import deffccdicts
+
 import os
 import copy
 import heppy.framework.config as cfg
@@ -9,14 +11,14 @@ import imp
 logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 comp = cfg.Component(
     'example',
      files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/p8_pp_ExcitedQ_10TeV_qq/events_145027450.root"]
      #files = ["/eos/experiment/fcc/helhc/generation/DelphesEvents/helhc_v01/mgp8_pp_jj_5f_HT_2000_5000/events_163309325.root"]
 )
 
-sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/HELHC_heppySampleList_helhc_v01.py')
+sample=imp.load_source('heppylist', os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + 'HELHC_heppySampleList_helhc_v01.py')
 
 selectedComponents = [
     sample.p8_pp_ExcitedQ_2TeV_qq,
