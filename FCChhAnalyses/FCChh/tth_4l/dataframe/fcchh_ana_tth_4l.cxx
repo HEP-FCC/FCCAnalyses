@@ -7,7 +7,7 @@
 #include "datamodel/ParticleData.h"
 #include "datamodel/LorentzVector.h"
 #include "datamodel/JetData.h"
-#include "datamodel/FloatData.h"
+#include "datamodel/FloatValueData.h"
 #include "datamodel/TaggedParticleData.h"
 #include "datamodel/TaggedJetData.h"
 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
                       .Define("selected_lights", noMatchJets(0.2), {"jets_30_lights", "selected_leptons"})
                       .Define("nbjets", get_njets, {"selected_bs"})
                       .Define("njets", get_njets2, {"selected_bs", "selected_lights"})
-                      .Define("weight", id_float_legacy, {"mcEventWeights"})
+                      .Define("weight", id_float, {"mcEventWeights"})
                       .Define("n_selected_leptons", get_nparticles, {"selected_leptons"})
                     ;
   auto nentries = selectors.Count();

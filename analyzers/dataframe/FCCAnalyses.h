@@ -16,9 +16,6 @@
 #include "datamodel/Point.h"
 #include "datamodel/LorentzVector.h"
 #include "datamodel/FloatValueData.h"
-// legacy
-#include "datamodel/FloatData.h"
-
 
 
 /// transverse mass 
@@ -129,9 +126,6 @@ ROOT::VecOps::RVec<fcc::ParticleData> operator()(ROOT::VecOps::RVec<fcc::JetData
 
 /// cast FloatValueData to a primitive float
 ROOT::VecOps::RVec<float> id_float(ROOT::VecOps::RVec<fcc::FloatValueData> x);
-
-/// cast FloatData (used in earlier versions of fcc-edm) to a primitive float
-ROOT::VecOps::RVec<float> id_float_legacy(ROOT::VecOps::RVec<fcc::FloatData> x);
 
 /// return the masses of the input particles
 ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<fcc::ParticleData> x); 

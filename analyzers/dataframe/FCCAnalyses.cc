@@ -188,14 +188,6 @@ ROOT::VecOps::RVec<float> id_float(ROOT::VecOps::RVec<fcc::FloatValueData> x) {
   return result;
 }
 
-ROOT::VecOps::RVec<float> id_float_legacy(ROOT::VecOps::RVec<fcc::FloatData> x) {
-  ROOT::VecOps::RVec<float> result;
-  for (auto & p: x) {
-    result.push_back(p.value);
-  }
-  return result;
-}
-
 ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<fcc::ParticleData> x) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: x) {

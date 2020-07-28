@@ -20,7 +20,7 @@
 #pragma link C++ function merge_particles;
 #pragma link C++ class ResonanceBuilder;
 #pragma link C++ function id_float;
-#pragma link C++ function id_float_legacy;
+
 #pragma link C++ function get_mass;
 #pragma link C++ function get_n_particles;
 #pragma link C++ function get_n_particles_rvec;

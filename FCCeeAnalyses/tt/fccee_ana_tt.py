@@ -32,7 +32,7 @@ df2 = df.Define("selected_electrons",  "selectParticlesPtIso(10, 0.4)(electrons,
         .Define("selected_lights",     "noMatchJets(0.2)(jets_10_lights, selected_leptons)") \
         .Define("nbjets",              "get_njets(selected_bs)") \
         .Define("njets",               "get_njets2(selected_bs, selected_lights)") \
-        .Define("weight",              "id_float_legacy(mcEventWeights)") \
+        .Define("weight",              "id_float(mcEventWeights)") \
         .Define("n_selected_electrons","get_nparticles(electrons)") \
         
          
