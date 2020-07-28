@@ -1,3 +1,5 @@
+from common_defaults import deffccdicts
+
 import os, sys
 import copy, math
 import heppy.framework.config as cfg
@@ -8,7 +10,7 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/HELHC_heppySampleList_helhc_v01.py')
+sample=imp.load_source('heppylist', os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + 'HELHC_heppySampleList_helhc_v01.py')
 
 comp = cfg.Component(
     'example',

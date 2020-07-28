@@ -1,3 +1,5 @@
+from common_defaults import deffccdicts
+
 import os, sys
 import copy
 import heppy.framework.config as cfg
@@ -9,7 +11,7 @@ reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
 # for the sample lists
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 
 
 # pre-produced input files

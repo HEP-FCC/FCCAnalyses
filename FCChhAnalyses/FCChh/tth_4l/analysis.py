@@ -1,3 +1,5 @@
+from common_defaults import deffccdicts
+
 import os, sys
 import imp
 import copy
@@ -9,8 +11,8 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
-sample=imp.load_source('heppylist', '/afs/cern.ch/work/h/helsens/public/FCCDicts/FCC_heppySampleList_fcc_v02.py')
+sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
+sample=imp.load_source('heppylist', os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + 'FCC_heppySampleList_fcc_v02.py')
 
 
 comps = cfg.Component(

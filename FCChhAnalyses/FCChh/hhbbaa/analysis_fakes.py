@@ -1,3 +1,5 @@
+from common_defaults import deffccdicts
+
 import os, sys, math
 import copy
 import heppy.framework.config as cfg
@@ -8,7 +10,7 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
+sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 
 comp = cfg.Component(
     'example',
