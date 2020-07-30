@@ -11,13 +11,13 @@ import imp
 logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
-sys.path.append(os.path.join(os.environ['FCCDICTSDIR'], '') + '')
+sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 comp = cfg.Component(
     'example',
      files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/p8_pp_ExcitedQ_30TeV_qq/events_113722907.root"]
 )
 
-sample=imp.load_source('heppylist', os.path.join(os.environ['FCCDICTSDIR'], '') + 'FCC_heppySampleList_fcc_v02.py')
+sample=imp.load_source('heppylist', os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + 'FCC_heppySampleList_fcc_v02.py')
 
 selectedComponents = [
 

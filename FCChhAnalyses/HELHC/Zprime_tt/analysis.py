@@ -10,7 +10,7 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sample=imp.load_source('heppylist', os.path.join(os.environ['FCCDICTSDIR'], '') + 'HELHC_heppySampleList_helhc_v01.py')
+sample=imp.load_source('heppylist', os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + 'HELHC_heppySampleList_helhc_v01.py')
 
 comp = cfg.Component(
     'example',

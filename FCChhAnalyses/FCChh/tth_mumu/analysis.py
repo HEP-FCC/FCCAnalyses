@@ -11,7 +11,7 @@ reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
 # for the sample lists
-sys.path.append(os.path.join(os.environ['FCCDICTSDIR'], '') + '')
+sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 
 
 # pre-produced input files

@@ -10,7 +10,7 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sys.path.append(os.path.join(os.environ['FCCDICTSDIR'], '') + '')
+sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 
 comp = cfg.Component(
     'example',
