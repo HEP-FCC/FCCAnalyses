@@ -17,7 +17,7 @@
 #include "datamodel/LorentzVector.h"
 #include "datamodel/FloatValueData.h"
 // legacy
-#include "datamodel/FloatData.h"
+#include "utilities/FloatData.h"
 
 
 
