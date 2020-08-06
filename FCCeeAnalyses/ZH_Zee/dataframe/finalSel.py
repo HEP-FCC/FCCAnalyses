@@ -1,11 +1,18 @@
 from common_defaults import deffccdicts
 
 #python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py 
-import os
+import os, sys
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "/home/ganis/local/fcc/work/tutorials/aug2020/ch/FCCAnalyses/Outputs/FCCee/ZH_Zmumu/"
+defbaseDir = os.path.join(os.getenv('PWD',''), '') + "FCCAnalyses/Outputs/FCCee/ZH_Zmumu/"
+baseDir = os.path.join(os.getenv('FCCANAOUT', defbaseDir), '')
+if not os.path.exists(baseDir):
+    try:
+        os.makedirs(baseDir)
+    except:
+        print("Output directory " , baseDir ,  " could not be created - exit")
+        sys.exit(1)
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v01.json"
