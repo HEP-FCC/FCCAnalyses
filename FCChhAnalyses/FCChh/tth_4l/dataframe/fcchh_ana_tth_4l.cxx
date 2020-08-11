@@ -10,7 +10,7 @@
 #include "datamodel/TaggedParticleData.h"
 #include "datamodel/TaggedJetData.h"
 // Legacy class
-#include "utilities/FloatData.h"
+#include "datamodel/FloatData.h"
 
 #include "FCCAnalyses.h"
 
