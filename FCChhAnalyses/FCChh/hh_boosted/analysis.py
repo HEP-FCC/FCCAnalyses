@@ -14,7 +14,9 @@ sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_hhj_lambda100_5f_hhbbbb/events_000000486.root"]
+     #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_hhj_lambda100_5f_hhbbbb/events_000000486.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_hh_lambda100_5f_htautau/events_000000242.root"]
+
 )
 
 from FCC_heppySampleList_fcc_v02 import *
@@ -45,7 +47,7 @@ mgp8_pp_bbbbj_QCD.splitFactor = 130
 mgp8_pp_bbbbj_QCDQED.splitFactor = 130
 mgp8_pp_bbbbj_QED.splitFactor = 50
 
-#selectedComponents = [comp]
+selectedComponents = [comp]
 
 from heppy.analyzers.fcc.Reader import Reader
 source = cfg.Analyzer(

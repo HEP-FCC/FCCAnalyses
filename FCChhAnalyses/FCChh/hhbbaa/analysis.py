@@ -15,50 +15,343 @@ sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 comp = cfg.Component(
     'example',
      #files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v01/mgp8_pp_hh01j_5f/events0.root"]
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_hh_lambda100_5f_haa/events_000000127.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v03/pwp8_pp_hh_lambda098_5f_hhbbaa/events_000021883.root"]
+
 )
 
 from FCC_heppySampleList_fcc_v02 import *
+from FCC_heppySampleList_fcc_v03 import *
 
 selectedComponents = [
-                      mgp8_pp_jjaa_5f,
-                      mgp8_pp_hh_lambda090_5f_haa,
-                      mgp8_pp_hh_lambda095_5f_haa,
-                      mgp8_pp_hh_lambda096_5f_haa,
-                      mgp8_pp_hh_lambda097_5f_haa,
-                      mgp8_pp_hh_lambda098_5f_haa,
-                      mgp8_pp_hh_lambda099_5f_haa,
-                      mgp8_pp_hh_lambda100_5f_haa,
-                      mgp8_pp_hh_lambda101_5f_haa,
-                      mgp8_pp_hh_lambda102_5f_haa,
-                      mgp8_pp_hh_lambda103_5f_haa,
-                      mgp8_pp_hh_lambda104_5f_haa,
-                      mgp8_pp_hh_lambda105_5f_haa,
-                      mgp8_pp_hh_lambda110_5f_haa,
-                      mgp8_pp_tth01j_5f_haa,
-                     ]
+
+                     mgp8_pp_vbfhh_lambda000_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda020_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda040_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda060_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda070_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda080_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda085_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda090_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda092_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda094_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda096_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda097_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda098_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda099_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda100_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda101_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda102_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda103_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda104_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda106_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda108_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda110_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda120_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda130_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda140_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda145_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda150_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda155_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda160_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda170_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda180_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda190_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda200_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda220_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda240_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda260_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda280_5f_hhbbaa,
+                     mgp8_pp_vbfhh_lambda300_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda000_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda020_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda040_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda060_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda070_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda080_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda085_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda090_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda092_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda094_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda096_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda097_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda098_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda099_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda100_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda101_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda102_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda103_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda104_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda106_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda108_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda110_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda120_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda130_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda140_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda145_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda150_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda155_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda160_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda170_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda180_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda190_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda200_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda220_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda240_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda260_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda280_5f_hhbbaa,
+                     mgp8_pp_tthh_lambda300_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda000_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda020_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda040_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda060_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda070_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda080_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda085_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda090_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda092_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda094_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda096_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda097_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda098_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda099_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda100_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda101_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda102_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda103_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda104_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda106_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda108_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda110_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda120_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda130_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda140_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda145_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda150_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda155_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda160_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda170_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda180_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda190_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda200_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda220_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda240_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda260_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda280_5f_hhbbaa,
+                     mgp8_pp_vhh_lambda300_5f_hhbbaa,
+                     pwp8_pp_hh_lambda000_5f_hhbbaa,
+                     pwp8_pp_hh_lambda020_5f_hhbbaa,
+                     pwp8_pp_hh_lambda040_5f_hhbbaa,
+                     pwp8_pp_hh_lambda060_5f_hhbbaa,
+                     pwp8_pp_hh_lambda070_5f_hhbbaa,
+                     pwp8_pp_hh_lambda080_5f_hhbbaa,
+                     pwp8_pp_hh_lambda085_5f_hhbbaa,
+                     pwp8_pp_hh_lambda090_5f_hhbbaa,
+                     pwp8_pp_hh_lambda092_5f_hhbbaa,
+                     pwp8_pp_hh_lambda094_5f_hhbbaa,
+                     pwp8_pp_hh_lambda096_5f_hhbbaa,
+                     pwp8_pp_hh_lambda097_5f_hhbbaa,
+                     pwp8_pp_hh_lambda098_5f_hhbbaa,
+                     pwp8_pp_hh_lambda099_5f_hhbbaa,
+                     pwp8_pp_hh_lambda100_5f_hhbbaa,
+                     pwp8_pp_hh_lambda101_5f_hhbbaa,
+                     pwp8_pp_hh_lambda102_5f_hhbbaa,
+                     pwp8_pp_hh_lambda103_5f_hhbbaa,
+                     pwp8_pp_hh_lambda104_5f_hhbbaa,
+                     pwp8_pp_hh_lambda106_5f_hhbbaa,
+                     pwp8_pp_hh_lambda108_5f_hhbbaa,
+                     pwp8_pp_hh_lambda110_5f_hhbbaa,
+                     pwp8_pp_hh_lambda120_5f_hhbbaa,
+                     pwp8_pp_hh_lambda130_5f_hhbbaa,
+                     pwp8_pp_hh_lambda140_5f_hhbbaa,
+                     pwp8_pp_hh_lambda145_5f_hhbbaa,
+                     pwp8_pp_hh_lambda150_5f_hhbbaa,
+                     pwp8_pp_hh_lambda155_5f_hhbbaa,
+                     pwp8_pp_hh_lambda160_5f_hhbbaa,
+                     pwp8_pp_hh_lambda170_5f_hhbbaa,
+#                     pwp8_pp_hh_lambda180_5f_hhbbaa,
+                     pwp8_pp_hh_lambda190_5f_hhbbaa,
+                     pwp8_pp_hh_lambda200_5f_hhbbaa,
+                     pwp8_pp_hh_lambda220_5f_hhbbaa,
+                     pwp8_pp_hh_lambda240_5f_hhbbaa,
+                     pwp8_pp_hh_lambda260_5f_hhbbaa,
+                     pwp8_pp_hh_lambda280_5f_hhbbaa,
+                     pwp8_pp_hh_lambda300_5f_hhbbaa,
+
+                     mgp8_pp_h012j_5f_haa,
+                     mgp8_pp_vbf_h01j_5f_haa,
+                     mgp8_pp_vh012j_5f_haa,
+                     mgp8_pp_tth01j_5f_haa,
+                     mgp8_pp_jjaa_5f,
+                     
+
+]
 
 
 mgp8_pp_jjaa_5f.splitFactor = 400
-mgp8_pp_hh_lambda090_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda095_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda096_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda097_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda098_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda099_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda100_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda101_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda102_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda103_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda104_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda105_5f_haa.splitFactor = 20
-mgp8_pp_hh_lambda110_5f_haa.splitFactor = 20
+
+mgp8_pp_vbf_h01j_5f_haa.splitFactor = 55
+mgp8_pp_vh012j_5f_haa.splitFactor = 25
 mgp8_pp_tth01j_5f_haa.splitFactor = 50
+mgp8_pp_h012j_5f_haa.splitFactor = 50
+
+pwp8_pp_hh_lambda000_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda020_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda040_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda060_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda070_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda080_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda085_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda090_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda092_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda094_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda096_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda097_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda098_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda099_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda100_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda101_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda102_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda103_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda104_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda106_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda108_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda110_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda120_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda130_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda140_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda145_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda150_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda155_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda160_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda170_5f_hhbbaa.splitFactor = 50
+#pwp8_pp_hh_lambda180_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda190_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda200_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda220_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda240_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda260_5f_hhbbaa.splitFactor = 50
+pwp8_pp_hh_lambda280_5f_hhbbaa.splitFactor = 5
+pwp8_pp_hh_lambda300_5f_hhbbaa.splitFactor = 50
 
 
+mgp8_pp_vbfhh_lambda000_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda020_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda040_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda060_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda070_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda080_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda085_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda090_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda092_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda094_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda096_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda097_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda098_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda099_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda100_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda101_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda102_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda103_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda104_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda106_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda108_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda110_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda120_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda130_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda140_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda145_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda150_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda155_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda160_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda170_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda180_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda190_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda200_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda220_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda240_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda260_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda280_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vbfhh_lambda300_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda000_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda020_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda040_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda060_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda070_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda080_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda085_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda090_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda092_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda094_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda096_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda097_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda098_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda099_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda100_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda101_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda102_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda103_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda104_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda106_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda108_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda110_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda120_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda130_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda140_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda145_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda150_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda155_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda160_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda170_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda180_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda190_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda200_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda220_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda240_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda260_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda280_5f_hhbbaa.splitFactor = 5
+mgp8_pp_tthh_lambda300_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda000_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda020_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda040_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda060_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda070_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda080_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda085_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda090_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda092_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda094_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda096_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda097_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda098_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda099_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda100_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda101_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda102_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda103_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda104_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda106_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda108_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda110_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda120_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda130_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda140_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda145_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda150_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda155_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda160_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda170_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda180_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda190_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda200_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda220_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda240_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda260_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda280_5f_hhbbaa.splitFactor = 5
+mgp8_pp_vhh_lambda300_5f_hhbbaa.splitFactor = 5
 
 # dummy, needs to be here FlatTreeAnalyzer
 mgp8_pp_jjja_5f.splitFactor = 1000
+
 
 
 #selectedComponents = [comp]
