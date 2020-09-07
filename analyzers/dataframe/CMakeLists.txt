@@ -10,8 +10,8 @@ include_directories(
         "${FCCEDM_INCLUDE_DIRS}"
         )
 
-file(GLOB sources FCC*.cc)
-file(GLOB headers FCC*.h)
+file(GLOB sources *.cc)
+file(GLOB headers *.h)
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses FCCAnalyses.h LINKDEF LinkDef.h)
 
