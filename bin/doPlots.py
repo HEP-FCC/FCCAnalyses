@@ -24,7 +24,7 @@ def mapHistos(var, label, sel, param):
         for f in signal[s]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print 'file {} does not exist, skip'.format(fin)
+                print ('file {} does not exist, skip'.format(fin))
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -43,7 +43,7 @@ def mapHistos(var, label, sel, param):
         for f in backgrounds[b]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print 'file {} does not exist, skip'.format(fin)
+                print ('file {} does not exist, skip'.format(fin))
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -104,7 +104,7 @@ def runPlots(var,param,hsignal,hbackgrounds,extralab):
         if 'log' in param.yaxis:
             drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , True , histos, colors, param.ana_tex, extralab)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
-            print 'unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats)
+            print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
 
     if 'nostack' in param.stacksig:
         if 'lin' in param.yaxis:
@@ -112,9 +112,9 @@ def runPlots(var,param,hsignal,hbackgrounds,extralab):
         if 'log' in param.yaxis:
             drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , False , histos, colors, param.ana_tex, extralab)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
-            print 'unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats)
+            print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
     if 'stack' not in param.stacksig and 'nostack' not in param.stacksig:
-        print 'unrecognised option in stacksig, should be [\'stack\',\'nostack\']'.format(param.formats)
+        print ('unrecognised option in stacksig, should be [\'stack\',\'nostack\']'.format(param.formats))
 
 
 #_____________________________________________________________________________________________________________
@@ -264,7 +264,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     highX=hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.)
     #
     if escape_scale_Xaxis==False:
-      for i_bin in xrange( 1, hStacklast.GetNbinsX()+1 ):
+      for i_bin in range( 1, hStacklast.GetNbinsX()+1 ):
          bkg_val=hStacklast.GetBinContent(i_bin)
          sig_val=histos[0].GetBinContent(i_bin)
          if bkg_val/maxh>0.1 and i_bin<15 and lowX_is0==True :
@@ -365,7 +365,7 @@ if __name__=="__main__":
         
 
     for var in param.variables:
-        for label, sels in param.selections.iteritems():
+        for label, sels in param.selections.items():
             for sel in sels:
                 hsignal,hbackgrounds=mapHistos(var,label,sel, param)
                 runPlots(var+"_"+label+"_"+sel,param,hsignal,hbackgrounds,param.extralabel[sel])
