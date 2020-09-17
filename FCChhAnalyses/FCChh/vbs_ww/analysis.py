@@ -14,23 +14,95 @@ sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_wwjj_2l2v_LL/events_000000001.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_vbs_wwss_kw_090_TT/events_200758428.root"]
 )
 
 from FCC_heppySampleList_fcc_v02 import *
 
 selectedComponents = [
-                       mgp8_pp_wwjj_2l2v_LL,
-                       mgp8_pp_wwjj_2l2v_TT,
-                       mgp8_pp_wwjj_2l2v_TL,
-		       
-		      ]
+                       mgp8_pp_wz012j_4f_wzlllv,
+		       mgp8_pp_vbs_wwss_kw_050_TT,
+		       mgp8_pp_vbs_wwss_kw_050_TL,
+		       mgp8_pp_vbs_wwss_kw_050_LL,
+		       mgp8_pp_vbs_wwss_kw_070_TT,
+		       mgp8_pp_vbs_wwss_kw_070_TL,
+		       mgp8_pp_vbs_wwss_kw_070_LL,
+		       mgp8_pp_vbs_wwss_kw_080_TT,
+		       mgp8_pp_vbs_wwss_kw_080_TL,
+		       mgp8_pp_vbs_wwss_kw_080_LL,
+		       mgp8_pp_vbs_wwss_kw_090_TT,
+		       mgp8_pp_vbs_wwss_kw_090_TL,
+		       mgp8_pp_vbs_wwss_kw_090_LL,
+		       mgp8_pp_vbs_wwss_kw_090_TT,
+		       mgp8_pp_vbs_wwss_kw_090_TL,
+		       mgp8_pp_vbs_wwss_kw_090_LL,
+		       mgp8_pp_vbs_wwss_kw_095_TT,
+		       mgp8_pp_vbs_wwss_kw_095_TL,
+		       mgp8_pp_vbs_wwss_kw_095_LL,
+                       mgp8_pp_vbs_wwss_kw_100_TT,
+		       mgp8_pp_vbs_wwss_kw_100_TL,
+		       mgp8_pp_vbs_wwss_kw_100_LL,
+		       mgp8_pp_vbs_wwss_kw_102_TT,
+		       mgp8_pp_vbs_wwss_kw_102_TL,
+		       mgp8_pp_vbs_wwss_kw_102_LL,
+		       mgp8_pp_vbs_wwss_kw_105_TT,
+		       mgp8_pp_vbs_wwss_kw_105_TL,
+		       mgp8_pp_vbs_wwss_kw_105_LL,
+		       mgp8_pp_vbs_wwss_kw_110_TT,
+		       mgp8_pp_vbs_wwss_kw_110_TL,
+		       mgp8_pp_vbs_wwss_kw_110_LL,
+		       mgp8_pp_vbs_wwss_kw_120_TT,
+		       mgp8_pp_vbs_wwss_kw_120_TL,
+		       mgp8_pp_vbs_wwss_kw_120_LL,
+		       mgp8_pp_vbs_wwss_kw_130_TT,
+		       mgp8_pp_vbs_wwss_kw_130_TL,
+		       mgp8_pp_vbs_wwss_kw_130_LL,
+		       mgp8_pp_vbs_wwss_kw_150_TT,
+		       mgp8_pp_vbs_wwss_kw_150_TL,
+		       mgp8_pp_vbs_wwss_kw_150_LL,
+                     ]
 
-mgp8_pp_wwjj_2l2v_LL.splitFactor = 3
-mgp8_pp_wwjj_2l2v_TT.splitFactor = 3
-mgp8_pp_wwjj_2l2v_TL.splitFactor = 3
 
-selectedComponents = [comp]
+mgp8_pp_wz012j_4f_wzlllv.splitFactor = 150
+mgp8_pp_vbs_wwss_kw_050_TT.splitFactor = 10
+mgp8_pp_vbs_wwss_kw_050_TL.splitFactor = 6
+mgp8_pp_vbs_wwss_kw_050_LL.splitFactor = 4
+mgp8_pp_vbs_wwss_kw_070_TT.splitFactor = 7
+mgp8_pp_vbs_wwss_kw_070_TL.splitFactor = 4
+mgp8_pp_vbs_wwss_kw_070_LL.splitFactor = 1
+mgp8_pp_vbs_wwss_kw_080_TT.splitFactor = 6
+mgp8_pp_vbs_wwss_kw_080_TL.splitFactor = 3
+mgp8_pp_vbs_wwss_kw_080_LL.splitFactor = 1
+mgp8_pp_vbs_wwss_kw_090_TT.splitFactor = 5
+mgp8_pp_vbs_wwss_kw_090_TL.splitFactor = 3
+mgp8_pp_vbs_wwss_kw_090_LL.splitFactor = 1
+mgp8_pp_vbs_wwss_kw_095_TT.splitFactor = 3
+mgp8_pp_vbs_wwss_kw_095_TL.splitFactor = 4
+mgp8_pp_vbs_wwss_kw_095_LL.splitFactor = 1
+mgp8_pp_vbs_wwss_kw_100_TT.splitFactor = 35
+mgp8_pp_vbs_wwss_kw_100_TL.splitFactor = 1
+mgp8_pp_vbs_wwss_kw_100_LL.splitFactor = 4
+mgp8_pp_vbs_wwss_kw_102_TT.splitFactor = 35
+mgp8_pp_vbs_wwss_kw_102_TL.splitFactor = 20
+mgp8_pp_vbs_wwss_kw_102_LL.splitFactor = 5
+mgp8_pp_vbs_wwss_kw_105_TT.splitFactor = 35
+mgp8_pp_vbs_wwss_kw_105_TL.splitFactor = 20
+mgp8_pp_vbs_wwss_kw_105_LL.splitFactor = 5
+mgp8_pp_vbs_wwss_kw_110_TT.splitFactor = 30
+mgp8_pp_vbs_wwss_kw_110_TL.splitFactor = 20
+mgp8_pp_vbs_wwss_kw_110_LL.splitFactor = 5
+mgp8_pp_vbs_wwss_kw_120_TT.splitFactor = 6
+mgp8_pp_vbs_wwss_kw_120_TL.splitFactor = 5
+mgp8_pp_vbs_wwss_kw_120_LL.splitFactor = 1
+mgp8_pp_vbs_wwss_kw_130_TT.splitFactor = 10
+mgp8_pp_vbs_wwss_kw_130_TL.splitFactor = 7
+mgp8_pp_vbs_wwss_kw_130_LL.splitFactor = 3
+mgp8_pp_vbs_wwss_kw_150_TT.splitFactor = 20
+mgp8_pp_vbs_wwss_kw_150_TL.splitFactor = 10
+mgp8_pp_vbs_wwss_kw_150_LL.splitFactor = 10
+
+
+#selectedComponents = [comp]
 
 
 from FCChhAnalyses.analyzers.Reader import Reader
@@ -110,7 +182,7 @@ jets_30 = cfg.Analyzer(
     'jets_30',
     output = 'jets_30',
     input_objects = 'jets',
-    filter_func = lambda jet: jet.pt()>20.
+    filter_func = lambda jet: jet.pt()>30.
 )
 from heppy.analyzers.Matcher import Matcher
 match_lepton_jets = cfg.Analyzer(
@@ -130,6 +202,31 @@ jets_nolepton = cfg.Analyzer(
 )
 
 from FCChhAnalyses.FCChh.vbs_ww.selection import Selection
+selected_bs = cfg.Analyzer(
+    Selector,
+    'selected_bs',
+    output = 'selected_bs',
+    input_objects = 'jets_nolepton',
+    filter_func = lambda ptc: ptc.tags['bf'] > 0
+)
+
+selected_lights = cfg.Analyzer(
+    Selector,
+    'selected_lights',
+    output = 'selected_lights',
+    input_objects = 'jets_nolepton',
+    filter_func = lambda ptc: ptc.tags['bf'] == 0
+)
+
+# create H boson candidates with bs
+from heppy.FCChhAnalyses.analyzers.LeptonicHiggsBuilder import LeptonicHiggsBuilder
+higgses = cfg.Analyzer(
+      LeptonicHiggsBuilder,
+      output = 'higgses',
+      leptons = 'selected_leptons',
+      pdgid = 25
+)
+
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
@@ -151,6 +248,9 @@ sequence = cfg.Sequence( [
     jets_30,
     match_lepton_jets,
     jets_nolepton,
+    selected_bs,
+    selected_lights,
+    higgses,
     reco_tree,
     ] )
 
