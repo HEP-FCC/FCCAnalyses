@@ -8,6 +8,12 @@ class JetCorrector(Analyzer):
         output_jets = []
         jet_collection  = getattr(event, self.cfg_ana.input_jets)
         corr_collection = getattr(event, self.cfg_ana.input_extra)
+
+        scale = 1.0
+
+        if hasattr(self.cfg_ana, 'scale'):
+            scale = self.cfg_ana.scale
+
         drMax = self.cfg_ana.dr_match
 
         for jet in jet_collection:
@@ -21,6 +27,7 @@ class JetCorrector(Analyzer):
                     jet_tmp += extra.p4()
                     #print "extra dR-> "+str(extra)
 
+            jet_tmp *= scale
             jetfix.p4().SetPtEtaPhiM(jet_tmp.Pt(),jet_tmp.Eta(),jet_tmp.Phi(),jet_tmp.M())
             output_jets.append(jetfix)
             #print "end-> "+str(jetfix)

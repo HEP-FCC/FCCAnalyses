@@ -1,5 +1,3 @@
-from common_defaults import deffccdicts
-
 import os, sys
 import copy
 import heppy.framework.config as cfg
@@ -10,34 +8,36 @@ logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
+sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
      files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_h012j_5f_hlla/events_000001296.root"]
 )
 
-from FCC_heppySampleList_fcc_v02 import *
+from HELHC_heppySampleList_helhc_v01 import *
 
 selectedComponents = [
-                      mgp8_pp_h012j_5f_hlla,
-                      mgp8_pp_tth01j_5f_hlla,
-                      mgp8_pp_vbf_h01j_5f_hlla,
-                      mgp8_pp_vh012j_5f_hlla,
-                      mgp8_pp_llaj_mhcut_5f
+                      mgp8_pp_h012j_5f_HT_0_27000_hlla,
+                      mgp8_pp_tth01j_5f_HT_0_27000_hlla,
+                      mgp8_pp_vbf_h01j_5f_HT_0_27000_hlla,
+                      mgp8_pp_vh012j_5f_HT_0_27000_hlla,
+                      mgp8_pp_lla01j_mhcut_5f,
+                      mgp8_pp_llaj_mhcut_5f,
                       ]
 
-mgp8_pp_h012j_5f_hlla.splitFactor = 50
-mgp8_pp_vbf_h01j_5f_hlla.splitFactor = 50
-mgp8_pp_tth01j_5f_hlla.splitFactor = 50
-mgp8_pp_vh012j_5f_hlla.splitFactor = 50
-mgp8_pp_llaj_mhcut_5f.splitFactor = 100
+mgp8_pp_h012j_5f_HT_0_27000_hlla.splitFactor = 10
+mgp8_pp_vbf_h01j_5f_HT_0_27000_hlla.splitFactor = 5
+mgp8_pp_tth01j_5f_HT_0_27000_hlla.splitFactor = 20
+mgp8_pp_vh012j_5f_HT_0_27000_hlla.splitFactor = 10
 
+mgp8_pp_lla01j_mhcut_5f.splitFactor = 200
+mgp8_pp_llaj_mhcut_5f.splitFactor = 100
 
 #selectedComponents = [comp]
 
 
-from FCChhAnalyses.analyzers.Reader import Reader
+from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
@@ -124,7 +124,7 @@ zeds = cfg.Analyzer(
 
 
 # store interesting quantities into flat ROOT tree
-from FCChhAnalyses.FCChh.hza.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.hza.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
     zeds = 'zeds',

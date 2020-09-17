@@ -39,7 +39,7 @@ class TreeProducer(Analyzer):
     
     def process(self, event):
         self.tree.reset()
-        higgses = getattr(event, self.cfg_ana.higgses)
+        higgses = event.higgses
 
         if len(higgses) > 0:  
             self.tree.fill('weight' , event.weight )

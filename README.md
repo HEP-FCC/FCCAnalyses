@@ -126,6 +126,25 @@ heppy_loop.py Outputs/HELHC FCChhAnalyses/HELHC/Zprime_tt/analysis.py
 but better to run on Batch
 ```
 heppy_batch.py -o FCChhAnalyses/HELHC/Outputs FCChhAnalyses/HELHC/Zprime_tt/analysis.py -b 'bsub -q 8nh < batchScript.sh'
+heppy_batch.py -o FCChhAnalyses/HELHC/Outputs FCChhAnalyses/HELHC/Zprime_tt/analysis.py -b 'run_condor.sh --bulk tttt_condor -f workday'
+-> the --bulk option is necessary to submit all the CHunks into 1 CONDOR job
+-> if do not use --bulk, there will have 1 job per Chunk
+```
+
+The job retry, is as follow :
+heppy_check.py Outdir/*Chunk* -b 'run_condor.sh -f workday'
+-> it will submit each failed Chunks into a single CONDOR job
+```
+
+The queue names of CONDOR :
+ 20 mins -> espresso
+ 1h -> microcentury
+ 2h -> longlunch
+ 8h -> workday
+ 1d -> tomorrow
+ 3d -> testmatch
+ 1w -> nextweek
+
 ```
 
 in order to save time I already produced the outputs, they are stored on eos

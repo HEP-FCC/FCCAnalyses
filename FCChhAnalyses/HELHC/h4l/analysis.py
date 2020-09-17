@@ -1,75 +1,57 @@
-from common_defaults import deffccdicts
-
 import os, sys
 import copy
 import heppy.framework.config as cfg
-import logging
 
+import logging
 # next 2 lines necessary to deal with reimports from ipython
 logging.shutdown()
 reload(logging)
 logging.basicConfig(level=logging.WARNING)
 
-sys.path.append(os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + '')
+sys.path.append('/afs/cern.ch/work/h/helsens/public/FCCDicts/')
 
 comp = cfg.Component(
     'example',
-     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_wwjj_2l2v_LL/events_000000001.root"]
+     files = ["/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v02/mgp8_pp_h012j_5f_hllll/events_000000625.root"]
 )
 
-from FCC_heppySampleList_fcc_v02 import *
+from HELHC_heppySampleList_helhc_v01 import *
 
 selectedComponents = [
-		       mgp8_pp_tt012j_5f,
-		       mgp8_pp_wz012j_4f,
-		       mgp8_pp_zzjj_4l_QED4_QCD0_LL,
-		       mgp8_pp_zzjj_4l_QED4_QCD0_TL,
-		       mgp8_pp_zzjj_4l_QED4_QCD0_TT,
-		       mgp8_pp_zzjj_4l_QED2_QCD2_LL,
-		       mgp8_pp_zzjj_4l_QED2_QCD2_TL,
-		       mgp8_pp_zzjj_4l_QED2_QCD2_TT,
-		       mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_LL,
-		       mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TL,
-		       mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TT,
-		       mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_LL,
-		       mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TL,
-		       mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TT,
-                     ]
+                      mgp8_pp_h012j_5f_HT_0_27000_hllll,
+                      mgp8_pp_tth01j_5f_HT_0_27000_hllll,
+                      mgp8_pp_vbf_h01j_5f_HT_0_27000_hllll,
+                      mgp8_pp_vh012j_5f_HT_0_27000_hllll,
+                      mgp8_pp_llllj_mhcut_5f_HT_20_100,
+                      mgp8_pp_llllj_mhcut_5f_HT_100_400,
+                      mgp8_pp_llllj_mhcut_5f_HT_400_27000,
+                      ]
 
-mgp8_pp_zzjj_4l_QED4_QCD0_LL.splitFactor = 1
-mgp8_pp_zzjj_4l_QED4_QCD0_TL.splitFactor = 4
-mgp8_pp_zzjj_4l_QED4_QCD0_TT.splitFactor = 6
-mgp8_pp_zzjj_4l_QED2_QCD2_LL.splitFactor = 1
-mgp8_pp_zzjj_4l_QED2_QCD2_TL.splitFactor = 4
-mgp8_pp_zzjj_4l_QED2_QCD2_TT.splitFactor = 6
-mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_LL.splitFactor = 1
-mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TL.splitFactor = 4
-mgp8_pp_wwjj_ss_2l2v_QED4_QCD0_TT.splitFactor = 6
-mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_LL.splitFactor = 1
-mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TL.splitFactor = 4
-mgp8_pp_wwjj_ss_2l2v_QED2_QCD2_TT.splitFactor = 6
+mgp8_pp_h012j_5f_HT_0_27000_hllll.splitFactor = 10
+mgp8_pp_vbf_h01j_5f_HT_0_27000_hllll.splitFactor = 5
+mgp8_pp_tth01j_5f_HT_0_27000_hllll.splitFactor = 20
+mgp8_pp_vh012j_5f_HT_0_27000_hllll.splitFactor = 10
+mgp8_pp_llllj_mhcut_5f_HT_20_100.splitFactor = 20
+mgp8_pp_llllj_mhcut_5f_HT_100_400.splitFactor = 20
+mgp8_pp_llllj_mhcut_5f_HT_400_27000.splitFactor = 20
 
-mgp8_pp_tt012j_5f.splitFactor = 150
-mgp8_pp_wz012j_4f.splitFactor = 30
+#selectedComponents = [comp]
 
-selectedComponents = [comp]
-
-
-from FCChhAnalyses.analyzers.Reader import Reader
+from heppy.FCChhAnalyses.analyzers.Reader import Reader
 source = cfg.Analyzer(
     Reader,
 
     weights = 'mcEventWeights',
 
     gen_particles = 'skimmedGenParticles',
-    
-    muons = 'muons',
-    muonITags = 'muonITags',
-    muonsToMC = 'muonsToMC',
 
     electrons = 'electrons',
     electronITags = 'electronITags',
     electronsToMC = 'electronsToMC',
+
+    muons = 'muons',
+    muonITags = 'muonITags',
+    muonsToMC = 'muonsToMC',
 
     jets = 'pfjets04',
     bTags = 'pfbTags04',
@@ -94,8 +76,6 @@ from EventStore import EventStore as Events
 #############################
 
 
-######################## SIMPLE ANALYSIS #####################
-
 # select isolated muons with pT > 5 GeV and relIso < 0.4
 from heppy.analyzers.Selector import Selector
 selected_muons = cfg.Analyzer(
@@ -103,7 +83,7 @@ selected_muons = cfg.Analyzer(
     'selected_muons',
     output = 'selected_muons',
     input_objects = 'muons',
-    filter_func = lambda ptc: ptc.pt()>15 and ptc.iso.sumpt/ptc.pt()<0.1
+    filter_func = lambda ptc: ptc.pt()>5 and ptc.iso.sumpt/ptc.pt()<0.4
 )
 
 # select electrons with pT > 7 GeV and relIso < 0.4
@@ -112,7 +92,7 @@ selected_electrons = cfg.Analyzer(
     'selected_electrons',
     output = 'selected_electrons',
     input_objects = 'electrons',
-    filter_func = lambda ptc: ptc.pt()>15 and ptc.iso.sumpt/ptc.pt()<0.1
+    filter_func = lambda ptc: ptc.pt()>7 and ptc.iso.sumpt/ptc.pt()<0.4
 )
 
 # merge electrons and muons into a single lepton collection
@@ -124,15 +104,13 @@ selected_leptons = cfg.Analyzer(
       output = 'selected_leptons'
 )
 
-###############################################################
-
-# select jet above 20 GeV
+# select jet above 30 GeV
 jets_30 = cfg.Analyzer(
     Selector,
     'jets_30',
     output = 'jets_30',
     input_objects = 'jets',
-    filter_func = lambda jet: jet.pt()>20.
+    filter_func = lambda jet: jet.pt()>30.
 )
 from heppy.analyzers.Matcher import Matcher
 match_lepton_jets = cfg.Analyzer(
@@ -151,32 +129,54 @@ jets_nolepton = cfg.Analyzer(
     filter_func = lambda jet: jet.match is None
 )
 
-from FCChhAnalyses.FCChh.vbs.selection import Selection
-selected_bs = cfg.Analyzer(
-    Selector,
-    'selected_bs',
-    output = 'selected_bs',
-    input_objects = 'jets_nolepton',
-    filter_func = lambda ptc: ptc.tags['bf'] > 0
-)
-
+# select lights with pT > 30 GeV and relIso < 0.4
 selected_lights = cfg.Analyzer(
     Selector,
     'selected_lights',
     output = 'selected_lights',
     input_objects = 'jets_nolepton',
-    filter_func = lambda ptc: ptc.tags['bf'] == 0
+    filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] == 0
 )
 
+# select b's with pT > 30 GeV
+selected_bs = cfg.Analyzer(
+    Selector,
+    'selected_bs',
+    output = 'selected_bs',
+    input_objects = 'jets_nolepton',
+    filter_func = lambda ptc: ptc.pt()>30 and ptc.tags['bf'] > 0
+)
+
+# create Z boson candidates with leptons
+from heppy.analyzers.LeptonicZedBuilder import LeptonicZedBuilder
+zeds = cfg.Analyzer(
+      LeptonicZedBuilder,
+      output = 'zeds',
+      leptons = 'selected_leptons',
+)
+
+# create H boson candidates
+from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
+higgses = cfg.Analyzer(
+      ResonanceBuilder,
+      output = 'higgses',
+      leg_collection = 'zeds',
+      pdgid = 25
+)
+
+# apply event selection. Defined in "analyzers/examples/h4l/selection.py"
+from heppy.FCChhAnalyses.HELHC.h4l.selection import Selection
 selection = cfg.Analyzer(
     Selection,
     instance_label='cuts'
 )
 
 # store interesting quantities into flat ROOT tree
-from FCChhAnalyses.FCChh.vbs.TreeProducer import TreeProducer
+from heppy.FCChhAnalyses.HELHC.h4l.TreeProducer import TreeProducer
 reco_tree = cfg.Analyzer(
     TreeProducer,
+    zeds = 'zeds',
+    higgses = 'higgses',
 )
 
 # definition of a sequence of analyzers,
@@ -189,10 +189,14 @@ sequence = cfg.Sequence( [
     jets_30,
     match_lepton_jets,
     jets_nolepton,
-    selected_bs,
     selected_lights,
+    selected_bs,
+    zeds,
+    higgses,
+    selection,
     reco_tree,
     ] )
+
 
 config = cfg.Config(
     components = selectedComponents,
