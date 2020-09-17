@@ -98,15 +98,15 @@ ROOT::VecOps::RVec<float> eta(ROOT::VecOps::RVec<fcc::MCParticleData> in){
 	 return result;
 }
 
-ROOT::VecOps::RVec<TLorentzVector> tlv(ROOT::VecOps::RVec<fcc::LorentzVector> in){
- ROOT::VecOps::RVec<TLorentzVector> result;
-   TLorentzVector lv;
-	 for (size_t i = 0; i < in.size(); ++i) {
-     lv.SetXYZM(in[i].px, in[i].py, in[i].pz, in[i].mass);
-		 result.push_back(lv);
-	 }
-	 return result;
-}
+//ROOT::VecOps::RVec<TLorentzVector> tlv(ROOT::VecOps::RVec<fcc::LorentzVector> in){
+// ROOT::VecOps::RVec<TLorentzVector> result;
+//   TLorentzVector lv;
+//	 for (size_t i = 0; i < in.size(); ++i) {
+//     lv.SetXYZM(in[i].px, in[i].py, in[i].pz, in[i].mass);
+//		 result.push_back(lv);
+//	 }
+//	 return result;
+//}
 
 ROOT::VecOps::RVec<float> r (ROOT::VecOps::RVec<fcc::Point> in) {
  ROOT::VecOps::RVec<float> result;
@@ -314,7 +314,7 @@ ROOT::VecOps::RVec<fcc::JetData> selectJets::operator()(ROOT::VecOps::RVec<fcc::
 }
 selectParticlesPtIso::selectParticlesPtIso(float arg_min_pt, float arg_max_iso) : m_min_pt(arg_min_pt), m_max_iso(arg_max_iso) {};
 
-ROOT::VecOps::RVec<fcc::ParticleData>  selectParticlesPtIso::operator() (ROOT::VecOps::RVec<fcc::ParticleData> in, ROOT::VecOps::RVec<fcc::TaggedParticleData> iso) {
+ROOT::VecOps::RVec<edm4hep::RecoParticleRefData>  selectParticlesPtIso::operator() (ROOT::VecOps::RVec<edm4hep::RecoParticleRefData> in, ROOT::VecOps::RVec<fcc::TaggedParticleData> iso) {
   ROOT::VecOps::RVec<fcc::ParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
