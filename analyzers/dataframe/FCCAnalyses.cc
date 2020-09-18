@@ -234,6 +234,7 @@ ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<fcc::ParticleData> x) {
   return result;
 }
 
+
 ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<fcc::ParticleData> x) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: x) {
@@ -250,6 +251,46 @@ ROOT::VecOps::RVec<float> get_y(ROOT::VecOps::RVec<fcc::ParticleData> x) {
     TLorentzVector tlv;
     tlv.SetXYZM(p.core.p4.px, p.core.p4.py, p.core.p4.pz, p.core.p4.mass);
     result.push_back(tlv.Rapidity());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_trk_phi(ROOT::VecOps::RVec<fcc::TrackStateData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    result.push_back(p.phi);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_trk_theta(ROOT::VecOps::RVec<fcc::TrackStateData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    result.push_back(p.theta);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_trk_qOverP(ROOT::VecOps::RVec<fcc::TrackStateData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    result.push_back(p.qOverP);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_trk_z0(ROOT::VecOps::RVec<fcc::TrackStateData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    result.push_back(p.z0);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_trk_d0(ROOT::VecOps::RVec<fcc::TrackStateData> x) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: x) {
+    result.push_back(p.d0);
   }
   return result;
 }

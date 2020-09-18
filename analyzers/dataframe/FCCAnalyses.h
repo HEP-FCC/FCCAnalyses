@@ -16,6 +16,7 @@
 #include "datamodel/Point.h"
 #include "datamodel/LorentzVector.h"
 #include "datamodel/FloatValueData.h"
+#include "datamodel/TrackStateCollection.h"
 // legacy
 #include "datamodel/FloatData.h"
 
@@ -112,6 +113,22 @@ ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<fcc::ParticleData> in);
 
 /// concatenate both input vectors and return the resulting vector
 ROOT::VecOps::RVec<fcc::ParticleData> mergeParticles(ROOT::VecOps::RVec<fcc::ParticleData> x, ROOT::VecOps::RVec<fcc::ParticleData> y);
+
+/// return track phi
+ROOT::VecOps::RVec<float> get_trk_phi(ROOT::VecOps::RVec<fcc::TrackStateData> in);
+
+/// return track theta
+ROOT::VecOps::RVec<float> get_trk_theta(ROOT::VecOps::RVec<fcc::TrackStateData> in);
+
+/// return track qOverP
+ROOT::VecOps::RVec<float> get_trk_qOverP(ROOT::VecOps::RVec<fcc::TrackStateData> in);
+
+/// return track d0
+ROOT::VecOps::RVec<float> get_trk_d0(ROOT::VecOps::RVec<fcc::TrackStateData> in);
+
+/// return track z0
+ROOT::VecOps::RVec<float> get_trk_z0(ROOT::VecOps::RVec<fcc::TrackStateData> in);
+
 
 struct ResonanceBuilder {
   int m_resonance_pdgid;
