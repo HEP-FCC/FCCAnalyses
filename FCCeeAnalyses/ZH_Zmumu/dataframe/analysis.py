@@ -69,7 +69,17 @@ class analysis():
                       # calculate recoil of zed_leptonic
                      .Define("zed_leptonic_recoil",  "recoil(240)(zed_leptonic)")
                       # write branch with recoil mass
-                     .Define("zed_leptonic_recoil_m","get_mass(zed_leptonic_recoil)") 
+                     .Define("zed_leptonic_recoil_m","get_mass(zed_leptonic_recoil)")
+                      # create branch with muon track phi 
+                     .Define("muons_trk_phi",     "get_trk_phi(muons_trkCov)")
+                      # create branch with muon track theta 
+                     .Define("muons_trk_theta",   "get_trk_theta(muons_trkCov)")
+                      # create branch with muon track qOverP 
+                     .Define("muons_trk_qOverP",  "get_trk_qOverP(muons_trkCov)")
+                       # create branch with muon track d0 
+                     .Define("muons_trk_d0",      "get_trk_d0(muons_trkCov)")
+                       # create branch with muon track z0 
+                     .Define("muons_trk_z0",      "get_trk_z0(muons_trkCov)") 
                      )
 
         
@@ -89,6 +99,11 @@ class analysis():
                 "zed_hadronic_b_pt",
                 "zed_hadronic_b_m",
                 "zed_leptonic_recoil_m",
+                "muons_trk_phi",
+                "muons_trk_theta",
+                "muons_trk_qOverP",
+                "muons_trk_d0",
+                "muons_trk_z0",
                 "nbjets",
                 "njets",
                 "weight",
