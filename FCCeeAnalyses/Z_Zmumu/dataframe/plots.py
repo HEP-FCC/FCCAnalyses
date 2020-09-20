@@ -2,8 +2,8 @@ import ROOT
 
 # global parameters
 intLumi        = 5.0e+06 #in pb-1
-ana_tex        = "e^{+}e^{-} #rightarrow Z #rightarrow #mu^{+}#mu^{-}"
-delphesVersion = "3.4.2"
+ana_tex        = "e^{+}e^{-} #rightarrow Z/#gamma^{*} #rightarrow #mu^{+}#mu^{-}"
+delphesVersion = "3.4.3pre04"
 energy         = 91.2
 collider       = "FCC-ee"
 inputDir       = "FCCee/Z_Zmumu/"
