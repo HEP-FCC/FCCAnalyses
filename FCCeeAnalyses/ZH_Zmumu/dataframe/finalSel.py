@@ -35,8 +35,6 @@ variables = {
 NUM_CPUS = 10
 
 ###This part is standard to all analyses
-sys.path.append('./bin')
-import runDataFrameFinal as rdf
-#import bin.runDataFrameFinal as rdf
+import bin.runDataFrameFinal as rdf
 myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables)
 myana.run(ncpu=NUM_CPUS)
