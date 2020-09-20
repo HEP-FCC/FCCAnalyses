@@ -80,6 +80,10 @@ class analysis():
                      .Define("muons_trk_d0",      "get_trk_d0(muons_trkCov)")
                        # create branch with muon track z0 
                      .Define("muons_trk_z0",      "get_trk_z0(muons_trkCov)") 
+                      # find Higgs candidates from b jets resonances
+                     .Define("higgs_hadronic_b",   "JetResonanceBuilder(25, 125)(selected_bs)")
+                      # write branch with zed mass
+                     .Define("higgs_hadronic_b_m", "get_mass(higgs_hadronic_b)")
                      )
 
         
@@ -104,6 +108,7 @@ class analysis():
                 "muons_trk_qOverP",
                 "muons_trk_d0",
                 "muons_trk_z0",
+                "higgs_hadronic_b_m",
                 "nbjets",
                 "njets",
                 "weight",
