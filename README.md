@@ -34,7 +34,7 @@ source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
 ```
 
 ```
-source setup.sh
+source ./setup.sh
 mkdir build install
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install
