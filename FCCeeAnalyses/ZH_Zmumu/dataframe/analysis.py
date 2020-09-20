@@ -35,9 +35,9 @@ class analysis():
                       # create branch with muon energy 
                      .Define("selected_muons_e",     "get_e(selected_muons)")
                       # select b-tagged jets with pt > 10 GeV
-                     .Define("jets_10_bs",           "selectJets(10, true)(jets, bTags)")
+                     .Define("jets_10_bs",           "selectJets(10, true)(efjets, efbTags)")
                       # select light jets  with pt > 10 Gev
-                     .Define("jets_10_lights",       "selectJets(10, false)(jets, bTags)")
+                     .Define("jets_10_lights",       "selectJets(10, false)(efjets, efbTags)")
                       # final b-jet selection: unmatched jets_10_bs  
                      .Define("selected_bs",          "noMatchJets(0.2)(jets_10_bs, selected_muons)")
                       # final light-jet selection: unmatched jets_10_lights
