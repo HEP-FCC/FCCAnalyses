@@ -28,7 +28,7 @@ colors['Z_Pythia8'] = ROOT.kRed
 colors['Z_Whizard'] = ROOT.kBlue+1
 
 plots = {}
-plots['Z'] = {'signal':{'Z_Pythia8':['p8_ee_Zmumu_ecm91']},
+plots['Z'] = {'signal':{'Z_Pythia8':['p8_ee_Z_Zmumu_ecm91']},
                'backgrounds':{'Z_Whizard':['wizhardp8_ee_Z_Zmumu_ecm91']
                           }
            }
