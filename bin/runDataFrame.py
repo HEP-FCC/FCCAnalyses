@@ -14,7 +14,7 @@ class runDataFrame():
 
     #__________________________________________________________
     def run(self,ncpu=10, fraction=1, outDir=''):
-        print "EnableImplicitMT: {}".format(ncpu)
+        print ("EnableImplicitMT: {}".format(ncpu))
 
         if not os.path.exists(outDir) and outDir!='': 
             os.system("mkdir -p {}".format(outDir))
@@ -30,10 +30,10 @@ class runDataFrame():
                 except yaml.YAMLError as exc:
                     print(exc)
                 except IOError as exc:
-                    print "I/O error({0}): {1}".format(exc.errno, exc.strerror)
-                    print "outfile ",outfile
+                    print ("I/O error({0}): {1}".format(exc.errno, exc.strerror))
+                    print ("outfile ",outfile)
                 finally:
-                    print 'file succesfully opened'
+                    print ('file succesfully opened')
 
 
             filelist  = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
@@ -51,29 +51,29 @@ class runDataFrame():
 
             filelist=tmplist
             if len(filelist)==0:
-                print "fraction too small, no files left: exit"
+                print ("fraction too small, no files left: exit")
                 sys.exit(3)
         
-            print "Create list object from ", 
+            print ("Create list object from ",)
             fileListRoot = ROOT.vector('string')()
             for fileName in filelist:
                 fileListRoot.push_back(fileName)
-                print fileName, " ",
-                print " ..."
+                print (fileName, " ",)
+                print (" ...")
 
 
-            print 'About to run process {} with {} events'.format(pr,nevents_real)
+            print ('About to run process {} with {} events'.format(pr,nevents_real))
             import analysis as ana
             import time
             start_time = time.time()
             myana=ana.analysis(fileListRoot,outDir+pr+'.root',ncpu)
             myana.run()
             elapsed_time = time.time() - start_time
-            print  '==============================SUMMARY=============================='
-            print  'Elapsed time (H:M:S)     :  ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
-            print  'Events Processed/Second  :  ',int(nevents_real/elapsed_time)
-            print  'Total Events Processed   :  ',int(nevents_real/elapsed_time)
-            print  '==================================================================='
+            print  ('==============================SUMMARY==============================')
+            print  ('Elapsed time (H:M:S)     :  ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
+            print  ('Events Processed/Second  :  ',int(nevents_real/elapsed_time))
+            print  ('Total Events Processed   :  ',int(nevents_real/elapsed_time))
+            print  ('===================================================================')
 
             outf = ROOT.TFile( outDir+pr+'.root', 'update' )
             meta = ROOT.TTree( 'metadata', 'metadata informations' )
