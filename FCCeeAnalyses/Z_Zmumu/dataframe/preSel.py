@@ -1,7 +1,11 @@
-#python FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py 
+#python FCCeeAnalyses/Z_Zmumu/dataframe/preSel.py
 
-basedir="/afs/cern.ch/work/h/helsens/public/FCCDicts/yaml/FCCee/fcc_v01/"
-outdir="FCCee/ZH_Zmumu/"
+from common_defaults import deffccdicts
+import os
+
+basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/fcc_v02/"
+outdir="FCCee/Z_Zmumu/"
+
 NUM_CPUS = 15
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 fraction=0.01
