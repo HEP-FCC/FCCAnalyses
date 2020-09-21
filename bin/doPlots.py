@@ -254,7 +254,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         hStack.SetMinimum(0.)
 
 
-    escape_scale_Xaxis=False
+    escape_scale_Xaxis=True
     if xlabel.find("#tau_{")>=0: escape_scale_Xaxis=True
     #
     hStacklast = hStack.GetStack().Last()

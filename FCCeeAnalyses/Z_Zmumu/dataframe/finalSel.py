@@ -1,11 +1,14 @@
-#python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py 
+from common_defaults import deffccdicts
+
+#python FCCeeAnalyses/Z_Zmumu/dataframe/finalSel.py 
+import os, sys
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
 baseDir  = "FCCee/Z_Zmumu/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = "/afs/cern.ch/work/h/helsens/public/FCCDicts/FCCee_procDict_fcc_v01.json"
+procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v02.json"
 
 process_list=['p8_ee_Z_Zmumu_ecm91','wizhardp8_ee_Z_Zmumu_ecm91']
 

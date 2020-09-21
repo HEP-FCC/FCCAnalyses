@@ -8,7 +8,7 @@ import ROOT
 baseDir  = "FCCee/ZH_Zmumu/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v01.json"
+procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v02.json"
 
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 
