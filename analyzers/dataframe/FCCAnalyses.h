@@ -170,4 +170,10 @@ ROOT::VecOps::RVec<fcc::ParticleData> LeptonicHiggsBuilder(ROOT::VecOps::RVec<fc
 /// concatenate both input vectors and return the resulting vector
 ROOT::VecOps::RVec<fcc::ParticleData> mergeElectronsAndMuons(ROOT::VecOps::RVec<fcc::ParticleData> x, ROOT::VecOps::RVec<fcc::ParticleData> y);
 
+/// return the transverse momenta of the input lorentz vectors
+ROOT::VecOps::RVec<float> get_pt_lv(ROOT::VecOps::RVec<fcc::LorentzVector> in);
+
+/// return the transverse momenta of the input lorentz vectors
+ROOT::VecOps::RVec<float> get_px_mctruth(ROOT::VecOps::RVec<fcc::MCParticleData> in, ROOT::VecOps::RVec<Int_t> indices);
+
 #endif

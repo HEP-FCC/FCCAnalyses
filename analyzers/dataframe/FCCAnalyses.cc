@@ -543,3 +543,14 @@ ROOT::VecOps::RVec<fcc::ParticleData> mergeElectronsAndMuons(ROOT::VecOps::RVec<
   result.insert( result.end(), y.begin(), y.end() );
   return ROOT::VecOps::RVec(result);
 };
+
+ROOT::VecOps::RVec<float> get_px_mctruth(ROOT::VecOps::RVec<fcc::MCParticleData> in, ROOT::VecOps::RVec<Int_t> indices) {
+
+  ROOT::VecOps::RVec<float> result;
+  for (auto i: indices) {
+    result.push_back(in[i].core.p4.px);
+  }
+  return result;
+
+
+};
