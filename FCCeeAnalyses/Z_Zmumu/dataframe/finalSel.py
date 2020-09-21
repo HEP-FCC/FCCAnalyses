@@ -9,6 +9,7 @@ baseDir  = "FCCee/Z_Zmumu/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v02.json"
+procDict ='https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee_procDict_fcc_v02.json'
 
 process_list=['p8_ee_Z_Zmumu_ecm91','wizhardp8_ee_Z_Zmumu_ecm91']
 

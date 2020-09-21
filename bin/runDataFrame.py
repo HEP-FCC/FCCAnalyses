@@ -24,6 +24,15 @@ class runDataFrame():
         for pr in self.process_list:
             doc = None
             yamlfile=self.basedir+pr+'/merge.yaml'
+
+            if 'https://fcc-physics-events.web.cern.ch' in self.basedir:
+                print ('getting info from the web')
+                import urllib.request
+                outname=yamlfile.split('/')[-1]
+                outname=outname.replace('.yaml','_{}.yaml'.format(pr))
+                urllib.request.urlretrieve(yamlfile, outname)
+                yamlfile=outname
+
             with open(yamlfile) as ftmp:
                 try:
                     doc = yaml.load(ftmp, Loader=yaml.FullLoader)

@@ -14,8 +14,15 @@ class runDataFrameFinal():
         self.treename  = treename
 
         self.procDict  = None
-        with open(procDict, 'r') as f:
-            self.procDict=json.load(f)
+        
+        if 'https://fcc-physics-events.web.cern.ch' in procDict:
+            print ('getting info from the web')
+            import urllib.request
+            req = urllib.request.urlopen(procDict).read()
+            self.procDict = json.loads(req.decode('utf-8'))
+        else:
+            with open(procDict, 'r') as f:
+                self.procDict=json.load(f)
 
         if self.procDict==None:
             print ('no procDict found ==={}=== exit'.format(self.procDict))

@@ -4,6 +4,7 @@ from common_defaults import deffccdicts
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/fcc_v02/"
+basedir='https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee/fcc_v02/'
 outdir="FCCee/ZH_Zee/"
 
 NUM_CPUS = 15
