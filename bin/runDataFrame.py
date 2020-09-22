@@ -57,8 +57,11 @@ class runDataFrame():
                     if nevents_real>nevents_target:break
                     nevents_real+=eventlist[ev]
                     tmplist.append(filelist[ev])
-
-            filelist=tmplist
+                filelist=tmplist
+                
+            else:
+                nevents_real=int(doc['merge']['nevents'])
+                
             if len(filelist)==0:
                 print ("fraction too small, no files left: exit")
                 sys.exit(3)
