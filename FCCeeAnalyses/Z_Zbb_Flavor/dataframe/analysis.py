@@ -24,13 +24,13 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Define("rec_part_pt",     "get_p(ReconstructedParticles)")                    
+        df2 = (self.df.Define("rec_part_p",     "get_p(ReconstructedParticles)")                    
                )
 
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                "rec_part_pt",
+                "rec_part_p",
                 ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
