@@ -16,7 +16,7 @@ file(GLOB headers FCC*.h)
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses FCCAnalyses.h LINKDEF LinkDef.h)
 
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
-target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics)
+target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics EDM4HEP::edm4hep)
 
 set_target_properties(FCCAnalyses PROPERTIES
   PUBLIC_HEADER "${headers}")

@@ -7,8 +7,8 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 _p = ROOT.edm4hep.ReconstructedParticleData()
-#_s = ROOT.selectParticlesPtIso
-print (_p)
+_s = ROOT.get_p
+print (_s)
 
 class analysis():
 
@@ -21,6 +21,7 @@ class analysis():
         ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
+        print(inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
