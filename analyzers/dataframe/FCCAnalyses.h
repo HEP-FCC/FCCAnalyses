@@ -17,6 +17,8 @@
 #include "edm4hep/MCRecoParticleAssociationData.h"
 #include "edm4hep/TrackData.h"
 #include "edm4hep/TrackState.h"
+#include "edm4hep/TrackCollection.h"
+#include "edm4hep/TrackState.h"
 
 
 /// compute transverse momentum of a MCParticle
@@ -34,11 +36,42 @@ struct selectParticlesPt {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 };
 
+/// Return the D0 of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_D0 (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+std::vector<float> get_D0_std (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
+/// Return the Z0 of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_Z0 (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+std::vector<float> get_Z0_std (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
+/// Return the Phi of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_phi (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
+/// Return the omega of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_omega (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
+/// Return the tanLambda of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_tanLambda (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
 /// return the transverse momenta of the input ReconstructedParticles
 ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
 /// return the momenta of the input ReconstructedParticles
 ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+
+/// return the momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<float> get_px_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+
+
+
+/// return the momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_py(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<float> get_py_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+
+/// return the momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<float> get_pz_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
 /// return the pseudo-rapidity of the input ReconstructedParticles
 ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
@@ -57,6 +90,11 @@ ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
 
 /// return the masses of the input ReconstructedParticles
 ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+std::vector<float> get_mass_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+
+/// return the charges of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+std::vector<float> get_charge_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
 
 /// concatenate both input vectors and return the resulting vector
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> mergeParticles(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);

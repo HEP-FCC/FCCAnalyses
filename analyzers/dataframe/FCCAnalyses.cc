@@ -44,7 +44,13 @@ ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedPart
   }
   return result;
 }
-
+std::vector<float> get_mass_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<float> result;
+  for (auto & p: in) {
+    result.push_back(p.mass);
+  }
+  return result;
+}
 ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
@@ -83,6 +89,65 @@ ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
   return result;
 }
 
+ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.x);
+  }
+  return result;
+}
+std::vector<float> get_px_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<float> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.x);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_py(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.y);
+  }
+  return result;
+}
+std::vector<float> get_py_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<float> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.y);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.z);
+  }
+  return result;
+}
+std::vector<float> get_pz_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<float> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.z);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.charge);
+  }
+  return result;
+}
+std::vector<float> get_charge_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<float> result;
+  for (auto & p: in) {
+    result.push_back(p.charge);
+  }
+  return result;
+}
 ROOT::VecOps::RVec<float> get_y(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
@@ -99,6 +164,66 @@ ROOT::VecOps::RVec<float> get_theta(ROOT::VecOps::RVec<edm4hep::ReconstructedPar
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
     result.push_back(tlv.Theta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_D0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size())
+      result.push_back(tracks.at(p.tracks_begin).D0);
+  }
+  return result;
+}
+std::vector<float> get_D0_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  std::vector<float> result;
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size())
+      result.push_back(tracks.at(p.tracks_begin).D0);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_Z0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size())
+      result.push_back(tracks.at(p.tracks_begin).Z0);
+  }
+  return result;
+}
+std::vector<float> get_Z0_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  std::vector<float> result;
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size())
+      result.push_back(tracks.at(p.tracks_begin).Z0);
+  }
+  return result;
+}
+ROOT::VecOps::RVec<float> get_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size())
+      result.push_back(tracks.at(p.tracks_begin).phi);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_omega(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size())
+      result.push_back(tracks.at(p.tracks_begin).omega);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_tanLambda(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size())
+      result.push_back(tracks.at(p.tracks_begin).tanLambda);
   }
   return result;
 }

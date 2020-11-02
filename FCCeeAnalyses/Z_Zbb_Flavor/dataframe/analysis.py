@@ -25,15 +25,30 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Define("rec_part_p",     "get_p(ReconstructedParticles)")                    
+        df2 = (
+               self.df.Define("rec_part_px",     "get_px_std(ReconstructedParticles)")
+               .Define("rec_part_py",     "get_py_std(ReconstructedParticles)")
+               .Define("rec_part_pz",     "get_pz_std(ReconstructedParticles)")
+               .Define("rec_part_mass",   "get_mass_std(ReconstructedParticles)")
+               .Define("rec_part_charge", "get_charge_std(ReconstructedParticles)")
+               .Define("rec_part_track_D0", "get_D0_std(ReconstructedParticles, EFlowTrack_1)")
+               .Define("rec_part_track_Z0", "get_Z0_std(ReconstructedParticles, EFlowTrack_1)")
                )
 
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                "rec_part_p",
+                "rec_part_px",
+                "rec_part_py",
+                "rec_part_pz",
+                "rec_part_mass",
+                "rec_part_charge",
+                "rec_part_track_D0",
+                "rec_part_track_Z0"
                 ]:
             branchList.push_back(branchName)
+        print (branchList)
+        print (type(branchList))
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
