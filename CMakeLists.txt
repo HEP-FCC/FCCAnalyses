@@ -10,7 +10,8 @@ find_package(ROOT COMPONENTS ROOTDataFrame)
 include(${ROOT_USE_FILE})
 
 find_package(fccedm)
-find_package(edm4hep)
+find_package(EDM4HEP)
+
 
 # Define basic build settings
 # Use GNU-style hierarchy for installing build products
@@ -46,5 +47,5 @@ endif()
 
 add_subdirectory(analyzers/dataframe)
 
-add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
+#add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
 #add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)

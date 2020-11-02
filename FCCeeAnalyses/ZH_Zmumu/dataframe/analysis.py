@@ -25,7 +25,7 @@ class analysis():
     #__________________________________________________________
     def run(self):
         # select isolated muons with pt > 10 GeV
-        df2 = (self.df.Define("selected_muons",  "selectParticlesPtIso(10, 0.4)(muons, muonITags)") 
+        df2 = (self.df.Define("selected_muons",  "selectParticlesPtIso(10, 0.4)(Muon, muonITags)") 
                      # create branch with muon transverse momentum
                      .Define("selected_muons_pt",    "get_pt(selected_muons)") 
                      # create branch with muon rapidity
