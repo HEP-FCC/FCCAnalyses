@@ -7,8 +7,11 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 _p = ROOT.edm4hep.ReconstructedParticleData()
-_s = ROOT.get_p
-print (_s)
+_s = ROOT.getRP_px
+_t = ROOT.getRP2TRK_D0
+
+print ('recp ',_s)
+print ('recp tra',_t)
 
 class analysis():
 
@@ -21,18 +24,22 @@ class analysis():
         ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
-        print(inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
         df2 = (
-               self.df.Define("rec_part_px",     "get_px_std(ReconstructedParticles)")
-               .Define("rec_part_py",     "get_py_std(ReconstructedParticles)")
-               .Define("rec_part_pz",     "get_pz_std(ReconstructedParticles)")
-               .Define("rec_part_mass",   "get_mass_std(ReconstructedParticles)")
-               .Define("rec_part_charge", "get_charge_std(ReconstructedParticles)")
-               .Define("rec_part_track_D0", "get_D0_std(ReconstructedParticles, EFlowTrack_1)")
-               .Define("rec_part_track_Z0", "get_Z0_std(ReconstructedParticles, EFlowTrack_1)")
+               self.df.Define("rec_part_px",     "getRP_px_std(ReconstructedParticles)")
+               .Define("rec_part_py",     "getRP_py_std(ReconstructedParticles)")
+               .Define("rec_part_pz",     "getRP_pz_std(ReconstructedParticles)")
+               .Define("rec_part_mass",   "getRP_mass_std(ReconstructedParticles)")
+               .Define("rec_part_charge", "getRP_charge_std(ReconstructedParticles)")
+               .Define("rec_part_track_D0", "getRP2TRK_D0_std(ReconstructedParticles, EFlowTrack_1)")
+               #.Define("rec_part_track_Z0", "getRP2TRK_Z0_std(ReconstructedParticles, EFlowTrack_1)")
+               .Define("rec_part_px_VecOps",     "getRP_px(ReconstructedParticles)")
+               .Define("rec_part_py_VecOps",     "getRP_py(ReconstructedParticles)")
+               .Define("rec_part_pz_VecOps",     "getRP_pz_std(ReconstructedParticles)")
+               
+            
                )
 
         # select branches for output file
@@ -44,15 +51,17 @@ class analysis():
                 "rec_part_mass",
                 "rec_part_charge",
                 "rec_part_track_D0",
-                "rec_part_track_Z0"
+                #"rec_part_track_Z0",
+                 "rec_part_px_VecOps",
+                "rec_part_py_VecOps",
+                "rec_part_pz_VecOps",
                 ]:
             branchList.push_back(branchName)
-        print (branchList)
-        print (type(branchList))
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python FCCeeAnalyses/ZH_Zmumu/dataframe/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
+# python FCCeeAnalyses/Z_Zbb_Flavor/dataframe/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Ztautau_ecm91/events_012154460.root
+
 if __name__ == "__main__":
 
     if len(sys.argv)==1:

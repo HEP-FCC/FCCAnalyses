@@ -5,9 +5,11 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
-#pragma link C++ class selectParticlesPt;
-#pragma link C++ function pt;
+#pragma link C++ class selRP_pT;
+#pragma link C++ function getRP_px;
 #pragma link C++ function eta;
+
+#pragma link C++ function getRP2TRK_D0_std;
 
 #pragma link C++ function get_pt;
 #pragma link C++ function get_p;
