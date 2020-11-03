@@ -12,6 +12,7 @@ include(${ROOT_USE_FILE})
 find_package(fccedm)
 find_package(EDM4HEP)
 
+
 # Define basic build settings
 # Use GNU-style hierarchy for installing build products
 include(GNUInstallDirs)
