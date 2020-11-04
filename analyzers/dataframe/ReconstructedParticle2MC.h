@@ -23,6 +23,30 @@ std::vector<float> getRP2MC_p_test (ROOT::VecOps::RVec<int> recin,
 				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
 				    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 
+/// Return the D0 of a track to a reconstructed particle
+std::vector<float> getRP2MC_p_test2 (ROOT::VecOps::RVec<int> recin,
+				    ROOT::VecOps::RVec<int> mcin,
+				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 
+/// Return the D0 of a track to a reconstructed particle
+std::vector<float> getRP2MC_p_test3 (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind);
+
+
+/// Return the D0 of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> getRP2MC_p_test4 (ROOT::VecOps::RVec<int> recin,
+				    ROOT::VecOps::RVec<int> mcin,
+				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+
+
+/// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
+struct getRP2MC_p_test5 {
+  ROOT::VecOps::RVec<float>  operator() (ROOT::VecOps::RVec<int> recin,
+					 ROOT::VecOps::RVec<int> mcin,
+					 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+					 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+};
 
 #endif

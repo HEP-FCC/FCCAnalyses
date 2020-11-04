@@ -58,8 +58,12 @@ int main(int argc, char* argv[]){
      .Define("MC_px",         getMC_px,{"Particle"})
      .Define("MC_py",         getMC_py,{"Particle"})
      .Define("MC_pz",         getMC_pz,{"Particle"})
+     .Define("MC_p",         getMC_p,{"Particle"})
+     .Define("RP_p",         getRP_p,{"ReconstructedParticles"})
      //.Define("RPMC_p",        getRP2MC_p,{"MCRecoAssociations#0", "MCRecoAssociations#1","ReconstructedParticles", "Particle"})
-     .Define("RPMC_p",        getRP2MC_p_test,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
+     //.Define("RPMC_p",        getRP2MC_p_test,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
+     .Define("RPMC_p2",        getRP2MC_p_test2,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
+     .Define("RPMC_p3",        getRP2MC_p_test3,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index"})
      ;
    auto nentries = selectors.Count();
    std::cout << "Count events: " <<  *nentries << std::endl;
@@ -69,7 +73,11 @@ int main(int argc, char* argv[]){
 			"MC_px",
 			  "MC_py",
 			  "MC_pz",
-			  "RPMC_p"
+			  "MC_p",			  
+			  "RP_p",			  
+			  //"RPMC_p",
+			  "RPMC_p2",
+			  "RPMC_p3"
 			  }
 		      );
 

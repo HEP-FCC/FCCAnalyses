@@ -23,9 +23,58 @@ std::vector<float> getRP2MC_p_test(ROOT::VecOps::RVec<int> recind, ROOT::VecOps:
     TLorentzVector tlv;
     tlv.SetXYZM(mc.at(mcind.at(i)).momentum.x,mc.at(mcind.at(i)).momentum.y,mc.at(mcind.at(i)).momentum.z,mc.at(mcind.at(i)).mass);
     result[recind.at(i)]=tlv.P();
+  }  
+  return result;
+}
+
+
+std::vector<float> getRP2MC_p_test2(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+
+  std::vector<float> result;
+  result.resize(reco.size(),-1.);
+
+  for (unsigned int i=0; i<recind.size();i++) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(mc.at(mcind.at(i)).momentum.x,mc.at(mcind.at(i)).momentum.y,mc.at(mcind.at(i)).momentum.z,mc.at(mcind.at(i)).mass);
+    result[recind.at(i)]=tlv.P();
+  }
+  
+  return result;
+}
+std::vector<float> getRP2MC_p_test3(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind) {
+
+  std::vector<float> result;
+  for (unsigned int i=0; i<recind.size();i++) {
+    result.push_back(recind.at(i));
+    result.push_back(mcind.at(i));
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> getRP2MC_p_test4(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+
+  ROOT::VecOps::RVec<float> result;
+  result.resize(reco.size(),-1.);
+
+  for (unsigned int i=0; i<recind.size();i++) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(mc.at(mcind.at(i)).momentum.x,mc.at(mcind.at(i)).momentum.y,mc.at(mcind.at(i)).momentum.z,mc.at(mcind.at(i)).mass);
+    result[recind.at(i)]=tlv.P();
   }
   
   return result;
 }
 
 
+ROOT::VecOps::RVec<float>  getRP2MC_p_test5::operator() (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+   ROOT::VecOps::RVec<float> result;
+  result.resize(reco.size(),-1.);
+
+  for (unsigned int i=0; i<recind.size();i++) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(mc.at(mcind.at(i)).momentum.x,mc.at(mcind.at(i)).momentum.y,mc.at(mcind.at(i)).momentum.z,mc.at(mcind.at(i)).mass);
+    result[recind.at(i)]=tlv.P();
+  }
+  return result;
+}

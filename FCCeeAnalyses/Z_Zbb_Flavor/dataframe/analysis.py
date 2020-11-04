@@ -31,8 +31,12 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        mcReco0="MCRecoAssociations#0"
-        mcReco1="MCRecoAssociations#1"
+        match=ROOT.getRP2MC_p_test5
+        string_vec = ROOT.std.vector('string')()
+        string_vec.push_back('MCRecoAssociations#0.index')
+        string_vec.push_back('MCRecoAssociations#1.index')
+        string_vec.push_back('ReconstructedParticles')
+        string_vec.push_back('Particle')
         df2 = (self.df
                .Define("MC_px",         "getMC_px(Particle)")
                .Define("MC_py",         "getMC_px(Particle)")
@@ -47,24 +51,7 @@ class analysis():
                .Define("RP_tlv",        "getRP_tlv(ReconstructedParticles)")
                .Define("RPTRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
                .Define("RPTRK_Z0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
-               #.Define("RPMC_p",        "getRP2MC_p(MCRecoAssociations#0, MCRecoAssociations#1,ReconstructedParticles, Particle)")
-               #.Define("RPMC_p",        "getRP2MC_p(MCRecoAssociations{}0, MCRecoAssociations{}1,ReconstructedParticles, Particle)".format('#','#'))
-               #.Define("RPMC_p",        "getRP2MC_p",["MCRecoAssociations#0","MCRecoAssociations#1", "ReconstructedParticles", "Particle"])
-               #.Define("RPMC_p",        "getRP2MC_p",{"MCRecoAssociations#0", "MCRecoAssociations#1", "ReconstructedParticles", "Particle"})
-               #.Define("RPMC_p",        ROOT.getRP2MC_p,["MCRecoAssociations#0", "MCRecoAssociations#1","ReconstructedParticles", "Particle"])
-               #.Define("RPMC_p",        "getRP2MC_p({mcReco0}, {mcReco1},ReconstructedParticles, Particle)")
-               #.Define("RPMC_p",        "getRP2MC_p({mcReco0}*, {mcReco1}*,ReconstructedParticles, Particle)")
-               #.Define("RPMC_p",        "getRP2MC_p", ["{mcReco0}*", "{mcReco1}*","ReconstructedParticles", "Particle"])
-               #.Define("RPMC_p",        "getRP2MC_p", ["{mcReco0}", "{mcReco1}","ReconstructedParticles", "Particle"])
-               #.Define("RPMC_p",        "getRP2MC_p", [mcReco0, mcReco1,"ReconstructedParticles", "Particle"])
-               #.Define("RPMC_p",        "getRP2MC_p", {mcReco0, mcReco1,"ReconstructedParticles", "Particle"})
-               #.Define("RPMC_p",        ROOT.getRP2MC_p, {mcReco0, mcReco1,"ReconstructedParticles", "Particle"})
-               #.Define("RPMC_p",        "getRP2MC_p_test", {"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
-               #.Define("RPMC_p",        "getRP2MC_p_test(MCRecoAssociations#0.index, MCRecoAssociations#1.index,ReconstructedParticles, Particle)")
-               #.Define("RPMC_p",        "getRP2MC_p_test", ["MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"])
-               .Define("RPMC_p",        ROOT.getRP2MC_p_test, ["MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"])
-
-            
+               .Define('RPMC_p',        match,string_vec)
                )
 
         # select branches for output file
