@@ -3,15 +3,17 @@ import ROOT
 
 print ("Load cxx analyzers ... ",)
 ROOT.gSystem.Load("libedm4hep")
+ROOT.gSystem.Load("libpodio")
 ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
+_edm  = ROOT.edm4hep.ReconstructedParticleData()
+_pod  = ROOT.podio.ObjectID()
+_fcc  = ROOT.getMC_px
 
-_p = ROOT.edm4hep.ReconstructedParticleData()
-_s = ROOT.getRP_px
-_t = ROOT.getRP2TRK_D0
+print ('edm4hep  ',_edm)
+print ('podio    ',_pod)
+print ('fccana   ',_fcc)
 
-print ('recp ',_s)
-print ('recp tra',_t)
 
 class analysis():
 
@@ -27,17 +29,25 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (
-               self.df.Define("rec_part_px",     "getRP_px_std(ReconstructedParticles)")
-               .Define("rec_part_py",     "getRP_py_std(ReconstructedParticles)")
-               .Define("rec_part_pz",     "getRP_pz_std(ReconstructedParticles)")
-               .Define("rec_part_mass",   "getRP_mass_std(ReconstructedParticles)")
-               .Define("rec_part_charge", "getRP_charge_std(ReconstructedParticles)")
-               .Define("rec_part_track_D0", "getRP2TRK_D0_std(ReconstructedParticles, EFlowTrack_1)")
-               #.Define("rec_part_track_Z0", "getRP2TRK_Z0_std(ReconstructedParticles, EFlowTrack_1)")
-               .Define("rec_part_px_VecOps",     "getRP_px(ReconstructedParticles)")
-               .Define("rec_part_py_VecOps",     "getRP_py(ReconstructedParticles)")
-               .Define("rec_part_pz_VecOps",     "getRP_pz_std(ReconstructedParticles)")
+        df2 = (self.df
+               .Define("MC_px",         "getMC_px(Particle)")
+               .Define("MC_py",         "getMC_px(Particle)")
+               .Define("MC_pz",         "getMC_px(Particle)")
+               .Define("MC_pdg",        "getMC_pdg(Particle)")
+               .Define("MC_status",     "getMC_genStatus(Particle)")
+               .Define("MC_vertex_x",   "getMC_vertex_x(Particle)")
+               .Define("MC_vertex_y",   "getMC_vertex_y(Particle)")
+               .Define("MC_vertex_z",   "getMC_vertex_z(Particle)")
+               .Define("MC_tlv",        "getMC_tlv(Particle)")
+               .Define("RP_p",          "getRP_p(ReconstructedParticles)")
+               .Define("RP_tlv",        "getRP_tlv(ReconstructedParticles)")
+               .Define("RPTRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RPTRK_Z0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
+               #.Define("RPMC_p",        "getRP2MC_p(MCRecoAssociations#0, MCRecoAssociations#1,ReconstructedParticles, Particle)")
+               #.Define("RPMC_p",        "getRP2MC_p(MCRecoAssociations{}0, MCRecoAssociations{}1,ReconstructedParticles, Particle)".format('#','#'))
+               #.Define("RPMC_p",        "getRP2MC_p",["MCRecoAssociations#0","MCRecoAssociations#1", "ReconstructedParticles", "Particle"])
+               #.Define("RPMC_p",        "getRP2MC_p",{"MCRecoAssociations#0", "MCRecoAssociations#1", "ReconstructedParticles", "Particle"})
+               #.Define("RPMC_p",        ROOT.getRP2MC_p,["MCRecoAssociations#0", "MCRecoAssociations#1","ReconstructedParticles", "Particle"])
                
             
                )
@@ -45,16 +55,22 @@ class analysis():
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                "rec_part_px",
-                "rec_part_py",
-                "rec_part_pz",
-                "rec_part_mass",
-                "rec_part_charge",
-                "rec_part_track_D0",
-                #"rec_part_track_Z0",
-                 "rec_part_px_VecOps",
-                "rec_part_py_VecOps",
-                "rec_part_pz_VecOps",
+                "MC_px",
+                "MC_py",
+                "MC_pz",
+                "MC_pdg",
+                "MC_status",
+                "MC_tlv",
+                "MC_vertex_x",
+                "MC_vertex_y",
+                "MC_vertex_z",
+                "RP_p",
+                "RP_tlv",
+                "RPTRK_D0",
+                "RPTRK_Z0",
+                "RPMC_p"
+                
+                
                 ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
