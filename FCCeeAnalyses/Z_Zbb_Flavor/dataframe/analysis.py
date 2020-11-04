@@ -9,10 +9,12 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.getMC_px
+_fcc2  = ROOT.getRP2MC_p_test
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
+print ('fccana2  ',_fcc2)
 
 
 class analysis():
@@ -29,6 +31,8 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
+        mcReco0="MCRecoAssociations#0"
+        mcReco1="MCRecoAssociations#1"
         df2 = (self.df
                .Define("MC_px",         "getMC_px(Particle)")
                .Define("MC_py",         "getMC_px(Particle)")
@@ -48,7 +52,18 @@ class analysis():
                #.Define("RPMC_p",        "getRP2MC_p",["MCRecoAssociations#0","MCRecoAssociations#1", "ReconstructedParticles", "Particle"])
                #.Define("RPMC_p",        "getRP2MC_p",{"MCRecoAssociations#0", "MCRecoAssociations#1", "ReconstructedParticles", "Particle"})
                #.Define("RPMC_p",        ROOT.getRP2MC_p,["MCRecoAssociations#0", "MCRecoAssociations#1","ReconstructedParticles", "Particle"])
-               
+               #.Define("RPMC_p",        "getRP2MC_p({mcReco0}, {mcReco1},ReconstructedParticles, Particle)")
+               #.Define("RPMC_p",        "getRP2MC_p({mcReco0}*, {mcReco1}*,ReconstructedParticles, Particle)")
+               #.Define("RPMC_p",        "getRP2MC_p", ["{mcReco0}*", "{mcReco1}*","ReconstructedParticles", "Particle"])
+               #.Define("RPMC_p",        "getRP2MC_p", ["{mcReco0}", "{mcReco1}","ReconstructedParticles", "Particle"])
+               #.Define("RPMC_p",        "getRP2MC_p", [mcReco0, mcReco1,"ReconstructedParticles", "Particle"])
+               #.Define("RPMC_p",        "getRP2MC_p", {mcReco0, mcReco1,"ReconstructedParticles", "Particle"})
+               #.Define("RPMC_p",        ROOT.getRP2MC_p, {mcReco0, mcReco1,"ReconstructedParticles", "Particle"})
+               #.Define("RPMC_p",        "getRP2MC_p_test", {"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
+               #.Define("RPMC_p",        "getRP2MC_p_test(MCRecoAssociations#0.index, MCRecoAssociations#1.index,ReconstructedParticles, Particle)")
+               #.Define("RPMC_p",        "getRP2MC_p_test", ["MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"])
+               .Define("RPMC_p",        ROOT.getRP2MC_p_test, ["MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"])
+
             
                )
 

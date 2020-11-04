@@ -49,4 +49,4 @@ endif()
 add_subdirectory(analyzers/dataframe)
 
 #add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
+add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/dataframe)
