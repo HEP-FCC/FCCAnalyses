@@ -11,6 +11,7 @@ include(${ROOT_USE_FILE})
 
 find_package(fccedm)
 find_package(EDM4HEP)
+find_package(podio)
 
 
 # Define basic build settings
@@ -48,4 +49,4 @@ endif()
 add_subdirectory(analyzers/dataframe)
 
 #add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
+add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/dataframe)

@@ -173,6 +173,7 @@ ROOT::VecOps::RVec<float> get_D0(ROOT::VecOps::RVec<edm4hep::ReconstructedPartic
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
       result.push_back(tracks.at(p.tracks_begin).D0);
+    else result.push_back(std::nan(""));
   }
   return result;
 }
@@ -181,6 +182,7 @@ std::vector<float> get_D0_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleD
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
       result.push_back(tracks.at(p.tracks_begin).D0);
+    else result.push_back(std::nan(""));
   }
   return result;
 }

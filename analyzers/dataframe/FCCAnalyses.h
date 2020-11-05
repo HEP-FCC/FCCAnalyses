@@ -1,6 +1,6 @@
 
-#ifndef  FCCANALYSES_ANALYZERS_H
-#define  FCCANALYSES_ANALYZERS_H
+#ifndef  MCPARTICLE_ANALYZERS_H
+#define  MCPARTICLE_ANALYZERS_H
 
 #include <cmath>
 #include <vector>
@@ -27,6 +27,9 @@ ROOT::VecOps::RVec<float> pt (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 /// compute pseudorapidity of a MCPparticle
 ROOT::VecOps::RVec<float> eta(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
+/// return the TlorentzVector of the input MCPparticle
+ROOT::VecOps::RVec<TLorentzVector> tlv(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+std::vector<TLorentzVector> tlv_std(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 
 /// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
@@ -63,8 +66,6 @@ ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
 ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 std::vector<float> get_px_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-
-
 /// return the momenta of the input ReconstructedParticles
 ROOT::VecOps::RVec<float> get_py(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 std::vector<float> get_py_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
@@ -95,6 +96,10 @@ std::vector<float> get_mass_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
 /// return the charges of the input ReconstructedParticles
 ROOT::VecOps::RVec<float> get_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
 std::vector<float> get_charge_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+
+/// return the TlorentzVector of the input ReconstructedParticles
+ROOT::VecOps::RVec<TLorentzVector> get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<TLorentzVector> get_tlv_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
 /// concatenate both input vectors and return the resulting vector
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> mergeParticles(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
