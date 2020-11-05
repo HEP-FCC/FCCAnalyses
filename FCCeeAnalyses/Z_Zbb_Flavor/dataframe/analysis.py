@@ -9,7 +9,7 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.getMC_px
-_fcc2  = ROOT.getRP2MC_p_test
+_fcc2  = ROOT.getRP2MC_p
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -31,27 +31,51 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        match=ROOT.getRP2MC_p_test5
+        match=ROOT.getRP2MC_p_func()
         string_vec = ROOT.std.vector('string')()
         string_vec.push_back('MCRecoAssociations#0.index')
         string_vec.push_back('MCRecoAssociations#1.index')
         string_vec.push_back('ReconstructedParticles')
         string_vec.push_back('Particle')
+
         df2 = (self.df
                .Define("MC_px",         "getMC_px(Particle)")
-               .Define("MC_py",         "getMC_px(Particle)")
-               .Define("MC_pz",         "getMC_px(Particle)")
+               .Define("MC_py",         "getMC_py(Particle)")
+               .Define("MC_pz",         "getMC_pz(Particle)")
+               .Define("MC_p",          "getMC_p(Particle)")
                .Define("MC_pdg",        "getMC_pdg(Particle)")
+               .Define("MC_charge",     "getMC_charge(Particle)")
+               .Define("MC_mass",       "getMC_mass(Particle)")
                .Define("MC_status",     "getMC_genStatus(Particle)")
                .Define("MC_vertex_x",   "getMC_vertex_x(Particle)")
                .Define("MC_vertex_y",   "getMC_vertex_y(Particle)")
                .Define("MC_vertex_z",   "getMC_vertex_z(Particle)")
-               .Define("MC_tlv",        "getMC_tlv(Particle)")
+
                .Define("RP_p",          "getRP_p(ReconstructedParticles)")
-               .Define("RP_tlv",        "getRP_tlv(ReconstructedParticles)")
+               .Define("RP_px",         "getRP_px(ReconstructedParticles)")
+               .Define("RP_py",         "getRP_py(ReconstructedParticles)")
+               .Define("RP_pz",         "getRP_pz(ReconstructedParticles)")
+               .Define("RP_charge",     "getRP_charge(ReconstructedParticles)")
+               .Define("RP_mass",       "getRP_mass(ReconstructedParticles)")
+
                .Define("RPTRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
                .Define("RPTRK_Z0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
-               .Define('RPMC_p',        match,string_vec)
+
+               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
+               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
+               .Alias("Particle0", "Particle#0.index")
+
+               .Define('RPMC_index',    "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_p',        "getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_px',       "getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_py',       "getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_pz',       "getRP2MC_pz(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_pdg',      "getRP2MC_pdg(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_charge',   "getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RPMC_parentindex', "getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
+               
+               #.Define('RPMC_p',        match,string_vec)
                )
 
         # select branches for output file
@@ -60,18 +84,35 @@ class analysis():
                 "MC_px",
                 "MC_py",
                 "MC_pz",
+                "MC_p",
                 "MC_pdg",
+                "MC_charge",
+                "MC_mass",
                 "MC_status",
-                "MC_tlv",
                 "MC_vertex_x",
                 "MC_vertex_y",
                 "MC_vertex_z",
+
                 "RP_p",
-                "RP_tlv",
+                "RP_px",
+                "RP_py",
+                "RP_pz",
+                "RP_charge",
+                "RP_mass",
+
                 "RPTRK_D0",
                 "RPTRK_Z0",
-                "RPMC_p"
-                
+
+                "RPMC_p",
+                "RPMC_px",
+                "RPMC_py",
+                "RPMC_pz",
+                "RPMC_pdg",
+                "RPMC_charge",
+                "RPMC_index",
+                "RPMC_parentindex",
+
+
                 
                 ]:
             branchList.push_back(branchName)

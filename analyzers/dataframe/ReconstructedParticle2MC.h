@@ -11,42 +11,76 @@
 #include "podio/ObjectID.h"
 #include "TLorentzVector.h"
 
+
 /// Return the D0 of a track to a reconstructed particle
-std::vector<float> getRP2MC_p (std::vector<podio::ObjectID> recin,
-			       ROOT::VecOps::RVec<podio::ObjectID> mcin,
+std::vector<float> getRP2MC_p (ROOT::VecOps::RVec<int> recin,
+			       ROOT::VecOps::RVec<int> mcin,
 			       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
 			       ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 
 /// Return the D0 of a track to a reconstructed particle
-std::vector<float> getRP2MC_p_test (ROOT::VecOps::RVec<int> recin,
+std::vector<float> getRP2MC_px (ROOT::VecOps::RVec<int> recin,
+				ROOT::VecOps::RVec<int> mcin,
+				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+/// Return the D0 of a track to a reconstructed particle
+std::vector<float> getRP2MC_py (ROOT::VecOps::RVec<int> recin,
+				ROOT::VecOps::RVec<int> mcin,
+				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+/// Return the D0 of a track to a reconstructed particle
+std::vector<float> getRP2MC_pz (ROOT::VecOps::RVec<int> recin,
+				ROOT::VecOps::RVec<int> mcin,
+				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+/// Return the D0 of a track to a reconstructed particle
+std::vector<float> getRP2MC_mass (ROOT::VecOps::RVec<int> recin,
+				  ROOT::VecOps::RVec<int> mcin,
+				  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+/// Return the D0 of a track to a reconstructed particle
+std::vector<float> getRP2MC_charge (ROOT::VecOps::RVec<int> recin,
 				    ROOT::VecOps::RVec<int> mcin,
 				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
 				    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 
 /// Return the D0 of a track to a reconstructed particle
-std::vector<float> getRP2MC_p_test2 (ROOT::VecOps::RVec<int> recin,
-				    ROOT::VecOps::RVec<int> mcin,
-				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
-				    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
-
-/// Return the D0 of a track to a reconstructed particle
-std::vector<float> getRP2MC_p_test3 (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind);
+std::vector<float> getRP2MC_pdg (ROOT::VecOps::RVec<int> recin,
+				 ROOT::VecOps::RVec<int> mcin,
+				 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 
 
 /// Return the D0 of a track to a reconstructed particle
-ROOT::VecOps::RVec<float> getRP2MC_p_test4 (ROOT::VecOps::RVec<int> recin,
+std::vector<TLorentzVector> getRP2MC_tlv (ROOT::VecOps::RVec<int> recin,
+					  ROOT::VecOps::RVec<int> mcin,
+					  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+					  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+/// Return the D0 of a track to a reconstructed particle
+std::vector<int> getRP2MC_index (ROOT::VecOps::RVec<int> recin,
+				 ROOT::VecOps::RVec<int> mcin,
+				 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+/// Return the D0 of a track to a reconstructed particle
+std::vector<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recin,
 				    ROOT::VecOps::RVec<int> mcin,
 				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
-				    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
-
+				    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+				    ROOT::VecOps::RVec<int> parents);
 
 
 /// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
-struct getRP2MC_p_test5 {
-  ROOT::VecOps::RVec<float>  operator() (ROOT::VecOps::RVec<int> recin,
-					 ROOT::VecOps::RVec<int> mcin,
-					 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
-					 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+struct getRP2MC_p_func {
+  std::vector<float>  operator() (ROOT::VecOps::RVec<int> recin,
+				  ROOT::VecOps::RVec<int> mcin,
+				  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+				  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 };
 
 #endif

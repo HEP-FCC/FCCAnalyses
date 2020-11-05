@@ -61,9 +61,9 @@ int main(int argc, char* argv[]){
      .Define("MC_p",         getMC_p,{"Particle"})
      .Define("RP_p",         getRP_p,{"ReconstructedParticles"})
      //.Define("RPMC_p",        getRP2MC_p,{"MCRecoAssociations#0", "MCRecoAssociations#1","ReconstructedParticles", "Particle"})
-     //.Define("RPMC_p",        getRP2MC_p_test,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
-     .Define("RPMC_p2",        getRP2MC_p_test2,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
-     .Define("RPMC_p3",        getRP2MC_p_test3,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index"})
+     .Define("RPMC_p",        getRP2MC_p,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
+     //.Define("RPMC_p2",        getRP2MC_p_test2,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index","ReconstructedParticles", "Particle"})
+     //.Define("RPMC_p3",        getRP2MC_p_test3,{"MCRecoAssociations#0.index", "MCRecoAssociations#1.index"})
      ;
    auto nentries = selectors.Count();
    std::cout << "Count events: " <<  *nentries << std::endl;

@@ -40,10 +40,7 @@
 #pragma link C++ function getRP2TRK_Z0;
 
 #pragma link C++ function getRP2MC_p;
-#pragma link C++ function getRP2MC_p_test;
-#pragma link C++ function getRP2MC_p_test2;
-#pragma link C++ function getRP2MC_p_test3;
-#pragma link C++ class getRP2MC_p_test5;
+#pragma link C++ class getRP2MC_p_func;
 
 
 
