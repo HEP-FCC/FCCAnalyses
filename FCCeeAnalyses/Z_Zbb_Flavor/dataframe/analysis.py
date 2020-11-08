@@ -58,22 +58,22 @@ class analysis():
                .Define("RP_charge",     "getRP_charge(ReconstructedParticles)")
                .Define("RP_mass",       "getRP_mass(ReconstructedParticles)")
 
-               .Define("RPTRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RPTRK_Z0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_Z0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
 
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Alias("Particle0", "Particle#0.index")
 
-               .Define('RPMC_index',    "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_p',        "getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_px',       "getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_py',       "getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_pz',       "getRP2MC_pz(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_pdg',      "getRP2MC_pdg(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_charge',   "getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RPMC_parentindex', "getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
+               .Define('RP_MC_index',    "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_p',        "getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_px',       "getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_py',       "getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_pz',       "getRP2MC_pz(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_pdg',      "getRP2MC_pdg(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_charge',   "getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_parentindex', "getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
                
                #.Define('RPMC_p',        match,string_vec)
                )
@@ -100,17 +100,17 @@ class analysis():
                 "RP_charge",
                 "RP_mass",
 
-                "RPTRK_D0",
-                "RPTRK_Z0",
+                "RP_TRK_D0",
+                "RP_TRK_Z0",
 
-                "RPMC_p",
-                "RPMC_px",
-                "RPMC_py",
-                "RPMC_pz",
-                "RPMC_pdg",
-                "RPMC_charge",
-                "RPMC_index",
-                "RPMC_parentindex",
+                "RP_MC_p",
+                "RP_MC_px",
+                "RP_MC_py",
+                "RP_MC_pz",
+                "RP_MC_pdg",
+                "RP_MC_charge",
+                "RP_MC_index",
+                "RP_MC_parentindex",
 
 
                 
