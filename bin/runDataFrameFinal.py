@@ -6,13 +6,13 @@ import os
 class runDataFrameFinal():
 
     #__________________________________________________________
-    def __init__(self, baseDir, procDict, processes, cuts, variables, treename="events"):
+    def __init__(self, baseDir, procDict, processes, cuts, variables, treename="events", defines={}):
         self.baseDir   = baseDir
         self.processes = processes
         self.variables = variables
         self.cuts      = cuts
         self.treename  = treename
-
+        self.defines   = defines
         self.procDict  = None
         with open(procDict, 'r') as f:
             self.procDict=json.load(f)
@@ -81,6 +81,10 @@ class runDataFrameFinal():
                 RDF = ROOT.ROOT.RDataFrame
                 df  = RDF(self.treename,fin )
                 df_cut = df.Filter(self.cuts[cut])
+                if len(self.defines)>0:
+                    for define in self.defines:
+                        print ('Running extra Define')
+                        df_cut=df_cut.Define(define, self.defines[define])
                 snapshot_tdf = df_cut.Snapshot(self.treename, fout)
 
                 validfile = self.testfile(fout)

@@ -12,7 +12,7 @@ yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
 outdir         = 'FCChh/ttHH/plots/'
 
-variables = ['jet_pt_1']
+variables = ['jet_pt_0','jet_pt_1','jet_pt_2','jet_pt_3','jet_pt_4','jet_pt_5']
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
