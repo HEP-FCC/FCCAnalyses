@@ -10,12 +10,29 @@
 #include "edm4hep/ReconstructedParticleData.h"
 
 
+/// TO BE MOVED LATER
+struct ResonanceBuilder {
+  int m_resonance_pdgid;
+  float m_resonance_mass;
+  ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass);
+  std::vector<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs);
+};
+
+struct recoil {
+  recoil(float arg_sqrts);
+  float m_sqrts = 240.0;
+  std::vector<edm4hep::ReconstructedParticleData> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) ;
+};
+
 /// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
 struct selRP_pT {
   selRP_pT(float arg_min_pt);
   float m_min_pt = 20; //> transverse momentum threshold [GeV]
   std::vector<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 };
+
+/// return reconstructed particles
+std::vector<edm4hep::ReconstructedParticleData> getRP(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
 /// return the transverse momenta of the input ReconstructedParticles
 std::vector<float> getRP_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
