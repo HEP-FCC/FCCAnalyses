@@ -4,11 +4,11 @@
 #include "Math/Factory.h"
 #include "Math/Functor.h"
 
-std::vector<double> m_px;
-std::vector<double> m_py;
-std::vector<double> m_pz;
 
-double thrust(const double *pars){
+
+
+
+/*double thrust(const double *pars){
 
   //Magnitude of the thrust axis vector to make a unit vector
   double mag = sqrt(pars[0]*pars[0] + pars[1]*pars[1] + pars[2]*pars[2]);
@@ -25,28 +25,40 @@ double thrust(const double *pars){
   //Thrust value
   if (T_den>0.){
     double val = T_num / T_den;
-    //Return minus so that scipy minimises -T i.e. maximises T
+    //Return minus so that minuit minimises -T i.e. maximises T
     return -val;
   }
   return 0.;
-}
+  }*/
 
-
-double minimize_thrust(std::vector<double> px, std::vector<double> py, std::vector<double> pz) {
-
-  m_px.clear();
-  m_py.clear();
-  m_pz.clear();
-
-  for (unsigned int i =0; i<px.size(); i++){
-    m_px.push_back(px.at(i));
-    m_py.push_back(py.at(i));
-    m_pz.push_back(pz.at(i));
+thrustFit::thrustFit(std::vector<float> arg_px, std::vector<float> arg_py, std::vector<float> arg_pz) {m_px=arg_px;m_py=arg_py;m_pz=arg_pz; }
+float thrustFit::operator()(double *pars){
+  //Magnitude of the thrust axis vector to make a unit vector
+  double mag = sqrt(pars[0]*pars[0] + pars[1]*pars[1] + pars[2]*pars[2]);
+  
+  //Numerator of the thrust expression
+  double T_num = 0.;
+  //Denominator of the thrust expression
+  double T_den = 0.;
+  
+  for (unsigned int i =0; i<m_px.size(); i++){
+    T_num += abs(m_px.at(i)*(pars[0]/mag) + m_py.at(i)*(pars[1]/mag) + m_pz.at(i)*(pars[2]/mag));                 
+    T_den += sqrt(m_px.at(i)*m_px.at(i) + m_py.at(i)*m_py.at(i) + m_pz.at(i)*m_pz.at(i));
+  }           
+  //Thrust value
+  if (T_den>0.){
+    double val = T_num / T_den;
+    //Return minus so that minuit minimises -T i.e. maximises T
+    return -val;
   }
+  return 0.;
+};
+
+
+minimize_thrust::minimize_thrust(char *arg_minname, char* arg_algoname){m_minname=arg_minname; m_algoname=arg_algoname;}
+float minimize_thrust::operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz){
   
-  
-  ROOT::Math::Minimizer *min = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
-  //ROOT::Math::Minimizer* min = new ROOT::Minuit2::Minuit2Minimizer("Minuit2") ;
+  ROOT::Math::Minimizer *min = ROOT::Math::Factory::CreateMinimizer(m_minname, m_algoname);
   min->SetMaxFunctionCalls(100000); // for Minuit/Minuit2 
   min->SetMaxIterations(1000);  // for GSL 
   min->SetTolerance(0.001);
@@ -54,7 +66,7 @@ double minimize_thrust(std::vector<double> px, std::vector<double> py, std::vect
 
   // create functon wrapper for minmizer
   // a IMultiGenFunction type 
-  ROOT::Math::Functor f(&thrust,3); 
+  ROOT::Math::Functor f(thrustFit(px,py,pz),3); 
   double step[3] = {0.001,0.001,0.001};
   
   // starting point

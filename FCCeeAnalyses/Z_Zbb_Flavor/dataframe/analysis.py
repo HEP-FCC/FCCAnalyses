@@ -16,7 +16,7 @@ print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 print ('fccana2  ',_fcc2)
 ROOT.ROOT.EnableThreadSafety()
-#ROOT.ROOT.EnableImplicitMT(2)
+#ROOT.ROOT.EnableImplicitMT(1)
 ROOT.TTree.SetMaxTreeSize(100000000000)
 class analysis():
 
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 0
+    ncpus = 1
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 

@@ -49,18 +49,6 @@ std::vector<float> getRP_py(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleDat
 /// return the momenta of the input ReconstructedParticles
 std::vector<float> getRP_pz(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-
-/// return the momenta of the input ReconstructedParticles
-std::vector<double> getRP_px_d(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-
-/// return the momenta of the input ReconstructedParticles
-std::vector<double> getRP_py_d(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-
-/// return the momenta of the input ReconstructedParticles
-std::vector<double> getRP_pz_d(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-
-
-
 /// return the pseudo-rapidity of the input ReconstructedParticles
 std::vector<float> getRP_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
