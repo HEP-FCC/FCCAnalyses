@@ -15,8 +15,9 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 print ('fccana2  ',_fcc2)
-
-
+ROOT.ROOT.EnableThreadSafety()
+#ROOT.ROOT.EnableImplicitMT(2)
+ROOT.TTree.SetMaxTreeSize(100000000000)
 class analysis():
 
     #__________________________________________________________
@@ -55,6 +56,7 @@ class analysis():
                .Define("RP_px",         "getRP_px(ReconstructedParticles)")
                .Define("RP_py",         "getRP_py(ReconstructedParticles)")
                .Define("RP_pz",         "getRP_pz(ReconstructedParticles)")
+               
                .Define("RP_charge",     "getRP_charge(ReconstructedParticles)")
                .Define("RP_mass",       "getRP_mass(ReconstructedParticles)")
 
@@ -66,15 +68,19 @@ class analysis():
                .Alias("Particle0", "Particle#0.index")
 
                .Define('RP_MC_index',    "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_p',        "getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_px',       "getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_py',       "getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_pz',       "getRP2MC_pz(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_pdg',      "getRP2MC_pdg(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_charge',   "getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_p',        "getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_px',       "getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_py',       "getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_pz',       "getRP2MC_pz(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_pdg',      "getRP2MC_pdg(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_charge',   "getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
                .Define('RP_MC_parentindex', "getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
-               
+
+               .Define("RP_px_d",         "getRP_px_d(ReconstructedParticles)")
+               .Define("RP_py_d",         "getRP_py_d(ReconstructedParticles)")
+               .Define("RP_pz_d",         "getRP_pz_d(ReconstructedParticles)")
+               .Define('thrust', "minimize_thrust(RP_px_d, RP_py_d, RP_pz_d)")
                #.Define('RPMC_p',        match,string_vec)
                )
 
@@ -92,6 +98,7 @@ class analysis():
                 "MC_vertex_x",
                 "MC_vertex_y",
                 "MC_vertex_z",
+                "thrust",
 
                 "RP_p",
                 "RP_px",
@@ -103,19 +110,25 @@ class analysis():
                 "RP_TRK_D0",
                 "RP_TRK_Z0",
 
-                "RP_MC_p",
-                "RP_MC_px",
-                "RP_MC_py",
-                "RP_MC_pz",
-                "RP_MC_pdg",
-                "RP_MC_charge",
-                "RP_MC_index",
+                #"RP_MC_p",
+                #"RP_MC_px",
+                #"RP_MC_py",
+                #"RP_MC_pz",
+                #"RP_MC_pdg",
+                #"RP_MC_charge",
+                #"RP_MC_index",
                 "RP_MC_parentindex",
 
 
                 
                 ]:
             branchList.push_back(branchName)
+
+        opts = ROOT.RDF.RSnapshotOptions()
+        opts.fCompressionAlgorithm = ROOT.ROOT.kLZ4
+        opts.fCompressionLevel = 3
+        opts.fAutoFlush = -1024*1024*branchList.size()
+        #df2.Snapshot("events", self.outname, branchList, opts)
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file

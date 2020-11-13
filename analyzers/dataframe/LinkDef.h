@@ -9,6 +9,11 @@
 #pragma link C++ class ROOT::VecOps::RVec<TLorentzVector>+;
 #pragma link C++ class std::vector<std::string>+;
 
+//Algo
+#pragma link C++ function thrust;
+#pragma link C++ function minimize_thrust;
+
+
 //Reconstructed Particles
 #pragma link C++ class selRP_pT;
 #pragma link C++ function getRP_p;

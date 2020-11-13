@@ -10,7 +10,7 @@ process_list=['mgp8_pp_tthh_lambda100_5f',
               'mgp8_pp_ttzz_5f',
               'mgp8_pp_tth01j_5f'
               ]
-fraction=0.1
+fraction=1
 
 import bin.runDataFrame as rdf
 myana=rdf.runDataFrame(basedir,process_list)

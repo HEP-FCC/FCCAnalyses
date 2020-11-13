@@ -1,6 +1,31 @@
 #include "ReconstructedParticle.h"
 
 
+std::vector<double> getRP_px_d(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<double> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.x);
+  }
+  return result;
+}
+
+
+std::vector<double> getRP_py_d(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<double> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.y);
+  }
+  return result;
+}
+
+std::vector<double> getRP_pz_d(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  std::vector<double> result;
+  for (auto & p: in) {
+    result.push_back(p.momentum.z);
+  }
+  return result;
+}
+
 //TOBEMOVED LATER
 ResonanceBuilder::ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass) {m_resonance_pdgid = arg_resonance_pdgid; m_resonance_mass = arg_resonance_mass;}
 

@@ -16,7 +16,7 @@ Table of contents
     * [Plotting](#plotting)
   * [Uproot based](#uproot-based)
     * [Getting Started](#getting-started)
-    
+    * [Running]
   * [Heppy based (no long term support)](#heppy-based-no-long-term-support)
     * [Requirements](#requirements)
     * [Getting Started](#getting-started)
@@ -86,7 +86,7 @@ For the time being the uproot analyses is using the output of the RootDataFrame 
 
 Getting Started
 ============
-This step requires extra packages that we will install locally. For that please specify the place where you want those to be instal by setting this enviroment variable:
+This step requires extra packages that we will install locally. For that please specify the place where you want those to be instal by setting this enviroment variable (please adapt MYPATH to where you want the packages to be installed):
 ```
 export PYTHONUSERBASE=/MYPATH/.local
 ```
@@ -105,17 +105,21 @@ export PATH=/MYPATH/.local/bin:$PATH
 Then install the following packages:
 
 ```
-python -m pip install --user zfit --use-feature=2020-resolver
+#python -m pip install --user zfit --use-feature=2020-resolver
 python -m pip install --user uproot4 --use-feature=2020-resolver
 python -m pip install --user awkward1 --use-feature=2020-resolver
-python -m pip install --user matplotlib --use-feature=2020-resolver
+#python -m pip install --user matplotlib --use-feature=2020-resolver
 python -m pip install --user particle --use-feature=2020-resolver
 ```
 
 Finally update the python path:
 ```
-export PYTHONPATH=/afs/cern.ch/work/h/helsens/.local/lib/python3.6/site-packages:$PYTHONPATH
+export PYTHONPATH=/MYPATH/.local/lib/python3.7/site-packages:$PYTHONPATH
 ```
+
+
+
+
 
 Heppy based (no long term support)
 ============

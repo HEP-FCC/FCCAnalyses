@@ -96,7 +96,7 @@ std::vector<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recind, ROOT::VecOps
     }
   }
 
-  if (recind.size()>reco.size()){ 
+  /*  if (recind.size()>reco.size()){ 
     std::cout << recind.size() <<"========="<<reco.size()<<std::endl;
     for (unsigned int i=0; i<recind.size();i++) {
       if (i<recind.size()-1 && recind[i]==recind[i+1]){
@@ -112,7 +112,7 @@ std::vector<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recind, ROOT::VecOps
 	std::cout << "n mc " << mc.size() << " rec ind " << recind.at(i+1) << " reco P "<< tlv2.P()<< "  mc ind " << mcind.at(i+1) << " truth P " << tlv.P() << " pdg_id " << mc.at(mcind.at(i+1)).PDG  << "  parent id " << parents.at(mc.at(mcind.at(i+1)).parents_begin) << " parent pdg id " << mc.at(parents.at(mc.at(mcind.at(i+1)).parents_begin)).PDG << std::endl;
 	}
     }
-  }
+    }*/
   return result;
 }
 
