@@ -15,9 +15,9 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 print ('fccana2  ',_fcc2)
-ROOT.ROOT.EnableThreadSafety()
+#ROOT.ROOT.EnableThreadSafety()
 #ROOT.ROOT.EnableImplicitMT(1)
-ROOT.TTree.SetMaxTreeSize(100000000000)
+#ROOT.TTree.SetMaxTreeSize(100000000000)
 class analysis():
 
     #__________________________________________________________
@@ -32,13 +32,8 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        match=ROOT.getRP2MC_p_func()
-        string_vec = ROOT.std.vector('string')()
-        string_vec.push_back('MCRecoAssociations#0.index')
-        string_vec.push_back('MCRecoAssociations#1.index')
-        string_vec.push_back('ReconstructedParticles')
-        string_vec.push_back('Particle')
-
+        
+        #df2 = (self.df.Range(10000)
         df2 = (self.df
                .Define("MC_px",         "getMC_px(Particle)")
                .Define("MC_py",         "getMC_py(Particle)")
@@ -76,11 +71,25 @@ class analysis():
                #.Define('RP_MC_charge',   "getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
                #.Define('RP_MC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
                .Define('RP_MC_parentindex', "getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
+               .Define('event_thrust', 'minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
+               .Define('RP_thrustangle', 'thrust_angle(event_thrust, RP_px, RP_py, RP_pz)')
+               .Define('event_thrust_x', "event_thrust.at(0)")
+               .Define('event_thrust_y', "event_thrust.at(1)")
+               .Define('event_thrust_z', "event_thrust.at(2)")
+               .Define('event_thrust_val', "event_thrust.at(3)")
 
-               .Define("RP_px_d",         "getRP_px_d(ReconstructedParticles)")
-               .Define("RP_py_d",         "getRP_py_d(ReconstructedParticles)")
-               .Define("RP_pz_d",         "getRP_pz_d(ReconstructedParticles)")
-               .Define('thrust', "minimize_thrust(RP_px_d, RP_py_d, RP_pz_d)")
+               .Define('event_hemis_0', "getThrustCharge(0)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)")
+               .Define('event_hemis_1', "getThrustCharge(1)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)")
+
+               
+               
+               .Define('event_sphericity', 'minimize_sphericity("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
+               .Define('event_sphericity_x', "event_sphericity.at(0)")
+               .Define('event_sphericity_y', "event_sphericity.at(1)")
+               .Define('event_sphericity_z', "event_sphericity.at(2)")
+               .Define('event_sphericity_val', "event_sphericity.at(3)")
+
+               
                #.Define('RPMC_p',        match,string_vec)
                )
 
@@ -98,7 +107,20 @@ class analysis():
                 "MC_vertex_x",
                 "MC_vertex_y",
                 "MC_vertex_z",
-                "thrust",
+
+                "event_thrust_x",
+                "event_thrust_y",
+                "event_thrust_z",
+                "event_thrust_val",
+                "event_thrust",
+                "event_hemis_0",
+                "event_hemis_1",
+                "event_sphericity_x",
+                "event_sphericity_y",
+                "event_sphericity_z",
+                "event_sphericity_val",
+
+                "RP_thrustangle",
 
                 "RP_p",
                 "RP_px",
@@ -145,7 +167,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 1
+    ncpus = 4
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 

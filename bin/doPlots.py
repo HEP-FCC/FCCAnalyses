@@ -29,7 +29,7 @@ def mapHistos(var, label, sel, param):
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
                 hh = copy.deepcopy(h)
-                hh.Scale(param.intLumi)
+                hh.Scale(param.intLumi*param.scaleSig)
                 if len(hsignal[s])==0:
                     hsignal[s].append(hh)
                 else:

@@ -15,40 +15,47 @@
 #include "TFitter.h"
 
 
-
-/*struct ThrustFitObject {
-double operator()(double* pars) { // the implementation above }
-const std::vector<double>& _px;
-// same for _py, _pz
+struct sphericityFit {
+  sphericityFit(std::vector<float> arg_px, std::vector<float> arg_py, std::vector<float> arg_pz);
+  std::vector<float> m_px;
+  std::vector<float> m_py;
+  std::vector<float> m_pz;
+  float operator()(const double *par);
 };
 
 
-struct selRP_pT {
-  selRP_pT(float arg_min_pt);
-  float m_min_pt = 20; //> transverse momentum threshold [GeV]
-  float operator() (double *par);
+struct minimize_sphericity {
+  minimize_sphericity(std::string arg_minname, std::string arg_algoname);
+  char const *m_minname  = "Minuit2";
+  char const *m_algoname = "";
+  std::vector<float> operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz);
 };
 
 
-*/
 
 struct thrustFit {
   thrustFit(std::vector<float> arg_px, std::vector<float> arg_py, std::vector<float> arg_pz);
   std::vector<float> m_px;
   std::vector<float> m_py;
   std::vector<float> m_pz;
-  float operator()(double *par);
+  float operator()(const double *par);
 };
 
 
-double thrust(const double *par);
-
-
 struct minimize_thrust {
-  minimize_thrust(char *arg_minname, char* arg_algoname);
+  minimize_thrust(std::string arg_minname, std::string arg_algoname);
   char const *m_minname  = "Minuit2";
   char const *m_algoname = "";
-  float operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+  std::vector<float> operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+};
+
+
+std::vector<float> thrust_angle(std::vector<float> thrust, std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+
+struct getThrustCharge {
+  getThrustCharge(bool arg_pos);
+  bool m_pos = 0;
+  float operator() (std::vector<float> thrust_angle, std::vector<float> charge,std::vector<float> px, std::vector<float> py, std::vector<float> pz);
 };
 
 
