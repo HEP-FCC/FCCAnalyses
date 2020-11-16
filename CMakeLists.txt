@@ -48,7 +48,7 @@ add_subdirectory(analyzers/dataframe)
 add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
 #add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
 
-option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target.")
+option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
 if(FCCANALYSES_DOCUMENTATION)
   include(cmake/FCCANALYSESDoxygen.cmake)
