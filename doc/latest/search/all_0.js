@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['architecture_5fid_0',['ARCHITECTURE_ID',['../_c_make_c_x_x_compiler_id_8cpp.html#aba35d0d200deaeb06aee95ca297acb28',1,'CMakeCXXCompilerId.cpp']]]
+  ['deltar_0',['deltaR',['../_f_c_c_analyses_8cc.html#a4be1df77d8bc410a7e1edb5164fc1a16',1,'deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2):&#160;FCCAnalyses.cc'],['../_f_c_c_analyses_8h.html#a4be1df77d8bc410a7e1edb5164fc1a16',1,'deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2):&#160;FCCAnalyses.cc']]]
 ];

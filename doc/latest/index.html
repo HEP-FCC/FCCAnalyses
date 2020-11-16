@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>FCCAnalyses: Main Page</title>
+<title>FCCAnalyses: FCCAnalyses</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,16 +69,112 @@ $(function() {
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">FCCAnalyses Documentation</div>  </div>
+<div class="title">FCCAnalyses </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_README"></a></p>
+<p>This package produce flat ROOT trees using FCCSW EDM root files produced with the <a href="https://github.com/HEP-FCC/EventProducer">EventProducer</a>. As usual, if you aim at contributing to the repository, please fork it, develop and submit pull requests. To have access to the FCC samples, you need to subscribe to one of the following e-group (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx=ee,hh,eh</code>. For the time being, the configuration files are accessible on <code>helsens</code> public <code>afs</code>. This is not optimal and will be changed in the future, thus you are also kindly asked to contact <code>clement.helsens@cern.ch</code> and request access to <code>/afs/cern.ch/work/h/helsens/public/FCCDicts/</code>.</p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+Table of contents</h1>
+<ul>
+<li><a href="#fccanalyses">FCCAnalyses</a></li>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#rootdataframe-based">RootDataFrame based</a><ul>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#generalities">Generalities</a></li>
+<li><a href="#pre-selection">Pre selection</a></li>
+<li><a href="#final-selection">Final selection</a></li>
+<li><a href="#plotting">Plotting</a></li>
+</ul>
+</li>
+<li><a href="#heppy-based-no-long-term-support">Heppy based (no long term support)</a><ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+</ul>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md1"></a>
+RootDataFrame based</h1>
+<p>Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Getting Started</h1>
+<p>In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into <code>LD_LIBRARY_PATH</code> (this happens in <code>setup.sh</code>)</p>
+<p>First check if FCCSW is setup. If the command <code>which fccrun</code> returns something like: <code>/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/fccsw-develop-q57ahua7lm65fvxnzekozih4mgvzptlx/scripts/fccrun</code> then you are good to go, if not please run:</p>
+<div class="fragment"><div class="line">source /cvmfs/fcc.cern.ch/sw/latest/setup.sh</div>
+</div><!-- fragment --><div class="fragment"><div class="line">source ./setup.sh</div>
+<div class="line">mkdir build install</div>
+<div class="line">cd build</div>
+<div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=../install</div>
+<div class="line">make install</div>
+</div><!-- fragment --><p>Each time changes are made in <code>analyzers/dataframe/</code> please re-compile!</p>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Generalities</h1>
+<p>Each analysis is hosted in a single directory, for example <code>FCCeeAnalyses/ZH_Zmumu/dataframe/</code> and contains the same kind of files, please use the same naming convention for all analysis.</p>
+<ol type="1">
+<li><code>analysis.py</code>: This class that is used to define the list of analysers and filters to run on as well as the output variables.</li>
+<li><code>preSel.py</code>: This configuration file is used to define how to run the <code>analysis.py</code>. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the <code>analysis.py</code> with a common code <code>bin/runDataFrame.py</code> (this last file is common to all analyses and should not be touched).</li>
+<li><code>finalSel.py</code>: This configuration file contains the final selections and it runs over the locally produced flat ntuples from the <code>preSel.py</code>. It contains a link to the <code>procDict.json</code> for getting cross section etc...(this might be removed later to include everything in the yaml, closer to the sample), the list of processes, the number of CPU, the cut list, and the variables (that will be both written in a <code>TTree</code> and in the form of <code>TH1</code> properly normalised to an integrated luminosity of 1pb-1.</li>
+<li><code>plots.py</code>: This configuration files is used to select the final selections from running <code>finalSel.py</code> to plot. Informations about how to merge processes, write some extra text, normalise to a given integrated luminosity etc... For the moment it is possible to only plot one signal at the time, but several backgrounds.</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Pre-selection</h1>
+<p>The pre-selection runs over already existing and properly registered FCCSW EDM events. The dataset names with the corresponding statistics can be found <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_v01.php">here</a>. One important parameter is the fraction of the total dataset to run. It can be found in the <code>preSel.py</code> file by setting a value between ]0,1]. For example <code>fraction=0.1</code> will run over 10% of the statistics. Reading the files on <code>eos</code>, and with 15 CPUs we observe processing speeds between 3000 and 10000 events per seconds depending on the number of files. Only run full statistics after having done all the proper testing and analysis design as it can take some time (that of course depends on the sample total statistics). To run the pre-selection of the <code>ZH_Zmumu</code> analysis, just run: </p><div class="fragment"><div class="line">python FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py</div>
+</div><!-- fragment --><p>This will output 3 files in <code>FCCee/ZH_Zmumu/</code> following the parameter <code>outdir</code> in the <code>preSel.py</code> configuration file.</p>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Final selection</h1>
+<p>The final selection runs on the pre-selection files that we produced in the <a href="#pre-selection">Pre-selection</a> step. In the configuration file <code>finalSel.py</code> we define the various cuts to run on and the final variables to be stored in both a <code>TTree</code> and histograms. This is why the variables needs extra fields like <code>title</code>, number of bins and range for the histogram creation. In this example it should run like:</p>
+<div class="fragment"><div class="line">python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py</div>
+</div><!-- fragment --><p>This will create 2 files per selection <code>SAMPLENAME_SELECTIONNAME.root</code> for the <code>TTree</code> and <code>SAMPLENAME_SELECTIONNAME_histo.root</code> for the histograms. <code>SAMPLENAME</code> and <code>SELECTIONNAME</code> corresponds to the name of the sample and selection respectively in the configuration file.</p>
+<h1><a class="anchor" id="autotoc_md6"></a>
+Plotting</h1>
+<p>The plotting configuration file <code>plots.py</code> contains informations about plotting details for plots rendering but also ways of combining samples for plotting. In this example just run like: </p><div class="fragment"><div class="line">python bin/doPlots.py FCCeeAnalyses/ZH_Zmumu/dataframe/plots.py</div>
+</div><!-- fragment --><p>This will produce the plots in the <code>outdir</code> defined in the configuration file.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
+Heppy based (no long term support)</h1>
+<h1><a class="anchor" id="autotoc_md8"></a>
+Requirements</h1>
+<p><code>FCCAnalyses</code> depends on the following packages:</p>
+<ul>
+<li><a href="https://github.com/cbernet/heppy"><code>heppy</code></a></li>
+<li><a href="https://github.com/root-project/root"><code>ROOT</code></a></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md9"></a>
+Getting Started</h1>
+<p>Above-mentioned packages are provided through CVMFS in the stack of FCC external software dependencies, which can be sourced as follows:</p>
+<div class="fragment"><div class="line">source /cvmfs/fcc.cern.ch/sw/views/releases/externals/latest/setup.sh</div>
+</div><!-- fragment --><p>Otherwise, both packages can be easily installed using <code>conda</code> and <code>pip</code>:</p>
+<div class="fragment"><div class="line"># Install ROOT</div>
+<div class="line">conda install -c conda-forge root</div>
+<div class="line"> </div>
+<div class="line"># Install heppy</div>
+<div class="line">pip install heppyfwk</div>
+</div><!-- fragment --><p>See the official documentation for further information about <a href="https://conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> and <a href="https://pip.pypa.io/en/stable/installing/">pip</a></p>
+<p>Once <code>root</code> and <code>heppy</code> are present on our system, either through CVMFS or a manual installation, <code>FCChhAnalyses</code> can be installed with the following command:</p>
+<div class="fragment"><div class="line">python setup.py install --user</div>
+</div><!-- fragment --><p>Now you are ready to run an existing analysis or make your own one.</p>
+<div class="fragment"><div class="line">heppy_loop.py Outputs/HELHC FCChhAnalyses/HELHC/Zprime_tt/analysis.py</div>
+</div><!-- fragment --><p>but better to run on Batch </p><div class="fragment"><div class="line">heppy_batch.py -o FCChhAnalyses/HELHC/Outputs FCChhAnalyses/HELHC/Zprime_tt/analysis.py -b &#39;bsub -q 8nh &lt; batchScript.sh&#39;</div>
+<div class="line">heppy_batch.py -o FCChhAnalyses/HELHC/Outputs FCChhAnalyses/HELHC/Zprime_tt/analysis.py -b &#39;run_condor.sh --bulk tttt_condor -f workday&#39;</div>
+<div class="line">-&gt; the --bulk option is necessary to submit all the CHunks into 1 CONDOR job</div>
+<div class="line">-&gt; if do not use --bulk, there will have 1 job per Chunk</div>
+</div><!-- fragment --><p>The job retry, is as follow : heppy_check.py Outdir/*Chunk* -b 'run_condor.sh -f workday' -&gt; it will submit each failed Chunks into a single CONDOR job </p><div class="fragment"><div class="line">The queue names of CONDOR :</div>
+<div class="line"> 20 mins -&gt; espresso</div>
+<div class="line"> 1h -&gt; microcentury</div>
+<div class="line"> 2h -&gt; longlunch</div>
+<div class="line"> 8h -&gt; workday</div>
+<div class="line"> 1d -&gt; tomorrow</div>
+<div class="line"> 3d -&gt; testmatch</div>
+<div class="line"> 1w -&gt; nextweek</div>
+</div><!-- fragment --><p>in order to save time I already produced the outputs, they are stored on eos</p>
+<div class="fragment"><div class="line">/eos/experiment/fcc/helhc/analyses/Zprime_tt/heppy_outputs/helhc_v01/</div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 16 2020 11:13:23 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Nov 16 2020 12:09:07 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>
