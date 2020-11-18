@@ -12,18 +12,18 @@ yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
 outdir         = 'FCCee/ZH_Zmumu/plots/'
 
-variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m','leptonic_recoil_m_zoom','higgs_hadronic_b_mass']
+variables = ['mz','mz_zoom','leptonic_recoil_m','leptonic_recoil_m_zoom']
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['ZH']   = ["sel0","sel1","sel2","sel3"]
-selections['ZH_2'] = ["sel0","sel2"]
+selections['ZH']   = ["sel0","sel1"]
+selections['ZH_2'] = ["sel0","sel1"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: N_{Z} = 1"
 extralabel['sel1'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV"
-extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
-extralabel['sel3'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
+#extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
+#extralabel['sel3'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
 
 
 colors = {}
