@@ -81,7 +81,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> mergeParticles(ROOT::VecO
 std::vector<edm4hep::ReconstructedParticleData> getRP(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
   std::vector<edm4hep::ReconstructedParticleData> result;
   for (size_t i = 0; i < index.size(); ++i) {
-    result.push_back(in.at(i));
+    result.push_back(in.at(index[i]));
   }  
   return result;
 }
