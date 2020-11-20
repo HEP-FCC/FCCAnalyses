@@ -56,7 +56,7 @@ class analysis():
                .Define("RP_mass",       "getRP_mass(ReconstructedParticles)")
 
                .Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_Z0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
 
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
