@@ -29,7 +29,12 @@ def mapHistos(var, label, sel, param):
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
                 hh = copy.deepcopy(h)
-                hh.Scale(param.intLumi*param.scaleSig)
+                scaleSig=1
+                try:
+                    scaleSig=param.scaleSig
+                except AttributeError:
+                    print ('no scale signal, using 1')
+                hh.Scale(param.intLumi*scaleSig)
                 if len(hsignal[s])==0:
                     hsignal[s].append(hh)
                 else:
