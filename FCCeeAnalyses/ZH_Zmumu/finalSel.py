@@ -8,15 +8,13 @@ import ROOT
 baseDir  = "FCCee/ZH_Zmumu/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v01.json"
+procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp.json"
 
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
 cut_list = {"sel0":"zed_leptonic_m.size() == 1",
             "sel1":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100",
-            #"sel2":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100 && nbjets==2",
-            #"sel3":"zed_leptonic_m.size() == 1 && higgs_hadronic_b_m.size() ==1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100 && nbjets==2"
             }
 
 
@@ -24,15 +22,14 @@ cut_list = {"sel0":"zed_leptonic_m.size() == 1",
 variables = {
     "mz":{"name":"zed_leptonic_m","title":"m_{Z} [GeV]","bin":125,"xmin":0,"xmax":250},
     "mz_zoom":{"name":"zed_leptonic_m","title":"m_{Z} [GeV]","bin":40,"xmin":80,"xmax":100},
-    #"nbjets":{"name":"nbjets","title":"number of bjets","bin":10,"xmin":0,"xmax":10},
     "leptonic_recoil_m":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":0,"xmax":200},
-    "leptonic_recoil_m_zoom":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":120,"xmax":140},
+    "leptonic_recoil_m_zoom":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":200,"xmin":80,"xmax":160},
+    "leptonic_recoil_m_zoom1":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":120,"xmax":140},
     "leptonic_recoil_m_zoom2":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":200,"xmin":120,"xmax":140},
-    #"higgs_hadronic_b_mass":{"name":"higgs_hadronic_b_m","title":"Higgs hadronic bb mass [GeV]","bin":100,"xmin":0,"xmax":200},
 }
 
 ###Number of CPUs to use
-NUM_CPUS = 10
+NUM_CPUS = 5
 
 ###This part is standard to all analyses
 sys.path.append('./bin')

@@ -39,6 +39,7 @@ class analysis():
                .Define("MC_py",         "getMC_py(Particle)")
                .Define("MC_pz",         "getMC_pz(Particle)")
                .Define("MC_p",          "getMC_p(Particle)")
+               .Define("MC_e",          "getMC_e(Particle)")
                .Define("MC_pdg",        "getMC_pdg(Particle)")
                .Define("MC_charge",     "getMC_charge(Particle)")
                .Define("MC_mass",       "getMC_mass(Particle)")
@@ -47,6 +48,10 @@ class analysis():
                .Define("MC_vertex_y",   "getMC_vertex_y(Particle)")
                .Define("MC_vertex_z",   "getMC_vertex_z(Particle)")
 
+               .Define("MC_jets",       "clustering(1,0.5)(MC_px, MC_py, MC_pz, MC_e)")
+               .Define("MC_jets_pt",    "getJet_pt(MC_jets)")
+               
+               
                .Define("RP_p",          "getRP_p(ReconstructedParticles)")
                .Define("RP_px",         "getRP_px(ReconstructedParticles)")
                .Define("RP_py",         "getRP_py(ReconstructedParticles)")
@@ -100,6 +105,9 @@ class analysis():
                 "MC_py",
                 "MC_pz",
                 "MC_p",
+                "MC_e",
+                "MC_jets_pt",
+
                 "MC_pdg",
                 "MC_charge",
                 "MC_mass",
@@ -154,7 +162,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python FCCeeAnalyses/Z_Zbb_Flavor/dataframe/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Ztautau_ecm91/events_012154460.root
+# python FCCeeAnalyses/Z_Zbb_Flavor/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Ztautau_ecm91/events_012154460.root
 
 if __name__ == "__main__":
 

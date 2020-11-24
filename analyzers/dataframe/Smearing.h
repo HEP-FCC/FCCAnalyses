@@ -19,3 +19,4 @@ struct logNormal {
   ROOT::VecOps::RVec<float>  operator() (ROOT::VecOps::RVec<float> in);
 };
 
+#endif

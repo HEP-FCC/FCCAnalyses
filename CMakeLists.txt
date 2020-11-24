@@ -18,7 +18,10 @@ find_package(podio)
 # Use GNU-style hierarchy for installing build products
 include(GNUInstallDirs)
 
+	
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+find_package(FastJet)
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
@@ -50,6 +53,7 @@ add_subdirectory(analyzers/dataframe)
 
 #add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
 #add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
+#add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/)
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
