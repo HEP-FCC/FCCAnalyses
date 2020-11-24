@@ -18,4 +18,3 @@ cd code_docs
 git add --all doc/latest
 git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
 git push origin gh-pages:gh-pages > /dev/null 2>&1
-

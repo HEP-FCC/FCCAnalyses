@@ -1,6 +1,6 @@
 
-#ifndef  FCCANALYSES_ANALYZERS_H
-#define  FCCANALYSES_ANALYZERS_H
+#ifndef  MCPARTICLE_ANALYZERS_H
+#define  MCPARTICLE_ANALYZERS_H
 
 #include <cmath>
 #include <vector>
@@ -19,100 +19,68 @@
 #include "datamodel/TrackStateCollection.h"
 // legacy
 #include "datamodel/FloatData.h"
+#include "edm4hep/MCParticleData.h"
+#include "edm4hep/ParticleIDData.h"
+#include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/ClusterData.h"
+#include "edm4hep/Vector3f.h"
+#include "edm4hep/Vector3d.h"
+#include "edm4hep/Vector2i.h"
+#include "edm4hep/MCRecoParticleAssociationData.h"
+#include "edm4hep/TrackData.h"
+#include "edm4hep/TrackState.h"
+#include "edm4hep/TrackCollection.h"
+#include "edm4hep/TrackState.h"
 
 
+/// compute transverse momentum of a MCParticle
+ROOT::VecOps::RVec<float> pt (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
-/// transverse mass 
-ROOT::VecOps::RVec<float> MTW (ROOT::VecOps::RVec<fcc::ParticleData> in_electrons, ROOT::VecOps::RVec<fcc::ParticleData> in_muons , ROOT::VecOps::RVec<fcc::METData> in_met);
+/// compute pseudorapidity of a MCPparticle
+ROOT::VecOps::RVec<float> eta(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
-
-/*** @M3Builder
- * Computes the event variable M3
- *   
- *   All combinations of 3 jets are tested to retain
- *   the one with highest pT (transverse momentum of the 3-jet system).
- *   This combination of three jets is used to build an "M3" particle,
- *   with the pdgid of the top quark. 
- *   
- **/
-ROOT::VecOps::RVec<fcc::ParticleData> M3Builder (ROOT::VecOps::RVec<fcc::JetData> in_jets, ROOT::VecOps::RVec<fcc::MET> in_met);
+/// return the TlorentzVector of the input MCPparticle
+ROOT::VecOps::RVec<TLorentzVector> tlv(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+std::vector<TLorentzVector> tlv_std(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 
-/// compute transverse momentum of a particle
-ROOT::VecOps::RVec<float> pt (ROOT::VecOps::RVec<fcc::MCParticleData> in);
-
-/// compute pseudorapidity of a particle
-ROOT::VecOps::RVec<float> eta(ROOT::VecOps::RVec<fcc::MCParticleData> in);
-
-/// cast a fcc lorentzvector to a root
-ROOT::VecOps::RVec<TLorentzVector> tlv(ROOT::VecOps::RVec<fcc::LorentzVector> in);
-
-/// calc
-ROOT::VecOps::RVec<float> r (ROOT::VecOps::RVec<fcc::Point> in); 
-
-double deltaR(fcc::LorentzVector v1, fcc::LorentzVector v2);
-
-struct recoil {
-  recoil(float arg_sqrts);
-  float m_sqrts = 240.0;
-  ROOT::VecOps::RVec<fcc::ParticleData> operator() (ROOT::VecOps::RVec<fcc::ParticleData> in) ;
-};
-
-struct noMatchJets {
-  float m_max_rel_iso;
-  // constructor
-  noMatchJets(float arg_max_rel_iso);
-  ROOT::VecOps::RVec<fcc::JetData> operator() (ROOT::VecOps::RVec<fcc::JetData> in, ROOT::VecOps::RVec<fcc::ParticleData> matchParticles);
-};
-
-/// select jets according to transverse momentum and btag
-struct selectJets {
-  float m_min_pt;
-  bool m_btag_must_be_zero;
-  selectJets(float arg_min_pt, bool arg_btag_must_be_zero);
-ROOT::VecOps::RVec<fcc::JetData> operator()(ROOT::VecOps::RVec<fcc::JetData> in, ROOT::VecOps::RVec<fcc::TaggedJetData> btags);
-};
-
-
-/// select particles with a minimum transverse momentum and isolation
-struct selectParticlesPtIso {
-  selectParticlesPtIso(float arg_min_pt, float arg_max_iso); //> ctor, set thresholds
-  float m_min_pt = 20;  //> transverse momentum threshold [GeV]
-  float m_max_iso = 0.4; //> isolation threshold
-  ROOT::VecOps::RVec<fcc::ParticleData>  operator() (ROOT::VecOps::RVec<fcc::ParticleData> in, ROOT::VecOps::RVec<fcc::TaggedParticleData> iso) ;
-};
-
-/// select particles with transverse momentum greater than a minimum value [GeV]
+/// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
 struct selectParticlesPt {
   selectParticlesPt(float arg_min_pt);
   float m_min_pt = 20; //> transverse momentum threshold [GeV]
-  ROOT::VecOps::RVec<fcc::ParticleData>  operator() (ROOT::VecOps::RVec<fcc::ParticleData> in);
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 };
 
+/// Return the D0 of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_D0 (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+std::vector<float> get_D0_std (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
-/// return the transverse momenta of the input lorentz vectors
-ROOT::VecOps::RVec<float> get_pt_lv(ROOT::VecOps::RVec<fcc::LorentzVector> in);
+/// Return the Z0 of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_Z0 (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+std::vector<float> get_Z0_std (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
-/// return the transverse momenta of the input particles
-ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<fcc::ParticleData> in);
+/// Return the Phi of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_phi (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
-/// return the momenta of the input particles
-ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<fcc::ParticleData> in);
+/// Return the omega of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_omega (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
-/// return the pseudo-rapidity of the input particles
-ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<fcc::ParticleData> in);
+/// Return the tanLambda of a track to a reconstructed particle
+ROOT::VecOps::RVec<float> get_tanLambda (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
-/// return the rapidity of the input particles
-ROOT::VecOps::RVec<float> get_y(ROOT::VecOps::RVec<fcc::ParticleData> in);
+/// return the transverse momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// return the phi of the input particles
-ROOT::VecOps::RVec<float> get_phi(ROOT::VecOps::RVec<fcc::ParticleData> in);
+/// return the momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// return the energy of the input particles
-ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<fcc::ParticleData> in);
+/// return the momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<float> get_px_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// concatenate both input vectors and return the resulting vector
-ROOT::VecOps::RVec<fcc::ParticleData> mergeParticles(ROOT::VecOps::RVec<fcc::ParticleData> x, ROOT::VecOps::RVec<fcc::ParticleData> y);
+/// return the momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_py(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<float> get_py_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
 /// return track phi
 ROOT::VecOps::RVec<float> get_trk_phi(ROOT::VecOps::RVec<fcc::TrackStateData> in);
@@ -136,38 +104,41 @@ struct ResonanceBuilder {
   ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass);
 ROOT::VecOps::RVec<fcc::ParticleData> operator()(ROOT::VecOps::RVec<fcc::ParticleData> legs);
 };
+/// return the momenta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<float> get_pz_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-struct JetResonanceBuilder {
-  int m_resonance_pdgid;
-  float m_resonance_mass;
-  JetResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass);
-ROOT::VecOps::RVec<fcc::ParticleData> operator()(ROOT::VecOps::RVec<fcc::JetData> legs);
-};
+/// return the pseudo-rapidity of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// cast FloatValueData to a primitive float
-ROOT::VecOps::RVec<float> id_float(ROOT::VecOps::RVec<fcc::FloatValueData> x);
+/// return the rapidity of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_y(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// cast FloatData (used in earlier versions of fcc-edm) to a primitive float
-ROOT::VecOps::RVec<float> id_float_legacy(ROOT::VecOps::RVec<fcc::FloatData> x);
+/// return the theta of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_theta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// return the masses of the input particles
-ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<fcc::ParticleData> x); 
+/// return the phi of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// return the size of the input collection 
-int get_nparticles(ROOT::VecOps::RVec<fcc::ParticleData> x);
+/// return the energy of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-/// return the size of the input collection 
-int get_njets(ROOT::VecOps::RVec<fcc::JetData> x);
+/// return the masses of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+std::vector<float> get_mass_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
 
-/// return the sum of the  sizes of the input collections collection 
-int get_njets2(ROOT::VecOps::RVec<fcc::JetData> x, ROOT::VecOps::RVec<fcc::JetData> y);
+/// return the charges of the input ReconstructedParticles
+ROOT::VecOps::RVec<float> get_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+std::vector<float> get_charge_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
 
-ROOT::VecOps::RVec<fcc::ParticleData> LeptonicZBuilder (ROOT::VecOps::RVec<fcc::ParticleData> leptons);
-
-  /// @todo: refactor to remove code duplication with leptonicZBuilder
-ROOT::VecOps::RVec<fcc::ParticleData> LeptonicHiggsBuilder(ROOT::VecOps::RVec<fcc::ParticleData> leptons);
+/// return the TlorentzVector of the input ReconstructedParticles
+ROOT::VecOps::RVec<TLorentzVector> get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+std::vector<TLorentzVector> get_tlv_std(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
 /// concatenate both input vectors and return the resulting vector
-ROOT::VecOps::RVec<fcc::ParticleData> mergeElectronsAndMuons(ROOT::VecOps::RVec<fcc::ParticleData> x, ROOT::VecOps::RVec<fcc::ParticleData> y);
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> mergeParticles(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
+
+/// return the size of the input collection
+int get_nparticles(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
 #endif
