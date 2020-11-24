@@ -82,10 +82,8 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="_f_c_c_analyses_8h_source.html">FCCAnalyses.h</a>&quot;</code><br />
 <code>#include &quot;TLorentzVector.h&quot;</code><br />
-<code>#include &quot;datamodel/MCParticleData.h&quot;</code><br />
-<code>#include &quot;datamodel/ParticleData.h&quot;</code><br />
-<code>#include &quot;datamodel/Point.h&quot;</code><br />
-<code>#include &quot;datamodel/LorentzVector.h&quot;</code><br />
+<code>#include &quot;edm4hep/MCParticleData.h&quot;</code><br />
+<code>#include &quot;edm4hep/ReconstructedParticleData.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for FCCAnalyses.cc:</div>
 <div class="dyncontent">
@@ -94,123 +92,38 @@ Include dependency graph for FCCAnalyses.cc:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1763bda83aed97cdf2b847ae832640b2"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a1763bda83aed97cdf2b847ae832640b2">MTW</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; in_electrons, ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; in_muons, ROOT::VecOps::RVec&lt; fcc::METData &gt; in_met)</td></tr>
-<tr class="memdesc:a1763bda83aed97cdf2b847ae832640b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">todo: review  <a href="_f_c_c_analyses_8cc.html#a1763bda83aed97cdf2b847ae832640b2">More...</a><br /></td></tr>
-<tr class="separator:a1763bda83aed97cdf2b847ae832640b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fa47041407deb39ca22aca79dc5b1e5"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a7fa47041407deb39ca22aca79dc5b1e5">M3Builder</a> (ROOT::VecOps::RVec&lt; fcc::JetData &gt; in_jet, ROOT::VecOps::RVec&lt; fcc::MET &gt; in_met)</td></tr>
-<tr class="separator:a7fa47041407deb39ca22aca79dc5b1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a156947bd18ab18d46b4368275891041a"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a156947bd18ab18d46b4368275891041a">pt</a> (ROOT::VecOps::RVec&lt; fcc::MCParticleData &gt; in)</td></tr>
-<tr class="memdesc:a156947bd18ab18d46b4368275891041a"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute transverse momentum of a particle  <a href="_f_c_c_analyses_8cc.html#a156947bd18ab18d46b4368275891041a">More...</a><br /></td></tr>
-<tr class="separator:a156947bd18ab18d46b4368275891041a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aca6017ad8750379ed0dfa259ffdf09"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a6aca6017ad8750379ed0dfa259ffdf09">eta</a> (ROOT::VecOps::RVec&lt; fcc::MCParticleData &gt; in)</td></tr>
-<tr class="memdesc:a6aca6017ad8750379ed0dfa259ffdf09"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute pseudorapidity of a particle  <a href="_f_c_c_analyses_8cc.html#a6aca6017ad8750379ed0dfa259ffdf09">More...</a><br /></td></tr>
-<tr class="separator:a6aca6017ad8750379ed0dfa259ffdf09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3fef7140d6a2dc5b03592a9f6413f4d"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; TLorentzVector &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#af3fef7140d6a2dc5b03592a9f6413f4d">tlv</a> (ROOT::VecOps::RVec&lt; fcc::LorentzVector &gt; in)</td></tr>
-<tr class="memdesc:af3fef7140d6a2dc5b03592a9f6413f4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">cast a fcc lorentzvector to a root  <a href="_f_c_c_analyses_8cc.html#af3fef7140d6a2dc5b03592a9f6413f4d">More...</a><br /></td></tr>
-<tr class="separator:af3fef7140d6a2dc5b03592a9f6413f4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1957de5acba6fc689c0a0270fae65ebc"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a1957de5acba6fc689c0a0270fae65ebc">r</a> (ROOT::VecOps::RVec&lt; fcc::Point &gt; in)</td></tr>
-<tr class="memdesc:a1957de5acba6fc689c0a0270fae65ebc"><td class="mdescLeft">&#160;</td><td class="mdescRight">calc  <a href="_f_c_c_analyses_8cc.html#a1957de5acba6fc689c0a0270fae65ebc">More...</a><br /></td></tr>
-<tr class="separator:a1957de5acba6fc689c0a0270fae65ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4f66ca693e893decbf10930472ded6b"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#ab4f66ca693e893decbf10930472ded6b">norm</a> (ROOT::VecOps::RVec&lt; fcc::Point &gt; in)</td></tr>
-<tr class="separator:ab4f66ca693e893decbf10930472ded6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4be1df77d8bc410a7e1edb5164fc1a16"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a4be1df77d8bc410a7e1edb5164fc1a16">deltaR</a> (fcc::LorentzVector v1, fcc::LorentzVector v2)</td></tr>
-<tr class="separator:a4be1df77d8bc410a7e1edb5164fc1a16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6de2fb8a7e1bd7662e3681d8d705f18"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#ab6de2fb8a7e1bd7662e3681d8d705f18">get_pt_lv</a> (ROOT::VecOps::RVec&lt; fcc::LorentzVector &gt; x)</td></tr>
-<tr class="memdesc:ab6de2fb8a7e1bd7662e3681d8d705f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the transverse momenta of the input lorentz vectors  <a href="_f_c_c_analyses_8cc.html#ab6de2fb8a7e1bd7662e3681d8d705f18">More...</a><br /></td></tr>
-<tr class="separator:ab6de2fb8a7e1bd7662e3681d8d705f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3296b3c26a829eb4253768602d130f3"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#af3296b3c26a829eb4253768602d130f3">get_pt</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:af3296b3c26a829eb4253768602d130f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the transverse momenta of the input particles  <a href="_f_c_c_analyses_8cc.html#af3296b3c26a829eb4253768602d130f3">More...</a><br /></td></tr>
-<tr class="separator:af3296b3c26a829eb4253768602d130f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfb999a44550233035896af3030a181f"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#acfb999a44550233035896af3030a181f">mergeParticles</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x, ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; y)</td></tr>
-<tr class="memdesc:acfb999a44550233035896af3030a181f"><td class="mdescLeft">&#160;</td><td class="mdescRight">concatenate both input vectors and return the resulting vector  <a href="_f_c_c_analyses_8cc.html#acfb999a44550233035896af3030a181f">More...</a><br /></td></tr>
-<tr class="separator:acfb999a44550233035896af3030a181f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac63a69001ff73fb4615290527c0aa7d7"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#ac63a69001ff73fb4615290527c0aa7d7">id_float</a> (ROOT::VecOps::RVec&lt; fcc::FloatValueData &gt; x)</td></tr>
-<tr class="memdesc:ac63a69001ff73fb4615290527c0aa7d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">cast FloatValueData to a primitive float  <a href="_f_c_c_analyses_8cc.html#ac63a69001ff73fb4615290527c0aa7d7">More...</a><br /></td></tr>
-<tr class="separator:ac63a69001ff73fb4615290527c0aa7d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6906b79bd83f69c3c7f864e57811752f"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a6906b79bd83f69c3c7f864e57811752f">id_float_legacy</a> (ROOT::VecOps::RVec&lt; fcc::FloatData &gt; x)</td></tr>
-<tr class="memdesc:a6906b79bd83f69c3c7f864e57811752f"><td class="mdescLeft">&#160;</td><td class="mdescRight">cast FloatData (used in earlier versions of fcc-edm) to a primitive float  <a href="_f_c_c_analyses_8cc.html#a6906b79bd83f69c3c7f864e57811752f">More...</a><br /></td></tr>
-<tr class="separator:a6906b79bd83f69c3c7f864e57811752f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d77aea3eae7416613930aa9981989ae"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a0d77aea3eae7416613930aa9981989ae">get_mass</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:a0d77aea3eae7416613930aa9981989ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the masses of the input particles  <a href="_f_c_c_analyses_8cc.html#a0d77aea3eae7416613930aa9981989ae">More...</a><br /></td></tr>
-<tr class="separator:a0d77aea3eae7416613930aa9981989ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5130787b4891bbf055d09082ab48a4d1"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a5130787b4891bbf055d09082ab48a4d1">get_eta</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:a5130787b4891bbf055d09082ab48a4d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the pseudo-rapidity of the input particles  <a href="_f_c_c_analyses_8cc.html#a5130787b4891bbf055d09082ab48a4d1">More...</a><br /></td></tr>
-<tr class="separator:a5130787b4891bbf055d09082ab48a4d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14116920d4c6b50cf687e3043cadf95e"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a14116920d4c6b50cf687e3043cadf95e">get_phi</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:a14116920d4c6b50cf687e3043cadf95e"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the phi of the input particles  <a href="_f_c_c_analyses_8cc.html#a14116920d4c6b50cf687e3043cadf95e">More...</a><br /></td></tr>
-<tr class="separator:a14116920d4c6b50cf687e3043cadf95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b73c7c22ac191b04d2b5aa330d0d296"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a3b73c7c22ac191b04d2b5aa330d0d296">get_e</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:a3b73c7c22ac191b04d2b5aa330d0d296"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the energy of the input particles  <a href="_f_c_c_analyses_8cc.html#a3b73c7c22ac191b04d2b5aa330d0d296">More...</a><br /></td></tr>
-<tr class="separator:a3b73c7c22ac191b04d2b5aa330d0d296"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78acea19e27fb6264272c576c5b8894a"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a78acea19e27fb6264272c576c5b8894a">pt</a> (ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in)</td></tr>
+<tr class="memdesc:a78acea19e27fb6264272c576c5b8894a"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute transverse momentum of a MCParticle  <a href="_f_c_c_analyses_8cc.html#a78acea19e27fb6264272c576c5b8894a">More...</a><br /></td></tr>
+<tr class="separator:a78acea19e27fb6264272c576c5b8894a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a812d9a057e3f2891d051d893b548c545"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a812d9a057e3f2891d051d893b548c545">eta</a> (ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in)</td></tr>
+<tr class="memdesc:a812d9a057e3f2891d051d893b548c545"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute pseudorapidity of a MCPparticle  <a href="_f_c_c_analyses_8cc.html#a812d9a057e3f2891d051d893b548c545">More...</a><br /></td></tr>
+<tr class="separator:a812d9a057e3f2891d051d893b548c545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6649ab240b5b10e3ae7b802e80c689"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a0b6649ab240b5b10e3ae7b802e80c689">get_pt</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="memdesc:a0b6649ab240b5b10e3ae7b802e80c689"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the transverse momenta of the input ReconstructedParticles  <a href="_f_c_c_analyses_8cc.html#a0b6649ab240b5b10e3ae7b802e80c689">More...</a><br /></td></tr>
+<tr class="separator:a0b6649ab240b5b10e3ae7b802e80c689"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4574e7f5c960b6f9e15a2dc79d1ab119"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a4574e7f5c960b6f9e15a2dc79d1ab119">mergeParticles</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; x, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; y)</td></tr>
+<tr class="memdesc:a4574e7f5c960b6f9e15a2dc79d1ab119"><td class="mdescLeft">&#160;</td><td class="mdescRight">concatenate both input vectors and return the resulting vector  <a href="_f_c_c_analyses_8cc.html#a4574e7f5c960b6f9e15a2dc79d1ab119">More...</a><br /></td></tr>
+<tr class="separator:a4574e7f5c960b6f9e15a2dc79d1ab119"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f2ef50c0b8007e65bff3b910883d0a1"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a1f2ef50c0b8007e65bff3b910883d0a1">get_mass</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="memdesc:a1f2ef50c0b8007e65bff3b910883d0a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the masses of the input ReconstructedParticles  <a href="_f_c_c_analyses_8cc.html#a1f2ef50c0b8007e65bff3b910883d0a1">More...</a><br /></td></tr>
+<tr class="separator:a1f2ef50c0b8007e65bff3b910883d0a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c29979a1869c9771eff8e9d21d8e33"><td class="memItemLeft" align="right" valign="top">std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a44c29979a1869c9771eff8e9d21d8e33">get_mass_std</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="separator:a44c29979a1869c9771eff8e9d21d8e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a737df945062fb4893b5bfe88deea11aa"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a737df945062fb4893b5bfe88deea11aa">get_eta</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="memdesc:a737df945062fb4893b5bfe88deea11aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the pseudo-rapidity of the input ReconstructedParticles  <a href="_f_c_c_analyses_8cc.html#a737df945062fb4893b5bfe88deea11aa">More...</a><br /></td></tr>
+<tr class="separator:a737df945062fb4893b5bfe88deea11aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0484a28ad560ce25b621bf7311d11228"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a0484a28ad560ce25b621bf7311d11228">get_phi</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="memdesc:a0484a28ad560ce25b621bf7311d11228"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the phi of the input ReconstructedParticles  <a href="_f_c_c_analyses_8cc.html#a0484a28ad560ce25b621bf7311d11228">More...</a><br /></td></tr>
+<tr class="separator:a0484a28ad560ce25b621bf7311d11228"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a96c7e106d5cb8d55835adf213d2d5c"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a9a96c7e106d5cb8d55835adf213d2d5c">get_e</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="memdesc:a9a96c7e106d5cb8d55835adf213d2d5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the energy of the input ReconstructedParticles  <a href="_f_c_c_analyses_8cc.html#a9a96c7e106d5cb8d55835adf213d2d5c">More...</a><br /></td></tr>
+<tr class="separator:a9a96c7e106d5cb8d55835adf213d2d5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d69a5a01473d952d5db811b7e836f03"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a7d69a5a01473d952d5db811b7e836f03">get_p</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:a7d69a5a01473d952d5db811b7e836f03"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the momenta of the input particles  <a href="_f_c_c_analyses_8cc.html#a7d69a5a01473d952d5db811b7e836f03">More...</a><br /></td></tr>
 <tr class="separator:a7d69a5a01473d952d5db811b7e836f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba9702e85895ba5e8a90f79cf4024c54"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#aba9702e85895ba5e8a90f79cf4024c54">get_y</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:aba9702e85895ba5e8a90f79cf4024c54"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the rapidity of the input particles  <a href="_f_c_c_analyses_8cc.html#aba9702e85895ba5e8a90f79cf4024c54">More...</a><br /></td></tr>
-<tr class="separator:aba9702e85895ba5e8a90f79cf4024c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bf0f6fabb78ea032aaef8240b1c2d4c"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a5bf0f6fabb78ea032aaef8240b1c2d4c">get_trk_phi</a> (ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt; x)</td></tr>
-<tr class="memdesc:a5bf0f6fabb78ea032aaef8240b1c2d4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">return track phi  <a href="_f_c_c_analyses_8cc.html#a5bf0f6fabb78ea032aaef8240b1c2d4c">More...</a><br /></td></tr>
-<tr class="separator:a5bf0f6fabb78ea032aaef8240b1c2d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3677338d80105c574d20e09bd2f5a901"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a3677338d80105c574d20e09bd2f5a901">get_trk_theta</a> (ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt; x)</td></tr>
-<tr class="memdesc:a3677338d80105c574d20e09bd2f5a901"><td class="mdescLeft">&#160;</td><td class="mdescRight">return track theta  <a href="_f_c_c_analyses_8cc.html#a3677338d80105c574d20e09bd2f5a901">More...</a><br /></td></tr>
-<tr class="separator:a3677338d80105c574d20e09bd2f5a901"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a721947d220fe625cc4fb5866a20247ce"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a721947d220fe625cc4fb5866a20247ce">get_trk_qOverP</a> (ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt; x)</td></tr>
-<tr class="memdesc:a721947d220fe625cc4fb5866a20247ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">return track qOverP  <a href="_f_c_c_analyses_8cc.html#a721947d220fe625cc4fb5866a20247ce">More...</a><br /></td></tr>
-<tr class="separator:a721947d220fe625cc4fb5866a20247ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa17af27521ec570b0616298ad56b1e3"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#aaa17af27521ec570b0616298ad56b1e3">get_trk_z0</a> (ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt; x)</td></tr>
-<tr class="memdesc:aaa17af27521ec570b0616298ad56b1e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">return track z0  <a href="_f_c_c_analyses_8cc.html#aaa17af27521ec570b0616298ad56b1e3">More...</a><br /></td></tr>
-<tr class="separator:aaa17af27521ec570b0616298ad56b1e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9750383d4bc6d4fc89f29b10be6f3a7c"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a9750383d4bc6d4fc89f29b10be6f3a7c">get_trk_d0</a> (ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt; x)</td></tr>
-<tr class="memdesc:a9750383d4bc6d4fc89f29b10be6f3a7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">return track d0  <a href="_f_c_c_analyses_8cc.html#a9750383d4bc6d4fc89f29b10be6f3a7c">More...</a><br /></td></tr>
-<tr class="separator:a9750383d4bc6d4fc89f29b10be6f3a7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a65dab8ef0e6fc1dd790bd73fdda989"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a3a65dab8ef0e6fc1dd790bd73fdda989">get_nparticles</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x)</td></tr>
-<tr class="memdesc:a3a65dab8ef0e6fc1dd790bd73fdda989"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the size of the input collection  <a href="_f_c_c_analyses_8cc.html#a3a65dab8ef0e6fc1dd790bd73fdda989">More...</a><br /></td></tr>
-<tr class="separator:a3a65dab8ef0e6fc1dd790bd73fdda989"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9239822c4bd45c568cac80e4c53163ef"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a9239822c4bd45c568cac80e4c53163ef">get_njets</a> (ROOT::VecOps::RVec&lt; fcc::JetData &gt; x)</td></tr>
-<tr class="memdesc:a9239822c4bd45c568cac80e4c53163ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the size of the input collection  <a href="_f_c_c_analyses_8cc.html#a9239822c4bd45c568cac80e4c53163ef">More...</a><br /></td></tr>
-<tr class="separator:a9239822c4bd45c568cac80e4c53163ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a132fb5e2c116c170031a54fe87b262be"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a132fb5e2c116c170031a54fe87b262be">get_njets2</a> (ROOT::VecOps::RVec&lt; fcc::JetData &gt; x, ROOT::VecOps::RVec&lt; fcc::JetData &gt; y)</td></tr>
-<tr class="memdesc:a132fb5e2c116c170031a54fe87b262be"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the sum of the sizes of the input collections collection  <a href="_f_c_c_analyses_8cc.html#a132fb5e2c116c170031a54fe87b262be">More...</a><br /></td></tr>
-<tr class="separator:a132fb5e2c116c170031a54fe87b262be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34b139c2e41d407d63d3a024e4129e25"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a34b139c2e41d407d63d3a024e4129e25">LeptonicZBuilder</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; leptons)</td></tr>
-<tr class="separator:a34b139c2e41d407d63d3a024e4129e25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a654923458754bd02e02aa9e74b1b0223"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a654923458754bd02e02aa9e74b1b0223">LeptonicHiggsBuilder</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; leptons)</td></tr>
-<tr class="separator:a654923458754bd02e02aa9e74b1b0223"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d45df320f8f4fae6b0463ed3bbedcd0"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_f_c_c_analyses_8cc.html#a8d45df320f8f4fae6b0463ed3bbedcd0">mergeElectronsAndMuons</a> (ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; x, ROOT::VecOps::RVec&lt; fcc::ParticleData &gt; y)</td></tr>
-<tr class="memdesc:a8d45df320f8f4fae6b0463ed3bbedcd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">concatenate both input vectors and return the resulting vector  <a href="_f_c_c_analyses_8cc.html#a8d45df320f8f4fae6b0463ed3bbedcd0">More...</a><br /></td></tr>
-<tr class="separator:a8d45df320f8f4fae6b0463ed3bbedcd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a4be1df77d8bc410a7e1edb5164fc1a16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4be1df77d8bc410a7e1edb5164fc1a16">&#9670;&nbsp;</a></span>deltaR()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double deltaR </td>
-          <td>(</td>
-          <td class="paramtype">fcc::LorentzVector&#160;</td>
-          <td class="paramname"><em>v1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">fcc::LorentzVector&#160;</td>
-          <td class="paramname"><em>v2</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6aca6017ad8750379ed0dfa259ffdf09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6aca6017ad8750379ed0dfa259ffdf09">&#9670;&nbsp;</a></span>eta()</h2>
+<a id="a812d9a057e3f2891d051d893b548c545"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a812d9a057e3f2891d051d893b548c545">&#9670;&nbsp;</a></span>eta()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -218,19 +131,19 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">ROOT::VecOps::RVec&lt;float&gt; eta </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::MCParticleData &gt;&#160;</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt;&#160;</td>
           <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>compute pseudorapidity of a particle </p>
+<p>compute pseudorapidity of a MCPparticle </p>
 
 </div>
 </div>
-<a id="a3b73c7c22ac191b04d2b5aa330d0d296"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b73c7c22ac191b04d2b5aa330d0d296">&#9670;&nbsp;</a></span>get_e()</h2>
+<a id="a9a96c7e106d5cb8d55835adf213d2d5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a96c7e106d5cb8d55835adf213d2d5c">&#9670;&nbsp;</a></span>get_e()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,19 +151,19 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_e </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>return the energy of the input particles </p>
+<p>return the energy of the input ReconstructedParticles </p>
 
 </div>
 </div>
-<a id="a5130787b4891bbf055d09082ab48a4d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5130787b4891bbf055d09082ab48a4d1">&#9670;&nbsp;</a></span>get_eta()</h2>
+<a id="a737df945062fb4893b5bfe88deea11aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a737df945062fb4893b5bfe88deea11aa">&#9670;&nbsp;</a></span>get_eta()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,19 +171,19 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_eta </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>return the pseudo-rapidity of the input particles </p>
+<p>return the pseudo-rapidity of the input ReconstructedParticles </p>
 
 </div>
 </div>
-<a id="a0d77aea3eae7416613930aa9981989ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d77aea3eae7416613930aa9981989ae">&#9670;&nbsp;</a></span>get_mass()</h2>
+<a id="a1f2ef50c0b8007e65bff3b910883d0a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f2ef50c0b8007e65bff3b910883d0a1">&#9670;&nbsp;</a></span>get_mass()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -278,84 +191,32 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_mass </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>return the masses of the input particles </p>
+<p>return the masses of the input ReconstructedParticles </p>
 
 </div>
 </div>
-<a id="a9239822c4bd45c568cac80e4c53163ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9239822c4bd45c568cac80e4c53163ef">&#9670;&nbsp;</a></span>get_njets()</h2>
+<a id="a44c29979a1869c9771eff8e9d21d8e33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44c29979a1869c9771eff8e9d21d8e33">&#9670;&nbsp;</a></span>get_mass_std()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int get_njets </td>
+          <td class="memname">std::vector&lt;float&gt; get_mass_std </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::JetData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>return the size of the input collection </p>
-
-</div>
-</div>
-<a id="a132fb5e2c116c170031a54fe87b262be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a132fb5e2c116c170031a54fe87b262be">&#9670;&nbsp;</a></span>get_njets2()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int get_njets2 </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::JetData &gt;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::JetData &gt;&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return the sum of the sizes of the input collections collection </p>
-
-</div>
-</div>
-<a id="a3a65dab8ef0e6fc1dd790bd73fdda989"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a65dab8ef0e6fc1dd790bd73fdda989">&#9670;&nbsp;</a></span>get_nparticles()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int get_nparticles </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return the size of the input collection </p>
 
 </div>
 </div>
@@ -375,12 +236,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>return the momenta of the input particles </p>
-
 </div>
 </div>
-<a id="a14116920d4c6b50cf687e3043cadf95e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14116920d4c6b50cf687e3043cadf95e">&#9670;&nbsp;</a></span>get_phi()</h2>
+<a id="a0484a28ad560ce25b621bf7311d11228"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0484a28ad560ce25b621bf7311d11228">&#9670;&nbsp;</a></span>get_phi()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -388,19 +247,19 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_phi </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>return the phi of the input particles </p>
+<p>return the phi of the input ReconstructedParticles </p>
 
 </div>
 </div>
-<a id="af3296b3c26a829eb4253768602d130f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3296b3c26a829eb4253768602d130f3">&#9670;&nbsp;</a></span>get_pt()</h2>
+<a id="a0b6649ab240b5b10e3ae7b802e80c689"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b6649ab240b5b10e3ae7b802e80c689">&#9670;&nbsp;</a></span>get_pt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -408,381 +267,49 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_pt </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return the transverse momenta of the input particles </p>
-
-</div>
-</div>
-<a id="ab6de2fb8a7e1bd7662e3681d8d705f18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6de2fb8a7e1bd7662e3681d8d705f18">&#9670;&nbsp;</a></span>get_pt_lv()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_pt_lv </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::LorentzVector &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return the transverse momenta of the input lorentz vectors </p>
-
-</div>
-</div>
-<a id="a9750383d4bc6d4fc89f29b10be6f3a7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9750383d4bc6d4fc89f29b10be6f3a7c">&#9670;&nbsp;</a></span>get_trk_d0()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_trk_d0 </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return track d0 </p>
-
-</div>
-</div>
-<a id="a5bf0f6fabb78ea032aaef8240b1c2d4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bf0f6fabb78ea032aaef8240b1c2d4c">&#9670;&nbsp;</a></span>get_trk_phi()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_trk_phi </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return track phi </p>
-
-</div>
-</div>
-<a id="a721947d220fe625cc4fb5866a20247ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a721947d220fe625cc4fb5866a20247ce">&#9670;&nbsp;</a></span>get_trk_qOverP()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_trk_qOverP </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return track qOverP </p>
-
-</div>
-</div>
-<a id="a3677338d80105c574d20e09bd2f5a901"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3677338d80105c574d20e09bd2f5a901">&#9670;&nbsp;</a></span>get_trk_theta()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_trk_theta </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return track theta </p>
-
-</div>
-</div>
-<a id="aaa17af27521ec570b0616298ad56b1e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa17af27521ec570b0616298ad56b1e3">&#9670;&nbsp;</a></span>get_trk_z0()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_trk_z0 </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::TrackStateData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return track z0 </p>
-
-</div>
-</div>
-<a id="aba9702e85895ba5e8a90f79cf4024c54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba9702e85895ba5e8a90f79cf4024c54">&#9670;&nbsp;</a></span>get_y()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; get_y </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>return the rapidity of the input particles </p>
-
-</div>
-</div>
-<a id="ac63a69001ff73fb4615290527c0aa7d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac63a69001ff73fb4615290527c0aa7d7">&#9670;&nbsp;</a></span>id_float()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; id_float </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::FloatValueData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>cast FloatValueData to a primitive float </p>
-
-</div>
-</div>
-<a id="a6906b79bd83f69c3c7f864e57811752f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6906b79bd83f69c3c7f864e57811752f">&#9670;&nbsp;</a></span>id_float_legacy()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; id_float_legacy </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::FloatData &gt;&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>cast FloatData (used in earlier versions of fcc-edm) to a primitive float </p>
-
-</div>
-</div>
-<a id="a654923458754bd02e02aa9e74b1b0223"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a654923458754bd02e02aa9e74b1b0223">&#9670;&nbsp;</a></span>LeptonicHiggsBuilder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;fcc::ParticleData&gt; LeptonicHiggsBuilder </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>leptons</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>: refactor to remove code duplication with leptonicZBuilder </dd></dl>
-
-</div>
-</div>
-<a id="a34b139c2e41d407d63d3a024e4129e25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34b139c2e41d407d63d3a024e4129e25">&#9670;&nbsp;</a></span>LeptonicZBuilder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;fcc::ParticleData&gt; LeptonicZBuilder </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>leptons</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7fa47041407deb39ca22aca79dc5b1e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fa47041407deb39ca22aca79dc5b1e5">&#9670;&nbsp;</a></span>M3Builder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;fcc::ParticleData&gt; M3Builder </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::JetData &gt;&#160;</td>
-          <td class="paramname"><em>in_jet</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::MET &gt;&#160;</td>
-          <td class="paramname"><em>in_met</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>iterate over permutations</p>
-
-</div>
-</div>
-<a id="a8d45df320f8f4fae6b0463ed3bbedcd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d45df320f8f4fae6b0463ed3bbedcd0">&#9670;&nbsp;</a></span>mergeElectronsAndMuons()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;fcc::ParticleData&gt; mergeElectronsAndMuons </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>concatenate both input vectors and return the resulting vector </p>
-
-</div>
-</div>
-<a id="acfb999a44550233035896af3030a181f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acfb999a44550233035896af3030a181f">&#9670;&nbsp;</a></span>mergeParticles()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;fcc::ParticleData&gt; mergeParticles </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>concatenate both input vectors and return the resulting vector </p>
-
-</div>
-</div>
-<a id="a1763bda83aed97cdf2b847ae832640b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1763bda83aed97cdf2b847ae832640b2">&#9670;&nbsp;</a></span>MTW()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; MTW </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>in_electrons</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::ParticleData &gt;&#160;</td>
-          <td class="paramname"><em>in_muons</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::METData &gt;&#160;</td>
-          <td class="paramname"><em>in_met</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>todo: review </p>
-<p>transverse mass </p>
-<p>original author in heppy: "this logic is bad"</p>
-
-</div>
-</div>
-<a id="ab4f66ca693e893decbf10930472ded6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4f66ca693e893decbf10930472ded6b">&#9670;&nbsp;</a></span>norm()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; norm </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::Point &gt;&#160;</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
           <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>return the transverse momenta of the input ReconstructedParticles </p>
+
 </div>
 </div>
-<a id="a156947bd18ab18d46b4368275891041a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a156947bd18ab18d46b4368275891041a">&#9670;&nbsp;</a></span>pt()</h2>
+<a id="a4574e7f5c960b6f9e15a2dc79d1ab119"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4574e7f5c960b6f9e15a2dc79d1ab119">&#9670;&nbsp;</a></span>mergeParticles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::VecOps::RVec&lt;edm4hep::ReconstructedParticleData&gt; mergeParticles </td>
+          <td>(</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>concatenate both input vectors and return the resulting vector </p>
+
+</div>
+</div>
+<a id="a78acea19e27fb6264272c576c5b8894a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78acea19e27fb6264272c576c5b8894a">&#9670;&nbsp;</a></span>pt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -790,54 +317,14 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">ROOT::VecOps::RVec&lt;float&gt; pt </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::MCParticleData &gt;&#160;</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt;&#160;</td>
           <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>compute transverse momentum of a particle </p>
-
-</div>
-</div>
-<a id="a1957de5acba6fc689c0a0270fae65ebc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1957de5acba6fc689c0a0270fae65ebc">&#9670;&nbsp;</a></span>r()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;float&gt; r </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::Point &gt;&#160;</td>
-          <td class="paramname"><em>in</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>calc </p>
-
-</div>
-</div>
-<a id="af3fef7140d6a2dc5b03592a9f6413f4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3fef7140d6a2dc5b03592a9f6413f4d">&#9670;&nbsp;</a></span>tlv()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt;TLorentzVector&gt; tlv </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; fcc::LorentzVector &gt;&#160;</td>
-          <td class="paramname"><em>in</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>cast a fcc lorentzvector to a root </p>
+<p>compute transverse momentum of a MCParticle </p>
 
 </div>
 </div>
@@ -845,7 +332,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 16 2020 12:09:07 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 24 2020 11:36:42 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

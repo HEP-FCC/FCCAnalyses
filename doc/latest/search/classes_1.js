@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nomatchjets_52',['noMatchJets',['../structno_match_jets.html',1,'']]]
+  ['lognormal_138',['logNormal',['../structlog_normal.html',1,'']]]
 ];
