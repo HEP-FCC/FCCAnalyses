@@ -52,4 +52,11 @@ endif()
 add_subdirectory(analyzers/dataframe)
 
 #add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
-add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/)
+#add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
+#add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/)
+
+option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
+
+if(FCCANALYSES_DOCUMENTATION)
+  include(cmake/FCCANALYSESDoxygen.cmake)
+endif()

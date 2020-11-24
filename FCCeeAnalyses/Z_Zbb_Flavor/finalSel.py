@@ -8,7 +8,8 @@ import ROOT
 baseDir  = "FCCee/ZH_Zmumu/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v01.json"
+procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v02.json"
+procDict ='https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee_procDict_fcc_v02.json'
 
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 
@@ -35,8 +36,6 @@ variables = {
 NUM_CPUS = 10
 
 ###This part is standard to all analyses
-sys.path.append('./bin')
-import runDataFrameFinal as rdf
-#import bin.runDataFrameFinal as rdf
+import bin.runDataFrameFinal as rdf
 myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables)
 myana.run(ncpu=NUM_CPUS)

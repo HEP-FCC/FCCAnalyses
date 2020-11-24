@@ -1,21 +1,15 @@
 from common_defaults import deffccdicts
 
-#python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py 
+#python FCCeeAnalyses/ZH_Zee/dataframe/finalSel.py 
 import os, sys
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-defbaseDir = os.path.join(os.getenv('PWD',''), '') + "FCCAnalyses/Outputs/FCCee/ZH_Zmumu/"
-baseDir = os.path.join(os.getenv('FCCANAOUT', defbaseDir), '')
-if not os.path.exists(baseDir):
-    try:
-        os.makedirs(baseDir)
-    except:
-        print("Output directory " , baseDir ,  " could not be created - exit")
-        sys.exit(1)
+baseDir  = "FCCee/ZH_Zee/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v01.json"
+procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v02.json"
+procDict ='https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee_procDict_fcc_v02.json'
 
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 
