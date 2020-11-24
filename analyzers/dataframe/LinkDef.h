@@ -5,29 +5,48 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
+#pragma link C++ class vector<TLorentzVector>+;
+#pragma link C++ class ROOT::VecOps::RVec<TLorentzVector>+;
+#pragma link C++ class std::vector<std::string>+;
 
-#pragma link C++ function pt;
-#pragma link C++ function eta;
-#pragma link C++ function tlv;
-#pragma link C++ function r;
-#pragma link C++ class recoil;
-#pragma link C++ class noMatchJets;
-#pragma link C++ class selectJets;
-#pragma link C++ class selectParticlesPtIso;
-#pragma link C++ class selectParticlesPt;
-#pragma link C++ function get_pt_lv;
-#pragma link C++ function get_pt;
-#pragma link C++ function merge_particles;
-#pragma link C++ class ResonanceBuilder;
-#pragma link C++ function id_float;
-#pragma link C++ function id_float_legacy;
-#pragma link C++ function get_mass;
+//Algo
+#pragma link C++ function thrust;
+#pragma link C++ function minimize_thrust;
+
+
+//Reconstructed Particles
+#pragma link C++ class selRP_pT;
+#pragma link C++ function getRP_p;
+#pragma link C++ function getRP_pt;
+#pragma link C++ function getRP_px;
+#pragma link C++ function getRP_py;
+#pragma link C++ function getRP_pz;
+#pragma link C++ function getRP_eta;
+#pragma link C++ function getRP_y;
+#pragma link C++ function getRP_theta;
+#pragma link C++ function getRP_phi;
+#pragma link C++ function getRP_e;
+#pragma link C++ function getRP_mass;
+#pragma link C++ function getRP_charge;
+#pragma link C++ function getRP_tlv;
+#pragma link C++ function mergeParticles;
 #pragma link C++ function get_n_particles;
-#pragma link C++ function get_n_particles_rvec;
-#pragma link C++ function get_n_jets;
-#pragma link C++ function get_n_jets2;
-#pragma link C++ function LeptonicZedBuilder;
-#pragma link C++ function LeptonicHiggsBuilder;
-#pragma link C++ function mergeElectronsAndMuons;
+
+
+//MC Particles
+#pragma link C++ function getMC_p;
+#pragma link C++ function getMC_px;
+#pragma link C++ function getMC_py;
+#pragma link C++ function getMC_pz;
+#pragma link C++ function getMC_e;
+
+//Reconstructed Particles to tracks
+#pragma link C++ function getRPTRK_D0;
+#pragma link C++ function getRP2TRK_Z0;
+
+#pragma link C++ function getRP2MC_p;
+#pragma link C++ class getRP2MC_p_func;
+
+
 
 #endif

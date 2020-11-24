@@ -29,7 +29,12 @@ def mapHistos(var, label, sel, param):
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
                 hh = copy.deepcopy(h)
-                hh.Scale(param.intLumi)
+                scaleSig=1
+                try:
+                    scaleSig=param.scaleSig
+                except AttributeError:
+                    print ('no scale signal, using 1')
+                hh.Scale(param.intLumi*scaleSig)
                 if len(hsignal[s])==0:
                     hsignal[s].append(hh)
                 else:
@@ -95,8 +100,14 @@ def runPlots(var,param,hsignal,hbackgrounds,extralab):
 
     intLumiab = param.intLumi/1e+06 
 
-    lt = "FCC-ee Simulation (Delphes)"
-    rt = "#sqrt{{s}} = {:.1f} GeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    
+    lt = "FCC-hh Simulation (Delphes)"    
+    rt = "#sqrt{{s}} = {:.1f} TeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+
+    if 'ee' in param.collider:
+        lt = "FCC-ee Simulation (Delphes)"
+        rt = "#sqrt{{s}} = {:.1f} GeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+
 
     if 'stack' in param.stacksig:
         if 'lin' in param.yaxis:
