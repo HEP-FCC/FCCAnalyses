@@ -18,7 +18,10 @@ find_package(podio)
 # Use GNU-style hierarchy for installing build products
 include(GNUInstallDirs)
 
+	
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+find_package(FastJet)
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
