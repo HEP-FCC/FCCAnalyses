@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['pt_258',['pt',['../_f_c_c_analyses_8cc.html#a78acea19e27fb6264272c576c5b8894a',1,'pt(ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in):&#160;FCCAnalyses.cc'],['../_f_c_c_analyses_8h.html#a78acea19e27fb6264272c576c5b8894a',1,'pt(ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in):&#160;FCCAnalyses.cc']]]
+  ['recoil_214',['recoil',['../structrecoil.html#ac2a2fa9d3a8b7f6dadcc9d565a423b2f',1,'recoil']]],
+  ['resonancebuilder_215',['ResonanceBuilder',['../struct_resonance_builder.html#a9e18f85c7c9bbf7e8dc50a5f2a2c4291',1,'ResonanceBuilder']]]
 ];
