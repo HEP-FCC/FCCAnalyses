@@ -4,29 +4,19 @@ include(${ROOT_USE_FILE})
 
 
 find_package(fccedm)
-find_package(EDM4HEP)
-find_package(podio)
-
-
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-
-find_package(FastJet)
 
 include_directories(
         ${CMAKE_SOURCE_DIR}/analyzers/dataframe
         "${FCCEDM_INCLUDE_DIRS}"
-	${FASTJET_INCLUDE_DIR}
         )
 
-file(GLOB sources *.cc)
-file(GLOB headers *.h)
+file(GLOB sources FCC*.cc)
+file(GLOB headers FCC*.h)
 
-
-
-ROOT_GENERATE_DICTIONARY(G__FCCAnalyses MCParticle.h ReconstructedParticle.h ReconstructedParticle2Track.h ReconstructedParticle2MC.h Algorithm.h JetClustering.h LINKDEF LinkDef.h)
+ROOT_GENERATE_DICTIONARY(G__FCCAnalyses FCCAnalyses.h LINKDEF LinkDef.h)
 
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
-target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics EDM4HEP::edm4hep podio::podio ${FASTJET_LIBRARY})
+target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics)
 
 set_target_properties(FCCAnalyses PROPERTIES
   PUBLIC_HEADER "${headers}")
