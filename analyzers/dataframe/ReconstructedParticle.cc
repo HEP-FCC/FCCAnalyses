@@ -4,8 +4,8 @@
 //TOBEMOVED LATER
 ResonanceBuilder::ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass) {m_resonance_pdgid = arg_resonance_pdgid; m_resonance_mass = arg_resonance_mass;}
 
-std::vector<edm4hep::ReconstructedParticleData> ResonanceBuilder::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs) {
-  std::vector<edm4hep::ReconstructedParticleData> result;
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ResonanceBuilder::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   int n = legs.size();
   if (n >1) {
     ROOT::VecOps::RVec<bool> v(n);
@@ -32,9 +32,9 @@ std::vector<edm4hep::ReconstructedParticleData> ResonanceBuilder::operator()(ROO
   if (result.size() > 1) {
     auto resonancesort = [&] (edm4hep::ReconstructedParticleData i ,edm4hep::ReconstructedParticleData j) { return (abs( m_resonance_mass -i.mass)<abs(m_resonance_mass-j.mass)); };
     std::sort(result.begin(), result.end(), resonancesort);
-    std::vector<edm4hep::ReconstructedParticleData>::const_iterator first = result.begin();
-    std::vector<edm4hep::ReconstructedParticleData>::const_iterator last = result.begin() + 1;
-    std::vector<edm4hep::ReconstructedParticleData> onlyBestReso(first, last);
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>::const_iterator first = result.begin();
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>::const_iterator last = result.begin() + 1;
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> onlyBestReso(first, last);
     return onlyBestReso;
   } else {
     return result;
@@ -44,8 +44,8 @@ std::vector<edm4hep::ReconstructedParticleData> ResonanceBuilder::operator()(ROO
 
 
 recoil::recoil(float arg_sqrts) : m_sqrts(arg_sqrts) {};
-std::vector<edm4hep::ReconstructedParticleData>  recoil::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<edm4hep::ReconstructedParticleData> result;
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  recoil::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   auto recoil_p4 = TLorentzVector(0, 0, 0, m_sqrts);
   for (auto & v1: in) {
     TLorentzVector tv1;
@@ -61,8 +61,8 @@ std::vector<edm4hep::ReconstructedParticleData>  recoil::operator() (ROOT::VecOp
   return result;
 };
 
-std::vector<float> getRP_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
- std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+ ROOT::VecOps::RVec<float> result;
  for (size_t i = 0; i < in.size(); ++i) {
    result.push_back(sqrt(in[i].momentum.x * in[i].momentum.x + in[i].momentum.y * in[i].momentum.y));
  }
@@ -70,7 +70,7 @@ std::vector<float> getRP_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleDat
 }
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> mergeParticles(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y) {
-  //to be keept as std::vector
+  //to be keept as ROOT::VecOps::RVec
   std::vector<edm4hep::ReconstructedParticleData> result;
   result.reserve(x.size() + y.size());
   result.insert( result.end(), x.begin(), x.end() );
@@ -78,25 +78,28 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> mergeParticles(ROOT::VecO
   return ROOT::VecOps::RVec(result);
 }
 
-std::vector<edm4hep::ReconstructedParticleData> getRP(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
-  std::vector<edm4hep::ReconstructedParticleData> result;
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> getRP(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   for (size_t i = 0; i < index.size(); ++i) {
-    result.push_back(in.at(index[i]));
+    if (index[i]>-1)
+      result.push_back(in.at(index[i]));
+    //else
+    //  std::cout << "electron index negative " << index[i]<<std::endl;
   }  
   return result;
 }
 
 
-std::vector<float> getRP_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     result.push_back(p.mass);
   }
   return result;
 }
 
-std::vector<float> getRP_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
@@ -105,8 +108,8 @@ std::vector<float> getRP_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleDa
   return result;
 }
 
-std::vector<float> getRP_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
@@ -115,16 +118,16 @@ std::vector<float> getRP_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleDa
   return result;
 }
 
-std::vector<float> getRP_e(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_e(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     result.push_back(p.energy);
   }
   return result;
 }
 
-std::vector<float> getRP_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
@@ -133,8 +136,8 @@ std::vector<float> getRP_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData
   return result;
 }
 
-std::vector<float> getRP_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     result.push_back(p.momentum.x);
   }
@@ -142,32 +145,32 @@ std::vector<float> getRP_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleDat
 }
 
 
-std::vector<float> getRP_py(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_py(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     result.push_back(p.momentum.y);
   }
   return result;
 }
 
-std::vector<float> getRP_pz(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_pz(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     result.push_back(p.momentum.z);
   }
   return result;
 }
 
-std::vector<float> getRP_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     result.push_back(p.charge);
   }
   return result;
 }
 
-std::vector<float> getRP_y(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_y(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
@@ -176,8 +179,8 @@ std::vector<float> getRP_y(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData
   return result;
 }
 
-std::vector<float> getRP_theta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP_theta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
@@ -186,8 +189,8 @@ std::vector<float> getRP_theta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticle
   return result;
 }
 
-std::vector<TLorentzVector> getRP_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<TLorentzVector> result;
+ROOT::VecOps::RVec<TLorentzVector> getRP_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<TLorentzVector> result;
   for (auto & p: in) {
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
@@ -204,8 +207,8 @@ int getRP_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x) {
 
 selRP_pT::selRP_pT(float arg_min_pt) : m_min_pt(arg_min_pt) {};
 
-std::vector<edm4hep::ReconstructedParticleData>  selRP_pT::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-  std::vector<edm4hep::ReconstructedParticleData> result;
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  selRP_pT::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
