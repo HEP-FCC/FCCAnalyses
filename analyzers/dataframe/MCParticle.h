@@ -35,6 +35,14 @@ struct getMC_tree{
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
 };
 
+/// get the decay of a given particle
+struct getMC_decay {
+  getMC_decay(int arg_mother, int arg_daughters, bool arg_inf);
+  int m_mother = 0; //> mother pdg id
+  int m_daughters = 0;//> daughters pdg id
+  bool m_inf = false;//> boolean to check if the pdgid is below a value rather than equal
+  bool  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
+};
 
 /// return the time of the input MCParticles
 ROOT::VecOps::RVec<float> getMC_time(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);

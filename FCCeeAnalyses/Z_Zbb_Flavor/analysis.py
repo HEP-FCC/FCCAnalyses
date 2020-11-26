@@ -26,15 +26,20 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        #ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
         
-        #df2 = (self.df.Range(10000)
-        df2 = (self.df
+        df2 = (self.df.Range(10)
+        #df2 = (self.df
+
+               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
+               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
+               .Alias("Particle0", "Particle#0.index")
+
                .Define("MC_px",         "getMC_px(Particle)")
                .Define("MC_py",         "getMC_py(Particle)")
                .Define("MC_pz",         "getMC_pz(Particle)")
@@ -50,7 +55,9 @@ class analysis():
 
                .Define("MC_jets",       "clustering(1,0.5)(MC_px, MC_py, MC_pz, MC_e)")
                .Define("MC_jets_pt",    "getJet_pt(MC_jets)")
-               
+
+               .Define("MC_status1",    "selMC_genStatus(1)(Particle)")
+               .Define("MC_tree",       "getMC_tree(1)(Particle,Particle0)")
                
                .Define("RP_p",          "getRP_p(ReconstructedParticles)")
                .Define("RP_px",         "getRP_px(ReconstructedParticles)")
@@ -63,11 +70,7 @@ class analysis():
                .Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
                .Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
 
-               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
-               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Alias("Particle0", "Particle#0.index")
-
-               .Define('RP_MC_index',    "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_index',    "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles)")
                #.Define('RP_MC_p',        "getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
                #.Define('RP_MC_px',       "getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
                #.Define('RP_MC_py',       "getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
@@ -116,6 +119,7 @@ class analysis():
                 "MC_vertex_y",
                 "MC_vertex_z",
 
+                "MC_tree",
                 "event_thrust_x",
                 "event_thrust_y",
                 "event_thrust_z",
@@ -175,7 +179,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 4
+    ncpus = 1
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 

@@ -259,20 +259,51 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  selMC_genStatus::operator() (ROOT::
   return result;
 }
 
+
+getMC_decay::getMC_decay(int arg_mother, int arg_daughters, bool arg_inf){m_mother=arg_mother; m_daughters=arg_daughters; m_inf=arg_inf;};
+bool getMC_decay::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  ROOT::VecOps::RVec<int> ind){
+
+  bool result=false;
+  for (size_t i = 0; i < in.size(); ++i) {
+    if (in[i].PDG!=m_mother)continue;
+    int ndaughters=0;
+    for (unsigned j = in.at(i).daughters_begin; j != in.at(i).daughters_end; ++j) {
+      if (std::abs(in[ind.at(j)].PDG)==m_daughters && m_inf==false)ndaughters+=1;
+      else if (std::abs(in[ind.at(j)].PDG)<=m_daughters && m_inf==true)ndaughters+=1;
+    }
+    if (ndaughters>1){
+      result=true;
+      return result;
+    }
+  }
+  return result;
+}
+
+
 getMC_tree::getMC_tree(int arg_status) : m_status(arg_status) {};
 ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getMC_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
 
+  std::cout << "My logic"<<std::endl;
   for (size_t i = 0; i < in.size(); ++i) {
     std::cout << i << " status " << in[i].generatorStatus << " pdg " << in[i].PDG << " p_beg " << in.at(ind.at(i)).parents_begin << " p_end " << in.at(ind.at(i)).parents_end << std::endl;
   }
 
 
+  std::cout << "Thomas logic"<<std::endl;
+
+  for (size_t i = 0; i < in.size(); ++i) {
+    // all the other cout
+    std::cout << i  << " status " << in[i].generatorStatus << " pdg " << in[i].PDG << std::endl;
+    for (unsigned j = in.at(i).parents_begin; j != in.at(i).parents_end; ++j) {
+      std::cout << " parents " << ind.at(j) << std::endl;
+    }
+  }
  
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
-  /* for (size_t i = 0; i < in.size(); ++i) {
+  for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
     std::cout <<  "here" << std::endl;
-
+    
     if (p.generatorStatus != m_status) continue;
     ROOT::VecOps::RVec<int> tree;
     tree.push_back(in.at(ind.at(i)).parents_begin);
@@ -281,8 +312,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getMC_tree::operator() (ROOT::VecOps
       //      std::cout << 
       tree.push_back(in.at(ind.at(tree.back())).parents_begin);
     }
-
     result.push_back(tree);
-    }*/
+  }
   return result;
 }
