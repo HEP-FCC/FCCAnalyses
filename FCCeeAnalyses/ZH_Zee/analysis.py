@@ -1,13 +1,18 @@
 import sys
 import ROOT
 
-print ("Load cxx analyzers ... ")
-ROOT.gSystem.Load("libdatamodel")
+print ("Load cxx analyzers ... ",)
+ROOT.gSystem.Load("libedm4hep")
+ROOT.gSystem.Load("libpodio")
 ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
+_edm  = ROOT.edm4hep.ReconstructedParticleData()
+_pod  = ROOT.podio.ObjectID()
+_fcc  = ROOT.getMC_px
 
-_p = ROOT.fcc.ParticleData()
-_s = ROOT.selectParticlesPtIso
+print ('edm4hep  ',_edm)
+print ('podio    ',_pod)
+print ('fccana   ',_fcc)
 
 class analysis():
 
@@ -23,56 +28,50 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = self.df.Define("selected_muons", "selectParticlesPtIso(10, 0.4)(muons, muonITags)") \
-                     .Define("selected_muons_pt", "get_pt(selected_muons)") \
-                     .Define("selected_muons_y", "get_y(selected_muons)") \
-                     .Define("selected_muons_p", "get_p(selected_muons)") \
-                     .Define("selected_muons_e", "get_e(selected_muons)") \
-                     .Define("jets_10_bs", "selectJets(10, true)(efjets, efbTags)") \
-                     .Define("jets_10_lights", "selectJets(10, false)(efjets, efbTags)") \
-                     .Define("selected_bs", "noMatchJets(0.2)(jets_10_bs, selected_muons)") \
-                     .Define("selected_lights", "noMatchJets(0.2)(jets_10_lights, selected_muons)") \
-                     .Define("nbjets", "get_njets(selected_bs)") \
-                     .Define("njets", "get_njets2(selected_bs, selected_lights)") \
-                     .Define("weight"," id_float(mcEventWeights)") \
-                     .Define("zed_leptonic","ResonanceBuilder(23, 91)(selected_muons)") \
-                     .Define("zed_leptonic_m", "get_mass(zed_leptonic)") \
-                     .Define("zed_leptonic_pt","get_pt(zed_leptonic)") \
-                     .Define("zed_hadronic_light","JetResonanceBuilder(23, 91)(jets_10_lights)") \
-                     .Define("zed_hadronic_light_m", "get_mass(zed_hadronic_light)") \
-                     .Define("zed_hadronic_light_pt","get_pt(zed_hadronic_light)") \
-                     .Define("zed_hadronic_b","JetResonanceBuilder(23, 91)(jets_10_bs)") \
-                     .Define("zed_hadronic_b_m", "get_mass(zed_hadronic_b)") \
-                     .Define("zed_hadronic_b_pt","get_pt(zed_hadronic_b)") \
-                     .Define("zed_leptonic_recoil","recoil(240)(zed_leptonic)") \
-                     .Define("zed_leptonic_recoil_m","get_mass(zed_leptonic_recoil)") \
+        df2 = (self.df
+               # define an alias for muon index collection
+               .Alias("Electron0", "Electron#0.index")
+               # define the muon collection
+               .Define("electrons",  "getRP(Electron0, ReconstructedParticles)")
+               #select muons on pT
+               .Define("selected_electrons", "selRP_pT(10.)(electrons)")
+               # create branch with muon transverse momentum
+               .Define("selected_electrons_pt", "getRP_pt(selected_electrons)") 
+               # create branch with muon rapidity
+               .Define("selected_electrons_y",  "getRP_y(selected_electrons)") 
+               # create branch with muon total momentum
+               .Define("selected_electrons_p",     "getRP_p(selected_electrons)")
+               # create branch with muon energy 
+               .Define("selected_electrons_e",     "getRP_e(selected_electrons)")
+               # find zed candidates from  di-muon resonances  
+               .Define("zed_leptonic",         "ResonanceBuilder(23, 91)(selected_electrons)")
+               # write branch with zed mass
+               .Define("zed_leptonic_m",       "getRP_mass(zed_leptonic)")
+               # write branch with zed transverse momenta
+               .Define("zed_leptonic_pt",      "getRP_pt(zed_leptonic)")
+               # calculate recoil of zed_leptonic
+               .Define("zed_leptonic_recoil",  "recoil(240)(zed_leptonic)")
+               # write branch with recoil mass
+               .Define("zed_leptonic_recoil_m","getRP_mass(zed_leptonic_recoil)") 
 
-        
+        )
 
-
+        # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                "selected_muons_pt",
-                "selected_muons_y",
-                "selected_muons_p",
-                "selected_muons_e",
+                "selected_electrons_pt",
+                "selected_electrons_y",
+                "selected_electrons_p",
+                "selected_electrons_e",
                 "zed_leptonic_pt",
                 "zed_leptonic_m",
-                "zed_hadronic_light_pt",
-                "zed_hadronic_light_m",
-                "zed_hadronic_b_pt",
-                "zed_hadronic_b_m",
-                "zed_leptonic_recoil_m",
-                "nbjets",
-                "njets",
-                "weight",
-        ]:
+                "zed_leptonic_recoil_m"
+                ]:
             branchList.push_back(branchName)
-            df2.Snapshot("events", self.outname, branchList)
+        df2.Snapshot("events", self.outname, branchList)
 
-
-# example call
-# python FCCeeAnalyses/ZH_Zmumu/dataframe/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
+# example call for standalone file
+# python FCCeeAnalyses/ZH_Zmumu/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
 if __name__ == "__main__":
 
     if len(sys.argv)==1:
@@ -84,7 +83,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 0
+    ncpus = 1
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 
