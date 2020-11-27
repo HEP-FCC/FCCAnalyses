@@ -50,18 +50,23 @@ if __name__ == "__main__":
     if len(sys.argv)==1:
         print ("usage:")
         print ("python ",sys.argv[0]," file.root")
+        print ("python ",sys.argv[0]," dir/*.root")
         sys.exit(3)
-    infile = sys.argv[1]
+
+    import glob
+    filelist = glob.glob(sys.argv[1])
+    
+    print ("Create dataframe object from ", )
+    fileListRoot = ROOT.vector('string')()
+    for fileName in filelist:
+        fileListRoot.push_back(fileName)
+        print (fileName, " ",)
+        print (" ...")
+        
     outDir = 'FCCee/'+sys.argv[0].split('/')[1]+'/'
     import os
     os.system("mkdir -p {}".format(outDir))
-    outfile = outDir+infile.split('/')[-1]
+    outfile = outDir+sys.argv[1].split('/')[-1]
     ncpus = 0
-    analysis = analysis(infile, outfile, ncpus)
+    analysis = analysis(fileListRoot, outfile, ncpus)
     analysis.run()
-
-    tf = ROOT.TFile(infile)
-    entries = tf.events.GetEntries()
-    p = ROOT.TParameter(int)( "eventsProcessed", entries)
-    outf=ROOT.TFile(outfile,"UPDATE")
-    p.Write()
