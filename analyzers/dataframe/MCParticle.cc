@@ -230,6 +230,8 @@ int getMC_n(ROOT::VecOps::RVec<edm4hep::MCParticleData> x) {
   return result;
 }
 
+
+
 selMC_pT::selMC_pT(float arg_min_pt) : m_min_pt(arg_min_pt) {};
 
 ROOT::VecOps::RVec<edm4hep::MCParticleData>  selMC_pT::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
@@ -244,3 +246,43 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  selMC_pT::operator() (ROOT::VecOps:
   return result;
 }
 
+selMC_genStatus::selMC_genStatus(int arg_status) : m_status(arg_status) {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData>  selMC_genStatus::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  result.reserve(in.size());
+  for (size_t i = 0; i < in.size(); ++i) {
+    auto & p = in[i];
+    if (p.generatorStatus == m_status) {
+      result.emplace_back(p);
+    }
+  }
+  return result;
+}
+
+getMC_tree::getMC_tree(int arg_status) : m_status(arg_status) {};
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getMC_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
+
+  for (size_t i = 0; i < in.size(); ++i) {
+    std::cout << i << " status " << in[i].generatorStatus << " pdg " << in[i].PDG << " p_beg " << in.at(ind.at(i)).parents_begin << " p_end " << in.at(ind.at(i)).parents_end << std::endl;
+  }
+
+
+ 
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
+  /* for (size_t i = 0; i < in.size(); ++i) {
+    auto & p = in[i];
+    std::cout <<  "here" << std::endl;
+
+    if (p.generatorStatus != m_status) continue;
+    ROOT::VecOps::RVec<int> tree;
+    tree.push_back(in.at(ind.at(i)).parents_begin);
+    while(true){
+      std::cout <<  "tree back " << tree.back() << std::endl;
+      //      std::cout << 
+      tree.push_back(in.at(ind.at(tree.back())).parents_begin);
+    }
+
+    result.push_back(tree);
+    }*/
+  return result;
+}

@@ -2,27 +2,28 @@ import ROOT
 
 # global parameters
 intLumi        = 5.0e+06 #in pb-1
-ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow #mu^{+}#mu^{-} + X"
+ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow e^{+}e^{-} + X"
 delphesVersion = "3.4.2"
 energy         = 240.0
 collider       = "FCC-ee"
-inputDir       = "Outputs/FCCee/ZH_Zmumu/"
+inputDir       = "FCCee/ZH_Zee/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
-outdir         = 'Outputs/FCCee/ZH_Zmumu/plots/'
+outdir         = 'FCCee/ZH_Zee/plots/'
 
-variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m']
+variables = ['mz','mz_zoom','leptonic_recoil_m','leptonic_recoil_m_zoom','leptonic_recoil_m_zoom2','leptonic_recoil_m_zoom3','leptonic_recoil_m_zoom4']
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['ZH']   = ["sel0","sel1","sel2"]
-selections['ZH_2'] = ["sel0","sel2"]
+selections['ZH']   = ["sel0","sel1"]
+selections['ZH_2'] = ["sel0","sel1"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: N_{Z} = 1"
 extralabel['sel1'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV"
-extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
+#extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
+#extralabel['sel3'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
 
 
 colors = {}
@@ -43,9 +44,9 @@ plots['ZH_2'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
              }
 
 legend = {}
-legend['ZH'] = 'ZH boson'
-legend['WW'] = 'WW boson'
-legend['ZZ'] = 'ZZ boson'
+legend['ZH'] = 'ZH'
+legend['WW'] = 'WW'
+legend['ZZ'] = 'ZZ'
 legend['VV'] = 'VV boson'
 
 

@@ -1,22 +1,20 @@
 from common_defaults import deffccdicts
 
-#python FCCeeAnalyses/ZH_Zee/dataframe/finalSel.py 
-import os, sys
+#python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py 
+import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
 baseDir  = "FCCee/ZH_Zee/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_v02.json"
-procDict ='https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee_procDict_fcc_v02.json'
+procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp.json"
 
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
 cut_list = {"sel0":"zed_leptonic_m.size() == 1",
             "sel1":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100",
-            "sel2":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100 && nbjets==2"
             }
 
 
@@ -24,14 +22,21 @@ cut_list = {"sel0":"zed_leptonic_m.size() == 1",
 variables = {
     "mz":{"name":"zed_leptonic_m","title":"m_{Z} [GeV]","bin":125,"xmin":0,"xmax":250},
     "mz_zoom":{"name":"zed_leptonic_m","title":"m_{Z} [GeV]","bin":40,"xmin":80,"xmax":100},
-    "nbjets":{"name":"nbjets","title":"number of bjets","bin":10,"xmin":0,"xmax":10},
     "leptonic_recoil_m":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":0,"xmax":200},
+    "leptonic_recoil_m_zoom":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":200,"xmin":80,"xmax":160},
+    "leptonic_recoil_m_zoom1":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":120,"xmax":140},
+    "leptonic_recoil_m_zoom2":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":200,"xmin":120,"xmax":140},
+    "leptonic_recoil_m_zoom3":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":400,"xmin":120,"xmax":140},
+    "leptonic_recoil_m_zoom4":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":800,"xmin":120,"xmax":140},
+    "leptonic_recoil_m_zoom5":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":2000,"xmin":120,"xmax":140},
 }
 
 ###Number of CPUs to use
-NUM_CPUS = 10
+NUM_CPUS = 5
 
 ###This part is standard to all analyses
-import bin.runDataFrameFinal as rdf
+sys.path.append('./bin')
+import runDataFrameFinal as rdf
+#import bin.runDataFrameFinal as rdf
 myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables)
 myana.run(ncpu=NUM_CPUS)

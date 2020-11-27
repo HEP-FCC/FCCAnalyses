@@ -21,6 +21,21 @@ struct selMC_pT {
   ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 };
 
+/// select MCParticles with their status
+struct selMC_genStatus {
+  selMC_genStatus(int arg_status);
+  float m_status = 1; //> Generator status
+  ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+};
+
+/// get MC history tree for a given generator status
+struct getMC_tree{
+  getMC_tree(int arg_status);
+  float m_status = 1; //> Generator status
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
+};
+
+
 /// return the time of the input MCParticles
 ROOT::VecOps::RVec<float> getMC_time(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 

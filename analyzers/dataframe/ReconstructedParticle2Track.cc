@@ -1,8 +1,8 @@
 #include "ReconstructedParticle2Track.h"
 
 
-std::vector<float> getRP2TRK_D0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2TRK_D0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
       result.push_back(tracks.at(p.tracks_begin).D0);
@@ -11,8 +11,8 @@ std::vector<float> getRP2TRK_D0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
   return result;
 }
 
-std::vector<float> getRP2TRK_Z0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2TRK_Z0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
       result.push_back(tracks.at(p.tracks_begin).Z0);
@@ -21,8 +21,8 @@ std::vector<float> getRP2TRK_Z0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
   return result;
 }
 
-std::vector<float> getRP2TRK_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2TRK_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
       result.push_back(tracks.at(p.tracks_begin).phi);
@@ -31,8 +31,8 @@ std::vector<float> getRP2TRK_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedPartic
   return result;
 }
 
-std::vector<float> getRP2TRK_omega(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2TRK_omega(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
       result.push_back(tracks.at(p.tracks_begin).omega);
@@ -41,8 +41,8 @@ std::vector<float> getRP2TRK_omega(ROOT::VecOps::RVec<edm4hep::ReconstructedPart
   return result;
 }
 
-std::vector<float> getRP2TRK_tanLambda(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2TRK_tanLambda(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+  ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
       result.push_back(tracks.at(p.tracks_begin).tanLambda);
