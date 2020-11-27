@@ -123,27 +123,27 @@ std::vector<float> minimize_thrust::operator()(std::vector<float> px, std::vecto
 }
 
 
-std::vector<float> thrust_angle(std::vector<float> thrust, std::vector<float> px, std::vector<float> py, std::vector<float> pz){
+std::vector<float> axisCosTheta(std::vector<float> axis, std::vector<float> px, std::vector<float> py, std::vector<float> pz){
 
-  float thrust_mag = sqrt(thrust[0]*thrust[0] + thrust[1]*thrust[1] + thrust[2]*thrust[2]);
+  float thrust_mag = sqrt(axis[0]*axis[0] + axis[1]*axis[1] + axis[2]*axis[2]);
   std::vector<float> result;
   for (unsigned int i =0; i<px.size(); i++){
-    float value = (px.at(i)*thrust[0] + py.at(i)*thrust[1] + pz.at(i)*thrust[2])/(sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i))*thrust_mag);
+    float value = (px.at(i)*axis[0] + py.at(i)*axis[1] + pz.at(i)*axis[2])/(sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i))*thrust_mag);
     result.push_back(value);
   }
   return result;
 }
 
-getThrustCharge::getThrustCharge(bool arg_pos) : m_pos(arg_pos) {};
+getAxisCharge::getAxisCharge(bool arg_pos) : m_pos(arg_pos) {};
 
-float  getThrustCharge::operator() (std::vector<float> thrust_angle, std::vector<float> charge, std::vector<float> px, std::vector<float> py, std::vector<float> pz) {
+float  getAxisCharge::operator() (std::vector<float> angle, std::vector<float> charge, std::vector<float> px, std::vector<float> py, std::vector<float> pz) {
   float result=0.;
   float norm = 0.;
-  for (size_t i = 0; i < thrust_angle.size(); ++i) {
+  for (size_t i = 0; i < angle.size(); ++i) {
     norm+=px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i);
 
-    if (m_pos==1 && thrust_angle.at(i)>0.) result+=charge.at(i)*sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i));
-    if (m_pos==0 && thrust_angle.at(i)<0.) result+=charge.at(i)*sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i));
+    if (m_pos==1 && angle.at(i)>0.) result+=charge.at(i)*sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i));
+    if (m_pos==0 && angle.at(i)<0.) result+=charge.at(i)*sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i));
   }
   return result/norm;
 }

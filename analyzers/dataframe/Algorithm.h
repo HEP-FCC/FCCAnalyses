@@ -50,12 +50,12 @@ struct minimize_thrust {
 };
 
 
-std::vector<float> thrust_angle(std::vector<float> thrust, std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+std::vector<float> axisCosTheta(std::vector<float> axis, std::vector<float> px, std::vector<float> py, std::vector<float> pz);
 
-struct getThrustCharge {
-  getThrustCharge(bool arg_pos);
+struct getAxisCharge {
+  getAxisCharge(bool arg_pos);
   bool m_pos = 0;
-  float operator() (std::vector<float> thrust_angle, std::vector<float> charge,std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+  float operator() (std::vector<float> angle, std::vector<float> charge,std::vector<float> px, std::vector<float> py, std::vector<float> pz);
 };
 
 
