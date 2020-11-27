@@ -67,6 +67,6 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+sys.argv[1].split('/')[-1]
-    ncpus = 0
+    ncpus = 8
     analysis = analysis(fileListRoot, outfile, ncpus)
     analysis.run()
