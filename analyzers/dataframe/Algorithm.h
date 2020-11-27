@@ -50,12 +50,13 @@ struct minimize_thrust {
 };
 
 
-ROOT::VecOps::RVec<float> thrust_angle(ROOT::VecOps::RVec<float> thrust, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
 
-struct getThrustCharge {
-  getThrustCharge(bool arg_pos);
+ROOT::VecOps::RVec<float> axisCosTheta(ROOT::VecOps::RVec<float> axis, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
+
+struct getAxisCharge {
+  getAxisCharge(bool arg_pos);
   bool m_pos = 0;
-  float operator() (ROOT::VecOps::RVec<float> thrust_angle, ROOT::VecOps::RVec<float> charge,ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
+  float operator() (ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<float> charge, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
 };
 
 
