@@ -21,7 +21,7 @@ Table of contents
 
 RootDataFrame based
 =============
-Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained.
+Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading EDM4Hep or FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained.
 
 Getting Started
 ============
@@ -44,7 +44,7 @@ Each time changes are made in ```analyzers/dataframe/``` please re-compile!
 
 Generalities
 ============
-Each analysis is hosted in a single directory, for example ```FCCeeAnalyses/ZH_Zmumu/dataframe/``` and contains the same kind of files, please use the same naming convention for all analysis. 
+Each analysis is hosted in a single directory, for example ```FCCeeAnalyses/ZH_Zmumu/``` and contains the same kind of files, please use the same naming convention for all analysis. 
 
 1. ```analysis.py```: This class that is used to define the list of analysers and filters to run on as well as the output variables. 
 2. ```preSel.py```: This configuration file is used to define how to run the ```analysis.py```. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the ```analysis.py``` with a common code ```bin/runDataFrame.py``` (this last file is common to all analyses and should not be touched). 

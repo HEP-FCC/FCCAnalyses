@@ -16,10 +16,10 @@
 
 
 struct sphericityFit {
-  sphericityFit(std::vector<float> arg_px, std::vector<float> arg_py, std::vector<float> arg_pz);
-  std::vector<float> m_px;
-  std::vector<float> m_py;
-  std::vector<float> m_pz;
+  sphericityFit(ROOT::VecOps::RVec<float> arg_px, ROOT::VecOps::RVec<float> arg_py, ROOT::VecOps::RVec<float> arg_pz);
+  ROOT::VecOps::RVec<float> m_px;
+  ROOT::VecOps::RVec<float> m_py;
+  ROOT::VecOps::RVec<float> m_pz;
   float operator()(const double *par);
 };
 
@@ -28,16 +28,16 @@ struct minimize_sphericity {
   minimize_sphericity(std::string arg_minname, std::string arg_algoname);
   char const *m_minname  = "Minuit2";
   char const *m_algoname = "";
-  std::vector<float> operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+  ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
 };
 
 
 
 struct thrustFit {
-  thrustFit(std::vector<float> arg_px, std::vector<float> arg_py, std::vector<float> arg_pz);
-  std::vector<float> m_px;
-  std::vector<float> m_py;
-  std::vector<float> m_pz;
+  thrustFit(ROOT::VecOps::RVec<float> arg_px, ROOT::VecOps::RVec<float> arg_py, ROOT::VecOps::RVec<float> arg_pz);
+  ROOT::VecOps::RVec<float> m_px;
+  ROOT::VecOps::RVec<float> m_py;
+  ROOT::VecOps::RVec<float> m_pz;
   float operator()(const double *par);
 };
 
@@ -46,16 +46,17 @@ struct minimize_thrust {
   minimize_thrust(std::string arg_minname, std::string arg_algoname);
   char const *m_minname  = "Minuit2";
   char const *m_algoname = "";
-  std::vector<float> operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+  ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
 };
 
 
-std::vector<float> axisCosTheta(std::vector<float> axis, std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+
+ROOT::VecOps::RVec<float> axisCosTheta(ROOT::VecOps::RVec<float> axis, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
 
 struct getAxisCharge {
   getAxisCharge(bool arg_pos);
   bool m_pos = 0;
-  float operator() (std::vector<float> angle, std::vector<float> charge,std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+  float operator() (ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<float> charge, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz);
 };
 
 

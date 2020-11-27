@@ -30,42 +30,46 @@ class analysis():
     def run(self):
         df2 = (self.df
                # define an alias for muon index collection
-               .Alias("Electron0", "Electron#0.index")
+               .Alias("Muon0", "Muon#0.index")
                # define the muon collection
-               .Define("electrons",  "getRP(Electron0, ReconstructedParticles)")
+               .Define("muons",  "getRP(Muon0, ReconstructedParticles)")
                #select muons on pT
-               .Define("selected_electrons", "selRP_pT(10.)(electrons)")
+               .Define("selected_muons", "selRP_pT(10.)(muons)")
                # create branch with muon transverse momentum
-               .Define("selected_electrons_pt", "getRP_pt(selected_electrons)") 
+               .Define("selected_muons_pt", "getRP_pt(selected_muons)") 
                # create branch with muon rapidity
-               .Define("selected_electrons_y",  "getRP_y(selected_electrons)") 
+               .Define("selected_muons_y",  "getRP_y(selected_muons)") 
                # create branch with muon total momentum
-               .Define("selected_electrons_p",     "getRP_p(selected_electrons)")
+               .Define("selected_muons_p",     "getRP_p(selected_muons)")
                # create branch with muon energy 
-               .Define("selected_electrons_e",     "getRP_e(selected_electrons)")
+               .Define("selected_muons_e",     "getRP_e(selected_muons)")
                # find zed candidates from  di-muon resonances  
-               .Define("zed_leptonic",         "ResonanceBuilder(23, 91)(selected_electrons)")
+               .Define("zed_leptonic",         "ResonanceBuilder(23, 91)(selected_muons)")
                # write branch with zed mass
                .Define("zed_leptonic_m",       "getRP_mass(zed_leptonic)")
                # write branch with zed transverse momenta
                .Define("zed_leptonic_pt",      "getRP_pt(zed_leptonic)")
                # calculate recoil of zed_leptonic
-               .Define("zed_leptonic_recoil",  "recoil(240)(zed_leptonic)")
+               .Define("zed_leptonic_recoil",  "recoil(365)(zed_leptonic)")
                # write branch with recoil mass
                .Define("zed_leptonic_recoil_m","getRP_mass(zed_leptonic_recoil)") 
 
         )
 
+        
+
+
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                "selected_electrons_pt",
-                "selected_electrons_y",
-                "selected_electrons_p",
-                "selected_electrons_e",
+                "selected_muons_pt",
+                "selected_muons_y",
+                "selected_muons_p",
+                "selected_muons_e",
                 "zed_leptonic_pt",
                 "zed_leptonic_m",
-                "zed_leptonic_recoil_m"
+                "zed_leptonic_recoil_m",
+               
                 ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
@@ -83,7 +87,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 1
+    ncpus = 0
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 

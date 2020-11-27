@@ -4,7 +4,7 @@
 #include "Math/Factory.h"
 #include "Math/Functor.h"
 
-sphericityFit::sphericityFit(std::vector<float> arg_px, std::vector<float> arg_py, std::vector<float> arg_pz) {m_px=arg_px;m_py=arg_py;m_pz=arg_pz; }
+sphericityFit::sphericityFit(ROOT::VecOps::RVec<float> arg_px, ROOT::VecOps::RVec<float> arg_py, ROOT::VecOps::RVec<float> arg_pz) {m_px=arg_px;m_py=arg_py;m_pz=arg_pz; }
 float sphericityFit::operator()(const double *pars){
   
   double num = 0.;
@@ -25,7 +25,7 @@ float sphericityFit::operator()(const double *pars){
 };
 
 minimize_sphericity::minimize_sphericity(std::string arg_minname, std::string arg_algoname){m_minname=arg_minname.c_str(); m_algoname=arg_algoname.c_str();}
-std::vector<float> minimize_sphericity::operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz){
+ROOT::VecOps::RVec<float> minimize_sphericity::operator()(ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz){
 
   ROOT::Math::Minimizer *min = ROOT::Math::Factory::CreateMinimizer(m_minname, m_algoname);
   min->SetMaxFunctionCalls(1000000); // for Minuit/Minuit2 
@@ -53,7 +53,7 @@ std::vector<float> minimize_sphericity::operator()(std::vector<float> px, std::v
   const double *xs = min->X();
   //std::cout << "Minimum: f(" << xs[0] << "," << xs[1] << "," << xs[2] << "): " << min->MinValue()  << std::endl;
 
-  std::vector<float> result;
+  ROOT::VecOps::RVec<float> result;
   result.push_back(xs[0]);
   result.push_back(xs[1]);
   result.push_back(xs[2]);
@@ -63,7 +63,7 @@ std::vector<float> minimize_sphericity::operator()(std::vector<float> px, std::v
 }
 
 
-thrustFit::thrustFit(std::vector<float> arg_px, std::vector<float> arg_py, std::vector<float> arg_pz) {m_px=arg_px;m_py=arg_py;m_pz=arg_pz; }
+thrustFit::thrustFit(ROOT::VecOps::RVec<float> arg_px, ROOT::VecOps::RVec<float> arg_py, ROOT::VecOps::RVec<float> arg_pz) {m_px=arg_px;m_py=arg_py;m_pz=arg_pz; }
 float thrustFit::operator()(const double *pars){
   
   double num = 0.;
@@ -83,7 +83,7 @@ float thrustFit::operator()(const double *pars){
 
 
 minimize_thrust::minimize_thrust(std::string arg_minname, std::string arg_algoname){m_minname=arg_minname.c_str(); m_algoname=arg_algoname.c_str();}
-std::vector<float> minimize_thrust::operator()(std::vector<float> px, std::vector<float> py, std::vector<float> pz){
+ROOT::VecOps::RVec<float> minimize_thrust::operator()(ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz){
 
   
   
@@ -113,7 +113,7 @@ std::vector<float> minimize_thrust::operator()(std::vector<float> px, std::vecto
   const double *xs = min->X();
   //std::cout << "Minimum: f(" << xs[0] << "," << xs[1] << "," << xs[2] << "): " << min->MinValue()  << std::endl;
 
-  std::vector<float> result;
+  ROOT::VecOps::RVec<float> result;
   result.push_back(xs[0]);
   result.push_back(xs[1]);
   result.push_back(xs[2]);
@@ -123,10 +123,11 @@ std::vector<float> minimize_thrust::operator()(std::vector<float> px, std::vecto
 }
 
 
-std::vector<float> axisCosTheta(std::vector<float> axis, std::vector<float> px, std::vector<float> py, std::vector<float> pz){
 
-  float thrust_mag = sqrt(axis[0]*axis[0] + axis[1]*axis[1] + axis[2]*axis[2]);
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> axisCosTheta(ROOT::VecOps::RVec<float> thrust, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz){
+
+  float thrust_mag = sqrt(thrust[0]*thrust[0] + thrust[1]*thrust[1] + thrust[2]*thrust[2]);
+  ROOT::VecOps::RVec<float> result;
   for (unsigned int i =0; i<px.size(); i++){
     float value = (px.at(i)*axis[0] + py.at(i)*axis[1] + pz.at(i)*axis[2])/(sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i))*thrust_mag);
     result.push_back(value);
@@ -135,8 +136,7 @@ std::vector<float> axisCosTheta(std::vector<float> axis, std::vector<float> px, 
 }
 
 getAxisCharge::getAxisCharge(bool arg_pos) : m_pos(arg_pos) {};
-
-float  getAxisCharge::operator() (std::vector<float> angle, std::vector<float> charge, std::vector<float> px, std::vector<float> py, std::vector<float> pz) {
+float  getThrustCharge::operator() (ROOT::VecOps::RVec<float> thrust_angle, ROOT::VecOps::RVec<float> charge, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz) {
   float result=0.;
   float norm = 0.;
   for (size_t i = 0; i < angle.size(); ++i) {

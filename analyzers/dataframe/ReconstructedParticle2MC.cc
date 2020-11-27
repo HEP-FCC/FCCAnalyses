@@ -1,7 +1,7 @@
 #include "ReconstructedParticle2MC.h"
 
-std::vector<float> getRP2MC_p(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2MC_p(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
 
   for (unsigned int i=0; i<recind.size();i++) {
@@ -12,8 +12,8 @@ std::vector<float> getRP2MC_p(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec
   return result;
 }
 
-std::vector<TLorentzVector> getRP2MC_tlv(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<TLorentzVector> result;
+ROOT::VecOps::RVec<TLorentzVector> getRP2MC_tlv(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<TLorentzVector> result;
   result.resize(reco.size(),TLorentzVector());
 
   for (unsigned int i=0; i<recind.size();i++) {
@@ -24,8 +24,8 @@ std::vector<TLorentzVector> getRP2MC_tlv(ROOT::VecOps::RVec<int> recind, ROOT::V
   return result;
 }
 
-std::vector<float> getRP2MC_px(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2MC_px(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     result[recind.at(i)]=mc.at(mcind.at(i)).momentum.x;
@@ -33,8 +33,8 @@ std::vector<float> getRP2MC_px(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVe
   return result;
 }
 
-std::vector<float> getRP2MC_py(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2MC_py(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     result[recind.at(i)]=mc.at(mcind.at(i)).momentum.y;
@@ -42,8 +42,8 @@ std::vector<float> getRP2MC_py(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVe
   return result;
 }
 
-std::vector<float> getRP2MC_pz(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2MC_pz(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     result[recind.at(i)]=mc.at(mcind.at(i)).momentum.z;
@@ -51,8 +51,8 @@ std::vector<float> getRP2MC_pz(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVe
   return result;
 }
 
-std::vector<float> getRP2MC_pdg(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2MC_pdg(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     result[recind.at(i)]=mc.at(mcind.at(i)).PDG;
@@ -60,8 +60,8 @@ std::vector<float> getRP2MC_pdg(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RV
   return result;
 }
 
-std::vector<float> getRP2MC_charge(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2MC_charge(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     result[recind.at(i)]=mc.at(mcind.at(i)).charge;
@@ -69,8 +69,8 @@ std::vector<float> getRP2MC_charge(ROOT::VecOps::RVec<int> recind, ROOT::VecOps:
   return result;
 }
 
-std::vector<float> getRP2MC_mass(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float> getRP2MC_mass(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     result[recind.at(i)]=mc.at(mcind.at(i)).mass;
@@ -78,8 +78,8 @@ std::vector<float> getRP2MC_mass(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::R
   return result;
 }
 
-std::vector<int> getRP2MC_index(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<int> result;
+ROOT::VecOps::RVec<int> getRP2MC_index(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
+  ROOT::VecOps::RVec<int> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     result[recind.at(i)]=mcind.at(i);
@@ -87,8 +87,8 @@ std::vector<int> getRP2MC_index(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RV
   return result;
 }
 
-std::vector<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents){
-  std::vector<int> result;
+ROOT::VecOps::RVec<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents){
+  ROOT::VecOps::RVec<int> result;
   result.resize(reco.size(),-1.);
   for (unsigned int i=0; i<recind.size();i++) {
     if (mc.at(mcind.at(i)).parents_begin!=mc.at(mcind.at(i)).parents_end){
@@ -117,8 +117,8 @@ std::vector<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recind, ROOT::VecOps
 }
 
 
-std::vector<float>  getRP2MC_p_func::operator() (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
-  std::vector<float> result;
+ROOT::VecOps::RVec<float>  getRP2MC_p_func::operator() (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  ROOT::VecOps::RVec<float> result;
   result.resize(reco.size(),-1.);
 
   for (unsigned int i=0; i<recind.size();i++) {
