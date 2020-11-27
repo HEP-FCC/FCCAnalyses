@@ -124,9 +124,9 @@ ROOT::VecOps::RVec<float> minimize_thrust::operator()(ROOT::VecOps::RVec<float> 
 
 
 
-ROOT::VecOps::RVec<float> axisCosTheta(ROOT::VecOps::RVec<float> thrust, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz){
+ROOT::VecOps::RVec<float> axisCosTheta(ROOT::VecOps::RVec<float> axis, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz){
 
-  float thrust_mag = sqrt(thrust[0]*thrust[0] + thrust[1]*thrust[1] + thrust[2]*thrust[2]);
+  float thrust_mag = sqrt(axis[0]*axis[0] + axis[1]*axis[1] + axis[2]*axis[2]);
   ROOT::VecOps::RVec<float> result;
   for (unsigned int i =0; i<px.size(); i++){
     float value = (px.at(i)*axis[0] + py.at(i)*axis[1] + pz.at(i)*axis[2])/(sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i))*thrust_mag);
@@ -136,7 +136,7 @@ ROOT::VecOps::RVec<float> axisCosTheta(ROOT::VecOps::RVec<float> thrust, ROOT::V
 }
 
 getAxisCharge::getAxisCharge(bool arg_pos) : m_pos(arg_pos) {};
-float  getThrustCharge::operator() (ROOT::VecOps::RVec<float> thrust_angle, ROOT::VecOps::RVec<float> charge, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz) {
+float  getAxisCharge::operator() (ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<float> charge, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz) {
   float result=0.;
   float norm = 0.;
   for (size_t i = 0; i < angle.size(); ++i) {
