@@ -86,3 +86,8 @@ venv.bak/
 *.exe
 *.out
 *.app
+
+# Swap files
+
+*.swp
+*.swo

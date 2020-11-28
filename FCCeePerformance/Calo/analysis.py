@@ -24,11 +24,12 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        # select isolated muons with pt > 10 GeV
         df2 = (self.df
-               .Define("cell_phi",     "getCalo_phi(ECalBarrelPositions)") 
-               .Define("cell_theta",   "getCalo_theta(ECalBarrelPositions)") 
-
+               .Define("cell_phi",     "getCaloHit_phi(ECalBarrelPositions)")
+               .Define("cell_theta",   "getCaloHit_theta(ECalBarrelPositions)")
+               .Define("cell_energy",   "getCaloHit_energy(ECalBarrelPositions)")
+               .Define("cell_vec",   "getCaloHit_vector(ECalBarrelPositions)")
+               .Define("cluster_energy",   "getCaloCluster_energy(CaloClusters)")
                      )
 
         
@@ -39,18 +40,21 @@ class analysis():
         for branchName in [
                 "cell_phi",
                 "cell_theta",
+                "cell_energy",
+                "cell_vec",
+                "cluster_energy",
                 ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
 
 # example call
-# python FCCeeAnalyses/ZH_Zmumu/dataframe/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
+# python FCCeePerformance/Calo/analysis.py /eos/experiment/fcc/ee/simulation/calorimeter/dummy/fccsw_output_pdgID_22_pMin_50000_pMax_50000_thetaMin_90_thetaMax_90_jobid_20.root
 if __name__ == "__main__":
 
-    if len(sys.argv)==1:
+    if len(sys.argv) == 1:
         print ("usage:")
-        print ("python ",sys.argv[0]," file.root")
-        print ("python ",sys.argv[0]," dir/*.root")
+        print ("python ", sys.argv[0], " file.root")
+        print ("python ", sys.argv[0], " \"dir/*.root\"")
         sys.exit(3)
 
     import glob
@@ -66,7 +70,9 @@ if __name__ == "__main__":
     outDir = 'FCCee/'+sys.argv[0].split('/')[1]+'/'
     import os
     os.system("mkdir -p {}".format(outDir))
-    outfile = outDir+sys.argv[1].split('/')[-1]
+    outFile = outDir+sys.argv[1].split('/')[-1]
+    outFile = outFile.replace("*", "all")
     ncpus = 8
-    analysis = analysis(fileListRoot, outfile, ncpus)
+    analysis = analysis(fileListRoot, outFile, ncpus)
     analysis.run()
+    print (outFile, " written.")
