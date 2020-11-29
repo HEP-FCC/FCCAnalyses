@@ -5,6 +5,7 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
+#pragma link C++ class ROOT::VecOps::RVec<TVector3>+;
 
 #pragma link C++ function pt;
 #pragma link C++ function eta;
