@@ -6,7 +6,7 @@
 ### Preliminary analyses
 Using the corresponding ```FCCAnalyses``` [ZH_Zmumu](https://github.com/HEP-FCC/FCCAnalyses/tree/master/FCCeeAnalyses/ZH_Zmumu) and [ZH_Zee](https://github.com/HEP-FCC/FCCAnalyses/tree/master/FCCeeAnalyses/ZH_Zee) and using the input files in ```edm4hep``` of this [sample production](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_tmp.php), produced ```FlatNtuples``` and ```histograms``` used to fit the recoil: ```/eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/FlatNtuples/```.
 
-![](leptonic_recoil_m_ZH_sel1_stack_lin.png?raw=true)
+![](images/leptonic_recoil_m_ZH_sel1_stack_lin.png?raw=true)
 
 
 arguments and examples to run the fitting macro could be seen by running
@@ -37,7 +37,7 @@ is shown below (to be re-done with including beam energy spread)
    7  nsig         9.05996e+03   2.19379e+02   1.28389e-03  -1.51059e+00
 ```
 
-![](fitResult.png?raw=true)
+![](images/fitResult.png?raw=true)
 
 
 
