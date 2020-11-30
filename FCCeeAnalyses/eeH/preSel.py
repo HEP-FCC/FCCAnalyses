@@ -8,8 +8,8 @@ NUM_CPUS = 15
 process_list=[
 
     'p8_ee_Z_Zqq_ecm125',
-    #'p8_ee_Z_Zbb_ecm125',
-    #'p8_ee_Z_Zcc_ecm125',
+    'p8_ee_Z_Zbb_ecm125',
+    'p8_ee_Z_Zcc_ecm125',
     #'p8_ee_H_Htautau_ecm125',
     #'p8_ee_H_Hcc_ecm125',
     #'p8_ee_WW_ecm125',
