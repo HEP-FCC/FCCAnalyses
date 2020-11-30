@@ -136,7 +136,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList, opts)
 
 # example call for standalone file
-# python FCCeeAnalyses/Z_Zbb_Flavor/dataframe/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Ztautau_ecm91/events_012154460.root
+# python FCCeeAnalyses/eeH/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_H_Hcc_ecm125/events_108949551.root 
 
 if __name__ == "__main__":
 
