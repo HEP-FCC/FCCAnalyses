@@ -20,7 +20,7 @@ example: python massFit.py /eos/experiment/fcc/ee/analyses/case-studies/higgs/mH
 
 As an example the fit result of running the following command 
 ```python
-python case-studies/higgs/mH-recoil/massFit.py /eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/FlatNtuples/ZH_Zee/ leptonic_recoil_m_zoom4 sel1 123 127:
+python utils/massFit.py /eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/FlatNtuples/ZH_Zee/ leptonic_recoil_m_zoom4 sel1 123 127:
 ```
 
 is shown below (to be re-done with including beam energy spread)
