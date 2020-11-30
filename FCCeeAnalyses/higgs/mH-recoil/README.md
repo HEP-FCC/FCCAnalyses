@@ -4,14 +4,14 @@
 - Clement Helsens: Developer, Sample production, Preliminary FCCAnalyses design, Preliminary recoil fit analysis
 
 ### Preliminary analyses
-Using the corresponding ```FCCAnalyses``` [ZH_Zmumu](https://github.com/HEP-FCC/FCCAnalyses/tree/master/FCCeeAnalyses/ZH_Zmumu) and [ZH_Zee](https://github.com/HEP-FCC/FCCAnalyses/tree/master/FCCeeAnalyses/ZH_Zee) and using the input files in ```edm4hep``` of this [sample production](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_tmp.php), produced ```FlatNtuples``` and ```histograms``` used to fit the recoil: ```/eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/FlatNtuples/```.
+Using the corresponding ```FCCAnalyses``` [ZH_Zmumu](https://github.com/HEP-FCC/FCCAnalyses/tree/master/FCCeeAnalyses/Higgs/mH-recoil/mumu) and [ZH_Zee](https://github.com/HEP-FCC/FCCAnalyses/tree/master/FCCeeAnalyses/Higgs/mH-recoil/ee) and using the input files in ```edm4hep``` of this [sample production](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_tmp.php), produced ```FlatNtuples``` and ```histograms``` used to fit the recoil: ```/eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/FlatNtuples/```.
 
 ![](images/leptonic_recoil_m_ZH_sel1_stack_lin.png?raw=true)
 
 
 arguments and examples to run the fitting macro could be seen by running
 ```python
-python case-studies/higgs/mH-recoil/massFit.py
+python utils/massFit.py
 usage:   python massFit.py BASEDIR HISTONAME SELECTION BINLOW=120 BINHIGH=140
 example: python massFit.py /eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/FlatNtuples/ZH_Zee/ leptonic_recoil_m_zoom3 sel1
 example: python massFit.py /eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/FlatNtuples/ZH_Zmumu/ leptonic_recoil_m_zoom4 sel0 122 128
