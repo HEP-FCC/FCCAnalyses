@@ -147,3 +147,30 @@ float  getAxisCharge::operator() (ROOT::VecOps::RVec<float> angle, ROOT::VecOps:
   }
   return result/norm;
 }
+
+
+
+getAxisMass::getAxisMass(bool arg_pos) : m_pos(arg_pos) {};
+float  getAxisMass::operator() (ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<float> energy, ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz) {
+  
+  TLorentzVector result;
+  for (size_t i = 0; i < angle.size(); ++i) {
+    TLorentzVector tmp;
+    tmp.SetPxPyPzE(px.at(i), py.at(i), pz.at(i), energy.at(i));
+    if (m_pos==1 && angle.at(i)>0.) result+=tmp;
+    if (m_pos==0 && angle.at(i)<0.) result+=tmp;
+  }
+  return result.M();
+}
+
+
+float getMass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  TLorentzVector result;
+  for (auto & p: in) {
+    TLorentzVector tmp;
+    tmp.SetPxPyPzE(p.momentum.x, p.momentum.y, p.momentum.z, p.energy);
+    result+=tmp;
+  }
+  return result.M();
+}
+
