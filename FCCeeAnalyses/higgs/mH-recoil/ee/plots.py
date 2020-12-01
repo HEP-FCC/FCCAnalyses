@@ -6,11 +6,11 @@ ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow e^{+}e^{-} + X"
 delphesVersion = "3.4.2"
 energy         = 240.0
 collider       = "FCC-ee"
-inputDir       = "FCCee/ZH_Zee/"
+inputDir       = "outputs/FCCee/higgs/mH-recoil/ee/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
-outdir         = 'FCCee/ZH_Zee/plots/'
+outdir         = 'outputs/FCCee/higgs/mH-recoil/ee/plots/'
 
 variables = ['mz','mz_zoom','leptonic_recoil_m','leptonic_recoil_m_zoom','leptonic_recoil_m_zoom2','leptonic_recoil_m_zoom3','leptonic_recoil_m_zoom4']
 
@@ -22,9 +22,6 @@ selections['ZH_2'] = ["sel0","sel1"]
 extralabel = {}
 extralabel['sel0'] = "Selection: N_{Z} = 1"
 extralabel['sel1'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV"
-#extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
-#extralabel['sel3'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
-
 
 colors = {}
 colors['ZH'] = ROOT.kRed
