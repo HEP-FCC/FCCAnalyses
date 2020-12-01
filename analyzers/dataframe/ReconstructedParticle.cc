@@ -3,7 +3,6 @@
 
 //TOBEMOVED LATER
 ResonanceBuilder::ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass) {m_resonance_pdgid = arg_resonance_pdgid; m_resonance_mass = arg_resonance_mass;}
-
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ResonanceBuilder::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   int n = legs.size();
