@@ -75,7 +75,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python FCCeeAnalyses/ZH_Zmumu/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
+# python FCCeeAnalyses/higgs/mH-recoil/mumu/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_ZH_ecm240/events_058720051.root
 if __name__ == "__main__":
 
     if len(sys.argv)==1:
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         print ("python ",sys.argv[0]," file.root")
         sys.exit(3)
     infile = sys.argv[1]
-    outDir = 'FCCee/'+sys.argv[0].split('/')[1]+'/'
+    outDir = sys.argv[0].replace(sys.argv[0].split('/')[0],'outputs/FCCee').replace('analysis.py','')+'/'
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
