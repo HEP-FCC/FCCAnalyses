@@ -19,10 +19,11 @@ variables = ["thrust_val", "sphericity_val", "thrust_angle", "sphericity_angle",
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['ttbar']   = ["sel0"]
+selections['ttbar']   = ["sel0","sel1"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: no selection"
+extralabel['sel1'] = "Selection: mass hemisphere0/1>100GeV"
 
 colors = {}
 colors['tt'] = ROOT.kRed

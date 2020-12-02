@@ -56,8 +56,8 @@ class analysis():
                .Define("MC_jets",       "clustering(1,0.5)(MC_px, MC_py, MC_pz, MC_e)")
                .Define("MC_jets_pt",    "getJet_pt(MC_jets)")
 
-               .Define("MC_status1",    "selMC_genStatus(1)(Particle)")
-               .Define("MC_tree",       "getMC_tree(1)(Particle,Particle0)")
+               #.Define("MC_status1",    "selMC_genStatus(1)(Particle)")
+               #.Define("MC_tree",       "getMC_tree(1)(Particle,Particle0)")
                
                .Define("RP_p",          "getRP_p(ReconstructedParticles)")
                .Define("RP_px",         "getRP_px(ReconstructedParticles)")
@@ -80,14 +80,14 @@ class analysis():
                #.Define('RP_MC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
                .Define('RP_MC_parentindex', "getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
                .Define('event_thrust', 'minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
-               .Define('RP_thrustangle', 'thrust_angle(event_thrust, RP_px, RP_py, RP_pz)')
+               .Define('RP_thrustangle', 'axisCosTheta(event_thrust, RP_px, RP_py, RP_pz)')
                .Define('event_thrust_x', "event_thrust.at(0)")
                .Define('event_thrust_y', "event_thrust.at(1)")
                .Define('event_thrust_z', "event_thrust.at(2)")
                .Define('event_thrust_val', "event_thrust.at(3)")
 
-               .Define('event_hemis_0', "getThrustCharge(0)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)")
-               .Define('event_hemis_1', "getThrustCharge(1)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)")
+               .Define('event_hemis_0', "getAxisCharge(0)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)")
+               .Define('event_hemis_1', "getAxisCharge(1)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)")
 
                
                
@@ -119,7 +119,7 @@ class analysis():
                 "MC_vertex_y",
                 "MC_vertex_z",
 
-                "MC_tree",
+                #"MC_tree",
                 "event_thrust_x",
                 "event_thrust_y",
                 "event_thrust_z",

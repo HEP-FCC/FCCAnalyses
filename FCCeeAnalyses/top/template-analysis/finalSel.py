@@ -11,10 +11,11 @@ baseDir  = "outputs/FCCee/top/template-analysis/"
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp.json"
 
 process_list=['p8_ee_ZZ_ecm365','p8_ee_WW_ecm365','p8_ee_ZH_ecm365', 'p8_ee_tt_ecm365']
-process_list=['p8_ee_ZZ_fullhad_ecm365','p8_ee_WW_fullhad_ecm365', 'p8_ee_tt_ecm365']
+process_list=['p8_ee_ZZ_fullhad_ecm365','p8_ee_WW_fullhad_ecm365', 'p8_ee_tt_fullhad_ecm365']
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
-cut_list = {"sel0":"EVT_thrust_val>0"
+cut_list = {"sel0":"EVT_thrust_val>0",
+            "sel1":"RP_hemis0_mass>100. && RP_hemis1_mass>100."
             }
 
 ###Optinally Define new variables
@@ -39,5 +40,5 @@ NUM_CPUS = 5
 sys.path.append('./bin')
 import runDataFrameFinal as rdf
 #import bin.runDataFrameFinal as rdf
-myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables,defines=define_list)
+myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables)
 myana.run(ncpu=NUM_CPUS)
