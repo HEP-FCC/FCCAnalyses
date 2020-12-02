@@ -30,7 +30,7 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
   "Installation directory for header files")
 
 
-file(GLOB _run_python_files bin/*.py))
+file(GLOB _run_python_files bin/*.py)
 install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/bin)
 #install(DIRECTORY FCCeeAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 #install(DIRECTORY FCChhAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
