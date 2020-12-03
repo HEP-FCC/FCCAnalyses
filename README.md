@@ -44,7 +44,7 @@ Each time changes are made in ```analyzers/dataframe/``` please re-compile!
 
 Generalities
 ============
-Each analysis is hosted in a single directory, for example ```FCCeeAnalyses/ZH_Zmumu/``` and contains the same kind of files, please use the same naming convention for all analysis. 
+Each analysis is hosted in a single directory, for example ```examples/FCCee/higgs/mH-recoil/mumu/``` and contains the same kind of files, please use the same naming convention for all analysis. 
 
 1. ```analysis.py```: This class that is used to define the list of analysers and filters to run on as well as the output variables. 
 2. ```preSel.py```: This configuration file is used to define how to run the ```analysis.py```. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the ```analysis.py``` with a common code ```bin/runDataFrame.py``` (this last file is common to all analyses and should not be touched). 
@@ -55,9 +55,9 @@ Pre-selection
 ============
 The pre-selection runs over already existing and properly registered FCCSW EDM events. The dataset names with the corresponding statistics can be found [here](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_v01.php). One important parameter is the fraction of the total dataset to run. It can be found in the ```preSel.py``` file by setting a value between ]0,1]. For example ```fraction=0.1``` will run over 10% of the statistics. Reading the files on ```eos```, and with 15 CPUs we observe processing speeds between 3000 and 10000 events per seconds depending on the number of files. Only run full statistics after having done all the proper testing and analysis design as it can take some time (that of course depends on the sample total statistics). To run the pre-selection of the ```ZH_Zmumu``` analysis, just run:
 ```
-python FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py
+python examples/FCCee/higgs/mH-recoil/mumu/preSel.py
 ```
-This will output 3 files in ```FCCee/ZH_Zmumu/``` following the parameter ```outdir``` in the ```preSel.py``` configuration file.
+This will output 3 files in ```outputs/FCCee/higgs/mH-recoil/mumu/``` following the parameter ```outdir``` in the ```preSel.py``` configuration file.
 
 
 Final selection
@@ -67,7 +67,7 @@ In the configuration file ```finalSel.py``` we define the various cuts to run on
 In this example it should run like: 
 
 ```
-python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py
+python examples/FCCee/higgs/mH-recoil/mumu/finalSel.py
 ```
 
 This will create 2 files per selection ```SAMPLENAME_SELECTIONNAME.root``` for the ```TTree``` and ```SAMPLENAME_SELECTIONNAME_histo.root``` for the histograms. ```SAMPLENAME``` and ```SELECTIONNAME``` corresponds to the name of the sample and selection respectively in the configuration file.
@@ -77,7 +77,7 @@ Plotting
 The plotting configuration file ```plots.py``` contains informations about plotting details for plots rendering but also ways of combining samples for plotting. 
 In this example just run like: 
 ```
-python bin/doPlots.py FCCeeAnalyses/ZH_Zmumu/dataframe/plots.py
+python bin/doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py
 ```
 
 This will produce the plots in the ```outdir``` defined in the configuration file.

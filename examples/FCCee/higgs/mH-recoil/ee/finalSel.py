@@ -1,11 +1,11 @@
 from common_defaults import deffccdicts
 
-#python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py 
+#python FCCeeAnalyses/higgs/mH-recoil/ee/finalSel.py 
 import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "FCCee/ZH_Zee/"
+baseDir  = "outputs/FCCee/higgs/mH-recoil/ee/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp.json"

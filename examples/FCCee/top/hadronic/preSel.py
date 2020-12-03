@@ -1,16 +1,16 @@
-#python FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py 
+#python FCCeeAnalyses/top/template-analysis/preSel.py 
 
 from common_defaults import deffccdicts
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/fcc_tmp/"
-outdir="FCCee/ZH_Zmumu/"
+outdir="outputs/FCCee/top/template-analysis/"
 
 import multiprocessing
 NUM_CPUS = int(multiprocessing.cpu_count()-2)
 
-process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
-#process_list=['p8_ee_ZZ_ecm240']
+process_list=['p8_ee_ZZ_ecm365','p8_ee_WW_ecm365','p8_ee_ZH_ecm365', 'p8_ee_tt_fullhad_ecm365']
+process_list=['p8_ee_ZZ_fullhad_ecm365','p8_ee_WW_fullhad_ecm365', 'p8_ee_tt_fullhad_ecm365']
 fraction=1.0
 
 import bin.runDataFrame as rdf
