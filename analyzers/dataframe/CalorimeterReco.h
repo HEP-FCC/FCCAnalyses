@@ -17,10 +17,12 @@
 ROOT::VecOps::RVec<float> getCaloHit_phi (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_theta (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_energy (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
-ROOT::VecOps::RVec<TVector3> getCaloHit_vector (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
+ROOT::VecOps::RVec<TVector3> getCaloHit_positionVector3 (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 
 // calo clusters
 ROOT::VecOps::RVec<float> getCaloCluster_energy (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
-
+ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<int> getCaloCluster_firstCell (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<int> getCaloCluster_lastCell (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
 
 #endif

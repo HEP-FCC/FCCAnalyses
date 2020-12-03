@@ -1,4 +1,5 @@
-import sys
+import os, sys, glob, argparse
+from datetime import date
 import ROOT
 
 print ("Load cxx analyzers ... ")
@@ -6,13 +7,26 @@ ROOT.gSystem.Load("libdatamodel")
 ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
+# does not work without these two lines
 _p = ROOT.fcc.ParticleData()
 _s = ROOT.selectParticlesPtIso
-print (_s)
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-inputFilesRegex", default = '/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/dummy_releases/201203/output_fullCalo_SimAndDigi_withCluster_noMagneticField_10GeV.root', help = "Output folder for the rootfiles", type = str)
+parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
+parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = bool)
+parser.add_argument("-cellBranchName", default = "ECalBarrelPositionedCells", help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
+parser.add_argument("-storeClusterBranches", default = True, help="Whether or not to store cluster information", type = bool)
+parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
+parser.add_argument("-storeClusterCellsBranches", default = True, help="Whether or not to store cluster cells information", type = bool)
+parser.add_argument("-clusterCellsBranchNames", default = ["CaloClusterPositionedCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
+
+args = parser.parse_args()
+
 
 class analysis():
 
-    #__________________________________________________________
     def __init__(self, inputlist, outname, ncpu):
         self.outname = outname
         if ".root" not in outname:
@@ -21,58 +35,52 @@ class analysis():
         ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
-        print (" done")
-    #__________________________________________________________
+
     def run(self):
-        df2 = (self.df
-               .Define("cell_phi",     "getCaloHit_phi(ECalBarrelPositions)")
-               .Define("cell_theta",   "getCaloHit_theta(ECalBarrelPositions)")
-               .Define("cell_energy",   "getCaloHit_energy(ECalBarrelPositions)")
-               .Define("cell_vec",   "getCaloHit_vector(ECalBarrelPositions)")
-               .Define("cluster_energy",   "getCaloCluster_energy(CaloClusters)")
-                     )
 
-        
+        # cells
+        if args.storeCellBranches:
+            dict_outputBranchName_function = {}
+            dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_energy"] = "getCaloHit_energy(%s)"%args.cellBranchName
 
+        # clusters
+        if args.storeClusterBranches:
+            for clusterBranchName in args.clusterBranchNames:
+                dict_outputBranchName_function["%s_energy"%clusterBranchName] = "getCaloCluster_energy(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_position"%clusterBranchName] = "getCaloCluster_positionVector3(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_firstCell"%clusterBranchName] = "getCaloCluster_firstCell(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_lastCell"%clusterBranchName] = "getCaloCluster_lastCell(%s)"%clusterBranchName
 
-        # select branches for output file
+        # cells attached to clusters
+        if args.storeClusterCellsBranches:
+            for clusterCellsBranchName in args.clusterCellsBranchNames:
+                dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "getCaloHit_positionVector3(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "getCaloHit_energy(%s)"%clusterCellsBranchName
+
+        df2 = self.df
         branchList = ROOT.vector('string')()
-        for branchName in [
-                "cell_phi",
-                "cell_theta",
-                "cell_energy",
-                "cell_vec",
-                "cluster_energy",
-                ]:
+        for branchName in dict_outputBranchName_function:
             branchList.push_back(branchName)
+            df2 = df2.Define(branchName, dict_outputBranchName_function[branchName])
+
         df2.Snapshot("events", self.outname, branchList)
 
-# example call
-# python FCCeePerformance/Calo/analysis.py /eos/experiment/fcc/ee/simulation/calorimeter/dummy/fccsw_output_pdgID_22_pMin_50000_pMax_50000_thetaMin_90_thetaMax_90_jobid_20.root
-if __name__ == "__main__":
 
-    if len(sys.argv) == 1:
-        print ("usage:")
-        print ("python ", sys.argv[0], " file.root")
-        print ("python ", sys.argv[0], " \"dir/*.root\"")
-        sys.exit(3)
+filelist = glob.glob(args.inputFilesRegex)
 
-    import glob
-    filelist = glob.glob(sys.argv[1])
+fileListRoot = ROOT.vector('string')()
+print ("Input files:")
+for fileName in filelist:
+    fileListRoot.push_back(fileName)
+    print ("\t", fileName)
     
-    print ("Create dataframe object from ", )
-    fileListRoot = ROOT.vector('string')()
-    for fileName in filelist:
-        fileListRoot.push_back(fileName)
-        print (fileName, " ",)
-        print (" ...")
-        
-    outDir = 'FCCee/'+sys.argv[0].split('/')[1]+'/'
-    import os
-    os.system("mkdir -p {}".format(outDir))
-    outFile = outDir+sys.argv[1].split('/')[-1]
-    outFile = outFile.replace("*", "all")
-    ncpus = 8
-    analysis = analysis(fileListRoot, outFile, ncpus)
-    analysis.run()
-    print (outFile, " written.")
+if not os.path.isdir(args.outputFolder):
+    os.makedirs(args.outputFolder)
+
+outputFile = os.path.join(args.outputFolder, args.inputFilesRegex.split('/')[-1].replace("*", "all"))
+ncpus = 8
+analysis = analysis(fileListRoot, outputFile, ncpus)
+print ("Processing...")
+analysis.run()
+print (outputFile, " written.")
