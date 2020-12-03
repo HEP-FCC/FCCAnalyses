@@ -1,4 +1,4 @@
-#python FCCeeAnalyses/higgs/mH-recoil/mumu/preSel.py 
+#python examples/FCCee/higgs/mH-recoil/mumu/preSel.py
 
 from common_defaults import deffccdicts
 import os

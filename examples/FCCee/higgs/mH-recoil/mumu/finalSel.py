@@ -1,6 +1,6 @@
 from common_defaults import deffccdicts
 
-#python FCCeeAnalyses/higgs/mH-recoil/mumu/finalSel.py 
+#python examples/FCCee/higgs/mH-recoil/mumu/finalSel.py 
 import sys, os
 import ROOT
 
