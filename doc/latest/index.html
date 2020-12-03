@@ -111,7 +111,7 @@ Getting Started</h1>
 </div><!-- fragment --><p>Each time changes are made in <code>analyzers/dataframe/</code> please re-compile!</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Generalities</h1>
-<p>Each analysis is hosted in a single directory, for example <code>FCCeeAnalyses/ZH_Zmumu/</code> and contains the same kind of files, please use the same naming convention for all analysis.</p>
+<p>Each analysis is hosted in a single directory, for example <code>examples/FCCee/higgs/mH-recoil/mumu/</code> and contains the same kind of files, please use the same naming convention for all analysis.</p>
 <ol type="1">
 <li><code>analysis.py</code>: This class that is used to define the list of analysers and filters to run on as well as the output variables.</li>
 <li><code>preSel.py</code>: This configuration file is used to define how to run the <code>analysis.py</code>. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the <code>analysis.py</code> with a common code <code>bin/runDataFrame.py</code> (this last file is common to all analyses and should not be touched).</li>
@@ -120,16 +120,16 @@ Generalities</h1>
 </ol>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Pre-selection</h1>
-<p>The pre-selection runs over already existing and properly registered FCCSW EDM events. The dataset names with the corresponding statistics can be found <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_v01.php">here</a>. One important parameter is the fraction of the total dataset to run. It can be found in the <code>preSel.py</code> file by setting a value between ]0,1]. For example <code>fraction=0.1</code> will run over 10% of the statistics. Reading the files on <code>eos</code>, and with 15 CPUs we observe processing speeds between 3000 and 10000 events per seconds depending on the number of files. Only run full statistics after having done all the proper testing and analysis design as it can take some time (that of course depends on the sample total statistics). To run the pre-selection of the <code>ZH_Zmumu</code> analysis, just run: </p><div class="fragment"><div class="line">python FCCeeAnalyses/ZH_Zmumu/dataframe/preSel.py</div>
-</div><!-- fragment --><p>This will output 3 files in <code>FCCee/ZH_Zmumu/</code> following the parameter <code>outdir</code> in the <code>preSel.py</code> configuration file.</p>
+<p>The pre-selection runs over already existing and properly registered FCCSW EDM events. The dataset names with the corresponding statistics can be found <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_fccee_v01.php">here</a>. One important parameter is the fraction of the total dataset to run. It can be found in the <code>preSel.py</code> file by setting a value between ]0,1]. For example <code>fraction=0.1</code> will run over 10% of the statistics. Reading the files on <code>eos</code>, and with 15 CPUs we observe processing speeds between 3000 and 10000 events per seconds depending on the number of files. Only run full statistics after having done all the proper testing and analysis design as it can take some time (that of course depends on the sample total statistics). To run the pre-selection of the <code>ZH_Zmumu</code> analysis, just run: </p><div class="fragment"><div class="line">python examples/FCCee/higgs/mH-recoil/mumu/preSel.py</div>
+</div><!-- fragment --><p>This will output 3 files in <code>outputs/FCCee/higgs/mH-recoil/mumu/</code> following the parameter <code>outdir</code> in the <code>preSel.py</code> configuration file.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
 Final selection</h1>
 <p>The final selection runs on the pre-selection files that we produced in the <a href="#pre-selection">Pre-selection</a> step. In the configuration file <code>finalSel.py</code> we define the various cuts to run on and the final variables to be stored in both a <code>TTree</code> and histograms. This is why the variables needs extra fields like <code>title</code>, number of bins and range for the histogram creation. In this example it should run like:</p>
-<div class="fragment"><div class="line">python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py</div>
+<div class="fragment"><div class="line">python examples/FCCee/higgs/mH-recoil/mumu/finalSel.py</div>
 </div><!-- fragment --><p>This will create 2 files per selection <code>SAMPLENAME_SELECTIONNAME.root</code> for the <code>TTree</code> and <code>SAMPLENAME_SELECTIONNAME_histo.root</code> for the histograms. <code>SAMPLENAME</code> and <code>SELECTIONNAME</code> corresponds to the name of the sample and selection respectively in the configuration file.</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
 Plotting</h1>
-<p>The plotting configuration file <code>plots.py</code> contains informations about plotting details for plots rendering but also ways of combining samples for plotting. In this example just run like: </p><div class="fragment"><div class="line">python bin/doPlots.py FCCeeAnalyses/ZH_Zmumu/dataframe/plots.py</div>
+<p>The plotting configuration file <code>plots.py</code> contains informations about plotting details for plots rendering but also ways of combining samples for plotting. In this example just run like: </p><div class="fragment"><div class="line">python bin/doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py</div>
 </div><!-- fragment --><p>This will produce the plots in the <code>outdir</code> defined in the configuration file.</p>
 <h1><a class="anchor" id="autotoc_md7"></a>
 Uproot based</h1>
@@ -152,7 +152,7 @@ Getting Started</h1>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 2 2020 21:49:15 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 3 2020 15:03:03 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>
