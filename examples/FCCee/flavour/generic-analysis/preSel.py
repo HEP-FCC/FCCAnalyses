@@ -1,5 +1,6 @@
-from common_defaults import deffccdicts
- #python FCCeeAnalyses/Z_Zbb_Flavor/dataframe/preSel.py 
+#python examples/FCCee/flavour/generic-analysis/preSel.py
+
+from config.common_defaults import deffccdicts
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/fcc_tmp/"
@@ -36,6 +37,6 @@ process_list=[
               ]
 fraction=0.5
 
-import bin.runDataFrame as rdf
+import config.runDataFrame as rdf
 myana=rdf.runDataFrame(basedir,process_list)
 myana.run(ncpu=NUM_CPUS,fraction=fraction,outDir=outdir)

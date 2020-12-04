@@ -1,6 +1,6 @@
-from common_defaults import deffccdicts
+#python examples/FCCee/flavour/generic-analysis/finalSel.py
 
-#python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py 
+from config.common_defaults import deffccdicts
 import sys, os
 import ROOT
 
@@ -36,6 +36,6 @@ variables = {
 NUM_CPUS = 10
 
 ###This part is standard to all analyses
-import bin.runDataFrameFinal as rdf
+import config.runDataFrameFinal as rdf
 myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables)
 myana.run(ncpu=NUM_CPUS)
