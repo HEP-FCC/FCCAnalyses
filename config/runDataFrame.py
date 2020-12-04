@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import yaml
 import ROOT 
 import sys
