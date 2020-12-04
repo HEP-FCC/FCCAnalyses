@@ -1,5 +1,6 @@
-from common_defaults import deffccdicts
- #python FCCeeAnalyses/eeH/dataframe/preSel.py 
+#python examples/FCCee/higgs/eeh/preSel.py
+
+from config.common_defaults import deffccdicts
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/fcc_tmp/"

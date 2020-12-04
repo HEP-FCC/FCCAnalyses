@@ -1,11 +1,12 @@
-from common_defaults import deffccdicts
+#python examples/FCCee/higgs/eeh/finalSel.py 
 
-#python FCCeeAnalyses/ZH_Zmumu/dataframe/finalSel.py 
+from config.common_defaults import deffccdicts
+
 import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "FCCee/eeH/"
+baseDir  = "outputs/FCCee/higgs/eeh/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp.json"
@@ -33,8 +34,6 @@ variables = {
 NUM_CPUS = 10
 
 ###This part is standard to all analyses
-sys.path.append('./bin')
-import runDataFrameFinal as rdf
-#import bin.runDataFrameFinal as rdf
+import config.runDataFrameFinal as rdf
 myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables)
 myana.run(ncpu=NUM_CPUS)

@@ -1,6 +1,6 @@
-#python FCCeeAnalyses/top/template-analysis/finalSel.py 
+#python examples/FCCee/top/hadronic/finalSel.py 
 
-from common_defaults import deffccdicts
+from config.common_defaults import deffccdicts
 import sys, os
 import ROOT
 
@@ -37,8 +37,6 @@ variables = {
 NUM_CPUS = 5
 
 ###This part is standard to all analyses
-sys.path.append('./bin')
-import runDataFrameFinal as rdf
-#import bin.runDataFrameFinal as rdf
+import config.runDataFrameFinal as rdf
 myana=rdf.runDataFrameFinal(baseDir,procDict,process_list,cut_list,variables)
 myana.run(ncpu=NUM_CPUS)
