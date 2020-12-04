@@ -13,9 +13,24 @@ procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_proc
 
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','p8_ee_ZH_ecm240']
 
+
+ROOT.gInterpreter.Declare("""
+bool myFilter(ROOT::VecOps::RVec<float> mass) {
+    if (mass.size()<2) return false;
+    for (size_t i = 0; i < mass.size(); ++i) {
+       if (mass.at(i)<80. || mass.at(i)>100.)
+        return false;
+}
+    return true;
+}
+""")
+
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
-cut_list = {"sel0":"zed_leptonic_m.size() == 1",
-            "sel1":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100",
+cut_list = {#"sel0":"zed_leptonic_m.size() == 1",
+            #"sel1":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100",
+            #"sel3":"bool m = true; for (auto&& x : zed_leptonic_m) if (zed_leptonic_m.size()<1 || x<80 || x>100) m=False; return m;"
+            "sel3":"myFilter(zed_leptonic_m)"
+            
             }
 
 
@@ -30,6 +45,8 @@ variables = {
     "leptonic_recoil_m_zoom3":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":400,"xmin":120,"xmax":140},
     "leptonic_recoil_m_zoom4":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":800,"xmin":120,"xmax":140},
     "leptonic_recoil_m_zoom5":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":2000,"xmin":120,"xmax":140},
+    "leptonic_recoil_m_zoomEP":{"name":"zed_leptonic_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":130.3,"xmax":132.5},
+
 }
 
 ###Number of CPUs to use
