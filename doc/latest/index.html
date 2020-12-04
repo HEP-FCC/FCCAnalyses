@@ -114,7 +114,7 @@ Generalities</h1>
 <p>Each analysis is hosted in a single directory, for example <code>examples/FCCee/higgs/mH-recoil/mumu/</code> and contains the same kind of files, please use the same naming convention for all analysis.</p>
 <ol type="1">
 <li><code>analysis.py</code>: This class that is used to define the list of analysers and filters to run on as well as the output variables.</li>
-<li><code>preSel.py</code>: This configuration file is used to define how to run the <code>analysis.py</code>. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the <code>analysis.py</code> with a common code <code>bin/runDataFrame.py</code> (this last file is common to all analyses and should not be touched).</li>
+<li><code>preSel.py</code>: This configuration file is used to define how to run the <code>analysis.py</code>. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the <code>analysis.py</code> with a common code <code>config/runDataFrame.py</code> (this last file is common to all analyses and should not be touched).</li>
 <li><code>finalSel.py</code>: This configuration file contains the final selections and it runs over the locally produced flat ntuples from the <code>preSel.py</code>. It contains a link to the <code>procDict.json</code> for getting cross section etc...(this might be removed later to include everything in the yaml, closer to the sample), the list of processes, the number of CPU, the cut list, and the variables (that will be both written in a <code>TTree</code> and in the form of <code>TH1</code> properly normalised to an integrated luminosity of 1pb-1.</li>
 <li><code>plots.py</code>: This configuration files is used to select the final selections from running <code>finalSel.py</code> to plot. Informations about how to merge processes, write some extra text, normalise to a given integrated luminosity etc... For the moment it is possible to only plot one signal at the time, but several backgrounds.</li>
 </ol>
@@ -129,7 +129,7 @@ Final selection</h1>
 </div><!-- fragment --><p>This will create 2 files per selection <code>SAMPLENAME_SELECTIONNAME.root</code> for the <code>TTree</code> and <code>SAMPLENAME_SELECTIONNAME_histo.root</code> for the histograms. <code>SAMPLENAME</code> and <code>SELECTIONNAME</code> corresponds to the name of the sample and selection respectively in the configuration file.</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
 Plotting</h1>
-<p>The plotting configuration file <code>plots.py</code> contains informations about plotting details for plots rendering but also ways of combining samples for plotting. In this example just run like: </p><div class="fragment"><div class="line">python bin/doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py</div>
+<p>The plotting configuration file <code>plots.py</code> contains informations about plotting details for plots rendering but also ways of combining samples for plotting. In this example just run like: </p><div class="fragment"><div class="line">doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py</div>
 </div><!-- fragment --><p>This will produce the plots in the <code>outdir</code> defined in the configuration file.</p>
 <h1><a class="anchor" id="autotoc_md7"></a>
 Uproot based</h1>
@@ -152,7 +152,7 @@ Getting Started</h1>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 3 2020 15:03:03 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 4 2020 12:55:42 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>
