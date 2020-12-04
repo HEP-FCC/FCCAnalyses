@@ -47,7 +47,7 @@ Generalities
 Each analysis is hosted in a single directory, for example ```examples/FCCee/higgs/mH-recoil/mumu/``` and contains the same kind of files, please use the same naming convention for all analysis. 
 
 1. ```analysis.py```: This class that is used to define the list of analysers and filters to run on as well as the output variables. 
-2. ```preSel.py```: This configuration file is used to define how to run the ```analysis.py```. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the ```analysis.py``` with a common code ```bin/runDataFrame.py``` (this last file is common to all analyses and should not be touched). 
+2. ```preSel.py```: This configuration file is used to define how to run the ```analysis.py```. It contains the list of samples, the number of CPUs, the fraction of the original sample to process and the base directory for the yaml files (that contains the informations about the samples). This will run the ```analysis.py``` with a common code ```config/runDataFrame.py``` (this last file is common to all analyses and should not be touched). 
 3. ```finalSel.py```: This configuration file contains the final selections and it runs over the locally produced flat ntuples from the ```preSel.py```. It contains a link to the ```procDict.json``` for getting cross section etc...(this might be removed later to include everything in the yaml, closer to the sample), the list of processes, the number of CPU, the cut list, and the variables (that will be both written in a ```TTree``` and in the form of ```TH1``` properly normalised to an integrated luminosity of 1pb-1. 
 4. ```plots.py```: This configuration files is used to select the final selections from running ```finalSel.py``` to plot. Informations about how to merge processes, write some extra text, normalise to a given integrated luminosity etc... For the moment it is possible to only plot one signal at the time, but several backgrounds. 
 
@@ -77,7 +77,7 @@ Plotting
 The plotting configuration file ```plots.py``` contains informations about plotting details for plots rendering but also ways of combining samples for plotting. 
 In this example just run like: 
 ```
-python bin/doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py
+doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py
 ```
 
 This will produce the plots in the ```outdir``` defined in the configuration file.
