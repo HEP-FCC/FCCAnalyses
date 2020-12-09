@@ -1,5 +1,8 @@
 #include "CalorimeterReco.h"
 #include "TVector3.h"
+#include "TLorentzVector.h"
+
+#include <math.h>
 
 // calo hit
 ROOT::VecOps::RVec<float> getCaloHit_phi (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in){
@@ -73,4 +76,31 @@ ROOT::VecOps::RVec<int> getCaloCluster_lastCell (ROOT::VecOps::RVec<fcc::CaloClu
     result.push_back(p.hits_end);
   }
   return result;
+}
+
+// MC particles
+ROOT::VecOps::RVec<int> getMC_pid (ROOT::VecOps::RVec<fcc::MCParticleData> in){
+    ROOT::VecOps::RVec<int> result;
+    for (auto & p: in){
+        result.push_back(p.core.pdgId);
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<int> getMC_status (ROOT::VecOps::RVec<fcc::MCParticleData> in){
+    ROOT::VecOps::RVec<int> result;
+    for (auto & p: in){
+        result.push_back(p.core.status);
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<TLorentzVector> getMC_lorentzVector (ROOT::VecOps::RVec<fcc::MCParticleData> in){
+    ROOT::VecOps::RVec<TLorentzVector> result;
+    for (auto & p: in){
+        TLorentzVector fourvec;
+        fourvec.SetPxPyPzE(p.core.p4.px, p.core.p4.py, p.core.p4.pz, sqrt(p.core.p4.px * p.core.p4.px + p.core.p4.py * p.core.p4.py + p.core.p4.pz * p.core.p4.pz + p.core.p4.mass * p.core.p4.mass));
+        result.push_back(fourvec);
+    }
+    return result;
 }
