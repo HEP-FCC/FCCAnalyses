@@ -35,8 +35,10 @@ ROOT::VecOps::RVec<fastjet::PseudoJet> clustering::operator() (ROOT::VecOps::RVe
   cs = new fastjet::ClusterSequence(input, def);
   std::vector<fastjet::PseudoJet> pjets;
   if(m_exclusive ==  0 )       pjets = fastjet::sorted_by_pt(cs->inclusive_jets(m_cut));
-  else if( m_exclusive ==  1)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets (m_cut));
-  else if( m_exclusive ==  2)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets (int(m_cut)));
+  else if( m_exclusive ==  1)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets(m_cut));
+  else if( m_exclusive ==  2)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets(int(m_cut)));
+  else if( m_exclusive ==  3)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets_up_to(int(m_cut)));
+  else if( m_exclusive ==  4)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets_ycut(m_cut));
   for (const auto& pjet : pjets) {
     result.push_back(pjet);
   }
