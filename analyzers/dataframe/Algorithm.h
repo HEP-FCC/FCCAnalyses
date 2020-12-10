@@ -17,6 +17,15 @@
 #include "TFitter.h"
 
 
+struct getRP_combination{
+  getRP_combination(int arg_n, int arg_charge, bool arg_abs);
+  int  m_n;
+  int  m_charge;
+  bool m_abs;
+  ROOT::VecOps::RVec<int> operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+};
+
+
 struct sphericityFit {
   sphericityFit(ROOT::VecOps::RVec<float> arg_px, ROOT::VecOps::RVec<float> arg_py, ROOT::VecOps::RVec<float> arg_pz);
   ROOT::VecOps::RVec<float> m_px;

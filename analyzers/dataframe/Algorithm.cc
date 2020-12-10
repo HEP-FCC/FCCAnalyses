@@ -3,6 +3,37 @@
 #include "Math/IFunction.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
+#include <algorithm>
+#include <iostream>
+#include <numeric>
+
+getRP_combination::getRP_combination(int arg_n, int arg_charge, bool arg_abs){m_n = arg_n; m_charge = arg_charge; m_abs = arg_charge;}
+ROOT::VecOps::RVec<int> getRP_combination::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  ROOT::VecOps::RVec<int> result;
+
+  std::vector<int> d(in.size());
+  std::cout<<"==============================NEX EVET====================="<<std::endl;
+  std::iota(d.begin(),d.end(),1);
+  std::cout << "These are the Possible Permutations: " << std::endl;
+  int index=0;
+  do
+    {
+      int charge=0;
+      for (int i = 0; i < m_n; i++)
+	charge+=in[d[i]].charge;
+      if ((abs(charge)==m_charge and m_abs) || charge==m_charge){
+	index+=1;
+	for (int i = 0; i < m_n; i++)
+	  std::cout << d[i] << " ";
+        std::cout << "  charge  " << charge << "  index " << index << std::endl;
+      }
+        std::reverse(d.begin()+m_n,d.end());
+    } while (next_permutation(d.begin(),d.end()));
+
+  return result;
+}
+
+
 
 sphericityFit::sphericityFit(ROOT::VecOps::RVec<float> arg_px, ROOT::VecOps::RVec<float> arg_py, ROOT::VecOps::RVec<float> arg_pz) {m_px=arg_px;m_py=arg_py;m_pz=arg_pz; }
 float sphericityFit::operator()(const double *pars){
