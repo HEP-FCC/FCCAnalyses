@@ -81,11 +81,23 @@ ROOT::VecOps::RVec<float> getRP2MC_mass(ROOT::VecOps::RVec<int> recind, ROOT::Ve
 ROOT::VecOps::RVec<int> getRP2MC_index(ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
   ROOT::VecOps::RVec<int> result;
   result.resize(reco.size(),-1.);
-  for (unsigned int i=0; i<recind.size();i++) {
+  for (size_t i=0; i<recind.size();i++) {
     result[recind.at(i)]=mcind.at(i);
   }
   return result;
 }
+
+
+
+/*RVec<int> getPDG(RVec<int> recoInd, RVec<int> mcInd, RVec<MCParticleData> mcParts, RVec<ReconstructedParticleData> recoParts) {
+  RVec<int> results;
+  results.resize(recoParts.size(), -1);
+  for (size_t i = 0; i < recoParts.size(); ++i) {
+    results[ recoInd[i] ] = mcParts[ mcInd[i] ].PDG;
+  }
+  return results;
+  }*/
+
 
 ROOT::VecOps::RVec<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents){
   ROOT::VecOps::RVec<int> result;
