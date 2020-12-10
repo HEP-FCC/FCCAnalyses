@@ -19,11 +19,14 @@
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/JetDefinition.hh"
 
-///Jet Clustering
+///Jet Clustering interface
 struct clustering {
-  clustering (int arg_jetalgo, float arg_radius);
-  int m_jetalgo = 1;
-  float m_radius = 0.5;
+  clustering (int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut);
+
+  int m_jetalgo = 1; //> jet algorithm to choose. Possible choices are 1=kt_algorithm, 2=antikt_algorithm, 3=cambridge_algorithm
+  float m_radius = 0.5; //> jet cone radius
+  int   m_exclusive = 0; //> flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets.
+  float m_cut = 5.; //> pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2
   ROOT::VecOps::RVec<fastjet::PseudoJet>  operator() (ROOT::VecOps::RVec<float> p_x, ROOT::VecOps::RVec<float> p_y, ROOT::VecOps::RVec<float> p_z, ROOT::VecOps::RVec<float> E);
 };
 
