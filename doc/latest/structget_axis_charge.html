@@ -79,12 +79,15 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Get the weighted charge in a given hemisphere (defined by it's angle wrt to axis). For definition see eq1 <a href="https://arxiv.org/pdf/1209.2421.pdf">https://arxiv.org/pdf/1209.2421.pdf</a>.  
+ <a href="structget_axis_charge.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_algorithm_8h_source.html">/workspace/analyzers/dataframe/Algorithm.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0b23c66a447c7ae61d11b7c9378623e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_charge.html#a0b23c66a447c7ae61d11b7c9378623e1">getAxisCharge</a> (bool arg_pos)</td></tr>
-<tr class="separator:a0b23c66a447c7ae61d11b7c9378623e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c6af3233e709d722f865035ecc74f6f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_charge.html#a8c6af3233e709d722f865035ecc74f6f">getAxisCharge</a> (bool arg_pos, float arg_power)</td></tr>
+<tr class="separator:a8c6af3233e709d722f865035ecc74f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46ba071d648f0a4854f9e89ddeadafb0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_charge.html#a46ba071d648f0a4854f9e89ddeadafb0">operator()</a> (ROOT::VecOps::RVec&lt; float &gt; angle, ROOT::VecOps::RVec&lt; float &gt; charge, ROOT::VecOps::RVec&lt; float &gt; px, ROOT::VecOps::RVec&lt; float &gt; py, ROOT::VecOps::RVec&lt; float &gt; pz)</td></tr>
 <tr class="separator:a46ba071d648f0a4854f9e89ddeadafb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -92,10 +95,14 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a5006d1cf6479a23ea61e63aabc363d36"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_charge.html#a5006d1cf6479a23ea61e63aabc363d36">m_pos</a> = 0</td></tr>
 <tr class="separator:a5006d1cf6479a23ea61e63aabc363d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c1257c5d74ca71f9ba74ff55ecb3015"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_charge.html#a6c1257c5d74ca71f9ba74ff55ecb3015">m_power</a> = 1</td></tr>
+<tr class="separator:a6c1257c5d74ca71f9ba74ff55ecb3015"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a0b23c66a447c7ae61d11b7c9378623e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b23c66a447c7ae61d11b7c9378623e1">&#9670;&nbsp;</a></span>getAxisCharge()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Get the weighted charge in a given hemisphere (defined by it's angle wrt to axis). For definition see eq1 <a href="https://arxiv.org/pdf/1209.2421.pdf">https://arxiv.org/pdf/1209.2421.pdf</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a8c6af3233e709d722f865035ecc74f6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c6af3233e709d722f865035ecc74f6f">&#9670;&nbsp;</a></span>getAxisCharge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -104,8 +111,18 @@ Public Attributes</h2></td></tr>
           <td class="memname">getAxisCharge::getAxisCharge </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>arg_pos</em></td><td>)</td>
+          <td class="paramname"><em>arg_pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>arg_power</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -174,6 +191,20 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6c1257c5d74ca71f9ba74ff55ecb3015"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c1257c5d74ca71f9ba74ff55ecb3015">&#9670;&nbsp;</a></span>m_power</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float getAxisCharge::m_power = 1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
 <li>analyzers/dataframe/<a class="el" href="_algorithm_8h_source.html">Algorithm.h</a></li>
 <li>analyzers/dataframe/<a class="el" href="_algorithm_8cc.html">Algorithm.cc</a></li>
@@ -182,7 +213,7 @@ Public Attributes</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 7 2020 16:36:20 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 10 2020 12:23:02 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

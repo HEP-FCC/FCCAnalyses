@@ -105,6 +105,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfilter_m_c__pdg_i_d.html">filterMC_pdgID</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filter events based on a MCParticles PDGID.  <a href="structfilter_m_c__pdg_i_d.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsel_m_c__p_t.html">selMC_pT</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select MCParticles with transverse momentum greater than a minimum value [GeV]  <a href="structsel_m_c__p_t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,7 +115,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select MCParticles with their status  <a href="structsel_m_c__gen_status.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__tree.html">getMC_tree</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">get MC history tree for a given generator status  <a href="structget_m_c__tree.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">get MC history tree for a given MCParticle index  <a href="structget_m_c__tree.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__decay.html">getMC_decay</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the decay of a given particle  <a href="structget_m_c__decay.html#details">More...</a><br /></td></tr>
@@ -120,6 +123,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a35a88e07ddecd2ee20316d09f8d1ea8c"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_c_particle_8h.html#a35a88e07ddecd2ee20316d09f8d1ea8c">getMC_parentid</a> (ROOT::VecOps::RVec&lt; int &gt; mcind, ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; mc, ROOT::VecOps::RVec&lt; int &gt; parents)</td></tr>
+<tr class="memdesc:a35a88e07ddecd2ee20316d09f8d1ea8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the parent index of a given list of MC particles  <a href="_m_c_particle_8h.html#a35a88e07ddecd2ee20316d09f8d1ea8c">More...</a><br /></td></tr>
+<tr class="separator:a35a88e07ddecd2ee20316d09f8d1ea8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0a6b5cb50a583521c018c0eb1bd6a82"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_c_particle_8h.html#ac0a6b5cb50a583521c018c0eb1bd6a82">getMC_time</a> (ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in)</td></tr>
 <tr class="memdesc:ac0a6b5cb50a583521c018c0eb1bd6a82"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the time of the input MCParticles  <a href="_m_c_particle_8h.html#ac0a6b5cb50a583521c018c0eb1bd6a82">More...</a><br /></td></tr>
 <tr class="separator:ac0a6b5cb50a583521c018c0eb1bd6a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -420,6 +426,42 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>return the momenta of the input MCParticles </p>
+
+</div>
+</div>
+<a id="a35a88e07ddecd2ee20316d09f8d1ea8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35a88e07ddecd2ee20316d09f8d1ea8c">&#9670;&nbsp;</a></span>getMC_parentid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::VecOps::RVec&lt;int&gt; getMC_parentid </td>
+          <td>(</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>mcind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt;&#160;</td>
+          <td class="paramname"><em>mc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>parents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>return the parent index of a given list of MC particles </p>
 
 </div>
 </div>
@@ -757,7 +799,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 7 2020 16:36:20 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 10 2020 12:23:02 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

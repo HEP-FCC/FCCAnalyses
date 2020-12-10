@@ -107,6 +107,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_r_p__combination.html">getRP_combination</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsphericity_fit.html">sphericityFit</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structminimize__sphericity.html">minimize_sphericity</a></td></tr>
@@ -116,8 +118,16 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structminimize__thrust.html">minimize_thrust</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_charge.html">getAxisCharge</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the weighted charge in a given hemisphere (defined by it's angle wrt to axis). For definition see eq1 <a href="https://arxiv.org/pdf/1209.2421.pdf">https://arxiv.org/pdf/1209.2421.pdf</a>.  <a href="structget_axis_charge.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_mass.html">getAxisMass</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the invariant mass in a given hemisphere (defined by it's angle wrt to axis).  <a href="structget_axis_mass.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_energy.html">getAxisEnergy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the energy in a given hemisphere (defined by it's angle wrt to axis). Returns 3 values: total, charged, neutral energies.  <a href="structget_axis_energy.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_axis_n.html">getAxisN</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of particles in a given hemisphere (defined by it's angle wrt to axis). Returns 3 values: total, charged, neutral multiplicity.  <a href="structget_axis_n.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -125,7 +135,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a4b95560ea91ed8d72e864845812f050c"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_algorithm_8h.html#a4b95560ea91ed8d72e864845812f050c">axisCosTheta</a> (ROOT::VecOps::RVec&lt; float &gt; axis, ROOT::VecOps::RVec&lt; float &gt; px, ROOT::VecOps::RVec&lt; float &gt; py, ROOT::VecOps::RVec&lt; float &gt; pz)</td></tr>
 <tr class="separator:a4b95560ea91ed8d72e864845812f050c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34862f8c7a1734a7b8f9a486a79d6367"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_algorithm_8h.html#a34862f8c7a1734a7b8f9a486a79d6367">getMass</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
-<tr class="memdesc:a34862f8c7a1734a7b8f9a486a79d6367"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the mass from a list of reconstructed particles.  <a href="_algorithm_8h.html#a34862f8c7a1734a7b8f9a486a79d6367">More...</a><br /></td></tr>
+<tr class="memdesc:a34862f8c7a1734a7b8f9a486a79d6367"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the invariant mass from a list of reconstructed particles.  <a href="_algorithm_8h.html#a34862f8c7a1734a7b8f9a486a79d6367">More...</a><br /></td></tr>
 <tr class="separator:a34862f8c7a1734a7b8f9a486a79d6367"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -185,7 +195,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the mass from a list of reconstructed particles. </p>
+<p>Get the invariant mass from a list of reconstructed particles. </p>
 
 </div>
 </div>
@@ -193,7 +203,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 7 2020 16:36:20 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 10 2020 12:23:02 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

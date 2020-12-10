@@ -137,8 +137,67 @@ Functions</h2></td></tr>
 <tr class="memitem:a266d57a00572dd8ae5090400936b370c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_reconstructed_particle_8cc.html#a266d57a00572dd8ae5090400936b370c">getRP_n</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; x)</td></tr>
 <tr class="memdesc:a266d57a00572dd8ae5090400936b370c"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the size of the input collection  <a href="_reconstructed_particle_8cc.html#a266d57a00572dd8ae5090400936b370c">More...</a><br /></td></tr>
 <tr class="separator:a266d57a00572dd8ae5090400936b370c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a764ff882d84ebffcab050b0783817821"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_reconstructed_particle_8cc.html#a764ff882d84ebffcab050b0783817821">getJet_btag</a> (ROOT::VecOps::RVec&lt; int &gt; index, ROOT::VecOps::RVec&lt; edm4hep::ParticleIDData &gt; pid, ROOT::VecOps::RVec&lt; float &gt; values)</td></tr>
+<tr class="memdesc:a764ff882d84ebffcab050b0783817821"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the bjet flavour  <a href="_reconstructed_particle_8cc.html#a764ff882d84ebffcab050b0783817821">More...</a><br /></td></tr>
+<tr class="separator:a764ff882d84ebffcab050b0783817821"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80cdd2d7fc7e3fdabb95f3899e35e026"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_reconstructed_particle_8cc.html#a80cdd2d7fc7e3fdabb95f3899e35e026">getJet_ntags</a> (ROOT::VecOps::RVec&lt; bool &gt; in)</td></tr>
+<tr class="separator:a80cdd2d7fc7e3fdabb95f3899e35e026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a764ff882d84ebffcab050b0783817821"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a764ff882d84ebffcab050b0783817821">&#9670;&nbsp;</a></span>getJet_btag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::VecOps::RVec&lt;bool&gt; getJet_btag </td>
+          <td>(</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ParticleIDData &gt;&#160;</td>
+          <td class="paramname"><em>pid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>returns the bjet flavour </p>
+
+</div>
+</div>
+<a id="a80cdd2d7fc7e3fdabb95f3899e35e026"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80cdd2d7fc7e3fdabb95f3899e35e026">&#9670;&nbsp;</a></span>getJet_ntags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getJet_ntags </td>
+          <td>(</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; bool &gt;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a87fd9beeaa25cf1bc865681486d5b839"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a87fd9beeaa25cf1bc865681486d5b839">&#9670;&nbsp;</a></span>getRP()</h2>
 
@@ -483,7 +542,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 7 2020 16:36:20 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 10 2020 12:23:02 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

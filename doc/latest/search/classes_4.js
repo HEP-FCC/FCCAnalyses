@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['recoil_131',['recoil',['../structrecoil.html',1,'']]],
-  ['resonancebuilder_132',['ResonanceBuilder',['../struct_resonance_builder.html',1,'']]]
+  ['minimize_5fsphericity_151',['minimize_sphericity',['../structminimize__sphericity.html',1,'']]],
+  ['minimize_5fthrust_152',['minimize_thrust',['../structminimize__thrust.html',1,'']]]
 ];

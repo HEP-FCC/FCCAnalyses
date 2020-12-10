@@ -79,28 +79,28 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>get MC history tree for a given generator status  
+<p>get MC history tree for a given MCParticle index  
  <a href="structget_m_c__tree.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_m_c_particle_8h_source.html">/workspace/analyzers/dataframe/MCParticle.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb7169482f5a3c2695b8b4a9e0eb8399"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__tree.html#abb7169482f5a3c2695b8b4a9e0eb8399">getMC_tree</a> (int arg_status)</td></tr>
-<tr class="separator:abb7169482f5a3c2695b8b4a9e0eb8399"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04120c18b74b2a601ecc83bdb139407c"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; ROOT::VecOps::RVec&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__tree.html#a04120c18b74b2a601ecc83bdb139407c">operator()</a> (ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in, ROOT::VecOps::RVec&lt; int &gt; ind)</td></tr>
-<tr class="separator:a04120c18b74b2a601ecc83bdb139407c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa79d8c6f909cdcb777aeda0ba024bd24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__tree.html#aa79d8c6f909cdcb777aeda0ba024bd24">getMC_tree</a> (int arg_index)</td></tr>
+<tr class="separator:aa79d8c6f909cdcb777aeda0ba024bd24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1e381bfa826df6b71d69aba89d42e6b"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__tree.html#ab1e381bfa826df6b71d69aba89d42e6b">operator()</a> (ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in, ROOT::VecOps::RVec&lt; int &gt; ind)</td></tr>
+<tr class="separator:ab1e381bfa826df6b71d69aba89d42e6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a91355a1a92ae7fdf03508cc391a1fa23"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__tree.html#a91355a1a92ae7fdf03508cc391a1fa23">m_status</a> = 1</td></tr>
-<tr class="separator:a91355a1a92ae7fdf03508cc391a1fa23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4d89aae997ff3ee16f9a1cd69eca1e0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_m_c__tree.html#ae4d89aae997ff3ee16f9a1cd69eca1e0">m_index</a></td></tr>
+<tr class="separator:ae4d89aae997ff3ee16f9a1cd69eca1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>get MC history tree for a given generator status </p>
+<div class="textblock"><p>get MC history tree for a given MCParticle index </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abb7169482f5a3c2695b8b4a9e0eb8399"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb7169482f5a3c2695b8b4a9e0eb8399">&#9670;&nbsp;</a></span>getMC_tree()</h2>
+<a id="aa79d8c6f909cdcb777aeda0ba024bd24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa79d8c6f909cdcb777aeda0ba024bd24">&#9670;&nbsp;</a></span>getMC_tree()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -109,7 +109,7 @@ Public Attributes</h2></td></tr>
           <td class="memname">getMC_tree::getMC_tree </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>arg_status</em></td><td>)</td>
+          <td class="paramname"><em>arg_index</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -118,14 +118,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a04120c18b74b2a601ecc83bdb139407c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04120c18b74b2a601ecc83bdb139407c">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="ab1e381bfa826df6b71d69aba89d42e6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1e381bfa826df6b71d69aba89d42e6b">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt; ROOT::VecOps::RVec&lt; int &gt; &gt; getMC_tree::operator() </td>
+          <td class="memname">ROOT::VecOps::RVec&lt; int &gt; getMC_tree::operator() </td>
           <td>(</td>
           <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt;&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -147,14 +147,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a91355a1a92ae7fdf03508cc391a1fa23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91355a1a92ae7fdf03508cc391a1fa23">&#9670;&nbsp;</a></span>m_status</h2>
+<a id="ae4d89aae997ff3ee16f9a1cd69eca1e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4d89aae997ff3ee16f9a1cd69eca1e0">&#9670;&nbsp;</a></span>m_index</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float getMC_tree::m_status = 1</td>
+          <td class="memname">float getMC_tree::m_index</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -169,7 +169,7 @@ Public Attributes</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 7 2020 16:36:20 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 10 2020 12:23:02 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

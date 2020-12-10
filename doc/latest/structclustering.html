@@ -79,15 +79,15 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Jet Clustering.  
+<p>Jet Clustering interface.  
  <a href="structclustering.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_jet_clustering_8h_source.html">/workspace/analyzers/dataframe/JetClustering.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac992fe27a351a22c1b659b818d79198e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structclustering.html#ac992fe27a351a22c1b659b818d79198e">clustering</a> (int arg_jetalgo, float arg_radius)</td></tr>
-<tr class="separator:ac992fe27a351a22c1b659b818d79198e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cb7e8f048b450ebd048d4a294b72630"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structclustering.html#a5cb7e8f048b450ebd048d4a294b72630">clustering</a> (int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut)</td></tr>
+<tr class="separator:a5cb7e8f048b450ebd048d4a294b72630"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80abf42d0a3d74322cb790635a309531"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; fastjet::PseudoJet &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structclustering.html#a80abf42d0a3d74322cb790635a309531">operator()</a> (ROOT::VecOps::RVec&lt; float &gt; p_x, ROOT::VecOps::RVec&lt; float &gt; p_y, ROOT::VecOps::RVec&lt; float &gt; p_z, ROOT::VecOps::RVec&lt; float &gt; E)</td></tr>
 <tr class="separator:a80abf42d0a3d74322cb790635a309531"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -97,12 +97,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a48db9377b1db4ab28b168fd969eb4cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3155c417d423de71ebdda18f968177c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structclustering.html#ab3155c417d423de71ebdda18f968177c">m_radius</a> = 0.5</td></tr>
 <tr class="separator:ab3155c417d423de71ebdda18f968177c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30586f30d96f83a74052c5547287ddaf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structclustering.html#a30586f30d96f83a74052c5547287ddaf">m_exclusive</a> = 0</td></tr>
+<tr class="separator:a30586f30d96f83a74052c5547287ddaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64ea9cc0a387bf4b1d8ded2fc588d6a4"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structclustering.html#a64ea9cc0a387bf4b1d8ded2fc588d6a4">m_cut</a> = 5.</td></tr>
+<tr class="separator:a64ea9cc0a387bf4b1d8ded2fc588d6a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Jet Clustering. </p>
+<div class="textblock"><p>Jet Clustering interface. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac992fe27a351a22c1b659b818d79198e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac992fe27a351a22c1b659b818d79198e">&#9670;&nbsp;</a></span>clustering()</h2>
+<a id="a5cb7e8f048b450ebd048d4a294b72630"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cb7e8f048b450ebd048d4a294b72630">&#9670;&nbsp;</a></span>clustering()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -117,7 +121,19 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>arg_radius</em>&#160;</td>
+          <td class="paramname"><em>arg_radius</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>arg_exclusive</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>arg_cut</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -171,6 +187,34 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a64ea9cc0a387bf4b1d8ded2fc588d6a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64ea9cc0a387bf4b1d8ded2fc588d6a4">&#9670;&nbsp;</a></span>m_cut</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float clustering::m_cut = 5.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30586f30d96f83a74052c5547287ddaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30586f30d96f83a74052c5547287ddaf">&#9670;&nbsp;</a></span>m_exclusive</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int clustering::m_exclusive = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a48db9377b1db4ab28b168fd969eb4cfc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a48db9377b1db4ab28b168fd969eb4cfc">&#9670;&nbsp;</a></span>m_jetalgo</h2>
 
@@ -207,7 +251,7 @@ Public Attributes</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 7 2020 16:36:20 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 10 2020 12:23:02 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>
