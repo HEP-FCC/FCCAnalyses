@@ -14,6 +14,16 @@
 #include "edm4hep/Vector2i.h"
 
 
+/// Filter events based on a MCParticles PDGID
+struct filterMC_pdgID {
+  filterMC_pdgID(int arg_pdgid, bool arg_abs);
+  float m_pdgid; //> Generator pdgid
+  bool m_abs;//> Use absolute value for pdgig
+  bool  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+};
+
+
+
 /// select MCParticles with transverse momentum greater than a minimum value [GeV]
 struct selMC_pT {
   selMC_pT(float arg_min_pt);
@@ -28,11 +38,11 @@ struct selMC_genStatus {
   ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 };
 
-/// get MC history tree for a given generator status
+/// get MC history tree for a given MCParticle index
 struct getMC_tree{
-  getMC_tree(int arg_status);
-  float m_status = 1; //> Generator status
-  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
+  getMC_tree(int arg_index);
+  float m_index; //> MC Particle index to build the tree from
+  ROOT::VecOps::RVec<int> operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
 };
 
 /// get the decay of a given particle
@@ -43,6 +53,10 @@ struct getMC_decay {
   bool m_inf = false;//> boolean to check if the pdgid is below a value rather than equal
   bool  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
 };
+
+
+/// return the parent index of a given list of MC particles
+ROOT::VecOps::RVec<int> getMC_parentid(ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents);
 
 /// return the time of the input MCParticles
 ROOT::VecOps::RVec<float> getMC_time(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);

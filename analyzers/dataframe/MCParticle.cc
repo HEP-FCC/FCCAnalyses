@@ -280,31 +280,68 @@ bool getMC_decay::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  R
 }
 
 
-getMC_tree::getMC_tree(int arg_status) : m_status(arg_status) {};
-ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getMC_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
+ROOT::VecOps::RVec<int> getMC_parentid(ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents){
+  ROOT::VecOps::RVec<int> result;
+  /*std::cout <<"================== Full Truth=================" <<std::endl;
+  for (size_t i = 0; i < mc.size(); ++i) {
+    std::cout << "i= " << i << "  PDGID "<< mc.at(i).PDG  <<  "  status  " << mc.at(i).generatorStatus << std::endl;
+    for (unsigned j = mc.at(i).parents_begin; j != mc.at(i).parents_end; ++j) 
+      std::cout << "   ==index " << j <<" parents " << parents.at(j) << "  PDGID "<< mc.at(parents.at(j)).PDG << "  status  " << mc.at(parents.at(j)).generatorStatus << std::endl;
 
-  std::cout << "My logic"<<std::endl;
-  for (size_t i = 0; i < in.size(); ++i) {
-    std::cout << i << " status " << in[i].generatorStatus << " pdg " << in[i].PDG << " p_beg " << in.at(ind.at(i)).parents_begin << " p_end " << in.at(ind.at(i)).parents_end << std::endl;
-  }
+  }*/
+    
+  //std::cout <<"================== NEW EVENT=================" <<std::endl;
+  for (size_t i = 0; i < mcind.size(); ++i) {
 
-
-  std::cout << "Thomas logic"<<std::endl;
-
-  for (size_t i = 0; i < in.size(); ++i) {
-    // all the other cout
-    std::cout << i  << " status " << in[i].generatorStatus << " pdg " << in[i].PDG << std::endl;
-    for (unsigned j = in.at(i).parents_begin; j != in.at(i).parents_end; ++j) {
-      std::cout << " parents " << ind.at(j) << std::endl;
+    if (mcind.at(i)<0){
+      result.push_back(-999);
+      continue;
+    }
+    //std::cout << "mc ind " << mcind.at(i) << "  PDGID "<< mc.at(mcind.at(i)).PDG  << "  status  " << mc.at(mcind.at(i)).generatorStatus << std::endl;
+    for (unsigned j = mc.at(mcind.at(i)).parents_begin; j != mc.at(mcind.at(i)).parents_end; ++j) {
+      //std::cout << "   ==index " << j <<" parents " << parents.at(j) << "  PDGID "<< mc.at(parents.at(j)).PDG << "  status  " << mc.at(parents.at(j)).generatorStatus << std::endl;
+      // result.push_back(parents.at(j));
+    }
+    //std::cout << mc.at(mcind.at(i)).parents_begin <<"---"<< mc.at(mcind.at(i)).parents_end<< std::endl;	
+    if (mc.at(mcind.at(i)).parents_end - mc.at(mcind.at(i)).parents_begin>1) {
+      //std::cout << "-999" << std::endl;
+      result.push_back(-999);
+    }
+    else {
+      //std::cout << "not -999 "<< parents.at(mc.at(mcind.at(i)).parents_begin) << std::endl;		    
+      result.push_back(parents.at(mc.at(mcind.at(i)).parents_begin));
     }
   }
- 
-  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
+  return result;
+}
+
+
+getMC_tree::getMC_tree(int arg_index) : m_index(arg_index) {};
+ROOT::VecOps::RVec<int> getMC_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
+  ROOT::VecOps::RVec<int> result;
+  auto & particle = in[m_index];
+  
+  //for (unsigned j = in.at(i).parents_begin; j != in.at(i).parents_end; ++j){
+  //  if 
+  //  result.push_back(ind.at(j));
+  
+  
+  std::cout << "Thomas logic"<<std::endl;
+  
   for (size_t i = 0; i < in.size(); ++i) {
+    // all the other cout
+    std::cout << i  << " status " << in[i].generatorStatus << " pdg " << in[i].PDG << " p beg "<< in.at(i).parents_begin << " p end " <<in.at(i).parents_end << "  mc size " << in.size() << "  ind size "<<ind.size() << std::endl;
+    for (unsigned j = in.at(i).parents_begin; j != in.at(i).parents_end; ++j) {
+      std::cout << "   ==index " << j <<" parents " << ind.at(j) << std::endl;
+    }
+  }
+  //std::cout << "END Thomas logic"<<std::endl;
+
+  /*  for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
     std::cout <<  "here" << std::endl;
     
-    if (p.generatorStatus != m_status) continue;
+    if (p.generatorStatus != m_index) continue;
     ROOT::VecOps::RVec<int> tree;
     tree.push_back(in.at(ind.at(i)).parents_begin);
     while(true){
@@ -314,5 +351,18 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getMC_tree::operator() (ROOT::VecOps
     }
     result.push_back(tree);
   }
+  return result;*/
   return result;
+}
+
+
+
+
+filterMC_pdgID::filterMC_pdgID(int arg_pdgid, bool arg_abs){m_pdgid = arg_pdgid; m_abs = arg_abs;};
+bool  filterMC_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+  for (size_t i = 0; i < in.size(); ++i) {
+    auto & p = in[i];
+    if ((m_abs && abs(p.PDG) == m_pdgid) || (p.PDG == m_pdgid)) return true;
+  }
+  return false;
 }
