@@ -29,11 +29,18 @@ class analysis():
     #__________________________________________________________
     def run(self):
         df2 = (self.df
+        #df2 = (self.df.Range(10)
 
+               .Alias("Jet3","Jet#3.index")
                .Define("RP_px",          "getRP_px(ReconstructedParticles)")
                .Define("RP_py",          "getRP_py(ReconstructedParticles)")
                .Define("RP_pz",          "getRP_pz(ReconstructedParticles)")               
-               .Define("RP_e",           "getRP_e(ReconstructedParticles)")               
+               .Define("RP_e",           "getRP_e(ReconstructedParticles)")
+
+               .Define("JET_btag",       "getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
+               #.Define("EVT_nbtag",      "JET_btag.at(0)")
+               .Define("EVT_nbtag",      "getJet_ntags(JET_btag)")
+               
                .Define('EVT_thrust',     'minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
                .Define('RP_thrustangle', 'axisCosTheta(EVT_thrust, RP_px, RP_py, RP_pz)')
                .Define('EVT_thrust_x',   "EVT_thrust.at(0)")
@@ -61,6 +68,10 @@ class analysis():
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
+
+                "JET_btag",
+                "EVT_nbtag",
+
                 "EVT_thrust_x",
                 "EVT_thrust_y",
                 "EVT_thrust_z",
@@ -83,7 +94,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python FCCeeAnalyses/top/template-analysis/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_tt_fullhad_ecm365/events_196309147.root 
+# python examples/FCCee/top/hadronic/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_tt_fullhad_ecm365/events_196309147.root 
 if __name__ == "__main__":
 
     if len(sys.argv)==1:
@@ -95,7 +106,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 0
+    ncpus = 2
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 
