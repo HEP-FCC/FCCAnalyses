@@ -8,6 +8,7 @@
 #include "TLorentzVector.h"
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/ParticleIDData.h"
 
 
 /// TO BE MOVED LATER
@@ -28,6 +29,21 @@ struct recoil {
 struct selRP_pT {
   selRP_pT(float arg_min_pt);
   float m_min_pt = 20; //> transverse momentum threshold [GeV]
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+};
+
+/// select ReconstructedParticles with momentum greater than a minimum value [GeV]
+struct selRP_p {
+  selRP_p(float arg_min_p);
+  float m_min_p = 1.; //> momentum threshold [GeV]
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+};
+
+/// select ReconstructedParticles with charge equal or in asolute value
+struct selRP_charge {
+  selRP_charge(int arg_charge, bool arg_abs);
+  float m_charge; //> charge condition
+  bool  m_abs;//> absolute value of the charge
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 };
 
@@ -79,4 +95,9 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> mergeParticles(ROOT::VecO
 /// return the size of the input collection
 int getRP_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
+
+/// returns the bjet flavour
+ROOT::VecOps::RVec<bool> getJet_btag(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> values); 
+
+int getJet_ntags(ROOT::VecOps::RVec<bool> in);
 #endif

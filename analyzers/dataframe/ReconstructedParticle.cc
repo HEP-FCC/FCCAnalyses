@@ -218,3 +218,53 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  selRP_pT::operator() (RO
   return result;
 }
 
+
+selRP_p::selRP_p(float arg_min_p) : m_min_p(arg_min_p) {};
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  selRP_p::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  result.reserve(in.size());
+  for (size_t i = 0; i < in.size(); ++i) {
+    auto & p = in[i];
+    if (std::sqrt(std::pow(p.momentum.x,2) + std::pow(p.momentum.y,2) + std::pow(p.momentum.z,2) ) > m_min_p) {
+      result.emplace_back(p);
+    }
+  }
+  return result;
+}
+
+selRP_charge::selRP_charge(int arg_charge, bool arg_abs){m_charge = arg_charge; m_abs = arg_abs;};
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  selRP_charge::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  result.reserve(in.size());
+  for (size_t i = 0; i < in.size(); ++i) {
+    auto & p = in[i];
+    if ((m_abs && abs(in[i].charge)==m_charge) || (m_charge==in[i].charge) ) {
+      result.emplace_back(p);
+    }
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<bool> getJet_btag(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> values){
+  ROOT::VecOps::RVec<bool> result;
+  //std::cout << "========================new event=======================" <<std::endl;
+  for (size_t i = 0; i < index.size(); ++i) {
+    result.push_back(values.at(pid.at(index.at(i)).parameters_begin +1));
+    
+    //std::cout << pid.at(index.at(i)).parameters_begin << "  ==  " << pid.at(index.at(i)).parameters_end << std::endl;
+    //for (unsigned j = pid.at(index.at(i)).parameters_begin; j != pid.at(index.at(i)).parameters_end; ++j) {
+    //  std::cout << " values : " << values.at(j) << std::endl;
+    //}
+  }
+  return result;
+}
+
+int getJet_ntags(ROOT::VecOps::RVec<bool> in) {
+  int result =  0;
+  for (size_t i = 0; i < in.size(); ++i)
+    if (in.at(i))result+=1;
+  return result;
+}
