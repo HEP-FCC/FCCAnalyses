@@ -1,8 +1,8 @@
 
 #include "JetClustering.h"
+using namespace JetClustering;
 
-
-clustering::clustering(int arg_jetalgo, float arg_radius){m_jetalgo = arg_jetalgo; m_radius = arg_radius;}
+clustering::clustering(int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut){m_jetalgo = arg_jetalgo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut;}
 
 ROOT::VecOps::RVec<fastjet::PseudoJet> clustering::operator() (ROOT::VecOps::RVec<float> p_x, ROOT::VecOps::RVec<float> p_y, ROOT::VecOps::RVec<float> p_z, ROOT::VecOps::RVec<float> E) {
   ROOT::VecOps::RVec<fastjet::PseudoJet> result;
@@ -33,7 +33,12 @@ ROOT::VecOps::RVec<fastjet::PseudoJet> clustering::operator() (ROOT::VecOps::RVe
   fastjet::ClusterSequence* cs;
   fastjet::JetDefinition def(jetAlgorithm, m_radius, fastjet::RecombinationScheme::E_scheme);
   cs = new fastjet::ClusterSequence(input, def);
-  std::vector<fastjet::PseudoJet> pjets = fastjet::sorted_by_pt(cs->inclusive_jets(5.));
+  std::vector<fastjet::PseudoJet> pjets;
+  if(m_exclusive ==  0 )       pjets = fastjet::sorted_by_pt(cs->inclusive_jets(m_cut));
+  else if( m_exclusive ==  1)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets(m_cut));
+  else if( m_exclusive ==  2)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets(int(m_cut)));
+  else if( m_exclusive ==  3)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets_up_to(int(m_cut)));
+  else if( m_exclusive ==  4)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets_ycut(m_cut));
   for (const auto& pjet : pjets) {
     result.push_back(pjet);
   }

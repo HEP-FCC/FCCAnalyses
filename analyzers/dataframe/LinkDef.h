@@ -10,12 +10,14 @@
 #pragma link C++ class std::vector<std::string>+;
 
 //Algo
-#pragma link C++ function thrust;
-#pragma link C++ function minimize_thrust;
+#pragma link C++ class thrustFit;
+#pragma link C++ class minimize_thrust;
+#pragma link C++ class getRP_combination;
 
 
 //Reconstructed Particles
 #pragma link C++ class selRP_pT;
+#pragma link C++ class selRP_p;
 #pragma link C++ function getRP_p;
 #pragma link C++ function getRP_pt;
 #pragma link C++ function getRP_px;

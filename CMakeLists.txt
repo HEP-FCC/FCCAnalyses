@@ -29,25 +29,13 @@ set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
 set(INSTALL_INCLUDE_DIR include CACHE PATH
   "Installation directory for header files")
 
-option(INSTALL_PYTHON "Flag for CMake to attempt to run python setup.py install" OFF)
 
-if(INSTALL_PYTHON)
-find_program(PYTHON "python")
-if (PYTHON)
-    set(SETUP_PY    "${CMAKE_CURRENT_SOURCE_DIR}/setup.py")
-    set(OUTPUT      "${CMAKE_CURRENT_BINARY_DIR}")
+file(GLOB _run_python_files config/*.py)
+install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
+install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
 
-
-    add_custom_command(OUTPUT ${OUTPUT}/timestamp
-                       COMMAND ${PYTHON} ${SETUP_PY} build
-                       COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT}/timestamp
-                        )
-
-    add_custom_target(target ALL DEPENDS ${OUTPUT}/timestamp)
-
-    install(CODE "execute_process(COMMAND ${PYTHON} ${SETUP_PY} install --prefix ${CMAKE_INSTALL_PREFIX})")
-endif()
-endif()
+#install(DIRECTORY FCCeeAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
+#install(DIRECTORY FCChhAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 
 add_subdirectory(analyzers/dataframe)
 
