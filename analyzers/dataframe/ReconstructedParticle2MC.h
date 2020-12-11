@@ -66,6 +66,14 @@ ROOT::VecOps::RVec<int> getRP2MC_index (ROOT::VecOps::RVec<int> recin,
 					ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco);
 
 /// Return the D0 of a track to a reconstructed particle
+ROOT::VecOps::RVec<int> getRP2MC_index_test (ROOT::VecOps::RVec<int> recin,
+					     ROOT::VecOps::RVec<int> mcin,
+					     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+					     ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					     ROOT::VecOps::RVec<int> parents);
+
+
+/// Return the D0 of a track to a reconstructed particle
 ROOT::VecOps::RVec<int> getRP2MC_parentid (ROOT::VecOps::RVec<int> recin,
 					   ROOT::VecOps::RVec<int> mcin,
 					   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,

@@ -144,7 +144,7 @@ ROOT::VecOps::RVec<float> minimize_thrust::operator()(ROOT::VecOps::RVec<float> 
   //min->Hesse();
   //std::cout << "is valid error after hesse  " << min->IsValidError() <<std::endl;
   //std::cout << "Ncalls  " << min->NCalls() << "  Niter " << min->NIterations() <<std::endl;
-  min->PrintResults();
+  //min->PrintResults();
   const double *xs = min->X();
   const double *xs_err = min->Errors();
 

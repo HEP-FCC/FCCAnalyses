@@ -26,7 +26,7 @@ bool myFilter(ROOT::VecOps::RVec<float> mass) {
 """)
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
-cut_list = {#"sel0":"zed_leptonic_m.size() == 1",
+cut_list = {"sel0":"zed_leptonic_m.size() == 1",
             #"sel1":"zed_leptonic_m.size() == 1 && zed_leptonic_m[0] > 80 &&  zed_leptonic_m[0] < 100",
             #"sel3":"bool m = true; for (auto&& x : zed_leptonic_m) if (zed_leptonic_m.size()<1 || x<80 || x>100) m=False; return m;"
             "sel3":"myFilter(zed_leptonic_m)"

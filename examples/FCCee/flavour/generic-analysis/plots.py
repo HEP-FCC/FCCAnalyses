@@ -1,41 +1,38 @@
 import ROOT
 
 # global parameters
-intLumi        = 5.0e+06 #in pb-1
-ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow #mu^{+}#mu^{-} + X"
+intLumi        = 10 #in pb-1
+ana_tex        = "Z #rightarrow b#bar{b}"
 delphesVersion = "3.4.2"
-energy         = 240.0
+energy         = 91.0
 collider       = "FCC-ee"
-inputDir       = "FCCee/ZH_Zmumu/"
+inputDir       = "outputs/FCCee/flavour/generic-analysis/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
-outdir         = 'FCCee/ZH_Zmumu/plots/'
+outdir         = 'outputs/FCCee/flavour/generic-analysis/plots/'
 
-variables = ['mz','mz_zoom','nbjets','leptonic_recoil_m','leptonic_recoil_m_zoom','higgs_hadronic_b_mass']
+variables = [ "EVT_thrust_val",
+              "EVT_thrutshemis_emax",
+              "EVT_thrutshemis_emin",
+              "EVT_thrust_x",
+              "EVT_thrust_y",
+              "EVT_thrust_z"]
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['ZH']   = ["sel0","sel1","sel2","sel3"]
-selections['ZH_2'] = ["sel0","sel2"]
+selections['Flavour']   = ["sel0"]
 
 extralabel = {}
-extralabel['sel0'] = "Selection: N_{Z} = 1"
-extralabel['sel1'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV"
-extralabel['sel2'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
-extralabel['sel3'] = "Selection: N_{Z} = 1; 80 GeV < m_{Z} < 100 GeV; N_{b} = 2"
-
+extralabel['sel0'] = "Selection: inclusive"
 
 colors = {}
-colors['ZH'] = ROOT.kRed
-colors['WW'] = ROOT.kBlue+1
-colors['ZZ'] = ROOT.kGreen+2
-colors['VV'] = ROOT.kGreen+3
+colors['Z_flavour'] = ROOT.kRed
+colors['Z_inclusive'] = ROOT.kBlue+1
 
 plots = {}
-plots['ZH'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
-               'backgrounds':{'WW':['p8_ee_WW_ecm240'],
-                              'ZZ':['p8_ee_ZZ_ecm240']}
+plots['Flavour'] = {'signal':{'Z_flavour':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
+                    'backgrounds':{'Z_inclusive':['p8_ee_Zbb_ecm91']}
            }
 
 
@@ -44,10 +41,8 @@ plots['ZH_2'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
              }
 
 legend = {}
-legend['ZH'] = 'ZH'
-legend['WW'] = 'WW'
-legend['ZZ'] = 'ZZ'
-legend['VV'] = 'VV boson'
+legend['Z_flavour'] = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
+legend['Z_inclusive'] = 'inclusive'
 
 
 
