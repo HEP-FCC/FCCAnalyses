@@ -1,6 +1,6 @@
 
 #include "JetClustering.h"
-
+using namespace JetClustering;
 
 clustering::clustering(int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut){m_jetalgo = arg_jetalgo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut;}
 
