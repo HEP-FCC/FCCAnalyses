@@ -104,6 +104,7 @@ class runDataFrameFinal():
                 for v in self.variables:
                     model = ROOT.RDF.TH1DModel(v, ";{};".format(self.variables[v]["title"]), self.variables[v]["bin"], self.variables[v]["xmin"],  self.variables[v]["xmax"])
                     h     = snapshot_tdf.Histo1D(model,self.variables[v]["name"])
+                    
                     try :
                         h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
                     except KeyError:

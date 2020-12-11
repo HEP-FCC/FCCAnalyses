@@ -263,7 +263,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         hStack.SetMaximum(highY)
         hStack.SetMinimum(lowY)
     else:
-        hStack.SetMaximum(2.0*maxh)
+        hStack.SetMaximum(1.3*maxh)
         hStack.SetMinimum(0.)
 
 

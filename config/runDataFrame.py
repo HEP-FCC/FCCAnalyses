@@ -8,10 +8,10 @@ import os.path
 class runDataFrame():
 
     #__________________________________________________________
-    def __init__(self, basedir, processes):
+    def __init__(self, basedir, processes, outlist=[]):
         self.basedir      = basedir
         self.process_list = processes
-
+        self.output_list  = outlist
 
     #__________________________________________________________
     def run(self,ncpu=10, fraction=1, outDir=''):
@@ -21,8 +21,12 @@ class runDataFrame():
             os.system("mkdir -p {}".format(outDir))
         if outDir!='' and outDir[-1]!='/':
             outDir+='/'
-
+        counter=0
         for pr in self.process_list:
+            outName=pr
+            if len(self.output_list)==len(self.process_list):
+                outName=self.output_list[counter]
+
             doc = None
             yamlfile=self.basedir+pr+'/merge.yaml'
 
@@ -79,7 +83,7 @@ class runDataFrame():
             import analysis as ana
             import time
             start_time = time.time()
-            myana=ana.analysis(fileListRoot,outDir+pr+'.root',ncpu)
+            myana=ana.analysis(fileListRoot,outDir+outName+'.root',ncpu)
             myana.run()
             elapsed_time = time.time() - start_time
             print  ('==============================SUMMARY==============================')
@@ -88,7 +92,7 @@ class runDataFrame():
             print  ('Total Events Processed   :  ',int(nevents_real/elapsed_time))
             print  ('===================================================================')
 
-            outf = ROOT.TFile( outDir+pr+'.root', 'update' )
+            outf = ROOT.TFile( outDir+outName+'.root', 'update' )
             meta = ROOT.TTree( 'metadata', 'metadata informations' )
             n = array( 'i', [ 0 ] )
             meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
@@ -98,3 +102,4 @@ class runDataFrame():
             p.Write()
             outf.Write()
             outf.Close()
+            counter+=1
