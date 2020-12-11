@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['clustering_140',['clustering',['../structclustering.html',1,'']]]
+  ['clustering_142',['clustering',['../struct_jet_clustering_1_1clustering.html',1,'JetClustering']]]
 ];
