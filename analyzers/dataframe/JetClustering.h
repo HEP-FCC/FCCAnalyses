@@ -20,7 +20,7 @@
 #include "fastjet/JetDefinition.hh"
 
 
-/** Jet clustering interface. This represents a set  */
+/** Jet clustering interface. This represents a set functions and utilities to perfom jet clustering from a list of  */
 namespace JetClustering{
   ///Jet Clustering interface
   struct clustering {
