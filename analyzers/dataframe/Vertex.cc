@@ -10,11 +10,71 @@ int get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
 }
 
 
+// 
+// Selection of tracks based on the significance of the measured
+// d0 and z0.
+//
+
+selTracks::selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_min, float arg_z0sig_max) : m_d0sig_min(arg_d0sig_min), 
+		m_d0sig_max  ( arg_d0sig_max ), m_z0sig_min( arg_z0sig_min ), m_z0sig_max (arg_z0sig_max) { };
+
+ROOT::VecOps::RVec<edm4hep::TrackState> selTracks::operator() ( ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) {
+
+ROOT::VecOps::RVec<edm4hep::TrackState> result;
+  result.reserve(tracks.size());
+    for (size_t i = 0; i < tracks.size(); ++i) {
+    auto & p = tracks[i];
+      double d0sig = fabs( p.D0 / sqrt( p.covMatrix[0]) ) ;
+      if ( fabs( d0sig ) > m_d0sig_max || fabs( d0sig ) < m_d0sig_min  ) continue;
+      double z0sig = fabs( p.Z0 / sqrt( p.covMatrix[12]) );
+      if ( fabs( z0sig ) > m_z0sig_max || fabs( z0sig ) < m_z0sig_min  ) continue;
+      result.emplace_back(p);
+    }
+  return result;
+}
+
+
+//
+// Selection of primary tracks, based on the matching of RecoParticles
+// to MC particles
+//
+
+ROOT::VecOps::RVec<edm4hep::TrackState> SelPrimaryTracks ( ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, 
+				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+				ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+  result.reserve(tracks.size());
+
+  for (unsigned int i=0; i<recind.size();i++) {
+    double xvtx = mc.at(mcind.at(i)).vertex.x ;
+    double yvtx = mc.at(mcind.at(i)).vertex.y ;
+    double zvtx = mc.at(mcind.at(i)).vertex.z ;
+    // primary particle ?
+       	// to be refined by using the genuine MC primary vertex, in the general case  !
+    double zero = 1e-12;
+    //if ( xvtx == 0 && yvtx == 0 && zvtx == 0 ) {
+    if ( fabs( xvtx) < zero && fabs( yvtx) < zero && fabs( zvtx) < zero ) {
+	int reco_idx = recind.at(i); 
+        if ( reco.at( reco_idx ).tracks_begin<tracks.size()) {
+           result.push_back(tracks.at( reco.at( reco_idx ).tracks_begin)) ;
+ 	}
+    }
+
+  }
+  return result;
+}
+
+
+
+// ---------------------------------------------------------------
 //
 // Interface of  the vertexing code of Franco Bedeschi
 // see https://www.pi.infn.it/~bedeschi/RD_FA/Software/
 // VertexNew.c,  dated 18 Sep 2020
 //
+// ---------------------------------------------------------------
+
 
 
 TMatrixDSym SymRegInv(TMatrixDSym &Smat)
@@ -51,9 +111,9 @@ TVectorD get_trackParam( edm4hep::TrackState & atrack) {
     double scale4 = 1.;
 
     // Same units and definitions as Franco :
-    scale0= 1.;
-    scale2 = 1.;
-    scale3 = 1.;
+    //scale0= 1.;
+    //scale2 = 1.;
+    //scale3 = 1.;
 
     res[0] = d0 * scale0;   
     res[1] = phi0 * scale1 ;
@@ -74,9 +134,9 @@ TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) {
     double scale4 = 1.;
 
     // Same units and definitions as Franco :
-    scale0= 1.;
-    scale2 = 1.;
-    scale3 = 1.;
+    //scale0= 1.;
+    //scale2 = 1.;
+    //scale3 = 1.;
 
     covM[0][0] = covMatrix[0] *scale0 * scale0;
     covM[0][1] = covMatrix[1] *scale0 * scale1;
@@ -117,8 +177,6 @@ TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) {
 
 
 
-//ROOT::TVectorD Vertex0(int Ntr, ObsTrk **tracks)
-//TVectorD Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 //std::vector<float> Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 TVector3 Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 {
@@ -130,13 +188,15 @@ TVector3 Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
    	// No error calculation
    	//
 
-    TFile* fdebug = new TFile("tracks_debug.root","update");
+    //TFile* fdebug = new TFile("tracks_debug.root","update");
 
-        std::cout << " enter inVertex0 "<< std::endl;
+        //std::cout << " enter inVertex0 "<< std::endl;
         //std::vector<float> result;
         //TVector3 result;
 
         int Ntr = tracks.size();
+        TVector3 dummy(-1e12,-1e12,-1e12);
+        if (Ntr <= 0) return dummy;
 
   	TVectorD xv(3);		// returned vertex position
 	//
@@ -234,14 +294,14 @@ TVector3 Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 	xv(2) = cz / hz;
 	//cout << ", z = " << xv(2) << endl;
   	//
-  	std::cout  << "Vertex0 : " << xv(0) << " " << xv(1) << " " << xv(2) << std::endl;
+  	//std::cout  << "Vertex0 : " << xv(0) << " " << xv(1) << " " << xv(2) << std::endl;
 
         //result.push_back( xv(0) );
         //result.push_back( xv(1) );
         //result.push_back( xv(2) );
         TVector3 result( xv(0), xv(1), xv(2));
 
-  fdebug ->Close();
+  // fdebug ->Close();
   	return result;
 }
 
@@ -351,17 +411,20 @@ TMatrixD FillB(TVectorD par, TVectorD xin)
 
 
 
-//double Vertex(int Ntr, ObsTrk **tracks, TVectorD &x, TMatrixDSym &covX)
-//TVector3 Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 //TVectorD Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
-std::array<float, 7> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 
-//  Returns:  (  x_vtx, y_vtx, z_vtx,  error on x_vtx, error on y_vtx, error on z_vtx,  chi2 )
+std::array<float, 8> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
+
+//  Returns:  (  x_vtx, y_vtx, z_vtx,  error on x_vtx, error on y_vtx, error on z_vtx,  chi2 ,chi2/Ndf
 
 {
 
+        std::array<float, 8> result;
+
         int Ntr = tracks.size();
-        std::cout <<" Ntr = " << Ntr << std::endl;
+        if ( Ntr <= 0) return result;
+
+        //std::cout <<" Ntr = " << Ntr << std::endl;
 
 	//
  	// Get approximate vertex evaluation
@@ -500,9 +563,6 @@ std::array<float, 7> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 	}
 
 
-/*
-        std::cout << " avant deletes" << std::endl;
-
         for (int i = 0; i < Ntr; i++) {
           delete fi[i];
           delete pi[i];
@@ -517,18 +577,16 @@ std::array<float, 7> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
         delete Bi;
         delete Wi;
         delete Ci;
-*/
 
         //TVector3 result( x(0), x(1), x(2));
 
         //TVectorD result(4);
-        std::cout << " Vertex : " << x(0) << " " << x(1) <<" " <<x(2) <<std::endl;
+        //std::cout << " Vertex : " << x(0) << " " << x(1) <<" " <<x(2) <<std::endl;
         //result[0] = x(0) ;
         //result[1] = x(1) ;
         //result[2] = x(2) ;
         //result[3] = Chi2 ;
 
-        std::array<float, 7> result;
         result[0] = x(0) ;
         result[1] = x(1) ;
         result[2] = x(2) ;
@@ -536,9 +594,9 @@ std::array<float, 7> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
         result[4] = sqrt( covX(1,1) );
         result[5] = sqrt( covX(2,2) );
         result[6] = Chi2 ;
+        float Ndof = 2.0 * Ntr - 3.0; ;
+        result[7] = Chi2 /Ndof;
 
         return result;
 
-	//
-  	// return Chi2;
 }

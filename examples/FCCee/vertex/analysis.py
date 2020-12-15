@@ -28,16 +28,33 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Range(10)
+        df2 = (self.df.Range(10000)
+        #df2 = (self.df.Range(10)
         #df2 = (self.df
                # number of tracks
                .Define("ntracks","get_nTracks(EFlowTrack_1)")
-               .Define("Vertex0","Vertex0(EFlowTrack_1)")
-               .Define("Vertex","Vertex(EFlowTrack_1)")
-               #.Define("Vertex_z","Vertex(EFlowTrack_1)[2]") 
-               #.Define("Vertex_x","Vertex(EFlowTrack_1)[0]")
-               #.Define("Vertex_y","Vertex(EFlowTrack_1)[1]")
-               #.Define("Vertex_chi2","Vertex(EFlowTrack_1)[3]")
+               # Select tracks with d0 and z0 significance < 3 sigmas
+               .Define("SelTracks","selTracks(0.,3.,0.,3.)(EFlowTrack_1)")
+               .Define("nSeltracks",  "get_nTracks(SelTracks)")
+               # Reconstruct the vertex from these tracks :
+               .Define("Vertex0","Vertex0( SelTracks )")        # first estimate
+               .Define("Vertex",  "Vertex( SelTracks )")	# refined vertex
+               #
+               # Select primary tracks based on the matching to MC
+               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
+               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
+               .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, EFlowTrack_1)" )
+               .Define("nPrimaryTracks", "get_nTracks( PrimaryTracks)")
+               #
+               # Reconstruct the vertex from these primary tracks :
+	       #	For some reason, I can not call the Vertex0 and Vertex functions twice
+	       #        so I need to run the analyzer twice, one for the vertices
+               #	over the SelectedTracks, and second for the vertices
+	       #        over the PrimaryTracks :-(
+               #
+               #.Define("Vertex0_primaryTracks",  "Vertex0( PrimaryTracks) ")
+               #.Define("Vertex_primaryTracks",  "Vertex ( PrimaryTracks) ")
+
         )
 
 
@@ -45,12 +62,12 @@ class analysis():
         branchList = ROOT.vector('string')()
         for branchName in [
                 "ntracks",
+                "nSeltracks",
                 "Vertex0",
                 "Vertex",
-                #"Vertex_z",
-                #"Vertex_x",
-                #"Vertex_y",
-                #"Vertex_chi2",
+                "nPrimaryTracks",
+                #"Vertex0_primaryTracks",
+                #"Vertex_primaryTracks"
 
                 ]:
             branchList.push_back(branchName)
