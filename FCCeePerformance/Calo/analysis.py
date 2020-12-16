@@ -46,13 +46,10 @@ class analysis():
 
         # cells
         if args.storeCellBranches:
-            dict_outputBranchName_function["cell_x"] = "getCaloHit_x(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_y"] = "getCaloHit_y(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_z"] = "getCaloHit_z(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_phi"] = "getCaloHit_phi(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_theta"] = "getCaloHit_phi(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_eta"] = "getCaloHit_phi(%s)"%args.cellBranchName
-            #dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
+            #dict_outputBranchName_function["cell_x"] = "getCaloHit_x(%s)"%args.cellBranchName
+            #dict_outputBranchName_function["cell_y"] = "getCaloHit_y(%s)"%args.cellBranchName
+            #dict_outputBranchName_function["cell_z"] = "getCaloHit_z(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
             dict_outputBranchName_function["cell_energy"] = "getCaloHit_energy(%s)"%args.cellBranchName
 
         # clusters
