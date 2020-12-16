@@ -29,31 +29,22 @@ class analysis():
     #__________________________________________________________
     def run(self):
         df2 = (self.df.Range(10000)
-        #df2 = (self.df.Range(10)
         #df2 = (self.df
                # number of tracks
                .Define("ntracks","get_nTracks(EFlowTrack_1)")
                # Select tracks with d0 and z0 significance < 3 sigmas
-               .Define("SelTracks","selTracks(0.,3.,0.,3.)(EFlowTrack_1)")
-               .Define("nSeltracks",  "get_nTracks(SelTracks)")
+               .Define("SelTracks","selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
+               .Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
-               .Define("Vertex0","Vertex0( SelTracks )")        # first estimate
-               .Define("Vertex",  "Vertex( SelTracks )")	# refined vertex
+               .Define("Vertex",  "VertexFB( 1, SelTracks, EFlowTrack_1 )")	# primary vertex
                #
                # Select primary tracks based on the matching to MC
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, EFlowTrack_1)" )
-               .Define("nPrimaryTracks", "get_nTracks( PrimaryTracks)")
-               #
+               .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)" )
+               .Define("nPrimaryTracks", "getRP_n(PrimaryTracks)")
                # Reconstruct the vertex from these primary tracks :
-	       #	For some reason, I can not call the Vertex0 and Vertex functions twice
-	       #        so I need to run the analyzer twice, one for the vertices
-               #	over the SelectedTracks, and second for the vertices
-	       #        over the PrimaryTracks :-(
-               #
-               #.Define("Vertex0_primaryTracks",  "Vertex0( PrimaryTracks) ")
-               #.Define("Vertex_primaryTracks",  "Vertex ( PrimaryTracks) ")
+               .Define("Vertex_primaryTracks",  "VertexFB ( 1, PrimaryTracks, EFlowTrack_1) ")
 
         )
 
@@ -63,11 +54,9 @@ class analysis():
         for branchName in [
                 "ntracks",
                 "nSeltracks",
-                "Vertex0",
                 "Vertex",
                 "nPrimaryTracks",
-                #"Vertex0_primaryTracks",
-                #"Vertex_primaryTracks"
+                "Vertex_primaryTracks"     # on Zuds: actually very similar to the vertex from the "selected" tracks
 
                 ]:
             branchList.push_back(branchName)

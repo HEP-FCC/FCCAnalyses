@@ -11,40 +11,42 @@ int get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
 
 
 // 
-// Selection of tracks based on the significance of the measured
-// d0 and z0.
+// Selection of particles based on the d0 / z0 significances of the associated track
 //
 
 selTracks::selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_min, float arg_z0sig_max) : m_d0sig_min(arg_d0sig_min), 
 		m_d0sig_max  ( arg_d0sig_max ), m_z0sig_min( arg_z0sig_min ), m_z0sig_max (arg_z0sig_max) { };
 
-ROOT::VecOps::RVec<edm4hep::TrackState> selTracks::operator() ( ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) {
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  selTracks::operator() ( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+  										ROOT::VecOps::RVec<edm4hep::TrackState> tracks  ) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  result;
+  result.reserve(recop.size());
 
-ROOT::VecOps::RVec<edm4hep::TrackState> result;
-  result.reserve(tracks.size());
-    for (size_t i = 0; i < tracks.size(); ++i) {
-    auto & p = tracks[i];
-      double d0sig = fabs( p.D0 / sqrt( p.covMatrix[0]) ) ;
-      if ( fabs( d0sig ) > m_d0sig_max || fabs( d0sig ) < m_d0sig_min  ) continue;
-      double z0sig = fabs( p.Z0 / sqrt( p.covMatrix[12]) );
-      if ( fabs( z0sig ) > m_z0sig_max || fabs( z0sig ) < m_z0sig_min  ) continue;
-      result.emplace_back(p);
+    for (size_t i = 0; i < recop.size(); ++i) {
+    auto & p = recop[i];
+      if (p.tracks_begin<tracks.size()) {
+	  auto & tr = tracks.at( p.tracks_begin );
+          double d0sig = fabs( tr.D0 / sqrt( tr.covMatrix[0]) ) ;
+          if ( fabs( d0sig ) > m_d0sig_max || fabs( d0sig ) < m_d0sig_min  ) continue;
+          double z0sig = fabs( tr.Z0 / sqrt( tr.covMatrix[12]) );
+          if ( fabs( z0sig ) > m_z0sig_max || fabs( z0sig ) < m_z0sig_min  ) continue;
+          result.emplace_back(p);
+      }
     }
   return result;
 }
 
 
 //
-// Selection of primary tracks, based on the matching of RecoParticles
+// Selection of primary particles based on the matching of RecoParticles
 // to MC particles
 //
 
-ROOT::VecOps::RVec<edm4hep::TrackState> SelPrimaryTracks ( ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, 
-				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
-				ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks ( ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, 
+				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
 
-  ROOT::VecOps::RVec<edm4hep::TrackState> result;
-  result.reserve(tracks.size());
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  result.reserve(reco.size());
 
   for (unsigned int i=0; i<recind.size();i++) {
     double xvtx = mc.at(mcind.at(i)).vertex.x ;
@@ -56,9 +58,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState> SelPrimaryTracks ( ROOT::VecOps::RVec<in
     //if ( xvtx == 0 && yvtx == 0 && zvtx == 0 ) {
     if ( fabs( xvtx) < zero && fabs( yvtx) < zero && fabs( zvtx) < zero ) {
 	int reco_idx = recind.at(i); 
-        if ( reco.at( reco_idx ).tracks_begin<tracks.size()) {
-           result.push_back(tracks.at( reco.at( reco_idx ).tracks_begin)) ;
- 	}
+        result.push_back( reco.at( reco_idx )  );
     }
 
   }
@@ -177,8 +177,8 @@ TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) {
 
 
 
-//std::vector<float> Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
-TVector3 Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
+//std::vector<float> Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
+TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 {
 	//
  	// Preliminary estimate of the vertex position
@@ -188,11 +188,6 @@ TVector3 Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
    	// No error calculation
    	//
 
-    //TFile* fdebug = new TFile("tracks_debug.root","update");
-
-        //std::cout << " enter inVertex0 "<< std::endl;
-        //std::vector<float> result;
-        //TVector3 result;
 
         int Ntr = tracks.size();
         TVector3 dummy(-1e12,-1e12,-1e12);
@@ -292,16 +287,9 @@ TVector3 Vertex0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 		cz += (cti*arg + zi)/sZi2;
 	}
 	xv(2) = cz / hz;
-	//cout << ", z = " << xv(2) << endl;
-  	//
-  	//std::cout  << "Vertex0 : " << xv(0) << " " << xv(1) << " " << xv(2) << std::endl;
 
-        //result.push_back( xv(0) );
-        //result.push_back( xv(1) );
-        //result.push_back( xv(2) );
         TVector3 result( xv(0), xv(1), xv(2));
 
-  // fdebug ->Close();
   	return result;
 }
 
@@ -407,20 +395,19 @@ TMatrixD FillB(TVectorD par, TVectorD xin)
 	//
   	return B;
 }
-//
 
 
 
-//TVectorD Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 
-std::array<float, 8> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 
-//  Returns:  (  x_vtx, y_vtx, z_vtx,  error on x_vtx, error on y_vtx, error on z_vtx,  chi2 ,chi2/Ndf
+edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+					ROOT::VecOps::RVec<edm4hep::TrackState> thetracks )
 
 {
 
-        std::array<float, 8> result;
+        edm4hep::VertexData result;
 
+        ROOT::VecOps::RVec<edm4hep::TrackState> tracks = getRP2TRK( recoparticles, thetracks );
         int Ntr = tracks.size();
         if ( Ntr <= 0) return result;
 
@@ -429,8 +416,8 @@ std::array<float, 8> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 	//
  	// Get approximate vertex evaluation
    	//
-  	//TVectorD x0 = Vertex0(Ntr, tracks);
-  	TVector3 ini_vtx = Vertex0( tracks) ;
+  	//TVectorD x0 = Vertex0FB(Ntr, tracks);
+  	TVector3 ini_vtx = Vertex0FB( tracks) ;
         TVectorD x0(3);
         x0[0] = ini_vtx[0] ;
         x0[1] = ini_vtx[1] ;
@@ -439,7 +426,7 @@ std::array<float, 8> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
         TVectorD x(3);
         TMatrixDSym covX(3);
 
-	//cout << "Preliminary vertex" << endl; x0.Print();
+	//std::cout << "Preliminary vertex" << std::endl; x0.Print();
   	TVectorD dx(3);		// Solution x variation
 	//
   	TVectorD f(2);		// Constraints
@@ -578,24 +565,34 @@ std::array<float, 8> Vertex( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
         delete Wi;
         delete Ci;
 
-        //TVector3 result( x(0), x(1), x(2));
 
-        //TVectorD result(4);
-        //std::cout << " Vertex : " << x(0) << " " << x(1) <<" " <<x(2) <<std::endl;
-        //result[0] = x(0) ;
-        //result[1] = x(1) ;
-        //result[2] = x(2) ;
-        //result[3] = Chi2 ;
 
-        result[0] = x(0) ;
-        result[1] = x(1) ;
-        result[2] = x(2) ;
-        result[3] = sqrt( covX(0,0) );  // error on vertex_x
-        result[4] = sqrt( covX(1,1) );
-        result[5] = sqrt( covX(2,2) );
-        result[6] = Chi2 ;
+
+        //std::cout << " final vertex " << x(0) << " " << x(1) << " " << x(2) << std::endl;
+
+	// store the results in an edm4hep::VertexData object
+        std::array<float,6> covMatrix;
+	covMatrix[0] = covX(0,0);
+	covMatrix[1] = covX(0,1);
+	covMatrix[2] = covX(0,2);
+	covMatrix[3] = covX(1,1);
+	covMatrix[4] = covX(1,2);
+	covMatrix[5] = covX(2,2);
+  
+        //result.setPrimary( Primary );
         float Ndof = 2.0 * Ntr - 3.0; ;
-        result[7] = Chi2 /Ndof;
+        //result.setChi2( Chi2 /Ndof );   
+        //result.setPosition ( edm4hep::Vector3f( x(0), x(1), x(2) ));
+        //result.setCovMatrix ( covMatrix );
+        //result.setAlgorithmType (1);
+
+        result.primary = Primary;
+	result.chi2 = Chi2 /Ndof ;	// I store the normalised chi2 here
+	result.position = edm4hep::Vector3f( x(0), x(1), x(2) ) ;
+	result.covMatrix = covMatrix;
+	result.algorithmType = 1;
+
+	// Need to fill the associations ...
 
         return result;
 

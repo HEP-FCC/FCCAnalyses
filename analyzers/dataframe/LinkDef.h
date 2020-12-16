@@ -9,6 +9,8 @@
 #pragma link C++ class ROOT::VecOps::RVec<TLorentzVector>+;
 #pragma link C++ class std::vector<std::string>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::TrackState>+;
+#pragma link C++ class <edm4hep::VertexData>+;
+#pragma link C++ class <edm4hep::ReconstructedParticleData>+;
 
 //Algo
 #pragma link C++ class thrustFit;

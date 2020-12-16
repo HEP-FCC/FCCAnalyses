@@ -36,5 +36,8 @@ ROOT::VecOps::RVec<float> getRP2TRK_omega_var (ROOT::VecOps::RVec<edm4hep::Recon
 ROOT::VecOps::RVec<float> getRP2TRK_tanLambda_var (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
 
+/// Return the tracks associated to reco'ed particles
+ROOT::VecOps::RVec<edm4hep::TrackState> getRP2TRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
+
 
 #endif

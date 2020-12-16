@@ -104,3 +104,18 @@ ROOT::VecOps::RVec<float> getRP2TRK_tanLambda_var(ROOT::VecOps::RVec<edm4hep::Re
   return result;
 }
 
+
+ROOT::VecOps::RVec<edm4hep::TrackState> getRP2TRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
+{
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result ;
+  result.reserve( in.size() );
+  
+  for (auto & p: in) {
+    if (p.tracks_begin<tracks.size()) {
+	result.push_back(tracks.at(p.tracks_begin) ) ;
+    }
+  }
+ return result ;
+}
+
