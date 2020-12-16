@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser()
 
 #parser.add_argument("-inputFilesRegex", default = '/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/dummy_releases/201203/output_fullCalo_SimAndDigi_withCluster_noMagneticField_10GeV.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
 #parser.add_argument("-inputFilesRegex", default = '/eos/user/b/brfranco/rootfile_storage/200912_pythia/fccsw_output_pythia_ee_Z_ee_*321*.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
-parser.add_argument("-inputFilesRegex", default = '/eos/user/b/brfranco/rootfile_storage/200912_pythia/fccsw_output_pythia_ee_Z_ee.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
+parser.add_argument("-inputFiles", default = '/eos/user/b/brfranco/rootfile_storage/201012_pythia/fccsw_output_pythia_ee_Z_ee_*131*.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
 parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = bool)
 parser.add_argument("-cellBranchName", default = "ECalBarrelPositionedCells", help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
@@ -46,7 +46,13 @@ class analysis():
 
         # cells
         if args.storeCellBranches:
-            dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_x"] = "getCaloHit_x(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_y"] = "getCaloHit_y(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_z"] = "getCaloHit_z(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_phi"] = "getCaloHit_phi(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_theta"] = "getCaloHit_phi(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_eta"] = "getCaloHit_phi(%s)"%args.cellBranchName
+            #dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
             dict_outputBranchName_function["cell_energy"] = "getCaloHit_energy(%s)"%args.cellBranchName
 
         # clusters
@@ -68,6 +74,7 @@ class analysis():
             dict_outputBranchName_function["genParticle_pid"] = "getMC_pid(%s)"%args.genBranchName
             dict_outputBranchName_function["genParticle_status"] = "getMC_status(%s)"%args.genBranchName
             dict_outputBranchName_function["genParticle_p4"] = "getMC_lorentzVector(%s)"%args.genBranchName
+            dict_outputBranchName_function["genParticle_phi"] = "getMC_phi(%s)"%args.genBranchName
 
         df2 = self.df
         branchList = ROOT.vector('string')()
@@ -78,7 +85,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 
-filelist = glob.glob(args.inputFilesRegex)
+filelist = glob.glob(args.inputFiles)
 
 fileListRoot = ROOT.vector('string')()
 print ("Input files:")
@@ -89,7 +96,7 @@ for fileName in filelist:
 if not os.path.isdir(args.outputFolder):
     os.makedirs(args.outputFolder)
 
-outputFile = os.path.join(args.outputFolder, args.inputFilesRegex.split('/')[-1].replace("*", "all"))
+outputFile = os.path.join(args.outputFolder, args.inputFiles.split('/')[-1].replace("*", "all"))
 ncpus = 8
 analysis = analysis(fileListRoot, outputFile, ncpus)
 print ("Processing...")

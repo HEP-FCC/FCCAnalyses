@@ -16,8 +16,12 @@
 #include "datamodel/FloatData.h"
 
 // calo hits (single cells)
+ROOT::VecOps::RVec<float> getCaloHit_x (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
+ROOT::VecOps::RVec<float> getCaloHit_y (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
+ROOT::VecOps::RVec<float> getCaloHit_z (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_phi (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_theta (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
+ROOT::VecOps::RVec<float> getCaloHit_eta (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_energy (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 ROOT::VecOps::RVec<TVector3> getCaloHit_positionVector3 (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 
@@ -31,5 +35,6 @@ ROOT::VecOps::RVec<int> getCaloCluster_lastCell (ROOT::VecOps::RVec<fcc::CaloClu
 ROOT::VecOps::RVec<int> getMC_pid (ROOT::VecOps::RVec<fcc::MCParticleData> in);
 ROOT::VecOps::RVec<int> getMC_status (ROOT::VecOps::RVec<fcc::MCParticleData> in);
 ROOT::VecOps::RVec<TLorentzVector> getMC_lorentzVector (ROOT::VecOps::RVec<fcc::MCParticleData> in);
+ROOT::VecOps::RVec<float> getMC_phi (ROOT::VecOps::RVec<fcc::MCParticleData> in);
 
 #endif

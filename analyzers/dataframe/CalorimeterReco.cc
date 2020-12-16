@@ -5,6 +5,30 @@
 #include <math.h>
 
 // calo hit
+ROOT::VecOps::RVec<float> getCaloHit_x (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.position.x);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloHit_y (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.position.y);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloHit_z (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.position.z);
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> getCaloHit_phi (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
@@ -21,6 +45,16 @@ ROOT::VecOps::RVec<float> getCaloHit_theta (ROOT::VecOps::RVec<fcc::PositionedCa
     TVector3 t3;
     t3.SetXYZ(p.position.x, p.position.y, p.position.z);
     result.push_back(t3.Theta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloHit_eta (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.position.x, p.position.y, p.position.z);
+    result.push_back(t3.Eta());
   }
   return result;
 }
@@ -104,3 +138,14 @@ ROOT::VecOps::RVec<TLorentzVector> getMC_lorentzVector (ROOT::VecOps::RVec<fcc::
     }
     return result;
 }
+
+ROOT::VecOps::RVec<float> getMC_phi (ROOT::VecOps::RVec<fcc::MCParticleData> in){
+    ROOT::VecOps::RVec<float> result;
+    for (auto & p: in){
+        TLorentzVector fourvec;
+        fourvec.SetPxPyPzE(p.core.p4.px, p.core.p4.py, p.core.p4.pz, sqrt(p.core.p4.px * p.core.p4.px + p.core.p4.py * p.core.p4.py + p.core.p4.pz * p.core.p4.pz + p.core.p4.mass * p.core.p4.mass));
+        result.push_back(fourvec.Phi());
+    }
+    return result;
+}
+
