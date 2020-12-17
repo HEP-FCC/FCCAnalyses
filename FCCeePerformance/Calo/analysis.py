@@ -13,9 +13,8 @@ _s = ROOT.selectParticlesPtIso
 
 parser = argparse.ArgumentParser()
 
-#parser.add_argument("-inputFilesRegex", default = '/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/dummy_releases/201203/output_fullCalo_SimAndDigi_withCluster_noMagneticField_10GeV.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
-#parser.add_argument("-inputFilesRegex", default = '/eos/user/b/brfranco/rootfile_storage/200912_pythia/fccsw_output_pythia_ee_Z_ee_*321*.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
-parser.add_argument("-inputFiles", default = '/eos/user/b/brfranco/rootfile_storage/201012_pythia/fccsw_output_pythia_ee_Z_ee_*131*.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
+#parser.add_argument("-inputFiles", default = '/eos/user/b/brfranco/rootfile_storage/201012_pythia/fccsw_output_pythia_ee_Z_ee_*131*.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
+parser.add_argument("-inputFiles", default = '/eos/user/b/brfranco/rootfile_storage/201012_pythia/fccsw_output_pythia_ee_Z_ee.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
 parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = bool)
 parser.add_argument("-cellBranchName", default = "ECalBarrelPositionedCells", help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
@@ -46,24 +45,36 @@ class analysis():
 
         # cells
         if args.storeCellBranches:
-            #dict_outputBranchName_function["cell_x"] = "getCaloHit_x(%s)"%args.cellBranchName
-            #dict_outputBranchName_function["cell_y"] = "getCaloHit_y(%s)"%args.cellBranchName
-            #dict_outputBranchName_function["cell_z"] = "getCaloHit_z(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_x"] = "getCaloHit_x(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_y"] = "getCaloHit_y(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_z"] = "getCaloHit_z(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_phi"] = "getCaloHit_phi(%s)"%args.cellBranchName
+            dict_outputBranchName_function["cell_theta"] = "getCaloHit_theta(%s)"%args.cellBranchName
+            #dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
             dict_outputBranchName_function["cell_energy"] = "getCaloHit_energy(%s)"%args.cellBranchName
 
         # clusters
         if args.storeClusterBranches:
             for clusterBranchName in args.clusterBranchNames:
+                dict_outputBranchName_function["%s_x"%clusterBranchName] = "getCaloCluster_x(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_y"%clusterBranchName] = "getCaloCluster_y(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_z"%clusterBranchName] = "getCaloCluster_z(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_phi"%clusterBranchName] = "getCaloCluster_phi(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_theta"%clusterBranchName] = "getCaloCluster_theta(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_energy"%clusterBranchName] = "getCaloCluster_energy(%s)"%clusterBranchName
-                dict_outputBranchName_function["%s_position"%clusterBranchName] = "getCaloCluster_positionVector3(%s)"%clusterBranchName
+                #dict_outputBranchName_function["%s_position"%clusterBranchName] = "getCaloCluster_positionVector3(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_firstCell"%clusterBranchName] = "getCaloCluster_firstCell(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_lastCell"%clusterBranchName] = "getCaloCluster_lastCell(%s)"%clusterBranchName
 
         # cells attached to clusters
         if args.storeClusterCellsBranches:
             for clusterCellsBranchName in args.clusterCellsBranchNames:
-                dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "getCaloHit_positionVector3(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_x"%clusterCellsBranchName] = "getCaloHit_x(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_y"%clusterCellsBranchName] = "getCaloHit_y(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_z"%clusterCellsBranchName] = "getCaloHit_z(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_phi"%clusterCellsBranchName] = "getCaloHit_phi(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_theta"%clusterCellsBranchName] = "getCaloHit_theta(%s)"%clusterCellsBranchName
+                #dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "getCaloHit_positionVector3(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "getCaloHit_energy(%s)"%clusterCellsBranchName
 
         # gen particles

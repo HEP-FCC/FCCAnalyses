@@ -26,8 +26,14 @@ ROOT::VecOps::RVec<float> getCaloHit_energy (ROOT::VecOps::RVec<fcc::PositionedC
 ROOT::VecOps::RVec<TVector3> getCaloHit_positionVector3 (ROOT::VecOps::RVec<fcc::PositionedCaloHitData> in);
 
 // calo clusters
-ROOT::VecOps::RVec<float> getCaloCluster_energy (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<float> getCaloCluster_x (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<float> getCaloCluster_y (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<float> getCaloCluster_z (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<float> getCaloCluster_phi (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<float> getCaloCluster_theta (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<float> getCaloCluster_eta (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
 ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
+ROOT::VecOps::RVec<float> getCaloCluster_energy (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
 ROOT::VecOps::RVec<int> getCaloCluster_firstCell (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
 ROOT::VecOps::RVec<int> getCaloCluster_lastCell (ROOT::VecOps::RVec<fcc::CaloClusterData> in);
 

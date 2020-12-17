@@ -78,10 +78,56 @@ ROOT::VecOps::RVec<TVector3> getCaloHit_positionVector3 (ROOT::VecOps::RVec<fcc:
 }
 
 // calo cluster
-ROOT::VecOps::RVec<float> getCaloCluster_energy (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_x (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
-    result.push_back(p.core.energy);
+    result.push_back(p.core.position.x);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloCluster_y (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.core.position.y);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloCluster_z (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.core.position.z);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloCluster_phi (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.core.position.x, p.core.position.y, p.core.position.z);
+    result.push_back(t3.Phi());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloCluster_theta (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.core.position.x, p.core.position.y, p.core.position.z);
+    result.push_back(t3.Theta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloCluster_eta (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.core.position.x, p.core.position.y, p.core.position.z);
+    result.push_back(t3.Eta());
   }
   return result;
 }
@@ -92,6 +138,14 @@ ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (ROOT::VecOps::RVec<
     TVector3 t3;
     t3.SetXYZ(p.core.position.x, p.core.position.y, p.core.position.z);
     result.push_back(t3);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getCaloCluster_energy (ROOT::VecOps::RVec<fcc::CaloClusterData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.core.energy);
   }
   return result;
 }
