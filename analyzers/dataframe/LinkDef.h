@@ -8,6 +8,7 @@
 #pragma link C++ class vector<TLorentzVector>+;
 #pragma link C++ class ROOT::VecOps::RVec<TLorentzVector>+;
 #pragma link C++ class std::vector<std::string>+;
+#pragma link C++ class ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>+;
 
 //Algo
 #pragma link C++ class thrustFit;

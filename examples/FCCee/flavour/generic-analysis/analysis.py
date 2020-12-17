@@ -26,15 +26,15 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
         
-        df2 = (self.df.Range(500)
-        #df2 = (self.df
+        #df2 = (self.df.Range(500)
+        df2 = (self.df
 
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
@@ -69,8 +69,6 @@ class analysis():
                #.Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
 
                .Define('RP_MC_index',            "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles)") 
-               .Define('RP_MC_index_test',       "getRP2MC_index_test(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
-
                .Define('RP_MC_parentindex',      "getMC_parentid(RP_MC_index,Particle, Particle0)")
                .Define('RP_MC_grandparentindex', "getMC_parentid(RP_MC_parentindex,Particle, Particle0)")
 
@@ -119,76 +117,18 @@ class analysis():
         branchList = ROOT.vector('string')()
         for branchName in [
 
-                "MC_px",
-                "MC_py",
-                "MC_pz",
-                "MC_p",
-                "MC_e",
-                "MC_pdg",
-                "MC_charge",
-                "MC_mass",
-                "MC_status",
-                "MC_vertex_x",
-                "MC_vertex_y",
-                "MC_vertex_z",
+                "MC_px","MC_py","MC_pz","MC_p","MC_e","MC_pdg","MC_charge","MC_mass","MC_status","MC_vertex_x","MC_vertex_y","MC_vertex_z",
 
-                "EVT_thrust_x",
-                "EVT_thrust_y",
-                "EVT_thrust_z",
-                "EVT_thrust_val",
-                "EVT_thrusthemis0_q_kappa1",
-                "EVT_thrusthemis1_q_kappa1",
-                "EVT_thrutshemis0_ncharged",
-                "EVT_thrutshemis1_ncharged",
-                "EVT_thrutshemis0_nneutral",
-                "EVT_thrutshemis1_nneutral",
-                "EVT_thrutshemis0_echarged",
-                "EVT_thrutshemis1_echarged",
-                "EVT_thrutshemis0_eneutral",
-                "EVT_thrutshemis1_eneutral",
+                "EVT_thrust_x","EVT_thrust_y","EVT_thrust_z","EVT_thrust_val","EVT_thrusthemis0_q_kappa1","EVT_thrusthemis1_q_kappa1",
+                "EVT_thrutshemis0_ncharged","EVT_thrutshemis1_ncharged","EVT_thrutshemis0_nneutral","EVT_thrutshemis1_nneutral",
+                "EVT_thrutshemis0_echarged","EVT_thrutshemis1_echarged","EVT_thrutshemis0_eneutral","EVT_thrutshemis1_eneutral",
+                "EVT_thrutshemis_emax","EVT_thrutshemis_emin",
 
-                "EVT_thrutshemis_emax",
-                "EVT_thrutshemis_emin",
+                "EVT_sphericity_x","EVT_sphericity_y","EVT_sphericity_z","EVT_sphericity_val",
 
+                "RP_thrustangle","RP_sphericityangle","RP_p","RP_px","RP_py","RP_pz","RP_charge","RP_mass",
 
-                "EVT_sphericity_x",
-                "EVT_sphericity_y",
-                "EVT_sphericity_z",
-                "EVT_sphericity_val",
-
-                "RP_thrustangle",
-                "RP_sphericityangle",
-                "RP_p",
-                "RP_px",
-                "RP_py",
-                "RP_pz",
-                "RP_charge",
-                "RP_mass",
-
-                #"RP_TRK_D0",
-                #"RP_TRK_Z0",
-
-                #"RP_MC_p",
-                #"RP_MC_px",
-                #"RP_MC_py",
-                #"RP_MC_pz",
-                #"RP_MC_pdg",
-                #"RP_MC_charge",
-                "RP_MC_index",
-"RP_MC_index_test",
-                "RP_MC_parentindex",
-                "RP_MC_grandparentindex",
-
-#    n terms of most important quantities for now by the way, I think the following:
-
-#Sum of the energy for each hemisphere
-#Total number of charged particles in each hemisphere
-#Total number of neutral particles in each hemisphere
-#Total charged and neutral energy separately
-#because this gives access to a number of other variables calculable from them
-
-#and they are all independent of the signal
-
+                "RP_MC_index","RP_MC_parentindex","RP_MC_grandparentindex",
                 
                 ]:
             branchList.push_back(branchName)
