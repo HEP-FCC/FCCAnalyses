@@ -21,10 +21,11 @@ class runDataFrameFinal():
             import urllib.request
             req = urllib.request.urlopen(procDict).read()
             self.procDict = json.loads(req.decode('utf-8'))
-        else:
+        elif '.json' in procDict:
             with open(procDict, 'r') as f:
                 self.procDict=json.load(f)
-
+        else:
+            self.procDict=procDict
         if self.procDict==None:
             print ('no procDict found ==={}=== exit'.format(self.procDict))
             sys.exit(3)
@@ -49,7 +50,7 @@ class runDataFrameFinal():
             return False
         return True
     #__________________________________________________________
-    def run(self,ncpu=5):
+    def run(self,ncpu=5,doTree=False):
         print ("EnableImplicitMT: {}".format(ncpu))
         ROOT.ROOT.EnableImplicitMT(ncpu)
         print ("Load cxx analyzers ... ")
@@ -76,6 +77,8 @@ class runDataFrameFinal():
                     found=True
             if not found:
                 processEvents[pr]=1
+            if 'Bc2TauNuTAUHADNU' in pr:
+                processEvents[pr]=self.procDict[pr]["numberOfEvents"]
             tfin.Close()
 
         for cut in self.cuts:
@@ -88,22 +91,26 @@ class runDataFrameFinal():
 
                 RDF = ROOT.ROOT.RDataFrame
                 df  = RDF(self.treename,fin )
-                df_cut = df.Filter(self.cuts[cut])
                 if len(self.defines)>0:
+                    print ('Running extra Define')
                     for define in self.defines:
-                        print ('Running extra Define')
-                        df_cut=df_cut.Define(define, self.defines[define])
-                snapshot_tdf = df_cut.Snapshot(self.treename, fout)
-
-                validfile = self.testfile(fout)
-                if not validfile: continue
+                        df=df.Define(define, self.defines[define])
+                
+                df_cut = df.Filter(self.cuts[cut])
+ 
+                if doTree:
+                    snapshot_tdf = df_cut.Snapshot(self.treename, fout)
+                    validfile = self.testfile(fout)
+                    if not validfile: continue
 
                 nevents_real+=df_cut.Count().GetValue()
 
                 tf    = ROOT.TFile.Open(fhisto,'RECREATE')
                 for v in self.variables:
                     model = ROOT.RDF.TH1DModel(v, ";{};".format(self.variables[v]["title"]), self.variables[v]["bin"], self.variables[v]["xmin"],  self.variables[v]["xmax"])
-                    h     = snapshot_tdf.Histo1D(model,self.variables[v]["name"])
+                    
+                    h     = df_cut.Histo1D(model,self.variables[v]["name"])
+                    #h     = snapshot_tdf.Histo1D(model,self.variables[v]["name"])
                     
                     try :
                         h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])

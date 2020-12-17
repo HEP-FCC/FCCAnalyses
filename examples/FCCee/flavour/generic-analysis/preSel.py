@@ -10,15 +10,15 @@ import multiprocessing
 NUM_CPUS = int(multiprocessing.cpu_count()-2)
 process_list=[
     'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
-    #'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
+    'p8_ee_Zcc_ecm91',
+    'p8_ee_Zuds_ecm91'
 ]
 
-output_list=['p8_ee_Zbb_ecm91']
-#output_list=[]
+#output_list=['p8_ee_Zbb_ecm91']
+output_list=[]
 
-fraction=0.05
+fraction=1.0
 
 import config.runDataFrame as rdf
 myana=rdf.runDataFrame(basedir,process_list, outlist=output_list)
-#myana=rdf.runDataFrame(basedir,process_list, outlist=[])
 myana.run(ncpu=NUM_CPUS,fraction=fraction,outDir=outdir)
