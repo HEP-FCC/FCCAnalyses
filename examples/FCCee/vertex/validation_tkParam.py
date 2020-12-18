@@ -42,11 +42,11 @@ class analysis():
                .Define("RP_TRK_phi",     "getRP2TRK_phi(ReconstructedParticles, EFlowTrack_1)")
                .Define("RP_TRK_tanlambda", "getRP2TRK_tanLambda(ReconstructedParticles, EFlowTrack_1)")
 
-               .Define("RP_TRK_D0_var",      "getRP2TRK_D0_var(ReconstructedParticles, EFlowTrack_1)")    
-               .Define("RP_TRK_Z0_var",      "getRP2TRK_Z0_var(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_omega_var",   "getRP2TRK_omega_var(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_phi_var",     "getRP2TRK_phi_var(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_tanlambda_var", "getRP2TRK_tanLambda_var(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_D0_cov",      "getRP2TRK_D0_cov(ReconstructedParticles, EFlowTrack_1)")    
+               .Define("RP_TRK_Z0_cov",      "getRP2TRK_Z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_omega_cov",   "getRP2TRK_omega_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi_cov",     "getRP2TRK_phi_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_tanlambda_cov", "getRP2TRK_tanLambda_cov(ReconstructedParticles, EFlowTrack_1)")
 
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
@@ -74,11 +74,11 @@ class analysis():
                 "RP_TRK_phi",
                 "RP_TRK_tanlambda",
 
-                "RP_TRK_D0_var",
-                "RP_TRK_Z0_var",
-                "RP_TRK_omega_var",
-                "RP_TRK_phi_var",
-                "RP_TRK_tanlambda_var",
+                "RP_TRK_D0_cov",
+                "RP_TRK_Z0_cov",
+                "RP_TRK_omega_cov",
+                "RP_TRK_phi_cov",
+                "RP_TRK_tanlambda_cov",
 
                 "RP_MC_p",
                 "RP_MC_px",

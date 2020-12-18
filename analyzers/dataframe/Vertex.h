@@ -23,11 +23,11 @@
 
 
 
+/// Return the number of tracks in a given track collection
 int get_nTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
 
-// -- Selection of particles based on the d0 / z0 significances of the associated track
-
+/// Selection of particles based on the d0 / z0 significances of the associated track
 struct selTracks {
   selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_min, float arg_z0sig_max)  ;
   float m_d0sig_min = 0;
@@ -40,7 +40,7 @@ struct selTracks {
 };
 
 
-// Selection of primary particles :
+/// Selection of primary particles :
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks( ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, 
                                 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 
@@ -57,15 +57,11 @@ TMatrixD FillD(TVectorD par, TVectorD xin) ;
 TMatrixD FillB(TVectorD par, TVectorD xin) ;
 
 
-// Preliminary estimate of the vertex position
-// based on transformation of track into points
-// and vertices into lines
-// No steering of track parameters
-// No error calculation
+/// Preliminary estimate of the vertex position based on transformation of track into points and vertices into lines. No steering of track parameters,No error calculation 
 TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 
 
-// Updated vertex 
+/// Updated vertex (code from Franco Bedeschi)
 edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 					ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 
