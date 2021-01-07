@@ -37,7 +37,7 @@ class analysis():
         df2 = (self.df
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex( Particle )" )
+               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex(21)( Particle )" )
 
                .Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")    #  d0 and z0 in mm
                .Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")

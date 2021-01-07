@@ -141,7 +141,9 @@ int getMC_n(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 
 /// return the event primary vertex  (mm)
-TVector3 getMC_EventPrimaryVertex(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
-
-
+struct getMC_EventPrimaryVertex {
+  getMC_EventPrimaryVertex( int arg_genstatus  );
+  int m_genstatus = 21;   // Pythia8  code of the incoming particles of the hardest subprocess
+  TVector3  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+};
 #endif

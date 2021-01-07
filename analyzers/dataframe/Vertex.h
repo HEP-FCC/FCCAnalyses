@@ -42,7 +42,8 @@ struct selTracks {
 
 /// Selection of primary particles :
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks( ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, 
-                                ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+                                ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+				TVector3 MC_EventPrimaryVertex) ;
 
 
 

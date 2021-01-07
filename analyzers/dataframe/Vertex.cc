@@ -46,16 +46,16 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  selTracks::operator() ( 
 //
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks ( ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, 
-				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+				ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+				TVector3 MC_EventPrimaryVertex) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(reco.size());
 
   // Event primary vertex:
-  TVector3 MC_Primary_vertex = getMC_EventPrimaryVertex( mc );
-  double xvtx0 = MC_Primary_vertex[0];
-  double yvtx0 = MC_Primary_vertex[1];
-  double zvtx0 = MC_Primary_vertex[2];
+  double xvtx0 = MC_EventPrimaryVertex[0];
+  double yvtx0 = MC_EventPrimaryVertex[1];
+  double zvtx0 = MC_EventPrimaryVertex[2];
 
   for (unsigned int i=0; i<recind.size();i++) {
     double xvtx = mc.at(mcind.at(i)).vertex.x ;

@@ -32,7 +32,7 @@ class analysis():
         df2 = (self.df
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex( Particle )" )
+               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
                .Define("ntracks","get_nTracks(EFlowTrack_1)")
@@ -51,7 +51,7 @@ class analysis():
 		  # gen-level primary vertex  is not  (0,0,0)
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)" )
+               .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
                .Define("nPrimaryTracks", "getRP_n(PrimaryTracks)")
                # Reconstruct the vertex from these primary tracks :
                .Define("Vertex_primaryTracks",  "VertexFB ( 1, PrimaryTracks, EFlowTrack_1) ")   # primary vertex, in mm
