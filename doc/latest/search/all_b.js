@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['r_42',['r',['../_f_c_c_analyses_8cc.html#a1957de5acba6fc689c0a0270fae65ebc',1,'r(ROOT::VecOps::RVec&lt; fcc::Point &gt; in):&#160;FCCAnalyses.cc'],['../_f_c_c_analyses_8h.html#a1957de5acba6fc689c0a0270fae65ebc',1,'r(ROOT::VecOps::RVec&lt; fcc::Point &gt; in):&#160;FCCAnalyses.cc']]],
-  ['readme_2emd_43',['README.md',['../_r_e_a_d_m_e_8md.html',1,'']]],
-  ['recoil_44',['recoil',['../structrecoil.html',1,'recoil'],['../structrecoil.html#ac2a2fa9d3a8b7f6dadcc9d565a423b2f',1,'recoil::recoil()']]],
-  ['resonancebuilder_45',['ResonanceBuilder',['../struct_resonance_builder.html',1,'ResonanceBuilder'],['../struct_resonance_builder.html#a9e18f85c7c9bbf7e8dc50a5f2a2c4291',1,'ResonanceBuilder::ResonanceBuilder()']]]
+  ['vertex_2ecc_164',['Vertex.cc',['../_vertex_8cc.html',1,'']]],
+  ['vertex_2eh_165',['Vertex.h',['../_vertex_8h.html',1,'']]],
+  ['vertexfitter_166',['VertexFitter',['../_vertex_8cc.html#a9aad3b3f6eca148221972c17db2b4339',1,'VertexFitter(int Primary, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; recoparticles, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; thetracks):&#160;Vertex.cc'],['../_vertex_8h.html#a242cbcb7450d00063106708addbab914',1,'VertexFitter(int Primary, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; recoparticles, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks):&#160;Vertex.cc']]],
+  ['vertexfitter0_167',['VertexFitter0',['../_vertex_8cc.html#adcf0a21a52c0bc599c08cf90c03ab662',1,'VertexFitter0(ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks):&#160;Vertex.cc'],['../_vertex_8h.html#adcf0a21a52c0bc599c08cf90c03ab662',1,'VertexFitter0(ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks):&#160;Vertex.cc']]]
 ];

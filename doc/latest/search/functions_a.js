@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['r_93',['r',['../_f_c_c_analyses_8cc.html#a1957de5acba6fc689c0a0270fae65ebc',1,'r(ROOT::VecOps::RVec&lt; fcc::Point &gt; in):&#160;FCCAnalyses.cc'],['../_f_c_c_analyses_8h.html#a1957de5acba6fc689c0a0270fae65ebc',1,'r(ROOT::VecOps::RVec&lt; fcc::Point &gt; in):&#160;FCCAnalyses.cc']]],
-  ['recoil_94',['recoil',['../structrecoil.html#ac2a2fa9d3a8b7f6dadcc9d565a423b2f',1,'recoil']]],
-  ['resonancebuilder_95',['ResonanceBuilder',['../struct_resonance_builder.html#a9e18f85c7c9bbf7e8dc50a5f2a2c4291',1,'ResonanceBuilder']]]
+  ['vertexfitter_323',['VertexFitter',['../_vertex_8cc.html#a9aad3b3f6eca148221972c17db2b4339',1,'VertexFitter(int Primary, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; recoparticles, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; thetracks):&#160;Vertex.cc'],['../_vertex_8h.html#a242cbcb7450d00063106708addbab914',1,'VertexFitter(int Primary, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; recoparticles, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks):&#160;Vertex.cc']]],
+  ['vertexfitter0_324',['VertexFitter0',['../_vertex_8cc.html#adcf0a21a52c0bc599c08cf90c03ab662',1,'VertexFitter0(ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks):&#160;Vertex.cc'],['../_vertex_8h.html#adcf0a21a52c0bc599c08cf90c03ab662',1,'VertexFitter0(ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks):&#160;Vertex.cc']]]
 ];
