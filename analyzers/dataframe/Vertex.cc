@@ -260,10 +260,8 @@ TMatrixDSym RegInv2(TMatrixDSym &Smat0)
 	return RegOut;
 }
 //
-//TVectorD Vertex0(Int_t Ntr, ObsTrk **tracks)
-TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 
-	// NB: the units of this vertex are meters !
+TVector3 VertexFitter0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 
 {
 	//
@@ -469,7 +467,7 @@ TVectorD Fill_x(TVectorD par, Double_t phi)
 
 //Double_t VertexP(Int_t Ntr, ObsTrk **tracks, TVectorD &x, TMatrixDSym &covX)
 
-edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+edm4hep::VertexData  VertexFitter( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
                                         ROOT::VecOps::RVec<edm4hep::TrackState> thetracks )
 
 {
@@ -486,7 +484,7 @@ edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::Reconstr
 	//
 	//TVectorD x0 = Vertex0(Ntr, tracks);
 
-        TVector3 ini_vtx = Vertex0FB( tracks) ;
+        TVector3 ini_vtx = VertexFitter0( tracks) ;
         TVectorD x0(3);	   // convert back from mm to meters below :
         x0[0] = ini_vtx[0] *1e-3 ;
         x0[1] = ini_vtx[1] *1e-3 ;

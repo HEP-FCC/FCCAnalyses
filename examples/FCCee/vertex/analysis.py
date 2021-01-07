@@ -44,7 +44,7 @@ class analysis():
                .Define("SelTracks","selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
                .Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
-               .Define("Vertex",  "VertexFB( 1, SelTracks, EFlowTrack_1 )")	# primary vertex, in mm
+               .Define("Vertex",  "VertexFitter( 1, SelTracks, EFlowTrack_1 )")	# primary vertex, in mm
                
                # Select primary tracks based on the matching to MC
 		  # This can be used  to select primary tracks when the
@@ -54,7 +54,7 @@ class analysis():
                .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
                .Define("nPrimaryTracks", "getRP_n(PrimaryTracks)")
                # Reconstruct the vertex from these primary tracks :
-               .Define("Vertex_primaryTracks",  "VertexFB ( 1, PrimaryTracks, EFlowTrack_1) ")   # primary vertex, in mm
+               .Define("Vertex_primaryTracks",  "VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")   # primary vertex, in mm
 
         )
 

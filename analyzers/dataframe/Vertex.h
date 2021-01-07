@@ -60,11 +60,11 @@ TVectorD Fill_x0(TVectorD par) ;
 TVectorD Fill_x(TVectorD par, Double_t phi) ;
 
 /// Preliminary estimate of the vertex position based on transformation of track into points and vertices into lines. No steering of track parameters,No error calculation. Units = millimeters 
-TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
+TVector3 VertexFitter0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 
 
 /// Updated vertex (code from Franco Bedeschi), in millimeters
-edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+edm4hep::VertexData  VertexFitter( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 					ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 
 
