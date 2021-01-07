@@ -48,20 +48,21 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks( ROOT::V
 
 // --- Internal methods needed by the code of  Franco B :
 
-TMatrixDSym SymRegInv(TMatrixDSym &Smat) ;
 TVectorD get_trackParam( edm4hep::TrackState & atrack) ;
 TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) ;
 
-TVectorD Fillf(TVectorD par, TVectorD xin) ;
-TMatrixD FillD(TVectorD par, TVectorD xin) ;
-TMatrixD FillB(TVectorD par, TVectorD xin) ;
+TMatrixDSym RegInv3(TMatrixDSym &Smat0) ;
+TMatrixDSym RegInv2(TMatrixDSym &Smat0) ;
+TMatrixD Fill_A(TVectorD par, Double_t phi) ;
+TVectorD Fill_a(TVectorD par, Double_t phi) ;
+TVectorD Fill_x0(TVectorD par) ;
+TVectorD Fill_x(TVectorD par, Double_t phi) ;
 
-
-/// Preliminary estimate of the vertex position based on transformation of track into points and vertices into lines. No steering of track parameters,No error calculation 
+/// Preliminary estimate of the vertex position based on transformation of track into points and vertices into lines. No steering of track parameters,No error calculation. Units = millimeters 
 TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 
 
-/// Updated vertex (code from Franco Bedeschi)
+/// Updated vertex (code from Franco Bedeschi), in millimeters
 edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 					ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 

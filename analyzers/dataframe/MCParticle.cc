@@ -366,3 +366,20 @@ bool  filterMC_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in
   }
   return false;
 }
+
+
+TVector3 getMC_EventPrimaryVertex( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
+
+  TVector3 result(-1e12,-1e12,-1e12);
+  for (auto & p: in) {
+     if ( p.generatorStatus == 21 ) {   // Pythia8  code : incoming particles of the hardest subprocess
+       TVector3 res( p.vertex.x, p.vertex.y, p.vertex.z );
+       result = res;
+       break;
+     }
+   }
+
+  return result;
+}
+
+

@@ -4,6 +4,9 @@
 #include "TFile.h"
 #include "TString.h"
 
+
+#include  "MCParticle.h"
+
 int get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
    int nt = tracks.size();
    return nt;
@@ -48,15 +51,19 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks ( ROOT::
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(reco.size());
 
+  // Event primary vertex:
+  TVector3 MC_Primary_vertex = getMC_EventPrimaryVertex( mc );
+  double xvtx0 = MC_Primary_vertex[0];
+  double yvtx0 = MC_Primary_vertex[1];
+  double zvtx0 = MC_Primary_vertex[2];
+
   for (unsigned int i=0; i<recind.size();i++) {
     double xvtx = mc.at(mcind.at(i)).vertex.x ;
     double yvtx = mc.at(mcind.at(i)).vertex.y ;
     double zvtx = mc.at(mcind.at(i)).vertex.z ;
     // primary particle ?
-       	// to be refined by using the genuine MC primary vertex, in the general case  !
     double zero = 1e-12;
-    //if ( xvtx == 0 && yvtx == 0 && zvtx == 0 ) {
-    if ( fabs( xvtx) < zero && fabs( yvtx) < zero && fabs( zvtx) < zero ) {
+    if ( fabs( xvtx - xvtx0) < zero && fabs( yvtx - yvtx0) < zero && fabs( zvtx -zvtx0) < zero ) {
 	int reco_idx = recind.at(i); 
         result.push_back( reco.at( reco_idx )  );
     }
@@ -71,30 +78,11 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks ( ROOT::
 //
 // Interface of  the vertexing code of Franco Bedeschi
 // see https://www.pi.infn.it/~bedeschi/RD_FA/Software/
-// VertexNew.c,  dated 18 Sep 2020
+// VertexParam.c,    dated 2 January  2021
 //
 // ---------------------------------------------------------------
 
 
-
-TMatrixDSym SymRegInv(TMatrixDSym &Smat)
-{
-	//
- 	Int_t N = Smat.GetNrows();
-	TMatrixDSym D(N); D.Zero();
-	for (Int_t i = 0; i < N; i++) D(i, i) = 1.0/TMath::Sqrt(Smat(i, i));
-	TMatrixDSym RegMat = Smat.Similarity(D); 
-	TDecompChol rChl(RegMat);
-	Bool_t OK = rChl.Decompose();
-	if (!OK)
-	{
-		std::cout << "RegMat: input matrix not positive definite"; RegMat.Print();
-	}
-	RegMat = rChl.Invert(OK);
-	TMatrixDSym RegOut = RegMat.Similarity(D);
-	//
-	return RegOut;
-}
 
 TVectorD get_trackParam( edm4hep::TrackState & atrack) {
     double d0 =atrack.D0 ;
@@ -177,77 +165,165 @@ TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) {
 
 
 
-//std::vector<float> Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
-TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
+
+
+TMatrixDSym RegInv3(TMatrixDSym &Smat0)
 {
 	//
- 	// Preliminary estimate of the vertex position
-   	// based on transformation of track into points
-   	// and vertices into lines
-   	// No steering of track parameters
-   	// No error calculation
-   	//
+	// Regularized inversion of symmetric 3x3 matrix with positive diagonal elements
+	//
+	TMatrixDSym Smat = Smat0;
+	Int_t N = Smat.GetNrows();
+	if (N != 3)
+	{
+		std::cout << "RegInv3 called with  matrix size != 3. Abort & return standard inversion." << std::endl;
+		return Smat.Invert();
+	}
+	TMatrixDSym D(N); D.Zero();
+	Bool_t dZero = kTRUE;	// No elements less or equal 0 on the diagonal
+	for (Int_t i = 0; i < N; i++) if (Smat(i, i) <= 0.0)dZero = kFALSE;
+	if (dZero)
+	{
+		for (Int_t i = 0; i < N; i++) D(i, i) = 1.0 / TMath::Sqrt(Smat(i, i));
+		TMatrixDSym RegMat = Smat.Similarity(D);
+		TMatrixDSym Q(2);
+		for (Int_t i = 0; i < 2; i++)
+		{
+			for (Int_t j = 0; j < 2; j++)Q(i, j) = RegMat(i, j);
+		}
+		Double_t Det = 1 - Q(0, 1)*Q(1, 0);
+		TMatrixDSym H(2);
+		H = Q;
+		H(0, 1) = -Q(0, 1);
+		H(1, 0) = -Q(1, 0);
+		TVectorD p(2);
+		p(0) = RegMat(0, 2);
+		p(1) = RegMat(1, 2);
+		Double_t pHp = H.Similarity(p);
+		Double_t h = pHp-Det;
+		//
+		TMatrixDSym pp(2); pp.Rank1Update(p);
+		TMatrixDSym F = (h*H) - pp.Similarity(H);
+		F *= 1.0 / Det;
+		TVectorD b = H*p;
+		TMatrixDSym InvReg(3);
+		for (Int_t i = 0; i < 2; i++)
+		{
+			InvReg(i, 2) = b(i);
+			InvReg(2, i) = b(i);
+			for (Int_t j = 0; j < 2; j++) InvReg(i, j) = F(i, j);
+		}
+		InvReg(2, 2) = -Det;
+		//
+		InvReg *= 1.0 / h;
+		//
+		return InvReg.Similarity(D);
+	}
+	else
+	{
+		//cout << "RegInv3: found negative elements in diagonal" << endl;
+		return Smat.Invert();
+	}
+}
+//
+TMatrixDSym RegInv2(TMatrixDSym &Smat0)
+{
+	//
+	TMatrixDSym Smat = Smat0; 
+	Int_t N = Smat.GetNrows();
+	if (N != 2)
+	{
+		std::cout << "RegInv2 called with  matrix size != 2. Abort & return standard inversion." << std::endl;
+		return Smat.Invert();
+	}
+	TMatrixDSym RegOut(N);
+	TMatrixDSym D(N); D.Zero();
+	Bool_t dZero = kTRUE;	// No elements less or equal 0 on the diagonal
+	for (Int_t i = 0; i < N; i++) if (Smat(i, i) <= 0.0)dZero = kFALSE;
+	if (dZero)
+	{
+		for (Int_t i = 0; i < N; i++) D(i, i) = 1.0 / TMath::Sqrt(Smat(i, i));
+		TMatrixDSym RegMat = Smat.Similarity(D);
+		Double_t Det = 1.0-RegMat(0,1)*RegMat(1,0);
+		RegMat(0, 1) *= -1;
+		RegMat(1, 0) *= -1;
+		RegMat *= 1.0 / Det;
+		//
+		RegOut = RegMat.Similarity(D);
+	}
+	else
+	{
+		RegOut = Smat.Invert();
+		//cout << "RegInv2: found negative elements in diagonal." << endl;
+	}
+	//
+	return RegOut;
+}
+//
+//TVectorD Vertex0(Int_t Ntr, ObsTrk **tracks)
+TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 
+	// NB: the units of this vertex are meters !
+
+{
+	//
+	// Preliminary estimate of the vertex position
+	// based on transformation of track into points
+	// and vertices into lines
+	// No steering of track parameters
+	// No error calculation
+	//
 
         int Ntr = tracks.size();
         TVector3 dummy(-1e12,-1e12,-1e12);
         if (Ntr <= 0) return dummy;
 
-  	TVectorD xv(3);		// returned vertex position
+
+	TVectorD xv(3);		// returned vertex position
 	//
-  	TMatrixDSym H(2); 
+	TMatrixDSym H(2);
 	TVectorD xvt(2);
-	TVectorD cxy(2); 
+	TVectorD cxy(2);
 	//
-  	// Loop on tracks for transverse fit
-   	//
-  	TVectorD x0(2); x0.Zero();
-	double Rv = 0.0;	    // Radius of first iteration
-	int Ntry = 0;
-	int TryMax = 10;
-	double epsi = 1000.;		// Starting stability
-	double eps = 0.0001;		// vertex stability required
+	// Loop on tracks for transverse fit
+	//
+	TVectorD x0(2); x0.Zero();
+	Double_t Rv = 0.0;	    // Radius of first iteration
+	Int_t Ntry = 0;
+	Int_t TryMax = 10;
+	Double_t epsi = 1000.;		// Starting stability
+	Double_t eps = 0.0001;		// vertex stability required
 	while (epsi > eps && Ntry < TryMax)
 	{
-		H.Zero(); 
-                cxy.Zero();
-		for (int i = 0; i < Ntr; i++)
+		H.Zero(); cxy.Zero();
+		for (Int_t i = 0; i < Ntr; i++)
 		{
 			// Get track helix parameters and their covariance matrix 
-   			//ObsTrk *t = tracks[i];
-                        edm4hep::TrackState t = tracks[i] ;
-			// ROOT::TVectorD par = t->GetObsPar();
+			//ObsTrk *t = tracks[i];
+			edm4hep::TrackState t = tracks[i] ;
+			//TVectorD par = t->GetObsPar();
 			TVectorD par = get_trackParam( t ) ;
-			//ROOT::TMatrixDSym C = t->GetCov();
-		        TMatrixDSym C = get_trackCov( t) ;
-  			// Transverse fit
-   			double D0i = par(0);
-			double phi = par(1);
-			double Ci = par(2);
-			double Di = (D0i*(1. + Ci*D0i) + Rv*Rv*Ci) / (1. + 2 * Ci*D0i);
-			double sDi2 = C(0, 0);
-			//  Debug :
-			    /*
-			   std::cout << " track # " << i <<std::endl;
-			   std::cout << "  params = " << std::endl;
-			   par.Print();
-			   std::cout << " C(0,0) = " << C(0, 0) << std::endl;
- 			   char buffer[100];
-			   sprintf(buffer,"_%i",i);
-			   TString trackIndex(buffer);
-			   par.Write("par"+trackIndex);
-			   C.Write("cov"+trackIndex);
-			*/
-  			TVectorD ni(2);
+			//TMatrixDSym C = t->GetCov();
+			TMatrixDSym C = get_trackCov( t) ;
+			//
+			// Transverse fit
+			Double_t D0i = par(0);
+			Double_t phi = par(1);
+			Double_t Ci = par(2);
+			Double_t Di = (D0i*(1. + Ci*D0i) + Rv*Rv*Ci) / (1. + 2 * Ci*D0i);
+			Double_t sDi2 = C(0, 0);
+			//
+			TVectorD ni(2);
 			ni(0) = -TMath::Sin(phi);
-			ni(1) =  TMath::Cos(phi);
+			ni(1) = TMath::Cos(phi);
 			TMatrixDSym Hadd(2);
 			Hadd.Rank1Update(ni, 1);		// Tensor product of vector ni with itself
 			H += (1.0 / sDi2)*Hadd;
 			cxy += (Di / sDi2)*ni;
+
 		}
 		//
- 		TMatrixDSym Cov = SymRegInv(H);
+		TMatrixDSym Cov = RegInv2(H);
 		xvt = Cov*cxy;
 		xv.SetSub(0, xvt);	// Store x,y of vertex
 		Rv = TMath::Sqrt(xv(0)*xv(0) + xv(1)*xv(1));
@@ -256,152 +332,145 @@ TVector3 Vertex0FB( ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 		x0 = xvt;
 		Ntry++;
 		//cout << "Vtx0: Iteration #" << Ntry << ", eps = " << epsi << ", x = " << xv(0) << ", y = " << xv(1);
-  	}
+	}
 	//
-  	// Longitudinal fit
-   	double Rv2 = Rv*Rv;
+	// Longitudinal fit
+	Double_t Rv2 = Rv*Rv;
 	//
- 	// Loop on tracks for longitudinal fit
-   	double hz = 0.0;
-	double cz = 0.0;
-	for (int i = 0; i < Ntr; i++)
+	// Loop on tracks for longitudinal fit
+	Double_t hz = 0.0;
+	Double_t cz = 0.0;
+	for (Int_t i = 0; i < Ntr; i++)
 	{
 		// Get track helix parameters and their covariance matrix 
-   		//ObsTrk *t = tracks[i];
-                edm4hep::TrackState t = tracks[i];
-		//ROOT::TVectorD par = t->GetObsPar();
-		//ROOT::TMatrixDSym C = t->GetCov();
-                TVectorD par = get_trackParam( t ) ;
-                TMatrixDSym C = get_trackCov( t) ;
-
+		//ObsTrk *t = tracks[i];
+		//TVectorD par = t->GetObsPar();
+		//TMatrixDSym C = t->GetCov();
+		edm4hep::TrackState t = tracks[i];
+		TVectorD par = get_trackParam( t ) ;
+		TMatrixDSym C = get_trackCov( t) ;
 		//
-  		// Longitudinal fit
-   		double zi = par(3);
-		double cti = par(4);
-		double Di = par(0);
-		double Ci = par(2);
-		double sZi2 = C(3, 3);
+		// Longitudinal fit
+		Double_t zi = par(3);
+		Double_t cti = par(4);
+		Double_t Di = par(0);
+		Double_t Ci = par(2);
+		Double_t sZi2 = C(3, 3);
 		//
- 		hz += 1 / sZi2;
-		double arg = TMath::Sqrt(TMath::Max(0.0, Rv*Rv - Di*Di)/(1.+2*Ci*Di));
-		cz += (cti*arg + zi)/sZi2;
+		hz += 1 / sZi2;
+		Double_t arg = TMath::Sqrt(TMath::Max(0.0, Rv*Rv - Di*Di) / (1. + 2 * Ci*Di));
+		cz += (cti*arg + zi) / sZi2;
 	}
 	xv(2) = cz / hz;
+	//cout << ", z = " << xv(2) << endl;
+	//
+	///return xv;
 
-        TVector3 result( xv(0), xv(1), xv(2));
+        TVector3 result( xv(0)*1e3, xv(1)*1e3, xv(2)*1e3 );  // convert to mm
+        return result;
 
-  	return result;
 }
-
-TVectorD Fillf(TVectorD par, TVectorD xin)
+//
+TMatrixD Fill_A(TVectorD par, Double_t phi)
 {
+	TMatrixD A(3, 5);
 	//
- 	// Decode input arrays
-   	//
-  	double D = par(0);
-	double p0 = par(1);
-	double C = par(2);
-	double z0 = par(3);
-	double ct = par(4);
+	// Decode input arrays
 	//
-  	double x = xin(0);
-	double y = xin(1);
-	double z = xin(2);
-	double R2 = x * x + y * y;
-	double D2 = D*D;
-	double UpCD = 1.0 + C*D;
-	double Up2CD = 1.0 + 2 * C*D;
-	double Az = C*(z - z0) / ct;
+	Double_t D = par(0);
+	Double_t p0 = par(1);
+	Double_t C = par(2);
+	Double_t z0 = par(3);
+	Double_t ct = par(4);
 	//
-  	// Calculate constraints
-   	//
-  	TVectorD f(2);
-	f(0) = (R2 * C + UpCD*D)/Up2CD - y * TMath::Cos(p0) + x * TMath::Sin(p0);
-	f(1) = TMath::Sin(Az)*TMath::Sin(Az) - C*C*(R2 - D2) / Up2CD;
+	// Fill derivative matrix dx/d alpha
+	// D
+	A(0, 0) = -TMath::Sin(p0);
+	A(1, 0) = TMath::Cos(p0);
+	A(2, 0) = 0.0;
+	// phi0
+	A(0, 1) = -D*TMath::Cos(p0) + (TMath::Cos(phi + p0) - TMath::Cos(p0)) / (2 * C);
+	A(1, 1) = -D*TMath::Sin(p0) + (TMath::Sin(phi + p0) - TMath::Sin(p0)) / (2 * C);
+	A(2, 1) = 0.0;
+	// C
+	A(0, 2) = -(TMath::Sin(phi + p0) - TMath::Sin(p0)) / (2 * C*C);
+	A(1, 2) = (TMath::Cos(phi + p0) - TMath::Cos(p0)) / (2 * C*C);
+	A(2, 2) = -ct*phi / (2 * C*C);
+	// z0
+	A(0, 3) = 0.0;
+	A(1, 3) = 0.0;
+	A(2, 3) = 1.0;
+	// ct = lambda
+	A(0, 4) = 0.0;
+	A(1, 4) = 0.0;
+	A(2, 4) = phi / (2 * C);
 	//
-	return f;
+	return A;
+}
+//
+TVectorD Fill_a(TVectorD par, Double_t phi)
+{
+	TVectorD a(3);
+	//
+	// Decode input arrays
+	//
+	Double_t D = par(0);
+	Double_t p0 = par(1);
+	Double_t C = par(2);
+	Double_t z0 = par(3);
+	Double_t ct = par(4);
+	//
+	a(0) = TMath::Cos(phi + p0) / (2 * C);
+	a(1) = TMath::Sin(phi + p0) / (2 * C);
+	a(2) = ct / (2 * C);
+	//
+	return a;
+}
+//
+TVectorD Fill_x0(TVectorD par)
+{
+	TVectorD x0(3);
+	//
+	// Decode input arrays
+	//
+	Double_t D = par(0);
+	Double_t p0 = par(1);
+	Double_t C = par(2);
+	Double_t z0 = par(3);
+	Double_t ct = par(4);
+	//
+	x0(0) = -D *TMath::Sin(p0);
+	x0(1) = D*TMath::Cos(p0);
+	x0(2) = z0;
+	//
+	return x0;
+}
+//
+TVectorD Fill_x(TVectorD par, Double_t phi)
+{
+	TVectorD x(3);
+	//
+	// Decode input arrays
+	//
+	Double_t D = par(0);
+	Double_t p0 = par(1);
+	Double_t C = par(2);
+	Double_t z0 = par(3);
+	Double_t ct = par(4);
+	//
+	TVectorD x0 = Fill_x0(par);
+	x(0) = x0(0) + (TMath::Sin(phi + p0) - TMath::Sin(p0)) / (2 * C);
+	x(1) = x0(1) - (TMath::Cos(phi + p0) - TMath::Cos(p0)) / (2 * C);
+	x(2) = x0(2) + ct*phi / (2 * C);
+	//
+	return x;
 }
 //
 
-
-TMatrixD FillD(TVectorD par, TVectorD xin)
-{
-	//
- 	// Decode input arrays
-   	//
-  	double D = par(0);
-	double p0 = par(1);
-	double C = par(2);
-	double z0 = par(3);
-	double ct = par(4);
-	//
-  	double x = xin(0);
-	double y = xin(1);
-	double z = xin(2);
-	double R2 = x * x + y * y;
-	double D2 = D*D;
-	double UpCD = 1.0 + C*D;
-	double Up2CD = 1.0 + 2 * C*D;
-	double Az = C*(z - z0) / ct;
-	//
-  	// Calculate matrix elements
-   	//
-  	TMatrixD Do(2, 5); Do.Zero();
-	Do(0, 0) = 1.0 - 2 * C*(D + C*(R2 - D2)) / (Up2CD*Up2CD);	// df(0)/dD
-	Do(0, 1) = x * TMath::Cos(p0) + y * TMath::Sin(p0);			// df(0)/dphi0
-	Do(0, 2) = (R2 - D2) / (Up2CD*Up2CD);						// df(0)/dC
-	Do(0, 3) = 0.0;												// df(0)/dz0
-	Do(0, 4) = 0.0;												// df(0)/dct
-	Do(1, 0) = 2 * C*C*(C*R2 + D*UpCD) / (Up2CD*Up2CD);			// df(1)/dD
-	Do(1, 1) = 0.0;												// df(1)/dphi0
-	Do(1, 2) = TMath::Sin(2 * Az)*Az / C - 2 * C*(R2 - D2)*UpCD / (Up2CD*Up2CD); // df(1)/dC
-	Do(1, 3) = -TMath::Sin(2 * Az)*C / ct;						// df(1)/dz0
-	Do(1, 4) = -TMath::Sin(2 * Az)*Az / ct;						// df(1)/dct
-	//
-  	return Do;
-}
-//
-
-TMatrixD FillB(TVectorD par, TVectorD xin)
-{
-	//
- 	// Decode input arrays
-   	//
-  	double D = par(0);
-	double p0 = par(1);
-	double C = par(2);
-	double z0 = par(3);
-	double ct = par(4);
-	//
-  	double x = xin(0);
-	double y = xin(1);
-	double z = xin(2);
-	double R2 = x * x + y * y;
-	double D2 = D*D;
-	double UpCD = 1.0 + C*D;
-	double Up2CD = 1.0 + 2 * C*D;
-	double Az = C*(z - z0) / ct;
-	//
-  	// Calculate constraints
-   	//
-  	TMatrixD B(2, 3); 
-        B.Zero();
-	B(0, 0) = 2 * C*x/Up2CD + TMath::Sin(p0);
-	B(0, 1) = 2 * C*y/Up2CD - TMath::Cos(p0);
-	B(0, 2) = 0.0;
-	B(1, 0) = -2 * x*C*C / Up2CD;
-	B(1, 1) = -2 * y*C*C / Up2CD;
-	B(1, 2) = TMath::Sin(2 * Az)*C / ct;
-	//
-  	return B;
-}
-
-
-
-
+//Double_t VertexP(Int_t Ntr, ObsTrk **tracks, TVectorD &x, TMatrixDSym &covX)
 
 edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-					ROOT::VecOps::RVec<edm4hep::TrackState> thetracks )
+                                        ROOT::VecOps::RVec<edm4hep::TrackState> thetracks )
 
 {
 
@@ -411,189 +480,185 @@ edm4hep::VertexData  VertexFB( int Primary, ROOT::VecOps::RVec<edm4hep::Reconstr
         int Ntr = tracks.size();
         if ( Ntr <= 0) return result;
 
-        //std::cout <<" Ntr = " << Ntr << std::endl;
-
+	Bool_t Debug = kFALSE;
 	//
- 	// Get approximate vertex evaluation
-   	//
-  	//TVectorD x0 = Vertex0FB(Ntr, tracks);
-  	TVector3 ini_vtx = Vertex0FB( tracks) ;
-        TVectorD x0(3);
-        x0[0] = ini_vtx[0] ;
-        x0[1] = ini_vtx[1] ;
-        x0[2] = ini_vtx[2] ;
+	// Get approximate vertex evaluation
+	//
+	//TVectorD x0 = Vertex0(Ntr, tracks);
+
+        TVector3 ini_vtx = Vertex0FB( tracks) ;
+        TVectorD x0(3);	   // convert back from mm to meters below :
+        x0[0] = ini_vtx[0] *1e-3 ;
+        x0[1] = ini_vtx[1] *1e-3 ;
+        x0[2] = ini_vtx[2] *1e-3 ;
 
         TVectorD x(3);
         TMatrixDSym covX(3);
 
-	//std::cout << "Preliminary vertex" << std::endl; x0.Print();
-  	TVectorD dx(3);		// Solution x variation
+	//cout << "Preliminary vertex" << endl; x0.Print();
 	//
-  	TVectorD f(2);		// Constraints
-	TMatrixD D(2, 5);	// df/d alf (constraint over parameters)
-	TMatrixD B(2, 3);	// df/dx    (constraint over x) 
 	// Stored quantities
-   	TVectorD **fi = new TVectorD*[Ntr];
-	TVectorD **pi = new TVectorD*[Ntr];
-	TMatrixD **Di = new TMatrixD*[Ntr];
-	TMatrixD **Bi = new TMatrixD*[Ntr];
-	TMatrixDSym **Wi = new TMatrixDSym*[Ntr];
-	TMatrixDSym **Ci = new TMatrixDSym*[Ntr];
+	Double_t *fi = new Double_t[Ntr];		// Phases 
+	TVectorD **x0i = new TVectorD*[Ntr];		// Track expansion point
+	TVectorD **ai = new TVectorD*[Ntr];		// dx/dphi
+	Double_t *a2i = new Double_t[Ntr];		// a'Wa
+	TMatrixDSym **Di = new TMatrixDSym*[Ntr];		// W-WBW
+	TMatrixDSym **Wi = new TMatrixDSym*[Ntr];	// (ACA')^-1
+	TMatrixDSym **Winvi = new TMatrixDSym*[Ntr];	// ACA'
 	//
-  	// Loop on tracks to calculate everything
-   	//
-  	int Ntry = 0;
-	int TryMax = 100;
-	double eps = 0.001; // vertex stability
-        double epsi = 1000.;
-	
-	x = x0;
-	// Protect for vertices close to 0
-//	
- // 	double pvx = 1.0e-8;
- // 	if (x(0)*x(0) + x(1)*x(1) < pvx)
- // 		{
- // 		double rn = gRandom->Rndm();
- // 		double phrn = TMath::TwoPi()*rn;
- // 		x(0) += 2.*pvx*TMath::Cos(phrn);
- // 		x(1) += 2.*pvx*TMath::Sin(phrn);
- // 		}
- // 	
+	// Loop on tracks to calculate everything
+	//
+	Int_t Ntry = 0;
+	Int_t TryMax = 100;
+	Double_t eps = 1.0e-9; // vertex stability
+	Double_t epsi = 1000.;
+	Double_t Chi2;
+	//
 	while (epsi > eps && Ntry < TryMax)		// Iterate until found vertex is stable
 	{
-                //std::cout << " Ntry  = " << Ntry << "  epsi = " << epsi << std::endl;
-		TVectorD BtWf(3); BtWf.Zero();
+		Double_t x0mod = TMath::Sqrt(x0(0)*x0(0) + x0(1)*x0(1));
+		if (x0mod > 2.0) x0.Zero();	// Reset to 0 if abnormal value
+		x = x0;
+		TVectorD cterm(3); TMatrixDSym H(3); TMatrixDSym DW1D(3);
 		covX.Zero();		// Reset vertex covariance
+		cterm.Zero();	// Reset constant term
+		H.Zero();		// Reset H matrix
+		DW1D.Zero();
+		// vertex radius approximation
+		Double_t R = TMath::Sqrt(x(0)*x(0) + x(1)*x(1));
 		// 
-   		for (int i = 0; i < Ntr; i++)
+		for (Int_t i = 0; i < Ntr; i++)
 		{
-		//std::cout << " ... track number " << i << std::endl;
 			// Get track helix parameters and their covariance matrix 
-   			///ObsTrk *t = tracks[i];
-   			edm4hep::TrackState t = tracks[i] ;
-			// TVectorD par0 = t->GetObsPar();
-			TVectorD par0 = get_trackParam( t ) ;
-			// TMatrixDSym C = t->GetCov();
-			TMatrixDSym C = get_trackCov( t) ; 
- 			    //C.Print();
-			    //par0.Print();
-			Ci[i] = new TMatrixDSym(C);
-			TVectorD par(5);
-			if (Ntry > 0) par = *pi[i];
-			else
+			//ObsTrk *t = tracks[i];
+			//TVectorD par = t->GetObsPar();
+			//TMatrixDSym Cov = t->GetCov(); 
+			edm4hep::TrackState t = tracks[i] ;
+ 			TVectorD par = get_trackParam( t ) ;
+			TMatrixDSym Cov = get_trackCov( t) ;
+			Double_t fs;
+			if (Ntry <= 0)
 			{
-				par = par0;
-				pi[i] = new TVectorD(par0);
+				Double_t D = par(0);
+				Double_t C = par(2);
+				Double_t arg = TMath::Max(1.0e-6, (R*R - D*D) / (1 + 2 * C*D));
+				fs = 2 * TMath::ASin(C*TMath::Sqrt(arg));
+				fi[i] = fs;
 			}
-			// Fill D
-			//std::cout << " par = " ; par.Print();
-                        //std::cout  << " x = " ; x.Print();
-   			D = FillD(par, x);
- 			//std::cout <<" D : " ; D.Print();
-			Di[i] = new TMatrixD(D);
-			// Fill B
-   			B = FillB(par, x);
-    			//std::cout <<" B : "; B.Print();
-			Bi[i] = new TMatrixD(B);
-			//std::cout << "Bi" << std::endl; Bi[i]->Print();
-  			// Fill constraints
-   			f = Fillf(par, x);
-			fi[i] = new TVectorD(f);
-			//std::cout << "fi" << std::endl; fi[i]->Print();
- 			//
-  			TMatrixDSym W = C.Similarity(D);
-			//std::cout << "W: "; W.Print();
-			//W.Invert();
-			W = SymRegInv(W);
-			Wi[i] = new TMatrixDSym(W);
-			//std::cout << "Wi" << std::endl; Wi[i]->Print();
-			TMatrixD Bt(TMatrixD::kTransposed, B);
-			TMatrixDSym W1(W);
-			TMatrixDSym BtWB = W1.Similarity(Bt);
-			covX += BtWB;
-			BtWf += Bt * (W*f);
-		}
-		// Update vertex covariance
-		TMatrixDSym Hess = covX;
-		//cout << "Hesse: "; Hess.Print();
-		//covX.Invert();
-		covX = SymRegInv(Hess);
-		//covX.Print();
+			//
+			// Starting values
+			//
+			//Starting helix positions
+			fs = fi[i];
+			TVectorD xs = Fill_x(par, fs);
+			x0i[i] = new TVectorD(xs);	// Starting helix position
+			// W matrix = (A*C*A')^-1; W^-1 = A*C*A'
+			TMatrixD A = Fill_A(par, fs);
+			TMatrixDSym Winv = Cov.Similarity(A);
+			//cout << "Track " << i << ", W^-1:" << endl; Winv.Print();
+			Winvi[i] = new TMatrixDSym(Winv);	// Store matrix
+			TMatrixDSym W = RegInv3(Winv);
+			//cout << "Track " << i << ", W:" << endl; W.Print();
+			Wi[i] = new TMatrixDSym(W);			// Store matrix
+			// B matrices
+			TVectorD a = Fill_a(par, fs);
+			ai[i] = new TVectorD(a);				// Store vector
+			//cout << "Track " << i << ", a vector:" << endl; a.Print();
+			Double_t a2 = W.Similarity(a);
+			//cout << "Track " << i << ", a2:"<<a2 << endl;
+			a2i[i] = a2;		// Store
+			TMatrixDSym B(3); 
+			B.Rank1Update(a, 1.0);
+			B *= -1. / a2;
+			B.Similarity(W);
+			//cout << "Track " << i << ", B matrix:" << endl; B.Print();
+			// D matrices
+			//cout << "Track " << i << ", before Ds calculation" << endl;
+			//cout << "Track " << i << ", Wd matrix:" << endl; Wd.Print();
+			TMatrixDSym Ds = W+B;
+			//cout << "Track " << i << ", Ds:" << endl; Ds.Print();
+			Di[i] = new TMatrixDSym(Ds);		// Store matrix
+			TMatrixDSym DsW1Ds = Winv.Similarity(Ds);
+			DW1D += DsW1Ds;
+			// Update hessian
+			H += Ds;
+			// update constant term
+			cterm += Ds * xs;
+		}				// End loop on tracks
+		//
 		// update vertex position
-		dx = (-1.0*covX) * BtWf;
-		//dx.Print();
-		x += dx;
-                //std::cout << " dx= "<<dx(0) <<" " << dx(1) << " " << dx(2) << std::endl;
-		// Update track parameters
-		for (int i = 0; i < Ntr; i++)
+		TMatrixDSym H1 = RegInv3(H);
+		x = H1*cterm;
+		// Update vertex covariance
+		covX = DW1D.Similarity(H1);
+		// Update phases and chi^2
+		Chi2 = 0.0;
+		for (Int_t i = 0; i < Ntr; i++)
 		{
-			TVectorD lambda = *fi[i] + (*Bi[i]) * dx;
-			TMatrixD Dt(TMatrixD::kTransposed, *Di[i]);
-			*pi[i] = *pi[i] - ((*Ci[i])*Dt) * lambda;
+			TVectorD lambda = (*Di[i])*(*x0i[i] - x);
+			TMatrixDSym Wm1 = *Winvi[i];
+			Chi2 += Wm1.Similarity(lambda);
+			TVectorD a = *ai[i];
+			TVectorD b = (*Wi[i])*(x - *x0i[i]);
+			for (Int_t j = 0; j < 3; j++)fi[i] += a(j)*b(j) / a2i[i];
 		}
+		//
+		TVectorD dx = x - x0;
+		x0 = x;
 		// update vertex stability
+		TMatrixDSym Hess = RegInv3(covX);
 		epsi = Hess.Similarity(dx);
 		Ntry++;
-                //std::cout << " end of iter: epsi = " << epsi << std::endl;
-		if (epsi >10)
-		std::cout << "Vtx:  Iteration #"<<Ntry<<", eps = "<<epsi<<", x = " << x(0) << ", " << x(1) << ", " << x(2) << std::endl;
+		//if (epsi >10)
+		//cout << "Vtx:  Iteration #"<<Ntry<<", eps = "<<epsi<<", x = " << x(0) << ", " << x(1) << ", " << x(2) << endl;
 	}
 	//
-  	// Calculate Chi2
-   	//
-  	double Chi2 = 0.0;
-	for (int i = 0; i < Ntr; i++)
+	// Cleanup
+	//
+	for (Int_t i = 0; i < Ntr; i++)
 	{
-		TVectorD lambda = *fi[i] + (*Bi[i]) * dx;
-		TMatrixDSym Wp = *Wi[i];
-		Chi2 += Wp.Similarity(lambda);
+		x0i[i]->Clear();
+		Winvi[i]->Clear();
+		Wi[i]->Clear();
+		ai[i]->Clear();
+		Di[i]->Clear();
 	}
-
-
-        for (int i = 0; i < Ntr; i++) {
-          delete fi[i];
-          delete pi[i];
-          delete Di[i];
-          delete Bi[i];
-          delete Wi[i];
-          delete Ci[i];
-        }
-        delete fi;
-        delete pi;
-        delete Di;
-        delete Bi;
-        delete Wi;
-        delete Ci;
-
-
-
-
-        //std::cout << " final vertex " << x(0) << " " << x(1) << " " << x(2) << std::endl;
+		delete[] fi;		// Phases 
+		delete[] x0i;		// Track expansion point
+		delete[] ai;		// dx/dphi
+		delete[] a2i;		// a'Wa
+		delete [] Di;		// W-WBW
+		delete [] Wi;	// (ACA')^-1
+		delete [] Winvi;	// ACA'
+	//
+	//return Chi2;
 
 	// store the results in an edm4hep::VertexData object
+	   // go back from meters to millimeters for the units 
+	float conv = 1e3;
         std::array<float,6> covMatrix;
-	covMatrix[0] = covX(0,0);
-	covMatrix[1] = covX(0,1);
-	covMatrix[2] = covX(0,2);
-	covMatrix[3] = covX(1,1);
-	covMatrix[4] = covX(1,2);
-	covMatrix[5] = covX(2,2);
-  
-        //result.setPrimary( Primary );
+        covMatrix[0] = covX(0,0) * pow(conv,2);
+        covMatrix[1] = covX(0,1) * pow(conv,2);
+        covMatrix[2] = covX(0,2) * pow(conv,2);
+        covMatrix[3] = covX(1,1) * pow(conv,2);
+        covMatrix[4] = covX(1,2) * pow(conv,2);
+        covMatrix[5] = covX(2,2) * pow(conv,2);
+
         float Ndof = 2.0 * Ntr - 3.0; ;
-        //result.setChi2( Chi2 /Ndof );   
-        //result.setPosition ( edm4hep::Vector3f( x(0), x(1), x(2) ));
-        //result.setCovMatrix ( covMatrix );
-        //result.setAlgorithmType (1);
 
         result.primary = Primary;
-	result.chi2 = Chi2 /Ndof ;	// I store the normalised chi2 here
-	result.position = edm4hep::Vector3f( x(0), x(1), x(2) ) ;
-	result.covMatrix = covMatrix;
-	result.algorithmType = 1;
+        result.chi2 = Chi2 /Ndof ;      // I store the normalised chi2 here
+        result.position = edm4hep::Vector3f( x(0)*conv, x(1)*conv, x(2)*conv ) ;  // store the  vertex in mm
+        result.covMatrix = covMatrix;
+        result.algorithmType = 1;
 
-	// Need to fill the associations ...
+        // Need to fill the associations ...
 
         return result;
 
+
 }
+
+
+////////////////////////////////////////////////////
+

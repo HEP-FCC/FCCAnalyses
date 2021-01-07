@@ -36,6 +36,9 @@ class analysis():
         #df2 = (self.df.Range(10000)
         df2 = (self.df
 
+               # MC event primary vertex
+               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex( Particle )" )
+
                .Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")    #  d0 and z0 in mm
                .Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
                .Define("RP_TRK_omega",   "getRP2TRK_omega(ReconstructedParticles, EFlowTrack_1)")  # rho, in mm-1
@@ -68,6 +71,7 @@ class analysis():
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
+		"MC_PrimaryVertex",
                 "RP_TRK_D0",
                 "RP_TRK_Z0",
                 "RP_TRK_omega",

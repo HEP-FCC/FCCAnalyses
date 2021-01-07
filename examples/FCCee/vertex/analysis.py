@@ -28,23 +28,33 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Range(10000)
-        #df2 = (self.df
+        #df2 = (self.df.Range(10000)
+        df2 = (self.df
+
+               # MC event primary vertex
+               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex( Particle )" )
+
                # number of tracks
                .Define("ntracks","get_nTracks(EFlowTrack_1)")
+
                # Select tracks with d0 and z0 significance < 3 sigmas
+		   # note: d0 and z0 are defined w.r.t. (0,0,0)
+		   # hence do not use such criteria to select primary tracks
+		   # if the events were generated with a vertex distribution
                .Define("SelTracks","selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
                .Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
-               .Define("Vertex",  "VertexFB( 1, SelTracks, EFlowTrack_1 )")	# primary vertex
-               #
+               .Define("Vertex",  "VertexFB( 1, SelTracks, EFlowTrack_1 )")	# primary vertex, in mm
+               
                # Select primary tracks based on the matching to MC
+		  # This can be used  to select primary tracks when the
+		  # gen-level primary vertex  is not  (0,0,0)
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)" )
                .Define("nPrimaryTracks", "getRP_n(PrimaryTracks)")
                # Reconstruct the vertex from these primary tracks :
-               .Define("Vertex_primaryTracks",  "VertexFB ( 1, PrimaryTracks, EFlowTrack_1) ")
+               .Define("Vertex_primaryTracks",  "VertexFB ( 1, PrimaryTracks, EFlowTrack_1) ")   # primary vertex, in mm
 
         )
 
@@ -52,18 +62,19 @@ class analysis():
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
+                "MC_PrimaryVertex",
                 "ntracks",
                 "nSeltracks",
                 "Vertex",
                 "nPrimaryTracks",
-                "Vertex_primaryTracks"     # on Zuds: actually very similar to the vertex from the "selected" tracks
+                "Vertex_primaryTracks"     # on Zuds: both track selections lead to very similar results for the vertex
 
                 ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
 
-# example call for standalone file
-# python FCCeeAnalyses/ZH_Zmumu/dataframe/analysis.py root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/fcc_v01/p8_ee_ZZ_ecm240/events_058759855.root
+
+
 if __name__ == "__main__":
 
     if len(sys.argv)==1:

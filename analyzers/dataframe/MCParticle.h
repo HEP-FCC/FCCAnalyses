@@ -140,4 +140,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> mergeParticles(ROOT::VecOps::RVec<ed
 int getMC_n(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 
+/// return the event primary vertex  (mm)
+TVector3 getMC_EventPrimaryVertex(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
+
 #endif
