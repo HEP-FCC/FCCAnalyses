@@ -268,3 +268,18 @@ int getJet_ntags(ROOT::VecOps::RVec<bool> in) {
     if (in.at(i))result+=1;
   return result;
 }
+
+
+getAxisRP::getAxisRP(bool arg_pos): m_pos(arg_pos) {};
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> getAxisRP::operator()(ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  for (size_t i = 0; i < angle.size(); ++i) {
+    if (m_pos==1 && angle.at(i)>0.) result.push_back(in.at(i));
+    if (m_pos==0 && angle.at(i)<0.) result.push_back(in.at(i));;
+  }
+  return result;
+}
+
+
+
+

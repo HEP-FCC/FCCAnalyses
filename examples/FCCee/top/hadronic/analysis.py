@@ -37,8 +37,14 @@ class analysis():
                .Define("RP_pz",          "getRP_pz(ReconstructedParticles)")               
                .Define("RP_e",           "getRP_e(ReconstructedParticles)")
 
+               #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
+               .Define("jets",           "clustering(1, 0.5, 2, 6)(RP_px, RP_py, RP_pz, RP_e)")
+               .Define("jets_px",        "getJet_px(jets)")
+               .Define("jets_py",        "getJet_py(jets)")
+               .Define("jets_pz",        "getJet_pz(jets)")
+               
+                       
                .Define("JET_btag",       "getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
-               #.Define("EVT_nbtag",      "JET_btag.at(0)")
                .Define("EVT_nbtag",      "getJet_ntags(JET_btag)")
                
                .Define('EVT_thrust',     'minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')

@@ -99,5 +99,15 @@ int getRP_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 /// returns the bjet flavour
 ROOT::VecOps::RVec<bool> getJet_btag(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> values); 
 
+/// get number of b-jets
 int getJet_ntags(ROOT::VecOps::RVec<bool> in);
+
+/// get a list of reconstructed particles depending on the angle cosTheta axis
+struct getAxisRP{
+    bool m_pos = 0; //> Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0
+  getAxisRP(bool arg_pos);
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+};
+
+
 #endif
