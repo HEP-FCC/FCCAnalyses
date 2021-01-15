@@ -1,4 +1,4 @@
-from common_defaults import deffccdicts
+from config.common_defaults import deffccdicts
  #python FCChhAnalyses/FCChh/ttHH/dataframe/preSel.py 
 import os
 
