@@ -20,8 +20,18 @@
 #include "fastjet/JetDefinition.hh"
 
 
-/** Jet clustering interface. This represents a set functions and utilities to perfom jet clustering from a list of  */
+/** Jet clustering interface. 
+This represents a set functions and utilities to perfom jet clustering from a list of.  
+*/
+
 namespace JetClustering{
+
+/** @name JetClustering
+ *  Jet clustering interface. 
+This represents a set functions and utilities to perfom jet clustering from a list of. 
+ */
+///@{
+
   ///Jet Clustering interface
   struct clustering {
     clustering (int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut);
@@ -34,35 +44,37 @@ namespace JetClustering{
   };
 
   
-  /// Get jet px
+  /** Get jet px. Details. */
   ROOT::VecOps::RVec<float> getJet_px(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet py
+  /** Get jet py. Details. */
   ROOT::VecOps::RVec<float> getJet_py(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet pz
+  /** Get jet pz. Details. */
   ROOT::VecOps::RVec<float> getJet_pz(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet e
+  /** Get jet energy. Details. */
   ROOT::VecOps::RVec<float> getJet_e(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet pt
+  /** Get jet pt. Details. */
   ROOT::VecOps::RVec<float> getJet_pt(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet p
+  /** Get jet p. Details. */
   ROOT::VecOps::RVec<float> getJet_p(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet mass
+  /** Get jet mass. Details. */
   ROOT::VecOps::RVec<float> getJet_m(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet eta
+  /** Get jet eta. Details. */
   ROOT::VecOps::RVec<float> getJet_eta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
 
-  /// Get jet phi
+  /** Get jet phi. Details. */
   ROOT::VecOps::RVec<float> getJet_phi(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
   
-  /// Get jet theta
+  /** Get jet theta. Details. */
   ROOT::VecOps::RVec<float> getJet_theta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+
+  ///@}
 }
 
 
