@@ -38,10 +38,10 @@ class analysis():
                .Define("RP_e",           "getRP_e(ReconstructedParticles)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
-               .Define("jets",           "clustering(1, 0.5, 2, 6)(RP_px, RP_py, RP_pz, RP_e)")
-               .Define("jets_px",        "getJet_px(jets)")
-               .Define("jets_py",        "getJet_py(jets)")
-               .Define("jets_pz",        "getJet_pz(jets)")
+               .Define("jets",           "JetClustering::clustering(1, 0.5, 2, 6)(RP_px, RP_py, RP_pz, RP_e)")
+               .Define("jets_px",        "JetClustering::getJet_px(jets)")
+               .Define("jets_py",        "JetClustering::getJet_py(jets)")
+               .Define("jets_pz",        "JetClustering::getJet_pz(jets)")
                
                        
                .Define("JET_btag",       "getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
@@ -94,6 +94,10 @@ class analysis():
                 "RP_hemis0_mass",
                 "RP_hemis1_mass",
                 "RP_total_mass",
+
+                "jets_px",
+                "jets_py",
+                "jets_pz",
                
                 ]:
             branchList.push_back(branchName)
