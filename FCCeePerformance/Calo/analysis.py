@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-inputFiles", default = '/eos/user/b/brfranco/rootfile_storage/201012_pythia/fccsw_output_pythia_ee_Z_ee.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
 parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = bool)
-parser.add_argument("-cellBranchName", default = "ECalBarrelPositionedCells", help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
+parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"], help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
 parser.add_argument("-storeClusterBranches", default = True, help="Whether or not to store cluster information", type = bool)
 parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
 parser.add_argument("-storeClusterCellsBranches", default = True, help="Whether or not to store cluster cells information", type = bool)
@@ -45,13 +45,15 @@ class analysis():
 
         # cells
         if args.storeCellBranches:
-            dict_outputBranchName_function["cell_x"] = "getCaloHit_x(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_y"] = "getCaloHit_y(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_z"] = "getCaloHit_z(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_phi"] = "getCaloHit_phi(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_theta"] = "getCaloHit_theta(%s)"%args.cellBranchName
-            #dict_outputBranchName_function["cell_position"] = "getCaloHit_positionVector3(%s)"%args.cellBranchName
-            dict_outputBranchName_function["cell_energy"] = "getCaloHit_energy(%s)"%args.cellBranchName
+            for cellBranchName in args.cellBranchNames:
+                dict_outputBranchName_function["%s_x"%cellBranchName] = "getCaloHit_x(%s)"%cellBranchName
+                dict_outputBranchName_function["%s_y"%cellBranchName] = "getCaloHit_y(%s)"%cellBranchName
+                dict_outputBranchName_function["%s_z"%cellBranchName] = "getCaloHit_z(%s)"%cellBranchName
+                dict_outputBranchName_function["%s_phi"%cellBranchName] = "getCaloHit_phi(%s)"%cellBranchName
+                dict_outputBranchName_function["%s_theta"%cellBranchName] = "getCaloHit_theta(%s)"%cellBranchName
+                dict_outputBranchName_function["%s_eta"%cellBranchName] = "getCaloHit_eta(%s)"%cellBranchName
+                #dict_outputBranchName_function["%s_position"%cellBranchName] = "getCaloHit_positionVector3(%s)"%cellBranchName
+                dict_outputBranchName_function["%s_energy"%cellBranchName] = "getCaloHit_energy(%s)"%cellBranchName
 
         # clusters
         if args.storeClusterBranches:
@@ -79,10 +81,12 @@ class analysis():
 
         # gen particles
         if args.storeGenBranches:
+            dict_outputBranchName_function["genParticle_phi"] = "getMC_phi(%s)"%args.genBranchName
+            dict_outputBranchName_function["genParticle_theta"] = "getMC_theta(%s)"%args.genBranchName
+            dict_outputBranchName_function["genParticle_energy"] = "getMC_energy(%s)"%args.genBranchName
+            #dict_outputBranchName_function["genParticle_p4"] = "getMC_lorentzVector(%s)"%args.genBranchName
             dict_outputBranchName_function["genParticle_pid"] = "getMC_pid(%s)"%args.genBranchName
             dict_outputBranchName_function["genParticle_status"] = "getMC_status(%s)"%args.genBranchName
-            dict_outputBranchName_function["genParticle_p4"] = "getMC_lorentzVector(%s)"%args.genBranchName
-            dict_outputBranchName_function["genParticle_phi"] = "getMC_phi(%s)"%args.genBranchName
 
         df2 = self.df
         branchList = ROOT.vector('string')()
