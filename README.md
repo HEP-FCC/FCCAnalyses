@@ -22,7 +22,7 @@ Table of contents
 
 RootDataFrame based
 =============
-Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading EDM4Hep or FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained.
+Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading EDM4Hep or FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained. ROOT dataframe documentation is availabe [here](https://root.cern/doc/master/classROOT_1_1RDataFrame.html)
 
 Getting Started
 ============
