@@ -98,6 +98,8 @@ TVectorD get_trackParam( edm4hep::TrackState & atrack) {
     double scale3 = 1e-3 ;  //convert mm to m
     double scale4 = 1.;
 
+  scale2 = -scale2 ;   // sign of omega
+
     // Same units and definitions as Franco :
     //scale0= 1.;
     //scale2 = 1.;
@@ -125,6 +127,8 @@ TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) {
     //scale0= 1.;
     //scale2 = 1.;
     //scale3 = 1.;
+
+  scale2 = -scale2 ;   // sign of omega
 
     covM[0][0] = covMatrix[0] *scale0 * scale0;
     covM[0][1] = covMatrix[1] *scale0 * scale1;
@@ -609,30 +613,50 @@ edm4hep::VertexData  VertexFitter( int Primary, ROOT::VecOps::RVec<edm4hep::Reco
 		Ntry++;
 		//if (epsi >10)
 		//cout << "Vtx:  Iteration #"<<Ntry<<", eps = "<<epsi<<", x = " << x(0) << ", " << x(1) << ", " << x(2) << endl;
+
+
+        //
+        // Cleanup
+        //
+	        for (Int_t i = 0; i < Ntr; i++)
+        	{
+                     x0i[i]->Clear();
+                     Winvi[i]->Clear();
+                     Wi[i]->Clear();
+                     ai[i]->Clear();
+                     Di[i]->Clear();
+	
+                     delete x0i[i];
+                     delete Winvi[i];
+                     delete Wi[i] ;
+                     delete ai[i] ;
+                     delete Di[i];
+                }
 	}
 	//
 	// Cleanup
 	//
-	for (Int_t i = 0; i < Ntr; i++)
-	{
-		x0i[i]->Clear();
-		Winvi[i]->Clear();
-		Wi[i]->Clear();
-		ai[i]->Clear();
-		Di[i]->Clear();
-	}
-		delete[] fi;		// Phases 
-		delete[] x0i;		// Track expansion point
-		delete[] ai;		// dx/dphi
-		delete[] a2i;		// a'Wa
-		delete [] Di;		// W-WBW
-		delete [] Wi;	// (ACA')^-1
-		delete [] Winvi;	// ACA'
+		//delete[] fi;		// Phases 
+		//delete[] x0i;		// Track expansion point
+		//delete[] ai;		// dx/dphi
+		//delete[] a2i;		// a'Wa
+		//delete [] Di;		// W-WBW
+		//delete [] Wi;	// (ACA')^-1
+		//delete [] Winvi;	// ACA'
+
+                delete fi;            // Phases 
+                delete x0i;           // Track expansion point
+                delete ai;            // dx/dphi
+                delete a2i;           // a'Wa
+                delete  Di;           // W-WBW
+                delete  Wi;   // (ACA')^-1
+                delete  Winvi;        // ACA'
+
 	//
 	//return Chi2;
 
 	// store the results in an edm4hep::VertexData object
-	   // go back from meters to millimeters for the units 
+	// go back from meters to millimeters for the units 
 	float conv = 1e3;
         std::array<float,6> covMatrix;
         covMatrix[0] = covX(0,0) * pow(conv,2);
