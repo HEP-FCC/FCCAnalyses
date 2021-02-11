@@ -90,11 +90,6 @@ Table of contents</h1>
 <li><a href="#plotting">Plotting</a></li>
 </ul>
 </li>
-<li><a href="#uproot-based">Uproot based</a><ul>
-<li><a href="#getting-started">Getting Started</a></li>
-<li>[Running]</li>
-</ul>
-</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md1"></a>
 RootDataFrame based</h1>
@@ -131,29 +126,13 @@ Final selection</h1>
 <h1><a class="anchor" id="autotoc_md6"></a>
 Plotting</h1>
 <p>The plotting configuration file <code>plots.py</code> contains informations about plotting details for plots rendering but also ways of combining samples for plotting. In this example just run like: </p><div class="fragment"><div class="line">doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py</div>
-</div><!-- fragment --><p>This will produce the plots in the <code>outdir</code> defined in the configuration file.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
-Uproot based</h1>
-<p>For the time being the uproot analyses is using the output of the RootDataFrame (small ntuples)</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
-Getting Started</h1>
-<p>This step requires extra packages that we will install locally. For that please specify the place where you want those to be instal by setting this enviroment variable (please adapt MYPATH to where you want the packages to be installed): </p><div class="fragment"><div class="line">export PYTHONUSERBASE=/MYPATH/.local</div>
-</div><!-- fragment --><p>First we need to upgrade pip: </p><div class="fragment"><div class="line">curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</div>
-<div class="line">python get-pip.py</div>
-</div><!-- fragment --><p>and add it to the path so that we run the new installed version </p><div class="fragment"><div class="line">export PATH=/MYPATH/.local/bin:$PATH</div>
-</div><!-- fragment --><p>Then install the following packages:</p>
-<div class="fragment"><div class="line">#python -m pip install --user zfit --use-feature=2020-resolver</div>
-<div class="line">python -m pip install --user uproot4 --use-feature=2020-resolver</div>
-<div class="line">python -m pip install --user awkward1 --use-feature=2020-resolver</div>
-<div class="line">#python -m pip install --user matplotlib --use-feature=2020-resolver</div>
-<div class="line">python -m pip install --user particle --use-feature=2020-resolver</div>
-</div><!-- fragment --><div class="fragment"><div class="line">export PYTHONPATH=/MYPATH/.local/lib/python3.7/site-packages:$PYTHONPATH</div>
-</div><!-- fragment --> </div></div><!-- PageDoc -->
+</div><!-- fragment --><p>This will produce the plots in the <code>outdir</code> defined in the configuration file. </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 9 2021 18:18:37 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 11 2021 16:22:04 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>
