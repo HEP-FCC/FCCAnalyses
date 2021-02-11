@@ -41,7 +41,8 @@ class analysis():
                .Alias("Particle0", "Particle#0.index")
                
 #               .Filter("filterMC_pdgID(541, true)(Particle)==true")
-               .Filter("filterMC_pdgID(541, true)(Particle)==false")
+#               .Filter("filterMC_pdgID(541, true)(Particle)==false")
+#               .Filter("(filterMC_pdgID(521, false)(Particle)==true && filterMC_pdgID(-521, false)(Particle)==false) || (filterMC_pdgID(521, false)(Particle)==false && filterMC_pdgID(-521, false)(Particle)==true)")
                
                .Define("MC_px",         "getMC_px(Particle)")
                .Define("MC_py",         "getMC_py(Particle)")
@@ -111,6 +112,29 @@ class analysis():
                .Define('EVT_thrutshemis_emax',  'if (EVT_thrusthemis0_e.at(0)>EVT_thrusthemis1_e.at(0)) return EVT_thrusthemis0_e.at(0); else return EVT_thrusthemis1_e.at(0);')
                .Define('EVT_thrutshemis_emin',  'if (EVT_thrusthemis0_e.at(0)>EVT_thrusthemis1_e.at(0)) return EVT_thrusthemis1_e.at(0); else return EVT_thrusthemis0_e.at(0);')
 
+               .Define('EVT_Echarged_max', 'if (EVT_thrutshemis0_echarged>EVT_thrutshemis1_echarged) return EVT_thrutshemis0_echarged; else return EVT_thrutshemis1_echarged')
+               .Define('EVT_Echarged_min', 'if (EVT_thrutshemis0_echarged>EVT_thrutshemis1_echarged) return EVT_thrutshemis1_echarged; else return EVT_thrutshemis0_echarged')
+               .Define('EVT_Eneutral_max', 'if (EVT_thrutshemis0_eneutral>EVT_thrutshemis1_eneutral) return EVT_thrutshemis0_eneutral; else return EVT_thrutshemis1_eneutral')
+               .Define('EVT_Eneutral_min', 'if (EVT_thrutshemis0_eneutral>EVT_thrutshemis1_eneutral) return EVT_thrutshemis1_eneutral; else return EVT_thrutshemis0_eneutral')
+
+               .Define('EVT_Ncharged_max','if (EVT_thrutshemis0_ncharged>EVT_thrutshemis1_ncharged) return EVT_thrutshemis0_ncharged; else return EVT_thrutshemis1_ncharged')
+               .Define('EVT_Ncharged_min','if (EVT_thrutshemis0_ncharged>EVT_thrutshemis1_ncharged) return EVT_thrutshemis1_ncharged; else return EVT_thrutshemis0_ncharged')
+               .Define('EVT_Nneutral_max','if (EVT_thrutshemis0_nneutral>EVT_thrutshemis1_nneutral) return EVT_thrutshemis0_nneutral; else return EVT_thrutshemis1_nneutral')
+               .Define('EVT_Nneutral_min','if (EVT_thrutshemis0_nneutral>EVT_thrutshemis1_nneutral) return EVT_thrutshemis1_nneutral; else return EVT_thrutshemis0_nneutral')
+
+
+
+               #.Define("SelTracks","selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
+               #.Define("nSeltracks",  "getRP_n(SelTracks)")
+               # Reconstruct the vertex from these tracks :
+               .Define("RP_thrusthemis0", "getAxisRP(0)(RP_thrustangle, ReconstructedParticles)")
+               .Define("RP_thrusthemis1", "getAxisRP(1)(RP_thrustangle, ReconstructedParticles)")
+               .Define("RP_thrusthemis_emax", "if (EVT_thrusthemis0_e.at(0)>EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
+               .Define("RP_thrusthemis_emin", "if (EVT_thrusthemis0_e.at(0)<EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
+               
+               #.Define("Vertex_thrusthemis_emin",  "VertexFB( 1, RP_thrusthemis_emin, EFlowTrack_1 )") # primary vertex
+               #.Define("Ntrack_thrusthemis_emin",  "getRP_n(RP_thrusthemis_emin)")
+
                )
 
         # select branches for output file
@@ -123,6 +147,10 @@ class analysis():
                 "EVT_thrutshemis0_ncharged","EVT_thrutshemis1_ncharged","EVT_thrutshemis0_nneutral","EVT_thrutshemis1_nneutral",
                 "EVT_thrutshemis0_echarged","EVT_thrutshemis1_echarged","EVT_thrutshemis0_eneutral","EVT_thrutshemis1_eneutral",
                 "EVT_thrutshemis_emax","EVT_thrutshemis_emin",
+
+                "EVT_Echarged_max","EVT_Echarged_min","EVT_Eneutral_max","EVT_Eneutral_min","EVT_Ncharged_max","EVT_Ncharged_min","EVT_Nneutral_max","EVT_Nneutral_min",
+
+
 
                 "EVT_sphericity_x","EVT_sphericity_y","EVT_sphericity_z","EVT_sphericity_val",
 
@@ -141,7 +169,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/generic-analysis/analysis_Bc2TauNu.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v02/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_103989732.root
+# python examples/FCCee/flavour/generic-analysis/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v02/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_103989732.root
 
 
 if __name__ == "__main__":
