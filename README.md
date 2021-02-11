@@ -15,9 +15,6 @@ Table of contents
     * [Pre selection](#pre-selection)
     * [Final selection](#final-selection)
     * [Plotting](#plotting)
-  * [Uproot based](#uproot-based)
-    * [Getting Started](#getting-started)
-    * [Running]
 
 
 RootDataFrame based
@@ -82,40 +79,3 @@ doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py
 ```
 
 This will produce the plots in the ```outdir``` defined in the configuration file.
-
-
-Uproot based
-=============
-For the time being the uproot analyses is using the output of the RootDataFrame (small ntuples)
-
-Getting Started
-============
-This step requires extra packages that we will install locally. For that please specify the place where you want those to be instal by setting this enviroment variable (please adapt MYPATH to where you want the packages to be installed):
-```
-export PYTHONUSERBASE=/MYPATH/.local
-```
-
-First we need to upgrade pip:
-```
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
-```
-
-and add it to the path so that we run the new installed version
-```
-export PATH=/MYPATH/.local/bin:$PATH
-```
-
-Then install the following packages:
-
-```
-#python -m pip install --user zfit --use-feature=2020-resolver
-python -m pip install --user uproot4 --use-feature=2020-resolver
-python -m pip install --user awkward1 --use-feature=2020-resolver
-#python -m pip install --user matplotlib --use-feature=2020-resolver
-python -m pip install --user particle --use-feature=2020-resolver
-```
-
-```
-export PYTHONPATH=/MYPATH/.local/lib/python3.7/site-packages:$PYTHONPATH
-```
