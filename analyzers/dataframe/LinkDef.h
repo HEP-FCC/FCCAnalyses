@@ -40,7 +40,8 @@
 
 //MC Particles
 #pragma link C++ function getMC_p;
-#pragma link C++ function getMC_px;
+#pragma link C++ function MCParticles::get_px;
+//#pragma link C++ class MCParticle::get_px;
 #pragma link C++ function getMC_py;
 #pragma link C++ function getMC_pz;
 #pragma link C++ function getMC_e;
@@ -52,6 +53,7 @@
 #pragma link C++ function getRP2MC_p;
 #pragma link C++ class getRP2MC_p_func;
 
-
+//Vertex
+#pragma link C++ function get_nTracks;
 
 #endif
