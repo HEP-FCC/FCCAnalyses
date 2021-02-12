@@ -12,6 +12,9 @@
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::VertexData>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>+;
 
+
+#pragma link C++ function dummyloader;
+
 //Algo
 #pragma link C++ class thrustFit;
 #pragma link C++ class minimize_thrust;

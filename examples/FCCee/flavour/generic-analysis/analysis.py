@@ -9,7 +9,7 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
 #Not in Namespace (works)
-_fcc  = ROOT.getRP_px
+_fcc  = ROOT.dummyloader
 #In namespace MCParticle (does not work)
 #_fcc  = ROOT.MCParticle.get_px
 
