@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['linkdef_2eh_103',['LinkDef.h',['../_link_def_8h.html',1,'']]],
-  ['lognormal_104',['logNormal',['../structlog_normal.html',1,'logNormal'],['../structlog_normal.html#ae7ed85acac82121d880ea7dea5983fa4',1,'logNormal::logNormal()']]]
+  ['jetclustering_101',['JetClustering',['../namespace_jet_clustering.html',1,'']]],
+  ['jetclustering_2ecc_102',['JetClustering.cc',['../_jet_clustering_8cc.html',1,'']]],
+  ['jetclustering_2eh_103',['JetClustering.h',['../_jet_clustering_8h.html',1,'']]]
 ];
