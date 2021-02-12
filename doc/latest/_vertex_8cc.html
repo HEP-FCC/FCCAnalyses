@@ -102,13 +102,10 @@ Functions</h2></td></tr>
 <tr class="separator:aa8d137b891110de2d7d32b85fc372db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab50c351613a1f42af7ddb1e1a6423acf"><td class="memItemLeft" align="right" valign="top">TMatrixDSym&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_vertex_8cc.html#ab50c351613a1f42af7ddb1e1a6423acf">get_trackCov</a> (edm4hep::TrackState &amp;atrack)</td></tr>
 <tr class="separator:ab50c351613a1f42af7ddb1e1a6423acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e6ce4c089db79ae7234296b83cac4ed"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_vertex_8cc.html#a4e6ce4c089db79ae7234296b83cac4ed">FastRv</a> (TVectorD p1, TVectorD p2)</td></tr>
+<tr class="separator:a4e6ce4c089db79ae7234296b83cac4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83444f955a8b3560e90952727fb7b51d"><td class="memItemLeft" align="right" valign="top">TMatrixDSym&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_vertex_8cc.html#a83444f955a8b3560e90952727fb7b51d">RegInv3</a> (TMatrixDSym &amp;Smat0)</td></tr>
 <tr class="separator:a83444f955a8b3560e90952727fb7b51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee2a0ce11ecfba222a34e91735d4879e"><td class="memItemLeft" align="right" valign="top">TMatrixDSym&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_vertex_8cc.html#aee2a0ce11ecfba222a34e91735d4879e">RegInv2</a> (TMatrixDSym &amp;Smat0)</td></tr>
-<tr class="separator:aee2a0ce11ecfba222a34e91735d4879e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcf0a21a52c0bc599c08cf90c03ab662"><td class="memItemLeft" align="right" valign="top">TVector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_vertex_8cc.html#adcf0a21a52c0bc599c08cf90c03ab662">VertexFitter0</a> (ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks)</td></tr>
-<tr class="memdesc:adcf0a21a52c0bc599c08cf90c03ab662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preliminary estimate of the vertex position based on transformation of track into points and vertices into lines. No steering of track parameters,No error calculation. Units = millimeters.  <a href="_vertex_8cc.html#adcf0a21a52c0bc599c08cf90c03ab662">More...</a><br /></td></tr>
-<tr class="separator:adcf0a21a52c0bc599c08cf90c03ab662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20dd0f550ddd7ce4afca58022322f694"><td class="memItemLeft" align="right" valign="top">TMatrixD&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_vertex_8cc.html#a20dd0f550ddd7ce4afca58022322f694">Fill_A</a> (TVectorD par, Double_t phi)</td></tr>
 <tr class="separator:a20dd0f550ddd7ce4afca58022322f694"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9822e4c5c62222283b23034660c2a64a"><td class="memItemLeft" align="right" valign="top">TVectorD&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_vertex_8cc.html#a9822e4c5c62222283b23034660c2a64a">Fill_a</a> (TVectorD par, Double_t phi)</td></tr>
@@ -122,6 +119,34 @@ Functions</h2></td></tr>
 <tr class="separator:a9aad3b3f6eca148221972c17db2b4339"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a4e6ce4c089db79ae7234296b83cac4ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e6ce4c089db79ae7234296b83cac4ed">&#9670;&nbsp;</a></span>FastRv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t FastRv </td>
+          <td>(</td>
+          <td class="paramtype">TVectorD&#160;</td>
+          <td class="paramname"><em>p1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TVectorD&#160;</td>
+          <td class="paramname"><em>p2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a20dd0f550ddd7ce4afca58022322f694"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a20dd0f550ddd7ce4afca58022322f694">&#9670;&nbsp;</a></span>Fill_A()</h2>
 
@@ -280,24 +305,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aee2a0ce11ecfba222a34e91735d4879e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee2a0ce11ecfba222a34e91735d4879e">&#9670;&nbsp;</a></span>RegInv2()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TMatrixDSym RegInv2 </td>
-          <td>(</td>
-          <td class="paramtype">TMatrixDSym &amp;&#160;</td>
-          <td class="paramname"><em>Smat0</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a83444f955a8b3560e90952727fb7b51d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a83444f955a8b3560e90952727fb7b51d">&#9670;&nbsp;</a></span>RegInv3()</h2>
 
@@ -400,32 +407,11 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="adcf0a21a52c0bc599c08cf90c03ab662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adcf0a21a52c0bc599c08cf90c03ab662">&#9670;&nbsp;</a></span>VertexFitter0()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TVector3 VertexFitter0 </td>
-          <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt;&#160;</td>
-          <td class="paramname"><em>tracks</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Preliminary estimate of the vertex position based on transformation of track into points and vertices into lines. No steering of track parameters,No error calculation. Units = millimeters. </p>
-<p>return xv;</p>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 11 2021 16:27:51 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Feb 12 2021 20:59:39 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>
