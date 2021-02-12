@@ -14,6 +14,13 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 
+
+#
+# Example file : /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Zuds_ecm91/events_199980034.root
+#    ( these events were generated at (0,0,0) i.e. no vertex smearing
+#
+
+
 class analysis():
 
     #__________________________________________________________
@@ -53,7 +60,7 @@ class analysis():
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Define("PrimaryTracks",  "SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
                .Define("nPrimaryTracks", "getRP_n(PrimaryTracks)")
-               # Reconstruct the vertex from these primary tracks :
+               ## Reconstruct the vertex from these primary tracks :
                .Define("Vertex_primaryTracks",  "VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")   # primary vertex, in mm
 
         )
