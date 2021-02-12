@@ -8,7 +8,10 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.getMC_px
+#Not in Namespace (works)
+_fcc  = ROOT.dummyloader
+#In namespace MCParticle (does not work)
+#_fcc  = ROOT.MCParticle.get_px
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -40,22 +43,22 @@ class analysis():
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Alias("Particle0", "Particle#0.index")
                
-#               .Filter("filterMC_pdgID(541, true)(Particle)==true")
-#               .Filter("filterMC_pdgID(541, true)(Particle)==false")
-#               .Filter("(filterMC_pdgID(521, false)(Particle)==true && filterMC_pdgID(-521, false)(Particle)==false) || (filterMC_pdgID(521, false)(Particle)==false && filterMC_pdgID(-521, false)(Particle)==true)")
+#               .Filter("filter_pdgID(541, true)(Particle)==true")
+#               .Filter("filter_pdgID(541, true)(Particle)==false")
+#               .Filter("(filter_pdgID(521, false)(Particle)==true && filter_pdgID(-521, false)(Particle)==false) || (filter_pdgID(521, false)(Particle)==false && filter_pdgID(-521, false)(Particle)==true)")
                
-               .Define("MC_px",         "getMC_px(Particle)")
-               .Define("MC_py",         "getMC_py(Particle)")
-               .Define("MC_pz",         "getMC_pz(Particle)")
-               .Define("MC_p",          "getMC_p(Particle)")
-               .Define("MC_e",          "getMC_e(Particle)")
-               .Define("MC_pdg",        "getMC_pdg(Particle)")
-               .Define("MC_charge",     "getMC_charge(Particle)")
-               .Define("MC_mass",       "getMC_mass(Particle)")
-               .Define("MC_status",     "getMC_genStatus(Particle)")
-               .Define("MC_vertex_x",   "getMC_vertex_x(Particle)")
-               .Define("MC_vertex_y",   "getMC_vertex_y(Particle)")
-               .Define("MC_vertex_z",   "getMC_vertex_z(Particle)")
+               .Define("MC_px",         "MCParticle::get_px(Particle)")
+               .Define("MC_py",         "MCParticle::get_py(Particle)")
+               .Define("MC_pz",         "MCParticle::get_pz(Particle)")
+               .Define("MC_p",          "MCParticle::get_p(Particle)")
+               .Define("MC_e",          "MCParticle::get_e(Particle)")
+               .Define("MC_pdg",        "MCParticle::get_pdg(Particle)")
+               .Define("MC_charge",     "MCParticle::get_charge(Particle)")
+               .Define("MC_mass",       "MCParticle::get_mass(Particle)")
+               .Define("MC_status",     "MCParticle::get_genStatus(Particle)")
+               .Define("MC_vertex_x",   "MCParticle::get_vertex_x(Particle)")
+               .Define("MC_vertex_y",   "MCParticle::get_vertex_y(Particle)")
+               .Define("MC_vertex_z",   "MCParticle::get_vertex_z(Particle)")
 
                
                .Define("RP_p",          "getRP_p(ReconstructedParticles)")
@@ -70,8 +73,8 @@ class analysis():
                #.Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
 
                .Define('RP_MC_index',            "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles)") 
-               .Define('RP_MC_parentindex',      "getMC_parentid(RP_MC_index,Particle, Particle0)")
-               .Define('RP_MC_grandparentindex', "getMC_parentid(RP_MC_parentindex,Particle, Particle0)")
+               .Define('RP_MC_parentindex',      "MCParticle::get_parentid(RP_MC_index,Particle, Particle0)")
+               .Define('RP_MC_grandparentindex', "MCParticle::get_parentid(RP_MC_parentindex,Particle, Particle0)")
 
                .Define('EVT_thrust',      'minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
                .Define('EVT_thrust_val',  'EVT_thrust.at(0)')
