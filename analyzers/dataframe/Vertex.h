@@ -52,15 +52,12 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> SelPrimaryTracks( ROOT::V
 TVectorD get_trackParam( edm4hep::TrackState & atrack) ;
 TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) ;
 
+Double_t FastRv(TVectorD p1, TVectorD p2) ;
 TMatrixDSym RegInv3(TMatrixDSym &Smat0) ;
-TMatrixDSym RegInv2(TMatrixDSym &Smat0) ;
 TMatrixD Fill_A(TVectorD par, Double_t phi) ;
 TVectorD Fill_a(TVectorD par, Double_t phi) ;
 TVectorD Fill_x0(TVectorD par) ;
 TVectorD Fill_x(TVectorD par, Double_t phi) ;
-
-/// Preliminary estimate of the vertex position based on transformation of track into points and vertices into lines. No steering of track parameters,No error calculation. Units = millimeters 
-TVector3 VertexFitter0( ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 
 
 /// Updated vertex (code from Franco Bedeschi), in millimeters
