@@ -8,7 +8,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.getMC_px
+_fcc  = ROOT.getRP_px
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -32,7 +32,7 @@ class analysis():
         df2 = (self.df
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex(21)( Particle )" )
+               .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
                .Define("ntracks","get_nTracks(EFlowTrack_1)")
