@@ -30,11 +30,19 @@ var menudata={children:[
 {text:"Namespace List",url:"namespaces.html"},
 {text:"Namespace Members",url:"namespacemembers.html",children:[
 {text:"All",url:"namespacemembers.html",children:[
+{text:"f",url:"namespacemembers.html#index_f"},
 {text:"g",url:"namespacemembers.html#index_g"},
-{text:"m",url:"namespacemembers.html#index_m"}]},
+{text:"m",url:"namespacemembers.html#index_m"},
+{text:"r",url:"namespacemembers.html#index_r"},
+{text:"s",url:"namespacemembers.html#index_s"},
+{text:"v",url:"namespacemembers.html#index_v"}]},
 {text:"Functions",url:"namespacemembers_func.html",children:[
+{text:"f",url:"namespacemembers_func.html#index_f"},
 {text:"g",url:"namespacemembers_func.html#index_g"},
-{text:"m",url:"namespacemembers_func.html#index_m"}]}]}]},
+{text:"m",url:"namespacemembers_func.html#index_m"},
+{text:"r",url:"namespacemembers_func.html#index_r"},
+{text:"s",url:"namespacemembers_func.html#index_s"},
+{text:"v",url:"namespacemembers_func.html#index_v"}]}]}]},
 {text:"Classes",url:"annotated.html",children:[
 {text:"Class List",url:"annotated.html"},
 {text:"Class Index",url:"classes.html"},
@@ -67,18 +75,10 @@ var menudata={children:[
 {text:"All",url:"globals.html",children:[
 {text:"a",url:"globals.html#index_a"},
 {text:"d",url:"globals.html#index_d"},
-{text:"f",url:"globals.html#index_f"},
 {text:"g",url:"globals.html#index_g"},
-{text:"m",url:"globals.html#index_m"},
-{text:"r",url:"globals.html#index_r"},
-{text:"s",url:"globals.html#index_s"},
-{text:"v",url:"globals.html#index_v"}]},
+{text:"m",url:"globals.html#index_m"}]},
 {text:"Functions",url:"globals_func.html",children:[
 {text:"a",url:"globals_func.html#index_a"},
 {text:"d",url:"globals_func.html#index_d"},
-{text:"f",url:"globals_func.html#index_f"},
 {text:"g",url:"globals_func.html#index_g"},
-{text:"m",url:"globals_func.html#index_m"},
-{text:"r",url:"globals_func.html#index_r"},
-{text:"s",url:"globals_func.html#index_s"},
-{text:"v",url:"globals_func.html#index_v"}]}]}]}]}
+{text:"m",url:"globals_func.html#index_m"}]}]}]}]}

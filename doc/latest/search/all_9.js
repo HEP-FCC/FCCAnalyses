@@ -8,6 +8,6 @@ var searchData=
   ['reconstructedparticle2mc_2eh_151',['ReconstructedParticle2MC.h',['../_reconstructed_particle2_m_c_8h.html',1,'']]],
   ['reconstructedparticle2track_2ecc_152',['ReconstructedParticle2Track.cc',['../_reconstructed_particle2_track_8cc.html',1,'']]],
   ['reconstructedparticle2track_2eh_153',['ReconstructedParticle2Track.h',['../_reconstructed_particle2_track_8h.html',1,'']]],
-  ['reginv3_154',['RegInv3',['../_vertex_8cc.html#a83444f955a8b3560e90952727fb7b51d',1,'RegInv3(TMatrixDSym &amp;Smat0):&#160;Vertex.cc'],['../_vertex_8h.html#a83444f955a8b3560e90952727fb7b51d',1,'RegInv3(TMatrixDSym &amp;Smat0):&#160;Vertex.cc']]],
+  ['reginv3_154',['RegInv3',['../namespace_vertexing.html#a2b2090ee94c5984259a3b7b505cbdb80',1,'Vertexing']]],
   ['resonancebuilder_155',['ResonanceBuilder',['../struct_resonance_builder.html',1,'ResonanceBuilder'],['../struct_resonance_builder.html#a9e18f85c7c9bbf7e8dc50a5f2a2c4291',1,'ResonanceBuilder::ResonanceBuilder()']]]
 ];
