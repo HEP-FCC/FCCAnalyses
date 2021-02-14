@@ -46,5 +46,7 @@ ROOT::VecOps::RVec<float> getRP2TRK_tanLambda_cov (ROOT::VecOps::RVec<edm4hep::R
 /// Return the tracks associated to reco'ed particles
 ROOT::VecOps::RVec<edm4hep::TrackState> getRP2TRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
 
+/// Return the size of a collection of TrackStates
+int getTK_n(ROOT::VecOps::RVec<edm4hep::TrackState> x) ;
 
 #endif

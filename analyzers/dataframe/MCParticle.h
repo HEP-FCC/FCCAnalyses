@@ -44,6 +44,14 @@ namespace MCParticle{
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
   
+/// select MCParticles with their PDG id
+  struct sel_PDG {
+    sel_PDG(int arg_pdg, bool arg_chargeconjugate);
+    int m_pdg = 13;
+    bool m_chargeconjugate = true;
+    ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+  };
+
   /// get MC history tree for a given MCParticle index
   struct get_tree{
     get_tree(int arg_index);
@@ -67,6 +75,25 @@ namespace MCParticle{
     TVector3  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
   
+
+ /// return a list of indices that correspond to a given MC decay. The list contains the index of the mother, followed by the indices of the daughters, in the order specified. In case there are several such decays in the event, keep only the first one. 
+  struct get_indices_ExclusiveDecay{
+     get_indices_ExclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugate ) ;
+     int m_pdg_mother;
+     std::vector<int> m_pdg_daughters;
+     bool m_stableDaughters;
+     bool m_chargeConjugate;
+     ROOT::VecOps::RVec<int>   operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in , ROOT::VecOps::RVec<int> ind);
+  };
+
+  /// return a list of indices that correspond to a given MC decay
+  ROOT::VecOps::RVec<int>  get_indices_ExclusiveDecay_MotherByIndex( int imother, 
+								     std::vector<int> m_pdg_daughters, 
+								     bool m_stableDaughters,
+                                        			     ROOT::VecOps::RVec<edm4hep::MCParticleData> in , 
+								     ROOT::VecOps::RVec<int> ind);
+
+
   /// return the parent index of a given list of MC particles
   ROOT::VecOps::RVec<int> get_parentid(ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents);
 
@@ -96,6 +123,9 @@ namespace MCParticle{
 
   /// return the end point of the input MCParticles
   ROOT::VecOps::RVec<edm4hep::Vector3d> get_endPoint(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
+  /// return the end point of the input MCParticles (not using the "endpoint" that is currently not filled)
+  ROOT::VecOps::RVec<edm4hep::Vector3d> get_endPoint(ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind );
 
   /// return the end point x of the input MCParticles
   ROOT::VecOps::RVec<float> get_endPoint_x(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
@@ -150,6 +180,21 @@ namespace MCParticle{
 
   /// return the size of the input collection
   int get_n(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
+  /// return the angle (3D) between two MCParticles :
+  ROOT::VecOps::RVec<float> AngleBetweenTwoMCParticles( ROOT::VecOps::RVec<edm4hep::MCParticleData> p1, ROOT::VecOps::RVec<edm4hep::MCParticleData> p2 );
+
+  /// return the list of stable particles from the decay of a mother particle, looking at the full decay chain recursively. i is the mother index in the Particle block
+  std::vector<int> list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
+
+  /// return the list of particles from the decay of a mother particle. i is the mother index in the Particle block.
+  std::vector<int> list_of_particles_from_decay( int i, 
+						 ROOT::VecOps::RVec<edm4hep::MCParticleData> in, 
+						 ROOT::VecOps::RVec<int> ind) ;
+
+  /// returns one MCParticle selected by its index in the particle block
+  edm4hep::MCParticleData sel_byIndex( int idx, ROOT::VecOps::RVec<edm4hep::MCParticleData> in) ;
+
 
 }
 #endif
