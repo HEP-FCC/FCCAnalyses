@@ -44,7 +44,7 @@ class analysis():
                # create branch with muon energy 
                .Define("selected_muons_e",     "getRP_e(selected_muons)")
                # find zed candidates from  di-muon resonances  
-               .Define("zed_leptonic",         "ResonanceBuilder(23, 91)(selected_muons)")
+               .Define("zed_leptonic",         "ResonanceBuilder(91)(selected_muons)")
                # write branch with zed mass
                .Define("zed_leptonic_m",       "getRP_mass(zed_leptonic)")
                # write branch with zed transverse momenta

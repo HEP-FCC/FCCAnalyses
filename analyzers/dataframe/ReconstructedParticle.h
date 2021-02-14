@@ -11,11 +11,9 @@
 #include "edm4hep/ParticleIDData.h"
 
 
-/// TO BE MOVED LATER
 struct ResonanceBuilder {
-  int m_resonance_pdgid;
   float m_resonance_mass;
-  ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass);
+  ResonanceBuilder(float arg_resonance_mass);
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs);
 };
 

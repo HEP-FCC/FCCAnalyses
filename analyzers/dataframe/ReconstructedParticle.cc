@@ -1,8 +1,7 @@
 #include "ReconstructedParticle.h"
 
 
-//TOBEMOVED LATER
-ResonanceBuilder::ResonanceBuilder(int arg_resonance_pdgid, float arg_resonance_mass) {m_resonance_pdgid = arg_resonance_pdgid; m_resonance_mass = arg_resonance_mass;}
+ResonanceBuilder::ResonanceBuilder(float arg_resonance_mass) {m_resonance_mass = arg_resonance_mass;}
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ResonanceBuilder::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   int n = legs.size();
@@ -11,7 +10,6 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ResonanceBuilder::operato
     std::fill(v.end() - 2, v.end(), true);
     do {
       edm4hep::ReconstructedParticleData reso;
-      //reso.pdg = m_resonance_pdgid;
       TLorentzVector reso_lv; 
       for (int i = 0; i < n; ++i) {
           if (v[i]) {
