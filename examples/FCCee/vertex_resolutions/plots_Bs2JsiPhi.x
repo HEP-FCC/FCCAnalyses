@@ -2,9 +2,6 @@
 
 TChain* events = new TChain("events","events");
 events -> Add("Bs2JpsiPhi_evtgen.root");
-events -> Add("Bs2JpsiPhi_evtgen_2.root");
-events -> Add("Bs2JpsiPhi_evtgen_3.root");
-events -> Add("Bs2JpsiPhi_evtgen_4.root");
 
 
 TString cut0 = "BsMCDecayVertex.position.z < 1e10" ;   // a Bs -> mumuKK has been found in MCParticle
@@ -31,24 +28,32 @@ tt.DrawLatexNDC(0.2,0.96,"B_{s} #rightarrow J/#psi #phi #rightarrow #mu#muKK");
 gPad -> SetLogy(1);
 //c1->SaveAs("plots/Bs2JPsiPhi_chi2.pdf");
 
+
+TCanvas* c2 = new TCanvas("pulls","pulls");
+c2 -> Divide(2,2);
+
 TString cut = cut0+" && BsVertex.chi2 < 10";
 
+c2->cd(1);
 // Pulls of the vertex in x, y, z
 TH1F* px = new TH1F("px",";Pull x_{vtx}; a.u.",100,-5,5) ;
 events->Draw("(BsVertex.position.x-BsMCDecayVertex.x[0])/TMath::Sqrt(BsVertex.covMatrix[0])>>px",cut);
 
+c2->cd(2);
 TH1F* py = new TH1F("py",";Pull y_{vtx}; a.u.",100,-5,5);
 events->Draw("(BsVertex.position.y-BsMCDecayVertex.y[0])/TMath::Sqrt(BsVertex.covMatrix[3])>>py",cut);
 
+c2->cd(3);
 TH1F* pz = new TH1F("pz",";Pull z_{vtx}; a.u.",100,-5,5);
 events->Draw("(BsVertex.position.z-BsMCDecayVertex.z[0])/TMath::Sqrt(BsVertex.covMatrix[5])>>pz",cut);
-
-TCanvas* c1 = new TCanvas("pulls","pulls");
 px->Draw(); px->Fit("gaus");
 tt.DrawLatexNDC(0.2,0.96,"B_{s} #rightarrow J/#psi #phi #rightarrow #mu#muKK");
 
 
 // resolutions on the Bs decay vertex :
+TCanvas* c2r = new TCanvas("reso","reso");
+c2r->Divide(2,2);
+c2r->cd(1);
 TH1F* hx = new TH1F("hx",";(vtx_{reco} - vtx_{gen}).x (#mum); Events",100,-40,40);
 events->Draw("1e3*(BsVertex.position.x-BsMCDecayVertex.x[0]) >>hx",cut);
 
@@ -60,10 +65,12 @@ ff->SetParameter(4,1e-2) ;
 ff->SetParameter(5,15) ;
 hx->Fit("ff","l") ;
 
+c2r->cd(2);
 TH1F* hy = new TH1F("hy",";(vtx_{reco} - vtx_{gen}).y (#mum); Events",100,-40,40);
 events->Draw("1e3*(BsVertex.position.y-BsMCDecayVertex.y[0]) >>hy",cut);
 hy->Fit("ff","l");
 
+c2r->cd(3);
 TH1F* hz = new TH1F("hz",";(vtx_{reco} - vtx_{gen}).z (#mum); Events",100,-40,40);
 events->Draw("1e3*(BsVertex.position.z-BsMCDecayVertex.z[0]) >>hz",cut);
 hz->Fit("ff","l");
@@ -73,6 +80,7 @@ hz->Fit("ff","l");
 
 // resolution on flight  distance :
 
+TCanvas* c3 = new TCanvas("fd","fd");
 
 TString fld = "TMath::Sqrt( pow( 1e3*BsVertex.position.x, 2) + pow( 1e3*BsVertex.position.y,2) + pow( 1e3*BsVertex.position.z,2))";
 TString fld_gen = "TMath::Sqrt( pow( 1e3*BsMCDecayVertex.x[0], 2) + pow( 1e3*BsMCDecayVertex.y[0],2) + pow( 1e3*BsMCDecayVertex.z[0],2)   )";
@@ -83,6 +91,8 @@ events->Draw(fld_res+ " >> hfld", cut);
 hfld->Fit("gaus");
 tt.DrawLatexNDC(0.2,0.96,"B_{s} #rightarrow J/#psi #phi #rightarrow #mu#muKK");
 
+
+TCanvas* c4 = new TCanvas("pull_fd","pull_fd");
 
 // Pull of the flight distance :
 
@@ -99,9 +109,15 @@ TH1F* h_fld_pull = new TH1F("h_fld_pull","; Pull flight distance; a.u.",100,-5,5
 events->Draw(fld_pull+" >> h_fld_pull" , cut);
 
 
+TCanvas* c5 = new TCanvas("profiles","profiles");
+c5->Divide(2,2);
+
 TString cut4 = cut + " && n_BsTracks == 4";
 
+TString fld_unc_mum = "1000*"+fld_unc;
+
 // Profile of the flight distance resolution versus the uncertainty on the FD, nTracks = 4
+c5->cd(1);
 TProfile* pro_unc = new TProfile("pro_unc",";uncertainty on the FD (#mum); flight distance (rec-true) (#mum)", 4,10.,50.,-70,70,"s");
 events->Draw(fld_res+":"+fld_unc_mum+" >>pro_unc",cut4);
 pro_unc->Draw();
@@ -111,6 +127,7 @@ tt.DrawLatexNDC(0.2,0.9,"N( B_{s} tracks ) = 4");
 //c1->SaveAs("plots/profile_FD_uncertainty_on_FD_Ntra4.pdf");
 
 // Profile of the flight distance resolution versus the theta of the Bs
+c5->cd(2);
 TProfile* ptheta = new TProfile("ptheta",";#theta of B_{s} (rad); flight distance (rec-true) (#mum)",10,0.,TMath::Pi(),-70.,70.,"s");
 events->Draw(fld_res+":Bs_theta >>ptheta",cut4);
 tt.DrawLatexNDC(0.2,0.96,"B_{s} #rightarrow J/#psi #phi #rightarrow #mu#muKK");
@@ -120,6 +137,7 @@ gPad->SetGridy(1);
 //c1->SaveAs("plots/profile_FD_theta_Bs.pdf");
 
 // Profile of the flight distance resolution versus the flight distance
+c5->cd(3);
 TProfile* pfld = new TProfile("pfld",";flight distance (mm); flight distance (rec-true) (#mum)", 4,0.,12.,-70,70,"s");
 events->Draw(fld_res+":"+fld_mm+" >>pfld",cut4);
 tt.DrawLatexNDC(0.2,0.96,"B_{s} #rightarrow J/#psi #phi #rightarrow #mu#muKK");
@@ -127,11 +145,16 @@ tt.DrawLatexNDC(0.7,0.9,"N( B_{s} tracks ) = 4");
 //c1->SaveAs("plots/profile_FDreso_FD.pdf");
 
 
+TCanvas* c6 = new TCanvas("distances","distances");
+c6->Divide(2,2);
 // angular separations
+c6->cd(1);
 TH1F* dmax = new TH1F("dmax",";#Delta#alpha max (rad); a.u.",100,0.,1.);
-events->Draw("deltaAlpha_max >>dmax",cut)
+events->Draw("deltaAlpha_max >>dmax",cut);
+c6->cd(2);
 TH1F* dmin = new TH1F("dmin",";#Delta#alpha min (rad); a.u.",100,0.,0.2);
-events->Draw("deltaAlpha_min >>dmin",cut)
+events->Draw("deltaAlpha_min >>dmin",cut);
+c6->cd(3);
 TH1F* dave = new TH1F("dave",";#Delta#alpha average (rad); a.u.",100,0.,1);
 events->Draw("deltaAlpha_ave>>dave",cut);
 
