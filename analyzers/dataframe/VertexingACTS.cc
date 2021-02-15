@@ -76,7 +76,7 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   // The vertex finder state
   Finder::State state;
 
-  std::vector<Acts::BoundTrackParameters> Mytracks;
+  std::vector<const Acts::BoundTrackParameters*> Mytracks;
 
   int Ntr = tracks.size();
   Double_t b = -0.29988*2. / 2.;
