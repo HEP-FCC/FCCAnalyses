@@ -23,13 +23,19 @@
 
 #include "TMath.h"
 using namespace VertexingACTS;
+using namespace Acts::UnitLiterals;
 
 bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
+  using Covariance = Acts::BoundSymMatrix;
 
   std::any myContext;
 
+  // Create a test context
+  Acts::GeometryContext geoContext = Acts::GeometryContext();
+  Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
+
   // Set up EigenStepper
-  Acts::ConstantBField bField(2.);
+  Acts::ConstantBField bField(Acts::Vector3D(0., 0., 2_T));
   Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
 
   // Set up the propagator
@@ -37,8 +43,7 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   auto propagator = std::make_shared<Propagator>(stepper);
 
   // Set up ImpactPointEstimator
-  using IPEstimator =
-    Acts::ImpactPointEstimator<Acts::BoundTrackParameters, Propagator>;
+  using IPEstimator = Acts::ImpactPointEstimator<Acts::BoundTrackParameters, Propagator>;
   IPEstimator::Config ipEstimatorCfg(bField, propagator);
   IPEstimator ipEstimator(ipEstimatorCfg);
 
@@ -54,15 +59,14 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   Acts::AnnealingUtility annealingUtility(annealingConfig);
 
   // Set up the vertex fitter with user-defined annealing
-  using Fitter =
-      Acts::AdaptiveMultiVertexFitter<Acts::BoundTrackParameters, Linearizer>;
+  using Fitter = Acts::AdaptiveMultiVertexFitter<Acts::BoundTrackParameters, Linearizer>;
   Fitter::Config fitterCfg(ipEstimator);
   fitterCfg.annealingTool = annealingUtility;
   Fitter fitter(fitterCfg);
 
   // Set up the vertex seed finder
-  using SeedFinder = Acts::TrackDensityVertexFinder<
-      Fitter, Acts::GaussianTrackDensity<Acts::BoundTrackParameters>>;
+  using SeedFinder = Acts::TrackDensityVertexFinder<Fitter, 
+						    Acts::GaussianTrackDensity<Acts::BoundTrackParameters>>;
   SeedFinder seedFinder;
 
   // The vertex finder type
@@ -78,8 +82,8 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   // The vertex finder state
   Finder::State state;
 
-  std::vector<const Acts::BoundTrackParameters*> Mytracks;
-
+  //std::vector<const Acts::BoundTrackParameters*> Mytracks;
+  std::vector<Acts::BoundTrackParameters> allTracks;
   int Ntr = tracks.size();
   Double_t b = -0.29988*2. / 2.;
   for (Int_t i = 0; i < Ntr; i++)
@@ -92,39 +96,41 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
       double z0 = ti.Z0 ;
       double theta = TMath::ATan2(1.0,ti.tanLambda) ;
       double qOverP = omega / (b*TMath::Sqrt(1 + ti.tanLambda*ti.tanLambda));	
-      Acts::BoundVector newTrackParams;
+      Acts::BoundTrackParameters::ParametersVector newTrackParams;
       newTrackParams << d0, z0, phi0, theta, qOverP ,0.0;
 
       // Get track covariance vector
-      std::vector<double> trkCovVec(36, 0.0); 
-	//ti.covMatrix;
-	
-      trkCovVec.at(0)=0.001;
-      trkCovVec.at(7)=0.001;
-      trkCovVec.at(14)=0.001;
-      trkCovVec.at(21)=0.001;
-      trkCovVec.at(28)=0.001;
+      Covariance covMat;
 
-      // Construct track covariance
-      Acts::BoundSymMatrix covMat =
-	Eigen::Map<Acts::BoundSymMatrix>(trkCovVec.data());
+      covMat << 0.001, 0., 0., 0., 0., 0., 0., 0.001, 0., 0., 0.,
+        0., 0., 0., 0.001, 0., 0., 0., 0., 0., 0., 0.001, 0.,
+        0., 0., 0., 0., 0., 0.001, 0., 0., 0., 0., 0., 0., 1.;
+      
 
       // Create track parameters and add to track list
       std::shared_ptr<Acts::PerigeeSurface> perigeeSurface =
 	Acts::Surface::makeShared<Acts::PerigeeSurface>(Acts::Vector3D(0., 0., 0.));
-      Mytracks.push_back(Acts::BoundTrackParameters(myContext, std::move(covMat),
-						    newTrackParams, perigeeSurface));
+
+      allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
+
+      //Mytracks.push_back(Acts::BoundTrackParameters(myContext, std::move(covMat),
+      //					    newTrackParams, perigeeSurface));
     }
   
-  const auto& inputTrackPointers = Mytracks;
+
+  std::vector<const Acts::BoundTrackParameters*> tracksPtr;
+  for (const auto& trk : allTracks) {
+    tracksPtr.push_back(&trk);
+  }
 
   // Default vertexing options, this is where e.g. a constraint could be set
-  using VertexingOptions = Acts::VertexingOptions<Acts::BoundTrackParameters>;
-  //VertexingOptions finderOpts(ctx.geoContext, ctx.magFieldContext);
-  VertexingOptions finderOpts(myContext, myContext);
 
+  Acts::VertexingOptions<Acts::BoundTrackParameters> vertexingOptions(geoContext,
+								      magFieldContext);
+  //  vertexingOptions.vertexConstraint = std::get<BeamSpotData>(csvData);
+ 
   // find vertices
-  auto result = finder.find(inputTrackPointers, finderOpts, state);
+  auto result = finder.find(tracksPtr, vertexingOptions, state);
   if (not result.ok()) {
     std::cout << "Error in vertex finder: " << result.error().message() << std::endl;
     return false;

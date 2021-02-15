@@ -40,7 +40,7 @@ target_include_directories(FCCAnalyses  PUBLIC
 	      "/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/acts-1.02.0-3qlgwswd5svjsvyksbzaqi2iegbx5lw2/include"
 
 )
-target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY})
+target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY} "/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/acts-1.02.0-3qlgwswd5svjsvyksbzaqi2iegbx5lw2/lib64")
 
 set_target_properties(FCCAnalyses PROPERTIES
   PUBLIC_HEADER "${headers}")
