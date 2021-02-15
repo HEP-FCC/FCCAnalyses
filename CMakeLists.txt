@@ -6,6 +6,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(FCCAnalyses CXX)
 
+#needed for ACTS
+cmake_policy(SET CMP0057 NEW)
+
 find_package(ROOT COMPONENTS ROOTDataFrame)
 include(${ROOT_USE_FILE})
 
@@ -22,6 +25,7 @@ include(GNUInstallDirs)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 find_package(FastJet)
+find_package( Acts COMPONENTS Core )
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")

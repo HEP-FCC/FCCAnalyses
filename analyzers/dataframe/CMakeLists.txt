@@ -17,7 +17,7 @@ find_package(FastJet)
 
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
 
-include_directories(${EDM4HEP_INCLUDE_DIRS} ${podio_INCLUDE_DIR} ${FASTJET_INCLUDE_DIR} ${FCCEDM_INCLUDE_DIRS})
+include_directories(${EDM4HEP_INCLUDE_DIRS} ${podio_INCLUDE_DIR} ${FASTJET_INCLUDE_DIR} ${FCCEDM_INCLUDE_DIRS}  "/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/acts-1.02.0-3qlgwswd5svjsvyksbzaqi2iegbx5lw2/include")
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses MCParticle.h
 					ReconstructedParticle.h
@@ -26,6 +26,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses MCParticle.h
 					Algorithm.h
 					JetClustering.h
 					Vertexing.h
+					VertexingACTS.h					
 					LINKDEF LinkDef.h)
 
 
@@ -36,6 +37,7 @@ target_include_directories(FCCAnalyses  PUBLIC
         ${CMAKE_SOURCE_DIR}/analyzers/dataframe
         "${FCCEDM_INCLUDE_DIRS}"
 	      ${FASTJET_INCLUDE_DIR}
+	      "/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/acts-1.02.0-3qlgwswd5svjsvyksbzaqi2iegbx5lw2/include"
 
 )
 target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY})
