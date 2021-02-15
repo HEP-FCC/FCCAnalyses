@@ -26,6 +26,8 @@ using namespace VertexingACTS;
 
 bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
 
+  std::any myContext;
+
   // Set up EigenStepper
   Acts::ConstantBField bField(2.);
   Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
@@ -110,7 +112,7 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
       // Create track parameters and add to track list
       std::shared_ptr<Acts::PerigeeSurface> perigeeSurface =
 	Acts::Surface::makeShared<Acts::PerigeeSurface>(Acts::Vector3D(0., 0., 0.));
-      Mytracks.push_back(Acts::BoundTrackParameters(std::any, std::move(covMat),
+      Mytracks.push_back(Acts::BoundTrackParameters(myContext, std::move(covMat),
 						    newTrackParams, perigeeSurface));
     }
   
@@ -119,7 +121,7 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   // Default vertexing options, this is where e.g. a constraint could be set
   using VertexingOptions = Acts::VertexingOptions<Acts::BoundTrackParameters>;
   //VertexingOptions finderOpts(ctx.geoContext, ctx.magFieldContext);
-  VertexingOptions finderOpts(std::any, std::any);
+  VertexingOptions finderOpts(myContext, myContext);
 
   // find vertices
   auto result = finder.find(inputTrackPointers, finderOpts, state);
