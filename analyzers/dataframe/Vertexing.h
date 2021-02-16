@@ -29,6 +29,17 @@ This represents a set functions and utilities to perfom vertexing from a list of
 namespace Vertexing{
 
 
+  /// Structure to keep useful track information that is related to the vertex
+  struct FCCAnalysesVertex{
+     edm4hep::VertexData vertex;
+     int ntracks;
+     ROOT::VecOps::RVec<int> reco_ind;
+     ROOT::VecOps::RVec<float> reco_chi2;
+     ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
+     ROOT::VecOps::RVec< TVectorD >  updated_track_parameters;
+     ROOT::VecOps::RVec<float> final_track_phases;
+  };
+
   /// Selection of particles based on the d0 / z0 significances of the associated track
   struct selTracks {
     selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_min, float arg_z0sig_max)  ;
@@ -47,11 +58,18 @@ namespace Vertexing{
 									   ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 									   TVector3 MC_EventPrimaryVertex) ;
 
-  /// Updated vertex (code from Franco Bedeschi), in millimeters
-  edm4hep::VertexData  VertexFitter( int Primary,
-				     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-				     ROOT::VecOps::RVec<edm4hep::TrackState> tracks ) ;
+  /// Vertex (code from Franco Bedeschi): passing the recoparticles
+  FCCAnalysesVertex  VertexFitter( int Primary, 
+				   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+                                   ROOT::VecOps::RVec<edm4hep::TrackState> alltracks ) ;
+
+  /// Vertex (code from Franco Bedeschi): passing the tracks:
+  FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks );
+
+  /// Retrieve the edm4hep::VertexData from the vertex object
+  edm4hep::VertexData get_VertexData( FCCAnalysesVertex TheVertex ) ;
   
+
   /// Return the number of tracks in a given track collection
   int get_nTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
   
@@ -65,6 +83,9 @@ namespace Vertexing{
   TVectorD Fill_a(TVectorD par, Double_t phi) ;
   TVectorD Fill_x0(TVectorD par) ;
   TVectorD Fill_x(TVectorD par, Double_t phi) ;
+
+  TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q);
+  TVector3 ParToP(TVectorD Par);
 }
 #endif
 

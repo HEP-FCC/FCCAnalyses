@@ -176,3 +176,118 @@ ROOT::VecOps::RVec<float>  getRP2MC_p_func::operator() (ROOT::VecOps::RVec<int> 
   }
   return result;
 }
+
+
+// -------------------------------------------------------------------------------------------------
+
+// -- select RecoParticles associated with MC particles of a given PDG_id
+//    Example use case: muons from JPsi, can not use the Muon collection because it oontains only the isolated muons
+
+selRP_PDG::selRP_PDG( int arg_pdg, bool arg_chargedOnly ): m_PDG(arg_pdg), m_chargedOnly(arg_chargedOnly)  {} ;
+std::vector<edm4hep::ReconstructedParticleData>  selRP_PDG::operator() (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+
+  std::vector<edm4hep::ReconstructedParticleData> result;
+
+  for (int i=0; i<recind.size();i++) {
+      int reco_idx = recind.at(i);
+      int mc_idx = mcind.at(i);
+      int pdg = mc.at(mc_idx).PDG ;
+      if ( m_chargedOnly ) {
+        if ( reco.at( reco_idx ).charge ==0 ) continue;
+      }
+      if ( std::abs( pdg ) == std::abs( m_PDG)  ) {
+         result.push_back( reco.at( reco_idx ) ) ;
+      }
+  }
+  return result;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+// -- select RecoParticles associated with a charged hadron :
+// -- take all charged RecoParticles that are not associated with  a MC lepton
+
+std::vector<edm4hep::ReconstructedParticleData> selRP_ChargedHadrons (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+
+  std::vector<edm4hep::ReconstructedParticleData> result;
+
+  for (int i=0; i<recind.size();i++) {
+      int reco_idx = recind.at(i);
+      int mc_idx = mcind.at(i);
+      int pdg = mc.at(mc_idx).PDG ;
+      if ( reco.at( reco_idx ).charge == 0 ) continue;
+      if ( std::abs( pdg ) == 11 || std::abs( pdg ) == 13 || std::abs( pdg ) == 15 ) continue ;
+      result.push_back( reco.at( reco_idx ) ) ;
+  }
+
+  return result;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+// -- select RecoParticles associated with a list of MC particles (passed by their index in the Particle block)
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selRP_matched_to_list( ROOT::VecOps::RVec<int>  mcParticles_indices,
+                ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind,
+                ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  results;
+
+  edm4hep::ReconstructedParticleData dummy;
+  dummy.energy = -9999;
+  dummy.tracks_begin = -9999 ;
+
+  for ( auto & idx: mcParticles_indices ) {
+
+    // exclude unstable particles - e.g. the list may contain the index of
+    // the mother
+    if ( mc.at(idx).generatorStatus != 1 ) continue ;
+
+    // is this MC particle associated with a Reco particle :
+    bool found = false;
+    for (int i=0; i<recind.size();i++) {
+      int reco_idx = recind.at(i);
+      int mc_idx = mcind.at(i);
+      if ( mc_idx == idx ) {
+        found = true;
+        results.push_back( reco.at( reco_idx ) );
+        break;
+      }
+    }
+    // no Reco particle has been found for idx: add a dummy particle such that
+    // one preserves the mapping with the input list
+    if ( ! found) results.push_back( dummy );
+
+
+  } // loop over the indices in the list
+
+  return results;
+
+}
+
+
+
+
+// -------------------------------------------------------------------------------------------------
+
+int getTrack2MC_index (  int track_index,
+                                        ROOT::VecOps::RVec<int> recind,
+                                        ROOT::VecOps::RVec<int> mcind,
+                                        ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
+
+  int mc_index = -1;
+
+      for (int i=0; i<recind.size();i++) {
+          int reco_idx = recind.at(i);
+          // keep only charged particles
+          if ( reco.at( reco_idx ).charge == 0 ) continue;
+          mc_index = mcind.at(i);
+          if ( reco.at( reco_idx ).tracks_begin == track_index ) return mc_index;
+      }
+ return mc_index;
+}
+
+
+
+
+

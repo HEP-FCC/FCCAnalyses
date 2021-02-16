@@ -42,7 +42,7 @@ class analysis():
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
-               .Define("ntracks","Vertexing::get_nTracks(EFlowTrack_1)")
+               .Define("ntracks","getTK_n(EFlowTrack_1)")
 
                # Select tracks with d0 and z0 significance < 3 sigmas
 		   # note: d0 and z0 are defined w.r.t. (0,0,0)
@@ -51,7 +51,8 @@ class analysis():
                .Define("SelTracks","Vertexing::selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
                .Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
-               .Define("Vertex",  "Vertexing::VertexFitter( 1, SelTracks, EFlowTrack_1 )")	# primary vertex, in mm
+               .Define("VertexObject",  "Vertexing::VertexFitter( 1, SelTracks, EFlowTrack_1 )")
+               .Define("Vertex",  "get_VertexData( VertexObject )")    # primary vertex, in mm
                
                # Select primary tracks based on the matching to MC
 		  # This can be used  to select primary tracks when the
@@ -61,7 +62,8 @@ class analysis():
                .Define("PrimaryTracks",  "Vertexing::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
                .Define("nPrimaryTracks", "getRP_n(PrimaryTracks)")
                ## Reconstruct the vertex from these primary tracks :
-               .Define("Vertex_primaryTracks",  "Vertexing::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")   # primary vertex, in mm
+               .Define("VertexObject_primaryTracks",  "Vertexing::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
+               .Define("Vertex_primaryTracks",   "get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
 
         )
 
