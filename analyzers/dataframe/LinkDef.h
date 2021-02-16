@@ -23,26 +23,6 @@
 #pragma link C++ class getRP_combination;
 
 
-//Reconstructed Particles
-#pragma link C++ class selRP_pT;
-#pragma link C++ class selRP_p;
-#pragma link C++ function getRP_p;
-#pragma link C++ function getRP_pt;
-#pragma link C++ function getRP_px;
-#pragma link C++ function getRP_py;
-#pragma link C++ function getRP_pz;
-#pragma link C++ function getRP_eta;
-#pragma link C++ function getRP_y;
-#pragma link C++ function getRP_theta;
-#pragma link C++ function getRP_phi;
-#pragma link C++ function getRP_e;
-#pragma link C++ function getRP_mass;
-#pragma link C++ function getRP_charge;
-#pragma link C++ function getRP_tlv;
-#pragma link C++ function mergeParticles;
-#pragma link C++ function get_n_particles;
-
-
 //MC Particles
 #pragma link C++ function getMC_p;
 #pragma link C++ function MCParticles::get_px;
