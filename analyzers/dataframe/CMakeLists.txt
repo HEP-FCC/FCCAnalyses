@@ -12,14 +12,15 @@ find_package(podio)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 find_package(FastJet)
-find_package( Boost )
+#find_package( Boost )
 
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
 
 include_directories(${EDM4HEP_INCLUDE_DIRS} 
 		    ${podio_INCLUDE_DIR} ${FASTJET_INCLUDE_DIR} ${FCCEDM_INCLUDE_DIRS}  
-		    "/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/acts-1.02.0-3qlgwswd5svjsvyksbzaqi2iegbx5lw2/include" 
-		    ${Boost_INCLUDE_DIRS})
+		    ${acts_INCLUDE_DIR} 
+		    #${Boost_INCLUDE_DIRS}
+		    )
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses MCParticle.h
 					ReconstructedParticle.h
@@ -36,13 +37,13 @@ file(GLOB sources *.cc)
 file(GLOB headers *.h)
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
 target_include_directories(FCCAnalyses  PUBLIC
-        ${CMAKE_SOURCE_DIR}/analyzers/dataframe
-        "${FCCEDM_INCLUDE_DIRS}"
-	      ${FASTJET_INCLUDE_DIR}
-	      "/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/acts-1.02.0-3qlgwswd5svjsvyksbzaqi2iegbx5lw2/include"
+                           ${CMAKE_SOURCE_DIR}/analyzers/dataframe
+                           ${FCCEDM_INCLUDE_DIRS}
+	                   ${FASTJET_INCLUDE_DIR}
+		           ${acts_INCLUDE_DIR} )
 
-)
-target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY} "/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/acts-1.02.0-3qlgwswd5svjsvyksbzaqi2iegbx5lw2/lib64/libActsCore.so" ActsCore ${Boost_LIBRARIES})
+target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY} ${acts_LIBRARY} ActsCore )
+#${Boost_LIBRARIES})
 
 set_target_properties(FCCAnalyses PROPERTIES
   PUBLIC_HEADER "${headers}")
