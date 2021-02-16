@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['tlv_99',['tlv',['../_f_c_c_analyses_8cc.html#af3fef7140d6a2dc5b03592a9f6413f4d',1,'tlv(ROOT::VecOps::RVec&lt; fcc::LorentzVector &gt; in):&#160;FCCAnalyses.cc'],['../_f_c_c_analyses_8h.html#af3fef7140d6a2dc5b03592a9f6413f4d',1,'tlv(ROOT::VecOps::RVec&lt; fcc::LorentzVector &gt; in):&#160;FCCAnalyses.cc']]]
+  ['vertexfitter_383',['VertexFitter',['../namespace_vertexing.html#a64d3f82065cd53fa90e15474918df425',1,'Vertexing']]],
+  ['vertexfitter_5ftk_384',['VertexFitter_Tk',['../namespace_vertexing.html#a5beab6624eeb8bb54c09ba5f3a6f5871',1,'Vertexing']]]
 ];

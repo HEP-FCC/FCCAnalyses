@@ -106,6 +106,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structget_r_p2_m_c__p__func.html">getRP2MC_p_func</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]  <a href="structget_r_p2_m_c__p__func.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsel_r_p___p_d_g.html">selRP_PDG</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select ReconstructedParticles matched with a MC particle of a given PDG_id  <a href="structsel_r_p___p_d_g.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -142,6 +145,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a16b5c373e11405b9696173d0ccdee31d"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_reconstructed_particle2_m_c_8h.html#a16b5c373e11405b9696173d0ccdee31d">getRP2MC_parentid</a> (ROOT::VecOps::RVec&lt; int &gt; recin, ROOT::VecOps::RVec&lt; int &gt; mcin, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; reco, ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; mc, ROOT::VecOps::RVec&lt; int &gt; parents)</td></tr>
 <tr class="memdesc:a16b5c373e11405b9696173d0ccdee31d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the D0 of a track to a reconstructed particle.  <a href="_reconstructed_particle2_m_c_8h.html#a16b5c373e11405b9696173d0ccdee31d">More...</a><br /></td></tr>
 <tr class="separator:a16b5c373e11405b9696173d0ccdee31d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affa1de40e67a8706c10a6e903fc0092c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_reconstructed_particle2_m_c_8h.html#affa1de40e67a8706c10a6e903fc0092c">selRP_ChargedHadrons</a> (ROOT::VecOps::RVec&lt; int &gt; recind, ROOT::VecOps::RVec&lt; int &gt; mcind, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; reco, ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; mc)</td></tr>
+<tr class="memdesc:affa1de40e67a8706c10a6e903fc0092c"><td class="mdescLeft">&#160;</td><td class="mdescRight">select ReconstructedParticles matched with a MC charged hadrons  <a href="_reconstructed_particle2_m_c_8h.html#affa1de40e67a8706c10a6e903fc0092c">More...</a><br /></td></tr>
+<tr class="separator:affa1de40e67a8706c10a6e903fc0092c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08694387082f4a51c905b20367937093"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_reconstructed_particle2_m_c_8h.html#a08694387082f4a51c905b20367937093">selRP_matched_to_list</a> (ROOT::VecOps::RVec&lt; int &gt; mcParticles_indices, ROOT::VecOps::RVec&lt; int &gt; recind, ROOT::VecOps::RVec&lt; int &gt; mcind, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; reco, ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; mc)</td></tr>
+<tr class="memdesc:a08694387082f4a51c905b20367937093"><td class="mdescLeft">&#160;</td><td class="mdescRight">select ReconstructedParticles matched to the (stable) MC particles whose indices are passed in a list  <a href="_reconstructed_particle2_m_c_8h.html#a08694387082f4a51c905b20367937093">More...</a><br /></td></tr>
+<tr class="separator:a08694387082f4a51c905b20367937093"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93556173862e0f2da0ebeddb10b8ac5f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_reconstructed_particle2_m_c_8h.html#a93556173862e0f2da0ebeddb10b8ac5f">getTrack2MC_index</a> (int track_index, ROOT::VecOps::RVec&lt; int &gt; recind, ROOT::VecOps::RVec&lt; int &gt; mcind, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; reco)</td></tr>
+<tr class="memdesc:a93556173862e0f2da0ebeddb10b8ac5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the index of the MC particle that is associated to a given track (via the track-reco association)  <a href="_reconstructed_particle2_m_c_8h.html#a93556173862e0f2da0ebeddb10b8ac5f">More...</a><br /></td></tr>
+<tr class="separator:a93556173862e0f2da0ebeddb10b8ac5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="abbeb91b5886110583532feb95776313b"></a>
@@ -612,11 +624,143 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a93556173862e0f2da0ebeddb10b8ac5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93556173862e0f2da0ebeddb10b8ac5f">&#9670;&nbsp;</a></span>getTrack2MC_index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getTrack2MC_index </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>track_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>recind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>mcind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>reco</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>return the index of the MC particle that is associated to a given track (via the track-reco association) </p>
+
+</div>
+</div>
+<a id="affa1de40e67a8706c10a6e903fc0092c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affa1de40e67a8706c10a6e903fc0092c">&#9670;&nbsp;</a></span>selRP_ChargedHadrons()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;edm4hep::ReconstructedParticleData&gt; selRP_ChargedHadrons </td>
+          <td>(</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>recind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>mcind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>reco</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt;&#160;</td>
+          <td class="paramname"><em>mc</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>select ReconstructedParticles matched with a MC charged hadrons </p>
+
+</div>
+</div>
+<a id="a08694387082f4a51c905b20367937093"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08694387082f4a51c905b20367937093">&#9670;&nbsp;</a></span>selRP_matched_to_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::VecOps::RVec&lt;edm4hep::ReconstructedParticleData&gt; selRP_matched_to_list </td>
+          <td>(</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>mcParticles_indices</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>recind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>mcind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td>
+          <td class="paramname"><em>reco</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt;&#160;</td>
+          <td class="paramname"><em>mc</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>select ReconstructedParticles matched to the (stable) MC particles whose indices are passed in a list </p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Feb 13 2021 14:27:00 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 16 2021 13:11:13 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vertexfitter_331',['VertexFitter',['../namespace_vertexing.html#a2ea4bddc55891496dd84ce71d9759e1e',1,'Vertexing']]]
+  ['thrustfit_382',['thrustFit',['../structthrust_fit.html#ad330dd374897a4f01e01634058f5f1ad',1,'thrustFit']]]
 ];
