@@ -10,7 +10,8 @@
 
 namespace VertexingACTS{
 
-bool initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+  //bool initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+  bool initialize(std::vector<edm4hep::TrackState> tracks);
 
 }
 
