@@ -16,8 +16,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_genStatus::operator
   return result;
 }
 
-MCParticle::sel_PDG::sel_PDG(int arg_pdg, bool arg_chargeconjugate) : m_pdg(arg_pdg), m_chargeconjugate( arg_chargeconjugate )  {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_PDG::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+MCParticle::sel_pdgID::sel_pdgID(int arg_pdg, bool arg_chargeconjugate) : m_pdg(arg_pdg), m_chargeconjugate( arg_chargeconjugate )  {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
@@ -54,8 +54,8 @@ bool MCParticle::get_decay::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleDa
   return result;
 }
 
-MCParticle::sel_pT::sel_pT(float arg_min_pt) : m_min_pt(arg_min_pt) {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_pT::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+MCParticle::sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_pt::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
