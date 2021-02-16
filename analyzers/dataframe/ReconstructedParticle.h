@@ -52,6 +52,14 @@ struct getAxisRP{
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 };
 
+
+/// return the angular separations (min / max / average) between a collection of particles
+struct angular_separation {
+  angular_separation( int arg_delta); //  0, 1, 2 = max, min, average
+  int m_delta = 0;
+  float operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) ;
+};
+
 /// return reconstructed particles
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> getRP(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 

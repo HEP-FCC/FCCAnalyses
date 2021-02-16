@@ -279,5 +279,43 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> getAxisRP::operator()(ROO
 }
 
 
+// Angular separation between the particles of a collection:
+//   arg_delta = 0 / 1 / 2 :   return delta_max, delta_min, delta_average
+
+angular_separation::angular_separation( int  arg_delta) : m_delta(arg_delta) {};
+
+float angular_separation::operator() ( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+
+ float result = -9999;
+
+ float dmax = -999;
+ float dmin = 999;
+ float sum = 0;
+ float npairs = 0;
+ for (int i=0; i < in.size(); i++) {
+  if ( in.at(i).energy < 0) continue;    // "dummy" particle - cf selRP_matched_to_list
+  TVector3 p1( in.at(i).momentum.x, in.at(i).momentum.y, in.at(i).momentum.z );
+  for (int j=i+1; j < in.size(); j++) {
+    if ( in.at(j).energy < 0) continue;   // "dummy" particle
+    TVector3 p2( in.at(j).momentum.x, in.at(j).momentum.y, in.at(j).momentum.z );
+    float delta_ij = fabs( p1.Angle( p2 ) );
+    if ( delta_ij > dmax) dmax = delta_ij;
+    if ( delta_ij < dmin) dmin = delta_ij;
+    sum = sum + delta_ij;
+    npairs ++;
+  }
+ }
+ float delta_max = dmax;
+ float delta_min = dmin;
+ float delta_ave = sum / npairs;
+
+ if (m_delta == 0 ) result = delta_max;
+ if (m_delta == 1 ) result = delta_min;
+ if (m_delta == 2 ) result = delta_ave;
+
+ return result;
+}
+
+
 
 

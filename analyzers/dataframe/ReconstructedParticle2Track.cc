@@ -112,10 +112,15 @@ ROOT::VecOps::RVec<edm4hep::TrackState> getRP2TRK( ROOT::VecOps::RVec<edm4hep::R
   result.reserve( in.size() );
   
   for (auto & p: in) {
-    if (p.tracks_begin<tracks.size()) {
+    if (p.tracks_begin >= 0 && p.tracks_begin<tracks.size()) {
 	result.push_back(tracks.at(p.tracks_begin) ) ;
     }
   }
  return result ;
+}
+
+int getTK_n(ROOT::VecOps::RVec<edm4hep::TrackState> x) {
+  int result =  x.size();
+  return result;
 }
 
