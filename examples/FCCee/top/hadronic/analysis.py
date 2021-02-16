@@ -32,10 +32,10 @@ class analysis():
         #df2 = (self.df.Range(10)
 
                .Alias("Jet3","Jet#3.index")
-               .Define("RP_px",          "getRP_px(ReconstructedParticles)")
-               .Define("RP_py",          "getRP_py(ReconstructedParticles)")
-               .Define("RP_pz",          "getRP_pz(ReconstructedParticles)")               
-               .Define("RP_e",           "getRP_e(ReconstructedParticles)")
+               .Define("RP_px",          "ReconstructedParticle::get_px(ReconstructedParticles)")
+               .Define("RP_py",          "ReconstructedParticle::get_py(ReconstructedParticles)")
+               .Define("RP_pz",          "ReconstructedParticle::get_pz(ReconstructedParticles)")               
+               .Define("RP_e",           "ReconstructedParticle::get_e(ReconstructedParticles)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
                .Define("jets",           "JetClustering::clustering(1, 0.5, 2, 6)(RP_px, RP_py, RP_pz, RP_e)")
@@ -44,8 +44,8 @@ class analysis():
                .Define("jets_pz",        "JetClustering::getJet_pz(jets)")
                
                        
-               .Define("JET_btag",       "getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
-               .Define("EVT_nbtag",      "getJet_ntags(JET_btag)")
+               .Define("JET_btag",       "ReconstructedParticle::getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
+               .Define("EVT_nbtag",      "ReconstructedParticle::getJet_ntags(JET_btag)")
                
                .Define('EVT_thrust',     'minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
                .Define('RP_thrustangle', 'axisCosTheta(EVT_thrust, RP_px, RP_py, RP_pz)')

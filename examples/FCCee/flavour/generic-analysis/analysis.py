@@ -8,10 +8,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-#Not in Namespace (works)
 _fcc  = ROOT.dummyloader
-#In namespace MCParticle (does not work)
-#_fcc  = ROOT.MCParticle.get_px
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -61,13 +58,13 @@ class analysis():
                .Define("MC_vertex_z",   "MCParticle::get_vertex_z(Particle)")
 
                
-               .Define("RP_p",          "getRP_p(ReconstructedParticles)")
-               .Define("RP_e",          "getRP_e(ReconstructedParticles)")
-               .Define("RP_px",         "getRP_px(ReconstructedParticles)")
-               .Define("RP_py",         "getRP_py(ReconstructedParticles)")
-               .Define("RP_pz",         "getRP_pz(ReconstructedParticles)")
-               .Define("RP_charge",     "getRP_charge(ReconstructedParticles)")
-               .Define("RP_mass",       "getRP_mass(ReconstructedParticles)")
+               .Define("RP_p",          "ReconstructedParticle::get_p(ReconstructedParticles)")
+               .Define("RP_e",          "ReconstructedParticle::get_e(ReconstructedParticles)")
+               .Define("RP_px",         "ReconstructedParticle::get_px(ReconstructedParticles)")
+               .Define("RP_py",         "ReconstructedParticle::get_py(ReconstructedParticles)")
+               .Define("RP_pz",         "ReconstructedParticle::get_pz(ReconstructedParticles)")
+               .Define("RP_charge",     "ReconstructedParticle::get_charge(ReconstructedParticles)")
+               .Define("RP_mass",       "ReconstructedParticle::get_mass(ReconstructedParticles)")
 
                #.Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")
                #.Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
@@ -130,14 +127,10 @@ class analysis():
                #.Define("SelTracks","selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
                #.Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
-               .Define("RP_thrusthemis0", "getAxisRP(0)(RP_thrustangle, ReconstructedParticles)")
-               .Define("RP_thrusthemis1", "getAxisRP(1)(RP_thrustangle, ReconstructedParticles)")
+               .Define("RP_thrusthemis0", "ReconstructedParticle::sel_axis(0)(RP_thrustangle, ReconstructedParticles)")
+               .Define("RP_thrusthemis1", "ReconstructedParticle::sel_axis(1)(RP_thrustangle, ReconstructedParticles)")
                .Define("RP_thrusthemis_emax", "if (EVT_thrusthemis0_e.at(0)>EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
                .Define("RP_thrusthemis_emin", "if (EVT_thrusthemis0_e.at(0)<EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
-               
-               #.Define("Vertex_thrusthemis_emin",  "VertexFB( 1, RP_thrusthemis_emin, EFlowTrack_1 )") # primary vertex
-               #.Define("Ntrack_thrusthemis_emin",  "getRP_n(RP_thrusthemis_emin)")
-
                )
 
         # select branches for output file

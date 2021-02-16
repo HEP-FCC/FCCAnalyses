@@ -32,27 +32,27 @@ class analysis():
                # define an alias for muon index collection
                .Alias("Muon0", "Muon#0.index")
                # define the muon collection
-               .Define("muons",  "getRP(Muon0, ReconstructedParticles)")
+               .Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
                #select muons on pT
-               .Define("selected_muons", "selRP_pT(10.)(muons)")
+               .Define("selected_muons", "ReconstructedParticle::sel_pt(10.)(muons)")
                # create branch with muon transverse momentum
-               .Define("selected_muons_pt", "getRP_pt(selected_muons)") 
+               .Define("selected_muons_pt", "ReconstructedParticle::get_pt(selected_muons)") 
                # create branch with muon rapidity
-               .Define("selected_muons_y",  "getRP_y(selected_muons)") 
+               .Define("selected_muons_y",  "ReconstructedParticle::get_y(selected_muons)") 
                # create branch with muon total momentum
-               .Define("selected_muons_p",     "getRP_p(selected_muons)")
+               .Define("selected_muons_p",     "ReconstructedParticle::get_p(selected_muons)")
                # create branch with muon energy 
-               .Define("selected_muons_e",     "getRP_e(selected_muons)")
+               .Define("selected_muons_e",     "ReconstructedParticle::get_e(selected_muons)")
                # find zed candidates from  di-muon resonances  
-               .Define("zed_leptonic",         "ResonanceBuilder(91)(selected_muons)")
+               .Define("zed_leptonic",         "ReconstructedParticle::resonanceBuilder(91)(selected_muons)")
                # write branch with zed mass
-               .Define("zed_leptonic_m",       "getRP_mass(zed_leptonic)")
+               .Define("zed_leptonic_m",       "ReconstructedParticle::get_mass(zed_leptonic)")
                # write branch with zed transverse momenta
-               .Define("zed_leptonic_pt",      "getRP_pt(zed_leptonic)")
+               .Define("zed_leptonic_pt",      "ReconstructedParticle::get_pt(zed_leptonic)")
                # calculate recoil of zed_leptonic
-               .Define("zed_leptonic_recoil",  "recoil(240)(zed_leptonic)")
+               .Define("zed_leptonic_recoil",  "ReconstructedParticle::recoilBuilder(240)(zed_leptonic)")
                # write branch with recoil mass
-               .Define("zed_leptonic_recoil_m","getRP_mass(zed_leptonic_recoil)") 
+               .Define("zed_leptonic_recoil_m","ReconstructedParticle::get_mass(zed_leptonic_recoil)") 
 
         )
 
