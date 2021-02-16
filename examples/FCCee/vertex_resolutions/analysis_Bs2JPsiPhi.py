@@ -205,6 +205,10 @@ class analysis():
                .Define("Bsdecay",  "MCParticle::get_decay(531, 443, false)(Particle, Particle1)")
                .Define("Bsbardecay",  "MCParticle::get_decay(-531, 443, false)(Particle, Particle1)")
 
+	       # to get the distribution of the d0 of the mu+ track
+	       .Define("RecoMuplus_d0",  "getRP2TRK_D0( RecoMuplus, EFlowTrack_1) ")
+	       .Define("RecoMuplus_z0",  "getRP2TRK_Z0( RecoMuplus, EFlowTrack_1) ")
+
 
         )
 
@@ -276,7 +280,10 @@ class analysis():
                 "RecoKminus_atVertex_theta",
                 "RecoKminus_atVertex_phi",
 
-                "Angle_JpsiPhi"
+                "Angle_JpsiPhi",
+
+		"RecoMuplus_d0",
+		"RecoMuplus_z0"
 
 
                 ]:

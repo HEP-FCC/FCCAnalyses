@@ -3,8 +3,8 @@
 using namespace MCParticle;
 
 
-sel_genStatus::sel_genStatus(int arg_status) : m_status(arg_status) {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_genStatus::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+MCParticle::sel_genStatus::sel_genStatus(int arg_status) : m_status(arg_status) {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_genStatus::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
@@ -16,8 +16,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_genStatus::operator() (ROOT::Ve
   return result;
 }
 
-sel_PDG::sel_PDG(int arg_pdg, bool arg_chargeconjugate) : m_pdg(arg_pdg), m_chargeconjugate( arg_chargeconjugate )  {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_PDG::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+MCParticle::sel_PDG::sel_PDG(int arg_pdg, bool arg_chargeconjugate) : m_pdg(arg_pdg), m_chargeconjugate( arg_chargeconjugate )  {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_PDG::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
@@ -34,8 +34,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_PDG::operator() (ROOT::VecOps::
 
 
 
-get_decay::get_decay(int arg_mother, int arg_daughters, bool arg_inf){m_mother=arg_mother; m_daughters=arg_daughters; m_inf=arg_inf;};
-bool get_decay::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  ROOT::VecOps::RVec<int> ind){
+MCParticle::get_decay::get_decay(int arg_mother, int arg_daughters, bool arg_inf){m_mother=arg_mother; m_daughters=arg_daughters; m_inf=arg_inf;};
+bool MCParticle::get_decay::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  ROOT::VecOps::RVec<int> ind){
 
   bool result=false;
   for (size_t i = 0; i < in.size(); ++i) {
@@ -54,8 +54,8 @@ bool get_decay::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  ROO
   return result;
 }
 
-sel_pT::sel_pT(float arg_min_pt) : m_min_pt(arg_min_pt) {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_pT::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+MCParticle::sel_pT::sel_pT(float arg_min_pt) : m_min_pt(arg_min_pt) {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData>  MCParticle::sel_pT::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
@@ -68,8 +68,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_pT::operator() (ROOT::VecOps::R
 }
 
 
-filter_pdgID::filter_pdgID(int arg_pdgid, bool arg_abs){m_pdgid = arg_pdgid; m_abs = arg_abs;};
-bool  filter_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+MCParticle::filter_pdgID::filter_pdgID(int arg_pdgid, bool arg_abs){m_pdgid = arg_pdgid; m_abs = arg_abs;};
+bool  MCParticle::filter_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
   for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
     if ((m_abs && abs(p.PDG) == m_pdgid) || (p.PDG == m_pdgid)) return true;
@@ -78,8 +78,8 @@ bool  filter_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) 
 }
 
 
-get_EventPrimaryVertex::get_EventPrimaryVertex( int arg_genstatus) { m_genstatus = arg_genstatus; };
-TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
+MCParticle::get_EventPrimaryVertex::get_EventPrimaryVertex( int arg_genstatus) { m_genstatus = arg_genstatus; };
+TVector3 MCParticle::get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
   TVector3 result(-1e12,-1e12,-1e12);
   for (auto & p: in) {
      if ( p.generatorStatus == m_genstatus ) {   // generator status code for the incoming particles of the hardest subprocess
@@ -93,8 +93,8 @@ TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCPart
 }
 
 
-get_tree::get_tree(int arg_index) : m_index(arg_index) {};
-ROOT::VecOps::RVec<int> get_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
+MCParticle::get_tree::get_tree(int arg_index) : m_index(arg_index) {};
+ROOT::VecOps::RVec<int> MCParticle::get_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
   ROOT::VecOps::RVec<int> result;
   auto & particle = in[m_index];
   
