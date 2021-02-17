@@ -13,5 +13,7 @@ export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
 
 #spack install --test=all acts+unit_tests
 #spack install acts
+#spack install acts build_type=Debug
 #spack load acts
-
+spack load acts build_type=Debug
+#spack load acts /jpihoer
