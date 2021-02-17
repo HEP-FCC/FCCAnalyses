@@ -143,12 +143,6 @@ bool VertexingACTS::initialize(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   for (Int_t i = 0; i < Ntr; i++)
     {
       edm4hep::TrackState ti = tracks[i] ;
-      double d0    = ti.D0 ;
-      double phi0  = ti.phi ;
-      double omega = ti.omega ;
-      double z0    = ti.Z0 ;
-      double tanLambda = ti.tanLambda;
-
 
       TVectorD trackFB  = Vertexing::get_trackParam(ti);
       TMatrixDSym covFB = Vertexing::get_trackCov(ti);
