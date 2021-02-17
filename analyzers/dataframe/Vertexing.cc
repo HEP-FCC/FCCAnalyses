@@ -12,23 +12,25 @@ using namespace Vertexing;
 // Selection of particles based on the d0 / z0 significances of the associated track
 //
 selTracks::selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_min, float arg_z0sig_max) : m_d0sig_min(arg_d0sig_min),
-                m_d0sig_max  ( arg_d0sig_max ), m_z0sig_min( arg_z0sig_min ), m_z0sig_max (arg_z0sig_max) { };
+													    m_d0sig_max( arg_d0sig_max ), 
+													    m_z0sig_min( arg_z0sig_min ), 
+													    m_z0sig_max (arg_z0sig_max) { };
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  selTracks::operator() ( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
                                                                                 ROOT::VecOps::RVec<edm4hep::TrackState> tracks  ) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  result;
   result.reserve(recop.size());
-
-    for (size_t i = 0; i < recop.size(); ++i) {
+  
+  for (size_t i = 0; i < recop.size(); ++i) {
     auto & p = recop[i];
-      if (p.tracks_begin<tracks.size()) {
-          auto & tr = tracks.at( p.tracks_begin );
-          double d0sig = fabs( tr.D0 / sqrt( tr.covMatrix[0]) ) ;
-          if ( fabs( d0sig ) > m_d0sig_max || fabs( d0sig ) < m_d0sig_min  ) continue;
-          double z0sig = fabs( tr.Z0 / sqrt( tr.covMatrix[12]) );
-          if ( fabs( z0sig ) > m_z0sig_max || fabs( z0sig ) < m_z0sig_min  ) continue;
-          result.emplace_back(p);
-      }
+    if (p.tracks_begin<tracks.size()) {
+      auto & tr = tracks.at( p.tracks_begin );
+      double d0sig = fabs( tr.D0 / sqrt( tr.covMatrix[0]) ) ;
+      if ( fabs( d0sig ) > m_d0sig_max || fabs( d0sig ) < m_d0sig_min  ) continue;
+      double z0sig = fabs( tr.Z0 / sqrt( tr.covMatrix[12]) );
+      if ( fabs( z0sig ) > m_z0sig_max || fabs( z0sig ) < m_z0sig_min  ) continue;
+      result.emplace_back(p);
     }
+  }
   return result;
 }
 
@@ -51,7 +53,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> Vertexing::SelPrimaryTrac
   double xvtx0 = MC_EventPrimaryVertex[0];
   double yvtx0 = MC_EventPrimaryVertex[1];
   double zvtx0 = MC_EventPrimaryVertex[2];
-
+  
   for (unsigned int i=0; i<recind.size();i++) {
     double xvtx = mc.at(mcind.at(i)).vertex.x ;
     double yvtx = mc.at(mcind.at(i)).vertex.y ;
