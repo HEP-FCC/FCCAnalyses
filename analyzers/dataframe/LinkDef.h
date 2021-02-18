@@ -11,6 +11,8 @@
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::TrackState>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::VertexData>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>+;
+#pragma link C++ class ROOT::VecOps::RVec<edm4hep::Vector3d>+;
+#pragma link C++ class ROOT::VecOps::RVec<edm4hep::MCParticleData>+;
 
 
 #pragma link C++ function dummyloader;

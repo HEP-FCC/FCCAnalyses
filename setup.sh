@@ -18,3 +18,4 @@ export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
 #spack load acts build_type=Debug
 #spack load acts /jpihoer
 spack load acts /pwh2qmq
+export LOCALFCCANALYSES=$PWD/install/include/FCCAnalyses

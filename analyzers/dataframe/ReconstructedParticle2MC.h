@@ -89,4 +89,34 @@ struct getRP2MC_p_func {
 					 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 };
 
+/// select ReconstructedParticles matched with a MC particle of a given PDG_id
+struct selRP_PDG {
+  selRP_PDG(int arg_PDG, bool arg_chargedOnly);
+  int m_PDG = 13 ;
+  bool m_chargedOnly = true;
+  std::vector<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<int> recind, 
+							       ROOT::VecOps::RVec<int> mcind, 
+							       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
+							       ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) ;
+};
+
+/// select ReconstructedParticles matched with a MC  charged hadrons 
+std::vector<edm4hep::ReconstructedParticleData> selRP_ChargedHadrons ( ROOT::VecOps::RVec<int> recind, 
+								       ROOT::VecOps::RVec<int> mcind, 
+								       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
+								       ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) ;
+
+/// select ReconstructedParticles matched to the (stable) MC particles whose indices are passed in a list
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selRP_matched_to_list( ROOT::VecOps::RVec<int>   mcParticles_indices,
+        								      ROOT::VecOps::RVec<int> recind, 
+									      ROOT::VecOps::RVec<int> mcind, 
+									      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+        								      ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) ;
+
+/// return the index of the MC particle that is associated to a given track (via the track-reco association)
+int getTrack2MC_index (  int track_index,
+                         ROOT::VecOps::RVec<int> recind,
+                         ROOT::VecOps::RVec<int> mcind,
+                         ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco);
+
 #endif
