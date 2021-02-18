@@ -111,11 +111,16 @@ TMatrixDSym Vertexing::get_trackCov( edm4hep::TrackState &  atrack) {
   TMatrixDSym covM(5);
   
   double scale0 = 1e-3;
-  double scale1 = 1;
+  double scale1 = 1.;
   double scale2 = 0.5*1e3;
   double scale3 = 1e-3 ;
   double scale4 = 1.;
   
+  //CLEMENT units are already in FBs
+  scale0 = 1.;
+  scale2 = 0.5;
+  scale3 = 1.;
+  //CLEMENT
   scale2 = -scale2 ;   // sign of omega
   
   covM[0][0] = covMatrix[0] *scale0 * scale0;

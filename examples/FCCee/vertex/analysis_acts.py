@@ -49,7 +49,7 @@ class analysis():
 		   # note: d0 and z0 are defined w.r.t. (0,0,0)
 		   # hence do not use such criteria to select primary tracks
 		   # if the events were generated with a vertex distribution
-               .Define("Vertex","VertexingACTS::initialize( EFlowTrack_1)")
+               .Define("Vertex","VertexingACTS::VertexFinder( EFlowTrack_1)")
                #.Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
                #.Define("Vertex",  "Vertexing::VertexFitter( 1, SelTracks, EFlowTrack_1 )")	# primary vertex, in mm

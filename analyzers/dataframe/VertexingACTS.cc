@@ -7,7 +7,9 @@
 #include "Acts/MagneticField/ConstantBField.hpp"
 #include "Acts/Vertexing/ImpactPointEstimator.hpp"
 #include "Acts/Vertexing/HelicalTrackLinearizer.hpp"
-
+//V5.0
+#include "Acts/Definitions/Algebra.hpp"
+#include "Acts/Definitions/Units.hpp"
 
 #include "Acts/Geometry/GeometryContext.hpp"
 #include "Acts/Surfaces/PerigeeSurface.hpp"
@@ -77,7 +79,6 @@ TMatrixDSym VertexingACTS::CovToACTS(TMatrixDSym Cov, TVectorD Par){
 bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   
   using Covariance = Acts::BoundSymMatrix;
-  Acts::Logging::Level loggingLevel = Acts::Logging::Level::DEBUG;
   std::any myContext;
 
   // Create a test context
@@ -85,7 +86,8 @@ bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks 
   Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
-  Acts::ConstantBField bField(Acts::Vector3D(0., 0., 2_T));
+  Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
+  //Acts::ConstantBField bField(Acts::Vector3D(0., 0., 2_T));
   Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
 
   // Set up the propagator
@@ -118,15 +120,39 @@ bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks 
   using SeedFinder = Acts::TrackDensityVertexFinder<Fitter, Acts::GaussianTrackDensity<Acts::BoundTrackParameters>>;
   SeedFinder seedFinder;
 
+
+  /*
+  // Set up Gaussian track density
+  Acts::GaussianTrackDensity::Config trackDensityConfig;
+  trackDensityConfig.d0MaxSignificance = 10.;
+  trackDensityConfig.z0MaxSignificance = 20.;
+  Acts::GaussianTrackDensity trackDensity(trackDensityConfig);
+
+  
+  // Vertex seed finder
+  Acts::VertexSeedFinder::Config seedFinderConfig;
+  seedFinderConfig.trackDensityEstimator = trackDensity;
+  VertexSeedFinder seedFinder(seedFinderConfig);
+  */
+
   // The vertex finder type
   using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
 
   Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;
-
+  finderConfig.useSeedConstraint = false;
+  finderConfig.tracksMaxSignificance = 100.;//5.;
+  finderConfig.maxVertexChi2 = 500.;//18.42;
+  finderConfig.tracksMaxZinterval = 300.;//3.;
+  finderConfig.maxIterations = 10000;//100;
   // Instantiate the finder
-  Finder finder(finderConfig);
+
+  //std::make_unique<const Acts::Logger> myLogger = Acts::getDefaultLogger("MyLogger", Acts::Logging::DEBUG);
+  //ACTS_LOCAL_LOGGER(myLogger);
+  
+  //myLogger().doPrint(Acts::Logging::DEBUG);
+  Finder finder(finderConfig);//, std::unique_ptr<const Acts::Logger>("MyLogger", Acts::Logging::DEBUG));
   // The vertex finder state
   Finder::State state;
 
@@ -158,6 +184,14 @@ bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks 
       std::cout << "track " << i << "  d0  " << trackACTS[0] << "  z0  " << trackACTS[1] << "  phi0  " << trackACTS[2] << "  theta  " << trackACTS[3] << "  qOverP  " << trackACTS[4] << "  P  " << 1./trackACTS[4] << std::endl;
 
 
+      for (int ii=0; ii<6; ii++){
+	for (int jj=0; jj<6; jj++){
+	  std::cout << "  " << covACTS(jj,ii) ;
+	  //covACTS(jj,ii) = covACTS(jj,ii)*100000.;
+	}
+	std::cout << "" <<std::endl;
+      }
+
       // Get track covariance vector
       Covariance covMat;
       covMat << 
@@ -168,9 +202,12 @@ bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks 
 	covACTS(0,4), covACTS(1,4), covACTS(2,4), covACTS(3,4), covACTS(4,4), covACTS(5,4), 
 	covACTS(0,5), covACTS(1,5), covACTS(2,5), covACTS(3,5), covACTS(4,5), covACTS(5,5);
 
+
+
       std::shared_ptr<Acts::PerigeeSurface> perigeeSurface;
       // Create track parameters and add to track list
-      Acts::Vector3D beamspotPos;
+      Acts::Vector3 beamspotPos;
+      //Acts::Vector3D beamspotPos;
       beamspotPos << 0.0, 0.0, 0.0;
       perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
       allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
