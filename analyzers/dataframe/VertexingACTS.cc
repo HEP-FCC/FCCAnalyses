@@ -77,17 +77,15 @@ TMatrixDSym VertexingACTS::CovToACTS(TMatrixDSym Cov, TVectorD Par){
 }
 
 bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
-  
-  using Covariance = Acts::BoundSymMatrix;
-  std::any myContext;
 
   // Create a test context
-  Acts::GeometryContext geoContext = Acts::GeometryContext();
-  Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
+  //Acts::GeometryContext geoContext = Acts::GeometryContext();
+  //Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
+  const auto& geoContext = Acts::GeometryContext();
+  const auto& magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
   Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
-  //Acts::ConstantBField bField(Acts::Vector3D(0., 0., 2_T));
   Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
 
   // Set up the propagator
@@ -114,7 +112,7 @@ bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks 
   using Fitter = Acts::AdaptiveMultiVertexFitter<Acts::BoundTrackParameters, Linearizer>;
   Fitter::Config fitterCfg(ipEstimator);
   fitterCfg.annealingTool = annealingUtility;
-  Fitter fitter(fitterCfg);
+  Fitter fitter(fitterCfg, Acts::getDefaultLogger("Fitter", Acts::Logging::VERBOSE));
 
   // Set up the vertex seed finder
   using SeedFinder = Acts::TrackDensityVertexFinder<Fitter, Acts::GaussianTrackDensity<Acts::BoundTrackParameters>>;
@@ -132,88 +130,110 @@ bool VertexingACTS::VertexFinder(ROOT::VecOps::RVec<edm4hep::TrackState> tracks 
   // Vertex seed finder
   Acts::VertexSeedFinder::Config seedFinderConfig;
   seedFinderConfig.trackDensityEstimator = trackDensity;
-  VertexSeedFinder seedFinder(seedFinderConfig);
+  VertexSeedFinder seedFinder(seedFinderConfig, Acts::getDefaultLogger("SeedFinder", Acts::Logging::VERBOSE));
   */
 
   // The vertex finder type
   using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
-
   Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
   // We do not want to use a beamspot constraint here
-  finderConfig.useBeamSpotConstraint = false;
-  finderConfig.useSeedConstraint = false;
-  finderConfig.tracksMaxSignificance = 100.;//5.;
-  finderConfig.maxVertexChi2 = 500.;//18.42;
-  finderConfig.tracksMaxZinterval = 300.;//3.;
-  finderConfig.maxIterations = 10000;//100;
+  //finderConfig.useBeamSpotConstraint = false;
+  //finderConfig.useSeedConstraint = false;
+  //finderConfig.tracksMaxSignificance = 100.;//5.;
+  //finderConfig.maxVertexChi2 = 500.;//18.42;
+  //finderConfig.tracksMaxZinterval = 300.;//3.;
+  //finderConfig.maxIterations = 10000;//100;
   // Instantiate the finder
 
-  //std::make_unique<const Acts::Logger> myLogger = Acts::getDefaultLogger("MyLogger", Acts::Logging::DEBUG);
-  //ACTS_LOCAL_LOGGER(myLogger);
-  
-  //myLogger().doPrint(Acts::Logging::DEBUG);
-  Finder finder(finderConfig);//, std::unique_ptr<const Acts::Logger>("MyLogger", Acts::Logging::DEBUG));
+  Finder finder(finderConfig, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
   // The vertex finder state
   Finder::State state;
 
   // Default vertexing options, this is where e.g. a constraint could be set
   using VertexingOptions = Acts::VertexingOptions<Acts::BoundTrackParameters>;
+  //VertexingOptions finderOpts(myContext, myContext);
   VertexingOptions finderOpts(geoContext, magFieldContext);
   //  vertexingOptions.vertexConstraint = std::get<BeamSpotData>(csvData);
 
-
-  //std::vector<const Acts::BoundTrackParameters*> Mytracks;
-  std::vector<Acts::BoundTrackParameters> allTracks;
   int Ntr = tracks.size();
   std::cout <<"ntr  : " << Ntr << std::endl;
 
+  //std::vector<const Acts::BoundTrackParameters*> Mytracks;
+  std::vector<Acts::BoundTrackParameters> allTracks;
+  allTracks.reserve(Ntr);
+
+  std::shared_ptr<Acts::PerigeeSurface> perigeeSurface;
+  Acts::Vector3 beamspotPos;
+  beamspotPos << 0.0, 0.0, 0.0;
+  perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
+
+  
   for (Int_t i = 0; i < Ntr; i++)
     {
+      //get the edm4hep track
       edm4hep::TrackState ti = tracks[i] ;
 
+      //convert edm4hep track to FB track
       TVectorD trackFB  = Vertexing::get_trackParam(ti);
       TMatrixDSym covFB = Vertexing::get_trackCov(ti);
 
+      //use FB tool to convert to ACTS track
       TVectorD trackACTS = ParToACTS(trackFB);
       TMatrixDSym covACTS = CovToACTS(covFB,trackFB);
 
-      Acts::BoundTrackParameters::ParametersVector newTrackParams;
-      //newTrackParams << d0, z0, phi0, theta, qOverP ,0.0;
+      //Acts::BoundTrackParameters::ParametersVector newTrackParams;
+      Acts::BoundVector newTrackParams;
       newTrackParams << trackACTS[0], trackACTS[1], trackACTS[2], trackACTS[3], trackACTS[4] ,trackACTS[5];
 
       std::cout << "track " << i << "  d0  " << trackACTS[0] << "  z0  " << trackACTS[1] << "  phi0  " << trackACTS[2] << "  theta  " << trackACTS[3] << "  qOverP  " << trackACTS[4] << "  P  " << 1./trackACTS[4] << std::endl;
-
 
       for (int ii=0; ii<6; ii++){
 	for (int jj=0; jj<6; jj++){
 	  std::cout << "  " << covACTS(jj,ii) ;
 	  //covACTS(jj,ii) = covACTS(jj,ii)*100000.;
+	  covACTS(jj,ii) = double(covACTS(jj,ii));
 	}
 	std::cout << "" <<std::endl;
       }
 
       // Get track covariance vector
-      Covariance covMat;
-      covMat << 
+      Acts::BoundSymMatrix covMat;
+      /*covMat << 
 	covACTS(0,0), covACTS(1,0), covACTS(2,0), covACTS(3,0), covACTS(4,0), covACTS(5,0), 
 	covACTS(0,1), covACTS(1,1), covACTS(2,1), covACTS(3,1), covACTS(4,1), covACTS(5,1), 
 	covACTS(0,2), covACTS(1,2), covACTS(2,2), covACTS(3,2), covACTS(4,2), covACTS(5,2), 
 	covACTS(0,3), covACTS(1,3), covACTS(2,3), covACTS(3,3), covACTS(4,3), covACTS(5,3), 
 	covACTS(0,4), covACTS(1,4), covACTS(2,4), covACTS(3,4), covACTS(4,4), covACTS(5,4), 
 	covACTS(0,5), covACTS(1,5), covACTS(2,5), covACTS(3,5), covACTS(4,5), covACTS(5,5);
-
-
-
-      std::shared_ptr<Acts::PerigeeSurface> perigeeSurface;
+      */
+      covMat <<  1., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,
+        0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0.,
+        0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 1.;
+      
       // Create track parameters and add to track list
-      Acts::Vector3 beamspotPos;
-      //Acts::Vector3D beamspotPos;
-      beamspotPos << 0.0, 0.0, 0.0;
-      perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
-      allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
+      //allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
+      //allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
+      //allTracks.push_back(perigeeSurface, newTrackParams, covMat);
+      allTracks.push_back(Acts::BoundTrackParameters(perigeeSurface, newTrackParams, covMat));
+
+      std::cout << "covMat          " << covMat << std::endl;
+      std::cout << "perigeeSurface  " << perigeeSurface << std::endl;
+      std::cout << "newTrackParams  " << newTrackParams << std::endl;
+      
+      std::cout << "params: " << allTracks[i] << std::endl;
+
+      
     }
   
 
+  std::cout << "Number of tracks in event: " << tracks.size() << std::endl;
+  int count = 0;
+  for (const auto& trk : allTracks) {
+    std::cout << count << ". track: " << std::endl;
+    std::cout << "params: " << trk << std::endl;
+    count++;
+  }
+  
   std::vector<const Acts::BoundTrackParameters*> tracksPtr;
   for (const auto& trk : allTracks) {
     tracksPtr.push_back(&trk);

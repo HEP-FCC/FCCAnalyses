@@ -12,10 +12,11 @@ R__LOAD_LIBRARY(libFCCAnalyses)
 #include "podio/EventStore.h"
 #include "podio/ROOTReader.h"
 #include "edm4hep/TrackState.h"
-
 #include "edm4hep/TrackCollection.h"
 
 #include "VertexingACTS.h"
+#include "ROOT/RVec.hxx"
+
 void reproducer()
 {
 
@@ -28,7 +29,7 @@ void reproducer()
   gSystem->Load("libFCCAnalyses.so");
 
   auto reader = podio::ROOTReader();
-  reader.openFile("/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Zuds_ecm91/events_199980034.root");
+  reader.openFile("/afs/cern.ch/user/h/helsens/public/test_zbb_Bs2DsK.root");
   auto store = podio::EventStore();
   store.setReader(&reader);
 
@@ -37,9 +38,9 @@ void reproducer()
   for (int entry = 0; entry < nEntries; ++entry) {
 
     auto& tracks = store.get<edm4hep::TrackCollection>("EFlowTrack");
-    std::vector<edm4hep::TrackState>  track_states;// = tracks.getTrackStates();
+    ROOT::VecOps::RVec<edm4hep::TrackState>  track_states;// = tracks.getTrackStates();
     for (auto track : tracks) { track_states.push_back(track.getTrackStates(0)); } 
-    bool status = VertexingACTS::initialize(track_states);
+    bool status = VertexingACTS::VertexFinder(track_states);
     
   }
 }
