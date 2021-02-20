@@ -33,7 +33,6 @@ void reproducer()
   auto store = podio::EventStore();
   store.setReader(&reader);
 
-
   const auto nEntries = reader.getEntries();
   for (int entry = 0; entry < nEntries; ++entry) {
 

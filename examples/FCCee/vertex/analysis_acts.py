@@ -36,7 +36,7 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Range(0,10)
+        df2 = (self.df.Range(0,10000)
         #df2 = (self.df
 
                # MC event primary vertex
@@ -49,7 +49,9 @@ class analysis():
 		   # note: d0 and z0 are defined w.r.t. (0,0,0)
 		   # hence do not use such criteria to select primary tracks
 		   # if the events were generated with a vertex distribution
-               .Define("Vertex","VertexingACTS::VertexFinder( EFlowTrack_1)")
+               .Define("VertexObject","VertexingACTS::VertexFinder( EFlowTrack_1)")
+               .Define("Vertex",   "Vertexing::get_VertexData( VertexObject )")   # primary vertex, in mm
+
                #.Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
                #.Define("Vertex",  "Vertexing::VertexFitter( 1, SelTracks, EFlowTrack_1 )")	# primary vertex, in mm

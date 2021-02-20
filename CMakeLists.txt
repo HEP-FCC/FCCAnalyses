@@ -12,7 +12,6 @@ cmake_policy(SET CMP0057 NEW)
 find_package(ROOT COMPONENTS ROOTDataFrame)
 include(${ROOT_USE_FILE})
 
-find_package(fccedm)
 find_package(EDM4HEP)
 find_package(podio)
 

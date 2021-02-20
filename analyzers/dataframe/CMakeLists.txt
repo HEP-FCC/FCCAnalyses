@@ -4,7 +4,6 @@ include(${ROOT_USE_FILE})
 #include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
 
-find_package(fccedm)
 find_package(EDM4HEP)
 find_package(podio)
 
@@ -17,7 +16,7 @@ find_package(FastJet)
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
 
 include_directories(${EDM4HEP_INCLUDE_DIRS} 
-		    ${podio_INCLUDE_DIR} ${FASTJET_INCLUDE_DIR} ${FCCEDM_INCLUDE_DIRS}  
+		    ${podio_INCLUDE_DIR} ${FASTJET_INCLUDE_DIR} 
 		    ${acts_INCLUDE_DIR} 
 		    #${Boost_INCLUDE_DIRS}
 		    )
@@ -42,7 +41,7 @@ target_include_directories(FCCAnalyses  PUBLIC
 	                   ${FASTJET_INCLUDE_DIR}
 		           ${acts_INCLUDE_DIR} )
 
-target_link_libraries(FCCAnalyses ${FCCEDM_LIBRARIES} ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY} ${acts_LIBRARY} ActsCore )
+target_link_libraries(FCCAnalyses ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY} ${acts_LIBRARY} ActsCore )
 #${Boost_LIBRARIES})
 
 set_target_properties(FCCAnalyses PROPERTIES
