@@ -1,16 +1,34 @@
 Basic examples
 =============
+This directory contains a number of examples each showcasing a specific functionality of the FCCAnalyses framework. It serves as a reference guide for how to implement specific common usecases or you can work through the examples one-by-one in order as a tutorial to familiarize yourself with the full functionality of the framework. 
 
-write here basic examples..
+Each example is a stand-alone script for demonstration purposes, and does not make assumptions on a specific physics case. To understand how to write a full analysis with the FCCAnalyses framework please have a look at (insert a link to documentation about code class-structure) - the examples here only illustrate specific technical functionalities. 
+
+By calling
+python <example>.py
+
+you can run the specific example over the integrated test file found in the testdata directory, and it will create a new directory in your current working directory with the name of the example to write the output to. If you prefer to run over your own input file or a different output directory you can run with options:
+
+python <example>.py -i <path_to_your_inputfile> -o <path_to_your_outputdir> 
+
+Certain examples may have additional options, you can always check what options are available with:
+
+python <example>.py -h 
 
 Table of contents
 =================
   * [RootDataFrame](#rootdataframe)
+  * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
   * [Writing your own function](#writing-your-own-function)
     * [Inline](#inline)
     * [Using ROOT GInterpreter](#using-root-ginterpreter)
     * [Writing your own class](#writing-your-own-class)
   * [Base collection](#base-collection)
+
+
+Reading objects from EDM4HEP
+=============
+The example read_EDM4HEP.py shows you how to access the different objects from the EDM4HEP files. 
  
 
 <!--
