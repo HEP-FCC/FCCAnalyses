@@ -8,13 +8,13 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.getMC_px
-_fcc2  = ROOT.getRP2MC_p
+_fcc  = ROOT.dummyloader
+
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
-print ('fccana2  ',_fcc2)
+
 #ROOT.ROOT.EnableThreadSafety()
 #ROOT.ROOT.EnableImplicitMT(1)
 #ROOT.TTree.SetMaxTreeSize(100000000000)
@@ -26,18 +26,18 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        #ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
 
-        #df2 = (self.df.Range(10000)
-        df2 = (self.df
+        df2 = (self.df.Range(10000)
+        #df2 = (self.df
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "getMC_EventPrimaryVertex(21)( Particle )" )
+               .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                .Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")    #  d0 and z0 in mm
                .Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
@@ -50,6 +50,17 @@ class analysis():
                .Define("RP_TRK_omega_cov",   "getRP2TRK_omega_cov(ReconstructedParticles, EFlowTrack_1)")
                .Define("RP_TRK_phi_cov",     "getRP2TRK_phi_cov(ReconstructedParticles, EFlowTrack_1)")
                .Define("RP_TRK_tanlambda_cov", "getRP2TRK_tanLambda_cov(ReconstructedParticles, EFlowTrack_1)")
+
+	       .Define("RP_TRK_d0_phi0_cov",  "getRP2TRK_d0_phi0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_d0_omega_cov", "getRP2TRK_d0_omega_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_d0_z0_cov",    "getRP2TRK_d0_z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_d0_tanlambda_cov",  "getRP2TRK_d0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi0_omega_cov",  "getRP2TRK_phi0_omega_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi0_z0_cov",     "getRP2TRK_phi0_z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi0_tanlambda_cov",   "getRP2TRK_phi0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_omega_z0_cov",    "getRP2TRK_omega_z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_omega_tanlambda_cov",  "getRP2TRK_omega_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_z0_tanlambda_cov",  "getRP2TRK_z0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
 
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
@@ -84,6 +95,17 @@ class analysis():
                 "RP_TRK_phi_cov",
                 "RP_TRK_tanlambda_cov",
 
+		"RP_TRK_d0_phi0_cov",
+		"RP_TRK_d0_omega_cov",
+		"RP_TRK_d0_z0_cov",
+		"RP_TRK_d0_tanlambda_cov",
+		"RP_TRK_phi0_omega_cov",
+		"RP_TRK_phi0_z0_cov",
+		"RP_TRK_phi0_tanlambda_cov",
+		"RP_TRK_omega_z0_cov",
+		"RP_TRK_omega_tanlambda_cov",
+		"RP_TRK_z0_tanlambda_cov",
+
                 "RP_MC_p",
                 "RP_MC_px",
                 "RP_MC_py",
@@ -104,8 +126,6 @@ class analysis():
         #df2.Snapshot("events", self.outname, branchList, opts)
         df2.Snapshot("events", self.outname, branchList)
 
-# example call for standalone file
-# python FCCeeAnalyses/Z_Zbb_Flavor/dataframe/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Ztautau_ecm91/events_012154460.root
 
 if __name__ == "__main__":
 
