@@ -837,5 +837,9 @@ edm4hep::VertexData Vertexing::get_VertexData( FCCAnalysesVertex TheVertex ) {
   return TheVertex.vertex ;
 }
 
+int Vertexing::get_VertexNtrk( FCCAnalysesVertex TheVertex ) {
+  return TheVertex.ntracks;
+}
+
 
 ////////////////////////////////////////////////////
