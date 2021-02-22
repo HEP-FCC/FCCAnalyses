@@ -29,7 +29,7 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
@@ -65,6 +65,12 @@ class analysis():
                .Define("VertexObject_primaryTracks",  "Vertexing::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
                .Define("Vertex_primaryTracks",   "get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
 
+               .Define("VertexObject_acts","VertexingACTS::VertexFinder( EFlowTrack_1)")
+               .Define("Vertex_acts",   "Vertexing::get_VertexData( VertexObject_acts )")   # primary vertex, in mm
+               .Define("nPrimaryTracks_acts", "get_VertexNtrk(VertexObject_acts)")
+
+
+
         )
 
 
@@ -76,7 +82,11 @@ class analysis():
                 "nSeltracks",
                 "Vertex",
                 "nPrimaryTracks",
-                "Vertex_primaryTracks"     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_primaryTracks",     # on Zuds: both track selections lead to very similar results for the vertex
+
+                "nPrimaryTracks_acts",
+                "Vertex_acts",     # on Zuds: both track selections lead to very similar results for the vertex
+
 
                 ]:
             branchList.push_back(branchName)
