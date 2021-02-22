@@ -7,9 +7,9 @@ Table of contents
 =================
   * [RootDataFrame](#rootdataframe)
   * [Writing your own function](#writing-your-own-function)
-    *[Inline](#inline)
-    *[Using ROOT GInterpreter](#using-root-ginterpreter)
-    *[Writing your own class](#writing-your-own-class)
+    * [Inline](#inline)
+    * [Using ROOT GInterpreter](#using-root-ginterpreter)
+    * [Writing your own class](#writing-your-own-class)
   * [Base collection](#base-collection)
  
 
