@@ -69,6 +69,8 @@ namespace Vertexing{
   /// Retrieve the edm4hep::VertexData from the vertex object
   edm4hep::VertexData get_VertexData( FCCAnalysesVertex TheVertex ) ;
   
+  int get_VertexNtrk( FCCAnalysesVertex TheVertex ) ;
+
 
   /// Return the number of tracks in a given track collection
   int get_nTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
