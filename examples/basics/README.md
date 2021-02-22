@@ -17,7 +17,9 @@ python <example>.py -h
 
 Table of contents
 =================
-  * [RootDataFrame](#rootdataframe)
+  *[Prerequisites](#prerequisites)
+    * [RootDataFrame](#rootdataframe)
+    * [EDM4HEP event model](#edm4hep)
   * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
   * [Writing your own function](#writing-your-own-function)
     * [Inline](#inline)
@@ -29,6 +31,8 @@ Table of contents
 Reading objects from EDM4HEP
 =============
 The example read_EDM4HEP.py shows you how to access the different objects from the EDM4HEP files. 
+
+TODO: explain the logics of naming etc and accessor functions for basics like pT, eta, etc. here. 
  
 
 <!--
