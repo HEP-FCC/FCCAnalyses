@@ -27,8 +27,9 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses MCParticle.h
 					ReconstructedParticle2MC.h
 					Algorithm.h
 					JetClustering.h
-					Vertexing.h
-					VertexingACTS.h					
+					VertexingUtils.h
+					VertexFitterSimple.h
+					VertexFinderActs.h					
 					LINKDEF LinkDef.h)
 
 
