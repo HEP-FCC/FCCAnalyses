@@ -104,42 +104,42 @@ TMatrixDSym VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
   double scale4 = 1.;
   
   scale2 = -scale2 ;   // sign of omega
+  
+  covM[0][0] = covMatrix[0] *scale0 * scale0;
 
-    covM[0][0] = covMatrix[0] *scale0 * scale0;
-    covM[0][1] = covMatrix[1] *scale0 * scale1;
-    covM[0][2] = covMatrix[2] *scale0 * scale2;
-    covM[0][3] = covMatrix[3] *scale0 * scale3;
-    covM[0][4] = covMatrix[4] *scale0 * scale4;
+  covM[1][0] = covMatrix[1] *scale1 * scale0;
+  covM[1][1] = covMatrix[2] *scale1 * scale1;
 
-    covM[1][0] = covM[0][1];
-    covM[2][0] = covM[0][2] ;
-    covM[3][0] = covM[0][3] ;
-    covM[4][0] = covM[0][4];
+  covM[0][1] = covM[1][0];
 
-    covM[1][1] = covMatrix[5] *scale1 * scale1;
-    covM[1][2] = covMatrix[6] *scale1 * scale2;
-    covM[1][3] = covMatrix[7] *scale1 * scale3;
-    covM[1][4] = covMatrix[8] *scale1 * scale4;;
+  covM[2][0] = covMatrix[3] *scale2 * scale0;
+  covM[2][1] = covMatrix[4] *scale2 * scale1;
+  covM[2][2] = covMatrix[5] *scale2 * scale2;
 
-    covM[2][1] = covM[1][2] ;
-    covM[3][1] = covM[1][3];
-    covM[4][1] = covM[1][4];
+  covM[0][2] = covM[2][0];
+  covM[1][2] = covM[2][1];
 
-    covM[2][2] = covMatrix[9] *scale2 *scale2;
-    covM[2][3] = covMatrix[10] * scale2 * scale3;
-    covM[2][4] = covMatrix[11] * scale2 * scale4;
+  covM[3][0] = covMatrix[6] *scale3 * scale0;
+  covM[3][1] = covMatrix[7] *scale3 * scale1;
+  covM[3][2] = covMatrix[8] *scale3 * scale2;
+  covM[3][3] = covMatrix[9] *scale3 * scale3;
 
-    covM[3][2] = covM[2][3];
-    covM[4][2] = covM[2][4];
+  covM[0][3] = covM[3][0];
+  covM[1][3] = covM[3][1];
+  covM[2][3] = covM[3][2];
 
-    covM[3][3] = covMatrix[12] * scale3 * scale3;
-    covM[3][4] = covMatrix[13] * scale3 * scale4;
+  covM[4][0] = covMatrix[10] *scale4 * scale0;
+  covM[4][1] = covMatrix[11] *scale4 * scale1;
+  covM[4][2] = covMatrix[12] *scale4 * scale2;
+  covM[4][3] = covMatrix[13] *scale4 * scale3;
+  covM[4][4] = covMatrix[14] *scale4 * scale4;
 
-    covM[4][3] = covM[3][4];
-
-    covM[4][4] = covMatrix[14] * scale4*scale4;;
-
-    return covM;
+  covM[0][4] = covM[4][0];
+  covM[1][4] = covM[4][1];
+  covM[2][4] = covM[4][2];
+  covM[3][4] = covM[4][3];
+  
+  return covM;
 }
 
 
