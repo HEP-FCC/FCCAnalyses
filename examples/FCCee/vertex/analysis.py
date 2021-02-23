@@ -16,7 +16,7 @@ print ('fccana   ',_fcc)
 
 
 #
-# Example file : /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Zuds_ecm91/events_199980034.root
+# Example file : /eos/experiment/fcc/ee/examples/p8_ecm91GeV_Zuds_IDEAtrkCov.root
 #    ( these events were generated at (0,0,0) i.e. no vertex smearing
 #
 
