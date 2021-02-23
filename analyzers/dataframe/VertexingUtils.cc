@@ -22,7 +22,8 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  VertexingUtils::selTrack
       auto & tr = tracks.at( p.tracks_begin );
       double d0sig = fabs( tr.D0 / sqrt( tr.covMatrix[0]) ) ;
       if ( fabs( d0sig ) > m_d0sig_max || fabs( d0sig ) < m_d0sig_min  ) continue;
-      double z0sig = fabs( tr.Z0 / sqrt( tr.covMatrix[12]) );
+      //double z0sig = fabs( tr.Z0 / sqrt( tr.covMatrix[12]) );
+      double z0sig = fabs( tr.Z0 / sqrt( tr.covMatrix[9])  );	// covMat = lower-triangle
       if ( fabs( z0sig ) > m_z0sig_max || fabs( z0sig ) < m_z0sig_min  ) continue;
       result.emplace_back(p);
     }
@@ -104,6 +105,8 @@ TMatrixDSym VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
   double scale4 = 1.;
   
   scale2 = -scale2 ;   // sign of omega
+
+  // covMatrix = lower-triang;e
   
   covM[0][0] = covMatrix[0] *scale0 * scale0;
 
