@@ -30,6 +30,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses MCParticle.h
 					VertexingUtils.h
 					VertexFitterSimple.h
 					VertexFinderActs.h					
+					VertexFitterActs.h					
 					LINKDEF LinkDef.h)
 
 
