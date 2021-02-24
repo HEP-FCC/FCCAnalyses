@@ -4,7 +4,7 @@ This directory contains a number of examples each showcasing a specific function
 
 Each example is a stand-alone script for demonstration purposes, and does not make assumptions on a specific physics case. To understand how to write a full analysis with the FCCAnalyses framework please have a look at (insert a link to documentation about code class-structure) - the examples here only illustrate specific technical functionalities. 
 
-By calling `python <example>.py` you can run the specific example over the integrated test file found in the testdata directory, and it will create a new directory in your current working directory with the name of the example to write the output to. If you prefer to run over your own input file or a different output directory you can run with options:
+By calling `python <example>.py` you can run the specific example over the integrated test file found (add the testdata directory), and it will create a new directory in your current working directory with the name of the example to write the output to. If you prefer to run over your own input file or a different output directory you can run with options:
 
 `python <example>.py -i <path_to_your_inputfile> -o <path_to_your_outputdir>`
 
@@ -13,14 +13,29 @@ Certain examples may have additional options, you can always check what options 
 Table of contents
 =================
   *[Prerequisites](#prerequisites)
-    * [RootDataFrame](#rootdataframe)
-    * [EDM4HEP event model](#edm4hep)
+    * [RDataFrame](#rdataframe)
+    * [EDM4HEP event model](#edm4hep-event-model)
   * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
   * [Writing your own function](#writing-your-own-function)
     * [Inline](#inline)
     * [Using ROOT GInterpreter](#using-root-ginterpreter)
     * [Writing your own class](#writing-your-own-class)
   * [Base collection](#base-collection)
+
+Prerequisites
+=================
+
+The FCCAnalyses framework is based on the [RDataFrame](https://root.cern/doc/master/classROOT_1_1RDataFrame.html) interface which allows fast and efficient analysis of [ROOT's TTrees](https://root.cern/doc/master/classTTree.html) and on samples following the [EDM4HEP event data model](https://edm4hep.web.cern.ch/). Some brief explanations and links to further material on the two are given below, a basic understanding of both is necessary for using this framework to write your own analysis code. 
+
+RDataFrame
+=================
+(to add)
+
+EDM4HEP event model
+=================
+[Link to EDM4HEP class overview](https://edm4hep.web.cern.ch/namespaceedm4hep.html)
+
+(to add brief intro/pointers)
 
 
 Reading objects from EDM4HEP
