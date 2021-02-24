@@ -4,7 +4,7 @@
 
 analysis.py runs the vertex fitter implemented in Vertexing.cc over a collection of tracks.
 This can be run e.g. over a sample of Z to light jets.
-Example: /eos/experiment/fcc/ee/generation/DelphesEvents/fcc\_tmp/p8\_ee\_Zuds\_ecm91/events\_199980034.root
+Example file:  /eos/experiment/fcc/ee/examples/p8\_ecm91GeV\_Zuds\_IDEAtrkCov.root
 
 To determine the primary vertex here, two possibilities are shown:
 
