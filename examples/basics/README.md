@@ -12,7 +12,7 @@ Certain examples may have additional options, you can always check what options 
 
 Table of contents
 =================
-  *[Prerequisites](#prerequisites)
+  * [Prerequisites](#prerequisites)
     * [RDataFrame](#rdataframe)
     * [EDM4HEP event model](#edm4hep-event-model)
   * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
