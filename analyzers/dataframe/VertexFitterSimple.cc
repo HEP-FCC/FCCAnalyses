@@ -573,12 +573,12 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   // store the results in an edm4hep::VertexData object
   // go back from meters to millimeters for the units 
   float conv = 1e3;
-  std::array<float,6> covMatrix;
+  std::array<float,6> covMatrix;	// covMat in edm4hep is a LOWER-triangle matrix.
   covMatrix[0] = covX(0,0) * pow(conv,2);
-  covMatrix[1] = covX(0,1) * pow(conv,2);
-  covMatrix[2] = covX(0,2) * pow(conv,2);
-  covMatrix[3] = covX(1,1) * pow(conv,2);
-  covMatrix[4] = covX(1,2) * pow(conv,2);
+  covMatrix[1] = covX(1,0) * pow(conv,2);
+  covMatrix[2] = covX(1,1) * pow(conv,2);
+  covMatrix[3] = covX(2,0) * pow(conv,2);
+  covMatrix[4] = covX(2,1) * pow(conv,2);
   covMatrix[5] = covX(2,2) * pow(conv,2);
   
   float Ndof = 2.0 * Ntr - 3.0; ;
