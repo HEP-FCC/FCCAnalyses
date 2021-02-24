@@ -4,16 +4,11 @@ This directory contains a number of examples each showcasing a specific function
 
 Each example is a stand-alone script for demonstration purposes, and does not make assumptions on a specific physics case. To understand how to write a full analysis with the FCCAnalyses framework please have a look at (insert a link to documentation about code class-structure) - the examples here only illustrate specific technical functionalities. 
 
-By calling
-python <example>.py
+By calling `python <example>.py` you can run the specific example over the integrated test file found in the testdata directory, and it will create a new directory in your current working directory with the name of the example to write the output to. If you prefer to run over your own input file or a different output directory you can run with options:
 
-you can run the specific example over the integrated test file found in the testdata directory, and it will create a new directory in your current working directory with the name of the example to write the output to. If you prefer to run over your own input file or a different output directory you can run with options:
+`python <example>.py -i <path_to_your_inputfile> -o <path_to_your_outputdir>`
 
-python <example>.py -i <path_to_your_inputfile> -o <path_to_your_outputdir> 
-
-Certain examples may have additional options, you can always check what options are available with:
-
-python <example>.py -h 
+Certain examples may have additional options, you can always check what options are available with `python <example>.py -h`. 
 
 Table of contents
 =================
