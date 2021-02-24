@@ -18,8 +18,6 @@
 This represents a set functions and utilities to access and perform operations on the MCParticle collection.  
 */
 
-bool dummyloader();
-
 namespace MCParticle{
 
   /// Filter events based on a MCParticles PDGID

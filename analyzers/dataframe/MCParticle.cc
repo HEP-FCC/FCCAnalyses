@@ -653,7 +653,4 @@ ROOT::VecOps::RVec<float> MCParticle::AngleBetweenTwoMCParticles( ROOT::VecOps::
 
 
 
-bool dummyloader(){return false;}
-
-
 
