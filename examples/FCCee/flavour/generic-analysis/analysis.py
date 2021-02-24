@@ -8,7 +8,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyloader
+_fcc  = ROOT.dummyLoader
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -73,7 +73,7 @@ class analysis():
                .Define('RP_MC_parentindex',      "MCParticle::get_parentid(RP_MC_index,Particle, Particle0)")
                .Define('RP_MC_grandparentindex', "MCParticle::get_parentid(RP_MC_parentindex,Particle, Particle0)")
 
-               .Define('EVT_thrust',      'minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
+               .Define('EVT_thrust',      'Algorithms::minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
                .Define('EVT_thrust_val',  'EVT_thrust.at(0)')
                .Define('EVT_thrust_x',    'EVT_thrust.at(1)')
                .Define('EVT_thrust_x_err','EVT_thrust.at(2)')
@@ -82,7 +82,7 @@ class analysis():
                .Define('EVT_thrust_z',    'EVT_thrust.at(5)')
                .Define('EVT_thrust_z_err','EVT_thrust.at(6)')
                
-               .Define('EVT_sphericity',      'minimize_sphericity("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
+               .Define('EVT_sphericity',      'Algorithms::minimize_sphericity("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
                .Define('EVT_sphericity_val',  'EVT_sphericity.at(0)')
                .Define('EVT_sphericity_x',    'EVT_sphericity.at(1)')
                .Define('EVT_sphericity_x_err','EVT_sphericity.at(2)')
@@ -91,15 +91,15 @@ class analysis():
                .Define('EVT_sphericity_z',    'EVT_sphericity.at(5)')
                .Define('EVT_sphericity_z_err','EVT_sphericity.at(6)')
 
-               .Define('RP_thrustangle',      'axisCosTheta(EVT_thrust, RP_px, RP_py, RP_pz)')
-               .Define('RP_sphericityangle',  'axisCosTheta(EVT_sphericity, RP_px, RP_py, RP_pz)')
+               .Define('RP_thrustangle',      'Algorithms::getAxisCosTheta(EVT_thrust, RP_px, RP_py, RP_pz)')
+               .Define('RP_sphericityangle',  'Algorithms::getAxisCosTheta(EVT_sphericity, RP_px, RP_py, RP_pz)')
 
-               .Define('EVT_thrusthemis0_q_kappa1',  'getAxisCharge(0, 1)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)')
-               .Define('EVT_thrusthemis1_q_kappa1',  'getAxisCharge(1, 1)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)')
-               .Define('EVT_thrusthemis0_n',         'getAxisN(0)(RP_thrustangle, RP_charge)')
-               .Define('EVT_thrusthemis1_n',         'getAxisN(1)(RP_thrustangle, RP_charge)')
-               .Define('EVT_thrusthemis0_e',         'getAxisEnergy(0)(RP_thrustangle, RP_charge, RP_e)')
-               .Define('EVT_thrusthemis1_e',         'getAxisEnergy(1)(RP_thrustangle, RP_charge, RP_e)')
+               .Define('EVT_thrusthemis0_q_kappa1',  'Algorithms::getAxisCharge(0, 1)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)')
+               .Define('EVT_thrusthemis1_q_kappa1',  'Algorithms::getAxisCharge(1, 1)(RP_thrustangle, RP_charge, RP_px, RP_py, RP_pz)')
+               .Define('EVT_thrusthemis0_n',         'Algorithms::getAxisN(0)(RP_thrustangle, RP_charge)')
+               .Define('EVT_thrusthemis1_n',         'Algorithms::getAxisN(1)(RP_thrustangle, RP_charge)')
+               .Define('EVT_thrusthemis0_e',         'Algorithms::getAxisEnergy(0)(RP_thrustangle, RP_charge, RP_e)')
+               .Define('EVT_thrusthemis1_e',         'Algorithms::getAxisEnergy(1)(RP_thrustangle, RP_charge, RP_e)')
                .Define('EVT_thrutshemis0_ncharged',  'EVT_thrusthemis0_n.at(1)')
                .Define('EVT_thrutshemis0_nneutral',  'EVT_thrusthemis0_n.at(2)')
                .Define('EVT_thrutshemis0_echarged',  'EVT_thrusthemis0_e.at(1)')
