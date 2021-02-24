@@ -29,14 +29,14 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        #ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df.Range(10000)
-        df2 = (self.df
+        df2 = (self.df.Range(0,5000)
+        #df2 = (self.df
 
                # MC event primary vertex
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
@@ -65,9 +65,17 @@ class analysis():
                .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
                .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
 
-               .Define("VertexObject_acts","VertexFinderActs::VertexFinderAMVF( EFlowTrack_1)")
-               .Define("Vertex_acts",   "VertexingUtils::get_VertexData( VertexObject_acts )")   # primary vertex, in mm
-               .Define("nPrimaryTracks_acts", "VertexingUtils::get_VertexNtrk(VertexObject_acts)")
+               #Run the Acts AMVF vertex finder
+               .Define("VertexObject_actsFinder","VertexFinderActs::VertexFinderAMVF( EFlowTrack_1)")
+               .Define("Vertex_actsFinder",   "VertexingUtils::get_VertexData( VertexObject_actsFinder )")   # primary vertex, in mm
+               .Define("nPrimaryTracks_actsFinder", "VertexingUtils::get_VertexNtrk(VertexObject_actsFinder)")
+
+               #Run the Acts full Billoir vertex fitter
+               .Define("VertexObject_actsFitter","VertexFitterActs::VertexFitterFullBilloir(SelTracks, EFlowTrack_1)")
+               .Define("Vertex_actsFitter",   "VertexingUtils::get_VertexData( VertexObject_actsFitter )")   # primary vertex, in mm
+
+               .Define("VertexObject_primaryTracks_actsFitter","VertexFitterActs::VertexFitterFullBilloir(PrimaryTracks, EFlowTrack_1)")
+               .Define("Vertex_primaryTracks_actsFitter", "VertexingUtils::get_VertexData( VertexObject_primaryTracks_actsFitter )")   # primary vertex, in mm
 
 
 
@@ -84,8 +92,10 @@ class analysis():
                 "nPrimaryTracks",
                 "Vertex_primaryTracks",     # on Zuds: both track selections lead to very similar results for the vertex
 
-                "nPrimaryTracks_acts",
-                "Vertex_acts",     # on Zuds: both track selections lead to very similar results for the vertex
+                "nPrimaryTracks_actsFinder",
+                "Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
 
 
                 ]:
@@ -105,7 +115,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 0
+    ncpus = 1
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 
