@@ -21,7 +21,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					ReconstructedParticle.h
 					ReconstructedParticle2Track.h
 					ReconstructedParticle2MC.h
-					Algorithm.h
+					Algorithms.h
 					JetClustering.h
 					Vertexing.h
 					LINKDEF LinkDef.h)
