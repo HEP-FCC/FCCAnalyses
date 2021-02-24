@@ -40,9 +40,15 @@ EDM4HEP event model
 
 Reading objects from EDM4HEP
 =============
-The example read_EDM4HEP.py shows you how to access the different objects from the EDM4HEP files. 
+The example read_EDM4HEP.py shows you how to access the different objects such as jets, electrons, muons, missing ET etc. from the EDM4HEP files. Generally a new variable is calculated with a statement inside the `run()` function of the `analysis` class like
+`dataframe.Define("<your_variable>", "<accessor_fct <name of collection/object>")`
+which creates a column in the RDataFrame named `<your_variable>` and filled with the return value of the `<accessor_fct>` for the given collection/object. 
 
-TODO: explain the logics of naming etc and accessor functions for basics like pT, eta, etc. here. 
+Here, accessor functions are the functions found in the C++ analyzers code that return a certain variable, e.g. getRP_pt(object) returns the pT of the object. To find out all functions available for e.g. reconstructed particles have a look at the [respective analyzers code](https://github.com/bistapf/FCCAnalyses/blob/basicexamples/analyzers/dataframe/ReconstructedParticle.h). If you want to add your own function have a look at the [Writing your own function](#writing-your-own-function) section on this page. 
+
+For the name of the object, in principle the names of the EDM4HEP collections are used - muons and electrons are an exception where a few extra steps are required, as shown in the example here. 
+
+TODO: explain the logics of naming etc and accessor functions for basics like pT, eta, etc. - make a brief overview of the most important ones in the readme or is the .py enough? 
  
 
 <!--
