@@ -1,4 +1,4 @@
-#include "Algorithm.h"
+#include "Algorithms.h"
 #include "Math/Minimizer.h"
 #include "Math/IFunction.h"
 #include "Math/Factory.h"
@@ -176,21 +176,6 @@ ROOT::VecOps::RVec<float> Algorithms::minimize_thrust::operator()(ROOT::VecOps::
 }
 
 
-
-ROOT::VecOps::RVec<float> Algorithms::axisCosTheta(ROOT::VecOps::RVec<float> axis, 
-						   ROOT::VecOps::RVec<float> px, 
-						   ROOT::VecOps::RVec<float> py, 
-						   ROOT::VecOps::RVec<float> pz){
-
-  float thrust_mag = sqrt(axis[1]*axis[1] + axis[3]*axis[3] + axis[5]*axis[5]);
-  ROOT::VecOps::RVec<float> result;
-  for (unsigned int i =0; i<px.size(); i++){
-    float value = (px.at(i)*axis[1] + py.at(i)*axis[3] + pz.at(i)*axis[5])/(sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i))*thrust_mag);
-    result.push_back(value);
-  }
-  return result;
-}
-
 getAxisCharge::getAxisCharge(bool arg_pos, 
 			     float arg_power){m_pos = arg_pos; m_power = arg_power;};
 float  Algorithms::getAxisCharge::operator() (ROOT::VecOps::RVec<float> angle, 
@@ -277,4 +262,19 @@ float Algorithms::getMass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
     result+=tmp;
   }
   return result.M();
+}
+
+
+ROOT::VecOps::RVec<float> Algorithms::getAxisCosTheta(ROOT::VecOps::RVec<float> axis, 
+						      ROOT::VecOps::RVec<float> px, 
+						      ROOT::VecOps::RVec<float> py, 
+						      ROOT::VecOps::RVec<float> pz){
+
+  float thrust_mag = sqrt(axis[1]*axis[1] + axis[3]*axis[3] + axis[5]*axis[5]);
+  ROOT::VecOps::RVec<float> result;
+  for (unsigned int i =0; i<px.size(); i++){
+    float value = (px.at(i)*axis[1] + py.at(i)*axis[3] + pz.at(i)*axis[5])/(sqrt(px.at(i)*px.at(i)+py.at(i)*py.at(i)+pz.at(i)*pz.at(i))*thrust_mag);
+    result.push_back(value);
+  }
+  return result;
 }
