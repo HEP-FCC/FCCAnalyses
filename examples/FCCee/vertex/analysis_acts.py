@@ -9,7 +9,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyloader
+_fcc  = ROOT.dummyLoader
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -43,14 +43,15 @@ class analysis():
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
-               .Define("ntracks","Vertexing::get_nTracks(EFlowTrack_1)")
+               #.Define("ntracks","Vertexing::get_nTracks(EFlowTrack_1)")
+               .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
                # Select tracks with d0 and z0 significance < 3 sigmas
 		   # note: d0 and z0 are defined w.r.t. (0,0,0)
 		   # hence do not use such criteria to select primary tracks
 		   # if the events were generated with a vertex distribution
                .Define("VertexObject","VertexingACTS::VertexFinder( EFlowTrack_1)")
-               .Define("Vertex",   "Vertexing::get_VertexData( VertexObject )")   # primary vertex, in mm
+               .Define("Vertex",   "VertexingUtils::get_VertexData( VertexObject )")   # primary vertex, in mm
 
                #.Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :

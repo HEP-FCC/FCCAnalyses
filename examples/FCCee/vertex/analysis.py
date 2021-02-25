@@ -8,7 +8,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyloader
+_fcc  = ROOT.dummyLoader
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -16,7 +16,8 @@ print ('fccana   ',_fcc)
 
 
 #
-# Example file : /eos/experiment/fcc/ee/examples/p8_ecm91GeV_Zuds_IDEAtrkCov.root
+# Example file : 
+#    /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zuds_IDEAtrkCov.root
 #    ( these events were generated at (0,0,0) i.e. no vertex smearing
 #
 
@@ -42,7 +43,7 @@ class analysis():
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
-               .Define("ntracks","getTK_n(EFlowTrack_1)")
+               .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
                # Select tracks with d0 and z0 significance < 3 sigmas
 		   # note: d0 and z0 are defined w.r.t. (0,0,0)
@@ -93,10 +94,10 @@ class analysis():
                 "nPrimaryTracks",
                 "Vertex_primaryTracks",     # on Zuds: both track selections lead to very similar results for the vertex
 
-                "nPrimaryTracks_actsFinder",
-                "Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
-                "Vertex_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
-                "Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+                #"nPrimaryTracks_actsFinder",
+                #"Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
+                #"Vertex_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+                #"Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
 
 
                 ]:

@@ -8,7 +8,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyloader
+_fcc  = ROOT.dummyLoader
 
 
 print ('edm4hep  ',_edm)
@@ -18,6 +18,12 @@ print ('fccana   ',_fcc)
 #ROOT.ROOT.EnableThreadSafety()
 #ROOT.ROOT.EnableImplicitMT(1)
 #ROOT.TTree.SetMaxTreeSize(100000000000)
+
+#
+# Example file:
+# /eos/experiment/fcc/ee/examples/lowerTriangle/dummy_zmumu_for_covMat_events_IFSROFF.root
+#
+
 class analysis():
 
     #__________________________________________________________
