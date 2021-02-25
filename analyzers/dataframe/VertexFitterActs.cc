@@ -18,7 +18,6 @@
 
 using namespace VertexFitterActs;
 using namespace Acts::UnitLiterals;
-using namespace ReconstructedParticle2Track;
 
 
 VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
@@ -134,18 +133,6 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
     tracksPtr.push_back(&trk);
   }
 
-  
-  Acts::Vertex<Acts::BoundTrackParameters> fittedVertex =  
-    billoirFitter.fit(tracksPtr, linearizer, vfOptions, state).value();
-  //Acts::Vertex<Acts::BoundTrackParameters> fittedVertexConstraint = 
-  //  billoirFitter.fit(tracksPtr, linearizer, vfOptionsConstr, state).value();
-
-
-  //std::cout << "Fitting nTracks: " << Ntr << std::endl;
-  //  std::cout << "Fitted Vertex: " << fittedVertex.position() << std::endl;
-  //  std::cout << "Fitted constraint Vertex: "
-  //             << fittedVertexConstraint.position() << std::endl;
-
   VertexingUtils::FCCAnalysesVertex TheVertex;
   edm4hep::VertexData edm4hep_vertex;
   ROOT::VecOps::RVec<float> reco_chi2;
@@ -160,6 +147,23 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
   TheVertex.reco_ind = reco_ind;
   TheVertex.final_track_phases = final_track_phases;
   TheVertex.updated_track_momentum_at_vertex = updated_track_momentum_at_vertex;
+
+
+  TheVertex.ntracks = Ntr; 
+  if ( Ntr <= 1) return TheVertex;   // can not reconstruct a vertex with only one track...
+
+
+  Acts::Vertex<Acts::BoundTrackParameters> fittedVertex =  
+    billoirFitter.fit(tracksPtr, linearizer, vfOptions, state).value();
+  //Acts::Vertex<Acts::BoundTrackParameters> fittedVertexConstraint = 
+  //  billoirFitter.fit(tracksPtr, linearizer, vfOptionsConstr, state).value();
+
+
+  //std::cout << "Fitting nTracks: " << Ntr << std::endl;
+  //  std::cout << "Fitted Vertex: " << fittedVertex.position() << std::endl;
+  //  std::cout << "Fitted constraint Vertex: "
+  //             << fittedVertexConstraint.position() << std::endl;
+
 
 
   TheVertex.ntracks = Ntr;

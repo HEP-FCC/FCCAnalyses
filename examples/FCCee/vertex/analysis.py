@@ -30,14 +30,14 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Range(0,5000)
-        #df2 = (self.df
+        #df2 = (self.df.Range(0,5000)
+        df2 = (self.df
 
                # MC event primary vertex
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 1
+    ncpus = 0
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 
