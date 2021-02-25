@@ -18,8 +18,6 @@
 This represents a set functions and utilities to access and perform operations on the MCParticle collection.  
 */
 
-bool dummyloader();
-
 namespace MCParticle{
 
   /// Filter events based on a MCParticles PDGID
@@ -31,8 +29,8 @@ namespace MCParticle{
   };
   
   /// select MCParticles with transverse momentum greater than a minimum value [GeV]
-  struct sel_pT {
-    sel_pT(float arg_min_pt);
+  struct sel_pt {
+    sel_pt(float arg_min_pt);
     float m_min_pt = 20; //> transverse momentum threshold [GeV]
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
@@ -44,14 +42,14 @@ namespace MCParticle{
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
   
-/// select MCParticles with their PDG id
-  struct sel_PDG {
-    sel_PDG(int arg_pdg, bool arg_chargeconjugate);
+  /// select MCParticles with their PDG id
+  struct sel_pdgID {
+    sel_pdgID(int arg_pdg, bool arg_chargeconjugate);
     int m_pdg = 13;
     bool m_chargeconjugate = true;
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
-
+  
   /// get MC history tree for a given MCParticle index
   struct get_tree{
     get_tree(int arg_index);
@@ -68,7 +66,7 @@ namespace MCParticle{
     bool  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
   };
   
- /// return the event primary vertex  (mm)
+  /// return the event primary vertex  (mm)
   struct get_EventPrimaryVertex {
     get_EventPrimaryVertex( int arg_genstatus  );
     int m_genstatus = 21;   // Pythia8  code of the incoming particles of the hardest subprocess

@@ -37,45 +37,76 @@ class analysis():
         #df2 = (self.df
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
+               .Define("MC_PrimaryVertex",
+                       "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
-               .Define("RP_TRK_D0",      "getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")    #  d0 and z0 in mm
-               .Define("RP_TRK_Z0",      "getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_omega",   "getRP2TRK_omega(ReconstructedParticles, EFlowTrack_1)")  # rho, in mm-1
-               .Define("RP_TRK_phi",     "getRP2TRK_phi(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_tanlambda", "getRP2TRK_tanLambda(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_D0",
+                       "ReconstructedParticle2Track::getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")    #  d0 and z0 in mm
+               .Define("RP_TRK_Z0",
+                       "ReconstructedParticle2Track::getRP2TRK_Z0(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_omega",
+                       "ReconstructedParticle2Track::getRP2TRK_omega(ReconstructedParticles, EFlowTrack_1)")  # rho, in mm-1
+               .Define("RP_TRK_phi",
+                       "ReconstructedParticle2Track::getRP2TRK_phi(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_tanlambda",
+                       "ReconstructedParticle2Track::getRP2TRK_tanLambda(ReconstructedParticles, EFlowTrack_1)")
 
-               .Define("RP_TRK_D0_cov",      "getRP2TRK_D0_cov(ReconstructedParticles, EFlowTrack_1)")    
-               .Define("RP_TRK_Z0_cov",      "getRP2TRK_Z0_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_omega_cov",   "getRP2TRK_omega_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_phi_cov",     "getRP2TRK_phi_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_tanlambda_cov", "getRP2TRK_tanLambda_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_D0_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_D0_cov(ReconstructedParticles, EFlowTrack_1)")    
+               .Define("RP_TRK_Z0_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_Z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_omega_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_omega_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_phi_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_tanlambda_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_tanLambda_cov(ReconstructedParticles, EFlowTrack_1)")
 
-	       .Define("RP_TRK_d0_phi0_cov",  "getRP2TRK_d0_phi0_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_d0_omega_cov", "getRP2TRK_d0_omega_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_d0_z0_cov",    "getRP2TRK_d0_z0_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_d0_tanlambda_cov",  "getRP2TRK_d0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_phi0_omega_cov",  "getRP2TRK_phi0_omega_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_phi0_z0_cov",     "getRP2TRK_phi0_z0_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_phi0_tanlambda_cov",   "getRP2TRK_phi0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_omega_z0_cov",    "getRP2TRK_omega_z0_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_omega_tanlambda_cov",  "getRP2TRK_omega_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
-               .Define("RP_TRK_z0_tanlambda_cov",  "getRP2TRK_z0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
+	       .Define("RP_TRK_d0_phi0_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_d0_phi0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_d0_omega_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_d0_omega_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_d0_z0_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_d0_z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_d0_tanlambda_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_d0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi0_omega_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_phi0_omega_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi0_z0_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_phi0_z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_phi0_tanlambda_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_phi0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_omega_z0_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_omega_z0_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_omega_tanlambda_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_omega_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
+               .Define("RP_TRK_z0_tanlambda_cov",
+                       "ReconstructedParticle2Track::getRP2TRK_z0_tanlambda_cov(ReconstructedParticles, EFlowTrack_1)")
 
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Alias("Particle0", "Particle#0.index")
 
-               #.Define('RP_MC_index',    "getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_p',        "getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_px',       "getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_py',       "getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_pz',       "getRP2MC_pz(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_pdg',      "getRP2MC_pdg(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_charge',   "getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               .Define('RP_MC_tlv',      "getRP2MC_tlv(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               #.Define('RP_MC_mass',     "getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
-               #.Define('RP_MC_parentindex', "getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
+               #.Define('RP_MC_index',
+               #"ReconstructedParticle2MC::getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_p',
+                       "ReconstructedParticle2MC::getRP2MC_p(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_px',
+                       "ReconstructedParticle2MC::getRP2MC_px(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_py',
+                       "ReconstructedParticle2MC::getRP2MC_py(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_pz',
+                       "ReconstructedParticle2MC::getRP2MC_pz(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_pdg',
+                       "ReconstructedParticle2MC::getRP2MC_pdg(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_charge',
+                       "ReconstructedParticle2MC::getRP2MC_charge(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               .Define('RP_MC_tlv',
+                       "ReconstructedParticle2MC::getRP2MC_tlv(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_mass',
+               #"ReconstructedParticle2MC::getRP2MC_mass(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle)")
+               #.Define('RP_MC_parentindex',
+               #"ReconstructedParticle2MC::getRP2MC_parentid(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, Particle0)")
 
                )
 

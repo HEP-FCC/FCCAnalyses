@@ -9,7 +9,6 @@ project(FCCAnalyses CXX)
 find_package(ROOT COMPONENTS ROOTDataFrame)
 include(${ROOT_USE_FILE})
 
-find_package(fccedm)
 find_package(EDM4HEP)
 find_package(podio)
 
