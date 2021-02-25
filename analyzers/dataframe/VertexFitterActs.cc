@@ -25,7 +25,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
 
 
   // retrieve the tracks associated to the recoparticles
-  ROOT::VecOps::RVec<edm4hep::TrackState> tracks = getRP2TRK( recoparticles, thetracks );
+  ROOT::VecOps::RVec<edm4hep::TrackState> tracks = ReconstructedParticle2Track::getRP2TRK( recoparticles, thetracks );
  
 
   // Create a test context
