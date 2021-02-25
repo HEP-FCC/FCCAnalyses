@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['thrustfit_242',['thrustFit',['../structthrust_fit.html',1,'']]]
+  ['thrustfit_232',['thrustFit',['../struct_algorithms_1_1thrust_fit.html',1,'Algorithms']]]
 ];

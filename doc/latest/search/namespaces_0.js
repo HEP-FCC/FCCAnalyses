@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jetclustering_243',['JetClustering',['../namespace_jet_clustering.html',1,'']]]
+  ['algorithms_233',['Algorithms',['../namespace_algorithms.html',1,'']]]
 ];

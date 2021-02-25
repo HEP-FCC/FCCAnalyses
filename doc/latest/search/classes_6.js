@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['recoil_231',['recoil',['../structrecoil.html',1,'']]],
-  ['resonancebuilder_232',['ResonanceBuilder',['../struct_resonance_builder.html',1,'']]]
+  ['recoilbuilder_221',['recoilBuilder',['../struct_reconstructed_particle_1_1recoil_builder.html',1,'ReconstructedParticle']]],
+  ['resonancebuilder_222',['resonanceBuilder',['../struct_reconstructed_particle_1_1resonance_builder.html',1,'ReconstructedParticle']]]
 ];

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['dummyloader_6',['dummyloader',['../_m_c_particle_8cc.html#a82fece00ae584ed3f9e75d20834c9674',1,'dummyloader():&#160;MCParticle.cc'],['../_m_c_particle_8h.html#a82fece00ae584ed3f9e75d20834c9674',1,'dummyloader():&#160;MCParticle.cc']]]
+  ['dummyloader_6',['dummyLoader',['../dummy_loader_8cc.html#a13655070a3dd083e1c4d47ff51d3172e',1,'dummyLoader():&#160;dummyLoader.cc'],['../dummy_loader_8h.html#a13655070a3dd083e1c4d47ff51d3172e',1,'dummyLoader():&#160;dummyLoader.cc']]],
+  ['dummyloader_2ecc_7',['dummyLoader.cc',['../dummy_loader_8cc.html',1,'']]],
+  ['dummyloader_2eh_8',['dummyLoader.h',['../dummy_loader_8h.html',1,'']]]
 ];

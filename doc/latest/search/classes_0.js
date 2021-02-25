@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['angular_5fseparation_213',['angular_separation',['../structangular__separation.html',1,'']]]
+  ['angular_5fseparationbuilder_204',['angular_separationBuilder',['../struct_reconstructed_particle_1_1angular__separation_builder.html',1,'ReconstructedParticle']]]
 ];

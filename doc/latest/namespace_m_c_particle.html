@@ -77,6 +77,9 @@ $(function() {
 <div class="title">MCParticle Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><a class="el" href="namespace_m_c_particle.html" title="MCParticle interface.">MCParticle</a> interface.  
+<a href="namespace_m_c_particle.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -93,16 +96,16 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">return a list of indices that correspond to a given MC decay. The list contains the index of the mother, followed by the indices of the daughters, in the order specified. In case there are several such decays in the event, keep only the first one.  <a href="struct_m_c_particle_1_1get__indices___exclusive_decay.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_c_particle_1_1get__tree.html">get_tree</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">get MC history tree for a given <a class="el" href="namespace_m_c_particle.html">MCParticle</a> index  <a href="struct_m_c_particle_1_1get__tree.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">get MC history tree for a given <a class="el" href="namespace_m_c_particle.html" title="MCParticle interface.">MCParticle</a> index  <a href="struct_m_c_particle_1_1get__tree.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_c_particle_1_1sel__gen_status.html">sel_genStatus</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select MCParticles with their status  <a href="struct_m_c_particle_1_1sel__gen_status.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_c_particle_1_1sel___p_d_g.html">sel_PDG</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select MCParticles with their PDG id  <a href="struct_m_c_particle_1_1sel___p_d_g.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_c_particle_1_1sel__pdg_i_d.html">sel_pdgID</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select MCParticles with their PDG id  <a href="struct_m_c_particle_1_1sel__pdg_i_d.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_c_particle_1_1sel__p_t.html">sel_pT</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select MCParticles with transverse momentum greater than a minimum value [GeV]  <a href="struct_m_c_particle_1_1sel__p_t.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_c_particle_1_1sel__pt.html">sel_pt</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">select MCParticles with transverse momentum greater than a minimum value [GeV]  <a href="struct_m_c_particle_1_1sel__pt.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -207,10 +210,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:a5d6af3220247d07b62e3ac9de6d704e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the list of particles from the decay of a mother particle. i is the mother index in the Particle block.  <a href="namespace_m_c_particle.html#a5d6af3220247d07b62e3ac9de6d704e6">More...</a><br /></td></tr>
 <tr class="separator:a5d6af3220247d07b62e3ac9de6d704e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bb4130d6c6dfea9985fc29b489288df"><td class="memItemLeft" align="right" valign="top">edm4hep::MCParticleData&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_m_c_particle.html#a5bb4130d6c6dfea9985fc29b489288df">sel_byIndex</a> (int idx, ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; in)</td></tr>
-<tr class="memdesc:a5bb4130d6c6dfea9985fc29b489288df"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns one <a class="el" href="namespace_m_c_particle.html">MCParticle</a> selected by its index in the particle block  <a href="namespace_m_c_particle.html#a5bb4130d6c6dfea9985fc29b489288df">More...</a><br /></td></tr>
+<tr class="memdesc:a5bb4130d6c6dfea9985fc29b489288df"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns one <a class="el" href="namespace_m_c_particle.html" title="MCParticle interface.">MCParticle</a> selected by its index in the particle block  <a href="namespace_m_c_particle.html#a5bb4130d6c6dfea9985fc29b489288df">More...</a><br /></td></tr>
 <tr class="separator:a5bb4130d6c6dfea9985fc29b489288df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="namespace_m_c_particle.html" title="MCParticle interface.">MCParticle</a> interface. </p>
+<p>This represents a set functions and utilities to access and perform operations on the <a class="el" href="namespace_m_c_particle.html" title="MCParticle interface.">MCParticle</a> collection. <br  />
+ </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a9c422d36644dcb28a4c2c5943cce270f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c422d36644dcb28a4c2c5943cce270f">&#9670;&nbsp;</a></span>AngleBetweenTwoMCParticles()</h2>
 
@@ -1003,7 +1010,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>returns one <a class="el" href="namespace_m_c_particle.html">MCParticle</a> selected by its index in the particle block </p>
+<p>returns one <a class="el" href="namespace_m_c_particle.html" title="MCParticle interface.">MCParticle</a> selected by its index in the particle block </p>
 
 </div>
 </div>
@@ -1011,7 +1018,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 24 2021 14:33:11 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 25 2021 14:29:40 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>
