@@ -44,7 +44,7 @@ ReconstructedParticle2Track::getRP2TRK_Z0_cov(ROOT::VecOps::RVec<edm4hep::Recons
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[12]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[9]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -70,7 +70,7 @@ ReconstructedParticle2Track::getRP2TRK_phi_cov(ROOT::VecOps::RVec<edm4hep::Recon
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[5]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[2]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -95,7 +95,7 @@ ReconstructedParticle2Track::getRP2TRK_omega_cov(ROOT::VecOps::RVec<edm4hep::Rec
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[9]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[5]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -143,7 +143,7 @@ ReconstructedParticle2Track::getRP2TRK_d0_omega_cov(ROOT::VecOps::RVec<edm4hep::
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[2]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[3]);   
     else result.push_back(std::nan(""));
   }
   return result;
@@ -155,7 +155,7 @@ ReconstructedParticle2Track::getRP2TRK_d0_z0_cov(ROOT::VecOps::RVec<edm4hep::Rec
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[3]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[6]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -167,7 +167,7 @@ ReconstructedParticle2Track::getRP2TRK_d0_tanlambda_cov(ROOT::VecOps::RVec<edm4h
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[4]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[10]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -179,7 +179,7 @@ ReconstructedParticle2Track::getRP2TRK_phi0_omega_cov(ROOT::VecOps::RVec<edm4hep
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[6]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[4]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -203,7 +203,7 @@ ReconstructedParticle2Track::getRP2TRK_phi0_tanlambda_cov(ROOT::VecOps::RVec<edm
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[8]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[11]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -215,7 +215,7 @@ ReconstructedParticle2Track::getRP2TRK_omega_z0_cov(ROOT::VecOps::RVec<edm4hep::
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[10]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[8]);
     else result.push_back(std::nan(""));
   }
   return result;
@@ -227,7 +227,7 @@ ReconstructedParticle2Track::getRP2TRK_omega_tanlambda_cov(ROOT::VecOps::RVec<ed
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
-      result.push_back(tracks.at(p.tracks_begin).covMatrix[11]);
+      result.push_back(tracks.at(p.tracks_begin).covMatrix[12]);
     else result.push_back(std::nan(""));
   }
   return result;

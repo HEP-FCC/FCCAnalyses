@@ -35,8 +35,8 @@ class analysis():
         print (" done")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df.Range(10000)
-        df2 = (self.df
+        df2 = (self.df.Range(0,5000)
+        #df2 = (self.df
 
                # MC event primary vertex
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
@@ -48,22 +48,37 @@ class analysis():
 		   # note: d0 and z0 are defined w.r.t. (0,0,0)
 		   # hence do not use such criteria to select primary tracks
 		   # if the events were generated with a vertex distribution
-               .Define("SelTracks","Vertexing::selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
+               .Define("SelTracks",  "VertexingUtils::selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
                .Define("nSeltracks",  "ReconstructedParticle::get_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
-               .Define("VertexObject",  "Vertexing::VertexFitter( 1, SelTracks, EFlowTrack_1 )")
-               .Define("Vertex",  "get_VertexData( VertexObject )")    # primary vertex, in mm
+               .Define("VertexObject",  "VertexFitterSimple::VertexFitter( 1, SelTracks, EFlowTrack_1 )")
+               .Define("Vertex",        "VertexingUtils::get_VertexData( VertexObject )")    # primary vertex, in mm
                
                # Select primary tracks based on the matching to MC
 		  # This can be used  to select primary tracks when the
 		  # gen-level primary vertex  is not  (0,0,0)
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Define("PrimaryTracks",  "Vertexing::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
+               .Define("PrimaryTracks",  "VertexingUtils::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
                .Define("nPrimaryTracks", "ReconstructedParticle::get_n(PrimaryTracks)")
+
                ## Reconstruct the vertex from these primary tracks :
-               .Define("VertexObject_primaryTracks",  "Vertexing::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
-               .Define("Vertex_primaryTracks",   "get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
+               .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
+               .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
+
+               #Run the Acts AMVF vertex finder
+               .Define("VertexObject_actsFinder","VertexFinderActs::VertexFinderAMVF( EFlowTrack_1)")
+               .Define("Vertex_actsFinder",   "VertexingUtils::get_VertexData( VertexObject_actsFinder )")   # primary vertex, in mm
+               .Define("nPrimaryTracks_actsFinder", "VertexingUtils::get_VertexNtrk(VertexObject_actsFinder)")
+
+               #Run the Acts full Billoir vertex fitter
+               .Define("VertexObject_actsFitter","VertexFitterActs::VertexFitterFullBilloir(SelTracks, EFlowTrack_1)")
+               .Define("Vertex_actsFitter",   "VertexingUtils::get_VertexData( VertexObject_actsFitter )")   # primary vertex, in mm
+
+               .Define("VertexObject_primaryTracks_actsFitter","VertexFitterActs::VertexFitterFullBilloir(PrimaryTracks, EFlowTrack_1)")
+               .Define("Vertex_primaryTracks_actsFitter", "VertexingUtils::get_VertexData( VertexObject_primaryTracks_actsFitter )")   # primary vertex, in mm
+
+
 
         )
 
@@ -76,7 +91,13 @@ class analysis():
                 "nSeltracks",
                 "Vertex",
                 "nPrimaryTracks",
-                "Vertex_primaryTracks"     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_primaryTracks",     # on Zuds: both track selections lead to very similar results for the vertex
+
+                "nPrimaryTracks_actsFinder",
+                "Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+
 
                 ]:
             branchList.push_back(branchName)
@@ -95,7 +116,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
-    ncpus = 0
+    ncpus = 1
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 
