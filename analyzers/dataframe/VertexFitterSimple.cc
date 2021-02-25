@@ -7,8 +7,6 @@
 
 using namespace VertexFitterSimple;
 
-using namespace ReconstructedParticle2Track;
-
 
 
 
