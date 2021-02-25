@@ -7,7 +7,6 @@ include(${ROOT_USE_FILE})
 find_package(EDM4HEP)
 find_package(podio)
 
-
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 find_package(FastJet)
@@ -16,16 +15,19 @@ find_package(FastJet)
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
 
 include_directories(${EDM4HEP_INCLUDE_DIRS} 
-		    ${podio_INCLUDE_DIR} ${FASTJET_INCLUDE_DIR} 
+		    ${podio_INCLUDE_DIR} 
+                    ${FASTJET_INCLUDE_DIR} 
 		    ${acts_INCLUDE_DIR} 
 		    #${Boost_INCLUDE_DIRS}
 		    )
 
-ROOT_GENERATE_DICTIONARY(G__FCCAnalyses MCParticle.h
+
+ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
+                                        MCParticle.h
 					ReconstructedParticle.h
 					ReconstructedParticle2Track.h
 					ReconstructedParticle2MC.h
-					Algorithm.h
+					Algorithms.h
 					JetClustering.h
 					VertexingUtils.h
 					VertexFitterSimple.h
@@ -43,8 +45,19 @@ target_include_directories(FCCAnalyses  PUBLIC
 	                   ${FASTJET_INCLUDE_DIR}
 		           ${acts_INCLUDE_DIR} )
 
-target_link_libraries(FCCAnalyses ROOT::Physics ROOT::MathCore ROOT::ROOTVecOps ROOT::ROOTDataFrame EDM4HEP::edm4hep EDM4HEP::edm4hepDict podio::podio ${FASTJET_LIBRARY} ${acts_LIBRARY} ActsCore )
-#${Boost_LIBRARIES})
+target_link_libraries(FCCAnalyses 
+                      ROOT::Physics 
+		      ROOT::MathCore 
+		      ROOT::ROOTVecOps
+		      ROOT::ROOTDataFrame
+		      EDM4HEP::edm4hep 
+		      EDM4HEP::edm4hepDict 
+		      podio::podio 
+		      ${FASTJET_LIBRARY} 
+		      ${acts_LIBRARY} ActsCore )
+
+
+
 
 set_target_properties(FCCAnalyses PROPERTIES
   PUBLIC_HEADER "${headers}")

@@ -1,7 +1,10 @@
 #include "ReconstructedParticle2Track.h"
 
+using namespace ReconstructedParticle2Track;
 
-ROOT::VecOps::RVec<float> getRP2TRK_D0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_D0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+					  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -11,7 +14,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_D0(ROOT::VecOps::RVec<edm4hep::Reconstructed
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_D0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_D0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+					      ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -21,7 +26,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_D0_cov(ROOT::VecOps::RVec<edm4hep::Reconstru
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_Z0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_Z0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+					  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -31,7 +38,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_Z0(ROOT::VecOps::RVec<edm4hep::Reconstructed
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_Z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_Z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+					      ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -43,7 +52,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_Z0_cov(ROOT::VecOps::RVec<edm4hep::Reconstru
 
 
 
-ROOT::VecOps::RVec<float> getRP2TRK_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_phi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+					   ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -53,7 +64,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_phi(ROOT::VecOps::RVec<edm4hep::Reconstructe
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_phi_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_phi_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, 
+					       ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -64,7 +77,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_phi_cov(ROOT::VecOps::RVec<edm4hep::Reconstr
 }
 
 
-ROOT::VecOps::RVec<float> getRP2TRK_omega(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_omega(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+					     ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -74,7 +89,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_omega(ROOT::VecOps::RVec<edm4hep::Reconstruc
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+						 ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -84,7 +101,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_omega_cov(ROOT::VecOps::RVec<edm4hep::Recons
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_tanLambda(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_tanLambda(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+						 ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -94,7 +113,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_tanLambda(ROOT::VecOps::RVec<edm4hep::Recons
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_tanLambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_tanLambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+						     ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -104,7 +125,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_tanLambda_cov(ROOT::VecOps::RVec<edm4hep::Re
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_d0_phi0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_d0_phi0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+						   ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -114,7 +137,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_d0_phi0_cov(ROOT::VecOps::RVec<edm4hep::Reco
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_d0_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_d0_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+						    ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -124,7 +149,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_d0_omega_cov(ROOT::VecOps::RVec<edm4hep::Rec
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_d0_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_d0_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+						 ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -134,7 +161,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_d0_z0_cov(ROOT::VecOps::RVec<edm4hep::Recons
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_d0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_d0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+							ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -144,7 +173,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_d0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep:
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_phi0_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_phi0_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  
+						      ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -154,7 +185,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_phi0_omega_cov(ROOT::VecOps::RVec<edm4hep::R
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_phi0_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_phi0_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, 
+						   ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -164,7 +197,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_phi0_z0_cov(ROOT::VecOps::RVec<edm4hep::Reco
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_phi0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_phi0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+							  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -174,7 +209,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_phi0_tanlambda_cov(ROOT::VecOps::RVec<edm4he
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_omega_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_omega_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+						    ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -184,7 +221,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_omega_z0_cov(ROOT::VecOps::RVec<edm4hep::Rec
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_omega_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_omega_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+							   ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -194,7 +233,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_omega_tanlambda_cov(ROOT::VecOps::RVec<edm4h
   return result;
 }
 
-ROOT::VecOps::RVec<float> getRP2TRK_z0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+ROOT::VecOps::RVec<float> 
+ReconstructedParticle2Track::getRP2TRK_z0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+							ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     if (p.tracks_begin<tracks.size())
@@ -204,7 +245,9 @@ ROOT::VecOps::RVec<float> getRP2TRK_z0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep:
   return result;
 }
 
-ROOT::VecOps::RVec<edm4hep::TrackState> getRP2TRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
+ROOT::VecOps::RVec<edm4hep::TrackState> 
+ReconstructedParticle2Track::getRP2TRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, 
+					ROOT::VecOps::RVec<edm4hep::TrackState> tracks )
 {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> result ;
@@ -218,7 +261,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState> getRP2TRK( ROOT::VecOps::RVec<edm4hep::R
  return result ;
 }
 
-int getTK_n(ROOT::VecOps::RVec<edm4hep::TrackState> x) {
+int ReconstructedParticle2Track::getTK_n(ROOT::VecOps::RVec<edm4hep::TrackState> x) {
   int result =  x.size();
   return result;
 }

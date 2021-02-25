@@ -49,7 +49,7 @@ class analysis():
 		   # hence do not use such criteria to select primary tracks
 		   # if the events were generated with a vertex distribution
                .Define("SelTracks",  "VertexingUtils::selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
-               .Define("nSeltracks", "getRP_n(SelTracks)")
+               .Define("nSeltracks",  "ReconstructedParticle::get_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
                .Define("VertexObject",  "VertexFitterSimple::VertexFitter( 1, SelTracks, EFlowTrack_1 )")
                .Define("Vertex",        "VertexingUtils::get_VertexData( VertexObject )")    # primary vertex, in mm
@@ -60,7 +60,8 @@ class analysis():
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Define("PrimaryTracks",  "VertexingUtils::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
-               .Define("nPrimaryTracks", "getRP_n(PrimaryTracks)")
+               .Define("nPrimaryTracks", "ReconstructedParticle::get_n(PrimaryTracks)")
+
                ## Reconstruct the vertex from these primary tracks :
                .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
                .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm

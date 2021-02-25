@@ -7,3 +7,4 @@ export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
 
 spack load acts@5.00.0 build_type=Debug
 export LOCALFCCANALYSES=$PWD/install/include/FCCAnalyses
+spack load py-pyyaml
