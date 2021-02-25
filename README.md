@@ -23,16 +23,10 @@ Using ROOT dataframe allows a much quicker processing time. In this implementati
 
 Getting Started
 ============
-In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (this happens in `setup.sh`)
-
-First check if FCCSW is setup. If the command ```which fccrun``` returns something like: ```/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/fccsw-develop-q57ahua7lm65fvxnzekozih4mgvzptlx/scripts/fccrun``` then you are good to go, if not please run:
+In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (this happens in `setup_lcg.sh`)
 
 ```
-source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
-```
-
-```
-source ./setup.sh
+source ./setup_lcg.sh
 mkdir build install
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install
