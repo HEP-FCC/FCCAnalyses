@@ -94,10 +94,10 @@ class analysis():
                 "nPrimaryTracks",
                 "Vertex_primaryTracks",     # on Zuds: both track selections lead to very similar results for the vertex
 
-                #"nPrimaryTracks_actsFinder",
-                #"Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
-                #"Vertex_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
-                #"Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+                "nPrimaryTracks_actsFinder",
+                "Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
 
 
                 ]:
