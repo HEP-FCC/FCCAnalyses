@@ -18,6 +18,7 @@
 
 using namespace VertexFitterActs;
 using namespace Acts::UnitLiterals;
+using namespace ReconstructedParticle2Track;
 
 
 VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,

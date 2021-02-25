@@ -7,6 +7,9 @@
 
 using namespace VertexFitterSimple;
 
+using namespace ReconstructedParticle2Track;
+
+
 
 
 TVector3 VertexFitterSimple::ParToP(TVectorD Par){

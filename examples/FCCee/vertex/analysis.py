@@ -16,7 +16,8 @@ print ('fccana   ',_fcc)
 
 
 #
-# Example file : /eos/experiment/fcc/ee/examples/p8_ecm91GeV_Zuds_IDEAtrkCov.root
+# Example file : 
+#    /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zuds_IDEAtrkCov.root
 #    ( these events were generated at (0,0,0) i.e. no vertex smearing
 #
 
@@ -42,7 +43,7 @@ class analysis():
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
-               .Define("ntracks","getTK_n(EFlowTrack_1)")
+               .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
                # Select tracks with d0 and z0 significance < 3 sigmas
 		   # note: d0 and z0 are defined w.r.t. (0,0,0)
