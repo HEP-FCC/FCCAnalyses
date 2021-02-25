@@ -295,7 +295,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary
   VertexingUtils::FCCAnalysesVertex thevertex;
   
   // retrieve the tracks associated to the recoparticles
-  ROOT::VecOps::RVec<edm4hep::TrackState> tracks = getRP2TRK( recoparticles, thetracks );
+  ROOT::VecOps::RVec<edm4hep::TrackState> tracks = ReconstructedParticle2Track::getRP2TRK( recoparticles, thetracks );
   
   // and run the vertex fitter
   
