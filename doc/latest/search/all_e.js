@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['updated_5ftrack_5fmomentum_5fat_5fvertex_195',['updated_track_momentum_at_vertex',['../struct_vertexing_1_1_f_c_c_analyses_vertex.html#a103653940118fdd7390c9227b7651fed',1,'Vertexing::FCCAnalysesVertex']]],
-  ['updated_5ftrack_5fparameters_196',['updated_track_parameters',['../struct_vertexing_1_1_f_c_c_analyses_vertex.html#a86e42016f0ae21a9ad01b398cf0a1f7b',1,'Vertexing::FCCAnalysesVertex']]]
+  ['updated_5ftrack_5fmomentum_5fat_5fvertex_198',['updated_track_momentum_at_vertex',['../struct_vertexing_utils_1_1_f_c_c_analyses_vertex.html#ad714b8aaf3c76e638a841db2e48c04f2',1,'VertexingUtils::FCCAnalysesVertex']]],
+  ['updated_5ftrack_5fparameters_199',['updated_track_parameters',['../struct_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a34dfb432862b0e109f4aa27e4a1b8bf1',1,'VertexingUtils::FCCAnalysesVertex']]]
 ];

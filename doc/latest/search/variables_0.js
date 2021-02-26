@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['final_5ftrack_5fphases_388',['final_track_phases',['../struct_vertexing_1_1_f_c_c_analyses_vertex.html#a1740681eecd8c2de24f5c7d0a1fa55d5',1,'Vertexing::FCCAnalysesVertex']]]
+  ['final_5ftrack_5fphases_416',['final_track_phases',['../struct_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a25ef9b5eb744692d1886de55f959aef4',1,'VertexingUtils::FCCAnalysesVertex']]]
 ];

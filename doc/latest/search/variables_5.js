@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vertex_433',['vertex',['../struct_vertexing_1_1_f_c_c_analyses_vertex.html#a3d4351300b9ebd71915f487bf89da729',1,'Vertexing::FCCAnalysesVertex']]]
+  ['vertex_461',['vertex',['../struct_vertexing_utils_1_1_f_c_c_analyses_vertex.html#aee4c7a14b1beeca9261f6eb7782f80f5',1,'VertexingUtils::FCCAnalysesVertex']]]
 ];

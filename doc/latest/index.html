@@ -75,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a></p>
-<p>This package produce flat ROOT trees using FCCSW EDM root files produced with the <a href="https://github.com/HEP-FCC/EventProducer">EventProducer</a>. As usual, if you aim at contributing to the repository, please fork it, develop and submit pull requests. To have access to the FCC samples, you need to subscribe to one of the following e-group (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx=ee,hh,eh</code>. For the time being, the configuration files are accessible on <code>helsens</code> public <code>afs</code>. This is not optimal and will be changed in the future, thus you are also kindly asked to contact <code>clement.helsens@cern.ch</code> and request access to <code>/afs/cern.ch/work/h/helsens/public/FCCDicts/</code>.</p>
+<p>This package produces flat ROOT trees using FCCSW EDM root files produced with the <a href="https://github.com/HEP-FCC/EventProducer">EventProducer</a>. As usual, if you aim at contributing to the repository, please fork it, develop and submit pull requests. To have access to the FCC samples, you need to subscribe to one of the following e-group (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx=ee,hh,eh</code>. For the time being, the configuration files are accessible on <code>helsens</code> public <code>afs</code>. This is not optimal and will be changed in the future, thus you are also kindly asked to contact <code>clement.helsens@cern.ch</code> and request access to <code>/afs/cern.ch/work/h/helsens/public/FCCDicts/</code>.</p>
 <p>Analysers documentation <a href="http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html">here</a></p>
 <h1><a class="anchor" id="autotoc_md0"></a>
 Table of contents</h1>
@@ -96,10 +96,8 @@ RootDataFrame based</h1>
 <p>Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading EDM4Hep or FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained. ROOT dataframe documentation is availabe <a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html">here</a></p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Getting Started</h1>
-<p>In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into <code>LD_LIBRARY_PATH</code> (this happens in <code>setup.sh</code>)</p>
-<p>First check if FCCSW is setup. If the command <code>which fccrun</code> returns something like: <code>/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/fccsw-develop-q57ahua7lm65fvxnzekozih4mgvzptlx/scripts/fccrun</code> then you are good to go, if not please run:</p>
-<div class="fragment"><div class="line">source /cvmfs/fcc.cern.ch/sw/latest/setup.sh</div>
-</div><!-- fragment --><div class="fragment"><div class="line">source ./setup.sh</div>
+<p>In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into <code>LD_LIBRARY_PATH</code> (this happens in <code>setup_lcg.sh</code>)</p>
+<div class="fragment"><div class="line">source ./setup_lcg.sh</div>
 <div class="line">mkdir build install</div>
 <div class="line">cd build</div>
 <div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=../install</div>
@@ -132,7 +130,7 @@ Plotting</h1>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 25 2021 14:29:40 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Feb 26 2021 13:22:58 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.20
 </small></address>

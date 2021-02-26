@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ntracks_428',['ntracks',['../struct_vertexing_1_1_f_c_c_analyses_vertex.html#a3b10fb7a902bdbc85389d60980902fc4',1,'Vertexing::FCCAnalysesVertex']]]
+  ['ntracks_456',['ntracks',['../struct_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a7dbb92a14de42f00e6df1f049aad7ad8',1,'VertexingUtils::FCCAnalysesVertex']]]
 ];
