@@ -44,35 +44,6 @@ namespace JetClustering{
   };
   
   
-  /** Get jet px. Details. */
-  ROOT::VecOps::RVec<float> getJet_px(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet py. Details. */
-  ROOT::VecOps::RVec<float> getJet_py(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet pz. Details. */
-  ROOT::VecOps::RVec<float> getJet_pz(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet energy. Details. */
-  ROOT::VecOps::RVec<float> getJet_e(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet pt. Details. */
-  ROOT::VecOps::RVec<float> getJet_pt(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet p. Details. */
-  ROOT::VecOps::RVec<float> getJet_p(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet mass. Details. */
-  ROOT::VecOps::RVec<float> getJet_m(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet eta. Details. */
-  ROOT::VecOps::RVec<float> getJet_eta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-
-  /** Get jet phi. Details. */
-  ROOT::VecOps::RVec<float> getJet_phi(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet theta. Details. */
-  ROOT::VecOps::RVec<float> getJet_theta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
 
   ///@}
 }
