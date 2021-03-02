@@ -23,7 +23,7 @@ Using ROOT dataframe allows a much quicker processing time as it natively suppor
 
 Getting Started
 ============
-In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (this happens in `setup_lcg.sh`)
+In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (this happens in `setup.sh`)
 
 ```
 source ./setup.sh
