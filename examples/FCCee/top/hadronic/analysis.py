@@ -39,10 +39,13 @@ class analysis():
                .Define("RP_e",           "ReconstructedParticle::get_e(ReconstructedParticles)")
 
                #build pseudo jets with the RP
-               .Define("pseudo_jets",    "JetClusteringUtils::get_pseudoJet(RP_px, RP_py, RP_pz, RP_e)")
+               .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
-               .Define("jets",           "JetClustering::clustering(1, 0.5, 2, 6)(pseudo_jets)")
+               .Define("FCCAnalysesJets", "JetClustering::clustering_kt(1, 0.5, 2, 6)(pseudo_jets)")
+               #get the jets out of the struct
+               .Define("jets",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets)")
+               #get some variables
                .Define("jets_px",        "JetClusteringUtils::get_px(jets)")
                .Define("jets_py",        "JetClusteringUtils::get_py(jets)")
                .Define("jets_pz",        "JetClusteringUtils::get_pz(jets)")
