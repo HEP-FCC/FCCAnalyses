@@ -30,18 +30,22 @@ class analysis():
     def run(self):
         df2 = (self.df
         #df2 = (self.df.Range(10)
-
+               #alias for dealing with # in python 
                .Alias("Jet3","Jet#3.index")
+               #define the RP px, py, pz and e
                .Define("RP_px",          "ReconstructedParticle::get_px(ReconstructedParticles)")
                .Define("RP_py",          "ReconstructedParticle::get_py(ReconstructedParticles)")
                .Define("RP_pz",          "ReconstructedParticle::get_pz(ReconstructedParticles)")               
                .Define("RP_e",           "ReconstructedParticle::get_e(ReconstructedParticles)")
 
+               #build pseudo jets with the RP
+               .Define("pseudo_jets",    "JetClusteringUtils::get_pseudoJet(RP_px, RP_py, RP_pz, RP_e)")
+
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
-               .Define("jets",           "JetClustering::clustering(1, 0.5, 2, 6)(RP_px, RP_py, RP_pz, RP_e)")
-               .Define("jets_px",        "JetClustering::getJet_px(jets)")
-               .Define("jets_py",        "JetClustering::getJet_py(jets)")
-               .Define("jets_pz",        "JetClustering::getJet_pz(jets)")
+               .Define("jets",           "JetClustering::clustering(1, 0.5, 2, 6)(pseudo_jets)")
+               .Define("jets_px",        "JetClusteringUtils::get_px(jets)")
+               .Define("jets_py",        "JetClusteringUtils::get_py(jets)")
+               .Define("jets_pz",        "JetClusteringUtils::get_pz(jets)")
                
                        
                .Define("JET_btag",       "ReconstructedParticle::getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
