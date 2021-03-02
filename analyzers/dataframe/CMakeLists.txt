@@ -29,6 +29,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					ReconstructedParticle2MC.h
 					Algorithms.h
 					JetClustering.h
+					JetClusteringUtils.h
 					VertexingUtils.h
 					VertexFitterSimple.h
 					VertexFinderActs.h					
