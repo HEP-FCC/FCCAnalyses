@@ -2,18 +2,15 @@
 #include "JetClustering.h"
 using namespace JetClustering;
 
-clustering::clustering(int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut){m_jetalgo = arg_jetalgo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut;}
+clustering_kt::clustering_kt(int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut){m_jetalgo = arg_jetalgo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut;}
+JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (std::vector<fastjet::PseudoJet> input) {
+  
+  JetClusteringUtils::FCCAnalysesJet result;
+  ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> constituents;
 
-ROOT::VecOps::RVec<fastjet::PseudoJet> clustering::operator() (ROOT::VecOps::RVec<float> p_x, ROOT::VecOps::RVec<float> p_y, ROOT::VecOps::RVec<float> p_z, ROOT::VecOps::RVec<float> E) {
-  ROOT::VecOps::RVec<fastjet::PseudoJet> result;
-  std::vector<fastjet::PseudoJet> input;
-  unsigned index = 0;
-  for (size_t i = 0; i < p_x.size(); ++i) {
-    input.emplace_back(p_x.at(i), p_y.at(i), p_z.at(i), E.at(i));
-    input.back().set_user_index(index);
-    ++index;
-  }
-
+  result.jets = jets;
+  result.constituents = constituents;
 
   // initialize jet algorithm
   fastjet::JetAlgorithm jetAlgorithm{fastjet::JetAlgorithm::undefined_jet_algorithm};
@@ -30,19 +27,38 @@ ROOT::VecOps::RVec<fastjet::PseudoJet> clustering::operator() (ROOT::VecOps::RVe
       break;
     }
   
-  fastjet::ClusterSequence* cs;
+  //fastjet::ClusterSequence* cs;
+  fastjet::ClusterSequence cs;
   fastjet::JetDefinition def(jetAlgorithm, m_radius, fastjet::RecombinationScheme::E_scheme);
-  cs = new fastjet::ClusterSequence(input, def);
+  //cs = new fastjet::ClusterSequence(input, def);
+  cs = fastjet::ClusterSequence(input, def);
   std::vector<fastjet::PseudoJet> pjets;
-  if(m_exclusive ==  0 )       pjets = fastjet::sorted_by_pt(cs->inclusive_jets(m_cut));
+  if(m_exclusive ==  0 )       pjets = fastjet::sorted_by_pt(cs.inclusive_jets(m_cut));
+  else if( m_exclusive ==  1)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets(m_cut));
+  else if( m_exclusive ==  2)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets(int(m_cut)));
+  else if( m_exclusive ==  3)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets_up_to(int(m_cut)));
+  else if( m_exclusive ==  4)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets_ycut(m_cut));
+  /*if(m_exclusive ==  0 )       pjets = fastjet::sorted_by_pt(cs->inclusive_jets(m_cut));
   else if( m_exclusive ==  1)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets(m_cut));
   else if( m_exclusive ==  2)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets(int(m_cut)));
   else if( m_exclusive ==  3)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets_up_to(int(m_cut)));
-  else if( m_exclusive ==  4)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets_ycut(m_cut));
+  else if( m_exclusive ==  4)  pjets = fastjet::sorted_by_pt(cs->exclusive_jets_ycut(m_cut));*/
   for (const auto& pjet : pjets) {
-    result.push_back(pjet);
+    jets.push_back(pjet);
   }
-  delete cs;
+
+  
+  for (const auto& pjet : pjets) {
+    std::vector<fastjet::PseudoJet> consts = pjet.constituents();
+    ROOT::VecOps::RVec<int> tmpvec;
+    for (const auto& constituent : consts){
+      tmpvec.push_back(constituent.user_index());  
+    }
+    constituents.push_back(tmpvec);
+  }
+  result.jets = jets;
+  result.constituents = constituents;
+  //delete cs;  
   return result;
 }
 
