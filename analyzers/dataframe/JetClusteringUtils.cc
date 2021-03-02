@@ -3,14 +3,18 @@
 using namespace JetClusteringUtils;
 
 
-std::vector<fastjet::PseudoJet> JetClusteringUtils::get_pseudoJets(ROOT::VecOps::RVec<float> px, 
-						      ROOT::VecOps::RVec<float> py, 
-						      ROOT::VecOps::RVec<float> pz, 
-						      ROOT::VecOps::RVec<float> e) {
+ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(FCCAnalysesJet jets){
+  return jets.jets;
+}
+
+std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(ROOT::VecOps::RVec<float> px, 
+								   ROOT::VecOps::RVec<float> py, 
+								   ROOT::VecOps::RVec<float> pz, 
+								   ROOT::VecOps::RVec<float> e) {
   std::vector<fastjet::PseudoJet> result;
   unsigned index = 0;
-  for (size_t i = 0; i < p_x.size(); ++i) {
-    result.emplace_back(p_x.at(i), p_y.at(i), p_z.at(i), E.at(i));
+  for (size_t i = 0; i < px.size(); ++i) {
+    result.emplace_back(px.at(i), py.at(i), pz.at(i), e.at(i));
     result.back().set_user_index(index);
     ++index;
   }
