@@ -3,7 +3,7 @@
 using namespace JetClusteringUtils;
 
 
-ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(FCCAnalysesJet jets){
+ROOT::VecOps::RVec<fastjet::PseudoJet> JetClusteringUtils::get_pseudoJets(FCCAnalysesJet jets){
   return jets.jets;
 }
 
