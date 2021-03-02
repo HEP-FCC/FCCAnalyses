@@ -3,9 +3,10 @@
 gROOT->Reset();
 
 // processed :
-// /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_Zuds_ecm91/events_199980034.root
+//    /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zuds_IDEAtrkCov.root
 
-TFile* f = new TFile("events_199980034.root");
+
+TFile* f = new TFile("p8_ecm91GeV_Zuds_IDEAtrkCov.root") ;
 TTree* events = (TTree*)f->Get("events");
 
 //TString vtx = "Vertex";  // tracks selected based on d0 & z0 significance
@@ -56,7 +57,7 @@ events -> Draw( " ("+vtx+".position.x - MC_PrimaryVertex.x()) / TMath::Sqrt( "+v
 px->Fit("gaus");
 
 TH1F*  py = new TH1F("py","; Pull y_{vtx}; Events",100,-5,5);
-events -> Draw( "("+vtx+".position.y - MC_PrimaryVertex.y()) / TMath::Sqrt( "+vtx+".covMatrix[3] ) >> py",cut);
+events -> Draw( "("+vtx+".position.y - MC_PrimaryVertex.y()) / TMath::Sqrt( "+vtx+".covMatrix[2] ) >> py",cut);
 py->Fit("gaus");
 
 TH1F*  pz = new TH1F("pz","; Pull z_{vtx}; Events",100,-5,5);

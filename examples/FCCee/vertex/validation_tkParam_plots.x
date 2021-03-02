@@ -1,3 +1,6 @@
+{
+
+gROOT->Reset();
 
 TFile* f = new TFile("p8_Zmumu.root");
 TTree* events = (TTree*)f->Get("events");
@@ -50,3 +53,4 @@ events->Draw(" ( TMath::Abs(RP_TRK_omega) - 1e-3*0.3*2*(1./RP_MC_tlv.Pt()) ) / T
 	// sigma = 1, OK
 
 
+}
