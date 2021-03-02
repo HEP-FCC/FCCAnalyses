@@ -24,7 +24,7 @@ namespace JetClusteringUtils{
   /// Structure to keep useful informations for the jets
   struct FCCAnalysesJet{
     ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
-    ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> constituents;
+    std::vector<std::vector<int>> constituents;
   };
 
   /** Set fastjet pseudoJet for later reconstruction*/
@@ -36,6 +36,8 @@ namespace JetClusteringUtils{
   /** Get fastjet pseudoJet after reconstruction from FCCAnalyses jets*/
   ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(FCCAnalysesJet);
 
+  /** Get fastjet constituents after reconstruction from FCCAnalyses jets*/
+  std::vector<std::vector<int>> get_constituents(FCCAnalysesJet);
   
   /** Get jet px. Details. */
   ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<fastjet::PseudoJet> in);

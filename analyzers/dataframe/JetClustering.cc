@@ -7,7 +7,7 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (std
   
   JetClusteringUtils::FCCAnalysesJet result;
   ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
-  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> constituents;
+  std::vector<std::vector<int>> constituents;
 
   result.jets = jets;
   result.constituents = constituents;
@@ -44,12 +44,13 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (std
   
   for (const auto& pjet : pjets) {
     std::vector<fastjet::PseudoJet> consts = pjet.constituents();
-    ROOT::VecOps::RVec<int> tmpvec;
+    std::vector<int> tmpvec;
     for (const auto& constituent : consts){
       tmpvec.push_back(constituent.user_index());  
     }
     constituents.push_back(tmpvec);
   }
+
   result.jets = jets;
   result.constituents = constituents;
 

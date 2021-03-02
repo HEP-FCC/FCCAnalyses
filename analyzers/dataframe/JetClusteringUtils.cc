@@ -7,6 +7,10 @@ ROOT::VecOps::RVec<fastjet::PseudoJet> JetClusteringUtils::get_pseudoJets(FCCAna
   return jets.jets;
 }
 
+std::vector<std::vector<int>> JetClusteringUtils::get_constituents(FCCAnalysesJet jets){
+  return jets.constituents;
+}
+
 std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(ROOT::VecOps::RVec<float> px, 
 								   ROOT::VecOps::RVec<float> py, 
 								   ROOT::VecOps::RVec<float> pz, 

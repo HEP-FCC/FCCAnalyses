@@ -45,6 +45,8 @@ class analysis():
                .Define("FCCAnalysesJets", "JetClustering::clustering_kt(1, 0.5, 2, 6)(pseudo_jets)")
                #get the jets out of the struct
                .Define("jets",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents","JetClusteringUtils::get_constituents(FCCAnalysesJets)")
                #get some variables
                .Define("jets_px",        "JetClusteringUtils::get_px(jets)")
                .Define("jets_py",        "JetClusteringUtils::get_py(jets)")
@@ -105,6 +107,8 @@ class analysis():
                 "jets_px",
                 "jets_py",
                 "jets_pz",
+                "jetconstituents",
+                "RP_px"
                
                 ]:
             branchList.push_back(branchName)
