@@ -20,7 +20,7 @@ R__LOAD_LIBRARY(libFCCAnalyses)
 void reproducer()
 {
 
-  gInterpreter->ProcessLine("#include \"VertexingACTS.h\"");
+  gInterpreter->ProcessLine("#include \"VertexFinderActs.h\"");
   gSystem->Load("libpodio.so");
   gSystem->Load("libpodioDict.so");
   gSystem->Load("libpodioRootIO.so");
