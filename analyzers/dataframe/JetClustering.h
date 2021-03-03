@@ -79,16 +79,30 @@ namespace JetClustering{
   };
 
 
-  ///Jet Clustering interface for eekt
+  ///Jet Clustering interface for ee_genkt
   struct clustering_ee_genkt {
-    clustering_ee_genkt (int arg_exclusive, float arg_cut, int arg_sorted);
+    clustering_ee_genkt (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, float arg_exponent);
     
     float m_radius = 0.5; ///< jet cone radius
     int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
     float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
     int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    float m_exponent = 0; /// anti-kT algorithm=-1, cambridge algorithm=0, kT algorithm=1
     JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
   };
+
+  ///Jet Clustering interface for genkt
+  struct clustering_genkt {
+    clustering_genkt (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, float arg_exponent);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    float m_exponent = 0; /// anti-kT algorithm=-1, cambridge algorithm=0, kT algorithm=1
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
+
   ///@}
 }
 
