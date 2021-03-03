@@ -65,6 +65,19 @@ class analysis():
                .Define("jets_ee_genkt_py",        "JetClusteringUtils::get_py(jets_ee_genkt)")
                .Define("jets_ee_genkt_pz",        "JetClusteringUtils::get_pz(jets_ee_genkt)")
  
+
+               #run jet clustering with all reconstructed particles. valencia_algorithm, R=0.5, inclusive clustering
+               .Define("FCCAnalysesJets_valencia", "JetClustering::clustering_valencia(0.5, 1, 6, 0, 1., 1.)(pseudo_jets)")
+
+               #get the jets out of the struct
+               .Define("jets_valencia",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_valencia)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents_valencia","JetClusteringUtils::get_constituents(FCCAnalysesJets_valencia)")
+               #get some variables
+               .Define("jets_valencia_px",        "JetClusteringUtils::get_px(jets_valencia)")
+               .Define("jets_valencia_py",        "JetClusteringUtils::get_py(jets_valencia)")
+               .Define("jets_valencia_pz",        "JetClusteringUtils::get_pz(jets_valencia)")
+ 
                        
                .Define("JET_btag",       "ReconstructedParticle::getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
                .Define("EVT_nbtag",      "ReconstructedParticle::getJet_ntags(JET_btag)")
@@ -126,6 +139,11 @@ class analysis():
                 "jets_ee_genkt_py",
                 "jets_ee_genkt_pz",
                 "jetconstituents_ee_genkt",
+
+                "jets_valencia_px",
+                "jets_valencia_py",
+                "jets_valencia_pz",
+                "jetconstituents_valencia",
                
                 ]:
             branchList.push_back(branchName)
