@@ -8,9 +8,6 @@
 #include "fastjet/EECambridgePlugin.hh"
 
 
-using namespace std;
-using namespace fastjet;
-
 using namespace JetClustering;
 
 clustering_kt::clustering_kt(float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted){m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted;}
@@ -165,7 +162,7 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_valencia::operator(
  
   JetClusteringUtils::FCCAnalysesJet result2 = JetClusteringUtils::build_FCCAnalysesJet(pjets);
 
-  delete static_cast<JetDefinition::Plugin *>(jetAlgorithm);
+  delete static_cast<fastjet::JetDefinition::Plugin *>(jetAlgorithm);
   return result2;
 }
 
