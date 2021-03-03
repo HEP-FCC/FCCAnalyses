@@ -42,16 +42,29 @@ class analysis():
                .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
-               .Define("FCCAnalysesJets", "JetClustering::clustering_kt(0.5, 2, 6, 0)(pseudo_jets)")
+               .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 6, 0)(pseudo_jets)")
                #get the jets out of the struct
-               .Define("jets",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets)")
+               .Define("jets_kt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_kt)")
                #get the jets constituents out of the struct
-               .Define("jetconstituents","JetClusteringUtils::get_constituents(FCCAnalysesJets)")
+               .Define("jetconstituents_kt","JetClusteringUtils::get_constituents(FCCAnalysesJets_kt)")
                #get some variables
-               .Define("jets_px",        "JetClusteringUtils::get_px(jets)")
-               .Define("jets_py",        "JetClusteringUtils::get_py(jets)")
-               .Define("jets_pz",        "JetClusteringUtils::get_pz(jets)")
-               
+               .Define("jets_kt_px",        "JetClusteringUtils::get_px(jets_kt)")
+               .Define("jets_kt_py",        "JetClusteringUtils::get_py(jets_kt)")
+               .Define("jets_kt_pz",        "JetClusteringUtils::get_pz(jets_kt)")
+              
+
+
+               #run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=0.5, inclusive clustering
+               .Define("FCCAnalysesJets_ee_genkt", "JetClustering::clustering_ee_genkt(0.5, 0, 0, 0,-1)(pseudo_jets)")
+               #get the jets out of the struct
+               .Define("jets_ee_genkt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_ee_genkt)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents_ee_genkt","JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_genkt)")
+               #get some variables
+               .Define("jets_ee_genkt_px",        "JetClusteringUtils::get_px(jets_ee_genkt)")
+               .Define("jets_ee_genkt_py",        "JetClusteringUtils::get_py(jets_ee_genkt)")
+               .Define("jets_ee_genkt_pz",        "JetClusteringUtils::get_pz(jets_ee_genkt)")
+ 
                        
                .Define("JET_btag",       "ReconstructedParticle::getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
                .Define("EVT_nbtag",      "ReconstructedParticle::getJet_ntags(JET_btag)")
@@ -104,11 +117,15 @@ class analysis():
                 "RP_hemis1_mass",
                 "RP_total_mass",
 
-                "jets_px",
-                "jets_py",
-                "jets_pz",
-                "jetconstituents",
-                "RP_px"
+                "jets_kt_px",
+                "jets_kt_py",
+                "jets_kt_pz",
+                "jetconstituents_kt",
+                
+                "jets_ee_genkt_px",
+                "jets_ee_genkt_py",
+                "jets_ee_genkt_pz",
+                "jetconstituents_ee_genkt",
                
                 ]:
             branchList.push_back(branchName)
