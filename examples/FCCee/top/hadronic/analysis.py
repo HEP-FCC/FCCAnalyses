@@ -42,7 +42,7 @@ class analysis():
                .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
-               .Define("FCCAnalysesJets", "JetClustering::clustering_kt(1, 0.5, 2, 6)(pseudo_jets)")
+               .Define("FCCAnalysesJets", "JetClustering::clustering_kt(0.5, 2, 6, 0)(pseudo_jets)")
                #get the jets out of the struct
                .Define("jets",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets)")
                #get the jets constituents out of the struct
