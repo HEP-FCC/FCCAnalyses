@@ -39,7 +39,7 @@ void reproducer()
     auto& tracks = store.get<edm4hep::TrackCollection>("EFlowTrack");
     ROOT::VecOps::RVec<edm4hep::TrackState>  track_states;// = tracks.getTrackStates();
     for (auto track : tracks) { track_states.push_back(track.getTrackStates(0)); } 
-    bool status = VertexingACTS::VertexFinder(track_states);
+    auto result = VertexFitterActs::VertexFinderAMVF(track_states);
     
   }
 }
