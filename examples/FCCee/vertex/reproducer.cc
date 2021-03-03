@@ -14,7 +14,7 @@ R__LOAD_LIBRARY(libFCCAnalyses)
 #include "edm4hep/TrackState.h"
 #include "edm4hep/TrackCollection.h"
 
-#include "VertexingACTS.h"
+#include "VertexFinderActs.h"
 #include "ROOT/RVec.hxx"
 
 void reproducer()
@@ -39,7 +39,7 @@ void reproducer()
     auto& tracks = store.get<edm4hep::TrackCollection>("EFlowTrack");
     ROOT::VecOps::RVec<edm4hep::TrackState>  track_states;// = tracks.getTrackStates();
     for (auto track : tracks) { track_states.push_back(track.getTrackStates(0)); } 
-    auto result = VertexFitterActs::VertexFinderAMVF(track_states);
+    auto result = VertexFinderActs::VertexFinderAMVF(track_states);
     
   }
 }
