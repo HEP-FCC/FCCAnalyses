@@ -149,3 +149,9 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterS
   }
   return pjets;
 }
+
+
+bool JetClusteringUtils::check(unsigned int n, int exclusive, float cut){
+  if (exclusive>0 && n<=int(cut)) return false;
+  return true;
+}

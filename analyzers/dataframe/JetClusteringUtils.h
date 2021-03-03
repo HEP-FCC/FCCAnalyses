@@ -77,6 +77,8 @@ namespace JetClusteringUtils{
   
   std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence & cs, int exclusive, float cut, int sorted);
 
+  bool check(unsigned int n, int exclusive, float cut);
+
   ///@}
 }
 
