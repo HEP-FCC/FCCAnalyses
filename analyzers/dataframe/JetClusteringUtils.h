@@ -21,7 +21,7 @@ namespace JetClusteringUtils{
   ///@{
   
 
-  /// Structure to keep useful informations for the jets
+  /** Structure to keep useful informations for the jets*/
   struct FCCAnalysesJet{
     ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
     std::vector<std::vector<int>> constituents;
@@ -68,6 +68,12 @@ namespace JetClusteringUtils{
   
   /** Get jet theta. Details. */
   ROOT::VecOps::RVec<float> get_theta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+
+  FCCAnalysesJet initialise_FCCAnalysesJet();
+
+  FCCAnalysesJet build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in);
+  
+  std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence cs, int exclusive, float cut, int sorted);
 
   ///@}
 }

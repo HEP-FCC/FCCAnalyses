@@ -99,3 +99,52 @@ ROOT::VecOps::RVec<float> JetClusteringUtils::get_theta(ROOT::VecOps::RVec<fastj
   return result;
 }
 
+
+
+FCCAnalysesJet JetClusteringUtils::initialise_FCCAnalysesJet(){
+  
+  JetClusteringUtils::FCCAnalysesJet result;
+  ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
+  std::vector<std::vector<int>> constituents;
+
+  result.jets = jets;
+  result.constituents = constituents;
+
+  return result;
+};
+
+FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in){
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::initialise_FCCAnalysesJet();
+  for (const auto& pjet : in) {
+    result.jets.push_back(pjet);
+    
+    std::vector<fastjet::PseudoJet> consts = pjet.constituents();
+    std::vector<int> tmpvec;
+    for (const auto& constituent : consts){
+      tmpvec.push_back(constituent.user_index());  
+    }
+    result.constituents.push_back(tmpvec);
+  }
+  return result;
+}
+
+
+
+std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterSequence cs, int exclusive, float cut, int sorted){
+  std::vector<fastjet::PseudoJet> pjets;
+
+  if (sorted == 0){
+    if(exclusive ==  0 )       pjets = fastjet::sorted_by_pt(cs.inclusive_jets(cut));
+    else if( exclusive ==  1)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets(cut));
+    else if( exclusive ==  2)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets(int(cut)));
+    else if( exclusive ==  3)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets_up_to(int(cut)));
+    else if( exclusive ==  4)  pjets = fastjet::sorted_by_pt(cs.exclusive_jets_ycut(cut));
+  }
+  else if (sorted == 1){
+    if(exclusive ==  0 )       pjets = fastjet::sorted_by_E(cs.inclusive_jets(cut));
+    else if( exclusive ==  1)  pjets = fastjet::sorted_by_E(cs.exclusive_jets(cut));
+    else if( exclusive ==  2)  pjets = fastjet::sorted_by_E(cs.exclusive_jets(int(cut)));
+    else if( exclusive ==  3)  pjets = fastjet::sorted_by_E(cs.exclusive_jets_up_to(int(cut)));
+  }
+  return pjets;
+}
