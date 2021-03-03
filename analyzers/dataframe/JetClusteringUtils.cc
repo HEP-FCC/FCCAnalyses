@@ -130,7 +130,7 @@ FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(std::vector<fastjet::Pse
 
 
 
-std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterSequence cs, int exclusive, float cut, int sorted){
+std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterSequence & cs, int exclusive, float cut, int sorted){
   std::vector<fastjet::PseudoJet> pjets;
 
   if (sorted == 0){
@@ -145,6 +145,7 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterS
     else if( exclusive ==  1)  pjets = fastjet::sorted_by_E(cs.exclusive_jets(cut));
     else if( exclusive ==  2)  pjets = fastjet::sorted_by_E(cs.exclusive_jets(int(cut)));
     else if( exclusive ==  3)  pjets = fastjet::sorted_by_E(cs.exclusive_jets_up_to(int(cut)));
+    else if( exclusive ==  4)  pjets = fastjet::sorted_by_E(cs.exclusive_jets_ycut(cut));
   }
   return pjets;
 }

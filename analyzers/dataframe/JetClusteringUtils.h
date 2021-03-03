@@ -69,11 +69,13 @@ namespace JetClusteringUtils{
   /** Get jet theta. Details. */
   ROOT::VecOps::RVec<float> get_theta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
 
+
+  ///Internal methods
   FCCAnalysesJet initialise_FCCAnalysesJet();
 
   FCCAnalysesJet build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in);
   
-  std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence cs, int exclusive, float cut, int sorted);
+  std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence & cs, int exclusive, float cut, int sorted);
 
   ///@}
 }
