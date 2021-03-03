@@ -29,7 +29,7 @@ void reproducer()
   gSystem->Load("libFCCAnalyses.so");
 
   auto reader = podio::ROOTReader();
-  reader.openFile("/afs/cern.ch/user/h/helsens/public/test_zbb_Bs2DsK.root");
+  reader.openFile("https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee/test_zbb_Bs2DsK.root");
   auto store = podio::EventStore();
   store.setReader(&reader);
 
