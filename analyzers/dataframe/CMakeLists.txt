@@ -4,13 +4,7 @@ include(${ROOT_USE_FILE})
 #include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
 
-find_package(EDM4HEP)
-find_package(podio)
-
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-
-find_package(FastJet)
-#find_package( Boost )
 
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
 
@@ -22,7 +16,10 @@ include_directories(${EDM4HEP_INCLUDE_DIRS}
 		    #${Boost_INCLUDE_DIRS}
 		    )
 
-message(STATUS "includes--------------------------: ${AWKWARD_INCLUDE}")
+message(STATUS "includes-------------------------- dataframe awkward: ${AWKWARD_INCLUDE}")
+message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
+message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
+message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_INCLUDE_DIRS}")
 
 
 
@@ -61,7 +58,9 @@ target_link_libraries(FCCAnalyses
 		      podio::podio 
 		      ${FASTJET_LIBRARY} 
 		      ${acts_LIBRARY} ActsCore
-		      ${AWKWARD_LIBRARIES})
+		      #${AWKWARD_LIBRARIES}
+		      ${LIBAWKWARD}
+		      ${CPU-KERNELS} ${LIBDL})
 
 
 
