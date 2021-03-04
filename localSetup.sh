@@ -8,3 +8,4 @@ fi
 export COMMON=$PWD/python
 export PATH=${1}/.local/bin:$PATH
 export PYTHONPATH=${1}/.local/lib/python3.7/site-packages:$COMMON:$PYTHONPATH
+export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH

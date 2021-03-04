@@ -17,9 +17,13 @@ get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRE
 include_directories(${EDM4HEP_INCLUDE_DIRS} 
 		    ${podio_INCLUDE_DIR} 
                     ${FASTJET_INCLUDE_DIR} 
-		    ${acts_INCLUDE_DIR} 
+		    ${acts_INCLUDE_DIR}
+		    ${AWKWARD_INCLUDE}
 		    #${Boost_INCLUDE_DIRS}
 		    )
+
+message(STATUS "includes--------------------------: ${AWKWARD_INCLUDE}")
+
 
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
@@ -32,7 +36,8 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					VertexingUtils.h
 					VertexFitterSimple.h
 					VertexFinderActs.h					
-					VertexFitterActs.h					
+					VertexFitterActs.h
+					awkwardtest.h
 					LINKDEF LinkDef.h)
 
 
@@ -43,7 +48,8 @@ target_include_directories(FCCAnalyses  PUBLIC
                            ${CMAKE_SOURCE_DIR}/analyzers/dataframe
                            ${FCCEDM_INCLUDE_DIRS}
 	                   ${FASTJET_INCLUDE_DIR}
-		           ${acts_INCLUDE_DIR} )
+		           ${acts_INCLUDE_DIR}
+			   ${AWKWARD_INCLUDE})
 
 target_link_libraries(FCCAnalyses 
                       ROOT::Physics 
@@ -54,7 +60,8 @@ target_link_libraries(FCCAnalyses
 		      EDM4HEP::edm4hepDict 
 		      podio::podio 
 		      ${FASTJET_LIBRARY} 
-		      ${acts_LIBRARY} ActsCore )
+		      ${acts_LIBRARY} ActsCore
+		      ${AWKWARD_LIBRARIES})
 
 
 

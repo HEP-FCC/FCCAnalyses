@@ -1,5 +1,5 @@
-
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1...3.16)
+#cmake_minimum_required(VERSION 2.8)
 
 
 
@@ -42,12 +42,21 @@ install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
 
 add_subdirectory(analyzers/dataframe)
 
-#add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/)
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
 if(FCCANALYSES_DOCUMENTATION)
   include(cmake/FCCANALYSESDoxygen.cmake)
 endif()
+
+execute_process(COMMAND python -m awkward.config --incdir OUTPUT_VARIABLE AWKWARD_INCLUDE OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND python -m awkward.config --libdir OUTPUT_VARIABLE AWKWARD_LIBRARIES OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+include_directories(BEFORE "${AWKWARD_INCLUDE}")
+
+find_library(CPU-KERNELS awkward-cpu-kernels REQUIRED HINTS ${AWKWARD_LIBRARIES})
+find_library(LIBAWKWARD awkward REQUIRED HINTS ${AWKWARD_LIBRARIES})
+find_library(LIBDL dl REQUIRED)
+
+message(STATUS "Libraries: ${CPU-KERNELS} ${LIBAWKWARD} ${LIBDL}")
+message(STATUS "includes---------------------: ${AWKWARD_INCLUDE}")
