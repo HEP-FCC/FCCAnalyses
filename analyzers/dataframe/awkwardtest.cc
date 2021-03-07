@@ -44,10 +44,29 @@ bool awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 
   for (int64_t i=0;i<length;i++){
     std::shared_ptr<awkward::Content> sel = comb->getitem_at(i);
+    awkward::ContentPtr other  = comb.get()->getitem_at(i);
+
+    awkward::ContentPtr content(nullptr);
+    content = comb.get()->getitem_at(i);
+
+    const awkward::NumpyArray* raw = dynamic_cast<const awkward::NumpyArray*>(content.get());
+    std::cout << "test data content len " << raw->length() << std::endl;
+
+
+    //    uint8_t* data_ptr = reinterpret_cast<uint8_t*>(data.data());
+
+    //awkward::NumpyArray *test2 = dynamic_cast<awkward::NumpyArray*>(other);
 
 //awkward::NumpyArray test = sel->data();
     std::cout << "json "<<sel->tojson(false, 1) << std::endl;
     std::cout << "sel len " << sel->length() << std::endl;
+    //std::shared_ptr<awkward::NumpyArray> toto = comb->getitem_at(i);
+    const awkward::NumpyArray *test = dynamic_cast<const awkward::NumpyArray*>(sel.get());
+    std::cout << "is scalar sel  " << sel->isscalar() << std::endl;
+    std::cout << "is scalar comb " << comb->isscalar() << std::endl;
+    std::cout << "test data len " << test->length() << std::endl;
+    
+    //std::make_shared<awkward::NumpyArray> test = std::dynamic_cast<awkward::NumpyArray*>(sel.get());
 //sel->data()
     //const std::string val = sel.get()->tojson(false, 1);
    
