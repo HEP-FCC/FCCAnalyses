@@ -59,11 +59,10 @@ bool awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
     std::cout << "test data len " << test->length() << std::endl;
 
     
-    //produces a seg fault as well
     awkward::ContentPtr content(nullptr);
     content = comb.get()->getitem_at(i);
-
     const awkward::NumpyArray* raw = dynamic_cast<const awkward::NumpyArray*>(content.get());
+    //produces a seg fault as well
     std::cout << "test data content len " << raw->length() << std::endl;
 
     
