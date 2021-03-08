@@ -78,7 +78,19 @@ class analysis():
                .Define("jets_valencia_py",        "JetClusteringUtils::get_py(jets_valencia)")
                .Define("jets_valencia_pz",        "JetClusteringUtils::get_pz(jets_valencia)")
  
-                       
+               #run jet clustering with all reconstructed particles. jade_algorithm, R=0.5, inclusive clustering
+               .Define("FCCAnalysesJets_jade", "JetClustering::clustering_jade(0.5, 2, 4, 1)(pseudo_jets)")
+
+               #get the jets out of the struct
+               .Define("jets_jade",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_jade)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents_jade","JetClusteringUtils::get_constituents(FCCAnalysesJets_jade)")
+               #get some variables
+               .Define("jets_jade_px",        "JetClusteringUtils::get_px(jets_jade)")
+               .Define("jets_jade_py",        "JetClusteringUtils::get_py(jets_jade)")
+               .Define("jets_jade_pz",        "JetClusteringUtils::get_pz(jets_jade)")
+
+               
                .Define("JET_btag",       "ReconstructedParticle::getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
                .Define("EVT_nbtag",      "ReconstructedParticle::getJet_ntags(JET_btag)")
                
@@ -144,6 +156,11 @@ class analysis():
                 "jets_valencia_py",
                 "jets_valencia_pz",
                 "jetconstituents_valencia",
+
+                "jets_jade_px",
+                "jets_jade_py",
+                "jets_jade_pz",
+                "jetconstituents_jade",
                
                 ]:
             branchList.push_back(branchName)
