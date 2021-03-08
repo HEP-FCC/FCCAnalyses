@@ -117,7 +117,17 @@ namespace JetClustering{
     float m_gamma = 1.; /// gamma parameter
     JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
   };
-
+  
+  ///Jet Clustering interface for jade
+  struct clustering_jade {
+    clustering_jade (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
   ///@}
 }
 
