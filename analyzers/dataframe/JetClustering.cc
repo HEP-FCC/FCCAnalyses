@@ -6,6 +6,7 @@
 #include "fastjet/Selector.hh"
 #include "ValenciaPlugin.h"
 #include "fastjet/EECambridgePlugin.hh"
+#include "fastjet/JadePlugin.hh"
 
 
 using namespace JetClustering;
@@ -158,4 +159,26 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_valencia::operator(
   delete static_cast<fastjet::JetDefinition::Plugin *>(jetAlgorithm);
   return result;
 }
+
+clustering_jade::clustering_jade(float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted)
+{m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted;}
+JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_jade::operator() (std::vector<fastjet::PseudoJet> input) {
+
+  if (JetClusteringUtils::check(input.size(),m_exclusive, m_cut)==false) return JetClusteringUtils::initialise_FCCAnalysesJet();
+
+  // initialize jet algorithm
+  fastjet::JadePlugin * jetAlgorithm = new fastjet::JadePlugin();
+
+  fastjet::ClusterSequence cs;
+  fastjet::JetDefinition def(jetAlgorithm);
+  cs = fastjet::ClusterSequence(input, def);
+
+  std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
+
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  delete static_cast<fastjet::JetDefinition::Plugin *>(jetAlgorithm);
+  return result;
+}
+
+
 

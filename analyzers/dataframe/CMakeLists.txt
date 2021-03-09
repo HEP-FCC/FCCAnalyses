@@ -55,7 +55,8 @@ target_link_libraries(FCCAnalyses
 		      EDM4HEP::edm4hep 
 		      EDM4HEP::edm4hepDict 
 		      podio::podio 
-		      ${FASTJET_LIBRARY} 
+		      ${FASTJET_LIBRARY}
+		      fastjetplugins
 		      ${acts_LIBRARY} ActsCore )
 
 
