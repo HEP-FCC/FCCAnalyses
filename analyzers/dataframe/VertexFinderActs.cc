@@ -8,8 +8,8 @@
 #include "Acts/Vertexing/ImpactPointEstimator.hpp"
 #include "Acts/Vertexing/HelicalTrackLinearizer.hpp"
 //V5.0
-//#include "Acts/Definitions/Algebra.hpp"
-//#include "Acts/Definitions/Units.hpp"
+#include "Acts/Definitions/Algebra.hpp"
+#include "Acts/Definitions/Units.hpp"
 
 #include "Acts/Geometry/GeometryContext.hpp"
 #include "Acts/Surfaces/PerigeeSurface.hpp"
@@ -40,7 +40,7 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
   const auto& magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
-  Acts::ConstantBField bField(Acts::Vector3D(0., 0., 2_T));
+  Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
   Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
 
   // Set up the propagator
@@ -151,7 +151,7 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
     
     // Create track parameters and add to track list
     std::shared_ptr<Acts::PerigeeSurface> perigeeSurface;
-    Acts::Vector3D beamspotPos;
+    Acts::Vector3 beamspotPos;
     beamspotPos << 0.0, 0.0, 0.0;
     perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
 
@@ -173,12 +173,7 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
   for (const auto& trk : allTracks) {
     tracksPtr.push_back(&trk);
   }
-  
-  //std::cout << " --- n trk " << tracksPtr.size() << std::endl;
-  
-  // find vertices
-  auto result = finder.find(tracksPtr, finderOpts, state);
-  
+
 
   VertexingUtils::FCCAnalysesVertex TheVertex;
   edm4hep::VertexData edm4hep_vertex;
@@ -194,6 +189,18 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
   TheVertex.reco_ind = reco_ind;
   TheVertex.final_track_phases = final_track_phases;
   TheVertex.updated_track_momentum_at_vertex = updated_track_momentum_at_vertex;
+
+
+  TheVertex.ntracks = Ntr; 
+  if ( Ntr <= 1) return TheVertex;   // can not reconstruct a vertex with only one track...
+
+  
+  //std::cout << " --- n trk " << tracksPtr.size() << std::endl;
+  
+  // find vertices
+  auto result = finder.find(tracksPtr, finderOpts, state);
+  
+
 
 
   //std::cout << "result  " << result.ok() << std::endl;

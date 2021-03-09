@@ -14,13 +14,13 @@ R__LOAD_LIBRARY(libFCCAnalyses)
 #include "edm4hep/TrackState.h"
 #include "edm4hep/TrackCollection.h"
 
-#include "VertexingACTS.h"
+#include "VertexFinderActs.h"
 #include "ROOT/RVec.hxx"
 
 void reproducer()
 {
 
-  gInterpreter->ProcessLine("#include \"VertexingACTS.h\"");
+  gInterpreter->ProcessLine("#include \"VertexFinderActs.h\"");
   gSystem->Load("libpodio.so");
   gSystem->Load("libpodioDict.so");
   gSystem->Load("libpodioRootIO.so");
@@ -29,7 +29,7 @@ void reproducer()
   gSystem->Load("libFCCAnalyses.so");
 
   auto reader = podio::ROOTReader();
-  reader.openFile("/afs/cern.ch/user/h/helsens/public/test_zbb_Bs2DsK.root");
+  reader.openFile("https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee/test_zbb_Bs2DsK.root");
   auto store = podio::EventStore();
   store.setReader(&reader);
 
@@ -39,7 +39,7 @@ void reproducer()
     auto& tracks = store.get<edm4hep::TrackCollection>("EFlowTrack");
     ROOT::VecOps::RVec<edm4hep::TrackState>  track_states;// = tracks.getTrackStates();
     for (auto track : tracks) { track_states.push_back(track.getTrackStates(0)); } 
-    bool status = VertexingACTS::VertexFinder(track_states);
+    auto result = VertexFinderActs::VertexFinderAMVF(track_states);
     
   }
 }

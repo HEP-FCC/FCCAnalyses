@@ -8,17 +8,19 @@
 #include "Acts/Propagator/EigenStepper.hpp"
 #include "Acts/Propagator/Propagator.hpp"
 #include "Acts/Surfaces/PerigeeSurface.hpp"
-#include "Acts/Utilities/Definitions.hpp"
-#include "Acts/Utilities/Units.hpp"
 #include "Acts/Vertexing/FullBilloirVertexFitter.hpp"
 #include "Acts/Vertexing/HelicalTrackLinearizer.hpp"
 #include "Acts/Vertexing/Vertex.hpp"
+
+//V5.0
+#include "Acts/Definitions/Algebra.hpp"
+#include "Acts/Definitions/Units.hpp"
+
 
 #include "TMath.h"
 
 using namespace VertexFitterActs;
 using namespace Acts::UnitLiterals;
-using namespace ReconstructedParticle2Track;
 
 
 VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
@@ -36,7 +38,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
   const auto& magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
-  Acts::ConstantBField bField(Acts::Vector3D(0., 0., 2_T));
+  Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
   Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
 
   // Set up the propagator
@@ -58,13 +60,13 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
   // Constraint for vertex fit
   Acts::Vertex<Acts::BoundTrackParameters> myConstraint;
   // Some abitrary values
-  Acts::SymMatrix4D myCovMat = Acts::SymMatrix4D::Zero();
+  Acts::SymMatrix4 myCovMat = Acts::SymMatrix4::Zero();
   myCovMat(0, 0) = 30.;
   myCovMat(1, 1) = 30.;
   myCovMat(2, 2) = 30.;
   myCovMat(3, 3) = 30.;
   myConstraint.setFullCovariance(std::move(myCovMat));
-  myConstraint.setFullPosition(Acts::Vector4D(0, 0, 0, 0));
+  myConstraint.setFullPosition(Acts::Vector4(0, 0, 0, 0));
  
 
   Acts::VertexingOptions<Acts::BoundTrackParameters> vfOptions(geoContext, magFieldContext);
@@ -113,7 +115,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
     
     // Create track parameters and add to track list
     std::shared_ptr<Acts::PerigeeSurface> perigeeSurface;
-    Acts::Vector3D beamspotPos;
+    Acts::Vector3 beamspotPos;
     beamspotPos << 0.0, 0.0, 0.0;
     perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
     
@@ -134,18 +136,6 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
     tracksPtr.push_back(&trk);
   }
 
-  
-  Acts::Vertex<Acts::BoundTrackParameters> fittedVertex =  
-    billoirFitter.fit(tracksPtr, linearizer, vfOptions, state).value();
-  //Acts::Vertex<Acts::BoundTrackParameters> fittedVertexConstraint = 
-  //  billoirFitter.fit(tracksPtr, linearizer, vfOptionsConstr, state).value();
-
-
-  //std::cout << "Fitting nTracks: " << Ntr << std::endl;
-  //  std::cout << "Fitted Vertex: " << fittedVertex.position() << std::endl;
-  //  std::cout << "Fitted constraint Vertex: "
-  //             << fittedVertexConstraint.position() << std::endl;
-
   VertexingUtils::FCCAnalysesVertex TheVertex;
   edm4hep::VertexData edm4hep_vertex;
   ROOT::VecOps::RVec<float> reco_chi2;
@@ -160,6 +150,23 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
   TheVertex.reco_ind = reco_ind;
   TheVertex.final_track_phases = final_track_phases;
   TheVertex.updated_track_momentum_at_vertex = updated_track_momentum_at_vertex;
+
+
+  TheVertex.ntracks = Ntr; 
+  if ( Ntr <= 1) return TheVertex;   // can not reconstruct a vertex with only one track...
+
+
+  Acts::Vertex<Acts::BoundTrackParameters> fittedVertex =  
+    billoirFitter.fit(tracksPtr, linearizer, vfOptions, state).value();
+  //Acts::Vertex<Acts::BoundTrackParameters> fittedVertexConstraint = 
+  //  billoirFitter.fit(tracksPtr, linearizer, vfOptionsConstr, state).value();
+
+
+  //std::cout << "Fitting nTracks: " << Ntr << std::endl;
+  //  std::cout << "Fitted Vertex: " << fittedVertex.position() << std::endl;
+  //  std::cout << "Fitted constraint Vertex: "
+  //             << fittedVertexConstraint.position() << std::endl;
+
 
 
   TheVertex.ntracks = Ntr;
