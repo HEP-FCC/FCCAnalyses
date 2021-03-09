@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['final_5ftrack_5fphases_416',['final_track_phases',['../struct_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a25ef9b5eb744692d1886de55f959aef4',1,'VertexingUtils::FCCAnalysesVertex']]]
+  ['_5fbeta_489',['_beta',['../classcontrib_1_1_valencia_plugin.html#a20c7d2863787d1531e33e6e1753d6466',1,'contrib::ValenciaPlugin']]],
+  ['_5fgamma_490',['_gamma',['../classcontrib_1_1_valencia_plugin.html#aa8090731606df715bee56f0189826294',1,'contrib::ValenciaPlugin']]],
+  ['_5fr_491',['_R',['../classcontrib_1_1_valencia_plugin.html#afe725951f509f4b026ae8feaa7054121',1,'contrib::ValenciaPlugin']]]
 ];

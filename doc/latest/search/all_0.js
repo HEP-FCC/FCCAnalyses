@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['algorithms_0',['Algorithms',['../namespace_algorithms.html',1,'']]],
-  ['algorithms_2ecc_1',['Algorithms.cc',['../_algorithms_8cc.html',1,'']]],
-  ['algorithms_2eh_2',['Algorithms.h',['../_algorithms_8h.html',1,'']]],
-  ['anglebetweentwomcparticles_3',['AngleBetweenTwoMCParticles',['../namespace_m_c_particle.html#a9c422d36644dcb28a4c2c5943cce270f',1,'MCParticle']]],
-  ['angular_5fseparationbuilder_4',['angular_separationBuilder',['../struct_reconstructed_particle_1_1angular__separation_builder.html',1,'ReconstructedParticle::angular_separationBuilder'],['../struct_reconstructed_particle_1_1angular__separation_builder.html#a16e501b79ba0b2c6eb542dc63645a588',1,'ReconstructedParticle::angular_separationBuilder::angular_separationBuilder()']]]
+  ['_5fbeta_0',['_beta',['../classcontrib_1_1_valencia_plugin.html#a20c7d2863787d1531e33e6e1753d6466',1,'contrib::ValenciaPlugin']]],
+  ['_5fgamma_1',['_gamma',['../classcontrib_1_1_valencia_plugin.html#aa8090731606df715bee56f0189826294',1,'contrib::ValenciaPlugin']]],
+  ['_5fr_2',['_R',['../classcontrib_1_1_valencia_plugin.html#afe725951f509f4b026ae8feaa7054121',1,'contrib::ValenciaPlugin']]]
 ];

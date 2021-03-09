@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['jetclustering_110',['JetClustering',['../namespace_jet_clustering.html',1,'']]],
-  ['jetclustering_2ecc_111',['JetClustering.cc',['../_jet_clustering_8cc.html',1,'']]],
-  ['jetclustering_2eh_112',['JetClustering.h',['../_jet_clustering_8h.html',1,'']]]
+  ['e_31',['E',['../classcontrib_1_1_valencia_brief_jet.html#a5cb3984592746914ca943b884d41f599',1,'contrib::ValenciaBriefJet']]],
+  ['exclusive_5fsequence_5fmeaningful_32',['exclusive_sequence_meaningful',['../classcontrib_1_1_valencia_plugin.html#a56681fca6d9ac382cc6aa025b3c8942b',1,'contrib::ValenciaPlugin']]]
 ];

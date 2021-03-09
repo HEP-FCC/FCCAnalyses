@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['clustering_5',['clustering',['../struct_jet_clustering_1_1clustering.html',1,'JetClustering::clustering'],['../struct_jet_clustering_1_1clustering.html#a5cb7e8f048b450ebd048d4a294b72630',1,'JetClustering::clustering::clustering()']]],
-  ['covtoacts_6',['CovToACTS',['../namespace_vertexing_utils.html#a1aba8fa3b9b971138adb8b6cb22b407c',1,'VertexingUtils']]]
+  ['algorithms_3',['Algorithms',['../namespace_algorithms.html',1,'']]],
+  ['algorithms_2ecc_4',['Algorithms.cc',['../_algorithms_8cc.html',1,'']]],
+  ['algorithms_2eh_5',['Algorithms.h',['../_algorithms_8h.html',1,'']]],
+  ['anglebetweentwomcparticles_6',['AngleBetweenTwoMCParticles',['../namespace_m_c_particle.html#a9c422d36644dcb28a4c2c5943cce270f',1,'MCParticle']]],
+  ['angular_5fseparationbuilder_7',['angular_separationBuilder',['../struct_reconstructed_particle_1_1angular__separation_builder.html',1,'ReconstructedParticle::angular_separationBuilder'],['../struct_reconstructed_particle_1_1angular__separation_builder.html#a16e501b79ba0b2c6eb542dc63645a588',1,'ReconstructedParticle::angular_separationBuilder::angular_separationBuilder()']]]
 ];

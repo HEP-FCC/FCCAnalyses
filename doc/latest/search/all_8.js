@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ntracks_163',['ntracks',['../struct_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a7dbb92a14de42f00e6df1f049aad7ad8',1,'VertexingUtils::FCCAnalysesVertex']]]
+  ['init_129',['init',['../classcontrib_1_1_valencia_brief_jet.html#a634c8167dc6b0e89bcf19e54e30a4990',1,'contrib::ValenciaBriefJet']]],
+  ['initialise_5ffccanalysesjet_130',['initialise_FCCAnalysesJet',['../namespace_jet_clustering_utils.html#a476706a99ba9c2150070abeb010ad142',1,'JetClusteringUtils']]]
 ];

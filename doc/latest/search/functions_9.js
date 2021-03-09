@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['recoilbuilder_394',['recoilBuilder',['../struct_reconstructed_particle_1_1recoil_builder.html#a34537c77de73bb2e772d3901e4896d68',1,'ReconstructedParticle::recoilBuilder']]],
-  ['reginv3_395',['RegInv3',['../namespace_vertex_fitter_simple.html#a643e0b41b84f399ba2e47966aed81ff2',1,'VertexFitterSimple']]],
-  ['resonancebuilder_396',['resonanceBuilder',['../struct_reconstructed_particle_1_1resonance_builder.html#a50a273127f6a0ad404f24c9a1f04aa99',1,'ReconstructedParticle::resonanceBuilder']]]
+  ['merge_455',['merge',['../namespace_reconstructed_particle.html#a2dc23845066df82b3a147f01fb039d4a',1,'ReconstructedParticle']]],
+  ['mergeparticles_456',['mergeParticles',['../namespace_m_c_particle.html#af6762fa4ec50d550ca46ec131e5bd6da',1,'MCParticle']]],
+  ['minimize_5fsphericity_457',['minimize_sphericity',['../struct_algorithms_1_1minimize__sphericity.html#a4143d273e9f94889d426b93f99596ca0',1,'Algorithms::minimize_sphericity']]],
+  ['minimize_5fthrust_458',['minimize_thrust',['../struct_algorithms_1_1minimize__thrust.html#acf981c28fcf29e01e169e7b4be7d3292',1,'Algorithms::minimize_thrust']]]
 ];
