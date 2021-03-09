@@ -7,6 +7,8 @@
 #include "awkward/Content.h"
 #include "awkward/io/json.h"
 #include "awkward/array/NumpyArray.h"
+#include "awkward/array/RecordArray.h"
+#include "awkward/array/Record.h"
 #include "awkward/builder/ArrayBuilder.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 
@@ -41,19 +43,94 @@ bool awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 
   int64_t length = comb->length();
   std::cout << "ntracks " << tracks.size()<< "  length 3 comb " << length << std::endl;
+  std::cout << "comb class name " << comb.get()->classname() << std::endl;
+  awkward::RecordArray* recarray = dynamic_cast<awkward::RecordArray*>(comb.get());
+  int64_t length2 = recarray->length();
+  std::cout << "ntracks " << tracks.size()<< "  length 3 comb " << length2 << std::endl;
 
   for (int64_t i=0;i<length;i++){
-    std::shared_ptr<awkward::Content> sel = comb->getitem_at(i);
+    awkward::ContentPtr item = recarray->getitem_at(i);
+        std::cout << "item  " << item<< std::endl;
+        std::cout << "item class name " << item.get()->classname()<< std::endl;
+
+    awkward::NumpyArray* rawcontent666 = dynamic_cast<awkward::NumpyArray*>(item.get());
+        std::cout << "rawcontent66  " << rawcontent666 << std::endl;
 
 
+
+    awkward::RecordArray* rec = dynamic_cast<awkward::RecordArray*>(item.get());
+    awkward::Record* rec1 = dynamic_cast<awkward::Record*>(item.get());
+    std::shared_ptr<const awkward::RecordArray> rec2 = rec1->array();    
+    const awkward::NumpyArray* rawcontent = dynamic_cast<const awkward::NumpyArray*>(rec2.get());
+
+
+    //awkward::RecordArray* rec2 = rec1->array();
+
+    //awkward::RecordArray rec2 = item->array();
+    std::cout << "item class name " << item.get()->classname() << std::endl;
+
+    std::cout << "rec  " << rec << std::endl;
+    std::cout << "rec1  " << rec1 << std::endl;
+    std::cout << "rec2  " << rec2.get()->classname() << std::endl;
+    std::cout << "rawcontent  " << rawcontent << std::endl;
+    std::cout << "rec class name " << rec->classname() << std::endl;
+
+
+
+
+
+
+
+    std::shared_ptr<awkward::Content> test1 = comb->getitem_at(i);
+    //const awkward::Record* rec = dynamic_cast<awkward::Record*>(test1.get());
+    //std::cout << "rec class name " << rec->classname() << std::endl;
+
+    //const awkward::RecordArray ra = rec->array();
+    //std::cout << ra.classname() << std::endl;
+
+
+    const awkward::ContentPtr         test2 = comb->getitem_at(i);
+    const awkward::FormPtr            test3 = test2.get()->form(false);
+
+    //const awkward::RecordArray test4 = comb->getitem_at(i);
+    //std::shared_ptr<awkward::RecordArray> test5 = comb->getitem_at(i);
+
+    awkward::RecordArray* rarray1 = dynamic_cast<awkward::RecordArray*>(test1.get());
+
+
+    std::cout << "test1 " << test1 << std::endl;
+    std::cout << "test2 " << test2 << std::endl;
+    std::cout << "test3 " << test3 << std::endl;
+    std::cout << "test1 class name " << comb->getitem_at(i)->classname() << std::endl;
+   std::cout << test1.get()->tostring() << std::endl;
+
+    awkward::NumpyArray* rawcontent1 = dynamic_cast<awkward::NumpyArray*>(test1.get());
+    awkward::NumpyArray* rawcontent2 = dynamic_cast<awkward::NumpyArray*>(test2.get());
+    awkward::NumpyArray* rawcontent3 = dynamic_cast<awkward::NumpyArray*>(test3.get());
+    awkward::NumpyArray* rawcontent4 = dynamic_cast<awkward::NumpyArray*>(rarray1);
+    
+
+    std::cout << "rawcontent1 " << rawcontent1 << std::endl;
+    std::cout << "rawcontent2 " << rawcontent2 << std::endl;
+    std::cout << "rawcontent3 " << rawcontent3 << std::endl;
+    std::cout << "rawcontent4 " << rawcontent4 << std::endl;
+
+   
+    
+    //const awkward::ContentPtr mytest = sel.get();
+    //std::cout <<"my test " <<mytest<<std::endl;
+    
     //awkward::ContentPtr other  = comb.get()->getitem_at(i);
     //awkward::NumpyArray *test2 = dynamic_cast<awkward::NumpyArray*>(other);
 
-    std::cout << "json "<<sel->tojson(false, 1) << std::endl;
-    std::cout << "sel len " << sel->length() << std::endl;
-    const awkward::NumpyArray *test = dynamic_cast<const awkward::NumpyArray*>(sel.get());
-    std::cout << "is scalar sel  " << sel->isscalar() << std::endl;
-    std::cout << "is scalar comb " << comb->isscalar() << std::endl;
+    std::cout << "json test1 " << test1->tojson(false, 1) << std::endl;
+    std::cout << "len  test1 " << test1->length() << std::endl;
+    const awkward::NumpyArray *test = dynamic_cast<const awkward::NumpyArray*>(test1.get());
+    std::cout << "test " << test << std::endl;
+    
+    std::cout << "is scalar test1  " << test1->isscalar() << std::endl;
+    std::cout << "is scalar test2  " << test2->isscalar() << std::endl;
+    std::cout << "is scalar comb   " << comb->isscalar() << std::endl;
 
     //produces a seg fault
     std::cout << "test data len " << test->length() << std::endl;
