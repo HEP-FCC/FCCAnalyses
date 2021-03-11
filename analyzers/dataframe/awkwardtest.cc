@@ -39,11 +39,19 @@ bool awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
   }
 
   std::shared_ptr<awkward::Content> array = builder.snapshot();
+  std::cout << "array class name " << array.get()->classname()<<std::endl;
+  
   std::shared_ptr<awkward::Content> comb  = array.get()->combinations(3, false, nullptr, awkward::util::Parameters(), 0, 0);
+  std::cout << "comb class name " << comb.get()->classname() << std::endl;
+  
+  //std::shared_ptr<awkward::RecordArray> comb2  = array.get()->combinations(3, false, nullptr, awkward::util::Parameters(), 0, 0);
+  //std::cout << "comb2 class name " << comb.get()->classname() << std::endl;
+
+  //awkward::RecordArray comb3  = array.get()->combinations(3, false, nullptr, awkward::util::Parameters(), 0, 0);
+  //std::cout << "comb3 class name " << comb.classname() << std::endl;
 
   int64_t length = comb->length();
   std::cout << "ntracks " << tracks.size()<< "  length 3 comb " << length << std::endl;
-  std::cout << "comb class name " << comb.get()->classname() << std::endl;
   awkward::RecordArray* recarray = dynamic_cast<awkward::RecordArray*>(comb.get());
   int64_t length2 = recarray->length();
   std::cout << "ntracks " << tracks.size()<< "  length 3 comb " << length2 << std::endl;
