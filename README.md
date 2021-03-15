@@ -1,7 +1,7 @@
 FCCAnalyses
 =============
 
-This package produce flat ROOT trees using FCCSW EDM root files produced with the [EventProducer](https://github.com/HEP-FCC/EventProducer). As usual, if you aim at contributing to the repository, please fork it, develop and submit pull requests. To have access to the FCC samples, you need to subscribe to one of the following e-group (with owner approval) ```fcc-eos-read-xx``` with ```xx=ee,hh,eh```. For the time being, the configuration files are accessible on ```helsens``` public ```afs```. This is not optimal and will be changed in the future, thus you are also kindly asked to contact ```clement.helsens@cern.ch``` and request access to ```/afs/cern.ch/work/h/helsens/public/FCCDicts/```.
+This package produces flat ROOT trees using FCCSW EDM root files produced with the [EventProducer](https://github.com/HEP-FCC/EventProducer). As usual, if you aim at contributing to the repository, please fork it, develop and submit pull requests. To have access to the FCC samples, you need to subscribe to one of the following e-group (with owner approval) ```fcc-eos-read-xx``` with ```xx=ee,hh,eh```. For the time being, the configuration files are accessible on ```helsens``` public ```afs```. This is not optimal and will be changed in the future, thus you are also kindly asked to contact ```clement.helsens@cern.ch``` and request access to ```/afs/cern.ch/work/h/helsens/public/FCCDicts/```.
 
 Analysers documentation [here](http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html)
 
@@ -19,17 +19,11 @@ Table of contents
 
 RootDataFrame based
 =============
-Using ROOT dataframe allows a much quicker processing time. In this implementation, everything from reading EDM4Hep or FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained. ROOT dataframe documentation is availabe [here](https://root.cern/doc/master/classROOT_1_1RDataFrame.html)
+Using ROOT dataframe allows a much quicker processing time as it natively supports multithreading. In this implementation, everything from reading EDM4Hep or FCCSW EDM files on eos and producing flat n-tuples, to running a final selection and plotting the results will be explained. ROOT dataframe documentation is availabe [here](https://root.cern/doc/master/classROOT_1_1RDataFrame.html)
 
 Getting Started
 ============
 In order to use ROOT dataframe for the analyses, the dictionary with the analyzers needs to be built and put into  `LD_LIBRARY_PATH` (this happens in `setup.sh`)
-
-First check if FCCSW is setup. If the command ```which fccrun``` returns something like: ```/cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/fccsw-develop-q57ahua7lm65fvxnzekozih4mgvzptlx/scripts/fccrun``` then you are good to go, if not please run:
-
-```
-source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
-```
 
 ```
 source ./setup.sh

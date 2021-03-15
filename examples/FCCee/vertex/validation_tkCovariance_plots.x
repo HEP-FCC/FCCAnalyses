@@ -1,3 +1,6 @@
+{
+
+gROOT->Reset();
 
 //
 // Validation of  the off-diagonal terms of the covariance matrix
@@ -174,7 +177,7 @@ evts->Draw("RP_TRK_z0_tanlambda_cov / ( TMath::Sqrt(RP_TRK_Z0_cov) *  TMath::Sqr
 c1->SaveAs("validation_Cov_z0_tanlambda.pdf");
 
 
-
+}
 
 
 

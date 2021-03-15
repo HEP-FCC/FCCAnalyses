@@ -8,7 +8,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyloader
+_fcc  = ROOT.dummyLoader
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -32,27 +32,27 @@ class analysis():
                # define an alias for muon index collection
                .Alias("Electron0", "Electron#0.index")
                # define the muon collection
-               .Define("electrons",  "getRP(Electron0, ReconstructedParticles)")
+               .Define("electrons",  "ReconstructedParticle::get(Electron0, ReconstructedParticles)")
                #select muons on pT
-               .Define("selected_electrons", "selRP_pT(10.)(electrons)")
+               .Define("selected_electrons", "ReconstructedParticle::sel_pt(10.)(electrons)")
                # create branch with muon transverse momentum
-               .Define("selected_electrons_pt", "getRP_pt(selected_electrons)") 
+               .Define("selected_electrons_pt", "ReconstructedParticle::get_pt(selected_electrons)") 
                # create branch with muon rapidity
-               .Define("selected_electrons_y",  "getRP_y(selected_electrons)") 
+               .Define("selected_electrons_y",  "ReconstructedParticle::get_y(selected_electrons)") 
                # create branch with muon total momentum
-               .Define("selected_electrons_p",     "getRP_p(selected_electrons)")
+               .Define("selected_electrons_p",     "ReconstructedParticle::get_p(selected_electrons)")
                # create branch with muon energy 
-               .Define("selected_electrons_e",     "getRP_e(selected_electrons)")
+               .Define("selected_electrons_e",     "ReconstructedParticle::get_e(selected_electrons)")
                # find zed candidates from  di-muon resonances  
-               .Define("zed_leptonic",         "ResonanceBuilder(23, 91)(selected_electrons)")
+               .Define("zed_leptonic",         "ReconstructedParticle::resonanceBuilder(91)(selected_electrons)")
                # write branch with zed mass
-               .Define("zed_leptonic_m",       "getRP_mass(zed_leptonic)")
+               .Define("zed_leptonic_m",       "ReconstructedParticle::get_mass(zed_leptonic)")
                # write branch with zed transverse momenta
-               .Define("zed_leptonic_pt",      "getRP_pt(zed_leptonic)")
+               .Define("zed_leptonic_pt",      "ReconstructedParticle::get_pt(zed_leptonic)")
                # calculate recoil of zed_leptonic
-               .Define("zed_leptonic_recoil",  "recoil(240)(zed_leptonic)")
+               .Define("zed_leptonic_recoil",  "ReconstructedParticle::recoilBuilder(240)(zed_leptonic)")
                # write branch with recoil mass
-               .Define("zed_leptonic_recoil_m","getRP_mass(zed_leptonic_recoil)") 
+               .Define("zed_leptonic_recoil_m","ReconstructedParticle::get_mass(zed_leptonic_recoil)") 
 
         )
 
@@ -71,7 +71,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python FCCeeAnalyses/higgs/mH-recoil/ee/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_ZH_ecm240/events_058720051.root
+# python examples/FCCee/higgs/mH-recoil/ee/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_ZH_ecm240/events_058720051.root
 if __name__ == "__main__":
 
     if len(sys.argv)==1:
