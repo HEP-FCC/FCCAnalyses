@@ -45,8 +45,9 @@ class analysis():
 
 		#Access the various objects and their properties with the following syntax: .Define("<your_variable>", "<accessor_fct (name_object)>")
 		#This will create a column in the RDataFrame named <your_variable> and filled with the return value of the <accessor_fct> for the given collection/object 
-		#Accessor functions are the functions found in the C++ analyzers code that return a certain variable, e.g. get_n(object) returns the number of these objects 
-		#in the event and get_pt(object) returns the pT of the object 
+		#Accessor functions are the functions found in the C++ analyzers code that return a certain variable, e.g. <namespace>::get_n(object) returns the number 
+		#of these objects in the event and <namespace>::get_pt(object) returns the pT of the object. Here you can pick between two namespaces to access either
+		#reconstructed (namespace = ReconstructedParticle) or MC-level objects (namespace = MCParticle). 
 		#For the name of the object, in principle the names of the EDM4HEP collections are used - photons, muons and electrons are an exception, see below
 
 		#OVERVIEW: Accessing different objects and counting them
