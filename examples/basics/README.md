@@ -50,7 +50,7 @@ Below you can find an overview of the basic, most commonly required functions. T
 
 
 | Variable  | Function name | Available for | 
-| ------------- | ------------- |
+| ------------- | ------------- | ------------- |
 | Transverse momentum  | `get_pt(object)`  | `MCParticle`, `ReconstructedParticle` |
 | Pseudorapidity  | `get_eta(object)`  | `MCParticle`, `ReconstructedParticle` |
 
