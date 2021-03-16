@@ -73,6 +73,9 @@ namespace ReconstructedParticle{
   
   /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+
+  /// return the momenta of the input ReconstructedParticles
+  float get_p(edm4hep::ReconstructedParticleData in);
   
   /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
@@ -106,6 +109,12 @@ namespace ReconstructedParticle{
 
   /// return the TlorentzVector of the input ReconstructedParticles
   ROOT::VecOps::RVec<TLorentzVector> get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+
+  /// return the TlorentzVector of the indexed input ReconstructedParticles
+  TLorentzVector get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, int index);
+
+  /// return the TlorentzVector of the one input ReconstructedParticle
+  TLorentzVector get_tlv(edm4hep::ReconstructedParticleData in);
 
   /// concatenate both input vectors and return the resulting vector
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);

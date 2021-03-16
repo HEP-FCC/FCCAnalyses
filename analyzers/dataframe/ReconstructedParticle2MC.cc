@@ -266,6 +266,30 @@ ReconstructedParticle2MC::selRP_PDG::operator() (ROOT::VecOps::RVec<int> recind,
   return result;
 }
 
+selRP_PDG_index::selRP_PDG_index( int arg_pdg, 
+			    bool arg_chargedOnly ): m_PDG(arg_pdg), m_chargedOnly(arg_chargedOnly)  {} ;
+ROOT::VecOps::RVec<int>
+ReconstructedParticle2MC::selRP_PDG_index::operator() (ROOT::VecOps::RVec<int> recind, 
+						 ROOT::VecOps::RVec<int> mcind, 
+						 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
+						 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  
+  ROOT::VecOps::RVec<int> result;
+
+  for (int i=0; i<recind.size();i++) {
+      int reco_idx = recind.at(i);
+      int mc_idx = mcind.at(i);
+      int pdg = mc.at(mc_idx).PDG ;
+      if ( m_chargedOnly ) {
+        if ( reco.at( reco_idx ).charge ==0 ) continue;
+      }
+      if ( std::abs( pdg ) == std::abs( m_PDG)  ) {
+         result.push_back( reco_idx ) ;
+      }
+  }
+  return result;
+}
+
 // -------------------------------------------------------------------------------------------------
 
 // -- select RecoParticles associated with a charged hadron :

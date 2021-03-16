@@ -24,6 +24,18 @@ namespace ReconstructedParticle2MC{
 								 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) ;
   };
 
+   /// select ReconstructedParticles matched with a MC particle of a given PDG_id
+  struct selRP_PDG_index {
+    selRP_PDG_index(int arg_PDG, bool arg_chargedOnly);
+    int m_PDG = 13 ;
+    bool m_chargedOnly = true;
+    ROOT::VecOps::RVec<int>  operator() (ROOT::VecOps::RVec<int> recind, 
+					 ROOT::VecOps::RVec<int> mcind, 
+					 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
+					 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) ;
+  };
+
+
   /// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
   struct getRP2MC_p_func {
     ROOT::VecOps::RVec<float>  operator() (ROOT::VecOps::RVec<int> recin,

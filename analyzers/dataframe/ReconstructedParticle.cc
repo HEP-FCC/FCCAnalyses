@@ -223,6 +223,12 @@ ROOT::VecOps::RVec<float> ReconstructedParticle::get_p(ROOT::VecOps::RVec<edm4he
   return result;
 }
 
+float ReconstructedParticle::get_p(edm4hep::ReconstructedParticleData in) {
+  TLorentzVector tlv;
+  tlv.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
+  return tlv.P();
+}
+
 ROOT::VecOps::RVec<float> ReconstructedParticle::get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
@@ -286,6 +292,18 @@ ROOT::VecOps::RVec<TLorentzVector> ReconstructedParticle::get_tlv(ROOT::VecOps::
   return result;
 }
 
+TLorentzVector ReconstructedParticle::get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, int index) {
+  TLorentzVector result;
+  auto & p = in[index];
+  result.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+  return result;
+}
+
+TLorentzVector ReconstructedParticle::get_tlv(edm4hep::ReconstructedParticleData in) {
+  TLorentzVector result;
+  result.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
+  return result;
+}
 
 int ReconstructedParticle::get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x) {
   int result =  x.size();
