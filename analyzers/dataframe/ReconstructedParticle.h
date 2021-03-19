@@ -107,6 +107,9 @@ namespace ReconstructedParticle{
   /// return the charges of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
 
+  /// return the type of the input ReconstructedParticles
+  ROOT::VecOps::RVec<int> get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+
   /// return the TlorentzVector of the input ReconstructedParticles
   ROOT::VecOps::RVec<TLorentzVector> get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 

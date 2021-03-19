@@ -305,6 +305,16 @@ TLorentzVector ReconstructedParticle::get_tlv(edm4hep::ReconstructedParticleData
   return result;
 }
 
+ROOT::VecOps::RVec<int> 
+ReconstructedParticle::get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(p.type);
+  }
+  return result;
+}
+
+
 int ReconstructedParticle::get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x) {
   int result =  x.size();
   return result;

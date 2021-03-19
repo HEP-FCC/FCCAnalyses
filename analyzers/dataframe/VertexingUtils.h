@@ -51,12 +51,26 @@ namespace VertexingUtils{
 									   ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 									   TVector3 MC_EventPrimaryVertex) ;
 
+  /// Retrieve the number of reconstructed vertices from the collection of vertex object
+  int get_Nvertex( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl );
  
+  /// Retrieve a single FCCAnalyses vertex from the collection of vertex object
+  FCCAnalysesVertex get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index );
+  
   /// Retrieve the edm4hep::VertexData from the vertex object
   edm4hep::VertexData get_VertexData( FCCAnalysesVertex TheVertex ) ;
- 
+  
+  /// Retrieve a vector of edm4hep::VertexData from the collection of vertex object
+  ROOT::VecOps::RVec<edm4hep::VertexData> get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ) ;
+  
+  /// Retrieve a edm4hep::VertexData from the collection of vertex object at a given index
+  edm4hep::VertexData get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index);
+  
   /// Retrieve the number of tracks from FCCAnalysesVertex
   int get_VertexNtrk( FCCAnalysesVertex TheVertex ) ;
+
+   /// Retrieve the tracks indices from FCCAnalysesVertex
+  ROOT::VecOps::RVec<int> get_VertexRecoInd( FCCAnalysesVertex TheVertex ) ;
   
   /// Return the number of tracks in a given track collection
   int get_nTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);

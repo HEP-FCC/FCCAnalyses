@@ -98,6 +98,11 @@ namespace ReconstructedParticle2MC{
 					  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco);
   
   /// Return the D0 of a track to a reconstructed particle
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getRP2MC_indexVec (ROOT::VecOps::RVec<int> recin,
+								 ROOT::VecOps::RVec<int> mcin,
+								 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco);
+  
+  /// Return the D0 of a track to a reconstructed particle
   ROOT::VecOps::RVec<int> getRP2MC_index_test (ROOT::VecOps::RVec<int> recin,
 					       ROOT::VecOps::RVec<int> mcin,
 					       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,

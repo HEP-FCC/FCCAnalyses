@@ -133,6 +133,23 @@ ReconstructedParticle2MC::getRP2MC_index(ROOT::VecOps::RVec<int> recind,
 }
 
 
+ROOT::VecOps::RVec< ROOT::VecOps::RVec<int> >
+ReconstructedParticle2MC::getRP2MC_indexVec(ROOT::VecOps::RVec<int> recind, 
+					    ROOT::VecOps::RVec<int> mcind, 
+					    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
+  
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
+  for (size_t i=0; i<reco.size();i++) {
+    ROOT::VecOps::RVec<int> tmp;
+    result.push_back(tmp);
+  }
+
+  for (size_t i=0; i<recind.size();i++) {
+    result[recind.at(i)].push_back(mcind.at(i));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<int>
 ReconstructedParticle2MC::getRP2MC_index_test(ROOT::VecOps::RVec<int> recind, 
 					      ROOT::VecOps::RVec<int> mcind, 

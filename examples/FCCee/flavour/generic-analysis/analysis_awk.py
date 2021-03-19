@@ -33,19 +33,52 @@ class analysis():
     #__________________________________________________________
     def run(self):
         
-        df2 = (self.df.Range(10000)
+        df2 = (self.df.Range(1000)
         #df2 = (self.df
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
 
-               .Define("awk", "awkwardtest(ReconstructedParticles, EFlowTrack_1, MCRecoAssociations0,MCRecoAssociations1,Particle)")
+               #Run the Acts AMVF vertex finder
+               .Define("VertexObject_actsFinder"  ,"VertexFinderActs::VertexFinderAMVF( EFlowTrack_1)")
+               .Define("NVertexObject_actsFinder" ,"VertexingUtils::get_Nvertex(VertexObject_actsFinder)")
+               .Filter("NVertexObject_actsFinder==1")
+               .Define("Vertex_actsFinder"      ,"VertexingUtils::get_VertexData( VertexObject_actsFinder, 0)")
+               .Define("FCCAnaVertex_actsFinder","VertexingUtils::get_FCCAnalysesVertex( VertexObject_actsFinder, 0)")
+               .Define("RecoInd_actsFinder"     ,"VertexingUtils::get_VertexRecoInd(FCCAnaVertex_actsFinder)")
+               .Define("nTrkPV", "VertexingUtils::get_VertexNtrk(FCCAnaVertex_actsFinder)")
+               .Define("RecoPartPID" ,"myUtils::PID(ReconstructedParticles, MCRecoAssociations0,MCRecoAssociations1,Particle)")
+               .Define("Pions"       ,"myUtils::sel_PID(211)(RecoPartPID)"  )
+               .Define("Kaons"       ,"myUtils::sel_PID(321)(RecoPartPID)"  )
+               .Define("D0Candidates"          ,"myUtils::build_D0(0.05, 1.5, true)(RecoPartPID, EFlowTrack_1, Pions, Kaons,RecoInd_actsFinder)")
+
+               #does not work given the different index when filtering
+               #.Define("RecoPartPID_PVFiltered", "myUtils::filter_PV(false)(RecoPartPID, RecoInd_actsFinder)")
+               #.Define("Pions_PVFiltered"       ,"myUtils::sel_PID(211)(RecoPartPID_PVFiltered)"  )
+               #.Define("Kaons_PVFiltered"       ,"myUtils::sel_PID(321)(RecoPartPID_PVFiltered)"  )
+               #.Define("D0Candidates"          ,"myUtils::build_D0(0.05, 1.5)(RecoPartPID_PVFiltered, EFlowTrack_1, Pions_PVFiltered, Kaons_PVFiltered)")
+               .Define("nD0", "myUtils::getFCCAnalysesComposite_N(D0Candidates)")
+               .Filter("nD0>0")
+               .Define("massD0", "myUtils::getFCCAnalysesComposite_mass(D0Candidates)")
+               
+               .Define("Bu2D0PiCandidates","myUtils::build_Bu2D0Pi(RecoPartPID, D0Candidates, Pions)")
+               .Define("nBu2D0Pi", "myUtils::getFCCAnalysesComposite_N(Bu2D0PiCandidates)")
+               .Define("massBu2D0Pi", "myUtils::getFCCAnalysesComposite_mass(Bu2D0PiCandidates)")
+
+              
                
                )
 
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                "awk"
+                #"RecoInd_actsFinder",
+                #"Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
+               "nTrkPV",
+                "nD0",
+                "massD0",
+                "nBu2D0Pi",
+                "massBu2D0Pi",
+                #"awk"
                 ]:
             branchList.push_back(branchName)
 
@@ -57,7 +90,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/generic-analysis/analysis_awk.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v02/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_103989732.root
+# python examples/FCCee/flavour/generic-analysis/analysis_awk.py ../../Key4HEP/k4SimDelphes/zbb.root 
 
 
 if __name__ == "__main__":
