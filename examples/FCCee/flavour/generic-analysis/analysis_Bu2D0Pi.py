@@ -90,7 +90,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/generic-analysis/analysis_awk.py ../../Key4HEP/k4SimDelphes/zbb.root 
+# python examples/FCCee/flavour/generic-analysis/analysis_Bu2D0Pi.py /afs/cern.ch/user/h/helsens/FCCsoft/Key4HEP/k4SimDelphes/ee_Zbb_Bu2D0Pi.root
 
 
 if __name__ == "__main__":

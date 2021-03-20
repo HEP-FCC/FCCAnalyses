@@ -7,6 +7,7 @@
 #include "edm4hep/VertexData.h"
 
 #include "TLorentzVector.h"
+#include "VertexingUtils.h"
 
 namespace myUtils{
 
@@ -43,7 +44,10 @@ namespace myUtils{
   int getMC_parent(int parentindex, 
 		   edm4hep::MCParticleData in,  
 		   ROOT::VecOps::RVec<int> ind);
-  
+
+  ROOT::VecOps::RVec<float> get_flightDistanceVertex(ROOT::VecOps::RVec<FCCAnalysesComposite> in, VertexingUtils::FCCAnalysesVertex pv);
+  ROOT::VecOps::RVec<float> get_flightDistanceVertex(ROOT::VecOps::RVec<FCCAnalysesComposite> in, edm4hep::VertexData pv);
+  float get_distanceVertex(edm4hep::VertexData v1, edm4hep::VertexData v2);
   ROOT::VecOps::RVec<int> get_compmc(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
   ROOT::VecOps::RVec<TLorentzVector> getFCCAnalysesComposite_particle(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getFCCAnalysesComposite_index(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
@@ -84,6 +88,31 @@ namespace myUtils{
 							 ROOT::VecOps::RVec<int> pvindex);
   };
 
+
+  struct build_tau23pi {
+    build_tau23pi(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho);
+    int m_charge=1;
+    float m_masslow=0.05;
+    float m_masshigh=3.0;
+    float m_p=1.;
+    float m_angle=1.;
+    bool m_cc=true;
+    bool m_filterPV=true;
+    bool m_rho = true;
+    ROOT::VecOps::RVec<FCCAnalysesComposite> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							 ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+							 ROOT::VecOps::RVec<int> in,
+							 ROOT::VecOps::RVec<int> pvindex);
+  };
+
+
+  struct sel_PV {
+    sel_PV(bool arg_closest);
+    bool m_closest;
+    VertexingUtils::FCCAnalysesVertex operator()(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> pv);
+  };
+  
+  
   struct sel_PID {
     sel_PID(int arg_PDG);
     int m_PDG=211;    

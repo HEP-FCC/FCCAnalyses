@@ -20,6 +20,57 @@
 using namespace myUtils;
 
 
+
+
+float myUtils::get_distanceVertex(edm4hep::VertexData v1, edm4hep::VertexData v2){
+
+  return sqrt( pow( v1.position.x - v2.position.x, 2) +
+	       pow( v1.position.y - v2.position.y, 2) +
+	       pow( v1.position.z - v2.position.z, 2));
+}
+
+
+
+
+sel_PV::sel_PV(bool arg_closest):m_closest(arg_closest){};
+VertexingUtils::FCCAnalysesVertex
+myUtils::sel_PV::operator()(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> pv){
+
+  VertexingUtils::FCCAnalysesVertex result;
+
+  float min=999999;
+  for (auto& p: pv){
+    edm4hep::VertexData v = p.vertex;
+    float dist=sqrt( pow( v.position.x, 2) + pow( v.position.y, 2) + pow( v.position.z, 2));
+    if (dist < min) {min=dist; result = p;}
+  }
+  return result;
+}
+  
+
+
+ROOT::VecOps::RVec<float> myUtils::get_flightDistanceVertex(ROOT::VecOps::RVec<FCCAnalysesComposite> in, edm4hep::VertexData pv){
+  ROOT::VecOps::RVec<float> result;
+
+  for (auto &sv: in){
+    edm4hep::VertexData theSV = sv.vertex;
+    result.push_back(get_distanceVertex(pv, theSV));
+  }
+  
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> myUtils::get_flightDistanceVertex(ROOT::VecOps::RVec<FCCAnalysesComposite> in, VertexingUtils::FCCAnalysesVertex pv){
+
+  ROOT::VecOps::RVec<float> result;
+  edm4hep::VertexData thePV = pv.vertex;
+
+  return get_flightDistanceVertex(in, thePV);
+  
+}
+
+
 ROOT::VecOps::RVec<int> myUtils::getMC_parent(int parentindex, ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  ROOT::VecOps::RVec<int> ind){
   ROOT::VecOps::RVec<int> result;
   for (size_t i = 0; i < in.size(); ++i) {
@@ -54,7 +105,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> myUtils::add_truthmatched(ROOT::VecOps:
   for (size_t i = 0; i < rp2mc.size(); ++i) {
     int mcassoc = rp2mc.at(i);
 
-    std::cout <<"i="<<i<<" mc p " << sqrt(pow(mc.at(mcassoc).momentum.z,2)+pow(mc.at(mcassoc).momentum.y,2)+pow(mc.at(mcassoc).momentum.x,2)) << "  rp p " << ReconstructedParticle::get_p(recop.at(i))<<std::endl;
+    //std::cout <<"i="<<i<<" mc p " << sqrt(pow(mc.at(mcassoc).momentum.z,2)+pow(mc.at(mcassoc).momentum.y,2)+pow(mc.at(mcassoc).momentum.x,2)) << "  rp p " << ReconstructedParticle::get_p(recop.at(i))<<std::endl;
 
 
   }
@@ -62,7 +113,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> myUtils::add_truthmatched(ROOT::VecOps:
   //ROOT::VecOps::RVec<FCCAnalysesComposite> result = comp;
 
   for (size_t i = 0; i < comp.size(); ++i) {
-    std::cout << "compo " << i << "  charge " << comp.at(i).charge<< std::endl;
+    //std::cout << "compo " << i << "  charge " << comp.at(i).charge<< std::endl;
     ROOT::VecOps::RVec<int> index = comp.at(i).index;
     ROOT::VecOps::RVec<int> mother;
     ROOT::VecOps::RVec<int> motherPDG;
@@ -78,8 +129,8 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> myUtils::add_truthmatched(ROOT::VecOps:
       
       mother.push_back(mother1);
       motherPDG.push_back(mc.at(mother1).PDG);
-      std::cout << "mother 1 "<<mother1<<"  mother2  " << mother2<< std::endl;
-      std::cout << " mc assoc j " << j << "  rp index  "<< index.at(j) << " mc index " << mcassoc <<  "  PDG ID  " << mc.at(mcassoc).PDG << "  charge "<< mc.at(mcassoc).charge<< " mc p="<<sqrt(pow(mc.at(mcassoc).momentum.z,2)+pow(mc.at(mcassoc).momentum.y,2)+pow(mc.at(mcassoc).momentum.x,2)) << "  rp p " << ReconstructedParticle::get_p(recop.at(index.at(j)))<<std::endl; 
+      //std::cout << "mother 1 "<<mother1<<"  mother2  " << mother2<< std::endl;
+      //std::cout << " mc assoc j " << j << "  rp index  "<< index.at(j) << " mc index " << mcassoc <<  "  PDG ID  " << mc.at(mcassoc).PDG << "  charge "<< mc.at(mcassoc).charge<< " mc p="<<sqrt(pow(mc.at(mcassoc).momentum.z,2)+pow(mc.at(mcassoc).momentum.y,2)+pow(mc.at(mcassoc).momentum.x,2)) << "  rp p " << ReconstructedParticle::get_p(recop.at(index.at(j)))<<std::endl; 
       
       //std::cout << " mc assoc j " << j << "   " << mcassoc.at(0) <<  "  PDG ID  " << mc.at(mcassoc.at(0)).PDG << "  charge "<< mc.at(mcassoc.at(0)).charge<< "  px="<< mc.at(mcassoc.at(0)).momentum.x << "  py="<< mc.at(mcassoc.at(0)).momentum.y << "  pz="<< mc.at(mcassoc.at(0)).momentum.z << "  p="<<sqrt(pow(mc.at(mcassoc.at(0)).momentum.z,2)+pow(mc.at(mcassoc.at(0)).momentum.y,2)+pow(mc.at(mcassoc.at(0)).momentum.x,2))<<std::endl;
       //}
@@ -94,7 +145,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> myUtils::add_truthmatched(ROOT::VecOps:
 	if (tmpmother!=mother.at(k) || tmpmotherpdg!=motherPDG.at(k))truthmatched=false;
       }
 
-      if (truthmatched==true) {comp.at(i).mc_index=mother.at(0); std::cout <<"==============================mthchehhfewefkwefkwfwf"<<std::endl;}
+      if (truthmatched==true) {comp.at(i).mc_index=mother.at(0); }//std::cout <<"==============================mthchehhfewefkwefkwfwf"<<std::endl;}
       else comp.at(i).mc_index=-999;
 
     }
@@ -271,14 +322,14 @@ myUtils::build_composite_vertex::operator() (ROOT::VecOps::RVec<edm4hep::Reconst
     builder.integer(in.at(i));
   }
   std::shared_ptr<awkward::Content> array = builder.snapshot();  
-  std::cout << array.get()->tojson(false, 1)<<std::endl;
+  //std::cout << array.get()->tojson(false, 1)<<std::endl;
   std::shared_ptr<awkward::Content> comb  = array.get()->combinations(m_n, false, nullptr, awkward::util::Parameters(), 0, 0);
   int64_t length = comb->length();
 
 
   //loop over combinations
   for (int64_t i=0;i<length;i++){
-    std::cout <<"mew comb"<<std::endl;
+    //std::cout <<"mew comb"<<std::endl;
     awkward::ContentPtr item = comb.get()->getitem_at(i);
     awkward::Record* recitem = dynamic_cast<awkward::Record*>(item.get());
     std::vector<std::shared_ptr<awkward::Content>> contentvec = recitem->contents();
@@ -307,7 +358,7 @@ myUtils::build_composite_vertex::operator() (ROOT::VecOps::RVec<edm4hep::Reconst
     int charge=0;
     for (size_t k=0;k<tmpvec.size();k++){
       charge+=recop[tmpvec.at(k)].charge;
-      std::cout << "charge in builing " <<recop[tmpvec.at(k)].charge << "  px="<<recop[tmpvec.at(k)].momentum.x<< "  py="<<recop[tmpvec.at(k)].momentum.y<< "   pz="<<recop[tmpvec.at(k)].momentum.z<< "  p=" << ReconstructedParticle::get_p(recop[tmpvec.at(k)])<<std::endl;
+      //std::cout << "charge in builing " <<recop[tmpvec.at(k)].charge << "  px="<<recop[tmpvec.at(k)].momentum.x<< "  py="<<recop[tmpvec.at(k)].momentum.y<< "   pz="<<recop[tmpvec.at(k)].momentum.z<< "  p=" << ReconstructedParticle::get_p(recop[tmpvec.at(k)])<<std::endl;
     }
     if (m_cc==true && fabs(charge)!=fabs(m_charge))continue;
     if (m_cc==false && charge!=m_charge)continue;
@@ -327,11 +378,11 @@ myUtils::build_composite_vertex::operator() (ROOT::VecOps::RVec<edm4hep::Reconst
     if (chi2<0.01)continue;
     if (chi2>10.)continue;
 
-    std::cout << "SELECTED----------------"<<std::endl;
-    std::cout << "charge " << charge << std::endl;
-    std::cout << "mass   " << mass << std::endl;
-    std::cout << "chi2   " << chi2 << std::endl;
-    std::cout << "ntrk   " << TheVertex.ntracks << std::endl;
+    //std::cout << "SELECTED----------------"<<std::endl;
+    //std::cout << "charge " << charge << std::endl;
+    //std::cout << "mass   " << mass << std::endl;
+    //std::cout << "chi2   " << chi2 << std::endl;
+    //std::cout << "ntrk   " << TheVertex.ntracks << std::endl;
 
     FCCAnalysesComposite comp;
     ROOT::VecOps::RVec<int> index;
@@ -648,4 +699,127 @@ TLorentzVector myUtils::build_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParti
     tlv+=tmp_tlv;
   }
   return tlv;
+}
+
+
+
+build_tau23pi::build_tau23pi(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho):m_charge(arg_charge),m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_cc(arg_cc),m_filterPV(arg_filterPV),m_rho(arg_rho){};
+ROOT::VecOps::RVec<FCCAnalysesComposite> 
+myUtils::build_tau23pi::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+				    ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+				    ROOT::VecOps::RVec<int> in,
+				    ROOT::VecOps::RVec<int> pvindex){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
+  awkward::ArrayBuilder builder(awkward::ArrayBuilderOptions(1024, 2.0));
+  for (size_t i = 0; i < in.size(); ++i) {
+    if (ReconstructedParticle::get_p(recop.at(in.at(i)))<m_p) continue;
+    if (m_filterPV && isPV(recop.at(in.at(i)), pvindex) ) continue;
+    builder.integer(in.at(i));
+  }
+  std::shared_ptr<awkward::Content> array = builder.snapshot();  
+  //std::cout << array.get()->tojson(false, 1)<<std::endl;
+  std::shared_ptr<awkward::Content> comb  = array.get()->combinations(3, false, nullptr, awkward::util::Parameters(), 0, 0);
+  int64_t length = comb->length();
+
+
+  //loop over combinations
+  for (int64_t i=0;i<length;i++){
+    //std::cout <<"mew comb"<<std::endl;
+    awkward::ContentPtr item = comb.get()->getitem_at(i);
+    awkward::Record* recitem = dynamic_cast<awkward::Record*>(item.get());
+    std::vector<std::shared_ptr<awkward::Content>> contentvec = recitem->contents();
+    //loop over items of the comb
+    ROOT::VecOps::RVec<int> tmpvec;
+
+    for (size_t j=0;j<contentvec.size();j++){
+      awkward::NumpyArray* numpyraw = dynamic_cast<awkward::NumpyArray*>(contentvec.at(j).get());
+      int64_t lengthnp = numpyraw->length();
+
+      //loop over the items of the items and get the data (if nested array)
+      for (int64_t k=0;k<lengthnp;k++){
+	awkward::ContentPtr item2 = numpyraw->getitem_at(k);
+	awkward::NumpyArray* npitem = dynamic_cast<awkward::NumpyArray*>(item2.get());	
+	int32_t value = *reinterpret_cast<int32_t*>(npitem->data());
+	if (k==0)tmpvec.push_back(value);
+	else tmpvec.push_back(value);
+      }
+      //in case the data structure is a simple array (and not an array with a nested array)
+      if (lengthnp<0){
+	int32_t value = *reinterpret_cast<int32_t*>(numpyraw->data());
+	tmpvec.push_back(value);
+      }
+    }
+    int charge=0;
+    for (size_t k=0;k<tmpvec.size();k++)
+      charge+=recop[tmpvec.at(k)].charge;
+    
+    if (m_cc==true && fabs(charge)!=fabs(m_charge))continue;
+    if (m_cc==false && charge!=m_charge)continue;
+    
+    float mass=build_invmass(recop,tmpvec);
+    if (mass<m_masslow)continue;
+    if (mass>m_masshigh)continue;
+
+    if (m_rho){
+      ROOT::VecOps::RVec<int> tmpvec_rho;
+      if (recop[tmpvec.at(0)].charge!=recop[tmpvec.at(1)].charge){
+	tmpvec_rho.push_back(tmpvec.at(0));
+	tmpvec_rho.push_back(tmpvec.at(1));
+	float mass_rho=build_invmass(recop,tmpvec_rho);
+	std::cout <<"rho mass comd 1 " << mass_rho << std::endl;
+	if (mass_rho<0.6)continue;
+	if (mass_rho>0.9)continue;
+      }
+      else if (recop[tmpvec.at(0)].charge!=recop[tmpvec.at(2)].charge){
+	tmpvec_rho.push_back(tmpvec.at(0));
+	tmpvec_rho.push_back(tmpvec.at(2));
+	float mass_rho=build_invmass(recop,tmpvec_rho);
+	std::cout <<"rho mass comd 2 " << mass_rho << std::endl;
+	if (mass_rho<0.6)continue;
+	if (mass_rho>0.9)continue;
+      }
+      else if (recop[tmpvec.at(1)].charge!=recop[tmpvec.at(2)].charge){
+	tmpvec_rho.push_back(tmpvec.at(1));
+	tmpvec_rho.push_back(tmpvec.at(2));
+	float mass_rho=build_invmass(recop,tmpvec_rho);
+	std::cout <<"rho mass comd 3 " << mass_rho << std::endl;
+	if (mass_rho<0.6)continue;
+	if (mass_rho>0.9)continue;
+      }
+      else
+	std::cout <<"unpexted things happening build_tau23pi::build_tau23pi" <<std::endl;
+    }
+    
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles;
+    for (size_t k=0;k<tmpvec.size();k++){
+      recoparticles.push_back(recop.at(tmpvec.at(k)));
+    }
+ 
+    VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
+    float chi2 = TheVertex.vertex.chi2;
+  
+    if (chi2<0.01)continue;
+    if (chi2>10.)continue;
+
+    //std::cout << "SELECTED----------------"<<std::endl;
+    //std::cout << "charge " << charge << std::endl;
+    //std::cout << "mass   " << mass << std::endl;
+    //std::cout << "chi2   " << chi2 << std::endl;
+    //std::cout << "ntrk   " << TheVertex.ntracks << std::endl;
+
+    FCCAnalysesComposite comp;
+    ROOT::VecOps::RVec<int> index;
+    for (size_t k=0;k<tmpvec.size();k++)index.push_back(tmpvec.at(k));
+    comp.vertex = TheVertex.vertex;
+    comp.particle = build_tlv(recop,tmpvec);
+    comp.index = index;
+    comp.charge = charge;
+    
+    result.push_back(comp);
+  }
+
+  
+  return result;
 }
