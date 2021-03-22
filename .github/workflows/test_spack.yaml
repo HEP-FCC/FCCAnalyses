@@ -31,7 +31,7 @@ jobs:
         docker exec CI_container /bin/bash -c 'cd ./Package; 
         source spack/share/spack/setup-env.sh;\
         spack load fccanalyses@master;\
-        spack load cmake;\
+        spack load --first cmake;\
         rm spack-build-*.txt;\
         cd spack-build-*;\
         ctest --output-on-failure;'
