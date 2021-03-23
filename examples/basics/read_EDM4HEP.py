@@ -16,7 +16,7 @@ ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.getMC_px
+_fcc  = ROOT.dummyLoader
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -45,44 +45,45 @@ class analysis():
 
 		#Access the various objects and their properties with the following syntax: .Define("<your_variable>", "<accessor_fct (name_object)>")
 		#This will create a column in the RDataFrame named <your_variable> and filled with the return value of the <accessor_fct> for the given collection/object 
-		#Accessor functions are the functions found in the C++ analyzers code that return a certain variable, e.g. getRP_n(object) returns the number of these objects 
-		#in the event and getRP_pt(object) returns the pT of the object 
+		#Accessor functions are the functions found in the C++ analyzers code that return a certain variable, e.g. <namespace>::get_n(object) returns the number 
+		#of these objects in the event and <namespace>::get_pt(object) returns the pT of the object. Here you can pick between two namespaces to access either
+		#reconstructed (namespace = ReconstructedParticle) or MC-level objects (namespace = MCParticle). 
 		#For the name of the object, in principle the names of the EDM4HEP collections are used - photons, muons and electrons are an exception, see below
 
 		#OVERVIEW: Accessing different objects and counting them
 		#JETS
-		.Define("n_jets", "getRP_n(Jet)") #count how many jets are in the event in total
+		.Define("n_jets", "ReconstructedParticle::get_n(Jet)") #count how many jets are in the event in total
 
 		#PHOTONS
 		.Alias("Photon0", "Photon#0.index") 
-		.Define("photons",  "getRP(Photon0, ReconstructedParticles)") 
-		.Define("n_photons",  "getRP_n(photons)") #count how many photons are in the event in total
+		.Define("photons",  "ReconstructedParticle::get(Photon0, ReconstructedParticles)") 
+		.Define("n_photons",  "ReconstructedParticle::get_n(photons)") #count how many photons are in the event in total
 
 		#ELECTRONS AND MUONS
 		#TODO: ADD EXPLANATION OF THE EXTRA STEPS
 		.Alias("Electron0", "Electron#0.index")
-		.Define("electrons",  "getRP(Electron0, ReconstructedParticles)") 
-		.Define("n_electrons",  "getRP_n(electrons)") #count how many electrons are in the event in total
+		.Define("electrons",  "ReconstructedParticle::get(Electron0, ReconstructedParticles)") 
+		.Define("n_electrons",  "ReconstructedParticle::get_n(electrons)") #count how many electrons are in the event in total
 
 		.Alias("Muon0", "Muon#0.index")
-		.Define("muons",  "getRP(Muon0, ReconstructedParticles)")
-		.Define("n_muons",  "getRP_n(muons)") #count how many muons are in the event in total
+		.Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
+		.Define("n_muons",  "ReconstructedParticle::get_n(muons)") #count how many muons are in the event in total
 
 		#OBJECT SELECTION: Consider only those objects that have pT > certain threshold
-		.Define("selected_jets", "selRP_pT(50.)(Jet)") #select only jets with a pT > 50 GeV
-		.Define("selected_electrons", "selRP_pT(20.)(electrons)") #select only electrons with a pT > 20 GeV
-		.Define("selected_muons", "selRP_pT(20.)(muons)")
+		.Define("selected_jets", "ReconstructedParticle::sel_pt(50.)(Jet)") #select only jets with a pT > 50 GeV
+		.Define("selected_electrons", "ReconstructedParticle::sel_pt(20.)(electrons)") #select only electrons with a pT > 20 GeV
+		.Define("selected_muons", "ReconstructedParticle::sel_pt(20.)(muons)")
 		
 		#SIMPLE VARIABLES: Access the basic kinematic variables of the selected jets, works analogously for electrons, muons
-		.Define("seljet_pT",     "getRP_pt(selected_jets)") #transverse momentum pT
-		.Define("seljet_eta",     "getRP_eta(selected_jets)") #pseudorapidity eta
-		.Define("seljet_phi",     "getRP_phi(selected_jets)") #polar angle in the transverse plane phi
+		.Define("seljet_pT",     "ReconstructedParticle::get_pt(selected_jets)") #transverse momentum pT
+		.Define("seljet_eta",     "ReconstructedParticle::get_eta(selected_jets)") #pseudorapidity eta
+		.Define("seljet_phi",     "ReconstructedParticle::get_phi(selected_jets)") #polar angle in the transverse plane phi
 
 		#EVENTWIDE VARIABLES: Access quantities that exist only once per event, such as the missing transverse energy
-		.Define("MET", "getRP_pt(MissingET)") #absolute value of MET
-		.Define("MET_x", "getRP_px(MissingET)") #x-component of MET
-		.Define("MET_y", "getRP_py(MissingET)") #y-component of MET
-		.Define("MET_phi", "getRP_phi(MissingET)") #angle of MET
+		.Define("MET", "ReconstructedParticle::get_pt(MissingET)") #absolute value of MET
+		.Define("MET_x", "ReconstructedParticle::get_px(MissingET)") #x-component of MET
+		.Define("MET_y", "ReconstructedParticle::get_py(MissingET)") #y-component of MET
+		.Define("MET_phi", "ReconstructedParticle::get_phi(MissingET)") #angle of MET
 	
 		)
 

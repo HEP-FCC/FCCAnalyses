@@ -44,17 +44,29 @@ The example read_EDM4HEP.py shows you how to access the different objects such a
 `dataframe.Define("<your_variable>", "<accessor_fct (<name_object>)>")`
 which creates a column in the RDataFrame named `<your_variable>` and filled with the return value of the `<accessor_fct>` for the given object. 
 
-Here, accessor functions are the functions found in the C++ analyzers code that return a certain variable, e.g. getRP_pt(object) returns the pT of the object. To find out all functions available for e.g. reconstructed particles have a look at the [respective analyzers code](https://github.com/bistapf/FCCAnalyses/blob/basicexamples/analyzers/dataframe/ReconstructedParticle.h). If you want to add your own function have a look at the [Writing your own function](#writing-your-own-function) section on this page. 
+Here, accessor functions are the functions found in the C++ analyzers code that return a certain variable. Since the analyzers code defines a specific namespace for each module, such as ReconstructedParticle or MCParticle, the full accessor function call looks like `<namespace>::<function_name>(object)`. To access the pT of a reconstructed object you would therefore call `ReconstructedParticle::get_pt(object)` and for a MC-particle the call would be `MCParticle::get_pt(object)`. The namespace corresponds to the file name of the C++ code, making it clear where to look for the source code if you have a question about the internal workings of one such functions. 
+
+Below you can find an overview of the basic, most commonly required functions, to illustrate the naming conventions. This is not an exhaustive list, if you want to find out all functions that are available please take a look in the respective analyzers code itself - [here for reconstructed particles](https://github.com/bistapf/FCCAnalyses/blob/basicexamples/analyzers/dataframe/ReconstructedParticle.h) and [here for MC particles](https://github.com/bistapf/FCCAnalyses/blob/basicexamples/analyzers/dataframe/MCParticle.h).
+
+
+| Variable  | Function name | Available for | 
+| ------------- | ------------- | ------------- |
+| Transverse momentum  | `get_pt(object)`  | `MCParticle`, `ReconstructedParticle` |
+| Pseudorapidity  | `get_eta(object)`  | `MCParticle`, `ReconstructedParticle` |
+| Energy  | `get_e(object)`  | `MCParticle`, `ReconstructedParticle` |
+| Mass  | `get_mass(object)`  | `MCParticle`, `ReconstructedParticle` |
+| Charge  | `get_charge(object)`  | `MCParticle`, `ReconstructedParticle` |
+| Number (in event)  | `get_n(object)`  | `MCParticle`, `ReconstructedParticle` |
+| PDG ID  | `get_pdg(object)`  | `MCParticle` |
+
+
+If you want to add your own function have a look at the [Writing your own function](#writing-your-own-function) section on this page. 
 
 For the name of the object, in principle the names of the EDM4HEP collections are used - photons, muons and electrons are an exception where a few extra steps are required, as shown in the example here. 
 
-This example also shows how to apply object selection cuts, for example selecting only objects with a transverse momentum pT larger than a given threshold by using the `selRP_pT(<threshold>)(<name_object>)` function. 
+This example also shows how to apply object selection cuts, for example selecting only reconstructed objects with a transverse momentum pT larger than a given threshold by using the `ReconstructedParticle::sel_pt(<threshold>)(<name_object>)` function. 
 
-In the end of the example you can see how the selected variables are written to branches of the output n-tuple, using the `dataframe.Snapshot("<tree_name>", <branch_list> )`, where in all examples here the name of the output-tree is always `events` and the branch_list is defined as a `ROOT.vector('string')` as demonstrated in the example. Note that branches of variables that exist multiple times per event, i.e. anything derived from a collection such as the pT of jets, result in vector branches. This is also true for some quantities that in principle only exist once per event, but are collections in the EDM4HEP format, such as the missing transverse energy.
-
-
-TODO: explain the logics of naming etc and accessor functions for basics like pT, eta, etc. - make a brief overview of the most important ones in the readme or is the .py enough? 
- 
+In the end of the example you can see how the selected variables are written to branches of the output n-tuple, using the `dataframe.Snapshot("<tree_name>", <branch_list> )`, where in all examples here the name of the output-tree is always `events` and the branch_list is defined as a `ROOT.vector('string')` as demonstrated in the example. Note that branches of variables that exist multiple times per event, i.e. anything derived from a collection such as the pT of jets, result in vector branches. This is also true for some quantities that in principle only exist once per event, but are collections in the EDM4HEP format, such as the missing transverse energy. 
 
 <!--
 ======================================================
