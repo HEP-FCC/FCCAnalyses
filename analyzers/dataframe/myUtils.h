@@ -8,7 +8,7 @@
 
 #include "TLorentzVector.h"
 #include "VertexingUtils.h"
-
+#include <vector>
 namespace myUtils{
 
   struct FCCAnalysesComposite{
@@ -18,6 +18,14 @@ namespace myUtils{
     int charge;
     int mc_index;
   };
+
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+  ROOT::VecOps::RVec<TVector3> get_MCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
+  ROOT::VecOps::RVec<float> get_MCVertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
+  ROOT::VecOps::RVec<float> get_MCVertex_y(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
+  ROOT::VecOps::RVec<float> get_MCVertex_z(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
+  ROOT::VecOps::RVec<int> get_NTracksMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
+  std::vector< std::vector<int> > get_MCindMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
 
   struct filter_PV{
     filter_PV(bool arg_pv);
@@ -37,6 +45,10 @@ namespace myUtils{
   bool isPV(edm4hep::ReconstructedParticleData recop, 
 	    ROOT::VecOps::RVec<int> pvindex);
 
+  ROOT::VecOps::RVec<int> getMC_daughter(int daughterindex, 
+					 ROOT::VecOps::RVec<edm4hep::MCParticleData> in, 
+					 ROOT::VecOps::RVec<int> ind);
+
   ROOT::VecOps::RVec<int> getMC_parent(int parentindex, 
 				       ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  
 				       ROOT::VecOps::RVec<int> ind);
@@ -48,6 +60,7 @@ namespace myUtils{
   ROOT::VecOps::RVec<float> get_flightDistanceVertex(ROOT::VecOps::RVec<FCCAnalysesComposite> in, VertexingUtils::FCCAnalysesVertex pv);
   ROOT::VecOps::RVec<float> get_flightDistanceVertex(ROOT::VecOps::RVec<FCCAnalysesComposite> in, edm4hep::VertexData pv);
   float get_distanceVertex(edm4hep::VertexData v1, edm4hep::VertexData v2);
+  float get_distance(TVector3 v1, TVector3 v2);
   ROOT::VecOps::RVec<int> get_compmc(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
   ROOT::VecOps::RVec<TLorentzVector> getFCCAnalysesComposite_particle(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> getFCCAnalysesComposite_index(ROOT::VecOps::RVec<FCCAnalysesComposite> in);

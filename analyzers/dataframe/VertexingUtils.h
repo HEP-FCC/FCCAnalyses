@@ -33,6 +33,12 @@ namespace VertexingUtils{
     ROOT::VecOps::RVec<float> final_track_phases;
   };
 
+  /// Structure to keep useful track information that is related to the vertex
+  struct FCCAnalysesVertexMC{
+    TVector3 vertex;
+    ROOT::VecOps::RVec<int> mc_ind;
+  };
+
   /// Selection of particles based on the d0 / z0 significances of the associated track
   struct selTracks {
     selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_min, float arg_z0sig_max)  ;

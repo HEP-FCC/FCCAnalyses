@@ -74,15 +74,15 @@ VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> track
   // Set up the vertex seed finder
   using SeedFinder = Acts::TrackDensityVertexFinder<Fitter, Acts::GaussianTrackDensity<Acts::BoundTrackParameters>>;
   SeedFinder seedFinder;
-
-
+  
+  
   /*
   // Set up Gaussian track density
   Acts::GaussianTrackDensity::Config trackDensityConfig;
   trackDensityConfig.d0MaxSignificance = 10.;
   trackDensityConfig.z0MaxSignificance = 20.;
   Acts::GaussianTrackDensity trackDensity(trackDensityConfig);
-
+  
   
   // Vertex seed finder
   Acts::VertexSeedFinder::Config seedFinderConfig;
@@ -91,7 +91,8 @@ VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> track
   */
 
   // The vertex finder type
-  using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
+  //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
+  using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
   Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;
@@ -245,8 +246,8 @@ VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> track
     TheVertexColl.push_back(TheVertex);
   }
 
-  if (vertices.size()>1){
-    std::cout << "Found more than 1 Primary Vertex " << vertices.size() << std::endl;
+  if (vertices.size()>0){
+    std::cout << "Found more than 0 Primary Vertex " << vertices.size() << std::endl;
     for (const auto& vtx : vertices) {
       std::cout << "Found vertex at " << vtx.fullPosition().transpose() << " with "
 		<< vtx.tracks().size() << " tracks." << std::endl;
