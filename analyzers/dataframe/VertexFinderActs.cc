@@ -91,8 +91,8 @@ VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> track
   */
 
   // The vertex finder type
-  //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
-  using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
+  using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
+  //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
   Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;

@@ -19,23 +19,134 @@
 
 using namespace myUtils;
 
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+    ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex)
+    result.push_back(p.vertex.position.x);
+  return result;
+}
+  
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_y(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+    ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex)
+    result.push_back(p.vertex.position.y);
+  return result;
+}
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_z(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex)
+    result.push_back(p.vertex.position.z);
+  return result;
+}
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_chi2(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex)
+    result.push_back(p.vertex.chi2);
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::get_Vertex_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<int> result;
+  for (auto &p:vertex)
+    result.push_back(p.ntracks);
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver){
+
+  ROOT::VecOps::RVec<int> result;
+  for (auto &p:vertex){
+    float distance = 99999999999.;
+    int index=-1;
+    for (size_t i = 0; i < mcver.size(); ++i){
+      float distance2 = sqrt( pow(p.vertex.position.x - mcver.at(i).vertex[0] ,2) +
+			      pow(p.vertex.position.y - mcver.at(i).vertex[1] ,2) +
+			      pow(p.vertex.position.z - mcver.at(i).vertex[2] ,2) );
+
+      if (distance2<distance){distance=distance2; index=i;}
+    }
+    if (index>-1)result.push_back(index);
+    else std::cout <<"problem index myUtils::get_Vertex_indMC " << index <<std::endl;
+  }
+  return result;
+  
+}
+
+
+ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
+myUtils::get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
+			  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+			  ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+			  ROOT::VecOps::RVec<int> recin,
+			  ROOT::VecOps::RVec<int> mcin){
+
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> result;
+
+  ROOT::VecOps::RVec< ROOT::VecOps::RVec<int> > rp2mc = ReconstructedParticle2MC::getRP2MC_indexVec(recin, mcin, reco);
+  
+
+  
+  int counter=0;
+  for (auto &p: mcver){
+    ROOT::VecOps::RVec<int> mc_indRVec = p.mc_ind;
+    std::vector<int> mc_ind;
+    for (size_t i = 0; i < mc_indRVec.size(); ++i)mc_ind.push_back(mc_indRVec.at(i));
+    
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles;
+    for (size_t i = 0; i < rp2mc.size(); ++i){
+      for (size_t j = 0; j < rp2mc.at(i).size(); ++j){
+
+	std::vector<int>::iterator it = std::find(mc_ind.begin(), mc_ind.end(), rp2mc.at(i).at(j));
+	if (it!=mc_ind.end())recoparticles.push_back(reco.at(i));
+	
+	
+      } 
+    }
+
+    if (recoparticles.size()<2)continue;
+    
+    VertexingUtils::FCCAnalysesVertex TheVertex;
+    if (counter==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks );
+    else TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
+    counter+=1;
+    result.push_back(TheVertex);    
+  }
+
+  //std::cout <<"n vtx reco "<< result.size()<<std::endl;
+  for (auto&p:result){
+    edm4hep::VertexData vertex = p.vertex;    
+    //std::cout << "n tracks " << p.ntracks << "  chi2 " << vertex.chi2 << "  x=" << vertex.position.x << "  y=" << vertex.position.y << "  z=" << vertex.position.z <<std::endl;
+  }
+  
+  return result;
+}
+
+
 ROOT::VecOps::RVec<TVector3> myUtils::get_MCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex){
   ROOT::VecOps::RVec<TVector3> result;
   for (auto &p:vertex)
     result.push_back(p.vertex);
   return result;
 }
+
 ROOT::VecOps::RVec<float> myUtils::get_MCVertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex){
   ROOT::VecOps::RVec<float> result;
   for (auto &p:vertex)
     result.push_back(p.vertex[0]);
   return result;
-}ROOT::VecOps::RVec<float> myUtils::get_MCVertex_y(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex){
+}
+
+ROOT::VecOps::RVec<float> myUtils::get_MCVertex_y(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex){
   ROOT::VecOps::RVec<float> result;
   for (auto &p:vertex)
     result.push_back(p.vertex[1]);
   return result;
-}ROOT::VecOps::RVec<float> myUtils::get_MCVertex_z(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex){
+}
+ROOT::VecOps::RVec<float> myUtils::get_MCVertex_z(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex){
   ROOT::VecOps::RVec<float> result;
   for (auto &p:vertex)
     result.push_back(p.vertex[2]);
@@ -59,7 +170,8 @@ std::vector<std::vector<int>> myUtils::get_MCindMCVertex(ROOT::VecOps::RVec<Vert
 }
 
 
-ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
+ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+										    ROOT::VecOps::RVec<int> ind){
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> result;
   ROOT::VecOps::RVec<TVector3> tmpvec;
   ROOT::VecOps::RVec<int> tmpvecint;
@@ -109,9 +221,37 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
   }
 
 
-  std::cout <<"nvx MC  " << result.size()<<std::endl;
+  //std::cout << "====================size MC " << mc.size() << " size assoc  " << ind.size() << std::endl;
+  //adding the mother particles
+  //std::cout <<"nvx MC  " << result.size()<<std::endl;
+  for (auto& p:result) {
+    std::vector<int> mother_ind;
+
+    //std::cout <<"n part="<<p.mc_ind.size()<<"  x=" << p.vertex[0] <<"  y=" << p.vertex[1] <<"  z=" << p.vertex[2] <<std::endl;
+    ROOT::VecOps::RVec<int> mc_ind = p.mc_ind;
+    for (size_t i = 0; i < mc_ind.size(); ++i){
+
+      //std::cout << "i="<< i << "  mc_ind  "<< mc_ind.at(i) <<"  parent begin " << mc.at(mc_ind.at(i)).parents_begin <<"  parent end " << mc.at(mc_ind.at(i)).parents_end << " end-beg  "  << mc.at(mc_ind.at(i)).parents_end-mc.at(mc_ind.at(i)).parents_begin<< std::endl;
+
+      
+      
+      for (size_t j = mc.at(mc_ind.at(i)).parents_begin; j < mc.at(mc_ind.at(i)).parents_end; ++j){
+	//std::cout << "     j="<<j << "  index  " << ind.at(j) << "  PDG ID " << mc.at(ind.at(j)).PDG << std::endl;
+	std::vector<int>::iterator it = std::find(mother_ind.begin(), mother_ind.end(), ind.at(j));
+	if (it==mother_ind.end())mother_ind.push_back(ind.at(j));
+      }
+    }
+
+    ROOT::VecOps::RVec<int> mother_indRVec;
+    for (size_t i = 0; i < mother_ind.size(); ++i)mother_indRVec.push_back(mother_ind.at(i));
+    p.mother_ind = mother_indRVec;
+    //std::cout << "found n mothers="<<mother_ind.size()<<std::endl;
+    
+  }
+  
+  /*std::cout <<"nvx MC  " << result.size()<<std::endl;
   for (size_t j = 0; j < result.size(); ++j)
-    std::cout <<"n part="<<result.at(j).mc_ind.size()<<"  x=" << result.at(j).vertex[0] <<"  y=" << result.at(j).vertex[1] <<"  z=" << result.at(j).vertex[2] <<std::endl;
+  std::cout <<"n part="<<result.at(j).mc_ind.size()<<"  x=" << result.at(j).vertex[0] <<"  y=" << result.at(j).vertex[1] <<"  z=" << result.at(j).vertex[2] <<std::endl;*/
 
   return result;
 }
