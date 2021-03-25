@@ -70,7 +70,14 @@ ROOT::VecOps::RVec<int> myUtils::get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUt
       if (distance2<distance){distance=distance2; index=i;}
     }
     if (index>-1)result.push_back(index);
-    else std::cout <<"problem index myUtils::get_Vertex_indMC " << index <<std::endl;
+    else {
+      std::cout <<"problem index myUtils::get_Vertex_indMC " << index << "  distance " << distance <<std::endl;
+      std::cout <<"reco vtx chi2 " << p.vertex.chi2 << " ntrk " << p.ntracks << "x,y,z="<<p.vertex.position.x<<", "<<p.vertex.position.y<<", "<<p.vertex.position.z<<std::endl;
+      for (size_t i = 0; i < mcver.size(); ++i)
+	std::cout <<"  mc vtx i=" << i << " ntrk " << mcver.at(i).mc_ind.size() << "x,y,z="<<mcver.at(i).vertex[0]<<", "<<mcver.at(i).vertex[1]<<", "<<mcver.at(i).vertex[2]<<std::endl;
+      
+      
+    }
   }
   return result;
   
@@ -88,40 +95,33 @@ myUtils::get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC
 
   ROOT::VecOps::RVec< ROOT::VecOps::RVec<int> > rp2mc = ReconstructedParticle2MC::getRP2MC_indexVec(recin, mcin, reco);
   
-
-  
   int counter=0;
   for (auto &p: mcver){
     ROOT::VecOps::RVec<int> mc_indRVec = p.mc_ind;
     std::vector<int> mc_ind;
-    for (size_t i = 0; i < mc_indRVec.size(); ++i)mc_ind.push_back(mc_indRVec.at(i));
     
+    for (size_t i = 0; i < mc_indRVec.size(); ++i)mc_ind.push_back(mc_indRVec.at(i));
+
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles;
     for (size_t i = 0; i < rp2mc.size(); ++i){
       for (size_t j = 0; j < rp2mc.at(i).size(); ++j){
 
 	std::vector<int>::iterator it = std::find(mc_ind.begin(), mc_ind.end(), rp2mc.at(i).at(j));
-	if (it!=mc_ind.end())recoparticles.push_back(reco.at(i));
-	
-	
+	if (it!=mc_ind.end() && fabs(reco.at(i).charge)>0)recoparticles.push_back(reco.at(i));
       } 
     }
 
+    ROOT::VecOps::RVec<edm4hep::TrackState> tmptracks = ReconstructedParticle2Track::getRP2TRK( recoparticles, tracks );
+    
     if (recoparticles.size()<2)continue;
     
     VertexingUtils::FCCAnalysesVertex TheVertex;
     if (counter==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks );
     else TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
+    if (std::isnan(TheVertex.vertex.chi2))continue;
     counter+=1;
     result.push_back(TheVertex);    
   }
-
-  //std::cout <<"n vtx reco "<< result.size()<<std::endl;
-  for (auto&p:result){
-    edm4hep::VertexData vertex = p.vertex;    
-    //std::cout << "n tracks " << p.ntracks << "  chi2 " << vertex.chi2 << "  x=" << vertex.position.x << "  y=" << vertex.position.y << "  z=" << vertex.position.z <<std::endl;
-  }
-  
   return result;
 }
 
