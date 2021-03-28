@@ -1,5 +1,5 @@
 
-find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps)
+find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps TMVA)
 include(${ROOT_USE_FILE})
 #include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
@@ -38,6 +38,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					VertexFitterActs.h
 					awkwardtest.h
 					myUtils.h
+					myTMVA.h
 					LINKDEF LinkDef.h)
 
 

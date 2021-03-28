@@ -48,6 +48,13 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_chi2(ROOT::VecOps::RVec<VertexingU
   return result;
 }
 
+ROOT::VecOps::RVec<bool> myUtils::get_Vertex_isPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<bool> result;
+  for (auto &p:vertex)
+    result.push_back(p.vertex.primary);
+  return result;
+}
+
 ROOT::VecOps::RVec<int> myUtils::get_Vertex_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   ROOT::VecOps::RVec<int> result;
   for (auto &p:vertex)
