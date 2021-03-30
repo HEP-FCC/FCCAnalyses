@@ -62,6 +62,33 @@ ROOT::VecOps::RVec<int> myUtils::get_Vertex_ntracks(ROOT::VecOps::RVec<Vertexing
   return result;
 }
 
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<float> result;
+  VertexingUtils::FCCAnalysesVertex PV;
+  for (auto &p:vertex)
+    if (p.vertex.primary>0) PV=p;
+
+  for (auto &p:vertex){
+    if (p.vertex.primary>0) result.push_back(0);
+    else result.push_back(get_distanceVertex(PV.vertex,p.vertex));
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<float> result;
+  VertexingUtils::FCCAnalysesVertex PV;
+  for (auto &p:vertex)
+    if (p.vertex.primary>0) PV=p;
+
+  for (auto &p:vertex){
+    if (p.vertex.primary>0) result.push_back(0);
+    else result.push_back(get_distanceErrorVertex(PV.vertex,p.vertex));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<int> myUtils::get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 						  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver){
 
@@ -277,6 +304,48 @@ float myUtils::get_distanceVertex(edm4hep::VertexData v1, edm4hep::VertexData v2
 	       pow( v1.position.z - v2.position.z, 2));
 }
 
+
+float myUtils::get_distanceErrorVertex(edm4hep::VertexData v1, edm4hep::VertexData v2){
+
+  float result;
+  std::array<float,6> v1_covMatrix = v1.covMatrix;
+  std::array<float,6> v2_covMatrix = v2.covMatrix;
+
+  edm4hep::Vector3f v1_position = v1.position;
+  edm4hep::Vector3f v2_position = v2.position;
+  
+  float distance = get_distanceVertex(v1, v2);
+  
+  float x =
+    (v1_position[0]-v2_position[0])*(v1_covMatrix[0]+v2_covMatrix[0]) +
+    (v1_position[1]-v2_position[1])*(v1_covMatrix[1]+v2_covMatrix[1]) +
+    (v1_position[2]-v2_position[2])*(v1_covMatrix[3]+v2_covMatrix[3]) ;
+
+  float y =
+    (v1_position[0]-v2_position[0])*(v1_covMatrix[1]+v2_covMatrix[1]) +
+    (v1_position[1]-v2_position[1])*(v1_covMatrix[2]+v2_covMatrix[2]) +
+    (v1_position[2]-v2_position[2])*(v1_covMatrix[4]+v2_covMatrix[4]) ;
+
+  float z =
+    (v1_position[0]-v2_position[0])*(v1_covMatrix[3]+v2_covMatrix[3]) +
+    (v1_position[1]-v2_position[1])*(v1_covMatrix[4]+v2_covMatrix[4]) +
+    (v1_position[2]-v2_position[2])*(v1_covMatrix[5]+v2_covMatrix[5]) ;
+
+  std::cout << "x,y,z " << x<<" " <<y<<" " << z << std::endl;
+  
+  //\sigma_d = (\vec{x}_1-\vec{x}_2)^t\{C_1+C_2|}(\vec{x}_1-\vec{x}_2)/d^2
+  //Where d is the distance between the two vertices
+  //= \Sqrt((\vec{x}_1-\vec{x}_2)^t(\vec{x}_1-\vec{x}_2))
+
+  x = x*(v1_position[0]-v2_position[0]);
+  y = y*(v1_position[1]-v2_position[1]);
+  z = z*(v1_position[2]-v2_position[2]);
+
+    std::cout << "after x,y,z " << x<<" " <<y<<" " << z << std::endl;
+
+  result = (x+y+z)/pow(distance,2);
+  return result;
+}
 
 
 

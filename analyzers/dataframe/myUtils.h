@@ -105,6 +105,10 @@ namespace myUtils{
 
   ROOT::VecOps::RVec<int> get_Vertex_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
+  ROOT::VecOps::RVec<float> get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  
+  ROOT::VecOps::RVec<float> get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  
   ROOT::VecOps::RVec<int> get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 					   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver);
 
@@ -150,6 +154,9 @@ namespace myUtils{
 
   float get_distanceVertex(edm4hep::VertexData v1,
 			   edm4hep::VertexData v2);
+
+  float get_distanceErrorVertex(edm4hep::VertexData v1,
+				edm4hep::VertexData v2);
 
   float get_distance(TVector3 v1,
 		     TVector3 v2);

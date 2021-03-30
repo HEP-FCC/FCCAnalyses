@@ -57,6 +57,7 @@ target_link_libraries(FCCAnalyses
 		      ROOT::MathCore 
 		      ROOT::ROOTVecOps
 		      ROOT::ROOTDataFrame
+		      ROOT::TMVA
 		      EDM4HEP::edm4hep 
 		      EDM4HEP::edm4hepDict 
 		      podio::podio 
