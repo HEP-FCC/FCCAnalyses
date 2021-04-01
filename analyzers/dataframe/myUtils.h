@@ -55,8 +55,8 @@ namespace myUtils{
 							 ROOT::VecOps::RVec<int> pvindex);
   };
 
-  struct build_tau23pi {
-    build_tau23pi(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho);
+  struct build_tau23pi_vertexing {
+    build_tau23pi_vertexing(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho);
     int m_charge=1;
     float m_masslow=0.05;
     float m_masshigh=3.0;
@@ -99,20 +99,32 @@ namespace myUtils{
   
   ROOT::VecOps::RVec<float> get_Vertex_z(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
+  ROOT::VecOps::RVec<float> get_Vertex_xErr(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  
+  ROOT::VecOps::RVec<float> get_Vertex_yErr(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  
+  ROOT::VecOps::RVec<float> get_Vertex_zErr(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
   ROOT::VecOps::RVec<float> get_Vertex_chi2(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
   ROOT::VecOps::RVec<bool> get_Vertex_isPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
   ROOT::VecOps::RVec<int> get_Vertex_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
-  ROOT::VecOps::RVec<float> get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  ROOT::VecOps::RVec<float> get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+					    int comp);
   
-  ROOT::VecOps::RVec<float> get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  ROOT::VecOps::RVec<float> get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						 int comp);
   
   ROOT::VecOps::RVec<int> get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 					   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver);
 
-  
+  ROOT::VecOps::RVec<float> get_Vertex_d2MC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+					    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
+					    ROOT::VecOps::RVec<int> mcind,
+					    int comp);
+
   ROOT::VecOps::RVec<TVector3> get_MCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
 
   ROOT::VecOps::RVec<float> get_MCVertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
@@ -153,13 +165,21 @@ namespace myUtils{
 						     edm4hep::VertexData pv);
 
   float get_distanceVertex(edm4hep::VertexData v1,
-			   edm4hep::VertexData v2);
+			   edm4hep::VertexData v2,
+			   int comp);
 
   float get_distanceErrorVertex(edm4hep::VertexData v1,
-				edm4hep::VertexData v2);
+				edm4hep::VertexData v2,
+				int comp);
 
   float get_distance(TVector3 v1,
 		     TVector3 v2);
+
+  float get_distance(edm4hep::Vector3f v1,
+		     TVector3 v2,
+		     int comp);
+  
+
   
   ROOT::VecOps::RVec<int> get_compmc(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
   

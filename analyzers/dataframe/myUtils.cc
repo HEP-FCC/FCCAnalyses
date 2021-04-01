@@ -41,6 +41,27 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_z(ROOT::VecOps::RVec<VertexingUtil
   return result;
 }
 
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_xErr(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+    ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex)
+    result.push_back(sqrt(p.vertex.covMatrix[0]));
+  return result;
+}
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_yErr(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+    ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex)
+    result.push_back(sqrt(p.vertex.covMatrix[2]));
+  return result;
+}
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_zErr(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+    ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex)
+    result.push_back(sqrt(p.vertex.covMatrix[5]));
+  return result;
+}
+
 ROOT::VecOps::RVec<float> myUtils::get_Vertex_chi2(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   ROOT::VecOps::RVec<float> result;
   for (auto &p:vertex)
@@ -62,7 +83,8 @@ ROOT::VecOps::RVec<int> myUtils::get_Vertex_ntracks(ROOT::VecOps::RVec<Vertexing
   return result;
 }
 
-ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						   int comp){
   ROOT::VecOps::RVec<float> result;
   VertexingUtils::FCCAnalysesVertex PV;
   for (auto &p:vertex)
@@ -70,13 +92,14 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingU
 
   for (auto &p:vertex){
     if (p.vertex.primary>0) result.push_back(0);
-    else result.push_back(get_distanceVertex(PV.vertex,p.vertex));
+    else result.push_back(get_distanceVertex(PV.vertex,p.vertex, comp));
   }
   return result;
 }
 
 
-ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							int comp){
   ROOT::VecOps::RVec<float> result;
   VertexingUtils::FCCAnalysesVertex PV;
   for (auto &p:vertex)
@@ -84,10 +107,28 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2PVError(ROOT::VecOps::RVec<Verte
 
   for (auto &p:vertex){
     if (p.vertex.primary>0) result.push_back(0);
-    else result.push_back(get_distanceErrorVertex(PV.vertex,p.vertex));
+    else result.push_back(get_distanceErrorVertex(PV.vertex,p.vertex, comp));
   }
   return result;
 }
+
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2MC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
+						   ROOT::VecOps::RVec<int> mcind,
+						   int comp){
+  ROOT::VecOps::RVec<float> result;
+ 
+  for (size_t i = 0; i < vertex.size(); ++i){
+    edm4hep::Vector3f recov = vertex.at(i).vertex.position;
+    TVector3 mcv = mcver.at(mcind.at(i)).vertex;
+    result.push_back(get_distance(recov, mcv, comp));
+  }
+  
+  return result;
+}
+
+
 
 ROOT::VecOps::RVec<int> myUtils::get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 						  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver){
@@ -290,6 +331,22 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
   return result;
 }
 
+float myUtils::get_distance(edm4hep::Vector3f v1,
+			    TVector3 v2,
+			    int comp){
+
+  float result;
+  if      (comp==0) result = v1.x - v2[0];
+  else if (comp==1) result = v1.y - v2[1];
+  else if (comp==2) result = v1.z - v2[2];
+
+  else              result = sqrt( pow( v1.x - v2[0], 2) +
+				   pow( v1.y - v2[1], 2) +
+				   pow( v1.z - v2[2], 2));
+  return result;
+
+}
+
 float myUtils::get_distance(TVector3 v1, TVector3 v2){
 
   return sqrt( pow( v1[0] - v2[0], 2) +
@@ -297,24 +354,37 @@ float myUtils::get_distance(TVector3 v1, TVector3 v2){
 	       pow( v1[2] - v2[2], 2));
 }
 
-float myUtils::get_distanceVertex(edm4hep::VertexData v1, edm4hep::VertexData v2){
+float myUtils::get_distanceVertex(edm4hep::VertexData v1, edm4hep::VertexData v2, int comp){
 
-  return sqrt( pow( v1.position.x - v2.position.x, 2) +
-	       pow( v1.position.y - v2.position.y, 2) +
-	       pow( v1.position.z - v2.position.z, 2));
+  float result;
+  if      (comp==0) result = v1.position.x - v2.position.x;
+  else if (comp==1) result = v1.position.y - v2.position.y;
+  else if (comp==2) result = v1.position.z - v2.position.z;
+
+  else              result = sqrt( pow( v1.position.x - v2.position.x, 2) +
+				   pow( v1.position.y - v2.position.y, 2) +
+				   pow( v1.position.z - v2.position.z, 2));
+  return result;
+  
 }
 
 
-float myUtils::get_distanceErrorVertex(edm4hep::VertexData v1, edm4hep::VertexData v2){
+float myUtils::get_distanceErrorVertex(edm4hep::VertexData v1, edm4hep::VertexData v2, int comp){
 
-  float result;
   std::array<float,6> v1_covMatrix = v1.covMatrix;
   std::array<float,6> v2_covMatrix = v2.covMatrix;
+
+  //when error on x, y, z only
+  if      (comp==0) return sqrt(v1_covMatrix[0]+v2_covMatrix[0]);
+  else if (comp==1) return sqrt(v1_covMatrix[2]+v2_covMatrix[2]);
+  else if (comp==2) return sqrt(v1_covMatrix[5]+v2_covMatrix[5]);
+
+  float result;
 
   edm4hep::Vector3f v1_position = v1.position;
   edm4hep::Vector3f v2_position = v2.position;
   
-  float distance = get_distanceVertex(v1, v2);
+  float distance = get_distanceVertex(v1, v2, comp);
   
   float x =
     (v1_position[0]-v2_position[0])*(v1_covMatrix[0]+v2_covMatrix[0]) +
@@ -331,7 +401,6 @@ float myUtils::get_distanceErrorVertex(edm4hep::VertexData v1, edm4hep::VertexDa
     (v1_position[1]-v2_position[1])*(v1_covMatrix[4]+v2_covMatrix[4]) +
     (v1_position[2]-v2_position[2])*(v1_covMatrix[5]+v2_covMatrix[5]) ;
 
-  std::cout << "x,y,z " << x<<" " <<y<<" " << z << std::endl;
   
   //\sigma_d = (\vec{x}_1-\vec{x}_2)^t\{C_1+C_2|}(\vec{x}_1-\vec{x}_2)/d^2
   //Where d is the distance between the two vertices
@@ -341,9 +410,65 @@ float myUtils::get_distanceErrorVertex(edm4hep::VertexData v1, edm4hep::VertexDa
   y = y*(v1_position[1]-v2_position[1]);
   z = z*(v1_position[2]-v2_position[2]);
 
-    std::cout << "after x,y,z " << x<<" " <<y<<" " << z << std::endl;
+  result = x+y+z;
+  if (result>0)
+    result = sqrt((result)/pow(distance,2));
+  else result=0;
 
-  result = (x+y+z)/pow(distance,2);
+
+  /*
+  TVectorD x1(3); 
+  x1(0) = v1_position[0];
+  x1(1) = v1_position[1];
+  x1(2) = v1_position[2];
+
+  TVectorD x2(3); 
+  x2(0) = v2_position[0];
+  x2(1) = v2_position[1];
+  x2(2) = v2_position[2];
+  
+  TVectorD xdiff = x1-x2;
+
+  TMatrixDSym C1(3);
+  C1[0][0] = v1_covMatrix[0];
+
+  C1[1][0] = v1_covMatrix[1];
+  C1[1][1] = v1_covMatrix[2];
+
+  C1[0][1] = v1_covMatrix[1];
+
+  C1[2][0] = v1_covMatrix[3];
+  C1[2][1] = v1_covMatrix[4];
+  C1[2][2] = v1_covMatrix[5];
+
+  C1[0][2] = v1_covMatrix[3];
+  C1[1][2] = v1_covMatrix[4];
+
+
+  TMatrixDSym C2(3);
+  C2[0][0] = v2_covMatrix[0];
+
+  C2[1][0] = v2_covMatrix[1];
+  C2[1][1] = v2_covMatrix[2];
+
+  C2[0][1] = v2_covMatrix[1];
+
+  C2[2][0] = v2_covMatrix[3];
+  C2[2][1] = v2_covMatrix[4];
+  C2[2][2] = v2_covMatrix[5];
+
+  C2[0][2] = v2_covMatrix[3];
+  C2[1][2] = v2_covMatrix[4];
+
+  TMatrixDSym Csum = C1+C2;
+  Double_t d = TMath::Sqrt(xdiff(0)*xdiff(0) +xdiff(1)*xdiff(1) +xdiff(2)*xdiff(2));
+  TVectorD xDir = (1./d)*xdiff;
+  //
+  Double_t sig_d = TMath::Sqrt(Csum.Similarity(xDir)); 
+
+  std::cout << "my result " << result << "  FB  " << sig_d <<std::endl;
+  */
+
   return result;
 }
 
@@ -371,7 +496,7 @@ ROOT::VecOps::RVec<float> myUtils::get_flightDistanceVertex(ROOT::VecOps::RVec<F
 
   for (auto &sv: in){
     edm4hep::VertexData theSV = sv.vertex;
-    result.push_back(get_distanceVertex(pv, theSV));
+    result.push_back(get_distanceVertex(pv, theSV,-1));
   }
   
   return result;
@@ -1040,12 +1165,12 @@ TLorentzVector myUtils::build_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParti
 
 
 
-build_tau23pi::build_tau23pi(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho):m_charge(arg_charge),m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_cc(arg_cc),m_filterPV(arg_filterPV),m_rho(arg_rho){};
+build_tau23pi_vertexing::build_tau23pi_vertexing(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho):m_charge(arg_charge),m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_cc(arg_cc),m_filterPV(arg_filterPV),m_rho(arg_rho){};
 ROOT::VecOps::RVec<FCCAnalysesComposite> 
-myUtils::build_tau23pi::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
-				    ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-				    ROOT::VecOps::RVec<int> in,
-				    ROOT::VecOps::RVec<int> pvindex){
+myUtils::build_tau23pi_vertexing::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+					      ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+					      ROOT::VecOps::RVec<int> in,
+					      ROOT::VecOps::RVec<int> pvindex){
 
   ROOT::VecOps::RVec<FCCAnalysesComposite> result;
 
