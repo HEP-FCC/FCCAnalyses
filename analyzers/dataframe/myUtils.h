@@ -125,6 +125,8 @@ namespace myUtils{
 					    ROOT::VecOps::RVec<int> mcind,
 					    int comp);
 
+  std::vector<std::vector<int>> get_indVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
   ROOT::VecOps::RVec<TVector3> get_MCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
 
   ROOT::VecOps::RVec<float> get_MCVertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);

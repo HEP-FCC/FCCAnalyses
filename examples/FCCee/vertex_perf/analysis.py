@@ -73,6 +73,7 @@ class analysis():
 
                .Define("Vertex_chi2",  "myUtils::get_Vertex_chi2(VertexObject)")
                .Define("Vertex_mcind", "myUtils::get_Vertex_indMC(VertexObject, MCVertexObject)")
+               .Define("Vertex_ind",   "myUtils::get_Vertex_indVertex(VertexObject)")
                .Define("Vertex_isPV",  "myUtils::get_Vertex_isPV(VertexObject)")
                .Define("Vertex_ntrk",  "myUtils::get_Vertex_ntracks(VertexObject)")
                .Define("Vertex_n",     "int(Vertex_x.size())")
@@ -114,6 +115,9 @@ class analysis():
                 "MC_Vertex_n",
                 "MC_Vertex_ntrk",
 
+                "RP_p",
+                "RP_theta",
+                
                 "Vertex_x",
                 "Vertex_y",
                 "Vertex_z",
@@ -123,6 +127,7 @@ class analysis():
 
                 "Vertex_chi2",
                 "Vertex_mcind",
+                "Vertex_ind",
                 "Vertex_isPV",
                 "Vertex_ntrk",
                 "Vertex_n",

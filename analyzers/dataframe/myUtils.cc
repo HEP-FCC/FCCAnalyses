@@ -201,6 +201,18 @@ myUtils::get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC
 }
 
 
+
+std::vector<std::vector<int>> myUtils::get_indVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  std::vector<std::vector<int>> result;
+  for (auto &p:vertex){
+    std::vector<int> tmp;
+    for (size_t i = 0; i < p.reco_ind.size(); ++i) tmp.push_back(p.reco_ind.at(i));
+    result.push_back(tmp);
+  }
+  return result;
+}
+
+
 ROOT::VecOps::RVec<TVector3> myUtils::get_MCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex){
   ROOT::VecOps::RVec<TVector3> result;
   for (auto &p:vertex)
