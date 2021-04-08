@@ -79,6 +79,7 @@ namespace JetClusteringUtils{
 
   bool check(unsigned int n, int exclusive, float cut);
 
+  fastjet::RecombinationScheme recomb_scheme(int recombination);
   ///@}
 }
 

@@ -155,3 +155,17 @@ bool JetClusteringUtils::check(unsigned int n, int exclusive, float cut){
   if (exclusive>0 && n<=int(cut)) return false;
   return true;
 }
+
+fastjet::RecombinationScheme JetClusteringUtils::recomb_scheme(int recombination){
+  fastjet::RecombinationScheme recomb_scheme;
+
+  if(recombination == 0) recomb_scheme = fastjet::RecombinationScheme::E_scheme;
+  else if (recombination == 1) recomb_scheme = fastjet::RecombinationScheme::pt_scheme;
+  else if (recombination == 2) recomb_scheme = fastjet::RecombinationScheme::pt2_scheme;
+  else if (recombination == 3) recomb_scheme = fastjet::RecombinationScheme::Et_scheme;
+  else if (recombination == 4) recomb_scheme = fastjet::RecombinationScheme::Et2_scheme;
+  else if (recombination == 5) recomb_scheme = fastjet::RecombinationScheme::BIpt_scheme;
+  else if (recombination == 6) recomb_scheme = fastjet::RecombinationScheme::BIpt2_scheme;
+
+  return recomb_scheme;
+}

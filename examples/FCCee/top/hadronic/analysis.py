@@ -41,8 +41,8 @@ class analysis():
                #build pseudo jets with the RP
                .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
 
-               #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
-               .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 6, 0)(pseudo_jets)")
+               #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets, BIpt-scheme
+               .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 6, 0, 5)(pseudo_jets)")
                #get the jets out of the struct
                .Define("jets_kt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_kt)")
                #get the jets constituents out of the struct
@@ -54,8 +54,8 @@ class analysis():
               
 
 
-               #run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=0.5, inclusive clustering
-               .Define("FCCAnalysesJets_ee_genkt", "JetClustering::clustering_ee_genkt(0.5, 0, 0, 0,-1)(pseudo_jets)")
+               #run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=0.5, inclusive clustering, E-scheme 
+               .Define("FCCAnalysesJets_ee_genkt", "JetClustering::clustering_ee_genkt(0.5, 0, 0, 0, 0, -1)(pseudo_jets)")
                #get the jets out of the struct
                .Define("jets_ee_genkt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_ee_genkt)")
                #get the jets constituents out of the struct
@@ -66,8 +66,8 @@ class analysis():
                .Define("jets_ee_genkt_pz",        "JetClusteringUtils::get_pz(jets_ee_genkt)")
  
 
-               #run jet clustering with all reconstructed particles. valencia_algorithm, R=0.5, inclusive clustering
-               .Define("FCCAnalysesJets_valencia", "JetClustering::clustering_valencia(0.5, 1, 6, 0, 1., 1.)(pseudo_jets)")
+               #run jet clustering with all reconstructed particles. valencia_algorithm, R=0.5, inclusive clustering, E-scheme
+               .Define("FCCAnalysesJets_valencia", "JetClustering::clustering_valencia(0.5, 1, 6, 0, 0, 1., 1.)(pseudo_jets)")
 
                #get the jets out of the struct
                .Define("jets_valencia",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_valencia)")
@@ -78,8 +78,8 @@ class analysis():
                .Define("jets_valencia_py",        "JetClusteringUtils::get_py(jets_valencia)")
                .Define("jets_valencia_pz",        "JetClusteringUtils::get_pz(jets_valencia)")
  
-               #run jet clustering with all reconstructed particles. jade_algorithm, R=0.5, inclusive clustering
-               .Define("FCCAnalysesJets_jade", "JetClustering::clustering_jade(0.5, 2, 4, 1)(pseudo_jets)")
+               #run jet clustering with all reconstructed particles. jade_algorithm, R=0.5, exclusive clustering, exactly 4 jets, sorted by E, E-scheme 
+               .Define("FCCAnalysesJets_jade", "JetClustering::clustering_jade(0.5, 2, 4, 1, 0)(pseudo_jets)")
 
                #get the jets out of the struct
                .Define("jets_jade",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_jade)")
