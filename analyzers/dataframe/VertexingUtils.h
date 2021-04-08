@@ -26,6 +26,7 @@ namespace VertexingUtils{
   struct FCCAnalysesVertex{
     edm4hep::VertexData vertex;
     int ntracks;
+    int mc_ind; ///index in the MC vertex collection if any
     ROOT::VecOps::RVec<int> reco_ind;
     ROOT::VecOps::RVec<float> reco_chi2;
     ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;

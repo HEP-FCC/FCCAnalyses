@@ -19,6 +19,14 @@ namespace myUtils{
     int mc_index;
   };
 
+
+  struct FCCAnalysesComposite2{
+    TLorentzVector particle;
+    int vertex; //index in the vertex collection
+    int charge;
+    int mc_index;
+  };
+
   struct filter_PV{
     filter_PV(bool arg_pv);
     bool m_pv=true;
@@ -54,6 +62,18 @@ namespace myUtils{
 							 ROOT::VecOps::RVec<int> in,
 							 ROOT::VecOps::RVec<int> pvindex);
   };
+
+  struct build_tau23pi {
+    build_tau23pi( float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho);
+    float m_masslow=0.05;
+    float m_masshigh=3.0;
+    float m_p=1.;
+    float m_angle=1.;
+    bool m_rho = true;
+    ROOT::VecOps::RVec<FCCAnalysesComposite2> operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+  };
+
 
   struct build_tau23pi_vertexing {
     build_tau23pi_vertexing(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho);
@@ -107,7 +127,7 @@ namespace myUtils{
 
   ROOT::VecOps::RVec<float> get_Vertex_chi2(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
-  ROOT::VecOps::RVec<bool> get_Vertex_isPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  ROOT::VecOps::RVec<int> get_Vertex_isPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
   ROOT::VecOps::RVec<int> get_Vertex_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
@@ -120,12 +140,14 @@ namespace myUtils{
   ROOT::VecOps::RVec<int> get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 					   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver);
 
+  ROOT::VecOps::RVec<int> get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
   ROOT::VecOps::RVec<float> get_Vertex_d2MC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 					    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
 					    ROOT::VecOps::RVec<int> mcind,
 					    int comp);
 
-  std::vector<std::vector<int>> get_indVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  std::vector<std::vector<int>> get_Vertex_ind(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
   ROOT::VecOps::RVec<TVector3> get_MCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
 
@@ -195,6 +217,13 @@ namespace myUtils{
 
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
   
+ 
+  int getFCCAnalysesComposite_N(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+  ROOT::VecOps::RVec<int> getFCCAnalysesComposite_charge(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+ 
+
   ROOT::VecOps::RVec<FCCAnalysesComposite> build_Bu2D0Pi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 							 ROOT::VecOps::RVec<FCCAnalysesComposite> d0, 
 							 ROOT::VecOps::RVec<int> pions);

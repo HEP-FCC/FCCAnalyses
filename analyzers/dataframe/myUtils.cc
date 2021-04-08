@@ -69,8 +69,8 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_chi2(ROOT::VecOps::RVec<VertexingU
   return result;
 }
 
-ROOT::VecOps::RVec<bool> myUtils::get_Vertex_isPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
-  ROOT::VecOps::RVec<bool> result;
+ROOT::VecOps::RVec<int> myUtils::get_Vertex_isPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<int> result;
   for (auto &p:vertex)
     result.push_back(p.vertex.primary);
   return result;
@@ -128,7 +128,12 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_d2MC(ROOT::VecOps::RVec<VertexingU
   return result;
 }
 
-
+ROOT::VecOps::RVec<int> myUtils::get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<int> result;
+  for (size_t i = 0; i < vertex.size(); ++i)
+    result.push_back(vertex.at(i).mc_ind);
+  return result;
+}
 
 ROOT::VecOps::RVec<int> myUtils::get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 						  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver){
@@ -170,9 +175,9 @@ myUtils::get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC
 
   ROOT::VecOps::RVec< ROOT::VecOps::RVec<int> > rp2mc = ReconstructedParticle2MC::getRP2MC_indexVec(recin, mcin, reco);
   
-  int counter=0;
-  for (auto &p: mcver){
-    ROOT::VecOps::RVec<int> mc_indRVec = p.mc_ind;
+  //for (auto &p: mcver){
+  for (size_t v = 0; v < mcver.size(); ++v){
+    ROOT::VecOps::RVec<int> mc_indRVec = mcver.at(v).mc_ind;
     std::vector<int> mc_ind;
     
     for (size_t i = 0; i < mc_indRVec.size(); ++i)mc_ind.push_back(mc_indRVec.at(i));
@@ -191,18 +196,18 @@ myUtils::get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC
     if (recoparticles.size()<2)continue;
     
     VertexingUtils::FCCAnalysesVertex TheVertex;
-    if (counter==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks );
+    if (v==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks );
     else TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
     if (std::isnan(TheVertex.vertex.chi2))continue;
-    counter+=1;
-    result.push_back(TheVertex);    
+    TheVertex.mc_ind=v;
+    result.push_back(TheVertex);
   }
   return result;
 }
 
 
 
-std::vector<std::vector<int>> myUtils::get_indVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+std::vector<std::vector<int>> myUtils::get_Vertex_ind(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   std::vector<std::vector<int>> result;
   for (auto &p:vertex){
     std::vector<int> tmp;
@@ -262,7 +267,6 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> result;
   ROOT::VecOps::RVec<TVector3> tmpvec;
   ROOT::VecOps::RVec<int> tmpvecint;
-  //std::cout <<"==========================new event==========================" << std::endl;
   for (size_t i = 0; i < mc.size(); ++i) {
     if (mc.at(i).charge==0)continue;
     if (mc.at(i).generatorStatus==1){
@@ -272,7 +276,6 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
       tmp[2]=mc.at(i).vertex.z;
       tmpvec.push_back(tmp);
       tmpvecint.push_back(i);
-      //std::cout << "index=" << tmpvec.size()-1<<"  i="<<i<<"  PDG  " << mc.at(i).PDG << "  x=" <<tmp[0]<< "  y=" <<tmp[1]<< "  z=" <<tmp[2]<<std::endl;
     }
   }
   
@@ -746,6 +749,26 @@ ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RV
   }
   return result;
 }
+
+int myUtils::getFCCAnalysesComposite_N(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  return in.size();
+}
+
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.M());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_charge(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(p.charge);
+  }
+  return result;
+}
 ROOT::VecOps::RVec<TLorentzVector> myUtils::getFCCAnalysesComposite_particle(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
   ROOT::VecOps::RVec<TLorentzVector> result;
   for (auto & p: in) {
@@ -1175,6 +1198,71 @@ TLorentzVector myUtils::build_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParti
   return tlv;
 }
 
+
+build_tau23pi::build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho):m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_rho(arg_rho){};
+ROOT::VecOps::RVec<FCCAnalysesComposite2> 
+myUtils::build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+  //std::cout <<"n reco V " << vertex.size()<<std::endl;
+  int counter=0;
+  for (auto &p:vertex){
+    //exactly 3 tracks
+    if (p.ntracks!=3){counter+=1;continue;}
+    
+    //3 tracks id as pions, |charge| is 1, p cut
+    bool is3pi=true;
+    bool pcut=true;
+    bool hasrho=true;
+    int charge=0;
+    float angle = -9999999.;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type!=211)is3pi=false;
+      if (ReconstructedParticle::get_p(recop.at(r))<m_p) pcut=false;
+      charge+=recop.at(r).charge;
+      //std::cout << counter << "   ====  " << recop.at(r).charge << std::endl;
+      for (auto &r2:p.reco_ind){
+	if (r==r2)continue;
+	if (recop.at(r).charge!=recop.at(r2).charge){
+	  ROOT::VecOps::RVec<int> tmpvec_rho;
+	  tmpvec_rho.push_back(r);
+	  tmpvec_rho.push_back(r2);
+	  float mass_rho=build_invmass(recop,tmpvec_rho);
+	  if (mass_rho>0.9)hasrho=false;
+	  if (mass_rho<0.6)hasrho=false;
+	}
+      }
+
+    }
+    if (is3pi==false){counter+=1; continue;}
+    if (pcut==false){counter+=1; continue;}
+    if (fabs(charge)!=1){    counter+=1; continue;}
+    if (m_rho && hasrho==false){    counter+=1;continue;}
+
+    float mass=build_invmass(recop,p.reco_ind);
+
+    //if (p.vertex.chi2>10)continue;
+    //if (p.vertex.chi2>10)continue;
+    
+
+    //std::cout << "SELECTED----------------"<<std::endl;
+    //std::cout << "charge " << charge << std::endl;
+    //std::cout << "mass   " << mass << std::endl;
+    //std::cout << "chi2   " << p.vertex.chi2 << std::endl;
+    //std::cout << "ntrk   " << p.ntracks << std::endl;
+    //std::cout << "recoin   " << p.reco_ind.size() << std::endl;
+
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge;
+    
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
 
 
 build_tau23pi_vertexing::build_tau23pi_vertexing(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho):m_charge(arg_charge),m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_cc(arg_cc),m_filterPV(arg_filterPV),m_rho(arg_rho){};

@@ -41,9 +41,13 @@ class analysis():
                
                .Define("MC_p",    "MCParticle::get_p(Particle)")
                .Define("MC_theta","MCParticle::get_theta(Particle)")
+               .Define("MC_charge","MCParticle::get_charge(Particle)")
+               .Define("MC_phi","MCParticle::get_phi(Particle)")
               
                .Define("RP_p",    "ReconstructedParticle::get_p(ReconstructedParticles)")
                .Define("RP_theta","ReconstructedParticle::get_theta(ReconstructedParticles)")
+               .Define("RP_charge","ReconstructedParticle::get_charge(ReconstructedParticles)")
+               .Define("RP_phi","ReconstructedParticle::get_phi(ReconstructedParticles)")
 
 
                #Run the Acts AMVF vertex finder
@@ -72,8 +76,9 @@ class analysis():
                .Define("Vertex_zErr",  "myUtils::get_Vertex_zErr(VertexObject)")
 
                .Define("Vertex_chi2",  "myUtils::get_Vertex_chi2(VertexObject)")
-               .Define("Vertex_mcind", "myUtils::get_Vertex_indMC(VertexObject, MCVertexObject)")
-               .Define("Vertex_ind",   "myUtils::get_Vertex_indVertex(VertexObject)")
+               #.Define("Vertex_mcind", "myUtils::get_Vertex_indMC(VertexObject, MCVertexObject)")
+               .Define("Vertex_mcind", "myUtils::get_Vertex_indMC(VertexObject)")
+               .Define("Vertex_ind",   "myUtils::get_Vertex_ind(VertexObject)")
                .Define("Vertex_isPV",  "myUtils::get_Vertex_isPV(VertexObject)")
                .Define("Vertex_ntrk",  "myUtils::get_Vertex_ntracks(VertexObject)")
                .Define("Vertex_n",     "int(Vertex_x.size())")
@@ -107,6 +112,8 @@ class analysis():
         for branchName in [
                 "MC_p",
                 "MC_theta",
+                "MC_charge",
+                "MC_phi",
 
                 "MC_Vertex_x",
                 "MC_Vertex_y",
@@ -117,6 +124,8 @@ class analysis():
 
                 "RP_p",
                 "RP_theta",
+                "RP_charge",
+                "RP_phi",
                 
                 "Vertex_x",
                 "Vertex_y",
@@ -190,7 +199,7 @@ if __name__ == "__main__":
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+sys.argv[1].split('/')[-1]
-    ncpus = 8
+    ncpus = 6
     if len(sys.argv)==3:outfile=sys.argv[2]
     analysis = analysis(fileListRoot, outfile, ncpus)
     analysis.run()
