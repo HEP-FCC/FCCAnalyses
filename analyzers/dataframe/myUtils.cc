@@ -635,6 +635,23 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> myUtils::add_truthmatched(ROOT::VecOps:
 
 
 
+ROOT::VecOps::RVec<int> myUtils::get_trueVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+						ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+						ROOT::VecOps::RVec<int> ind,
+						int mother,
+						int grandmother){
+
+  ROOT::VecOps::RVec<int> result;
+  for (size_t i = 0; i < vertex.size(); ++i) {
+
+    
+
+    result.push_back(i);
+    
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::add_truthmatched2(ROOT::VecOps::RVec<FCCAnalysesComposite2> comp,
 								     ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 								     ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
@@ -791,6 +808,23 @@ ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RV
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     result.push_back(p.particle.M());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_vertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(p.vertex);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_mcvertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(vertex.at(p.vertex).mc_ind);
   }
   return result;
 }

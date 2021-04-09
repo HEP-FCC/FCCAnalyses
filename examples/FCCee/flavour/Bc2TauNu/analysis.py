@@ -139,6 +139,9 @@ class analysis():
                .Define("Tau23PiCandidates_n",       "myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_mass",    "myUtils::getFCCAnalysesComposite_mass(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_q",       "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
+               .Define("Tau23PiCandidates_vertex",  "myUtils::getFCCAnalysesComposite_vertex(Tau23PiCandidates)")
+               .Define("Tau23PiCandidates_mcvertex","myUtils::getFCCAnalysesComposite_mcvertex(Tau23PiCandidates,VertexObject)")
+               
                .Define("Tau23PiCandidates_px",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,0)")
                .Define("Tau23PiCandidates_py",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,1)")
                .Define("Tau23PiCandidates_pz",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,2)")
@@ -165,7 +168,7 @@ class analysis():
                .Define("Tau23PiCandidatesTM",      "myUtils::add_truthmatched2(Tau23PiCandidates, Particle, VertexObject, RP2MC, ReconstructedParticles, Particle0)")
                .Define("Tau23PiCandidates_tm",     "myUtils::getFCCAnalysesComposite_truthMatch(Tau23PiCandidatesTM)")
 
-
+               #.Define("TrueTau23Pi_vertex",       "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 541)"))
 
 
                
@@ -180,16 +183,19 @@ class analysis():
                 "EVT_Ncharged_min", "EVT_Ncharged_max",
                 "EVT_Nneutral_min", "EVT_Nneutral_max",
 
+                "MC_Vertex_x", "MC_Vertex_y", "MC_Vertex_z", 
+                "MC_Vertex_ntrk", "MC_Vertex_n",
+                
                 "Vertex_x", "Vertex_y", "Vertex_z",
                 "Vertex_xErr", "Vertex_yErr", "Vertex_zErr",
                 "Vertex_isPV", "Vertex_ntrk", "Vertex_chi2", "Vertex_n",
                 
                 "MVA",
 
-                "Tau23PiCandidates_n", "Tau23PiCandidates_mass","Tau23PiCandidates_tm",
+                #"TrueTau23Pi_vertex",
                 
+                "Tau23PiCandidates_n", "Tau23PiCandidates_mass","Tau23PiCandidates_tm", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex",
                 "Tau23PiCandidates_px", "Tau23PiCandidates_px", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",
-                
                 "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1pz", "Tau23PiCandidates_pion1p", "Tau23PiCandidates_pion1q",
                 "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2pz", "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q",
                 "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3pz", "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q",

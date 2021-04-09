@@ -181,6 +181,14 @@ namespace myUtils{
 							      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 							      ROOT::VecOps::RVec<int> ind);
 
+
+  ROOT::VecOps::RVec<int> get_trueVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+					 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					 ROOT::VecOps::RVec<int> ind,
+					 int mother,
+					 int grandmother);
+
+  
   bool isPV(edm4hep::ReconstructedParticleData recop, 
 	    ROOT::VecOps::RVec<int> pvindex);
 
@@ -247,6 +255,11 @@ namespace myUtils{
   
   ROOT::VecOps::RVec<int> getFCCAnalysesComposite_charge(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
 
+  ROOT::VecOps::RVec<int> getFCCAnalysesComposite_vertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<int> getFCCAnalysesComposite_mcvertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  
   ROOT::VecOps::RVec<int> getFCCAnalysesComposite_q(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 						    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 						    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
