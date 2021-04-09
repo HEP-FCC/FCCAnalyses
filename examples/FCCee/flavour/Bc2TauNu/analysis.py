@@ -87,7 +87,7 @@ class analysis():
                .Define("MVA", ROOT.computeModel, ("EVT_thrusthemis_emin", "EVT_thrusthemis_emax", "EVT_Echarged_min", "EVT_Echarged_max", "EVT_Eneutral_min", "EVT_Eneutral_max", "EVT_Ncharged_min", "EVT_Ncharged_max", "EVT_Nneutral_min", "EVT_Nneutral_max"))
 
 
-                              #MC Vertex
+               #MC Vertex
                .Define("MCVertexObject", "myUtils::get_MCVertexObject(Particle, Particle0)")
                .Define("MC_Vertex_x",    "myUtils::get_MCVertex_x(MCVertexObject)")
                .Define("MC_Vertex_y",    "myUtils::get_MCVertex_y(MCVertexObject)")
@@ -133,27 +133,70 @@ class analysis():
                .Define("Vertex_d2MCz",  "myUtils::get_Vertex_d2MC(VertexObject,MCVertexObject,Vertex_mcind,2)")
 
                .Define("RecoPartPID" ,"myUtils::PID(ReconstructedParticles, MCRecoAssociations0,MCRecoAssociations1,Particle)")
+               
+               #build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho)
+               .Define("Tau23PiCandidates",         "myUtils::build_tau23pi(VertexObject,RecoPartPID)")
+               .Define("Tau23PiCandidates_n",       "myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates)")
+               .Define("Tau23PiCandidates_mass",    "myUtils::getFCCAnalysesComposite_mass(Tau23PiCandidates)")
+               .Define("Tau23PiCandidates_q",       "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
+               .Define("Tau23PiCandidates_px",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,0)")
+               .Define("Tau23PiCandidates_py",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,1)")
+               .Define("Tau23PiCandidates_pz",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,2)")
+               .Define("Tau23PiCandidates_p",       "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,-1)")
+               .Define("Tau23PiCandidates_pion1px", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0, 0)")
+               .Define("Tau23PiCandidates_pion1py", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0, 1)")
+               .Define("Tau23PiCandidates_pion1pz", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0, 2)")
+               .Define("Tau23PiCandidates_pion1p",  "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0, -1)")
+               .Define("Tau23PiCandidates_pion1q",  "myUtils::getFCCAnalysesComposite_q(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0)")
+               
+               .Define("Tau23PiCandidates_pion2px", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 1, 0)")
+               .Define("Tau23PiCandidates_pion2py", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 1, 1)")
+               .Define("Tau23PiCandidates_pion2pz", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 1, 2)")
+               .Define("Tau23PiCandidates_pion2p",  "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 1, -1)")
+               .Define("Tau23PiCandidates_pion2q",  "myUtils::getFCCAnalysesComposite_q(Tau23PiCandidates, VertexObject, ReconstructedParticles, 1)")
+               
+               .Define("Tau23PiCandidates_pion3px", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 2, 0)")
+               .Define("Tau23PiCandidates_pion3py", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 2, 1)")
+               .Define("Tau23PiCandidates_pion3pz", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 2, 2)")
+               .Define("Tau23PiCandidates_pion3p",  "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 2, -1)")
+               .Define("Tau23PiCandidates_pion3q",  "myUtils::getFCCAnalysesComposite_q(Tau23PiCandidates, VertexObject, ReconstructedParticles, 2)")
+               
+               .Define('RP2MC',                    "ReconstructedParticle2MC::getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles)") 
+               .Define("Tau23PiCandidatesTM",      "myUtils::add_truthmatched2(Tau23PiCandidates, Particle, VertexObject, RP2MC, ReconstructedParticles, Particle0)")
+               .Define("Tau23PiCandidates_tm",     "myUtils::getFCCAnalysesComposite_truthMatch(Tau23PiCandidatesTM)")
 
-               .Define("Tau23PiCandidates","myUtils::build_tau23pi(0.1,3.5,1.,0.4,false)(VertexObject,RecoPartPID)")
-               .Define("nTau23Pi", "myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates)")
-               .Define("massTau23Pi", "myUtils::getFCCAnalysesComposite_mass(Tau23PiCandidates)")
-               .Define("chargeTau23Pi", "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
 
 
-               #.Define("Pions"       ,"myUtils::sel_PID(211)(RecoPartPID)"  )
-               #.Define("TauCandidates", "myUtils::build_tau23pi(1, 0.3 ,3., 1.5, 0.4, true, true, false)(RecoPartPID, EFlowTrack_1, Pions ,RecoInd_actsFinder)")
-               #.Define("TauCandidates_rho", "myUtils::build_tau23pi(1, 0.3 ,3., 1.5, 0.4, true, true, true)(RecoPartPID, EFlowTrack_1, Pions ,RecoInd_actsFinder)")
 
-
-                       
+               
+               
            )
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                "EVT_thrusthemis_emin", "EVT_thrusthemis_emax", "EVT_Echarged_min", "EVT_Echarged_max", "EVT_Eneutral_min", "EVT_Eneutral_max", "EVT_Ncharged_min", "EVT_Ncharged_max", "EVT_Nneutral_min", "EVT_Nneutral_max",
-                "MVA",
-                "nTau23Pi","massTau23Pi","chargeTau23Pi",
+                "EVT_thrusthemis_emin", "EVT_thrusthemis_emax",
+                "EVT_Echarged_min", "EVT_Echarged_max",
+                "EVT_Eneutral_min", "EVT_Eneutral_max",
+                "EVT_Ncharged_min", "EVT_Ncharged_max",
+                "EVT_Nneutral_min", "EVT_Nneutral_max",
 
+                "Vertex_x", "Vertex_y", "Vertex_z",
+                "Vertex_xErr", "Vertex_yErr", "Vertex_zErr",
+                "Vertex_isPV", "Vertex_ntrk", "Vertex_chi2", "Vertex_n",
+                
+                "MVA",
+
+                "Tau23PiCandidates_n", "Tau23PiCandidates_mass","Tau23PiCandidates_tm",
+                
+                "Tau23PiCandidates_px", "Tau23PiCandidates_px", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",
+                
+                "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1pz", "Tau23PiCandidates_pion1p", "Tau23PiCandidates_pion1q",
+                "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2pz", "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q",
+                "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3pz", "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q",
+                
+
+
+                
                 ]:
             branchList.push_back(branchName)
 
@@ -165,11 +208,11 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis.py  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_026734663.root flat_ee_Zbb_Bc2TauNu.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis.py  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root flat_ee_Zbb_Bc2TauNu.root
 
 # python examples/FCCee/flavour/Bc2TauNu/analysis.py  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root flat_ee_Zbb_Bu2TauNu.root
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis.py  "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_02*" flat_ee_Zbb_Bc2TauNu.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis.py  "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_*" flat_ee_Zbb_Bc2TauNu.root
 
 # python examples/FCCee/flavour/Bc2TauNu/analysis.py  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91/events_026734131.root flat_ee_Zbb_Bc2TauNu.root
 

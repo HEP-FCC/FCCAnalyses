@@ -579,15 +579,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> myUtils::add_truthmatched(ROOT::VecOps:
 								   ROOT::VecOps::RVec<int> ind){
 
 
-  for (size_t i = 0; i < rp2mc.size(); ++i) {
-    int mcassoc = rp2mc.at(i);
-
-    //std::cout <<"i="<<i<<" mc p " << sqrt(pow(mc.at(mcassoc).momentum.z,2)+pow(mc.at(mcassoc).momentum.y,2)+pow(mc.at(mcassoc).momentum.x,2)) << "  rp p " << ReconstructedParticle::get_p(recop.at(i))<<std::endl;
-
-
-  }
-
-  //ROOT::VecOps::RVec<FCCAnalysesComposite> result = comp;
+  
 
   for (size_t i = 0; i < comp.size(); ++i) {
     //std::cout << "compo " << i << "  charge " << comp.at(i).charge<< std::endl;
@@ -639,6 +631,47 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> myUtils::add_truthmatched(ROOT::VecOps:
      }
      }*/
    return comp;
+}
+
+
+
+ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::add_truthmatched2(ROOT::VecOps::RVec<FCCAnalysesComposite2> comp,
+								     ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+								     ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								     ROOT::VecOps::RVec<int> rp2mc,
+								     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+								     ROOT::VecOps::RVec<int> ind){
+
+
+  for (size_t i = 0; i < comp.size(); ++i) {
+    ROOT::VecOps::RVec<int> index = vertex.at(comp.at(i).vertex).reco_ind;
+    ROOT::VecOps::RVec<int> mother;
+    ROOT::VecOps::RVec<int> motherPDG;
+
+    for (size_t j = 0; j < index.size(); ++j) {
+
+      int mcassoc = rp2mc.at(index.at(j));
+      int mother1=getMC_parent(0, mc.at(mcassoc), ind);
+      int mother2=getMC_parent(1, mc.at(mcassoc), ind);
+      
+      mother.push_back(mother1);
+      motherPDG.push_back(mc.at(mother1).PDG);
+    }
+
+    if (mother.size()>0){
+      bool truthmatched=true;
+      int tmpmother = mother.at(0);
+      int tmpmotherpdg = motherPDG.at(0);
+      for (size_t k = 1; k < mother.size(); ++k) {
+	if (tmpmother!=mother.at(k) || tmpmotherpdg!=motherPDG.at(k))truthmatched=false;
+      }
+
+      if (truthmatched==true) comp.at(i).mc_index=mother.at(0); 
+      else comp.at(i).mc_index=-999;
+
+    }
+  }
+  return comp;
 }
 
 ROOT::VecOps::RVec<int> myUtils::get_compmc(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
@@ -762,6 +795,59 @@ ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RV
   return result;
 }
 
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							     int i){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    if (i==0)result.push_back(p.particle.Px());
+    else if (i==1)result.push_back(p.particle.Py());
+    else if (i==2)result.push_back(p.particle.Pz());
+    else result.push_back(sqrt(pow(p.particle.Px(),2)+
+			       pow(p.particle.Py(),2)+
+			       pow(p.particle.Pz(),2)));
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							     ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							     int index,
+							     int type){
+
+
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+
+    int recoind = vertex.at(p.vertex).reco_ind.at(index);
+    
+    if (type==0)result.push_back(recop.at(recoind).momentum.x);
+    else if (type==1)result.push_back(recop.at(recoind).momentum.y);
+    else if (type==2)result.push_back(recop.at(recoind).momentum.z);
+    else result.push_back(sqrt(pow(recop.at(recoind).momentum.x,2)+
+			       pow(recop.at(recoind).momentum.y,2)+
+			       pow(recop.at(recoind).momentum.z,2)));
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_q(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							   int index){
+
+
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+
+    int recoind = vertex.at(p.vertex).reco_ind.at(index);
+    result.push_back(recop.at(recoind).charge);
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_charge(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in) {
@@ -769,6 +855,15 @@ ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_charge(ROOT::VecOps::RV
   }
   return result;
 }
+
+ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_truthMatch(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(p.mc_index);
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<TLorentzVector> myUtils::getFCCAnalysesComposite_particle(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
   ROOT::VecOps::RVec<TLorentzVector> result;
   for (auto & p: in) {
@@ -1199,6 +1294,41 @@ TLorentzVector myUtils::build_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParti
 }
 
 
+ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_tau23pi(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+
+  int counter=0;
+  for (auto &p:vertex){
+    //exactly 3 tracks
+    if (p.ntracks!=3){counter+=1;continue;}
+    
+    //3 tracks id as pions, |charge| is 1
+    bool is3pi=true;
+    int charge=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type!=211)is3pi=false;
+      charge+=recop.at(r).charge;
+    }
+    if (is3pi==false){counter+=1; continue;}
+    if (fabs(charge)!=1){counter+=1; continue;}
+        
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge;
+    
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
+
+
+
+
+
 build_tau23pi::build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho):m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_rho(arg_rho){};
 ROOT::VecOps::RVec<FCCAnalysesComposite2> 
 myUtils::build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
@@ -1221,9 +1351,13 @@ myUtils::build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalys
       if (recop.at(r).type!=211)is3pi=false;
       if (ReconstructedParticle::get_p(recop.at(r))<m_p) pcut=false;
       charge+=recop.at(r).charge;
-      //std::cout << counter << "   ====  " << recop.at(r).charge << std::endl;
+      TVector3 p1( recop.at(r).momentum.x, recop.at(r).momentum.y, recop.at(r).momentum.z );
+
       for (auto &r2:p.reco_ind){
 	if (r==r2)continue;
+	TVector3 p2( recop.at(r2).momentum.x, recop.at(r2).momentum.y, recop.at(r2).momentum.z );
+	float delta = fabs( p1.Angle( p2 ) );
+	if (delta>angle)angle=delta;
 	if (recop.at(r).charge!=recop.at(r2).charge){
 	  ROOT::VecOps::RVec<int> tmpvec_rho;
 	  tmpvec_rho.push_back(r);
@@ -1233,17 +1367,15 @@ myUtils::build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalys
 	  if (mass_rho<0.6)hasrho=false;
 	}
       }
-
     }
     if (is3pi==false){counter+=1; continue;}
     if (pcut==false){counter+=1; continue;}
-    if (fabs(charge)!=1){    counter+=1; continue;}
-    if (m_rho && hasrho==false){    counter+=1;continue;}
-
+    if (fabs(charge)!=1){counter+=1; continue;}
+    if (m_rho && hasrho==false){counter+=1;continue;}
+    if (angle>m_angle)continue;
+    
     float mass=build_invmass(recop,p.reco_ind);
-
-    //if (p.vertex.chi2>10)continue;
-    //if (p.vertex.chi2>10)continue;
+    if (mass>m_masshigh || mass<m_masslow)continue;
     
 
     //std::cout << "SELECTED----------------"<<std::endl;

@@ -103,6 +103,13 @@ namespace myUtils{
     int m_PDG=211;    
     ROOT::VecOps::RVec<int> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
   };
+
+
+
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> build_tau23pi(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+  
   
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 									     ROOT::VecOps::RVec<int> ind);
@@ -167,6 +174,13 @@ namespace myUtils{
 							    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 							    ROOT::VecOps::RVec<int> ind);
 
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> add_truthmatched2(ROOT::VecOps::RVec<FCCAnalysesComposite2> comp,
+							      ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+							      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							      ROOT::VecOps::RVec<int> rp2mc,
+							      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							      ROOT::VecOps::RVec<int> ind);
+
   bool isPV(edm4hep::ReconstructedParticleData recop, 
 	    ROOT::VecOps::RVec<int> pvindex);
 
@@ -221,7 +235,25 @@ namespace myUtils{
   int getFCCAnalysesComposite_N(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
 
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						      int type);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+						      int index,
+						      int type);
+  
   ROOT::VecOps::RVec<int> getFCCAnalysesComposite_charge(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<int> getFCCAnalysesComposite_q(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+						    int index);
+
+  
+  ROOT::VecOps::RVec<int> getFCCAnalysesComposite_truthMatch(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
  
 
   ROOT::VecOps::RVec<FCCAnalysesComposite> build_Bu2D0Pi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
