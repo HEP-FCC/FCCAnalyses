@@ -247,6 +247,10 @@ namespace myUtils{
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 						      int type);
 
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_B(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+  
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 						      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 						      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,

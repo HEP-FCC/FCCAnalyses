@@ -33,16 +33,16 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.EnableImplicitMT(ncpu)
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
         #84702
-        df2 = (self.df.Range(1000)
+        #df2 = (self.df.Range(1000)
         
-        #df2 = (self.df
+        df2 = (self.df
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Alias("Particle0", "Particle#0.index")
@@ -142,11 +142,12 @@ class analysis():
                .Define("Tau23PiCandidates_q",       "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_vertex",  "myUtils::getFCCAnalysesComposite_vertex(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_mcvertex","myUtils::getFCCAnalysesComposite_mcvertex(Tau23PiCandidates,VertexObject)")
-               
                .Define("Tau23PiCandidates_px",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,0)")
                .Define("Tau23PiCandidates_py",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,1)")
                .Define("Tau23PiCandidates_pz",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,2)")
                .Define("Tau23PiCandidates_p",       "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,-1)")
+               .Define("Tau23PiCandidates_B",       "myUtils::getFCCAnalysesComposite_B(Tau23PiCandidates, VertexObject, ReconstructedParticles)")
+               
                .Define("Tau23PiCandidates_pion1px", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0, 0)")
                .Define("Tau23PiCandidates_pion1py", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0, 1)")
                .Define("Tau23PiCandidates_pion1pz", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 0, 2)")
@@ -200,7 +201,7 @@ class analysis():
 
                 "TrueTau23Pi_vertex",
                 
-                "Tau23PiCandidates_n", "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex",
+                "Tau23PiCandidates_n", "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex", "Tau23PiCandidates_B",
                 "Tau23PiCandidates_px", "Tau23PiCandidates_px", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",
                 "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1pz", "Tau23PiCandidates_pion1p", "Tau23PiCandidates_pion1q",
                 "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2pz", "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q",

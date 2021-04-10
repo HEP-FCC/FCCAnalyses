@@ -843,6 +843,30 @@ ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_mcvertex(ROOT::VecOps::
   return result;
 }
 
+
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_B(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							     ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    float energy=0;
+    ROOT::VecOps::RVec<int> reco_ind = vertex.at(p.vertex).reco_ind;
+    std::vector<int> reco_indstd;
+    for (size_t i = 0; i < reco_ind.size(); ++i) reco_indstd.push_back(reco_ind.at(i));
+   
+    for (size_t i = 0; i < recop.size(); ++i) {
+      std::vector<int>::iterator it = std::find(reco_indstd.begin(), reco_indstd.end(), i);
+      if (it!=reco_indstd.end()) continue;
+      energy+=recop.at(i).energy;
+    }
+    result.push_back(energy);
+  }
+  return result;
+
+}
+
+
 ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 							     int i){
   ROOT::VecOps::RVec<float> result;
