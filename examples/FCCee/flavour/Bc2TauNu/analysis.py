@@ -86,7 +86,7 @@ class analysis():
                
                
                .Define("MVAVec", ROOT.computeModel, ("EVT_thrusthemis_emin", "EVT_thrusthemis_emax", "EVT_Echarged_min", "EVT_Echarged_max", "EVT_Eneutral_min", "EVT_Eneutral_max", "EVT_Ncharged_min", "EVT_Ncharged_max", "EVT_Nneutral_min", "EVT_Nneutral_max"))
-               .Define("MVA", "MVA.at(0)")
+               .Define("MVA", "MVAVec.at(0)")
                .Filter("MVA>0.1")
                
                #MC Vertex
