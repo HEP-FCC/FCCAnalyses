@@ -33,16 +33,16 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        #ROOT.ROOT.EnableImplicitMT(ncpu)
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
         #84702
-        #df2 = (self.df.Range(1000)
+        df2 = (self.df.Range(1000)
         
-        df2 = (self.df
+        #df2 = (self.df
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Alias("Particle0", "Particle#0.index")
@@ -56,6 +56,7 @@ class analysis():
                .Define('EVT_thrust',          'Algorithms::minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
                .Define('RP_thrustangle',      'Algorithms::getAxisCosTheta(EVT_thrust, RP_px, RP_py, RP_pz)')
 
+               #hemis0 == negative angle, hemis1 == positive angle
                .Define('EVT_thrusthemis0_n',         'Algorithms::getAxisN(0)(RP_thrustangle, RP_charge)')
                .Define('EVT_thrusthemis1_n',         'Algorithms::getAxisN(1)(RP_thrustangle, RP_charge)')
                .Define('EVT_thrusthemis0_e',         'Algorithms::getAxisEnergy(0)(RP_thrustangle, RP_charge, RP_e)')
@@ -164,12 +165,15 @@ class analysis():
                .Define("Tau23PiCandidates_pion3p",  "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, ReconstructedParticles, 2, -1)")
                .Define("Tau23PiCandidates_pion3q",  "myUtils::getFCCAnalysesComposite_q(Tau23PiCandidates, VertexObject, ReconstructedParticles, 2)")
                
-               .Define('RP2MC',                    "ReconstructedParticle2MC::getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles)") 
-               .Define("Tau23PiCandidatesTM",      "myUtils::add_truthmatched2(Tau23PiCandidates, Particle, VertexObject, RP2MC, ReconstructedParticles, Particle0)")
-               .Define("Tau23PiCandidates_tm",     "myUtils::getFCCAnalysesComposite_truthMatch(Tau23PiCandidatesTM)")
+               .Define("TrueTau23Pi_vertex",       "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 541)")
 
-               #.Define("TrueTau23Pi_vertex",       "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 541)"))
+               #.Define('RP2MC',                    "ReconstructedParticle2MC::getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles)") 
+               #.Define("Tau23PiCandidatesTM",      "myUtils::add_truthmatched2(Tau23PiCandidates, Particle, VertexObject, RP2MC, ReconstructedParticles, Particle0)")
+               #.Define("Tau23PiCandidates_tm",     "myUtils::getFCCAnalysesComposite_truthMatch(Tau23PiCandidatesTM)")
 
+               .Define("Vertex_thrusthemis_angle",   "myUtils::get_Vertex_thrusthemis_angle(VertexObject, ReconstructedParticles,EVT_thrust)")
+               #hemis0 == negative angle, hemis1 == positive angle
+               .Define("Vertex_thrusthemis_emin",    "myUtils::get_Vertex_thrusthemis_emin(Vertex_thrusthemis_angle, EVT_thrusthemis0_e.at(0), EVT_thrusthemis1_e.at(0))")
 
                
                
@@ -189,12 +193,14 @@ class analysis():
                 "Vertex_x", "Vertex_y", "Vertex_z",
                 "Vertex_xErr", "Vertex_yErr", "Vertex_zErr",
                 "Vertex_isPV", "Vertex_ntrk", "Vertex_chi2", "Vertex_n",
+                "Vertex_thrusthemis_angle",                 "Vertex_thrusthemis_emin",
+
                 
                 "MVA",
 
-                #"TrueTau23Pi_vertex",
+                "TrueTau23Pi_vertex",
                 
-                "Tau23PiCandidates_n", "Tau23PiCandidates_mass","Tau23PiCandidates_tm", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex",
+                "Tau23PiCandidates_n", "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex",
                 "Tau23PiCandidates_px", "Tau23PiCandidates_px", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",
                 "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1pz", "Tau23PiCandidates_pion1p", "Tau23PiCandidates_pion1q",
                 "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2pz", "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q",

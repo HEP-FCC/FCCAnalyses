@@ -16,6 +16,7 @@
 #include "VertexFitterSimple.h"
 #include "ReconstructedParticle.h"
 #include "MCParticle.h"
+#include "Algorithms.h"
 
 using namespace myUtils;
 
@@ -323,8 +324,6 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
 
       //std::cout << "i="<< i << "  mc_ind  "<< mc_ind.at(i) <<"  parent begin " << mc.at(mc_ind.at(i)).parents_begin <<"  parent end " << mc.at(mc_ind.at(i)).parents_end << " end-beg  "  << mc.at(mc_ind.at(i)).parents_end-mc.at(mc_ind.at(i)).parents_begin<< std::endl;
 
-      
-      
       for (size_t j = mc.at(mc_ind.at(i)).parents_begin; j < mc.at(mc_ind.at(i)).parents_end; ++j){
 	//std::cout << "     j="<<j << "  index  " << ind.at(j) << "  PDG ID " << mc.at(ind.at(j)).PDG << std::endl;
 	std::vector<int>::iterator it = std::find(mother_ind.begin(), mother_ind.end(), ind.at(j));
@@ -641,12 +640,27 @@ ROOT::VecOps::RVec<int> myUtils::get_trueVertex(ROOT::VecOps::RVec<VertexingUtil
 						int mother,
 						int grandmother){
 
+  //std::cout<<"NEW EVENT"<<std::endl;
   ROOT::VecOps::RVec<int> result;
   for (size_t i = 0; i < vertex.size(); ++i) {
+    ROOT::VecOps::RVec<int> mother_ind = vertex.at(i).mother_ind;
+    for (size_t j = 0; j < mother_ind.size(); ++j) {
+      if (fabs(mc.at(mother_ind.at(j)).PDG)==mother){
+	for (size_t k = mc.at(mother_ind.at(j)).parents_begin; k < mc.at(mother_ind.at(j)).parents_end; ++k){
+	  if (fabs(mc.at(ind.at(k)).PDG)==grandmother) {
+	    result.push_back(i);
+	    //std::cout <<"i ="<< i << "  j=" << j << "  k=" << k << "  mother PDG " << mc.at(mother_ind.at(j)).PDG
+	    //	      << "  gmother PDG " << mc.at(ind.at(k)).PDG<< std::endl;
 
-    
-
-    result.push_back(i);
+	  }
+	}
+	
+	
+	
+	
+      }
+    }
+    //result.push_back(i);
     
   }
   return result;
@@ -1550,4 +1564,39 @@ myUtils::build_tau23pi_vertexing::operator() (ROOT::VecOps::RVec<edm4hep::Recons
 
   
   return result;
+}
+
+
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_thrusthemis_angle(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+								ROOT::VecOps::RVec<float> thrust){
+  ROOT::VecOps::RVec<float> result;
+
+  for (auto &p:vertex){
+    ROOT::VecOps::RVec<int> reco_ind = p.reco_ind;
+    TLorentzVector tlv;
+    for (auto &i:reco_ind){
+      TLorentzVector tlvtmp = ReconstructedParticle::get_tlv(recop.at(i));
+      tlv+=tlvtmp;
+    }
+
+    float angle = Algorithms::getAxisCosTheta(thrust, tlv.Px(), tlv.Py(), tlv.Pz());
+    result.push_back(angle);
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<int> myUtils::get_Vertex_thrusthemis_emin(ROOT::VecOps::RVec<float> angle,
+							     float eneg,
+							     float epos){
+  ROOT::VecOps::RVec<int> result;
+  for (auto &p:angle){
+
+    if (eneg<epos && p<0.) result.push_back(1);
+    else if (eneg>epos && p>0.) result.push_back(1);
+    else result.push_back(0);
+  }
+  return result;
+
 }

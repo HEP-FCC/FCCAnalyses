@@ -290,6 +290,14 @@ namespace myUtils{
 
   TLorentzVector build_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 			   ROOT::VecOps::RVec<int> index);
+
+  ROOT::VecOps::RVec<float> get_Vertex_thrusthemis_angle(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							 ROOT::VecOps::RVec<float> thrust);
   
+  ROOT::VecOps::RVec<int> get_Vertex_thrusthemis_emin(ROOT::VecOps::RVec<float> angle,
+						      float eneg,
+						      float epos);
+
 }
 #endif

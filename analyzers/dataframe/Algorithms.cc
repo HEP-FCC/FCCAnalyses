@@ -278,3 +278,15 @@ ROOT::VecOps::RVec<float> Algorithms::getAxisCosTheta(ROOT::VecOps::RVec<float> 
   }
   return result;
 }
+
+
+float Algorithms::getAxisCosTheta(ROOT::VecOps::RVec<float> axis, 
+				  float px, 
+				  float py, 
+				  float pz){
+
+  float thrust_mag = sqrt(axis[1]*axis[1] + axis[3]*axis[3] + axis[5]*axis[5]);
+  float result = (px*axis[1] + py*axis[3] + pz*axis[5])/(sqrt(px*px+py*py+pz*pz)*thrust_mag);
+ 
+  return result;
+}
