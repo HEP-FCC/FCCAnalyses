@@ -193,7 +193,7 @@ class analysis():
                 "Vertex_x", "Vertex_y", "Vertex_z",
                 "Vertex_xErr", "Vertex_yErr", "Vertex_zErr",
                 "Vertex_isPV", "Vertex_ntrk", "Vertex_chi2", "Vertex_n",
-                "Vertex_thrusthemis_angle",                 "Vertex_thrusthemis_emin",
+                "Vertex_thrusthemis_angle", "Vertex_thrusthemis_emin",
 
                 
                 "MVA",
