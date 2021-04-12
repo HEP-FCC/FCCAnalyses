@@ -244,6 +244,9 @@ namespace myUtils{
 
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
 
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 						      int type);
 
@@ -269,6 +272,20 @@ namespace myUtils{
 						    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 						    int index);
 
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_d0(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						       int index);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_z0(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						       int index);
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> getFCCAnalysesComposite_track(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+									ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
+  ROOT::VecOps::RVec<float> get_trackd0(ROOT::VecOps::RVec<edm4hep::TrackState> in);
+  ROOT::VecOps::RVec<float> get_trackz0(ROOT::VecOps::RVec<edm4hep::TrackState> in);
   
   ROOT::VecOps::RVec<int> getFCCAnalysesComposite_truthMatch(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
  
@@ -282,6 +299,10 @@ namespace myUtils{
 							     ROOT::VecOps::RVec<int> recind, 
 							     ROOT::VecOps::RVec<int> mcind, 
 							     ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get_RP_atVertex(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+									 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
   
   ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,  
 					ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
@@ -302,6 +323,14 @@ namespace myUtils{
   ROOT::VecOps::RVec<int> get_Vertex_thrusthemis_emin(ROOT::VecOps::RVec<float> angle,
 						      float eneg,
 						      float epos);
+
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> build_rho(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+										       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+										       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+				     int index);
 
 }
 #endif

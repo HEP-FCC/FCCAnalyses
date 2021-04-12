@@ -9,17 +9,17 @@ outdir="outputs/FCCee/flavour/Bc2TauNu/"
 import multiprocessing
 NUM_CPUS = int(multiprocessing.cpu_count()-2)
 process_list=[
-    #'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
-    #'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',    
-    'p8_ee_Zbb_ecm91',
-    'p8_ee_Zcc_ecm91',
-    'p8_ee_Zuds_ecm91'
+    'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',    
+    #'p8_ee_Zbb_ecm91',
+    #'p8_ee_Zcc_ecm91',
+    #'p8_ee_Zuds_ecm91'
 ]
 
 #output_list=['p8_ee_Zbb_ecm91']
 output_list=[]
 
-fraction=0.01
+fraction=0.7
 
 import config.runDataFrame as rdf
 myana=rdf.runDataFrame(basedir,process_list, outlist=output_list)

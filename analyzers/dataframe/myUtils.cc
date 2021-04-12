@@ -294,7 +294,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
     }
     else{
       for (size_t j = 0; j < result.size(); ++j) {
-	if (get_distance(result.at(j).vertex,vertexPos)<0.0001){
+	if (get_distance(result.at(j).vertex,vertexPos)<0.00001){
 	  result.at(j).mc_ind.push_back(tmpvecint.at(i));
 	  vertexfound=true;
 	  break;
@@ -826,6 +826,26 @@ ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RV
   return result;
 }
 
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex = vertex.at(p.vertex).updated_track_momentum_at_vertex;
+    TLorentzVector tlv;
+    for (size_t i = 0; i < updated_track_momentum_at_vertex.size(); ++i) {
+      TLorentzVector tlvtmp;
+      tlvtmp.SetXYZM( updated_track_momentum_at_vertex.at(i).Px(),
+		      updated_track_momentum_at_vertex.at(i).Py(),
+		      updated_track_momentum_at_vertex.at(i).Pz(),
+		      0.13957039);
+      tlv+=tlvtmp;
+      
+    }
+    result.push_back(tlv.M());
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_vertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in) {
@@ -916,6 +936,78 @@ ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_q(ROOT::VecOps::RVec<FC
 
     int recoind = vertex.at(p.vertex).reco_ind.at(index);
     result.push_back(recop.at(recoind).charge);
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<edm4hep::TrackState> myUtils::getFCCAnalysesComposite_track(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+									       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+  float norm = 1e-3;   // to convert from mm to meters 
+  for (auto & p: in){
+
+    edm4hep::TrackState track;
+    TVector3 vertexFB( vertex.at(p.vertex).vertex.position.x * norm,
+		       vertex.at(p.vertex).vertex.position.y * norm,
+		       vertex.at(p.vertex).vertex.position.z * norm);
+    TVector3 momentum ( p.particle.Px(),p.particle.Py(),p.particle.Pz());
+    
+    TVectorD track_param = VertexFitterSimple::XPtoPar( vertexFB, momentum, p.charge );
+
+
+    track.D0        = track_param[0] * 1e3 ; // from meters to mm
+    track.phi       = track_param[1];
+    track.omega     = track_param[2] / ( 0.5*1e3 ) ; // C from Franco = rho/2, and convert from m-1 to mm-1
+
+    // need to change here, because the TracSTate of edm4heo currently use
+    // the wrong sign !
+    track.omega = -track.omega ;
+
+    track.Z0        = track_param[3] * 1e3  ;   // from meters to mm
+    track.tanLambda = track_param[4];
+
+    track.referencePoint.x = vertexFB[0];
+    track.referencePoint.y = vertexFB[1];
+    track.referencePoint.z = vertexFB[2];
+
+
+    
+    result.push_back(track);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> myUtils::get_trackd0(ROOT::VecOps::RVec<edm4hep::TrackState> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) result.push_back(p.D0);
+  return result;
+}
+ROOT::VecOps::RVec<float> myUtils::get_trackz0(ROOT::VecOps::RVec<edm4hep::TrackState> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) result.push_back(p.Z0);
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_d0(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							      int index){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    float d0 = vertex.at(p.vertex).updated_track_parameters.at(index)[0];
+    result.push_back(d0);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_z0(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							      int index){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    float z0 = vertex.at(p.vertex).updated_track_parameters.at(index)[3];
+    result.push_back(z0);
   }
   return result;
 }
@@ -1191,6 +1283,27 @@ myUtils::PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 }
 
 
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> myUtils::get_RP_atVertex(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+										ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+
+  for (auto &p:vertex){
+    ROOT::VecOps::RVec<int> reco_ind = p.reco_ind;
+    ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex = p.updated_track_momentum_at_vertex;
+
+    for (size_t i = 0; i < reco_ind.size(); ++i) {
+      recop.at(reco_ind.at(i)).momentum.x = updated_track_momentum_at_vertex.at(i).Px();
+      recop.at(reco_ind.at(i)).momentum.y = updated_track_momentum_at_vertex.at(i).Py();
+      recop.at(reco_ind.at(i)).momentum.z = updated_track_momentum_at_vertex.at(i).Pz();
+      recop.at(reco_ind.at(i)).mass = 0.13957039;
+      recop.at(reco_ind.at(i)).energy = sqrt(pow(updated_track_momentum_at_vertex.at(i).Px(),2) + 
+					     pow(updated_track_momentum_at_vertex.at(i).Py(),2) + 
+					     pow(updated_track_momentum_at_vertex.at(i).Pz(),2) + 
+					     pow(0.13957039,2));
+    }
+  }
+  return recop;
+}
 
 
 ROOT::VecOps::RVec<float> myUtils::awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,  
@@ -1624,3 +1737,75 @@ ROOT::VecOps::RVec<int> myUtils::get_Vertex_thrusthemis_emin(ROOT::VecOps::RVec<
   return result;
 
 }
+
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> myUtils::build_rho(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+											      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+											      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> result;
+  
+  for (auto &p:in){
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tmp;
+    ROOT::VecOps::RVec<int> reco_ind = vertex.at(p.vertex).reco_ind;
+    if (recop[reco_ind.at(0)].charge!=recop[reco_ind.at(1)].charge){
+      edm4hep::ReconstructedParticleData cand;
+      TLorentzVector rho1;
+      rho1.SetXYZM(recop.at(0).momentum.x,recop.at(0).momentum.y,recop.at(0).momentum.z,recop.at(0).mass);
+      TLorentzVector rho2;
+      rho2.SetXYZM(recop.at(1).momentum.x,recop.at(1).momentum.y,recop.at(1).momentum.z,recop.at(1).mass);
+      TLorentzVector rho=rho1+rho2;
+      cand.momentum.x = rho.Px();
+      cand.momentum.y = rho.Py();
+      cand.momentum.z = rho.Pz();
+      cand.mass = rho.M();
+      cand.energy = rho.E();
+      tmp.push_back(cand);
+      }
+    if (recop[reco_ind.at(0)].charge!=recop[reco_ind.at(2)].charge){
+      edm4hep::ReconstructedParticleData cand;
+      TLorentzVector rho1;
+      rho1.SetXYZM(recop.at(0).momentum.x,recop.at(0).momentum.y,recop.at(0).momentum.z,recop.at(0).mass);
+      TLorentzVector rho2;
+      rho2.SetXYZM(recop.at(2).momentum.x,recop.at(2).momentum.y,recop.at(2).momentum.z,recop.at(2).mass);
+      TLorentzVector rho=rho1+rho2;
+      cand.momentum.x = rho.Px();
+      cand.momentum.y = rho.Py();
+      cand.momentum.z = rho.Pz();
+      cand.mass = rho.M();
+      cand.energy = rho.E();
+      tmp.push_back(cand);
+    }
+    if (recop[reco_ind.at(1)].charge!=recop[reco_ind.at(2)].charge){
+      edm4hep::ReconstructedParticleData cand;
+      TLorentzVector rho1;
+      rho1.SetXYZM(recop.at(1).momentum.x,recop.at(1).momentum.y,recop.at(1).momentum.z,recop.at(1).mass);
+      TLorentzVector rho2;
+      rho2.SetXYZM(recop.at(2).momentum.x,recop.at(2).momentum.y,recop.at(2).momentum.z,recop.at(2).mass);
+      TLorentzVector rho=rho1+rho2;
+      cand.momentum.x = rho.Px();
+      cand.momentum.y = rho.Py();
+      cand.momentum.z = rho.Pz();
+      cand.mass = rho.M();
+      cand.energy = rho.E();
+      tmp.push_back(cand);
+    }
+      
+    result.push_back(tmp);
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> myUtils::get_mass(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+					    int index){
+
+  ROOT::VecOps::RVec<float> result;
+
+  for (auto &p:in)
+    result.push_back(p.at(index).mass);
+  return result;
+}
+
+
+    
+  
