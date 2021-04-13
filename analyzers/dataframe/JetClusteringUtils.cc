@@ -166,6 +166,36 @@ fastjet::RecombinationScheme JetClusteringUtils::recomb_scheme(int recombination
   else if (recombination == 4) recomb_scheme = fastjet::RecombinationScheme::Et2_scheme;
   else if (recombination == 5) recomb_scheme = fastjet::RecombinationScheme::BIpt_scheme;
   else if (recombination == 6) recomb_scheme = fastjet::RecombinationScheme::BIpt2_scheme;
+  else recomb_scheme = fastjet::RecombinationScheme::external_scheme;
 
   return recomb_scheme;
+}
+
+ROOT::VecOps::RVec<bool> JetClusteringUtils::get_btag(ROOT::VecOps::RVec<fastjet::PseudoJet> in, ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin, float efficiency){
+  ROOT::VecOps::RVec<bool> result(in.size(),false);
+
+  for (size_t i = 0; i < MCin.size(); ++i) {
+    auto & parton = MCin[i];
+    //Select partons only (for pythia 71-79):
+    if (parton.generatorStatus>80 || parton.generatorStatus<70) continue;
+    if (std::abs( parton.PDG ) != 5) continue;
+      ROOT::Math::PxPyPzMVector lv(parton.momentum.x, parton.momentum.y, parton.momentum.z, parton.mass);
+      
+      for (size_t j = 0; j < in.size(); ++j) {
+	auto & p = in[j];
+	float dEta = lv.Eta() - p.eta();
+	float dPhi = lv.Phi() - p.phi();
+	float deltaR = sqrt(dEta*dEta+dPhi*dPhi);
+	if (deltaR <= 0.5 && gRandom->Uniform() <= efficiency) result[j] = true;
+
+	//Float_t dot = p.px()*parton.momentum.x+p.py()*parton.momentum.y+p.pz()*parton.momentum.z;
+	//Float_t lenSq1 = p.px()*p.px()+p.py()*p.py()+p.pz()*p.pz();
+	//Float_t lenSq2 = parton.momentum.x*parton.momentum.x+parton.momentum.y*parton.momentum.y+parton.momentum.z*parton.momentum.z;
+	//Float_t norm = sqrt(lenSq1*lenSq2);
+	//Float_t angle = acos(dot/norm);
+	//if (angle <= 0.5 && gRandom->Uniform() <= efficiency) result[j] = true;
+    }
+  }
+
+  return result;
 }

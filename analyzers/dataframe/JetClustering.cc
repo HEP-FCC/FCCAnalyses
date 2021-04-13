@@ -8,6 +8,7 @@
 #include "fastjet/EECambridgePlugin.hh"
 #include "fastjet/JadePlugin.hh"
 
+#include "ExternalRecombiner.hh"
 
 using namespace JetClustering;
 
@@ -24,13 +25,15 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (std
   fastjet::RecombinationScheme recomb_scheme = JetClusteringUtils::recomb_scheme(m_recombination);
   
   fastjet::ClusterSequence cs;
+  
   fastjet::JetDefinition def(jetAlgorithm, m_radius, recomb_scheme);
+  if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.set_recombiner(new ExternalRecombiner(m_recombination));
   cs = fastjet::ClusterSequence(input, def);
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
   
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
-
+  if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;
 }
 
