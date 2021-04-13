@@ -332,5 +332,10 @@ namespace myUtils{
   ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
 				     int index);
 
+  ROOT::VecOps::RVec<edm4hep::TrackState> get_truetrack(ROOT::VecOps::RVec<int> in,
+							ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+							ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+							
+  
 }
 #endif

@@ -941,6 +941,57 @@ ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_q(ROOT::VecOps::RVec<FC
 }
 
 
+ROOT::VecOps::RVec<edm4hep::TrackState> myUtils::get_truetrack(ROOT::VecOps::RVec<int> in,
+							       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+							       ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
+							
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+  float charge=0;
+  float norm = 1e-3;   // to convert from mm to meters 
+  for (auto & p: in){
+
+    ROOT::VecOps::RVec<int> mc_ind = vertex.at(p).mc_ind;
+    TLorentzVector tlv;
+    for (size_t i = 0; i < mc_ind.size(); ++i){
+      TLorentzVector tlvtmp;
+      tlvtmp.SetXYZM(mc.at(mc_ind.at(i)).momentum.x,
+		     mc.at(mc_ind.at(i)).momentum.y,
+		     mc.at(mc_ind.at(i)).momentum.z,
+		     mc.at(mc_ind.at(i)).mass);
+      tlv+=tlvtmp;
+      charge+=mc.at(mc_ind.at(i)).charge;
+    }
+
+    edm4hep::TrackState track;
+    TVector3 vertexFB( vertex.at(p).vertex.X() * norm,
+		       vertex.at(p).vertex.Y() * norm,
+		       vertex.at(p).vertex.Z() * norm);
+    
+    TVector3 momentum ( tlv.Px(),tlv.Py(),tlv.Pz());
+    
+    TVectorD track_param = VertexFitterSimple::XPtoPar( vertexFB, momentum, charge );
+
+
+    track.D0        = track_param[0] * 1e3 ; // from meters to mm
+    track.phi       = track_param[1];
+    track.omega     = track_param[2] / ( 0.5*1e3 ) ; // C from Franco = rho/2, and convert from m-1 to mm-1
+
+    // need to change here, because the TracSTate of edm4heo currently use
+    // the wrong sign !
+    track.omega = -track.omega ;
+
+    track.Z0        = track_param[3] * 1e3  ;   // from meters to mm
+    track.tanLambda = track_param[4];
+
+    track.referencePoint.x = vertexFB[0];
+    track.referencePoint.y = vertexFB[1];
+    track.referencePoint.z = vertexFB[2];
+    result.push_back(track);
+    
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<edm4hep::TrackState> myUtils::getFCCAnalysesComposite_track(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 									       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   ROOT::VecOps::RVec<edm4hep::TrackState> result;

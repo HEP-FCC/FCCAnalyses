@@ -88,7 +88,7 @@ class analysis():
                .Define("MVAVec", ROOT.computeModel, ("EVT_thrusthemis_emin", "EVT_thrusthemis_emax", "EVT_Echarged_min", "EVT_Echarged_max", "EVT_Eneutral_min",
                                                      "EVT_Eneutral_max", "EVT_Ncharged_min", "EVT_Ncharged_max", "EVT_Nneutral_min", "EVT_Nneutral_max"))
                .Define("MVA", "MVAVec.at(0)")
-               .Filter("MVA>0.1")
+               #.Filter("MVA>0.1")
                
                #MC Vertex
                .Define("MCVertexObject", "myUtils::get_MCVertexObject(Particle, Particle0)")
@@ -185,6 +185,9 @@ class analysis():
                .Define("Tau23PiCandidates_pion3z0", "myUtils::getFCCAnalysesComposite_z0(Tau23PiCandidates, VertexObject, 2)")
 
                .Define("TrueTau23Pi_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 541)")
+               .Define("TrueTau23Pi_track",         "myUtils::get_truetrack(TrueTau23Pi_vertex, MCVertexObject, Particle)")
+               .Define("TrueTau23Pi_d0",            "myUtils::get_trackd0(TrueTau23Pi_track)")
+               .Define("TrueTau23Pi_z0",            "myUtils::get_trackz0(TrueTau23Pi_track)")
 
                #.Define('RP2MC',                    "ReconstructedParticle2MC::getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,RecoPartPIDAtVertex)") 
                #.Define("Tau23PiCandidatesTM",      "myUtils::add_truthmatched2(Tau23PiCandidates, Particle, VertexObject, RP2MC, RecoPartPIDAtVertex, Particle0)")
@@ -220,7 +223,7 @@ class analysis():
                 
                 "MVA",
 
-                "TrueTau23Pi_vertex",
+                "TrueTau23Pi_vertex","TrueTau23Pi_d0","TrueTau23Pi_z0",
                 
                 "Tau23PiCandidates_n", "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex", "Tau23PiCandidates_B",
                 "Tau23PiCandidates_px", "Tau23PiCandidates_px", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",  "Tau23PiCandidates_d0",  "Tau23PiCandidates_z0",
