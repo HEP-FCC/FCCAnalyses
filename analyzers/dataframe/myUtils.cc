@@ -1596,6 +1596,8 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_tau23pi(ROOT::VecOps::R
 
   int counter=0;
   for (auto &p:vertex){
+    //not consider PV
+    if (p.vertex.primary==1){counter+=1;continue;}
     //exactly 3 tracks
     if (p.ntracks!=3){counter+=1;continue;}
     
