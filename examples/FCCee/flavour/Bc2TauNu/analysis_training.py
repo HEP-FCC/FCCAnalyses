@@ -101,7 +101,7 @@ class analysis():
                #build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho)
                .Define("Tau23PiCandidates",         "myUtils::build_tau23pi(VertexObject,RecoPartPIDAtVertex)")
                .Define("EVT_NTau23Pi",       "myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates)")
-
+               .Filter("EVT_NTau23Pi>0")
                .Define("Vertex_thrusthemis_angle",   "myUtils::get_Vertex_thrusthemis_angle(VertexObject, RecoPartPIDAtVertex, EVT_thrust)")
                .Define("EVT_NDV_hemis0", "myUtils::get_Npos(Vertex_thrusthemis_angle)")
                .Define("EVT_NDV_hemis1", "myUtils::get_Nneg(Vertex_thrusthemis_angle)")
@@ -191,6 +191,13 @@ if __name__ == "__main__":
         import os
         os.system("mkdir -p {}".format(outfile.replace(outfile.split('/')[-1],'')))
 
+
+    if nevents==0:
+        for f in fileListRoot:
+            tf=ROOT.TFile.Open(str(f),"READ")
+            tt=tf.Get("events")
+            nevents+=tt.GetEntries()
+    print ("nevents ", nevents)
     import time
     start_time = time.time()
     ncpus = 8

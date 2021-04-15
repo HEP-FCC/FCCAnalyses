@@ -5,19 +5,10 @@ import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "outputs/FCCee/flavour/Bc2TauNu/"
-#baseDir  = "/eos/experiment/fcc/ee/tmp/flatntuples/Z_Zbb_Bc2TauNu/"
+baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp_v03.json"
-#procDict ='https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee_procDict_fcc_v02.json'
-#procDict = {
-#    "p8_ee_Zbb_ecm91": {"numberOfEvents": 10100000, "sumOfWeights": 10100000, "crossSection":6645.46, "kfactor": 1.0, "matchingEfficiency": 1.0},
-#    "p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU": {"numberOfEvents": 710000, "sumOfWeights": 710000, "crossSection": 6645.46*7.9e-5*0.0236*0.098, "kfactor": 1.0, "matchingEfficiency": 1.0},
-#    "p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU": {"numberOfEvents": 690000, "sumOfWeights": 710000, "crossSection": 6645.46*0.43*0.0236*0.098, "kfactor": 1.0, "matchingEfficiency": 1.0},
-#    "p8_ee_Zcc_ecm91": {"numberOfEvents":10100000 , "sumOfWeights": 10100000, "crossSection": 5215.46, "kfactor": 1.0, "matchingEfficiency": 1.0},
-#    "p8_ee_Zuds_ecm91": {"numberOfEvents":10100000, "sumOfWeights": 10100000, "crossSection": 18616.5, "kfactor": 1.0, "matchingEfficiency": 1.0}
-#}
 
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',

@@ -84,14 +84,13 @@ class analysis():
                .Define('EVT_Nneutral_max','if (EVT_thrutshemis0_nneutral>EVT_thrutshemis1_nneutral) return float(EVT_thrutshemis0_nneutral); else return float(EVT_thrutshemis1_nneutral)')
                .Define('EVT_Nneutral_min','if (EVT_thrutshemis0_nneutral>EVT_thrutshemis1_nneutral) return float(EVT_thrutshemis1_nneutral); else return float(EVT_thrutshemis0_nneutral)')
 
-               
-               
+               #Build MVA with only thrust info
                .Define("MVAVec", ROOT.computeModel, ("EVT_thrusthemis_emin", "EVT_thrusthemis_emax", "EVT_Echarged_min", "EVT_Echarged_max", "EVT_Eneutral_min",
                                                      "EVT_Eneutral_max", "EVT_Ncharged_min", "EVT_Ncharged_max", "EVT_Nneutral_min", "EVT_Nneutral_max"))
                .Define("MVA", "MVAVec.at(0)")
-               #.Filter("MVA>0.1")
+               #.Filter("MVA>0.5")
                
-               #MC Vertex
+               #Build MC Vertex
                .Define("MCVertexObject", "myUtils::get_MCVertexObject(Particle, Particle0)")
                .Define("MC_Vertex_x",    "myUtils::get_MCVertex_x(MCVertexObject)")
                .Define("MC_Vertex_y",    "myUtils::get_MCVertex_y(MCVertexObject)")
@@ -100,8 +99,16 @@ class analysis():
                .Define("MC_Vertex_ntrk", "myUtils::get_NTracksMCVertex(MCVertexObject)")
                .Define("MC_Vertex_n",    "int(MC_Vertex_x.size())")
 
-               #Reco Vertex
+               #Build Reco Vertex
                .Define("VertexObject", "myUtils::get_VertexObject(MCVertexObject,ReconstructedParticles,EFlowTrack_1,MCRecoAssociations0,MCRecoAssociations1)")
+
+               #Filter when no PV is reconstructed
+               .Define("EVT_hasPV",    "myUtils::hasPV(VertexObject)")
+               .Filter("EVT_hasPV==1")
+               #
+               .Define("EVT_NtracksPV", "myUtils::get_PV_ntracks(VertexObject)")
+               .Define("EVT_NVertex",   "int(VertexObject.size())")
+  
                .Define("Vertex_x",     "myUtils::get_Vertex_x(VertexObject)")
                .Define("Vertex_y",     "myUtils::get_Vertex_y(VertexObject)")
                .Define("Vertex_z",     "myUtils::get_Vertex_z(VertexObject)")
@@ -141,7 +148,9 @@ class analysis():
                
                #build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho)
                .Define("Tau23PiCandidates",         "myUtils::build_tau23pi(VertexObject,RecoPartPIDAtVertex)")
-               .Define("Tau23PiCandidates_n",       "myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates)")
+               .Define("EVT_NTau23Pi",              "myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates)")
+               .Filter("EVT_NTau23Pi>0")
+
                .Define("Tau23PiCandidates_mass",    "myUtils::getFCCAnalysesComposite_mass(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_q",       "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_vertex",  "myUtils::getFCCAnalysesComposite_vertex(Tau23PiCandidates)")
@@ -160,7 +169,6 @@ class analysis():
                .Define("Tau23PiCandidates_rho1mass","myUtils::get_mass(Tau23PiCandidates_rho, 0)")
                .Define("Tau23PiCandidates_rho2mass","myUtils::get_mass(Tau23PiCandidates_rho, 1)")
 
-               
                .Define("Tau23PiCandidates_pion1px", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 0, 0)")
                .Define("Tau23PiCandidates_pion1py", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 0, 1)")
                .Define("Tau23PiCandidates_pion1pz", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 0, 2)")
@@ -190,10 +198,6 @@ class analysis():
                .Define("TrueTau23Pi_d0",            "myUtils::get_trackd0(TrueTau23Pi_track)")
                .Define("TrueTau23Pi_z0",            "myUtils::get_trackz0(TrueTau23Pi_track)")
 
-               #.Define('RP2MC',                    "ReconstructedParticle2MC::getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,RecoPartPIDAtVertex)") 
-               #.Define("Tau23PiCandidatesTM",      "myUtils::add_truthmatched2(Tau23PiCandidates, Particle, VertexObject, RP2MC, RecoPartPIDAtVertex, Particle0)")
-               #.Define("Tau23PiCandidates_tm",     "myUtils::getFCCAnalysesComposite_truthMatch(Tau23PiCandidatesTM)")
-
                .Define("Vertex_thrusthemis_angle",   "myUtils::get_Vertex_thrusthemis_angle(VertexObject, RecoPartPIDAtVertex, EVT_thrust)")
                #hemis0 == negative angle, hemis1 == positive angle
                .Define("Vertex_thrusthemis_emin",    "myUtils::get_Vertex_thrusthemis_emin(Vertex_thrusthemis_angle, EVT_thrusthemis0_e.at(0), EVT_thrusthemis1_e.at(0))")
@@ -210,7 +214,8 @@ class analysis():
                 "EVT_Eneutral_min", "EVT_Eneutral_max",
                 "EVT_Ncharged_min", "EVT_Ncharged_max",
                 "EVT_Nneutral_min", "EVT_Nneutral_max",
-
+                "EVT_NtracksPV", "EVT_NVertex", "EVT_NTau23Pi",
+                
                 "MC_Vertex_x", "MC_Vertex_y", "MC_Vertex_z", 
                 "MC_Vertex_ntrk", "MC_Vertex_n",
                 
@@ -226,7 +231,7 @@ class analysis():
 
                 "TrueTau23Pi_vertex","TrueTau23Pi_d0","TrueTau23Pi_z0",
                 
-                "Tau23PiCandidates_n", "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex", "Tau23PiCandidates_B",
+                "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex", "Tau23PiCandidates_B",
                 "Tau23PiCandidates_px", "Tau23PiCandidates_px", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",  "Tau23PiCandidates_d0",  "Tau23PiCandidates_z0",
                 #"Tau23PiCandidates_rho1px", "Tau23PiCandidates_rho1py", "Tau23PiCandidates_rho1pz",
                 "Tau23PiCandidates_rho1mass",

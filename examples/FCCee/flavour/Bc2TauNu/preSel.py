@@ -9,17 +9,16 @@ outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuple
 import multiprocessing
 NUM_CPUS = int(multiprocessing.cpu_count()-2)
 process_list=[
-    'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
-    'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',    
-    #'p8_ee_Zbb_ecm91',
-    #'p8_ee_Zcc_ecm91',
-    #'p8_ee_Zuds_ecm91'
+    #'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
+    #'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',    
+    'p8_ee_Zbb_ecm91',
+    'p8_ee_Zcc_ecm91',
+    'p8_ee_Zuds_ecm91'
 ]
 
-#output_list=['p8_ee_Zbb_ecm91']
 output_list=[]
 
-fraction=1.
+fraction=0.005
 
 #import config.runDataFrame as rdf
 #myana=rdf.runDataFrame(basedir,process_list, outlist=output_list)
@@ -27,4 +26,4 @@ fraction=1.
 
 import config.runDataFrameBatch as rdf
 myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=2 ,outDir=outdir)
+myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=4 ,outDir=outdir)
