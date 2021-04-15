@@ -20,7 +20,7 @@ print ('fccana   ',_fcc)
 
 
 ROOT.gInterpreter.ProcessLine('''
-TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt.root");
+TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_normal.root");
 
 computeModel = TMVA::Experimental::Compute<10, float>(bdt);
 ''')
@@ -88,7 +88,7 @@ class analysis():
                .Define("MVAVec", ROOT.computeModel, ("EVT_thrusthemis_emin", "EVT_thrusthemis_emax", "EVT_Echarged_min", "EVT_Echarged_max", "EVT_Eneutral_min",
                                                      "EVT_Eneutral_max", "EVT_Ncharged_min", "EVT_Ncharged_max", "EVT_Nneutral_min", "EVT_Nneutral_max"))
                .Define("MVA", "MVAVec.at(0)")
-               #.Filter("MVA>0.5")
+               .Filter("MVA>0.5")
                
                #Build MC Vertex
                .Define("MCVertexObject", "myUtils::get_MCVertexObject(Particle, Particle0)")
@@ -255,9 +255,9 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis.py  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root flat_ee_Zbb_Bc2TauNu.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis.py flat_ee_Zbb_Bc2TauNu.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis.py  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root flat_ee_Zbb_Bu2TauNu.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis.py flat_ee_Zbb_Bu2TauNu.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root
 
 # python examples/FCCee/flavour/Bc2TauNu/analysis.py  "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_*" flat_ee_Zbb_Bc2TauNu.root
 
@@ -298,13 +298,20 @@ if __name__ == "__main__":
                 print (sys.argv[i], " ",)
                 print (" ...")
 
-                          
+                         
     outfile=sys.argv[1]
     print('output file:  ',outfile)
     if len(outfile.split('/'))>1:
         import os
         os.system("mkdir -p {}".format(outfile.replace(outfile.split('/')[-1],'')))
 
+    if nevents==0:
+        for f in fileListRoot:
+            tf=ROOT.TFile.Open(str(f),"READ")
+            tt=tf.Get("events")
+            nevents+=tt.GetEntries()
+    print ("nevents ", nevents)
+    
     import time
     start_time = time.time()
     ncpus = 8

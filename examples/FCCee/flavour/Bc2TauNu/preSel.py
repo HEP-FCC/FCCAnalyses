@@ -18,7 +18,7 @@ process_list=[
 
 output_list=[]
 
-fraction=0.005
+fraction=1.
 
 #import config.runDataFrame as rdf
 #myana=rdf.runDataFrame(basedir,process_list, outlist=output_list)
@@ -26,4 +26,4 @@ fraction=0.005
 
 import config.runDataFrameBatch as rdf
 myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=4 ,outDir=outdir)
+myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=200 ,outDir=outdir)
