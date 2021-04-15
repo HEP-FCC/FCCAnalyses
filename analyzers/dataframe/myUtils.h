@@ -335,7 +335,15 @@ namespace myUtils{
   ROOT::VecOps::RVec<edm4hep::TrackState> get_truetrack(ROOT::VecOps::RVec<int> in,
 							ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
 							ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
-							
-  
+
+  int get_PV_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+  int hasPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
+  float get_dPV2DV_min(ROOT::VecOps::RVec<float> in);
+  float get_dPV2DV_max(ROOT::VecOps::RVec<float> in);
+  float get_dPV2DV_ave(ROOT::VecOps::RVec<float> in);
+
+  int get_Npos(ROOT::VecOps::RVec<float> in);
+  int get_Nneg(ROOT::VecOps::RVec<float> in);
 }
 #endif

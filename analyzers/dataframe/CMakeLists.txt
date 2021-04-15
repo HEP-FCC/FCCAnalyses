@@ -38,6 +38,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					VertexFitterActs.h
 					awkwardtest.h
 					myUtils.h
+					myFinalSel.h
 					LINKDEF LinkDef.h)
 
 

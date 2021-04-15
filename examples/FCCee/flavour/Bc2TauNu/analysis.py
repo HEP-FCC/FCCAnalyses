@@ -1,5 +1,6 @@
 import sys
 import ROOT
+from array import array
 
 print ("Load cxx analyzers ... ",)
 ROOT.gSystem.Load("libedm4hep")
@@ -36,7 +37,7 @@ class analysis():
         ROOT.ROOT.EnableImplicitMT(ncpu)
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
-        print (" done")
+        print (" init done, about to run")
     #__________________________________________________________
     def run(self):
         #84702
@@ -261,36 +262,66 @@ class analysis():
 
 if __name__ == "__main__":
 
-    if len(sys.argv)==1:
+    if len(sys.argv)<3:
         print ("usage:")
-        print ("python ",sys.argv[0]," file.root")
-        print ("python ",sys.argv[0]," dir/*.root")
+        print ("python ",sys.argv[0]," output.root input.root")
+        print ("python ",sys.argv[0]," output.root \"inputdir/*.root\"")
+        print ("python ",sys.argv[0]," output.root file1.root file2.root file3.root <nevents>")
         sys.exit(3)
 
 
-    import glob
-    filelist = glob.glob(sys.argv[1])
-    
     print ("Create dataframe object from ", )
     fileListRoot = ROOT.vector('string')()
-    for fileName in filelist:
-        fileListRoot.push_back(fileName)
-        print (fileName, " ",)
-        print (" ...")
-        
-    outDir = sys.argv[0].replace(sys.argv[0].split('/')[0],'outputs/').replace('analysis_Bc2TauNu.py','')+'/'
-    import os
-    os.system("mkdir -p {}".format(outDir))
-    outfile = outDir+sys.argv[1].split('/')[-1]
+    nevents=0
+
+    if len(sys.argv)==3 and "*" in sys.argv[2]:
+        import glob
+        filelist = glob.glob(sys.argv[2])
+        for fileName in filelist:
+            fileListRoot.push_back(fileName)
+            print (fileName, " ",)
+            print (" ...")
+
+
+    elif len(sys.argv)>2:
+        for i in range(2,len(sys.argv)):
+            try:
+                nevents=int(sys.argv[i])
+                print ('nevents found (will be in the processed events branch in roo tree):',nevents)
+            except ValueError:
+                fileListRoot.push_back(sys.argv[i])
+                print (sys.argv[i], " ",)
+                print (" ...")
+
+                          
+    outfile=sys.argv[1]
+    print('output file:  ',outfile)
+    if len(outfile.split('/'))>1:
+        import os
+        os.system("mkdir -p {}".format(outfile.replace(outfile.split('/')[-1],'')))
+
+    import time
+    start_time = time.time()
     ncpus = 8
-    if len(sys.argv)==3:outfile=sys.argv[2]
     analysis = analysis(fileListRoot, outfile, ncpus)
     analysis.run()
 
-    #tf = ROOT.TFile(infile)
-    #entries = tf.events.GetEntries()
-    #p = ROOT.TParameter(int)( "eventsProcessed", entries)
-    #outf=ROOT.TFile(outfile,"UPDATE")
-    #p.Write()
+    elapsed_time = time.time() - start_time
+    print  ('==============================SUMMARY==============================')
+    print  ('Elapsed time (H:M:S)     :  ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
+    print  ('Events Processed/Second  :  ',int(nevents/elapsed_time))
+    print  ('Total Events Processed   :  ',int(nevents))
+    print  ('===================================================================')
 
+    
+    outf = ROOT.TFile( outfile, 'update' )
+    meta = ROOT.TTree( 'metadata', 'metadata informations' )
+    n = array( 'i', [ 0 ] )
+    meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
+    n[0]=nevents
+    meta.Fill()
+    p = ROOT.TParameter(int)( "eventsProcessed", n[0])
+    p.Write()
+    outf.Write()
+    outf.Close()
 

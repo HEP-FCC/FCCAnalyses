@@ -19,7 +19,11 @@ procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_proc
 #    "p8_ee_Zuds_ecm91": {"numberOfEvents":10100000, "sumOfWeights": 10100000, "crossSection": 18616.5, "kfactor": 1.0, "matchingEfficiency": 1.0}
 #}
 
-process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU','p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU','p8_ee_Zbb_ecm91','p8_ee_Zcc_ecm91','p8_ee_Zuds_ecm91']
+process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',
+              'p8_ee_Zbb_ecm91',
+              'p8_ee_Zcc_ecm91',
+              'p8_ee_Zuds_ecm91']
 
 define_list={
     #"EVT_Ediff":"EVT_thrutshemis_emax-EVT_thrutshemis_emin"

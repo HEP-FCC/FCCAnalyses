@@ -4,7 +4,7 @@ from config.common_defaults import deffccdicts
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/fcc_tmp_v03/"
-outdir="outputs/FCCee/flavour/Bc2TauNu/"
+outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/"
 
 import multiprocessing
 NUM_CPUS = int(multiprocessing.cpu_count()-2)
@@ -19,8 +19,12 @@ process_list=[
 #output_list=['p8_ee_Zbb_ecm91']
 output_list=[]
 
-fraction=0.7
+fraction=1.
 
-import config.runDataFrame as rdf
-myana=rdf.runDataFrame(basedir,process_list, outlist=output_list)
-myana.run(ncpu=NUM_CPUS,fraction=fraction,outDir=outdir)
+#import config.runDataFrame as rdf
+#myana=rdf.runDataFrame(basedir,process_list, outlist=output_list)
+#myana.run(ncpu=NUM_CPUS,fraction=fraction,outDir=outdir)
+
+import config.runDataFrameBatch as rdf
+myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
+myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=2 ,outDir=outdir)

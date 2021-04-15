@@ -20,6 +20,65 @@
 
 using namespace myUtils;
 
+int myUtils::get_Npos(ROOT::VecOps::RVec<float> in){
+  int result=0;
+  for(auto &p:in)
+    if (p>0.)result+=1;
+  return result;
+}
+int myUtils::get_Nneg(ROOT::VecOps::RVec<float> in){
+  int result=0;
+  for(auto &p:in)
+    if (p<0.)result+=1;
+  return result;
+}
+
+float myUtils::get_dPV2DV_min(ROOT::VecOps::RVec<float> in){
+  float result = 9999999.;
+  for (auto &p:in){
+    if (p<result && p>0)result=p;
+  }
+  return result;
+}
+
+float myUtils::get_dPV2DV_max(ROOT::VecOps::RVec<float> in){
+  float result = -99999;
+  for (auto &p:in){
+    if (p>result)result=p;
+  }
+  return result;
+}
+
+float myUtils::get_dPV2DV_ave(ROOT::VecOps::RVec<float> in){
+  float result=0.;
+  for (auto &p:in){
+    result+=p;
+  }
+  if (in.size()-1>0)result=result/(in.size()-1);
+  return result;
+}
+
+int myUtils::get_PV_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  int result=0;
+  for (auto &p:vertex){
+    if (p.vertex.primary==1) {
+      result=p.ntracks;
+      break;
+    }
+  }
+  return result;
+}
+
+int myUtils::hasPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  int result=0;
+  for (auto &p:vertex){
+    if (p.vertex.primary==1) {
+      result=1;
+      break;
+    }
+  }
+  return result;
+}
 
 ROOT::VecOps::RVec<float> myUtils::get_Vertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
     ROOT::VecOps::RVec<float> result;
