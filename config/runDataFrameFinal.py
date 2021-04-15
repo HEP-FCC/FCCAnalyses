@@ -63,24 +63,26 @@ class runDataFrameFinal():
 
         processEvents={}
         for pr in self.processes:
+            fileListRoot = ROOT.vector('string')()    
             fin    = self.baseDir+pr+'.root' #input file
             if not os.path.isfile(fin):
-                print ('file ',fin,'  does not exist. exit')
-                exit(3)
-            tfin = ROOT.TFile.Open(fin)
-            tfin.cd()
-            found=False
-            for key in tfin.GetListOfKeys():
-                if 'eventsProcessed' == key.GetName():
-                    events = tfin.eventsProcessed.GetVal()
-                    processEvents[pr]=events
-                    found=True
-            if not found:
-                processEvents[pr]=1
-            if 'Bc2TauNuTAUHADNU' in pr:
-                processEvents[pr]=self.procDict[pr]["numberOfEvents"]
-            tfin.Close()
+                print ('file ',fin,'  does not exist. Try if it is a directory as it was processed with batch')
+            else:
+                tfin = ROOT.TFile.Open(fin)
+                tfin.cd()
+                found=False
+                for key in tfin.GetListOfKeys():
+                    if 'eventsProcessed' == key.GetName():
+                        events = tfin.eventsProcessed.GetVal()
+                        processEvents[pr]=events
+                        found=True
+                if not found:
+                    processEvents[pr]=1
+                tfin.Close()
 
+            if os.path.isdir(self.baseDir+pr):
+                glob.glob(self.baseDir+pr+"flat_chunk_*.root")
+                
         for cut in self.cuts:
             print ('running over cut : ',self.cuts[cut])
             for pr in self.processes:
@@ -110,7 +112,6 @@ class runDataFrameFinal():
                     model = ROOT.RDF.TH1DModel(v, ";{};".format(self.variables[v]["title"]), self.variables[v]["bin"], self.variables[v]["xmin"],  self.variables[v]["xmax"])
                     
                     h     = df_cut.Histo1D(model,self.variables[v]["name"])
-                    #h     = snapshot_tdf.Histo1D(model,self.variables[v]["name"])
                     
                     try :
                         h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
