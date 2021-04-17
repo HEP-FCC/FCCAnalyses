@@ -1,13 +1,14 @@
 import ROOT
 
 # global parameters
-intLumi        = 100000000. #in pb-1
+intLumi        = 150000000. #in pb-1
 ana_tex        = "Z #rightarrow q#bar{q}"
 delphesVersion = "3.4.2"
 energy         = 91.0
 collider       = "FCC-ee"
 inputDir       = "/eos/experiment/fcc/ee/tmp/flatntuples/Z_Zbb_Bc2TauNu/"
 inputDir       ="outputs/FCCee/flavour/Bc2TauNu/"
+inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
@@ -18,7 +19,7 @@ variables = [ "Tau23PiCandidates_mass"
 
               ]
 
-scaleSig=1000.
+scaleSig=10.
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
 selections['Flavour']   = ["sel0","sel1"]#,"sel2","sel3"]
@@ -46,7 +47,7 @@ plots['Flavour'] = {'signal':{'Z_flavour':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHA
            }
 
 legend = {}
-legend['Z_flavour'] = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
+legend['Z_flavour'] = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi) x10'
 legend['Z_bb'] = 'Z#rightarrow b#bar{b}'
 legend['Z_cc'] = 'Z#rightarrow c#bar{c}'
 legend['Z_uds'] = 'Z#rightarrow q#bar{q}'

@@ -20,9 +20,9 @@ print ('fccana   ',_fcc)
 
 
 ROOT.gInterpreter.ProcessLine('''
-TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_normal.root");
+TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_vtx.root");
 
-computeModel = TMVA::Experimental::Compute<10, float>(bdt);
+computeModel = TMVA::Experimental::Compute<18, float>(bdt);
 ''')
 
 
@@ -84,11 +84,6 @@ class analysis():
                .Define('EVT_Nneutral_max','if (EVT_thrutshemis0_nneutral>EVT_thrutshemis1_nneutral) return float(EVT_thrutshemis0_nneutral); else return float(EVT_thrutshemis1_nneutral)')
                .Define('EVT_Nneutral_min','if (EVT_thrutshemis0_nneutral>EVT_thrutshemis1_nneutral) return float(EVT_thrutshemis1_nneutral); else return float(EVT_thrutshemis0_nneutral)')
 
-               #Build MVA with only thrust info
-               .Define("MVAVec", ROOT.computeModel, ("EVT_thrusthemis_emin", "EVT_thrusthemis_emax", "EVT_Echarged_min", "EVT_Echarged_max", "EVT_Eneutral_min",
-                                                     "EVT_Eneutral_max", "EVT_Ncharged_min", "EVT_Ncharged_max", "EVT_Nneutral_min", "EVT_Nneutral_max"))
-               .Define("MVA", "MVAVec.at(0)")
-               .Filter("MVA>0.5")
                
                #Build MC Vertex
                .Define("MCVertexObject", "myUtils::get_MCVertexObject(Particle, Particle0)")
@@ -106,8 +101,8 @@ class analysis():
                .Define("EVT_hasPV",    "myUtils::hasPV(VertexObject)")
                .Filter("EVT_hasPV==1")
                #
-               .Define("EVT_NtracksPV", "myUtils::get_PV_ntracks(VertexObject)")
-               .Define("EVT_NVertex",   "int(VertexObject.size())")
+               .Define("EVT_NtracksPV", "float(myUtils::get_PV_ntracks(VertexObject))")
+               .Define("EVT_NVertex",   "float(VertexObject.size())")
   
                .Define("Vertex_x",     "myUtils::get_Vertex_x(VertexObject)")
                .Define("Vertex_y",     "myUtils::get_Vertex_y(VertexObject)")
@@ -148,9 +143,32 @@ class analysis():
                
                #build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho)
                .Define("Tau23PiCandidates",         "myUtils::build_tau23pi(VertexObject,RecoPartPIDAtVertex)")
-               .Define("EVT_NTau23Pi",              "myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates)")
+               .Define("EVT_NTau23Pi",              "float(myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates))")
                .Filter("EVT_NTau23Pi>0")
 
+               .Define("Vertex_thrusthemis_angle",   "myUtils::get_Vertex_thrusthemis_angle(VertexObject, RecoPartPIDAtVertex, EVT_thrust)")
+               #hemis0 == negative angle, hemis1 == positive angle
+               .Define("Vertex_thrusthemis_emin",    "myUtils::get_Vertex_thrusthemis_emin(Vertex_thrusthemis_angle, EVT_thrusthemis0_e.at(0), EVT_thrusthemis1_e.at(0))")
+               .Define("EVT_dPV2DVmin", "myUtils::get_dPV2DV_min(Vertex_d2PV)")
+               .Define("EVT_dPV2DVmax", "myUtils::get_dPV2DV_max(Vertex_d2PV)")
+               .Define("EVT_dPV2DVave", "myUtils::get_dPV2DV_ave(Vertex_d2PV)")
+               .Define("EVT_NDV_hemis0", "float(myUtils::get_Npos(Vertex_thrusthemis_angle))")
+               .Define("EVT_NDV_hemis1", "float(myUtils::get_Nneg(Vertex_thrusthemis_angle))")
+
+               
+               #Build MVA with only thrust info
+               .Define("MVAVec", ROOT.computeModel, ("EVT_thrusthemis_emin", "EVT_thrusthemis_emax",
+                                                     "EVT_Echarged_min",     "EVT_Echarged_max",
+                                                     "EVT_Eneutral_min",     "EVT_Eneutral_max",
+                                                     "EVT_Ncharged_min",     "EVT_Ncharged_max",
+                                                     "EVT_Nneutral_min",     "EVT_Nneutral_max",
+                                                     "EVT_NtracksPV",        "EVT_NVertex",
+                                                     "EVT_NTau23Pi",         "EVT_NDV_hemis0",
+                                                     "EVT_NDV_hemis1",       "EVT_dPV2DVmin",
+                                                     "EVT_dPV2DVmax",        "EVT_dPV2DVave"))
+               .Define("MVA", "MVAVec.at(0)")
+               .Filter("MVA>0.6")
+ 
                .Define("Tau23PiCandidates_mass",    "myUtils::getFCCAnalysesComposite_mass(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_q",       "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_vertex",  "myUtils::getFCCAnalysesComposite_vertex(Tau23PiCandidates)")
@@ -165,7 +183,7 @@ class analysis():
                .Define("Tau23PiCandidates_d0",      "myUtils::get_trackd0(Tau23PiCandidates_track)")
                .Define("Tau23PiCandidates_z0",      "myUtils::get_trackz0(Tau23PiCandidates_track)")
 
-               .Define("Tau23PiCandidates_rho",    "myUtils::build_rho(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex)")
+               .Define("Tau23PiCandidates_rho",     "myUtils::build_rho(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex)")
                .Define("Tau23PiCandidates_rho1mass","myUtils::get_mass(Tau23PiCandidates_rho, 0)")
                .Define("Tau23PiCandidates_rho2mass","myUtils::get_mass(Tau23PiCandidates_rho, 1)")
 
@@ -198,9 +216,11 @@ class analysis():
                .Define("TrueTau23Pi_d0",            "myUtils::get_trackd0(TrueTau23Pi_track)")
                .Define("TrueTau23Pi_z0",            "myUtils::get_trackz0(TrueTau23Pi_track)")
 
-               .Define("Vertex_thrusthemis_angle",   "myUtils::get_Vertex_thrusthemis_angle(VertexObject, RecoPartPIDAtVertex, EVT_thrust)")
-               #hemis0 == negative angle, hemis1 == positive angle
-               .Define("Vertex_thrusthemis_emin",    "myUtils::get_Vertex_thrusthemis_emin(Vertex_thrusthemis_angle, EVT_thrusthemis0_e.at(0), EVT_thrusthemis1_e.at(0))")
+               #.Define("TrueRho", "myUtils::build_truerho(TrueTau23Pi_vertex,MCVertexObject,Particle)")
+               #.Define("TrueRho1M", "TrueRho.at(0).mass")
+               #.Define("TrueRho2M", "TrueRho.at(1).mass")
+               
+
 
                
                
@@ -232,7 +252,7 @@ class analysis():
                 "TrueTau23Pi_vertex","TrueTau23Pi_d0","TrueTau23Pi_z0",
                 
                 "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex", "Tau23PiCandidates_B",
-                "Tau23PiCandidates_px", "Tau23PiCandidates_px", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",  "Tau23PiCandidates_d0",  "Tau23PiCandidates_z0",
+                "Tau23PiCandidates_px", "Tau23PiCandidates_py", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",  "Tau23PiCandidates_d0",  "Tau23PiCandidates_z0",
                 #"Tau23PiCandidates_rho1px", "Tau23PiCandidates_rho1py", "Tau23PiCandidates_rho1pz",
                 "Tau23PiCandidates_rho1mass",
                 #"Tau23PiCandidates_rho2px", "Tau23PiCandidates_rho2py", "Tau23PiCandidates_rho2pz",
@@ -242,7 +262,9 @@ class analysis():
                 "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2pz", "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q", "Tau23PiCandidates_pion2d0", "Tau23PiCandidates_pion2z0",
                 "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3pz", "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q", "Tau23PiCandidates_pion3d0", "Tau23PiCandidates_pion3z0",
                 
-
+                #"TrueRho1M",
+                #"TrueRho2M",
+                
                 
                 ]:
             branchList.push_back(branchName)
