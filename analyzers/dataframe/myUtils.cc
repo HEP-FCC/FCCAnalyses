@@ -1850,6 +1850,61 @@ ROOT::VecOps::RVec<int> myUtils::get_Vertex_thrusthemis_emin(ROOT::VecOps::RVec<
 
 }
 
+ROOT::VecOps::RVec<edm4hep::MCParticleData> myUtils::build_truerho(ROOT::VecOps::RVec<int> vertexind,
+								   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+								   ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
+  
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  int index= vertexind.at(0);
+  VertexingUtils::FCCAnalysesVertexMC mcver=vertex.at(index);
+  ROOT::VecOps::RVec<int> mc_ind = mcver.mc_ind;
+
+  //std::cout <<"new MC cand"<<std::endl;
+  //for (size_t i=0; i<mc_ind.size();++i)std::cout <<"MC i="<<i<< " px="<<mc.at(mc_ind.at(i)).momentum.x<< " py="<<mc.at(mc_ind.at(i)).momentum.y<< " pz="<<mc.at(mc_ind.at(i)).momentum.z<<std::endl;
+
+  if (mc.at(mc_ind.at(0)).charge!=mc.at(mc_ind.at(1)).charge){
+      edm4hep::MCParticleData cand;
+      TLorentzVector rho1;
+      rho1.SetXYZM(mc.at(mc_ind.at(0)).momentum.x,mc.at(mc_ind.at(0)).momentum.y,mc.at(mc_ind.at(0)).momentum.z,mc.at(mc_ind.at(0)).mass);
+      TLorentzVector rho2;
+      rho2.SetXYZM(mc.at(mc_ind.at(1)).momentum.x,mc.at(mc_ind.at(1)).momentum.y,mc.at(mc_ind.at(1)).momentum.z,mc.at(mc_ind.at(1)).mass);
+      TLorentzVector rho=rho1+rho2;
+      cand.momentum.x = rho.Px();
+      cand.momentum.y = rho.Py();
+      cand.momentum.z = rho.Pz();
+      cand.mass = rho.M();
+      result.push_back(cand);
+  }
+  if (mc.at(mc_ind.at(0)).charge!=mc.at(mc_ind.at(2)).charge){
+    edm4hep::MCParticleData cand;
+    TLorentzVector rho1;
+    rho1.SetXYZM(mc.at(mc_ind.at(0)).momentum.x,mc.at(mc_ind.at(0)).momentum.y,mc.at(mc_ind.at(0)).momentum.z,mc.at(mc_ind.at(0)).mass);
+    TLorentzVector rho2;
+    rho2.SetXYZM(mc.at(mc_ind.at(2)).momentum.x,mc.at(mc_ind.at(2)).momentum.y,mc.at(mc_ind.at(2)).momentum.z,mc.at(mc_ind.at(2)).mass);
+    TLorentzVector rho=rho1+rho2;
+    cand.momentum.x = rho.Px();
+    cand.momentum.y = rho.Py();
+    cand.momentum.z = rho.Pz();
+    cand.mass = rho.M();
+    result.push_back(cand);
+  }
+  if (mc.at(mc_ind.at(1)).charge!=mc.at(mc_ind.at(2)).charge){
+    edm4hep::MCParticleData cand;
+    TLorentzVector rho1;
+    rho1.SetXYZM(mc.at(mc_ind.at(1)).momentum.x,mc.at(mc_ind.at(1)).momentum.y,mc.at(mc_ind.at(1)).momentum.z,mc.at(mc_ind.at(1)).mass);
+    TLorentzVector rho2;
+    rho2.SetXYZM(mc.at(mc_ind.at(2)).momentum.x,mc.at(mc_ind.at(2)).momentum.y,mc.at(mc_ind.at(2)).momentum.z,mc.at(mc_ind.at(2)).mass);
+    TLorentzVector rho=rho1+rho2;
+    cand.momentum.x = rho.Px();
+    cand.momentum.y = rho.Py();
+    cand.momentum.z = rho.Pz();
+    cand.mass = rho.M();
+    result.push_back(cand);
+  }
+  
+  return result;
+}
+
 ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> myUtils::build_rho(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 											      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 											      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
@@ -1859,12 +1914,15 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> myUti
   for (auto &p:in){
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tmp;
     ROOT::VecOps::RVec<int> reco_ind = vertex.at(p.vertex).reco_ind;
+    //std::cout <<"new reco cand"<<std::endl;
+    //for (size_t i=0; i<reco_ind.size();++i)std::cout <<"reco i="<<i<< " px="<<recop.at(reco_ind.at(i)).momentum.x<< " py="<<recop.at(reco_ind.at(i)).momentum.y<< " pz="<<recop.at(reco_ind.at(i)).momentum.z<<std::endl;
+    
     if (recop[reco_ind.at(0)].charge!=recop[reco_ind.at(1)].charge){
       edm4hep::ReconstructedParticleData cand;
       TLorentzVector rho1;
-      rho1.SetXYZM(recop.at(0).momentum.x,recop.at(0).momentum.y,recop.at(0).momentum.z,recop.at(0).mass);
+      rho1.SetXYZM(recop.at(reco_ind.at(0)).momentum.x,recop.at(reco_ind.at(0)).momentum.y,recop.at(reco_ind.at(0)).momentum.z,recop.at(reco_ind.at(0)).mass);
       TLorentzVector rho2;
-      rho2.SetXYZM(recop.at(1).momentum.x,recop.at(1).momentum.y,recop.at(1).momentum.z,recop.at(1).mass);
+      rho2.SetXYZM(recop.at(reco_ind.at(1)).momentum.x,recop.at(reco_ind.at(1)).momentum.y,recop.at(reco_ind.at(1)).momentum.z,recop.at(reco_ind.at(1)).mass);
       TLorentzVector rho=rho1+rho2;
       cand.momentum.x = rho.Px();
       cand.momentum.y = rho.Py();
@@ -1876,9 +1934,9 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> myUti
     if (recop[reco_ind.at(0)].charge!=recop[reco_ind.at(2)].charge){
       edm4hep::ReconstructedParticleData cand;
       TLorentzVector rho1;
-      rho1.SetXYZM(recop.at(0).momentum.x,recop.at(0).momentum.y,recop.at(0).momentum.z,recop.at(0).mass);
+      rho1.SetXYZM(recop.at(reco_ind.at(0)).momentum.x,recop.at(reco_ind.at(0)).momentum.y,recop.at(reco_ind.at(0)).momentum.z,recop.at(reco_ind.at(0)).mass);
       TLorentzVector rho2;
-      rho2.SetXYZM(recop.at(2).momentum.x,recop.at(2).momentum.y,recop.at(2).momentum.z,recop.at(2).mass);
+      rho2.SetXYZM(recop.at(reco_ind.at(2)).momentum.x,recop.at(reco_ind.at(2)).momentum.y,recop.at(reco_ind.at(2)).momentum.z,recop.at(reco_ind.at(2)).mass);
       TLorentzVector rho=rho1+rho2;
       cand.momentum.x = rho.Px();
       cand.momentum.y = rho.Py();
@@ -1890,9 +1948,9 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> myUti
     if (recop[reco_ind.at(1)].charge!=recop[reco_ind.at(2)].charge){
       edm4hep::ReconstructedParticleData cand;
       TLorentzVector rho1;
-      rho1.SetXYZM(recop.at(1).momentum.x,recop.at(1).momentum.y,recop.at(1).momentum.z,recop.at(1).mass);
+      rho1.SetXYZM(recop.at(reco_ind.at(1)).momentum.x,recop.at(reco_ind.at(1)).momentum.y,recop.at(reco_ind.at(1)).momentum.z,recop.at(reco_ind.at(1)).mass);
       TLorentzVector rho2;
-      rho2.SetXYZM(recop.at(2).momentum.x,recop.at(2).momentum.y,recop.at(2).momentum.z,recop.at(2).mass);
+      rho2.SetXYZM(recop.at(reco_ind.at(2)).momentum.x,recop.at(reco_ind.at(2)).momentum.y,recop.at(reco_ind.at(2)).momentum.z,recop.at(reco_ind.at(2)).mass);
       TLorentzVector rho=rho1+rho2;
       cand.momentum.x = rho.Px();
       cand.momentum.y = rho.Py();

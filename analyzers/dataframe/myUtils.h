@@ -345,5 +345,12 @@ namespace myUtils{
 
   int get_Npos(ROOT::VecOps::RVec<float> in);
   int get_Nneg(ROOT::VecOps::RVec<float> in);
+
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> build_truerho(ROOT::VecOps::RVec<int> vertexind,
+							    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+							    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+  
+
+  
 }
 #endif
