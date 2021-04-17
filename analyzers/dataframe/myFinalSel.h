@@ -1,0 +1,21 @@
+#ifndef MYFINALSEL_ANALYZERS_H
+#define MYFINALSEL_ANALYZERS_H
+#include "ROOT/RVec.hxx"
+#include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/MCParticleData.h"
+
+#include "TLorentzVector.h"
+#include <vector>
+
+namespace myFinalSel{
+
+  int selTauCand( ROOT::VecOps::RVec<float> mass,
+		  ROOT::VecOps::RVec<int> vertex_ind,
+		  ROOT::VecOps::RVec<float> vertex_chi2);
+  
+  int selTauCandTM(ROOT::VecOps::RVec<int> mcvertex,
+		   ROOT::VecOps::RVec<int> truevertex,
+		   int CandInd);
+
+}
+#endif
