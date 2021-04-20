@@ -38,7 +38,9 @@ namespace VertexingUtils{
   struct FCCAnalysesVertexMC{
     TVector3 vertex;
     ROOT::VecOps::RVec<int> mc_ind;
+    ROOT::VecOps::RVec<int> mc_indneutral;
     ROOT::VecOps::RVec<int> mother_ind;
+    ROOT::VecOps::RVec<int> gmother_ind;
   };
 
   /// Selection of particles based on the d0 / z0 significances of the associated track

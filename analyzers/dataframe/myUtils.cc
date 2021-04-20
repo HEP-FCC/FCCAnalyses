@@ -321,6 +321,85 @@ std::vector<std::vector<int>> myUtils::get_MCindMCVertex(ROOT::VecOps::RVec<Vert
   return result;
 }
 
+std::vector<std::vector<int>> myUtils::get_MCpdgMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+							 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
+  std::vector<std::vector<int>> result;
+  for (auto &p:vertex){
+    std::vector<int> tmp;
+    for (size_t i = 0; i < p.mc_ind.size(); ++i) tmp.push_back(mc.at(p.mc_ind.at(i)).PDG);
+    for (size_t i = 0; i < p.mc_indneutral.size(); ++i) tmp.push_back(mc.at(p.mc_indneutral.at(i)).PDG);
+    result.push_back(tmp);
+  }
+  return result;
+}
+
+std::vector<std::vector<int>> myUtils::get_MCpdgMotherMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+							       ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
+  std::vector<std::vector<int>> result;
+  for (auto &p:vertex){
+    std::vector<int> tmp;
+    for (size_t i = 0; i < p.mother_ind.size(); ++i) tmp.push_back(mc.at(p.mother_ind.at(i)).PDG);
+    result.push_back(tmp);
+  }
+  return result;
+}
+
+std::vector<std::vector<int>> myUtils::get_MCpdgGMotherMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+								ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
+  std::vector<std::vector<int>> result;
+  for (auto &p:vertex){
+    std::vector<int> tmp;
+    for (size_t i = 0; i < p.gmother_ind.size(); ++i) tmp.push_back(mc.at(p.gmother_ind.at(i)).PDG);
+    result.push_back(tmp);
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<int> myUtils::get_MCMother1(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					       ROOT::VecOps::RVec<int> ind){
+
+  ROOT::VecOps::RVec<int> result;
+    for (size_t i = 0; i < mc.size(); ++i){
+      if (mc.at(i).parents_begin==mc.at(i).parents_end)result.push_back(-1);
+      else result.push_back(ind.at(mc.at(i).parents_begin));
+    }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::get_MCMother2(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					       ROOT::VecOps::RVec<int> ind){
+
+  ROOT::VecOps::RVec<int> result;
+  for (size_t i = 0; i < mc.size(); ++i){
+    if (mc.at(i).parents_begin==mc.at(i).parents_end)result.push_back(-1);
+    else result.push_back(ind.at(mc.at(i).parents_end-1));
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::get_MCDaughter1(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					       ROOT::VecOps::RVec<int> ind){
+
+  ROOT::VecOps::RVec<int> result;
+    for (size_t i = 0; i < mc.size(); ++i){
+      if (mc.at(i).daughters_begin==mc.at(i).daughters_end)result.push_back(-1);
+      else result.push_back(ind.at(mc.at(i).daughters_begin));
+    }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::get_MCDaughter2(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+						 ROOT::VecOps::RVec<int> ind){
+
+  ROOT::VecOps::RVec<int> result;
+  for (size_t i = 0; i < mc.size(); ++i){
+    if (mc.at(i).daughters_begin==mc.at(i).daughters_end)result.push_back(-1);
+    else result.push_back(ind.at(mc.at(i).daughters_end-1));
+  }
+  return result;
+}
+
 
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 										    ROOT::VecOps::RVec<int> ind){
@@ -371,9 +450,20 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
   }
 
 
-  //std::cout << "====================size MC " << mc.size() << " size assoc  " << ind.size() << std::endl;
+ //adding the neutrals
+  for (auto& p:result) {
+    ROOT::VecOps::RVec<int> mc_indneutral;
+    for (size_t i = 0; i < mc.size(); ++i) {
+      if (mc.at(i).charge!=0)continue;
+      if (mc.at(i).generatorStatus==1){
+	TVector3 vertexPos(mc.at(i).vertex.x,mc.at(i).vertex.y,mc.at(i).vertex.z);
+	if (get_distance(p.vertex,vertexPos)<0.000001) mc_indneutral.push_back(i);
+      }
+    }
+    p.mc_indneutral=mc_indneutral;
+  }
+  
   //adding the mother particles
-  //std::cout <<"nvx MC  " << result.size()<<std::endl;
   for (auto& p:result) {
     std::vector<int> mother_ind;
 
@@ -396,6 +486,32 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> myUtils::get_MCVertexObj
     //std::cout << "found n mothers="<<mother_ind.size()<<std::endl;
     
   }
+
+
+  //adding the grand mother particles
+  for (auto& p:result) {
+    std::vector<int> gmother_ind;
+
+    //std::cout <<"n part="<<p.mc_ind.size()<<"  x=" << p.vertex[0] <<"  y=" << p.vertex[1] <<"  z=" << p.vertex[2] <<std::endl;
+    ROOT::VecOps::RVec<int> mc_ind = p.mother_ind;
+    for (size_t i = 0; i < mc_ind.size(); ++i){
+
+      //std::cout << "i="<< i << "  mc_ind  "<< mc_ind.at(i) <<"  parent begin " << mc.at(mc_ind.at(i)).parents_begin <<"  parent end " << mc.at(mc_ind.at(i)).parents_end << " end-beg  "  << mc.at(mc_ind.at(i)).parents_end-mc.at(mc_ind.at(i)).parents_begin<< std::endl;
+
+      for (size_t j = mc.at(mc_ind.at(i)).parents_begin; j < mc.at(mc_ind.at(i)).parents_end; ++j){
+	//std::cout << "     j="<<j << "  index  " << ind.at(j) << "  PDG ID " << mc.at(ind.at(j)).PDG << std::endl;
+	std::vector<int>::iterator it = std::find(gmother_ind.begin(), gmother_ind.end(), ind.at(j));
+	if (it==gmother_ind.end())gmother_ind.push_back(ind.at(j));
+      }
+    }
+
+    ROOT::VecOps::RVec<int> gmother_indRVec;
+    for (size_t i = 0; i < gmother_ind.size(); ++i)gmother_indRVec.push_back(gmother_ind.at(i));
+    p.gmother_ind = gmother_indRVec;
+    //std::cout << "found n mothers="<<mother_ind.size()<<std::endl;
+    
+  }
+
   
   /*std::cout <<"nvx MC  " << result.size()<<std::endl;
   for (size_t j = 0; j < result.size(); ++j)

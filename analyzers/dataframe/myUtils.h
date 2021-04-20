@@ -168,6 +168,31 @@ namespace myUtils{
 
   std::vector< std::vector<int> > get_MCindMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
 
+  std::vector<std::vector<int>> get_MCpdgMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+						  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+  std::vector<std::vector<int>> get_MCpdgMotherMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+							ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+  std::vector<std::vector<int>> get_MCpdgGMotherMCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
+							 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
+
+  ROOT::VecOps::RVec<int> get_MCMother1(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					ROOT::VecOps::RVec<int> ind);
+  
+  ROOT::VecOps::RVec<int> get_MCMother2(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					ROOT::VecOps::RVec<int> ind);
+
+  ROOT::VecOps::RVec<int> get_MCDaughter1(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					  ROOT::VecOps::RVec<int> ind);
+
+  ROOT::VecOps::RVec<int> get_MCDaughter2(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					  ROOT::VecOps::RVec<int> ind);
+  
+  ROOT::VecOps::RVec<int> get_MCMother2(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+					ROOT::VecOps::RVec<int> ind);
+
+  
   ROOT::VecOps::RVec<FCCAnalysesComposite> add_truthmatched(ROOT::VecOps::RVec<FCCAnalysesComposite> comp,
 							    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 							    ROOT::VecOps::RVec<int> rp2mc,
