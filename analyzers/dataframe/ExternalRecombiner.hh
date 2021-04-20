@@ -15,8 +15,6 @@ public:
       return "E0 scheme recombination";
     case 11:
       return "p scheme recombination";
-    case 12:
-      return "p0 scheme recombination";
     default:
       return "ExternalRecombiner: unrecognized recombination scheme ";
     }
