@@ -62,7 +62,13 @@ class runDataFrameFinal():
         start_time = time.time()
 
         processEvents={}
+        eventsTTree={}
+        processList={}
+        
         for pr in self.processes:
+            processEvents[pr]=0
+            eventsTTree[pr]=0
+
             fileListRoot = ROOT.vector('string')()    
             fin    = self.baseDir+pr+'.root' #input file
             if not os.path.isfile(fin):
@@ -78,21 +84,49 @@ class runDataFrameFinal():
                         found=True
                 if not found:
                     processEvents[pr]=1
+                tt=tfin.Get("events")
+                eventsTTree[pr]+=tt.GetEntries()
+
                 tfin.Close()
+                fileListRoot.push_back(fin)
 
             if os.path.isdir(self.baseDir+pr):
-                glob.glob(self.baseDir+pr+"flat_chunk_*.root")
-                
+                print ('is dir found')
+                import glob
+                flist=glob.glob(self.baseDir+pr+"/flat_chunk_*.root")
+                for f in flist:
+                    tfin = ROOT.TFile.Open(f)
+                    print (f,'    ===    ',tfin, '  ',type(tfin))
+                    tfin.cd()
+                    
+                    found=False
+                    for key in tfin.GetListOfKeys():
+                        if 'eventsProcessed' == key.GetName():
+                            events = tfin.eventsProcessed.GetVal()
+                            processEvents[pr]+=events
+                            found=True
+                    if not found:
+                        processEvents[pr]=1
+                        
+                    tt=tfin.Get("events")
+                    eventsTTree[pr]+=tt.GetEntries()
+                    tfin.Close()
+                    fileListRoot.push_back(f)
+            processList[pr]=fileListRoot
+
+        print('processed events ',processEvents)
+        print('events in ttree  ',eventsTTree)
+
+                    
         for cut in self.cuts:
             print ('running over cut : ',self.cuts[cut])
             for pr in self.processes:
                 print ('   running over process : ',pr)
-                fin    = self.baseDir+pr+'.root' #input file
                 fout   = self.baseDir+pr+'_'+cut+'.root' #output file for tree
                 fhisto = self.baseDir+pr+'_'+cut+'_histo.root' #output file for histograms
 
                 RDF = ROOT.ROOT.RDataFrame
-                df  = RDF(self.treename,fin )
+                df  = RDF(self.treename,processList[pr] )
                 if len(self.defines)>0:
                     print ('Running extra Define')
                     for define in self.defines:

@@ -37,6 +37,8 @@ def mapHistos(var, label, sel, param):
                     print ('no scale signal, using 1')
                 print ('scaleSig ',scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
+                print('signal ',s,'  nevents  ',hh.Integral(0,-1)/scaleSig,'  MC events  ',hh.GetEntries())
+
                 if len(hsignal[s])==0:
                     hsignal[s].append(hh)
                 else:
@@ -56,6 +58,7 @@ def mapHistos(var, label, sel, param):
                 h=tf.Get(var)
                 hh = copy.deepcopy(h)
                 hh.Scale(param.intLumi)
+                print('background ',b,'  nevents  ',hh.Integral(0,-1),'  MC events  ',hh.GetEntries())
                 if len(hbackgrounds[b])==0:
                     hbackgrounds[b].append(hh)
                 else:
