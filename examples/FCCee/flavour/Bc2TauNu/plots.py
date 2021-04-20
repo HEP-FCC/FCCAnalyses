@@ -6,29 +6,28 @@ ana_tex        = "Z #rightarrow q#bar{q}"
 delphesVersion = "3.4.2"
 energy         = 91.0
 collider       = "FCC-ee"
-inputDir       = "/eos/experiment/fcc/ee/tmp/flatntuples/Z_Zbb_Bc2TauNu/"
-inputDir       ="outputs/FCCee/flavour/Bc2TauNu/"
-inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/"
+inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_stage2/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
 outdir         = 'outputs/FCCee/flavour/Bc2TauNu/plots/'
 
-variables = [ "Tau23PiCandidates_mass"
+variables = [ "EVT_CandMass","EVT_minRhoMass","EVT_maxRhoMass"
              
 
               ]
 
-scaleSig=10.
+#scaleSig=1.
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['Flavour']   = ["sel0","sel1"]#,"sel2","sel3"]
+selections['Flavour']   = ["sel0","sel1","sel2","sel3","sel4"]
 
 extralabel = {}
-extralabel['sel0'] = "Selection: MVA>0.99"
-extralabel['sel1'] = "Selection: MVA>0.995"
-extralabel['sel2'] = "Selection: with tighter cuts"
-extralabel['sel3'] = "Selection: with even tighter cuts"
+extralabel['sel0'] = "Selection: MVA2>0.6"
+extralabel['sel1'] = "Selection: MVA1>0.9 MVA2>0.9"
+extralabel['sel2'] = "Selection: MVA1>0.95 MVA2>0.95"
+extralabel['sel3'] = "Selection: MVA1>0.98 MVA2>0.98"
+extralabel['sel4'] = "Selection: MVA1>0.99 MVA2>0.99"
 
 colors = {}
 colors['Z_flavour'] = ROOT.kRed
@@ -47,7 +46,7 @@ plots['Flavour'] = {'signal':{'Z_flavour':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHA
            }
 
 legend = {}
-legend['Z_flavour'] = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi) x10'
+legend['Z_flavour'] = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
 legend['Z_bb'] = 'Z#rightarrow b#bar{b}'
 legend['Z_cc'] = 'Z#rightarrow c#bar{c}'
 legend['Z_uds'] = 'Z#rightarrow q#bar{q}'

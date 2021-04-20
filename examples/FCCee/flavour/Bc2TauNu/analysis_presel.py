@@ -18,6 +18,11 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 
+ROOT.gInterpreter.ProcessLine('''
+TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT2", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_stage2.root");
+
+computeModel = TMVA::Experimental::Compute<18, float>(bdt);
+''')
 
 
 class analysis():
@@ -37,53 +42,68 @@ class analysis():
     def run(self):
         #df2 = (self.df.Range(1000)        
         df2 = (self.df
-               .Define("LOCAL_CandInd",     "myFinalSel::selTauCand(Tau23PiCandidates_mass, Tau23PiCandidates_vertex, Vertex_chi2 )")
-               .Filter("LOCAL_CandInd>-1")
-               .Define("LOCAL_CandVtxInd", "Tau23PiCandidates_vertex.at(LOCAL_CandInd)")
-               .Define("EVT_CandN",        "float(Tau23PiCandidates_vertex.size())")
-               .Define("CUT_CandTruth",    "myFinalSel::selTauCandTM(Tau23PiCandidates_mcvertex, TrueTau23Pi_vertex, LOCAL_CandInd)")
-               .Define("EVT_CandMass",     "Tau23PiCandidates_mass.at(LOCAL_CandInd)")
-               .Define("EVT_CandPx",       "Tau23PiCandidates_px.at(LOCAL_CandInd)")
-               #.Define("EVT_CandPy",       "Tau23PiCandidates_py.at(LOCAL_CandInd)")
-               .Define("EVT_CandPz",       "Tau23PiCandidates_pz.at(LOCAL_CandInd)")
-               .Define("EVT_CandP",        "Tau23PiCandidates_p.at(LOCAL_CandInd)")
-               .Define("EVT_CandD0",       "Tau23PiCandidates_d0.at(LOCAL_CandInd)")
-               .Define("EVT_CandZ0",       "Tau23PiCandidates_z0.at(LOCAL_CandInd)")
+               #a candidate is found with a mass
+               .Define("CUT_CandInd",     "myFinalSel::selTauCand(Tau23PiCandidates_mass, Tau23PiCandidates_vertex, Vertex_chi2 )")
+               .Filter("CUT_CandInd>-1")
 
-               .Define("CUT_CandRho",      "if ((Tau23PiCandidates_rho1mass.at(LOCAL_CandInd)<1. && Tau23PiCandidates_rho2mass.at(LOCAL_CandInd)>0.5 && Tau23PiCandidates_rho2mass.at(LOCAL_CandInd)<1.0)|| (Tau23PiCandidates_rho2mass.at(LOCAL_CandInd)<0.9 && Tau23PiCandidates_rho1mass.at(LOCAL_CandInd)>0.5 && Tau23PiCandidates_rho1mass.at(LOCAL_CandInd)<1.)) return 1; else return 0;")
-               .Define("EVT_CandRho1Mass", "Tau23PiCandidates_rho1mass.at(LOCAL_CandInd)" )
-               .Define("EVT_CandRho2Mass", "Tau23PiCandidates_rho2mass.at(LOCAL_CandInd)")
+               .Define("CUT_CandRho",      "if ((Tau23PiCandidates_rho1mass.at(CUT_CandInd)<1. && Tau23PiCandidates_rho2mass.at(CUT_CandInd)>0.5 && Tau23PiCandidates_rho2mass.at(CUT_CandInd)<1.0)|| (Tau23PiCandidates_rho2mass.at(CUT_CandInd)<0.9 && Tau23PiCandidates_rho1mass.at(CUT_CandInd)>0.5 && Tau23PiCandidates_rho1mass.at(CUT_CandInd)<1.)) return 1; else return 0;")
+               .Filter("CUT_CandRho>0")
+
+               .Define("EVT_CandMass",     "Tau23PiCandidates_mass.at(CUT_CandInd)")
+               .Filter("EVT_CandMass<1.8")
+
+               .Define("LOCAL_CandVtxInd", "Tau23PiCandidates_vertex.at(CUT_CandInd)")
+               .Define("CUT_CandVtxThrustEmin", "Vertex_thrusthemis_emin.at(LOCAL_CandVtxInd)")
+               .Filter("CUT_CandVtxThrustEmin>0")
+               
+               .Define("EVT_CandN",        "float(Tau23PiCandidates_vertex.size())")
+               .Define("CUT_CandTruth",    "myFinalSel::selTauCandTM(Tau23PiCandidates_mcvertex, TrueTau23Pi_vertex, CUT_CandInd)")
+               .Define("EVT_CandPx",       "Tau23PiCandidates_px.at(CUT_CandInd)")
+               #.Define("EVT_CandPy",       "Tau23PiCandidates_py.at(CUT_CandInd)")
+               .Define("EVT_CandPz",       "Tau23PiCandidates_pz.at(CUT_CandInd)")
+               .Define("EVT_CandP",        "Tau23PiCandidates_p.at(CUT_CandInd)")
+               .Define("EVT_CandD0",       "Tau23PiCandidates_d0.at(CUT_CandInd)")
+               .Define("EVT_CandZ0",       "Tau23PiCandidates_z0.at(CUT_CandInd)")
+
+               
+               .Define("EVT_CandRho1Mass", "Tau23PiCandidates_rho1mass.at(CUT_CandInd)" )
+               .Define("EVT_CandRho2Mass", "Tau23PiCandidates_rho2mass.at(CUT_CandInd)")
+               
                .Define("EVT_CandVtxFD",    "Vertex_d2PV.at(LOCAL_CandVtxInd)")
                .Define("EVT_CandVtxFDErr", "Vertex_d2PVErr.at(LOCAL_CandVtxInd)")
                .Define("EVT_CandVtxChi2",  "Vertex_chi2.at(LOCAL_CandVtxInd)")
                .Define("EVT_MVA",  "MVA")
                
-               .Define("EVT_CandVtxThrustEmin", "float(Vertex_thrusthemis_emin.at(LOCAL_CandVtxInd))")
-               .Define("EVT_CandPion1P",          "Tau23PiCandidates_pion1p.at(LOCAL_CandInd)")
-               .Define("EVT_CandPion2P",          "Tau23PiCandidates_pion2p.at(LOCAL_CandInd)")
-               .Define("EVT_CandPion3P",          "Tau23PiCandidates_pion3p.at(LOCAL_CandInd)")
+               .Define("EVT_CandPion1P",          "Tau23PiCandidates_pion1p.at(CUT_CandInd)")
+               .Define("EVT_CandPion2P",          "Tau23PiCandidates_pion2p.at(CUT_CandInd)")
+               .Define("EVT_CandPion3P",          "Tau23PiCandidates_pion3p.at(CUT_CandInd)")
                
-               .Define("EVT_CandPion1D0",         "Tau23PiCandidates_pion1d0.at(LOCAL_CandInd)")
-               .Define("EVT_CandPion2D0",         "Tau23PiCandidates_pion2d0.at(LOCAL_CandInd)")
-               .Define("EVT_CandPion3D0",         "Tau23PiCandidates_pion3d0.at(LOCAL_CandInd)")
+               .Define("EVT_CandPion1D0",         "Tau23PiCandidates_pion1d0.at(CUT_CandInd)")
+               .Define("EVT_CandPion2D0",         "Tau23PiCandidates_pion2d0.at(CUT_CandInd)")
+               .Define("EVT_CandPion3D0",         "Tau23PiCandidates_pion3d0.at(CUT_CandInd)")
 
-               .Define("EVT_CandPion1Z0",         "Tau23PiCandidates_pion1z0.at(LOCAL_CandInd)")
-               .Define("EVT_CandPion2Z0",         "Tau23PiCandidates_pion2z0.at(LOCAL_CandInd)")
-               .Define("EVT_CandPion3Z0",         "Tau23PiCandidates_pion3z0.at(LOCAL_CandInd)")
-                       
+               .Define("EVT_CandPion1Z0",         "Tau23PiCandidates_pion1z0.at(CUT_CandInd)")
+               .Define("EVT_CandPion2Z0",         "Tau23PiCandidates_pion2z0.at(CUT_CandInd)")
+               .Define("EVT_CandPion3Z0",         "Tau23PiCandidates_pion3z0.at(CUT_CandInd)")
+
+               .Define("MVAVec", ROOT.computeModel, ())
+               .Define("EVT_MVA2", "MVAVec.at(0)")
+               #.Filter("EVT_MVA2>0.6")
+
            )
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
                 "CUT_CandTruth",
                 "CUT_CandRho",
+                "CUT_CandVtxThrustEmin",
                 "EVT_CandMass","EVT_CandRho1Mass","EVT_CandRho2Mass",
                 "EVT_CandN",
                 "EVT_CandVtxFD","EVT_CandVtxFDErr", "EVT_CandVtxChi2",
-                "EVT_CandPx","EVT_CandP","EVT_CandPz",##,"EVT_CandPz",
+                "EVT_CandPx","EVT_CandP","EVT_CandPz",##"EVT_CandPy",
                 "EVT_CandD0","EVT_CandZ0",
 
-                "EVT_MVA", "EVT_CandVtxThrustEmin",
+                "EVT_MVA", 
                 "EVT_CandPion1P","EVT_CandPion1D0","EVT_CandPion1Z0",
                 "EVT_CandPion2P","EVT_CandPion2D0","EVT_CandPion2Z0",
                 "EVT_CandPion3P","EVT_CandPion3D0","EVT_CandPion3Z0",
@@ -100,8 +120,17 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis_presel.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batch/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_presel.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batch/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/*.root"
 
+# python examples/FCCee/flavour/Bc2TauNu/analysis_presel.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/*.root"
+
+# python examples/FCCee/flavour/Bc2TauNu/analysis_presel.py p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/*.root"
+
+# python examples/FCCee/flavour/Bc2TauNu/analysis_presel.py p8_ee_Zbb_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zbb_ecm91/*.root"
+
+# python examples/FCCee/flavour/Bc2TauNu/analysis_presel.py p8_ee_Zcc_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zcc_ecm91/*.root"
+
+# python examples/FCCee/flavour/Bc2TauNu/analysis_presel.py p8_ee_Zuds_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zuds_ecm91/*.root"
 
 if __name__ == "__main__":
 

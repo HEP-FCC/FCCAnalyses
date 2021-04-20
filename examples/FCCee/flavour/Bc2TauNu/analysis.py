@@ -47,7 +47,15 @@ class analysis():
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Alias("Particle0", "Particle#0.index")
+               .Alias("Particle1", "Particle#1.index")
 
+               .Define("MC_PDG", "MCParticle::get_pdg(Particle)")
+               .Define("MC_n", "int(MC_PDG.size())")
+               .Define("MC_M1", "myUtils::get_MCMother1(Particle,Particle0)")
+               .Define("MC_M2", "myUtils::get_MCMother2(Particle,Particle0)")
+               .Define("MC_D1", "myUtils::get_MCDaughter1(Particle,Particle1)")
+               .Define("MC_D2", "myUtils::get_MCDaughter2(Particle,Particle1)")
+               
                .Define("RP_e",          "ReconstructedParticle::get_e(ReconstructedParticles)")
                .Define("RP_px",         "ReconstructedParticle::get_px(ReconstructedParticles)")
                .Define("RP_py",         "ReconstructedParticle::get_py(ReconstructedParticles)")
@@ -93,7 +101,10 @@ class analysis():
                .Define("MC_Vertex_ind",  "myUtils::get_MCindMCVertex(MCVertexObject)")
                .Define("MC_Vertex_ntrk", "myUtils::get_NTracksMCVertex(MCVertexObject)")
                .Define("MC_Vertex_n",    "int(MC_Vertex_x.size())")
-
+               .Define("MC_Vertex_PDG",  "myUtils::get_MCpdgMCVertex(MCVertexObject, Particle)")
+               .Define("MC_Vertex_PDGmother",  "myUtils::get_MCpdgMotherMCVertex(MCVertexObject, Particle)")
+               .Define("MC_Vertex_PDGgmother", "myUtils::get_MCpdgGMotherMCVertex(MCVertexObject, Particle)")
+               
                #Build Reco Vertex
                .Define("VertexObject", "myUtils::get_VertexObject(MCVertexObject,ReconstructedParticles,EFlowTrack_1,MCRecoAssociations0,MCRecoAssociations1)")
 
@@ -229,6 +240,7 @@ class analysis():
         branchList = ROOT.vector('string')()
         for branchName in [
 
+                "MC_PDG","MC_M1","MC_M2","MC_n","MC_D1","MC_D2",
                 "EVT_thrusthemis_emin", "EVT_thrusthemis_emax",
                 "EVT_Echarged_min", "EVT_Echarged_max",
                 "EVT_Eneutral_min", "EVT_Eneutral_max",
@@ -239,6 +251,8 @@ class analysis():
                 "MC_Vertex_x", "MC_Vertex_y", "MC_Vertex_z", 
                 "MC_Vertex_ntrk", "MC_Vertex_n",
                 
+                "MC_Vertex_PDG","MC_Vertex_PDGmother","MC_Vertex_PDGgmother",
+                
                 "Vertex_x", "Vertex_y", "Vertex_z",
                 "Vertex_xErr", "Vertex_yErr", "Vertex_zErr",
                 "Vertex_isPV", "Vertex_ntrk", "Vertex_chi2", "Vertex_n",
@@ -247,7 +261,7 @@ class analysis():
                 "Vertex_d2PV", "Vertex_d2PVx", "Vertex_d2PVy", "Vertex_d2PVz",
                 "Vertex_d2PVErr", "Vertex_d2PVxErr", "Vertex_d2PVyErr", "Vertex_d2PVzErr",
                 
-                "MVA",
+                "MVA","EVT_hasPV",
 
                 "TrueTau23Pi_vertex","TrueTau23Pi_d0","TrueTau23Pi_z0",
                 
@@ -258,9 +272,9 @@ class analysis():
                 #"Tau23PiCandidates_rho2px", "Tau23PiCandidates_rho2py", "Tau23PiCandidates_rho2pz",
                 "Tau23PiCandidates_rho2mass",
                 
-                "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1pz", "Tau23PiCandidates_pion1p", "Tau23PiCandidates_pion1q", "Tau23PiCandidates_pion1d0", "Tau23PiCandidates_pion1z0",
-                "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2pz", "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q", "Tau23PiCandidates_pion2d0", "Tau23PiCandidates_pion2z0",
-                "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3pz", "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q", "Tau23PiCandidates_pion3d0", "Tau23PiCandidates_pion3z0",
+                "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1py", "Tau23PiCandidates_pion1pz", "Tau23PiCandidates_pion1p", "Tau23PiCandidates_pion1q", "Tau23PiCandidates_pion1d0", "Tau23PiCandidates_pion1z0",
+                "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2py", "Tau23PiCandidates_pion2pz", "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q", "Tau23PiCandidates_pion2d0", "Tau23PiCandidates_pion2z0",
+                "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3py", "Tau23PiCandidates_pion3pz", "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q", "Tau23PiCandidates_pion3d0", "Tau23PiCandidates_pion3z0",
                 
                 #"TrueRho1M",
                 #"TrueRho2M",
@@ -281,9 +295,9 @@ class analysis():
 
 # python examples/FCCee/flavour/Bc2TauNu/analysis.py flat_ee_Zbb_Bu2TauNu.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis.py  "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_*" flat_ee_Zbb_Bc2TauNu.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis.py  flat_ee_Zbb_Bc2TauNu.root "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_*"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis.py  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91/events_026734131.root flat_ee_Zbb_Bc2TauNu.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis.py flat_ee_Zbb.root  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91/events_026734131.root
 
 
 
