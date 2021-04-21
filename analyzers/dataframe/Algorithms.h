@@ -126,6 +126,11 @@ namespace Algorithms{
   /// Get the invariant mass from a list of reconstructed particles
   float getMass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
+  /// if dir == 1. points to minimum hemis if dir == -1, points to maximum energy
+  ROOT::VecOps::RVec<float> getThrustPointing(ROOT::VecOps::RVec<float> in,
+					      ROOT::VecOps::RVec<float> rp_e,
+					      ROOT::VecOps::RVec<float> thrust,
+					      float dir);
 
 }
 #endif
