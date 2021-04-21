@@ -57,13 +57,14 @@ class analysis():
                #.Filter("CUT_CandVtxThrustEmin>0")
                
                .Define("EVT_CandN",        "float(Tau23PiCandidates_vertex.size())")
-               .Define("CUT_CandTruth",    "myFinalSel::selTauCandTM(Tau23PiCandidates_mcvertex, TrueTau23Pi_vertex, CUT_CandInd)")
+               .Define("CUT_CandTruth",    "myFinalSel::selTauCandTM(Tau23PiCandidates_mcvertex, TrueTau23PiBc_vertex, CUT_CandInd)")
                .Define("EVT_CandPx",       "Tau23PiCandidates_px.at(CUT_CandInd)")
                #.Define("EVT_CandPy",       "Tau23PiCandidates_py.at(CUT_CandInd)")
                .Define("EVT_CandPz",       "Tau23PiCandidates_pz.at(CUT_CandInd)")
                .Define("EVT_CandP",        "Tau23PiCandidates_p.at(CUT_CandInd)")
                .Define("EVT_CandD0",       "Tau23PiCandidates_d0.at(CUT_CandInd)")
                .Define("EVT_CandZ0",       "Tau23PiCandidates_z0.at(CUT_CandInd)")
+               .Define("EVT_CandAngleThrust",       "Tau23PiCandidates_anglethrust.at(CUT_CandInd)")
 
                
                .Define("EVT_CandRho1Mass", "Tau23PiCandidates_rho1mass.at(CUT_CandInd)" )
@@ -72,7 +73,6 @@ class analysis():
                .Define("EVT_CandVtxFD",    "Vertex_d2PV.at(LOCAL_CandVtxInd)")
                .Define("EVT_CandVtxFDErr", "Vertex_d2PVErr.at(LOCAL_CandVtxInd)")
                .Define("EVT_CandVtxChi2",  "Vertex_chi2.at(LOCAL_CandVtxInd)")
-               .Define("EVT_MVA",  "MVA")
                
                .Define("EVT_CandPion1P",          "Tau23PiCandidates_pion1p.at(CUT_CandInd)")
                .Define("EVT_CandPion2P",          "Tau23PiCandidates_pion2p.at(CUT_CandInd)")
@@ -124,9 +124,9 @@ class analysis():
                 "EVT_CandN",
                 "EVT_CandVtxFD","EVT_CandVtxFDErr", "EVT_CandVtxChi2",
                 "EVT_CandPx","EVT_CandP","EVT_CandPz",##"EVT_CandPy",
-                "EVT_CandD0","EVT_CandZ0",
+                "EVT_CandD0","EVT_CandZ0","EVT_CandAngleThrust",
 
-                "EVT_MVA", 
+                "EVT_MVA1", 
                 "EVT_MVA2", 
                 "EVT_CandPion1P","EVT_CandPion1D0","EVT_CandPion1Z0",
                 "EVT_CandPion2P","EVT_CandPion2D0","EVT_CandPion2Z0",
