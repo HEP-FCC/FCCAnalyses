@@ -120,6 +120,9 @@ namespace myUtils{
 									 ROOT::VecOps::RVec<int> recin,
 									 ROOT::VecOps::RVec<int> mcin);
 
+  ROOT::VecOps::RVec<float> get_Vertex_mass(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+					    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco);
+  
   ROOT::VecOps::RVec<float> get_Vertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
   
   ROOT::VecOps::RVec<float> get_Vertex_y(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
@@ -349,6 +352,11 @@ namespace myUtils{
 						      float eneg,
 						      float epos);
 
+  ///index ==1 -> positive angle == minimum energy
+  ///index ==0 -> negative angle == maximum energy
+  ROOT::VecOps::RVec<int> get_Vertex_thrusthemis(ROOT::VecOps::RVec<float> angle,
+						 int index);
+
 
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> build_rho(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 										       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
@@ -356,6 +364,15 @@ namespace myUtils{
 
   ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
 				     int index);
+  
+  ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+				   int index);
+
+  ROOT::VecOps::RVec<float> get_py(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+				   int index);
+
+  ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+				   int index);
 
   ROOT::VecOps::RVec<edm4hep::TrackState> get_truetrack(ROOT::VecOps::RVec<int> in,
 							ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
@@ -376,6 +393,10 @@ namespace myUtils{
 							    ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
   
 
-  
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_anglethrust(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								ROOT::VecOps::RVec<float> thrust);
+
+  int has_anglethrust_emin(ROOT::VecOps::RVec<float> angle);
+
 }
 #endif

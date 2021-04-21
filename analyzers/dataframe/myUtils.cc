@@ -80,6 +80,18 @@ int myUtils::hasPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex)
   return result;
 }
 
+ROOT::VecOps::RVec<float> myUtils::get_Vertex_mass(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco){
+
+  ROOT::VecOps::RVec<float> result;
+  for (auto &p:vertex){
+    ROOT::VecOps::RVec<int> reco_ind = p.reco_ind;
+    float mass = build_invmass(reco, reco_ind);
+    result.push_back(mass);
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> myUtils::get_Vertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
     ROOT::VecOps::RVec<float> result;
   for (auto &p:vertex)
@@ -1951,6 +1963,25 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_thrusthemis_angle(ROOT::VecOps::RV
   return result;
 }
 
+ROOT::VecOps::RVec<int> myUtils::get_Vertex_thrusthemis(ROOT::VecOps::RVec<float> angle,
+							int index){
+  ROOT::VecOps::RVec<int> result;
+  for (auto &p:angle){
+
+    //positive angle == min energy
+    if (index==1){
+      if( p>0.) result.push_back(1);
+      else result.push_back(0);
+    }
+    
+    else if (index==0){
+      if( p>0.) result.push_back(0);
+      else result.push_back(1);
+    }
+    else std::cout <<"unidentified index in myUtils::get_Vertex_thrusthemis" <<std::endl;
+  }
+  return result;
+}
 
 ROOT::VecOps::RVec<int> myUtils::get_Vertex_thrusthemis_emin(ROOT::VecOps::RVec<float> angle,
 							     float eneg,
@@ -2092,6 +2123,51 @@ ROOT::VecOps::RVec<float> myUtils::get_mass(ROOT::VecOps::RVec<ROOT::VecOps::RVe
   return result;
 }
 
+ROOT::VecOps::RVec<float> myUtils::get_px(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+					  int index){
 
-    
+  ROOT::VecOps::RVec<float> result;
+
+  for (auto &p:in)
+    result.push_back(p.at(index).momentum.x);
+  return result;
+}
+
+ROOT::VecOps::RVec<float> myUtils::get_py(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+					  int index){
+
+  ROOT::VecOps::RVec<float> result;
+
+  for (auto &p:in)
+    result.push_back(p.at(index).momentum.y);
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> myUtils::get_pz(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
+					  int index){
+
+  ROOT::VecOps::RVec<float> result;
+
+  for (auto &p:in)
+    result.push_back(p.at(index).momentum.z);
+  return result;
+}    
   
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_anglethrust(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								       ROOT::VecOps::RVec<float> thrust){
+  ROOT::VecOps::RVec<float> result;
+  TVector3 thrustvec(thrust.at(1),thrust.at(3),thrust.at(5));
+  for (auto &p:in){
+    TVector3 cand(p.particle.X(),p.particle.Y(),p.particle.Z());
+    result.push_back(cand.Angle(thrustvec));
+  }
+  return result;
+}
+
+
+int myUtils::has_anglethrust_emin(ROOT::VecOps::RVec<float> angle){
+  for (auto &p:angle)
+    if (p>0.)return 1;
+  return -1;
+}
