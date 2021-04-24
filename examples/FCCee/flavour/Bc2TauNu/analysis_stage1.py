@@ -34,14 +34,14 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.EnableImplicitMT(ncpu)
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" init done, about to run")
     #__________________________________________________________
     def run(self):
-        df2 = (self.df.Range(1000)        
-        #df2 = (self.df
+        #df2 = (self.df.Range(1000)        
+        df2 = (self.df
                #############################################
                ##          Aliases for # in python        ##
                #############################################
@@ -182,12 +182,14 @@ class analysis():
                .Define("EVT_ThrustEmax_E",         "EVT_thrusthemis0_e.at(0)")
                .Define("EVT_ThrustEmax_Echarged",  "EVT_thrusthemis0_e.at(1)")
                .Define("EVT_ThrustEmax_Eneutral",  "EVT_thrusthemis0_e.at(2)")
+               .Define("EVT_ThrustEmax_N",         "float(EVT_thrusthemis0_n.at(0))")
                .Define("EVT_ThrustEmax_Ncharged",  "float(EVT_thrusthemis0_n.at(1))")
                .Define("EVT_ThrustEmax_Nneutral",  "float(EVT_thrusthemis0_n.at(2))")
 
                .Define("EVT_ThrustEmin_E",         "EVT_thrusthemis1_e.at(0)")
                .Define("EVT_ThrustEmin_Echarged",  "EVT_thrusthemis1_e.at(1)")
                .Define("EVT_ThrustEmin_Eneutral",  "EVT_thrusthemis1_e.at(2)")
+               .Define("EVT_ThrustEmin_N",         "float(EVT_thrusthemis1_n.at(0))")
                .Define("EVT_ThrustEmin_Ncharged",  "float(EVT_thrusthemis1_n.at(1))")
                .Define("EVT_ThrustEmin_Nneutral",  "float(EVT_thrusthemis1_n.at(2))")
 
@@ -202,15 +204,15 @@ class analysis():
 
                
                ###Build MVA with only thrust info
-               .Define("MVAVec", ROOT.computeModel, ("EVT_ThrustEmin_E",          "EVT_ThrustEmax_E",
-                                                     "EVT_ThrustEmin_Echarged",   "EVT_ThrustEmax_Echarged",
-                                                     "EVT_ThrustEmin_Eneutral",   "EVT_ThrustEmax_Eneutral",
-                                                     "EVT_ThrustEmin_Ncharged",   "EVT_ThrustEmax_Ncharged",
-                                                     "EVT_ThrustEmin_Nneutral",   "EVT_ThrustEmax_Nneutral",
-                                                     "EVT_NtracksPV",        "EVT_NVertex",
-                                                     "EVT_NTau23Pi",         "EVT_ThrustEmin_NDV",
-                                                     "EVT_ThrustEmax_NDV",       "EVT_dPV2DVmin",
-                                                     "EVT_dPV2DVmax",        "EVT_dPV2DVave"))
+               .Define("MVAVec", ROOT.computeModel, ("EVT_ThrustEmin_E",        "EVT_ThrustEmax_E",
+                                                     "EVT_ThrustEmin_Echarged", "EVT_ThrustEmax_Echarged",
+                                                     "EVT_ThrustEmin_Eneutral", "EVT_ThrustEmax_Eneutral",
+                                                     "EVT_ThrustEmin_Ncharged", "EVT_ThrustEmax_Ncharged",
+                                                     "EVT_ThrustEmin_Nneutral", "EVT_ThrustEmax_Nneutral",
+                                                     "EVT_NtracksPV",           "EVT_NVertex",
+                                                     "EVT_NTau23Pi",            "EVT_ThrustEmin_NDV",
+                                                     "EVT_ThrustEmax_NDV",      "EVT_dPV2DVmin",
+                                                     "EVT_dPV2DVmax",           "EVT_dPV2DVave"))
                .Define("EVT_MVA1", "MVAVec.at(0)")
                .Filter("EVT_MVA1>0.6")
  
@@ -297,6 +299,7 @@ class analysis():
                 "EVT_ThrustEmin_E",          "EVT_ThrustEmax_E",
                 "EVT_ThrustEmin_Echarged",   "EVT_ThrustEmax_Echarged",
                 "EVT_ThrustEmin_Eneutral",   "EVT_ThrustEmax_Eneutral",
+                "EVT_ThrustEmin_N",          "EVT_ThrustEmax_N",                
                 "EVT_ThrustEmin_Ncharged",   "EVT_ThrustEmax_Ncharged",
                 "EVT_ThrustEmin_Nneutral",   "EVT_ThrustEmax_Nneutral",
                 "EVT_ThrustEmin_NDV",        "EVT_ThrustEmax_NDV",
@@ -353,13 +356,13 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py flat_ee_Zbb_Bc2TauNu.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py flat_ee_Zbb_Bu2TauNu.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bu2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py  flat_ee_Zbb_Bc2TauNu.root "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_*"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_*"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py flat_ee_Zbb.root  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91/events_026734131.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_stage1.root  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91/events_026734131.root
 
 
 

@@ -18,10 +18,12 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 
+MVAFilter="EVT_MVA2>0.6"
+
 ROOT.gInterpreter.ProcessLine('''
 TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT2", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_stage2.root");
 
-computeModel = TMVA::Experimental::Compute<20, float>(bdt);
+computeModel = TMVA::Experimental::Compute<22, float>(bdt);
 ''')
 
 
@@ -45,26 +47,28 @@ class analysis():
                #a candidate is found with a mass
                .Define("CUT_CandInd",     "myFinalSel::selTauCand(Tau23PiCandidates_mass, Tau23PiCandidates_vertex, Vertex_chi2 )")
                .Filter("CUT_CandInd>-1")
+               
+               .Define("CUT_CandTruth",   "myFinalSel::selTauCandTM(Tau23PiCandidates_mcvertex, TrueTau23PiBc_vertex, CUT_CandInd)")
+               .Define("CUT_CandTruth2",   "myFinalSel::selTauCandTM(Tau23PiCandidates_mcvertex, TrueTau23PiBu_vertex, CUT_CandInd)")
 
                .Define("CUT_CandRho",      "if ((Tau23PiCandidates_rho1mass.at(CUT_CandInd)<1. && Tau23PiCandidates_rho2mass.at(CUT_CandInd)>0.6 && Tau23PiCandidates_rho2mass.at(CUT_CandInd)<1.0)|| (Tau23PiCandidates_rho2mass.at(CUT_CandInd)<1. && Tau23PiCandidates_rho1mass.at(CUT_CandInd)>0.6 && Tau23PiCandidates_rho1mass.at(CUT_CandInd)<1.)) return 1; else return 0;")
-               #.Filter("CUT_CandRho>0")
+               .Filter("CUT_CandRho>0")
 
                .Define("EVT_CandMass",     "Tau23PiCandidates_mass.at(CUT_CandInd)")
                .Filter("EVT_CandMass<1.8")
 
                .Define("LOCAL_CandVtxInd", "Tau23PiCandidates_vertex.at(CUT_CandInd)")
                .Define("CUT_CandVtxThrustEmin", "Vertex_thrusthemis_emin.at(LOCAL_CandVtxInd)")
-               #.Filter("CUT_CandVtxThrustEmin>0")
+               .Filter("CUT_CandVtxThrustEmin>0")
                
-               .Define("EVT_CandN",        "float(Tau23PiCandidates_vertex.size())")
-               .Define("CUT_CandTruth",    "myFinalSel::selTauCandTM(Tau23PiCandidates_mcvertex, TrueTau23PiBc_vertex, CUT_CandInd)")
-               .Define("EVT_CandPx",       "Tau23PiCandidates_px.at(CUT_CandInd)")
-               #.Define("EVT_CandPy",       "Tau23PiCandidates_py.at(CUT_CandInd)")
-               .Define("EVT_CandPz",       "Tau23PiCandidates_pz.at(CUT_CandInd)")
-               .Define("EVT_CandP",        "Tau23PiCandidates_p.at(CUT_CandInd)")
-               .Define("EVT_CandD0",       "Tau23PiCandidates_d0.at(CUT_CandInd)")
-               .Define("EVT_CandZ0",       "Tau23PiCandidates_z0.at(CUT_CandInd)")
-               .Define("EVT_CandAngleThrust",       "Tau23PiCandidates_anglethrust.at(CUT_CandInd)")
+               .Define("EVT_CandN",           "float(Tau23PiCandidates_vertex.size())")
+               .Define("EVT_CandPx",          "Tau23PiCandidates_px.at(CUT_CandInd)")
+               .Define("EVT_CandPy",          "Tau23PiCandidates_py.at(CUT_CandInd)")
+               .Define("EVT_CandPz",          "Tau23PiCandidates_pz.at(CUT_CandInd)")
+               .Define("EVT_CandP",           "Tau23PiCandidates_p.at(CUT_CandInd)")
+               .Define("EVT_CandD0",          "Tau23PiCandidates_d0.at(CUT_CandInd)")
+               .Define("EVT_CandZ0",          "Tau23PiCandidates_z0.at(CUT_CandInd)")
+               .Define("EVT_CandAngleThrust", "Tau23PiCandidates_anglethrust.at(CUT_CandInd)")
 
                
                .Define("EVT_CandRho1Mass", "Tau23PiCandidates_rho1mass.at(CUT_CandInd)" )
@@ -86,16 +90,43 @@ class analysis():
                .Define("EVT_CandPion2Z0",         "Tau23PiCandidates_pion2z0.at(CUT_CandInd)")
                .Define("EVT_CandPion3Z0",         "Tau23PiCandidates_pion3z0.at(CUT_CandInd)")
 
-               .Define("MVAVec", ROOT.computeModel, ("EVT_CandMass", "EVT_CandRho1Mass", "EVT_CandRho2Mass", "EVT_CandN",
-                                                     "EVT_CandVtxFD","EVT_CandVtxChi2", "EVT_CandPx", "EVT_CandP",
-                                                     "EVT_CandPz", "EVT_CandD0", "EVT_CandZ0", "EVT_CandPion1P",
-                                                     "EVT_CandPion1D0", "EVT_CandPion1Z0", "EVT_CandPion2P", "EVT_CandPion2D0",
-                                                     "EVT_CandPion2Z0","EVT_CandPion3P", "EVT_CandPion3D0","EVT_CandPion3Z0"))
+               .Define("MVAVec", ROOT.computeModel, ("EVT_CandMass",
+                                                     "EVT_CandRho1Mass",
+                                                     "EVT_CandRho2Mass",
+                                                     "EVT_CandN",
+                                                     "EVT_CandVtxFD",
+                                                     "EVT_CandVtxChi2",
+                                                     "EVT_CandPx",
+                                                     "EVT_CandPy",
+                                                     "EVT_CandPz",
+                                                     "EVT_CandP",
+                                                     "EVT_CandD0",
+                                                     "EVT_CandZ0",
+                                                     "EVT_CandPion1P",
+                                                     "EVT_CandPion1D0",
+                                                     "EVT_CandPion1Z0",
+                                                     "EVT_CandPion2P",
+                                                     "EVT_CandPion2D0",
+                                                     "EVT_CandPion2Z0",
+                                                     "EVT_CandPion3P",
+                                                     "EVT_CandPion3D0",
+                                                     "EVT_CandPion3Z0",
+                                                     "EVT_CandAngleThrust"))
                .Define("EVT_MVA2", "MVAVec.at(0)")
-               #.Filter("EVT_MVA2>0.6")
+               .Filter(MVAFilter)
+
+
+               .Define("EVT_minRhoMass", "if (EVT_CandRho1Mass<EVT_CandRho2Mass) return EVT_CandRho1Mass; else return EVT_CandRho2Mass;")
+               .Define("EVT_maxRhoMass", "if (EVT_CandRho1Mass>EVT_CandRho2Mass) return EVT_CandRho1Mass; else return EVT_CandRho2Mass;")
+               .Define("EVT_ThrustDiff_E",        "EVT_ThrustEmax_E-EVT_ThrustEmin_E")
+               .Define("EVT_ThrustDiff_N",        "EVT_ThrustEmax_N-EVT_ThrustEmin_N")
+               .Define("EVT_ThrustDiff_Echarged", "EVT_ThrustEmax_Echarged-EVT_ThrustEmin_Echarged")
+               .Define("EVT_ThrustDiff_Eneutral", "EVT_ThrustEmax_Eneutral-EVT_ThrustEmin_Eneutral")
+               .Define("EVT_ThrustDiff_Ncharged", "EVT_ThrustEmax_Ncharged-EVT_ThrustEmin_Ncharged")
+               .Define("EVT_ThrustDiff_Nneutral", "EVT_ThrustEmax_Nneutral-EVT_ThrustEmin_Nneutral")
+
                
                .Define("LOCAL_CandMCVtxInd", "Tau23PiCandidates_mcvertex.at(CUT_CandInd)")
-
                .Define("MCVertex_PDG", "MC_Vertex_PDG.at(LOCAL_CandMCVtxInd)")
                .Define("MCVertex_PDGmother", "MC_Vertex_PDGmother.at(LOCAL_CandMCVtxInd)")
                .Define("MCVertex_PDGgmother", "MC_Vertex_PDGgmother.at(LOCAL_CandMCVtxInd)")
@@ -103,37 +134,41 @@ class analysis():
                .Define("MCVertex_nmother", "int(MC_Vertex_PDGmother.at(LOCAL_CandMCVtxInd).size())")
                .Define("MCVertex_ngmother", "int(MC_Vertex_PDGgmother.at(LOCAL_CandMCVtxInd).size())")
 
-
-
-
-               #.Define("MC_PDG", "MC_PDG")
-               #.Define("MC_n",   "MC_n")
-               #.Define("MC_M1",  "MC_M1")
-               #.Define("MC_M2",  "MC_M2")
-               #.Define("MC_D1",  "MC_D1")
-               #.Define("MC_D2",  "MC_D2")
-               
+            
            )
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
                 "CUT_CandTruth",
+                "CUT_CandTruth2",
                 "CUT_CandRho",
                 "CUT_CandVtxThrustEmin",
-                "EVT_CandMass","EVT_CandRho1Mass","EVT_CandRho2Mass",
-                "EVT_CandN",
-                "EVT_CandVtxFD","EVT_CandVtxFDErr", "EVT_CandVtxChi2",
-                "EVT_CandPx","EVT_CandP","EVT_CandPz",##"EVT_CandPy",
-                "EVT_CandD0","EVT_CandZ0","EVT_CandAngleThrust",
 
-                "EVT_MVA1", 
-                "EVT_MVA2", 
+                "EVT_ThrustEmin_E",          "EVT_ThrustEmax_E",
+                "EVT_ThrustEmin_Echarged",   "EVT_ThrustEmax_Echarged",
+                "EVT_ThrustEmin_Eneutral",   "EVT_ThrustEmax_Eneutral",
+                "EVT_ThrustEmin_Ncharged",   "EVT_ThrustEmax_Ncharged",
+                "EVT_ThrustEmin_Nneutral",   "EVT_ThrustEmax_Nneutral",
+                "EVT_ThrustEmin_NDV",        "EVT_ThrustEmax_NDV",
+                "EVT_ThrustDiff_E",          "EVT_ThrustDiff_N",
+                "EVT_ThrustDiff_Echarged",   "EVT_ThrustDiff_Eneutral",
+                "EVT_ThrustDiff_Ncharged",   "EVT_ThrustDiff_Nneutral",
+                
+                "EVT_CandN",
+                "EVT_CandMass","EVT_CandRho1Mass","EVT_CandRho2Mass",
+                "EVT_CandVtxFD","EVT_CandVtxFDErr", "EVT_CandVtxChi2",
+                "EVT_CandPx","EVT_CandP","EVT_CandPz","EVT_CandPy",
+                "EVT_CandD0","EVT_CandZ0","EVT_CandAngleThrust",
+                "EVT_minRhoMass", "EVT_maxRhoMass",
+                "EVT_MVA1", "EVT_MVA2",
+                
                 "EVT_CandPion1P","EVT_CandPion1D0","EVT_CandPion1Z0",
                 "EVT_CandPion2P","EVT_CandPion2D0","EVT_CandPion2Z0",
                 "EVT_CandPion3P","EVT_CandPion3D0","EVT_CandPion3Z0",
                 
                 "MCVertex_PDG","MCVertex_PDGmother","MCVertex_PDGgmother","MCVertex_n","MCVertex_nmother","MCVertex_ngmother",
                 "MC_PDG","MC_M1","MC_M2","MC_n","MC_D1","MC_D2",
+                "TrueTau23PiBc_vertex",  "TrueTau23PiBu_vertex",  
 
         ]:
             branchList.push_back(branchName)
@@ -146,27 +181,27 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batch/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Analysis_stage1/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batch/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Analysis_stage1/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batch/p8_ee_Zbb_ecm91/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Analysis_stage1/p8_ee_Zbb_ecm91/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zcc_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batch/p8_ee_Zcc_ecm91/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zcc_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Analysis_stage1/p8_ee_Zcc_ecm91/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zuds_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batch/p8_ee_Zuds_ecm91/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zuds_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Analysis_stage1/p8_ee_Zuds_ecm91/*.root"
 
-#########################################3
+#########################################
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Training_4stage2/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Training_4stage2/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zbb_ecm91/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Training_4stage2/p8_ee_Zbb_ecm91/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zcc_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zcc_ecm91/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zcc_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Training_4stage2/p8_ee_Zcc_ecm91/*.root"
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zuds_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples_batchTraining/p8_ee_Zuds_ecm91/*.root"
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zuds_ecm91.root "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Batch_Training_4stage2/p8_ee_Zuds_ecm91/*.root"
 
 if __name__ == "__main__":
 
@@ -182,6 +217,9 @@ if __name__ == "__main__":
     fileListRoot = ROOT.vector('string')()
     nevents=0
 
+    if "_Training_" in sys.argv[2]:
+        MVAFilter="EVT_MVA2>-1.0"
+    
     if len(sys.argv)==3 and "*" in sys.argv[2]:
         import glob
         filelist = glob.glob(sys.argv[2])
