@@ -2168,6 +2168,6 @@ ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_anglethrust(ROOT::Vec
 
 int myUtils::has_anglethrust_emin(ROOT::VecOps::RVec<float> angle){
   for (auto &p:angle)
-    if (p>0.)return 1;
+    if (cos(p)>0.)return 1;
   return -1;
 }
