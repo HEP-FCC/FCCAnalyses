@@ -7,7 +7,7 @@ delphesVersion = "3.4.2"
 energy         = 91.0
 collider       = "FCC-ee"
 inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Analysis_stage2/"
-inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
+#inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
@@ -33,6 +33,8 @@ scaleSig=100.
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
 selections['Flavour']   = ["sel0","sel1"]#,"sel2","sel3","sel4"]
+selections['FlavourCocktail']   = ["sel0","sel1"]#,"sel2","sel3","sel4"]
+selections['FlavourCocktail2']   = ["sel0","sel1"]#,"sel2","sel3","sel4"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: MVA1>0.8, MVA2>0.8"
@@ -43,7 +45,11 @@ extralabel['sel4'] = "Selection: MVA1>0.99, MVA2>0.99"
 
 colors = {}
 colors['Z_flavour'] = ROOT.kRed
-colors['Z_bb'] = ROOT.kBlue+1
+colors['Z_bb'] = ROOT.kBlue
+colors['Z_bb_Bu'] = ROOT.kBlue+1
+colors['Z_bb_Bd'] = ROOT.kBlue+2
+colors['Z_bb_Bs'] = ROOT.kBlue+3
+colors['Z_bb_Lb'] = ROOT.kBlue+4
 colors['Z_cc'] = ROOT.kGreen+1
 colors['Z_uds'] = ROOT.kGreen+2
 colors['Z_Bu'] = ROOT.kGreen+3
@@ -55,11 +61,37 @@ plots['Flavour'] = {'signal':{'Z_flavour':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHA
                                    'Z_uds':['p8_ee_Zuds_ecm91'],
                                    'Z_Bu':['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU']
                                    }
-           }
+                    }
+
+plots['FlavourCocktail'] = {'signal':{'Z_flavour':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
+                        'backgrounds':{'Z_bb_Bu':['p8_ee_Zbb_ecm91_EvtGen_BuCocktail'],
+                                       'Z_bb_Bd':['p8_ee_Zbb_ecm91_EvtGen_BdCocktail'],
+                                       'Z_bb_Bs':['p8_ee_Zbb_ecm91_EvtGen_BsCocktail'],
+                                       'Z_bb_Lb':['p8_ee_Zbb_ecm91_EvtGen_LbCocktail'],
+                                       'Z_cc':['p8_ee_Zcc_ecm91'],
+                                       'Z_uds':['p8_ee_Zuds_ecm91'],
+                                       'Z_Bu':['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU']
+                                   }
+                            }
+
+plots['FlavourCocktail2'] = {'signal':{'Z_flavour':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
+                             'backgrounds':{'Z_bb':['p8_ee_Zbb_ecm91_EvtGen_BuCocktail',
+                                                    'p8_ee_Zbb_ecm91_EvtGen_BdCocktail',
+                                                    'p8_ee_Zbb_ecm91_EvtGen_BsCocktail',
+                                                    'p8_ee_Zbb_ecm91_EvtGen_LbCocktail'],
+                                            'Z_cc':['p8_ee_Zcc_ecm91'],
+                                            'Z_uds':['p8_ee_Zuds_ecm91'],
+                                            'Z_Bu':['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU']
+                                   }
+                            }
 
 legend = {}
 legend['Z_flavour'] = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
 legend['Z_bb'] = 'Z#rightarrow b#bar{b}'
+legend['Z_bb_Bu'] = 'Z#rightarrow b#bar{b} Bu'
+legend['Z_bb_Bd'] = 'Z#rightarrow b#bar{b} Bd'
+legend['Z_bb_Bs'] = 'Z#rightarrow b#bar{b} Bs'
+legend['Z_bb_Lb'] = 'Z#rightarrow b#bar{b} Lb'
 legend['Z_cc'] = 'Z#rightarrow c#bar{c}'
 legend['Z_uds'] = 'Z#rightarrow q#bar{q}'
 legend['Z_Bu'] = 'B_{u}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'

@@ -13,10 +13,17 @@ fraction=1.
 
 inputana="analysis_stage1.py"
 
-process_list=['p8_ee_Zbb_ecm91',
-              'p8_ee_Zcc_ecm91',
-              'p8_ee_Zuds_ecm91'
+process_list=[#'p8_ee_Zbb_ecm91',
+              #'p8_ee_Zcc_ecm91',
+              'p8_ee_Zuds_ecm91',
+ #             ]
+#process_list=[
+              'p8_ee_Zbb_ecm91_EvtGen_BuCocktail',
+              'p8_ee_Zbb_ecm91_EvtGen_BdCocktail',
+              'p8_ee_Zbb_ecm91_EvtGen_BsCocktail',
+              'p8_ee_Zbb_ecm91_EvtGen_LbCocktail'
               ]
+
 myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
 myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=200 ,outDir=outdir, inputana=inputana)
 

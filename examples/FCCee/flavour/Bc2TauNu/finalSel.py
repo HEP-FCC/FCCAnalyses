@@ -11,15 +11,19 @@ baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNt
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp_v03.json"
 
 
-baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp_training.json"
+#baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
+#procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp_training.json"
 
 
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91',
               'p8_ee_Zcc_ecm91',
-              'p8_ee_Zuds_ecm91'
+              'p8_ee_Zuds_ecm91',
+              'p8_ee_Zbb_ecm91_EvtGen_BuCocktail',
+              'p8_ee_Zbb_ecm91_EvtGen_BdCocktail',
+              'p8_ee_Zbb_ecm91_EvtGen_BsCocktail',
+              'p8_ee_Zbb_ecm91_EvtGen_LbCocktail',
               ]
 
 define_list={
@@ -60,7 +64,8 @@ variables = {
     "EVT_CandVtxFD"          :{"name":"EVT_CandVtxFD","title":"Fligth distance to PV (mm)","bin":100,"xmin":0.,"xmax":10.},
     "EVT_CandAngleThrust"    :{"name":"EVT_CandAngleThrust","title":"Angle between candidate and thrust","bin":100,"xmin":0.,"xmax":2.},
     "EVT_CandAngleThrust_2"  :{"name":"EVT_CandAngleThrust","title":"Angle between candidate and thrust","bin":50,"xmin":0.,"xmax":0.5},
-    "EVT_MVA1"               :{"name":"EVT_CandAngleThrust","title":"Angle between candidate and thrust","bin":50,"xmin":0.,"xmax":0.5},
+    "EVT_MVA1"               :{"name":"EVT_MVA1","title":"MVA1 score","bin":100,"xmin":0.6,"xmax":1.},
+    "EVT_MVA1"               :{"name":"EVT_MVA2","title":"MVA2 score","bin":100,"xmin":0.6,"xmax":1.},
 
 }
 
