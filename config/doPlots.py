@@ -352,6 +352,10 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     Text.SetTextSize(0.025)
     Text.DrawLatex(0.18, 0.68, text)
 
+    text = '#bf{#it{' + 'Signal scale=' + str(scaleSig)+'}}'
+    Text.SetTextSize(0.025)
+    if scaleSig!=1:Text.DrawLatex(0.18, 0.63, text)
+
     canvas.RedrawAxis()
     #canvas.Update()
     canvas.GetFrame().SetBorderSize( 12 )

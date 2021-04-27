@@ -33,11 +33,11 @@ define_list={
 }
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
-cut_list = {"sel0":"EVT_MVA1>0.8 && EVT_MVA2>0.8",
-            "sel1":"EVT_MVA1>0.9 && EVT_MVA2>0.9",
-            #"sel2":"EVT_MVA>0.95 && EVT_MVA2>0.95",
-            #"sel3":"EVT_MVA>0.98 && EVT_MVA2>0.98",
-            #"sel4":"EVT_MVA>0.99 && EVT_MVA2>0.99",
+cut_list = {#"sel0":"EVT_MVA1>0.8 && EVT_MVA2>0.8",
+            #"sel1":"EVT_MVA1>0.9 && EVT_MVA2>0.9",
+            "sel2":"EVT_MVA1>0.95 && EVT_MVA2>0.95",
+            "sel3":"EVT_MVA1>0.98 && EVT_MVA2>0.98",
+            "sel4":"EVT_MVA1>0.99 && EVT_MVA2>0.99",
             }
 
 ###Dictionary for the ouput variable/hitograms. The key is the name of the variable in the output files. "name" is the name of the variable in the input file, "title" is the x-axis label of the histogram, "bin" the number of bins of the histogram, "xmin" the minimum x-axis value and "xmax" the maximum x-axis value.
@@ -59,13 +59,14 @@ variables = {
     "EVT_ThrustDiff_E"       :{"name":"EVT_ThrustDiff_E","title":"Hemisphere difference energy [GeV]","bin":120,"xmin":0.,"xmax":60},
     "EVT_ThrustDiff_Echarged":{"name":"EVT_ThrustDiff_Echarged","title":"Hemisphere difference charged energy [GeV]","bin":40,"xmin":-20.,"xmax":20},
     "EVT_ThrustDiff_Eneutral":{"name":"EVT_ThrustDiff_Eneutral","title":"Hemisphere difference neutral energy [GeV]","bin":40,"xmin":-20.,"xmax":20},
-    "EVT_ThrustDiff_Ncharged":{"name":"EVT_ThrustDiff_Ncharged","title":"Hemisphere difference charged energy [GeV]","bin":40,"xmin":-20.,"xmax":20},
-    "EVT_ThrustDiff_Nneutral":{"name":"EVT_ThrustDiff_Nneutral","title":"Hemisphere difference neutral energy [GeV]","bin":40,"xmin":-20.,"xmax":20},
+    "EVT_ThrustDiff_N"       :{"name":"EVT_ThrustDiff_N","title":"Hemisphere difference multiplicity","bin":40,"xmin":-20.,"xmax":20},
+    "EVT_ThrustDiff_Ncharged":{"name":"EVT_ThrustDiff_Ncharged","title":"Hemisphere difference charged multiplicity","bin":40,"xmin":-20.,"xmax":20},
+    "EVT_ThrustDiff_Nneutral":{"name":"EVT_ThrustDiff_Nneutral","title":"Hemisphere difference neutral multiplicity","bin":40,"xmin":-20.,"xmax":20},
     "EVT_CandVtxFD"          :{"name":"EVT_CandVtxFD","title":"Fligth distance to PV (mm)","bin":100,"xmin":0.,"xmax":10.},
     "EVT_CandAngleThrust"    :{"name":"EVT_CandAngleThrust","title":"Angle between candidate and thrust","bin":100,"xmin":0.,"xmax":2.},
     "EVT_CandAngleThrust_2"  :{"name":"EVT_CandAngleThrust","title":"Angle between candidate and thrust","bin":50,"xmin":0.,"xmax":0.5},
     "EVT_MVA1"               :{"name":"EVT_MVA1","title":"MVA1 score","bin":100,"xmin":0.6,"xmax":1.},
-    "EVT_MVA1"               :{"name":"EVT_MVA2","title":"MVA2 score","bin":100,"xmin":0.6,"xmax":1.},
+    "EVT_MVA2"               :{"name":"EVT_MVA2","title":"MVA2 score","bin":100,"xmin":0.6,"xmax":1.},
 
 }
 
