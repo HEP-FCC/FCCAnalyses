@@ -5,10 +5,10 @@ import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Analysis_stage2/"
+baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/27042021/Analysis_stage2/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp_v03.json"
+procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_spring2021.json"
 
 
 #baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
@@ -20,11 +20,41 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91',
               'p8_ee_Zcc_ecm91',
               'p8_ee_Zuds_ecm91',
-              'p8_ee_Zbb_ecm91_EvtGen_BuCocktail',
-              'p8_ee_Zbb_ecm91_EvtGen_BdCocktail',
-              'p8_ee_Zbb_ecm91_EvtGen_BsCocktail',
-              'p8_ee_Zbb_ecm91_EvtGen_LbCocktail',
+              
+              'p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Bd2DDs',
+              'p8_ee_Zbb_ecm91_EvtGen_Bd2DTauNu',
+              'p8_ee_Zbb_ecm91_EvtGen_Bd2Dst3Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Bd2DstDs',
+              'p8_ee_Zbb_ecm91_EvtGen_Bd2DstDsst',
+              'p8_ee_Zbb_ecm91_EvtGen_Bd2DstTauNu',
+
+              'p8_ee_Zbb_ecm91_EvtGen_Bs2Ds3Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Bs2DsDs',
+              'p8_ee_Zbb_ecm91_EvtGen_Bs2DsTauNu',
+              'p8_ee_Zbb_ecm91_EvtGen_Bs2Dsst3Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDs',
+              'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst',
+              'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstTauNu',
+              
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2D03Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2D0Ds',
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2D0TauNu',
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst03Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Ds',
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Dsst',
+              'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0TauNu',
+
+              'p8_ee_Zbb_ecm91_EvtGen_Lb2Lc3Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Lb2LcDs',
+              'p8_ee_Zbb_ecm91_EvtGen_Lb2LcTauNu',
+              'p8_ee_Zbb_ecm91_EvtGen_Lb2Lcst3Pi',
+              'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstDs',
+              'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstDsst',
+              'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstTauNu',
               ]
+
+#process_list=['p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst']
 
 define_list={
 #    "EVT_minRhoMass":"if (EVT_CandRho1Mass<EVT_CandRho2Mass) return EVT_CandRho1Mass; else return EVT_CandRho2Mass;",
@@ -35,7 +65,7 @@ define_list={
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
 cut_list = {#"sel0":"EVT_MVA1>0.8 && EVT_MVA2>0.8",
             #"sel1":"EVT_MVA1>0.9 && EVT_MVA2>0.9",
-            "sel2":"EVT_MVA1>0.95 && EVT_MVA2>0.95",
+            #"sel2":"EVT_MVA1>0.95 && EVT_MVA2>0.95",
             "sel3":"EVT_MVA1>0.98 && EVT_MVA2>0.98",
             "sel4":"EVT_MVA1>0.99 && EVT_MVA2>0.99",
             }
@@ -71,7 +101,7 @@ variables = {
 }
 
 ###Number of CPUs to use
-NUM_CPUS = 2
+NUM_CPUS = 4
 
 ###This part is standard to all analyses
 import config.runDataFrameFinal as rdf

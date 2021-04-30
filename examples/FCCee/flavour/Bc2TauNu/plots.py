@@ -6,12 +6,12 @@ ana_tex        = "Z #rightarrow q#bar{q}"
 delphesVersion = "3.4.2"
 energy         = 91.0
 collider       = "FCC-ee"
-inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Analysis_stage2/"
+inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/27042021/Analysis_stage2/"
 #inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['nostack']
-outdir         = '/eos/home-h/helsens/www/FCC/ee/flavour/Bc2TauNu/22042021/'
+outdir         = '/eos/home-h/helsens/www/FCC/ee/flavour/Bc2TauNu/27042021/'
 variables = [ "EVT_CandMass",
               "EVT_ThrustEmin_E","EVT_ThrustEmax_E",
               "EVT_ThrustEmin_Echarged", "EVT_ThrustEmax_Echarged",
@@ -33,9 +33,9 @@ variables = [ "EVT_CandMass",
 scaleSig=1.
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['Inclusive']      = ["sel0","sel1","sel2","sel3","sel4"]
-selections['Cocktail']       = ["sel0","sel1","sel2","sel3","sel4"]
-selections['CocktailMerged'] = ["sel0","sel1","sel2","sel3","sel4"]
+selections['Inclusive']      = ["sel0","sel1","sel2"]#,"sel3","sel4"]
+#selections['Cocktail']       = ["sel0","sel1","sel2"]#,"sel3","sel4"]
+selections['ExclusiveMerged'] = ["sel0","sel1","sel2"]#,"sel3","sel4"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: MVA1>0.8, MVA2>0.8"
@@ -76,14 +76,42 @@ plots['Cocktail'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU'
                                     }
                      }
 
-plots['CocktailMerged'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
-                           'backgrounds':{'Z_bb_B':['p8_ee_Zbb_ecm91_EvtGen_BuCocktail',
-                                                    'p8_ee_Zbb_ecm91_EvtGen_BdCocktail',
-                                                    'p8_ee_Zbb_ecm91_EvtGen_BsCocktail',
-                                                    'p8_ee_Zbb_ecm91_EvtGen_LbCocktail'],
-                                          'Z_cc':['p8_ee_Zcc_ecm91'],
-                                          'Z_uds':['p8_ee_Zuds_ecm91'],
-                                          'Z_Bu':['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU']
+plots['ExclusiveMerged'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
+                            'backgrounds':{'Z_bb_B':['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bd2DDs',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bd2DTauNu',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bd2Dst3Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bd2DstDs',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bd2DstDsst',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bd2DstTauNu',
+
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bs2Ds3Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bs2DsDs',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bs2DsTauNu',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bs2Dsst3Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDs',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstTauNu',
+              
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bu2D03Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bu2D0Ds',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bu2D0TauNu',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst03Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Ds',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Dsst',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0TauNu',
+                                                     
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Lb2Lc3Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcDs',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcTauNu',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Lb2Lcst3Pi',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstDs',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstDsst',
+                                                     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstTauNu',
+                                                    ],
+                                           'Z_cc':['p8_ee_Zcc_ecm91'],
+                                           'Z_uds':['p8_ee_Zuds_ecm91'],
+                                           'Z_Bu':['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU']
                                           }
                            }
 
