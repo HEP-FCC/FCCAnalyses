@@ -1,4 +1,4 @@
-#include "ExternalRecombiner.hh"
+#include "ExternalRecombiner.h"
 
 void ExternalRecombiner::recombine(const fastjet::PseudoJet & pa, const fastjet::PseudoJet & pb, fastjet::PseudoJet & pab) const {
 

@@ -8,7 +8,7 @@
 #include "fastjet/EECambridgePlugin.hh"
 #include "fastjet/JadePlugin.hh"
 
-#include "ExternalRecombiner.hh"
+#include "ExternalRecombiner.h"
 
 using namespace JetClustering;
 

@@ -88,8 +88,11 @@ class analysis():
                .Define("jets_jade_px",        "JetClusteringUtils::get_px(jets_jade)")
                .Define("jets_jade_py",        "JetClusteringUtils::get_py(jets_jade)")
                .Define("jets_jade_pz",        "JetClusteringUtils::get_pz(jets_jade)")
-               .Define("jets_jade_btag",      "JetClusteringUtils::get_btag(jets_jade, Particle, 0.80)")
-               .Define("jets_jade_btag_true",      "JetClusteringUtils::get_btag(jets_jade, Particle, 1.0)")
+               .Define("jets_jade_flavour",   "JetTaggingUtils::get_flavour(jets_jade, Particle)")
+               .Define("jets_jade_btag",      "JetTaggingUtils::get_btag(jets_jade_flavour, 0.80)")
+               .Define("jets_jade_btag_true", "JetTaggingUtils::get_btag(jets_jade_flavour, 1.0)")
+               .Define("jets_jade_ctag",      "JetTaggingUtils::get_ctag(jets_jade_flavour, 0.10)")
+               .Define("jets_jade_ctag_true",      "JetTaggingUtils::get_ctag(jets_jade_flavour, 1.0)")
                
                .Define("JET_btag",       "ReconstructedParticle::getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
                .Define("EVT_nbtag",      "ReconstructedParticle::getJet_ntags(JET_btag)")
@@ -161,6 +164,8 @@ class analysis():
                 "jets_jade_px",
                 "jets_jade_py",
                 "jets_jade_pz",
+                "jets_jade_ctag",
+                "jets_jade_ctag_true",
                 "jets_jade_btag",
                 "jets_jade_btag_true",
                 "jetconstituents_jade",

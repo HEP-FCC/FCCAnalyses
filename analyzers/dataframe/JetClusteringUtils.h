@@ -80,8 +80,7 @@ namespace JetClusteringUtils{
   bool check(unsigned int n, int exclusive, float cut);
 
   fastjet::RecombinationScheme recomb_scheme(int recombination);
-
-  ROOT::VecOps::RVec<bool> get_btag(ROOT::VecOps::RVec<fastjet::PseudoJet> in, ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin, float efficiency);
+  
   ///@}
 }
 
