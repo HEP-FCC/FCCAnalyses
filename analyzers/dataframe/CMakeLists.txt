@@ -30,6 +30,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					Algorithms.h
 					JetClustering.h
 					JetClusteringUtils.h
+					JetTaggingUtils.h
 					ValenciaPlugin.h
 					VertexingUtils.h
 					VertexFitterSimple.h
