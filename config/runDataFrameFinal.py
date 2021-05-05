@@ -74,6 +74,7 @@ class runDataFrameFinal():
             if not os.path.isfile(fin):
                 print ('file ',fin,'  does not exist. Try if it is a directory as it was processed with batch')
             else:
+                print ('open file ',fin)
                 tfin = ROOT.TFile.Open(fin)
                 tfin.cd()
                 found=False

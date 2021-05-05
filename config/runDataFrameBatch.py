@@ -15,7 +15,7 @@ class runDataFrameBatch():
         self.output_list  = outlist
 
     #__________________________________________________________
-    def run(self,ncpu=10, fraction=1, chunks=1, outDir='', inputana="analysis.py"):
+    def run(self,ncpu=10, fraction=1, chunks=1, outDir='', inputana="analysis.py", comp = "group_u_FCC.local_gen"):
         print ("EnableImplicitMT: {}".format(ncpu))
 
         if not os.path.exists(outDir) and outDir!='': 
@@ -75,12 +75,13 @@ class runDataFrameBatch():
 
             chunkList=[]
             eventList=[]
-            nFiles=int(len(filelist)/chunks)+1
+            #nFiles=int(len(filelist)/chunks)+1
+            nFiles=chunks
             counterFiles=0
             counterEvents=0
             counterFilesTot=0
             counterChunks=0
-            print ('Will chunk ',len(filelist),' files in ',chunks,' jobs of ',nFiles,' n files each')
+            print ('Will chunk ',len(filelist),' files in ',int(nevents_real/nFiles),' jobs of ',nFiles,' n files each')
             
             print ("Create list object for chunk ",counterChunks,"  ",)
             fileListRoot = ROOT.vector('string')()
@@ -131,15 +132,11 @@ class runDataFrameBatch():
                 frun.write('unset LD_LIBRARY_PATH\n')
                 frun.write('unset PYTHONHOME\n')
                 frun.write('unset PYTHONPATH\n')
-                #frun.write('source /afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses/mySetup.sh\n')
-                #frun.write('source /cvmfs/fcc.cern.ch/sw/latest/setup.sh\n')
-                frun.write('source /cvmfs/sw.hsf.org/spackages/linux-centos7-broadwell/gcc-8.3.0/key4hep-stack-2021-03-26-ch6gml3x3wk67ydbiekh7yx7bmr7nmil/setup.sh\n')
+                frun.write('source /cvmfs/sw.hsf.org/key4hep/setup.sh\n')
                 frun.write('export PYTHONPATH=/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses:$PYTHONPATH\n')
                 frun.write('export LD_LIBRARY_PATH=/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses/install/lib:$LD_LIBRARY_PATH\n')
                 frun.write('export ROOT_INCLUDE_PATH=/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH\n')
                 frun.write('export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH\n')
-                frun.write('spack load acts@5.0.0 arch=linux-centos7-x86_64\n')
-                frun.write('spack load py-pyyaml\n')
                 frun.write('export LD_LIBRARY_PATH=/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCeePhysicsPerformance/case-studies/flavour/dataframe/install/lib:$LD_LIBRARY_PATH\n')
                 frun.write('export ROOT_INCLUDE_PATH=/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCeePhysicsPerformance/case-studies/flavour/dataframe/install/include/FCCAnalysesFlavour:$ROOT_INCLUDE_PATH\n')
 
@@ -178,8 +175,8 @@ class runDataFrameBatch():
             frun_condor.write('requirements   = ( (OpSysAndVer =?= "CentOS7") && (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n')
             frun_condor.write('on_exit_remove = (ExitBySignal == False) && (ExitCode == 0)\n')
             frun_condor.write('max_retries    = 3\n')
-            frun_condor.write('+JobFlavour    = "longlunch"\n')
-            frun_condor.write('+AccountingGroup = "group_u_FCC.local_gen"\n')
+            frun_condor.write('+JobFlavour    = "workday"\n')
+            frun_condor.write('+AccountingGroup = "{}"\n'.format(comp))
             frun_condor.write('RequestCpus = %s\n'%ncpu)
             frun_condor.write('queue filename matching files %s\n'%condor_file_str)
             frun_condor.close()
