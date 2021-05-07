@@ -18,7 +18,7 @@ process_list=['p8_ee_Zbb_ecm91',
               'p8_ee_Zuds_ecm91',
               ]
 
-myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list, comp="group_u_ATLAST3.all")
+myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
 myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana)
 
 

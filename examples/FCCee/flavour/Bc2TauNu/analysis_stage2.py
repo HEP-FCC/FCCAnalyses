@@ -153,7 +153,11 @@ class analysis():
                 "EVT_ThrustDiff_E",          "EVT_ThrustDiff_N",
                 "EVT_ThrustDiff_Echarged",   "EVT_ThrustDiff_Eneutral",
                 "EVT_ThrustDiff_Ncharged",   "EVT_ThrustDiff_Nneutral",
-                
+                "EVT_Thrust_Mag",
+                "EVT_Thrust_X",  "EVT_Thrust_XErr",
+                "EVT_Thrust_Y",  "EVT_Thrust_YErr",
+                "EVT_Thrust_Z",  "EVT_Thrust_ZErr",
+
                 "EVT_CandN",
                 "EVT_CandMass","EVT_CandRho1Mass","EVT_CandRho2Mass",
                 "EVT_CandVtxFD","EVT_CandVtxFDErr", "EVT_CandVtxChi2",

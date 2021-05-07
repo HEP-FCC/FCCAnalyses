@@ -5,7 +5,7 @@ import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/27042021/Analysis_stage2/"
+baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_01/Analysis_stage2/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_spring2021_IDEA.json"
@@ -63,11 +63,11 @@ define_list={
 }
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
-cut_list = {#"sel0":"EVT_MVA1>0.8 && EVT_MVA2>0.8",
-            "sel1":"EVT_MVA1>0.9 && EVT_MVA2>0.9",
-            "sel2":"EVT_MVA1>0.95 && EVT_MVA2>0.95",
-            "sel3":"EVT_MVA1>0.98 && EVT_MVA2>0.98",
-            "sel4":"EVT_MVA1>0.99 && EVT_MVA2>0.99",
+cut_list = {"sel0":"EVT_MVA1>0.8 && EVT_MVA2>0.8",
+            #"sel1":"EVT_MVA1>0.9 && EVT_MVA2>0.9",
+            #"sel2":"EVT_MVA1>0.95 && EVT_MVA2>0.95",
+            #"sel3":"EVT_MVA1>0.98 && EVT_MVA2>0.98",
+            #"sel4":"EVT_MVA1>0.99 && EVT_MVA2>0.99",
             }
 
 ###Dictionary for the ouput variable/hitograms. The key is the name of the variable in the output files. "name" is the name of the variable in the input file, "title" is the x-axis label of the histogram, "bin" the number of bins of the histogram, "xmin" the minimum x-axis value and "xmax" the maximum x-axis value.

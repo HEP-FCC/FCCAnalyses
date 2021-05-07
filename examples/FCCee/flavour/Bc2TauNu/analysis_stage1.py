@@ -202,6 +202,15 @@ class analysis():
                .Define("EVT_ThrustEmin_NDV", "float(myUtils::get_Npos(Vertex_thrust_angle))")
                .Define("EVT_ThrustEmax_NDV", "float(myUtils::get_Nneg(Vertex_thrust_angle))")
 
+               .Define("EVT_Thrust_Mag",  "EVT_thrust.at(0)")
+               .Define("EVT_Thrust_X",    "EVT_thrust.at(1)")
+               .Define("EVT_Thrust_XErr", "EVT_thrust.at(2)")
+               .Define("EVT_Thrust_Y",    "EVT_thrust.at(3)")
+               .Define("EVT_Thrust_YErr", "EVT_thrust.at(4)")
+               .Define("EVT_Thrust_Z",    "EVT_thrust.at(5)")
+               .Define("EVT_Thrust_ZErr", "EVT_thrust.at(6)")
+
+
                
                ###Build MVA with only thrust info
                .Define("MVAVec", ROOT.computeModel, ("EVT_ThrustEmin_E",        "EVT_ThrustEmax_E",
@@ -303,7 +312,11 @@ class analysis():
                 "EVT_ThrustEmin_Ncharged",   "EVT_ThrustEmax_Ncharged",
                 "EVT_ThrustEmin_Nneutral",   "EVT_ThrustEmax_Nneutral",
                 "EVT_ThrustEmin_NDV",        "EVT_ThrustEmax_NDV",
-                
+                "EVT_Thrust_Mag",
+                "EVT_Thrust_X",  "EVT_Thrust_XErr",
+                "EVT_Thrust_Y",  "EVT_Thrust_YErr",
+                "EVT_Thrust_Z",  "EVT_Thrust_ZErr",
+
                 "EVT_NtracksPV", "EVT_NVertex", "EVT_NTau23Pi",
                 
                 "EVT_dPV2DVmin","EVT_dPV2DVmax","EVT_dPV2DVave",

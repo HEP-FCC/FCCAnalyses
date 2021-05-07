@@ -6,12 +6,11 @@ ana_tex        = "Z #rightarrow q#bar{q}"
 delphesVersion = "3.4.2"
 energy         = 91.0
 collider       = "FCC-ee"
-inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/27042021/Analysis_stage2/"
-#inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
+inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_01/Analysis_stage2/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['nostack']
-outdir         = '/eos/home-h/helsens/www/FCC/ee/flavour/Bc2TauNu/27042021/'
+outdir         = '/eos/home-h/helsens/www/FCC/ee/flavour/Bc2TauNu/spring2021/prod_01/'
 variables = [ "EVT_CandMass",
               "EVT_ThrustEmin_E","EVT_ThrustEmax_E",
               "EVT_ThrustEmin_Echarged", "EVT_ThrustEmax_Echarged",
@@ -33,9 +32,10 @@ variables = [ "EVT_CandMass",
 scaleSig=1.
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['Inclusive']      = ["sel0","sel1","sel2"]#,"sel3","sel4"]
-#selections['Cocktail']       = ["sel0","sel1","sel2"]#,"sel3","sel4"]
-selections['ExclusiveMerged'] = ["sel0","sel1","sel2"]#,"sel3","sel4"]
+selections['Inclusive']       = ["sel1","sel2","sel3","sel4"]
+selections['ExclusiveMerged'] = ["sel1","sel2","sel3","sel4"]
+selections['Inclusive']       = ["sel0"]
+selections['ExclusiveMerged'] = ["sel0"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: MVA1>0.8, MVA2>0.8"
@@ -65,16 +65,7 @@ plots['Inclusive'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU
                                      }
                       }
 
-plots['Cocktail'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
-                     'backgrounds':{'Z_bb_Bu':['p8_ee_Zbb_ecm91_EvtGen_BuCocktail'],
-                                    'Z_bb_Bd':['p8_ee_Zbb_ecm91_EvtGen_BdCocktail'],
-                                    'Z_bb_Bs':['p8_ee_Zbb_ecm91_EvtGen_BsCocktail'],
-                                    'Z_bb_Lb':['p8_ee_Zbb_ecm91_EvtGen_LbCocktail'],
-                                    'Z_cc':['p8_ee_Zcc_ecm91'],
-                                    'Z_uds':['p8_ee_Zuds_ecm91'],
-                                    'Z_Bu':['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU']
-                                    }
-                     }
+
 
 plots['ExclusiveMerged'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
                             'backgrounds':{'Z_bb_B':['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
@@ -119,10 +110,6 @@ legend = {}
 legend['Z_Bc']    = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
 legend['Z_bb']    = 'Z#rightarrow b#bar{b}'
 legend['Z_bb_B']  = 'Z#rightarrow b#bar{b} B_{u}+B_{d}+B_{s}+L_{b}'
-legend['Z_bb_Bu'] = 'Z#rightarrow b#bar{b} B_{u}'
-legend['Z_bb_Bd'] = 'Z#rightarrow b#bar{b} B_{d}'
-legend['Z_bb_Bs'] = 'Z#rightarrow b#bar{b} B_{s}'
-legend['Z_bb_Lb'] = 'Z#rightarrow b#bar{b} L_{b}'
 legend['Z_cc']    = 'Z#rightarrow c#bar{c}'
 legend['Z_uds']   = 'Z#rightarrow q#bar{q}'
 legend['Z_Bu']    = 'B_{u}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
