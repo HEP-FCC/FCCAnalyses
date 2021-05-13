@@ -18,6 +18,8 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 
+MVAFilter="EVT_MVA1>0.6"
+
 
 ROOT.gInterpreter.ProcessLine('''
 TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_vtx.root");
@@ -40,7 +42,7 @@ class analysis():
         print (" init done, about to run")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df.Range(1000)        
+        #df2 = (self.df.Range(10)        
         df2 = (self.df
                #############################################
                ##          Aliases for # in python        ##
@@ -195,12 +197,13 @@ class analysis():
 
 
                .Define("Vertex_thrust_angle",   "myUtils::get_Vertex_thrusthemis_angle(VertexObject, RecoPartPIDAtVertex, EVT_thrust)")
+               .Define("DVertex_thrust_angle",  "myUtils::get_DVertex_thrusthemis_angle(VertexObject, RecoPartPIDAtVertex, EVT_thrust)")
                ###0 == negative angle==max energy , 1 == positive angle == min energy
                .Define("Vertex_thrusthemis_emin",    "myUtils::get_Vertex_thrusthemis(Vertex_thrust_angle, 1)")
                .Define("Vertex_thrusthemis_emax",    "myUtils::get_Vertex_thrusthemis(Vertex_thrust_angle, 0)")
 
-               .Define("EVT_ThrustEmin_NDV", "float(myUtils::get_Npos(Vertex_thrust_angle))")
-               .Define("EVT_ThrustEmax_NDV", "float(myUtils::get_Nneg(Vertex_thrust_angle))")
+               .Define("EVT_ThrustEmin_NDV", "float(myUtils::get_Npos(DVertex_thrust_angle))")
+               .Define("EVT_ThrustEmax_NDV", "float(myUtils::get_Nneg(DVertex_thrust_angle))")
 
                .Define("EVT_Thrust_Mag",  "EVT_thrust.at(0)")
                .Define("EVT_Thrust_X",    "EVT_thrust.at(1)")
@@ -211,7 +214,11 @@ class analysis():
                .Define("EVT_Thrust_ZErr", "EVT_thrust.at(6)")
 
 
-               
+               .Define("DV_tracks", "myUtils::get_pseudotrack(VertexObject,RecoPartPIDAtVertex)")
+
+               .Define("DV_d0",            "myUtils::get_trackd0(DV_tracks)")
+               .Define("DV_z0",            "myUtils::get_trackz0(DV_tracks)")
+
                ###Build MVA with only thrust info
                .Define("MVAVec", ROOT.computeModel, ("EVT_ThrustEmin_E",        "EVT_ThrustEmax_E",
                                                      "EVT_ThrustEmin_Echarged", "EVT_ThrustEmax_Echarged",
@@ -223,7 +230,7 @@ class analysis():
                                                      "EVT_ThrustEmax_NDV",      "EVT_dPV2DVmin",
                                                      "EVT_dPV2DVmax",           "EVT_dPV2DVave"))
                .Define("EVT_MVA1", "MVAVec.at(0)")
-               .Filter("EVT_MVA1>0.6")
+               .Filter(MVAFilter)
  
                .Define("Tau23PiCandidates_mass",    "myUtils::getFCCAnalysesComposite_mass(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_q",       "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
@@ -334,7 +341,7 @@ class analysis():
                 "Vertex_d2PV", "Vertex_d2PVx", "Vertex_d2PVy", "Vertex_d2PVz",
                 "Vertex_d2PVErr", "Vertex_d2PVxErr", "Vertex_d2PVyErr", "Vertex_d2PVzErr",
                 "Vertex_mass",
-                
+                "DV_d0","DV_z0",
                 "EVT_MVA1",
 
                 "TrueTau23PiBc_vertex","TrueTau23PiBc_d0","TrueTau23PiBc_z0",
@@ -369,7 +376,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root
 
 # python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bu2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root
 
@@ -392,6 +399,10 @@ if __name__ == "__main__":
     print ("Create dataframe object from ", )
     fileListRoot = ROOT.vector('string')()
     nevents=0
+
+    print("===============================", sys.argv[2])
+    if "_training" in sys.argv[2]:
+        MVAFilter="EVT_MVA1>-1.0"
 
     if len(sys.argv)==3 and "*" in sys.argv[2]:
         import glob

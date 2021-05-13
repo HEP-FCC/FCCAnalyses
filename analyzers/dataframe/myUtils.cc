@@ -20,6 +20,17 @@
 
 using namespace myUtils;
 
+float myUtils::get_d0(TVector3 x, TVector3 p){
+  float D = x[1]*p[0]/sqrt(p[0]*p[0]+p[1]*p[1])-x[0]*p[1]/sqrt(p[0]*p[0]+p[1]*p[1]);
+  return D;
+}
+
+float myUtils::get_z0(TVector3 x, TVector3 p){
+  float Z = x[2] - p[2]/sqrt(p[0]*p[0]+p[1]*p[1])*sqrt(x[0]*x[0] + x[1]*x[1] - pow(get_d0(x,p),2));
+  return Z;
+}
+
+
 int myUtils::get_Npos(ROOT::VecOps::RVec<float> in){
   int result=0;
   for(auto &p:in)
@@ -1179,6 +1190,68 @@ ROOT::VecOps::RVec<edm4hep::TrackState> myUtils::get_truetrack(ROOT::VecOps::RVe
   return result;
 }
 
+
+ROOT::VecOps::RVec<edm4hep::TrackState> myUtils::get_pseudotrack(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+  float norm = 1e-3;   // to convert from mm to meters 
+  for (auto & p: vertex){
+    if (p.vertex.primary>0)continue;
+    edm4hep::TrackState track;
+    TVector3 vertexFB( p.vertex.position.x * norm,
+		       p.vertex.position.y * norm,
+		       p.vertex.position.z * norm);
+    TLorentzVector pseudop;
+    float pseudopq=0.;
+    for (auto &q:p.reco_ind){
+      TLorentzVector pseudotmp;
+      pseudotmp.SetXYZM(recop.at(q).momentum.x,
+			recop.at(q).momentum.y,
+			recop.at(q).momentum.z,
+			recop.at(q).mass);
+      pseudop+=pseudotmp;
+      pseudopq+=recop.at(q).charge;
+    }
+
+    //std::cout<<"px, py, pz= " << pseudop.Px() << "  "<< pseudop.Py()<<"  "<<pseudop.Pz()<<std::endl;
+    //std::cout<<"x, y, z=    " << vertexFB.X() << "  "<< vertexFB.Y()<<"  "<<vertexFB.Z()<<std::endl;
+    //std::cout <<"charge="<<pseudopq<<std::endl;
+    
+    TVector3 momentum ( pseudop.Px(),pseudop.Py(),pseudop.Pz());
+    
+    TVectorD track_param = VertexFitterSimple::XPtoPar( vertexFB, momentum, pseudopq );
+
+
+    track.D0        = track_param[0] * 1e3 ; // from meters to mm
+    track.phi       = track_param[1];
+    track.omega     = track_param[2] / ( 0.5*1e3 ) ; // C from Franco = rho/2, and convert from m-1 to mm-1
+
+    
+    // need to change here, because the TracSTate of edm4heo currently use
+    // the wrong sign !
+    track.omega = -track.omega ;
+
+    track.Z0        = track_param[3] * 1e3  ;   // from meters to mm
+    track.tanLambda = track_param[4];
+
+    track.referencePoint.x = vertexFB[0];
+    track.referencePoint.y = vertexFB[1];
+    track.referencePoint.z = vertexFB[2];
+
+
+    //    std::cout <<"mag field D0, Z0    =  "<<track.D0<<"  "<<track.Z0<<std::endl;
+    // std::cout <<"NO mag field D0, Z0 =  "<<get_d0(vertexFB, momentum)*1e3<<"  "<<get_z0(vertexFB, momentum)*1e3<<std::endl;
+
+    track.D0        =  get_d0(vertexFB, momentum)*1e3; // from meters to mm
+    track.Z0        =  get_z0(vertexFB, momentum)*1e3 ;   // from meters to mm
+
+    
+    result.push_back(track);
+  }
+  return result;
+}
+
+
 ROOT::VecOps::RVec<edm4hep::TrackState> myUtils::getFCCAnalysesComposite_track(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 									       ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   ROOT::VecOps::RVec<edm4hep::TrackState> result;
@@ -1209,6 +1282,8 @@ ROOT::VecOps::RVec<edm4hep::TrackState> myUtils::getFCCAnalysesComposite_track(R
     track.referencePoint.y = vertexFB[1];
     track.referencePoint.z = vertexFB[2];
 
+    track.D0        =  get_d0(vertexFB, momentum)*1e3; // from meters to mm
+    track.Z0        =  get_z0(vertexFB, momentum)*1e3 ;   // from meters to mm
 
     
     result.push_back(track);
@@ -1962,6 +2037,27 @@ ROOT::VecOps::RVec<float> myUtils::get_Vertex_thrusthemis_angle(ROOT::VecOps::RV
   }
   return result;
 }
+
+ROOT::VecOps::RVec<float> myUtils::get_DVertex_thrusthemis_angle(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+								ROOT::VecOps::RVec<float> thrust){
+  ROOT::VecOps::RVec<float> result;
+
+  for (auto &p:vertex){
+    if (p.vertex.primary>0)continue;
+    ROOT::VecOps::RVec<int> reco_ind = p.reco_ind;
+    TLorentzVector tlv;
+    for (auto &i:reco_ind){
+      TLorentzVector tlvtmp = ReconstructedParticle::get_tlv(recop.at(i));
+      tlv+=tlvtmp;
+    }
+
+    float angle = Algorithms::getAxisCosTheta(thrust, tlv.Px(), tlv.Py(), tlv.Pz());
+    result.push_back(angle);
+  }
+  return result;
+}
+
 
 ROOT::VecOps::RVec<int> myUtils::get_Vertex_thrusthemis(ROOT::VecOps::RVec<float> angle,
 							int index){

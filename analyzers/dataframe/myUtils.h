@@ -105,6 +105,8 @@ namespace myUtils{
   };
 
 
+  ROOT::VecOps::RVec<edm4hep::TrackState> get_pseudotrack(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
 
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_tau23pi(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
@@ -159,6 +161,10 @@ namespace myUtils{
 
   std::vector<std::vector<int>> get_Vertex_ind(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
+  float get_d0(TVector3 x, TVector3 p);
+  float get_z0(TVector3 x, TVector3 p);
+
+  
   ROOT::VecOps::RVec<TVector3> get_MCVertex(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
 
   ROOT::VecOps::RVec<float> get_MCVertex_x(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex);
@@ -347,6 +353,10 @@ namespace myUtils{
   ROOT::VecOps::RVec<float> get_Vertex_thrusthemis_angle(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 							 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 							 ROOT::VecOps::RVec<float> thrust);
+
+  ROOT::VecOps::RVec<float> get_DVertex_thrusthemis_angle(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							  ROOT::VecOps::RVec<float> thrust);
   
   ROOT::VecOps::RVec<int> get_Vertex_thrusthemis_emin(ROOT::VecOps::RVec<float> angle,
 						      float eneg,

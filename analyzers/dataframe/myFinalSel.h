@@ -17,5 +17,25 @@ namespace myFinalSel{
 		   ROOT::VecOps::RVec<int> truevertex,
 		   int CandInd);
 
+  float get_min(ROOT::VecOps::RVec<float> in,
+		float val);
+  float get_max(ROOT::VecOps::RVec<float> in,
+		float val);
+  float get_ave(ROOT::VecOps::RVec<float> in,
+		float val);
+
+
+  float get_min(ROOT::VecOps::RVec<float> in,
+		ROOT::VecOps::RVec<int> ispv,
+		int index);
+  float get_max(ROOT::VecOps::RVec<float> in,
+		ROOT::VecOps::RVec<int> ispv,
+		int index);
+  float get_ave(ROOT::VecOps::RVec<float> in,
+		ROOT::VecOps::RVec<int> ispv,
+		int index);
+
+
+
 }
 #endif

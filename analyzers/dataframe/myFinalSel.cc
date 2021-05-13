@@ -34,3 +34,94 @@ int myFinalSel::selTauCandTM(ROOT::VecOps::RVec<int> mcvertex,
   return 0;
   
 }
+
+
+float myFinalSel::get_min(ROOT::VecOps::RVec<float> in,
+			  float val){
+
+  float min=99999999.;
+  for (auto &p:in){
+    if (abs(p-val)<0.000000001)
+      continue;
+    if (p<min)min=p;
+
+  }
+  return min;
+}
+
+float myFinalSel::get_max(ROOT::VecOps::RVec<float> in,
+			  float val){
+
+  float max=-9999999.;
+  for (auto &p:in){
+    if (abs(p-val)<0.000000001)
+      continue;
+    if (p>max)max=p;
+
+  }
+  return max;
+}
+
+float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
+			  float val){
+
+  float ave=0.;
+  float aven=0.;
+
+  for (auto &p:in){
+    if (abs(p-val)<0.000000001)
+      continue;
+    
+    ave+=p;
+    aven+=1.;
+  }
+  if (aven>0.)
+    return ave/aven;
+  return -999999.;
+}
+
+
+float myFinalSel::get_min(ROOT::VecOps::RVec<float> in,
+			  ROOT::VecOps::RVec<int> ispv,
+			  int index){
+  float min = 9999999.;
+
+  for (size_t i = 0; i < in.size(); ++i){
+    if (ispv.at(i)>0)continue;
+    if (index==i)continue;
+    if (in.at(i)<min)min=in.at(i);
+  }
+  return min;
+}
+float myFinalSel::get_max(ROOT::VecOps::RVec<float> in,
+			  ROOT::VecOps::RVec<int> ispv,
+			  int index){
+  float max = -9999999.;
+
+  for (size_t i = 0; i < in.size(); ++i){
+    if (ispv.at(i)>0)continue;
+    if (index==i)continue;
+    if (in.at(i)>max)max=in.at(i);
+  }
+  return max;
+}
+
+
+float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
+			  ROOT::VecOps::RVec<int> ispv,
+			  int index){
+
+  float ave=0.;
+  float aven=0.;
+  for (size_t i = 0; i < in.size(); ++i){
+    if (ispv.at(i)>0)continue;
+    if (index==i)continue;
+    
+    ave+=in.at(i);
+    aven+=1.;
+  }
+  if (aven>0.)
+    return ave/aven;
+  return -999999.;
+}
+

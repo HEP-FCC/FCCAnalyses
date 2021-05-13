@@ -5,7 +5,7 @@ import config.runDataFrameBatch as rdf
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/spring2021/IDEA/"
-outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_01/Batch_Analysis_stage1/"
+outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_02/Batch_Analysis_stage1/"
 NUM_CPUS=8
 output_list=[]
 
@@ -19,7 +19,7 @@ process_list=['p8_ee_Zbb_ecm91',
               ]
 
 myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana)
+myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
 
 
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
@@ -56,12 +56,12 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
 
               ]
 
-#myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-#myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
+myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
+myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana)
 
 
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
               'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU'
               ]
-#myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-#myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=100 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
+myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
+myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=100 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
