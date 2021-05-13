@@ -578,7 +578,8 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
         // add the following term to the chi2 :
         TVectorD dx_beamspot = x - BeamSpotPos ;
         Double_t chi2_bsc = BeamSpotCovI.Similarity( dx_beamspot );
-        Chi2 += chi2_bsc -3;
+        //Chi2 += chi2_bsc -3;
+        Chi2 += chi2_bsc ;
 
       }
 
