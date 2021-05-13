@@ -29,13 +29,21 @@ This represents a set functions and utilities to perfom vertexing from a list of
 
 namespace VertexFitterSimple{
 
-  /// Vertex (code from Franco Bedeschi): passing the recoparticles
+  /// Vertex (code from Franco Bedeschi): passing the recoparticles. Units for the beamspot constraint: mum
   VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary, 
 						   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-						   ROOT::VecOps::RVec<edm4hep::TrackState> alltracks ) ;
+						   ROOT::VecOps::RVec<edm4hep::TrackState> alltracks,
+						   bool BeamSpotConstraint = false,
+						   double sigmax=0., double sigmay=0., double sigmaz=0.,
+                                                   double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
 
-  /// Vertex (code from Franco Bedeschi): passing the tracks:
-  VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks );
+
+  /// Vertex (code from Franco Bedeschi): passing the tracks. Units for the beamspot constraint: mum
+  VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+						      bool BeamSpotConstraint = false,		
+						      double sigmax=0., double sigmay=0., double sigmaz=0., 
+                                                      double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
+
   
   Double_t FastRv(TVectorD p1, TVectorD p2) ;
   TMatrixDSym RegInv3(TMatrixDSym &Smat0) ;
