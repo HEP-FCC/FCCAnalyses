@@ -325,7 +325,7 @@ ROOT::VecOps::RVec<bool> ReconstructedParticle::getJet_btag(ROOT::VecOps::RVec<i
   ROOT::VecOps::RVec<bool> result;
   //std::cout << "========================new event=======================" <<std::endl;
   for (size_t i = 0; i < index.size(); ++i) {
-    result.push_back(values.at(pid.at(index.at(i)).parameters_begin +1));
+    result.push_back(values.at(pid.at(index.at(i)).parameters_begin));
     
     //std::cout << pid.at(index.at(i)).parameters_begin << "  ==  " << pid.at(index.at(i)).parameters_end << std::endl;
     //for (unsigned j = pid.at(index.at(i)).parameters_begin; j != pid.at(index.at(i)).parameters_end; ++j) {

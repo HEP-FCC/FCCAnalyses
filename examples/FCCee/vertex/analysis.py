@@ -20,6 +20,8 @@ print ('fccana   ',_fcc)
 #    /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zuds_IDEAtrkCov.root
 #    ( these events were generated at (0,0,0) i.e. no vertex smearing
 #
+# Example file from spring2021, with vertex smearing :
+#    /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zuds_ecm91/events_125841058.root
 
 
 class analysis():
@@ -45,15 +47,6 @@ class analysis():
                # number of tracks
                .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
-               # Select tracks with d0 and z0 significance < 3 sigmas
-		   # note: d0 and z0 are defined w.r.t. (0,0,0)
-		   # hence do not use such criteria to select primary tracks
-		   # if the events were generated with a vertex distribution
-               .Define("SelTracks",  "VertexingUtils::selTracks(0.,3.,0.,3.)( ReconstructedParticles, EFlowTrack_1)")
-               .Define("nSeltracks",  "ReconstructedParticle::get_n(SelTracks)")
-               # Reconstruct the vertex from these tracks :
-               .Define("VertexObject",  "VertexFitterSimple::VertexFitter( 1, SelTracks, EFlowTrack_1 )")
-               .Define("Vertex",        "VertexingUtils::get_VertexData( VertexObject )")    # primary vertex, in mm
                
                # Select primary tracks based on the matching to MC
 		  # This can be used  to select primary tracks when the
@@ -63,9 +56,16 @@ class analysis():
                .Define("PrimaryTracks",  "VertexingUtils::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
                .Define("nPrimaryTracks", "ReconstructedParticle::get_n(PrimaryTracks)")
 
-               ## Reconstruct the vertex from these primary tracks :
+               # Reconstruct the vertex from these primary tracks :
                .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
                .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
+
+               # Idem, but adding the beam-spot constraint to the vertex fitter
+                  # At the Z peak, the beam-spot size is ( 4.5 mum, 20 nm, 0.3 mm) 
+		  # The beam-spot dimensions are passed in mum :
+               .Define("VertexObject_primaryTracks_BSC",  "VertexFitterSimple::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1, true, 4.5, 20e-3, 300) ")
+               .Define("Vertex_primaryTracks_BSC",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks_BSC )")   # primary vertex, in mm
+
 
                #Run the Acts AMVF vertex finder
                .Define("VertexObject_actsFinder","VertexFinderActs::VertexFinderAMVF( EFlowTrack_1)")
@@ -73,9 +73,6 @@ class analysis():
                .Define("nPrimaryTracks_actsFinder", "VertexingUtils::get_VertexNtrk(VertexObject_actsFinder)")
 
                #Run the Acts full Billoir vertex fitter
-               .Define("VertexObject_actsFitter","VertexFitterActs::VertexFitterFullBilloir(SelTracks, EFlowTrack_1)")
-               .Define("Vertex_actsFitter",   "VertexingUtils::get_VertexData( VertexObject_actsFitter )")   # primary vertex, in mm
-
                .Define("VertexObject_primaryTracks_actsFitter","VertexFitterActs::VertexFitterFullBilloir(PrimaryTracks, EFlowTrack_1)")
                .Define("Vertex_primaryTracks_actsFitter", "VertexingUtils::get_VertexData( VertexObject_primaryTracks_actsFitter )")   # primary vertex, in mm
 
@@ -89,15 +86,16 @@ class analysis():
         for branchName in [
                 "MC_PrimaryVertex",
                 "ntracks",
-                "nSeltracks",
-                "Vertex",
                 "nPrimaryTracks",
-                "Vertex_primaryTracks",     # on Zuds: both track selections lead to very similar results for the vertex
+                "Vertex_primaryTracks",     
+                "Vertex_primaryTracks_BSC",     
 
-                "nPrimaryTracks_actsFinder",
-                "Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
-                "Vertex_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
-                "Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
+                #"nPrimaryTracks_actsFinder",
+		#
+                # commented out temporarily, very slow !?
+                #
+                #"Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
+                #"Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
 
 
                 ]:
