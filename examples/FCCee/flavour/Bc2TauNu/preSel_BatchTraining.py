@@ -11,7 +11,7 @@ output_list=[]
 
 ##To produce variables for MVA stage 1 training
 inputana="analysis_stage1.py"
-outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_02/Batch_Training_4stage1/"
+outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_03/Batch_Training_4stage1/"
 
 fraction=1.
 

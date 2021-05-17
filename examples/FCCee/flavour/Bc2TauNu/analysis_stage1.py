@@ -23,7 +23,6 @@ MVAFilter="EVT_MVA1>0.6"
 
 ROOT.gInterpreter.ProcessLine('''
 TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_vtx.root");
-
 computeModel = TMVA::Experimental::Compute<18, float>(bdt);
 ''')
 
@@ -42,7 +41,7 @@ class analysis():
         print (" init done, about to run")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df.Range(10)        
+        #df2 = (self.df.Range(100)
         df2 = (self.df
                #############################################
                ##          Aliases for # in python        ##
@@ -376,7 +375,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList)
 
 # example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003834121.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003907469.root
 
 # python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bu2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root
 

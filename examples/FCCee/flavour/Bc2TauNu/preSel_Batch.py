@@ -5,7 +5,7 @@ import config.runDataFrameBatch as rdf
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/spring2021/IDEA/"
-outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_02/Batch_Analysis_stage1/"
+outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Batch_Analysis_stage1/"
 NUM_CPUS=8
 output_list=[]
 
@@ -13,7 +13,8 @@ fraction=1.
 
 inputana="analysis_stage1.py"
 
-process_list=['p8_ee_Zbb_ecm91',
+process_list=['p8_ee_Zbb_ecm91_EvtGen',
+              'p8_ee_Zbb_ecm91',
               'p8_ee_Zcc_ecm91',
               'p8_ee_Zuds_ecm91',
               ]

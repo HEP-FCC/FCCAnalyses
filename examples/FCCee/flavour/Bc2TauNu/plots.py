@@ -6,11 +6,11 @@ ana_tex        = "Z #rightarrow q#bar{q}"
 delphesVersion = "3.4.2"
 energy         = 91.0
 collider       = "FCC-ee"
-inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_01/Analysis_stage2/"
+inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Analysis_stage2/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['nostack']
-outdir         = '/eos/home-h/helsens/www/FCC/ee/flavour/Bc2TauNu/spring2021/prod_01/'
+outdir         = '/eos/home-h/helsens/www/FCC/ee/flavour/Bc2TauNu/spring2021/prod_04/plots/'
 variables = [ "EVT_CandMass",
               "EVT_ThrustEmin_E","EVT_ThrustEmax_E",
               "EVT_ThrustEmin_Echarged", "EVT_ThrustEmax_Echarged",
@@ -25,8 +25,21 @@ variables = [ "EVT_CandMass",
               "EVT_CandVtxFD",
               "EVT_CandAngleThrust",
               "EVT_CandAngleThrust_2",
-              "EVT_MVA1","EVT_MVA2"
+              "EVT_MVA1","EVT_MVA2",
 
+              "EVT_Nominal_B_E",
+              "EVT_PVmass",
+              "EVT_DVmass_min",
+              "EVT_DVmass_max",
+              "EVT_DVmass_ave",
+              "EVT_DVd0_min",
+              "EVT_DVd0_max",
+              "EVT_DVd0_ave",
+              "EVT_DVz0_min",
+              "EVT_DVz0_max",
+              "EVT_DVz0_ave",
+
+              
               ]
 
 scaleSig=1.
@@ -34,8 +47,10 @@ scaleSig=1.
 selections = {}
 selections['Inclusive']       = ["sel1","sel2","sel3","sel4"]
 selections['ExclusiveMerged'] = ["sel1","sel2","sel3","sel4"]
-selections['Inclusive']       = ["sel0"]
-selections['ExclusiveMerged'] = ["sel0"]
+
+selections['Inclusive']       = ["sel5"]
+selections['InclusiveEvtGen'] = ["sel5"]
+selections['ExclusiveMerged'] = ["sel5"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: MVA1>0.8, MVA2>0.8"
@@ -43,10 +58,12 @@ extralabel['sel1'] = "Selection: MVA1>0.9, MVA2>0.9"
 extralabel['sel2'] = "Selection: MVA1>0.95, MVA2>0.95"
 extralabel['sel3'] = "Selection: MVA1>0.98, MVA2>0.98"
 extralabel['sel4'] = "Selection: MVA1>0.99, MVA2>0.99"
+extralabel['sel5'] = "Selection: Donal's cuts"
 
 colors = {}
 colors['Z_Bc']    = ROOT.kRed
 colors['Z_bb']    = ROOT.kBlue
+colors['Z_bb_EvtGen'] = ROOT.kBlue
 colors['Z_bb_B']  = ROOT.kBlue
 colors['Z_bb_Bu'] = ROOT.kBlue+1
 colors['Z_bb_Bd'] = ROOT.kBlue+2
@@ -65,6 +82,13 @@ plots['Inclusive'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU
                                      }
                       }
 
+plots['InclusiveEvtGen'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
+                            'backgrounds':{'Z_bb_EvtGen':['p8_ee_Zbb_ecm91_EvtGen'],
+                                           'Z_cc':['p8_ee_Zcc_ecm91'],
+                                           'Z_uds':['p8_ee_Zuds_ecm91'],
+                                           'Z_Bu':['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU']
+                                     }
+                      }
 
 
 plots['ExclusiveMerged'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU']},
@@ -109,6 +133,7 @@ plots['ExclusiveMerged'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTA
 legend = {}
 legend['Z_Bc']    = 'B_{c}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
 legend['Z_bb']    = 'Z#rightarrow b#bar{b}'
+legend['Z_bb_EvtGen']    = 'Z#rightarrow b#bar{b} EvtGen'
 legend['Z_bb_B']  = 'Z#rightarrow b#bar{b} B_{u}+B_{d}+B_{s}+L_{b}'
 legend['Z_cc']    = 'Z#rightarrow c#bar{c}'
 legend['Z_uds']   = 'Z#rightarrow q#bar{q}'

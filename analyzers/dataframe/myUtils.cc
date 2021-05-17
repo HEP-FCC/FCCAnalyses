@@ -279,8 +279,9 @@ myUtils::get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC
     if (recoparticles.size()<2)continue;
     
     VertexingUtils::FCCAnalysesVertex TheVertex;
-    if (v==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks );
-    else TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
+    if (v==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks, true, 4.5, 20e-3, 300 );
+    //if (v==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks);
+    else TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks);
     if (std::isnan(TheVertex.vertex.chi2))continue;
     TheVertex.mc_ind=v;
     result.push_back(TheVertex);
@@ -1441,7 +1442,7 @@ myUtils::build_composite_vertex::operator() (ROOT::VecOps::RVec<edm4hep::Reconst
       recoparticles.push_back(recop.at(tmpvec.at(k)));
     }
  
-    VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
+    VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks);
     float chi2 = TheVertex.vertex.chi2;
   
     if (chi2<0.01)continue;
@@ -1520,7 +1521,7 @@ myUtils::build_D0::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticle
       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> seltracks;
       seltracks.push_back(recop.at(pions.at(i)));
       seltracks.push_back(recop.at(kaons.at(j)));
-      VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,seltracks, tracks );
+      VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,seltracks, tracks);
       float chi2 = TheVertex.vertex.chi2;
       
       if (chi2<0.01)continue;
@@ -1630,7 +1631,7 @@ ROOT::VecOps::RVec<float> myUtils::awkwardtest(ROOT::VecOps::RVec<edm4hep::Recon
   ROOT::VecOps::RVec<int> tk_ind;
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> seltracks = VertexingUtils::selTracks(0.,3.,0.,3.)( recop, tracks);
-  VertexingUtils::FCCAnalysesVertex ThePVertex = VertexFitterSimple::VertexFitter(0,seltracks, tracks );
+  VertexingUtils::FCCAnalysesVertex ThePVertex = VertexFitterSimple::VertexFitter(0,seltracks, tracks);
 
   int PV_ntrk   = ThePVertex.ntracks;
   float PV_chi2 = ThePVertex.vertex.chi2;
@@ -1750,7 +1751,7 @@ ROOT::VecOps::RVec<float> myUtils::awkwardtest(ROOT::VecOps::RVec<edm4hep::Recon
     }
  
     //VertexingUtils::FCCAnalysesVertex TheVertexActs = VertexFitterActs::VertexFitterFullBilloir(recoparticles, tracks );
-    VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
+    VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks);
     float chi2 = TheVertex.vertex.chi2;
   
     if (chi2<0.01)continue;
@@ -1991,7 +1992,7 @@ myUtils::build_tau23pi_vertexing::operator() (ROOT::VecOps::RVec<edm4hep::Recons
       recoparticles.push_back(recop.at(tmpvec.at(k)));
     }
  
-    VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
+    VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks);
     float chi2 = TheVertex.vertex.chi2;
   
     if (chi2<0.01)continue;

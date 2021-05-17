@@ -5,18 +5,15 @@ import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_01/Analysis_stage2/"
+baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Analysis_stage2/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_spring2021_IDEA.json"
 
 
-#baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/21042021/Training_4stage2/"
-#procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_fcc_tmp_training.json"
-
-
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',
+              'p8_ee_Zbb_ecm91_EvtGen',
               'p8_ee_Zbb_ecm91',
               'p8_ee_Zcc_ecm91',
               'p8_ee_Zuds_ecm91',
@@ -54,7 +51,6 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstTauNu',
               ]
 
-#process_list=['p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst']
 
 define_list={
 #    "EVT_minRhoMass":"if (EVT_CandRho1Mass<EVT_CandRho2Mass) return EVT_CandRho1Mass; else return EVT_CandRho2Mass;",
@@ -63,12 +59,14 @@ define_list={
 }
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
-cut_list = {"sel0":"EVT_MVA1>0.8 && EVT_MVA2>0.8",
+cut_list = {#"sel0":"EVT_MVA1>0.8 && EVT_MVA2>0.8",
             #"sel1":"EVT_MVA1>0.9 && EVT_MVA2>0.9",
             #"sel2":"EVT_MVA1>0.95 && EVT_MVA2>0.95",
             #"sel3":"EVT_MVA1>0.98 && EVT_MVA2>0.98",
             #"sel4":"EVT_MVA1>0.99 && EVT_MVA2>0.99",
+            "sel5":"EVT_MVA1>0.9998979591836735 && EVT_MVA2>0.9956122448979592 && EVT_ThrustDiff_E > 10",
             }
+
 
 ###Dictionary for the ouput variable/hitograms. The key is the name of the variable in the output files. "name" is the name of the variable in the input file, "title" is the x-axis label of the histogram, "bin" the number of bins of the histogram, "xmin" the minimum x-axis value and "xmax" the maximum x-axis value.
 variables = {
@@ -97,11 +95,23 @@ variables = {
     "EVT_CandAngleThrust_2"  :{"name":"EVT_CandAngleThrust","title":"Angle between candidate and thrust","bin":50,"xmin":0.,"xmax":0.5},
     "EVT_MVA1"               :{"name":"EVT_MVA1","title":"MVA1 score","bin":100,"xmin":0.6,"xmax":1.},
     "EVT_MVA2"               :{"name":"EVT_MVA2","title":"MVA2 score","bin":100,"xmin":0.6,"xmax":1.},
-
+    "EVT_Nominal_B_E"        :{"name":"EVT_Nominal_B_E","title":"Nominal B Energy [GeV]","bin":100,"xmin":0.,"xmax":50.},
+    "EVT_PVmass"             :{"name":"EVT_PVmass","title":"Primary Vertex Mass [GeV]","bin":100,"xmin":0.,"xmax":10.},
+    "EVT_DVmass_min"         :{"name":"EVT_DVmass_min","title":"Displaced Vertex Mass Min [GeV]","bin":100,"xmin":0.,"xmax":20.},
+    "EVT_DVmass_max"         :{"name":"EVT_DVmass_max","title":"Displaced Vertex Mass Max [GeV]","bin":100,"xmin":0.,"xmax":20.},
+    "EVT_DVmass_ave"         :{"name":"EVT_DVmass_ave","title":"Displaced Vertex Mass Ave [GeV]","bin":100,"xmin":0.,"xmax":20.},
+    "EVT_DVd0_min"           :{"name":"EVT_DVd0_min","title":"Displaced Vertex d0 Min [mm]","bin":100,"xmin":-10.,"xmax":10.},
+    "EVT_DVd0_max"           :{"name":"EVT_DVd0_max","title":"Displaced Vertex d0 Max [mm]","bin":100,"xmin":-10.,"xmax":10.},
+    "EVT_DVd0_ave"           :{"name":"EVT_DVd0_ave","title":"Displaced Vertex d0 Ave [mm]","bin":100,"xmin":-10.,"xmax":10.},
+    "EVT_DVz0_min"           :{"name":"EVT_DVz0_min","title":"Displaced Vertex z0 Min [mm]","bin":100,"xmin":-10.,"xmax":10.},
+    "EVT_DVz0_max"           :{"name":"EVT_DVz0_max","title":"Displaced Vertex z0 Max [mm]","bin":100,"xmin":-10.,"xmax":10.},
+    "EVT_DVz0_ave"           :{"name":"EVT_DVz0_ave","title":"Displaced Vertex z0 Ave [mm]","bin":100,"xmin":-10.,"xmax":10.},
+ 
+    
 }
 
 ###Number of CPUs to use
-NUM_CPUS = 4
+NUM_CPUS = 8
 
 ###This part is standard to all analyses
 import config.runDataFrameFinal as rdf
