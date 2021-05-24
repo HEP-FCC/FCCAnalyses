@@ -116,6 +116,9 @@ namespace myUtils{
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 									     ROOT::VecOps::RVec<int> ind);
 
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
+  merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in);
+    
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
 									 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
 									 ROOT::VecOps::RVec<edm4hep::TrackState> tracks,

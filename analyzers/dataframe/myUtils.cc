@@ -289,6 +289,29 @@ myUtils::get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC
   return result;
 }
 
+int globalmm=0;
+ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
+myUtils::merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in){
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> result;
+  std::cout<<"============================"<<std::endl;
+  for (size_t i = 0; i < in.size()-1; ++i){
+    edm4hep::VertexData vi = in.at(i).vertex;
+    std::array<float,6> vi_covMatrix = vi.covMatrix;
+    for (size_t j = i+1; j < in.size(); ++j){
+      edm4hep::VertexData vj = in.at(j).vertex;
+      std::array<float,6> vj_covMatrix = vj.covMatrix;
+      float dist = get_distanceVertex(vi,vj,-1);
+      float err1 = sqrt(vi_covMatrix[0]+vj_covMatrix[0]+vi_covMatrix[2]+vj_covMatrix[2]+vi_covMatrix[5]+vj_covMatrix[5]);
+      float err2 = get_distanceErrorVertex(vi,vj,-1);
+      if (dist<err1 || dist<err2){
+	globalmm+=1;
+	std::cout << globalmm << "  i,j="<< i<<", "<<j<<"  d= "<<dist<<"  err1  " << err1 << "  err2  " << err2 << " ntrk v1,v2="<< in.at(i).ntracks<<", "<< in.at(j).ntracks << "  isPV="<< vi.primary <<", "<< vj.primary<<std::endl;
+      }
+    }
+  }
+  //return result;
+  return in;
+}
 
 
 std::vector<std::vector<int>> myUtils::get_Vertex_ind(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
