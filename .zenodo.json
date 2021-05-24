@@ -1,16 +1,39 @@
 {
-    "description": "<p>This is a pre release for the Bc2TauNu paper</p>", 
-    "license": "other-open", "title": "HEP-FCC/FCCAnalyses: Bc2TauNu pre01", 
-    "version": "Bc2TauNu_pre01", 
-    "upload_type": "software", 
-    "publication_date": "2021-05-17", 
-    "creators": [ { "affiliation": "CERN", "name": "Clement Helsens" }, 
-		  { "affiliation": "CERN", "name": "Valentin Volkl" }, 
-		  { "affiliation": "CERN", "name": "Michele Selvaggi" }, 
-		  { "affiliation": "CERN", "name": "Emanuel Perez" }, 
-		  { "affiliation": "CERN", "name": "Gerardo Ganis" } ], 
-    "access_right": "open", 
-    "related_identifiers": [ { "scheme": "url", "identifier": "https://github.com/HEP-FCC/FCCAnalyses/tree/Bc2TauNu_pre01", "relation": "isSupplementTo" }, 
-			     { "scheme": "doi", "identifier": "10.5281/zenodo.4767810", "relation": "isVersionOf" } ] 
-
+  "creators": [
+    {
+      "affiliation": "CERN",
+      "name": "Helsens, Clement",
+      "orcid": "0000-0002-9243-7554"
+    },
+    {
+      "affiliation": "CERN",
+      "name": "Perez, Emmanuel",
+      "orcid": ""
+    },
+    {
+      "affiliation": "CERN",
+      "name": "Selvaggi, Michele",
+      "orcid": ""
+    },
+    {
+      "affiliation": "CERN",
+      "name": "Volkl, Valentin",
+      "orcid": ""
+    },
+    {
+      "affiliation": "University of Copenhagen",
+      "name": "Munch Torndal, Julie",
+      "orcid": ""
+    }
+  ],
+    "keywords": [
+	"data analyses",
+	"edm4hep",
+	"root",
+	"dataframe"
+	"fcc"
+    ],
+    "license": "Apache-2.0",
+    "upload_type": "software"
 }
+
