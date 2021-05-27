@@ -29,7 +29,7 @@
 	"data analyses",
 	"edm4hep",
 	"root",
-	"dataframe"
+	"dataframe",
 	"fcc"
     ],
     "license": "Apache-2.0",
