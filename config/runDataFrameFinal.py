@@ -81,28 +81,32 @@ class runDataFrameFinal():
                 processEvents[pr]=self.procDict[pr]["numberOfEvents"]
             tfin.Close()
 
+        length_cuts_names = max([len(cut) for cut in self.cuts])
+
         for pr in self.processes:
-            print ('   running over process : ',pr)
+            print ('\n   running over process : ',pr)
             fin    = self.baseDir+pr+'.root' #input file
 
             RDF = ROOT.ROOT.RDataFrame
             df  = RDF(self.treename,fin )
             if len(self.defines)>0:
-                print ('Running extra Define')
+                print ('     Running extra Define')
                 for define in self.defines:
                     df=df.Define(define, self.defines[define])
 
             fout_list = []
             histos_list = []
             tdf_list = []
+            count_list = []
 
             # Define all histos, snapshots, etc...
-            print ('Defining snapshots and histograms')
+            print ('     Defining snapshots and histograms')
             for cut in self.cuts:
                 fout   = self.baseDir+pr+'_'+cut+'.root' #output file for tree
                 fout_list.append(fout)
                 
                 df_cut = df.Filter(self.cuts[cut])
+                count_list.append(df_cut.Count())
 
                 histos = []
                 for v in self.variables:
@@ -120,12 +124,22 @@ class runDataFrameFinal():
                     tdf_list.append(snapshot_tdf)
 
             # Now perform the loop and evaluate everything at once.
-            print ('Evaluating...')
-            nevents_real+=df.Count().GetValue()
-            print ('Done...')
+            print ('     Evaluating...')
+            all_events = df.Count().GetValue()
+            print ('     Done')
+
+            nevents_real += all_events
+
+            print ('     Cutflow')
+            print ('       {cutname:{width}} : {nevents}'.format(cutname='All events',
+                width=16+length_cuts_names, nevents=all_events))
+            for i, cut in enumerate(self.cuts):
+                print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut,
+                    width=length_cuts_names, nevents=count_list[i].GetValue()))
+
 
             # And save everything
-            print ('Saving outputs')
+            print ('     Saving outputs')
             for i, cut in enumerate(self.cuts):
                 fhisto = self.baseDir+pr+'_'+cut+'_histo.root' #output file for histograms
                 tf    = ROOT.TFile.Open(fhisto,'RECREATE')
