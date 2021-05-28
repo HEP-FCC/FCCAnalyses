@@ -1,4 +1,4 @@
-!/usr/bin/env python
+#!/usr/bin/env python
 import ROOT
 import json
 import sys
@@ -36,7 +36,7 @@ class runDataFrameFinal():
         try :
             tt=tf.Get(self.treename)
             if tt==None:
-                print ('file does not contains events, selection was too tight, will skip: ',f)
+                print ('file do not contains events, selection was too tight, will skip: ',f)
                 return False
         except IOError as e:
             print ("I/O error({0}): {1}".format(e.errno, e.strerror))
@@ -118,36 +118,70 @@ class runDataFrameFinal():
         print('processed events ',processEvents)
         print('events in ttree  ',eventsTTree)
 
-                    
-        for cut in self.cuts:
-            print ('running over cut : ',self.cuts[cut])
-            for pr in self.processes:
-                print ('   running over process : ',pr)
-                fout   = self.baseDir+pr+'_'+cut+'.root' #output file for tree
-                fhisto = self.baseDir+pr+'_'+cut+'_histo.root' #output file for histograms
 
-                RDF = ROOT.ROOT.RDataFrame
-                df  = RDF(self.treename,processList[pr] )
-                if len(self.defines)>0:
-                    print ('Running extra Define')
-                    for define in self.defines:
-                        df=df.Define(define, self.defines[define])
+
+        length_cuts_names = max([len(cut) for cut in self.cuts])
+
+        for pr in self.processes:
+            print ('\n   running over process : ',pr)
+
+            RDF = ROOT.ROOT.RDataFrame
+            df  = RDF(self.treename, processList[pr] )
+            if len(self.defines)>0:
+                print ('     Running extra Define')
+                for define in self.defines:
+                    df=df.Define(define, self.defines[define])
+
+            fout_list = []
+            histos_list = []
+            tdf_list = []
+            count_list = []
+
+            # Define all histos, snapshots, etc...
+            print ('     Defining snapshots and histograms')
+            for cut in self.cuts:
+                fout   = self.baseDir+pr+'_'+cut+'.root' #output file for tree
+                fout_list.append(fout)
                 
                 df_cut = df.Filter(self.cuts[cut])
- 
-                if doTree:
-                    snapshot_tdf = df_cut.Snapshot(self.treename, fout)
-                    validfile = self.testfile(fout)
-                    if not validfile: continue
+                count_list.append(df_cut.Count())
 
-                nevents_real+=df_cut.Count().GetValue()
-
-                tf    = ROOT.TFile.Open(fhisto,'RECREATE')
+                histos = []
                 for v in self.variables:
                     model = ROOT.RDF.TH1DModel(v, ";{};".format(self.variables[v]["title"]), self.variables[v]["bin"], self.variables[v]["xmin"],  self.variables[v]["xmax"])
                     
-                    h     = df_cut.Histo1D(model,self.variables[v]["name"])
-                    
+                    histos.append(df_cut.Histo1D(model,self.variables[v]["name"]))
+                    #h     = snapshot_tdf.Histo1D(model,self.variables[v]["name"])
+                histos_list.append(histos)
+
+                if doTree:
+                    opts = ROOT.RDF.RSnapshotOptions()
+                    opts.fLazy = True
+                    snapshot_tdf = df_cut.Snapshot(self.treename, fout, "", opts)
+                    # Needed to avoid python garbage collector messing around with the snapshot
+                    tdf_list.append(snapshot_tdf)
+
+            # Now perform the loop and evaluate everything at once.
+            print ('     Evaluating...')
+            all_events = df.Count().GetValue()
+            print ('     Done')
+
+            nevents_real += all_events
+
+            print ('     Cutflow')
+            print ('       {cutname:{width}} : {nevents}'.format(cutname='All events',
+                width=16+length_cuts_names, nevents=all_events))
+            for i, cut in enumerate(self.cuts):
+                print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut,
+                    width=length_cuts_names, nevents=count_list[i].GetValue()))
+
+
+            # And save everything
+            print ('     Saving outputs')
+            for i, cut in enumerate(self.cuts):
+                fhisto = self.baseDir+pr+'_'+cut+'_histo.root' #output file for histograms
+                tf    = ROOT.TFile.Open(fhisto,'RECREATE')
+                for h in histos_list[i]:
                     try :
                         h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
                     except KeyError:
@@ -155,6 +189,12 @@ class runDataFrameFinal():
                         h.Scale(1./h.Integral(0,-1))
                     h.Write()
                 tf.Close()
+
+                if doTree:
+                    # test that the snapshot worked well
+                    validfile = self.testfile(fout_list[i])
+                    if not validfile: continue
+
 
         elapsed_time = time.time() - start_time
         print  ('==============================SUMMARY==============================')
