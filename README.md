@@ -31,6 +31,7 @@ mkdir build install
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make install
+cd ..
 ```
 Each time changes are made in ```analyzers/dataframe/``` please re-compile!
 
