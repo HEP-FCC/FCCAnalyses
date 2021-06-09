@@ -18,7 +18,7 @@ parser.add_argument("-storeClusterBranches", default = True, help="Whether or no
 parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
 parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = bool)
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
-parser.add_argument("-storeGenBranches", default = False, help="Whether or not to store gen information", type = bool)
+parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = bool)
 parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
 
 args = parser.parse_args()
@@ -77,8 +77,8 @@ class analysis():
 
         # gen particles
         if args.storeGenBranches:
-            #dict_outputBranchName_function["genParticle_phi"] = "getMC_phi(%s)"%args.genBranchName
-            #dict_outputBranchName_function["genParticle_theta"] = "getMC_theta(%s)"%args.genBranchName
+            dict_outputBranchName_function["genParticle_phi"] = "MCParticle::get_phi(%s)"%args.genBranchName
+            dict_outputBranchName_function["genParticle_theta"] = "MCParticle::get_theta(%s)"%args.genBranchName
             dict_outputBranchName_function["genParticle_energy"] = "MCParticle::get_e(%s)"%args.genBranchName
             dict_outputBranchName_function["genParticle_pid"] = "MCParticle::get_pdg(%s)"%args.genBranchName
             dict_outputBranchName_function["genParticle_status"] = "MCParticle::get_genStatus(%s)"%args.genBranchName
