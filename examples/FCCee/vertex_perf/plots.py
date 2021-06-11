@@ -10,6 +10,8 @@ f = r.TFile("/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses/flat_ee_Zbb
 f = r.TFile("/eos/experiment/fcc/ee/tmp/flat_ee_Zbb_VertexPerf.root")
 tree = f.Get("events")
 
+fout = r.TFile("forDonal.root","RECREATE")
+
 #--------------------------------------------#
 #--------------------------------------------#
 #     Plots that do not need event loop      #
@@ -205,7 +207,7 @@ centry=0
 for entry in tree:
     if centry%1000==1:print('entry : ',centry,'/',nentries)
     centry+=1
-
+    if centry>200000.:break
     #MC vertex with at least 2 tracks
     nvx=0
     nsv2,nsv3,nsv4,nsv5,nsv6=0,0,0,0,0
@@ -399,6 +401,10 @@ tt.DrawLatexNDC(0.60,0.79,"#color[4]{Reco vertex}")
 #r.gPad.SetLogy(1)
 can.SaveAs("plots/pdf/nVertex_MCtrkGT1.pdf")
 can.SaveAs("plots/png/nVertex_MCtrkGT1.png")
+fout.cd()
+h_reco.Write()
+h_mc.Write()
+
 ###################################################
 
 ###################################################
@@ -981,6 +987,8 @@ tt.DrawLatexNDC(0.60,0.92,"Z #rightarrow b#bar{b} N tracks = 3")
 #r.gPad.SetLogy(1)
 can.SaveAs("plots/pdf/recoEff_3trk.pdf")
 can.SaveAs("plots/png/recoEff_3trk.png")
+fout.cd()
+h_recoeff_SV_3trk.Write()
 ###################################################
 
 ###################################################
@@ -1903,3 +1911,5 @@ can.SaveAs("plots/pdf/dmin_DV2DV.pdf")
 can.SaveAs("plots/png/dmin_DV2DV.png")
 ###################################################
 
+fout.Write()
+fout.Close()
