@@ -207,7 +207,7 @@ class analysis():
 
 #########################################
 
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root /eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_03/Batch_Training_4stage1/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/flat_chunk_0.root
+# python examples/FCCee/flavour/Bc2TauNu/analysis_stage2.py p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU.root /eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Batch_Training_4stage1/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/flat_chunk_0.root
 
 
 if __name__ == "__main__":

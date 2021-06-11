@@ -19,8 +19,8 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen',
               'p8_ee_Zuds_ecm91',
               ]
 
-myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
+#myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
+#myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
 
 
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
@@ -57,12 +57,18 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
 
               ]
 
-myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana)
+#myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
+#myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana)
 
 
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
               'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU'
               ]
+#myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
+#myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=100 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
+
+process_list=['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTau23PiPi0NuTAUOLA',    
+              #'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU'
+              ]
 myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
-myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=100 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
+myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
