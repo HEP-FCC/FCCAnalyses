@@ -6,19 +6,29 @@ print ("Load cxx analyzers ... ")
 ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 _fcc  = ROOT.dummyLoader
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-inputFiles", default = '/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/key4hep_trial3/FCCSW/Examples/options/output_fullCalo_SimAndDigi_withCluster_MagneticField_False_pMin_10000_MeV_ThetaMinMax_45_135_pdgId_11_pythiaFalse.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
-parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = bool)
+parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = str2bool)
 parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"], help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
-parser.add_argument("-storeClusterBranches", default = True, help="Whether or not to store cluster information", type = bool)
+parser.add_argument("-storeClusterBranches", default = False, help="Whether or not to store cluster information", type = str2bool)
 parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
-parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = bool)
+parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = str2bool)
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
-parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = bool)
+parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
 parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
 
 args = parser.parse_args()
