@@ -1616,7 +1616,7 @@ myUtils::PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 					   pow(recop.at(recind.at(i)).mass,2));
     }
     //id an electron
-    if (fabs(mc.at(mcind.at(i)).PDG)==11){
+    else if (fabs(mc.at(mcind.at(i)).PDG)==11){
       recop.at(recind.at(i)).type = 11;
       recop.at(recind.at(i)).mass = 0.0005109989461;
       recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) + 
@@ -1625,7 +1625,7 @@ myUtils::PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 					   pow(recop.at(recind.at(i)).mass,2));
     }
     //id an muon
-    if (fabs(mc.at(mcind.at(i)).PDG)==13){
+    else if (fabs(mc.at(mcind.at(i)).PDG)==13){
       recop.at(recind.at(i)).type = 13;
       recop.at(recind.at(i)).mass = 0.1056583745;
       recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) + 
@@ -1889,25 +1889,38 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_B2Kstee(ROOT::VecOps::R
 	charge_ee+=recop.at(r).charge;
       }
     }
-    //1 tracks id as kaon 1 as pion
-    int charge_kpi=0;
-    int nobj_kpi=0;
+     //1 tracks id as kaon
+    int charge_k=0;
+    int nobj_k=0;
     for (auto &r:p.reco_ind){
-      if (recop.at(r).type==211 || recop.at(r).type==321 ){
-	nobj_kpi+=1;
-	charge_kpi+=recop.at(r).charge;
+      if (recop.at(r).type==321 ){
+	nobj_k+=1;
+	charge_k+=recop.at(r).charge;
       }
     }
 
-    if (nobj_ee!=2){counter+=1; continue;}
-    if (nobj_kpi!=2){counter+=1; continue;}
-    if (charge_ee!=0){counter+=1; continue;}
-    if (charge_kpi!=0){counter+=1; continue;}
+   //1 tracks id as pion
+    int charge_pi=0;
+    int nobj_pi=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==211){
+	nobj_pi+=1;
+	charge_pi+=recop.at(r).charge;
+      }
+    }
        
+
+    if (nobj_ee!=2){counter+=1; continue;}
+    if (nobj_pi!=1){counter+=1; continue;}
+    if (nobj_k!=1){counter+=1; continue;}
+
+    if (charge_ee!=0){counter+=1; continue;}
+    if (charge_pi+charge_k!=0){counter+=1; continue;}
     FCCAnalysesComposite2 comp;
     comp.vertex = counter;
     comp.particle = build_tlv(recop,p.reco_ind);
-    comp.charge = charge_ee+charge_kpi;
+    comp.charge = charge_ee+charge_pi+charge_pi
+;
     
     result.push_back(comp);
     counter+=1;
@@ -1936,25 +1949,39 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_B2Kstmumu(ROOT::VecOps:
 	charge_mumu+=recop.at(r).charge;
       }
     }
-    //1 tracks id as kaon 1 as pion
-    int charge_kpi=0;
-    int nobj_kpi=0;
+
+    //1 tracks id as kaon
+    int charge_k=0;
+    int nobj_k=0;
     for (auto &r:p.reco_ind){
-      if (recop.at(r).type==211 || recop.at(r).type==321 ){
-	nobj_kpi+=1;
-	charge_kpi+=recop.at(r).charge;
+      if (recop.at(r).type==321 ){
+	nobj_k+=1;
+	charge_k+=recop.at(r).charge;
       }
     }
 
-    if (nobj_mumu!=2){counter+=1; continue;}
-    if (nobj_kpi!=2){counter+=1; continue;}
-    if (charge_mumu!=0){counter+=1; continue;}
-    if (charge_kpi!=0){counter+=1; continue;}
+   //1 tracks id as pion
+    int charge_pi=0;
+    int nobj_pi=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==211){
+	nobj_pi+=1;
+	charge_pi+=recop.at(r).charge;
+      }
+    }
        
+
+    if (nobj_mumu!=2){counter+=1; continue;}
+    if (nobj_pi!=1){counter+=1; continue;}
+    if (nobj_k!=1){counter+=1; continue;}
+
+    if (charge_mumu!=0){counter+=1; continue;}
+    if (charge_pi+charge_k!=0){counter+=1; continue;}
+
     FCCAnalysesComposite2 comp;
     comp.vertex = counter;
     comp.particle = build_tlv(recop,p.reco_ind);
-    comp.charge = charge_mumu+charge_kpi;
+    comp.charge = charge_mumu+charge_pi+charge_k;
     
     result.push_back(comp);
     counter+=1;
@@ -1973,22 +2000,33 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bd2KstNuNu(ROOT::VecOps
     //exactly 2 tracks
     if (p.ntracks!=2){counter+=1;continue;}
     
-    //1 tracks id as kaon 1 as pion
-    int charge_kpi=0;
-    int nobj_kpi=0;
+    //1 tracks id as kaon
+    int charge_k=0;
+    int nobj_k=0;
     for (auto &r:p.reco_ind){
-      if (recop.at(r).type==211 || recop.at(r).type==321 ){
-	nobj_kpi+=1;
-	charge_kpi+=recop.at(r).charge;
+      if (recop.at(r).type==321 ){
+	nobj_k+=1;
+	charge_k+=recop.at(r).charge;
       }
     }
-    if (nobj_kpi!=2){counter+=1; continue;}
-    if (charge_kpi!=0){counter+=1; continue;}
+
+   //1 tracks id as pion
+    int charge_pi=0;
+    int nobj_pi=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==211){
+	nobj_pi+=1;
+	charge_pi+=recop.at(r).charge;
+      }
+    }
+    if (nobj_pi!=1){counter+=1; continue;}
+    if (nobj_k!=1){counter+=1; continue;}
+    if (charge_pi+charge_k!=0){counter+=1; continue;}
        
     FCCAnalysesComposite2 comp;
     comp.vertex = counter;
     comp.particle = build_tlv(recop,p.reco_ind);
-    comp.charge = charge_kpi;
+    comp.charge = charge_pi+charge_k;
     
     result.push_back(comp);
     counter+=1;

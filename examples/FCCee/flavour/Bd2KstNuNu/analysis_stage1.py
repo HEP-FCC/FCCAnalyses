@@ -141,7 +141,7 @@ class analysis():
                ##        Build B -> KiPi  candidates      ##
                #############################################
                .Define("KiPiCandidates",         "myUtils::build_Bd2KstNuNu(VertexObject,RecoPartPIDAtVertex)")
-               #.Define("KiPiCandidates",         "myUtils::build_B2Kstmumu(VertexObject,RecoPartPIDAtVertex)")
+
                #############################################
                ##       Filter Tau -> 3Pi candidates      ##
                ############################################# 
