@@ -111,6 +111,15 @@ namespace myUtils{
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_tau23pi(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstee(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstmumu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2KstNuNu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
   
   
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,

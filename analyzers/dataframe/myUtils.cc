@@ -1615,6 +1615,24 @@ myUtils::PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 					   pow(recop.at(recind.at(i)).momentum.z,2) + 
 					   pow(recop.at(recind.at(i)).mass,2));
     }
+    //id an electron
+    if (fabs(mc.at(mcind.at(i)).PDG)==11){
+      recop.at(recind.at(i)).type = 11;
+      recop.at(recind.at(i)).mass = 0.0005109989461;
+      recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) + 
+					   pow(recop.at(recind.at(i)).momentum.y,2) + 
+					   pow(recop.at(recind.at(i)).momentum.z,2) + 
+					   pow(recop.at(recind.at(i)).mass,2));
+    }
+    //id an muon
+    if (fabs(mc.at(mcind.at(i)).PDG)==13){
+      recop.at(recind.at(i)).type = 13;
+      recop.at(recind.at(i)).mass = 0.1056583745;
+      recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) + 
+					   pow(recop.at(recind.at(i)).momentum.y,2) + 
+					   pow(recop.at(recind.at(i)).momentum.z,2) + 
+					   pow(recop.at(recind.at(i)).mass,2));
+    }
   }
   return recop;
 }
@@ -1850,8 +1868,133 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_tau23pi(ROOT::VecOps::R
 }
 
 
+ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_B2Kstee(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
 
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
 
+  int counter=0;
+  for (auto &p:vertex){
+    //not consider PV
+    if (p.vertex.primary==1){counter+=1;continue;}
+    //exactly 4 tracks
+    if (p.ntracks!=4){counter+=1;continue;}
+    
+    //2 tracks id as e+ e-
+    int charge_ee=0;
+    int nobj_ee=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==11){
+	nobj_ee+=1;
+	charge_ee+=recop.at(r).charge;
+      }
+    }
+    //1 tracks id as kaon 1 as pion
+    int charge_kpi=0;
+    int nobj_kpi=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==211 || recop.at(r).type==321 ){
+	nobj_kpi+=1;
+	charge_kpi+=recop.at(r).charge;
+      }
+    }
+
+    if (nobj_ee!=2){counter+=1; continue;}
+    if (nobj_kpi!=2){counter+=1; continue;}
+    if (charge_ee!=0){counter+=1; continue;}
+    if (charge_kpi!=0){counter+=1; continue;}
+       
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge_ee+charge_kpi;
+    
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_B2Kstmumu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+
+  int counter=0;
+  for (auto &p:vertex){
+    //not consider PV
+    if (p.vertex.primary==1){counter+=1;continue;}
+    //exactly 4 tracks
+    if (p.ntracks!=4){counter+=1;continue;}
+    
+    //2 tracks id as mu+ mu-
+    int charge_mumu=0;
+    int nobj_mumu=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==13){
+	nobj_mumu+=1;
+	charge_mumu+=recop.at(r).charge;
+      }
+    }
+    //1 tracks id as kaon 1 as pion
+    int charge_kpi=0;
+    int nobj_kpi=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==211 || recop.at(r).type==321 ){
+	nobj_kpi+=1;
+	charge_kpi+=recop.at(r).charge;
+      }
+    }
+
+    if (nobj_mumu!=2){counter+=1; continue;}
+    if (nobj_kpi!=2){counter+=1; continue;}
+    if (charge_mumu!=0){counter+=1; continue;}
+    if (charge_kpi!=0){counter+=1; continue;}
+       
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge_mumu+charge_kpi;
+    
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bd2KstNuNu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+  int counter=0;
+  for (auto &p:vertex){
+    //not consider PV
+    if (p.vertex.primary==1){counter+=1;continue;}
+    //exactly 2 tracks
+    if (p.ntracks!=2){counter+=1;continue;}
+    
+    //1 tracks id as kaon 1 as pion
+    int charge_kpi=0;
+    int nobj_kpi=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==211 || recop.at(r).type==321 ){
+	nobj_kpi+=1;
+	charge_kpi+=recop.at(r).charge;
+      }
+    }
+    if (nobj_kpi!=2){counter+=1; continue;}
+    if (charge_kpi!=0){counter+=1; continue;}
+       
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge_kpi;
+    
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
 
 build_tau23pi::build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho):m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_rho(arg_rho){};
 ROOT::VecOps::RVec<FCCAnalysesComposite2> 
@@ -2181,6 +2324,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> myUti
   for (auto &p:in){
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tmp;
     ROOT::VecOps::RVec<int> reco_ind = vertex.at(p.vertex).reco_ind;
+    if (reco_ind.size()!=3)continue;
     //std::cout <<"new reco cand"<<std::endl;
     //for (size_t i=0; i<reco_ind.size();++i)std::cout <<"reco i="<<i<< " px="<<recop.at(reco_ind.at(i)).momentum.x<< " py="<<recop.at(reco_ind.at(i)).momentum.y<< " pz="<<recop.at(reco_ind.at(i)).momentum.z<<std::endl;
     
@@ -2237,9 +2381,10 @@ ROOT::VecOps::RVec<float> myUtils::get_mass(ROOT::VecOps::RVec<ROOT::VecOps::RVe
 					    int index){
 
   ROOT::VecOps::RVec<float> result;
-
-  for (auto &p:in)
+  for (auto &p:in){
+    if (index>=p.size())continue;
     result.push_back(p.at(index).mass);
+  }
   return result;
 }
 

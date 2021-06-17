@@ -67,8 +67,8 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
 #myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
 #myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=100 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
 
-process_list=['p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTau23PiPi0NuTAUOLA',    
-              #'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU'
+process_list=[#'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTau23PiPi0NuTAUOLA',    
+    'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTau23PiPi0NuTAUOLA',    
               ]
 myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
 myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
