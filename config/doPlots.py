@@ -75,7 +75,8 @@ def mapHistos(var, label, sel, param):
 #__________________________________________________________
 def runPlots(var,param,hsignal,hbackgrounds,extralab):
     legsize = 0.04*(len(hbackgrounds)+len(hsignal))
-    leg = ROOT.TLegend(0.58,0.86 - legsize,0.86,0.88)
+    #TLegend (Double_t x1, Double_t y1, Double_t x2, Double_t y2, const char *header="", Option_t *option="brNDC")
+    leg = ROOT.TLegend(0.68,0.86 - legsize,0.96,0.88)
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
@@ -92,6 +93,7 @@ def runPlots(var,param,hsignal,hbackgrounds,extralab):
     histos=[]
     colors=[]
 
+    nsig=len(hsignal)
     for s in hsignal:
         histos.append(hsignal[s][0])
         colors.append(param.colors[s])
@@ -113,17 +115,17 @@ def runPlots(var,param,hsignal,hbackgrounds,extralab):
 
     if 'stack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , True , histos, colors, param.ana_tex, extralab)
+            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , True , histos, colors, param.ana_tex, extralab, nsig)
         if 'log' in param.yaxis:
-            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , True , histos, colors, param.ana_tex, extralab)
+            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , True , histos, colors, param.ana_tex, extralab, nsig)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
 
     if 'nostack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , False , histos, colors, param.ana_tex, extralab)
+            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir, False , False , histos, colors, param.ana_tex, extralab, nsig)
         if 'log' in param.yaxis:
-            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , False , histos, colors, param.ana_tex, extralab)
+            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir, True , False , histos, colors, param.ana_tex, extralab, nsig)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
     if 'stack' not in param.stacksig and 'nostack' not in param.stacksig:
@@ -131,7 +133,7 @@ def runPlots(var,param,hsignal,hbackgrounds,extralab):
 
 
 #_____________________________________________________________________________________________________________
-def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab):
+def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab,nsig):
 
     canvas = ROOT.TCanvas(name, name, 600, 600) 
     canvas.SetLogy(logY)
@@ -167,37 +169,50 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
 
     # define stacked histo
     hStack = ROOT.THStack("hstack","")
-
+    hStackBkg = ROOT.THStack("hstackbkg","")
     # first plot backgrounds
          
-    histos[1].SetLineWidth(0)
-    histos[1].SetFillColor(colors[1])
+    histos[nsig].SetLineWidth(0)
+    histos[nsig].SetLineColor(ROOT.kBlack)
+    histos[nsig].SetFillColor(colors[nsig])
     
-    hStack.Add(histos[1])
-    
+    hStack.Add(histos[nsig])
+    hStackBkg.Add(histos[nsig])
 
     # now loop over other background (skipping first)
     iterh = iter(histos)
+    for i in range(nsig):
+       next(iterh)
     next(iterh)
-    next(iterh)
-    
-    k = 2
+
+    k = nsig+1
     for h in iterh:
        h.SetLineWidth(0)
        h.SetLineColor(ROOT.kBlack)
        h.SetFillColor(colors[k])
        hStack.Add(h)
+       hStackBkg.Add(h)
        k += 1
-    
-    
-    # finally add signal on top
-    histos[0].SetLineWidth(3)
-    histos[0].SetLineColor(colors[0])
-    
-    if stacksig:
-        hStack.Add(histos[0])
+    if not stacksig:
+      hStack.Draw("hist")
 
-    hStack.Draw("hist")
+    # define stacked signal histo
+    hStackSig = ROOT.THStack("hstacksig","")
+
+    # finally add signal on top
+    for l in range(nsig):
+      histos[l].SetLineWidth(3)
+      #histos[l].SetFillStyle(4000)
+      histos[l].SetLineColor(colors[l])
+      #histos[l].SetFillColor(colors[l])
+      if stacksig:
+        hStack.Add(histos[l])
+      else:
+        hStackSig.Add(histos[l])
+    if stacksig:
+      hStack.Draw("hist")
+    #else:
+    #  hStackSig.Draw("hist,same")
 
 
     # fix names if needed
@@ -301,9 +316,12 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
       highX=hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.)
     hStack.GetXaxis().SetLimits(int(lowX),int(highX))
 
-
+    
     if not stacksig:
-        histos[0].Draw("same hist")
+      hStackSig.Draw("same hist nostack")
+      #hStack.Draw("same hist nostack")
+      #hStackSig.Paint("same hist")
+      #histos[0].Draw("same hist")
    
     #legend.SetTextFont(font) 
     legend.Draw() 
