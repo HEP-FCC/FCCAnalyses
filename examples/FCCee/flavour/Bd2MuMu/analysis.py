@@ -93,7 +93,7 @@ class analysis():
         ##      select branches for output file    ##
         ############################################# 
         branchList = ROOT.vector('string')()
-        for branchName in ["Bd2MuMuCandidates_mass" ]:
+        for branchName in ["Bd2MuMu_mass" ]:
             branchList.push_back(branchName)
 
         df2.Snapshot("events", self.outname, branchList)
