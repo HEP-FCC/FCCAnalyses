@@ -2039,35 +2039,34 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bd2MuMu(ROOT::VecOps::R
 								 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
-  int counter=0;
-  for (auto &p:vertex){
-    //not consider PV
-    if (p.vertex.primary==1){counter+=1;continue;}
-    //exactly 2 tracks
-    if (p.ntracks!=2){counter+=1;continue;}
+  //loop over the reconstructed vertex collection
+  for (size_t i=0;i<vertex.size();i++){
+    
+    //not consider PV, exactly 2 tracks
+    if (vertex.at(i).vertex.primary==1)continue;
+    if (vertex.at(i).ntracks!=2)       continue;
     
     //2 tracks id as muons
     int charge_Bd=0;
     int nobj_Bd=0;
-    for (auto &r:p.reco_ind){
+    for (auto &r:vertex.at(i).reco_ind){
       if (recop.at(r).type==13 ){
 	nobj_Bd+=1;
 	charge_Bd+=recop.at(r).charge;
       }
     }
     //select candidates with exactly 2 muons and charge 0 
-    if (nobj_Bd!=2)   {counter+=1; continue;}
-    if (charge_Bd!=0) {counter+=1; continue;}
+    if (nobj_Bd!=2)   continue;
+    if (charge_Bd!=0) continue;
        
     //build a composite vertex
     FCCAnalysesComposite2 comp;
-    comp.vertex = counter;
-    comp.particle = build_tlv(recop,p.reco_ind);
-    comp.charge = charge_Bd;
+    comp.vertex   = i;
+    comp.particle = build_tlv(recop,vertex.at(i).reco_ind);
+    comp.charge   = charge_Bd;
 
     //add the composite vertex to the collection
     result.push_back(comp);
-    counter+=1;
   }
   return result;
 }
