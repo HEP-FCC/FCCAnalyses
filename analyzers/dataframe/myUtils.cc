@@ -2034,6 +2034,42 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bd2KstNuNu(ROOT::VecOps
   return result;
 }
 
+
+ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bd2MuMu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+  int counter=0;
+  for (auto &p:vertex){
+    //not consider PV
+    if (p.vertex.primary==1){counter+=1;continue;}
+    //exactly 2 tracks
+    if (p.ntracks!=2){counter+=1;continue;}
+    
+    //2 tracks id as muons
+    int charge_Bd=0;
+    int nobj_Bd=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==13 ){
+	nobj_Bd+=1;
+	charge_Bd+=recop.at(r).charge;
+      }
+    }
+
+    if (nobj_Bd!=2)   {counter+=1; continue;}
+    if (charge_Bd!=0) {counter+=1; continue;}
+       
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge_Bd;
+    
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
+
 build_tau23pi::build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho):m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_rho(arg_rho){};
 ROOT::VecOps::RVec<FCCAnalysesComposite2> 
 myUtils::build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
