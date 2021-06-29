@@ -2055,15 +2055,17 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bd2MuMu(ROOT::VecOps::R
 	charge_Bd+=recop.at(r).charge;
       }
     }
-
+    //select candidates with exactly 2 muons and charge 0 
     if (nobj_Bd!=2)   {counter+=1; continue;}
     if (charge_Bd!=0) {counter+=1; continue;}
        
+    //build a composite vertex
     FCCAnalysesComposite2 comp;
     comp.vertex = counter;
     comp.particle = build_tlv(recop,p.reco_ind);
     comp.charge = charge_Bd;
-    
+
+    //add the composite vertex to the collection
     result.push_back(comp);
     counter+=1;
   }
