@@ -56,6 +56,7 @@ class analysis():
                .Define("MC_y",   "MCParticle::get_vertex_y(Particle)")
                .Define("MC_z",   "MCParticle::get_vertex_z(Particle)")
                .Define("MC_e",   "MCParticle::get_e(Particle)")
+               .Define("MC_m",   "MCParticle::get_mass(Particle)")
                
                #############################################
                ##               Build MC Vertex           ##
@@ -259,7 +260,7 @@ class analysis():
         for branchName in [
                 
                 "MC_PDG","MC_M1","MC_M2","MC_n","MC_D1","MC_D2",
-                "MC_x","MC_y","MC_z","MC_e",
+                "MC_x","MC_y","MC_z","MC_e","MC_m",
                 "EVT_ThrustEmin_E",          "EVT_ThrustEmax_E",
                 "EVT_ThrustEmin_Echarged",   "EVT_ThrustEmax_Echarged",
                 "EVT_ThrustEmin_Eneutral",   "EVT_ThrustEmax_Eneutral",
