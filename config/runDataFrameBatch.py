@@ -144,7 +144,7 @@ class runDataFrameBatch():
                 frun.write('mkdir job{}_chunk{}\n'.format(pr,ch))
                 frun.write('cd job{}_chunk{}\n'.format(pr,ch))
                 frun.write('export EOS_MGM_URL=\"root://eospublic.cern.ch\"\n')
-                frun.write('python /afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses/examples/FCCee/flavour/Bc2TauNu/{} output.root '.format(inputana))
+                frun.write('python {} output.root '.format(inputana))
                 for ff in range(chunkList[ch].size()): frun.write(' {}'.format(chunkList[ch].at(ff)))
                 frun.write(' {}\n'.format(eventList[ch]))
                 frun.write('mkdir -p {}/{}\n'.format(outDir,pr))

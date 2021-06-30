@@ -10,7 +10,8 @@ NUM_CPUS=8
 output_list=[]
 
 ##To produce variables for MVA stage 1 training
-inputana="analysis_stage1.py"
+inputana="/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses/examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py"
+
 outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Batch_Training_4stage1/"
 
 fraction=1.

@@ -11,7 +11,7 @@ output_list=[]
 
 fraction=1.
 
-inputana="analysis_stage1.py"
+inputana="/afs/cern.ch/user/h/helsens/FCCsoft/HEP-FCC/FCCAnalyses/examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py"
 
 process_list=['p8_ee_Zbb_ecm91_EvtGen',
               'p8_ee_Zbb_ecm91',
