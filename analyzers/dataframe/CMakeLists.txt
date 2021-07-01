@@ -35,9 +35,9 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					VertexingUtils.h
 					VertexFitterSimple.h
 					VertexFinderActs.h					
-					VertexFitterActs.h					
+					VertexFitterActs.h
+					CaloNtupleizer.h
 					LINKDEF LinkDef.h)
-
 
 file(GLOB sources *.cc)
 file(GLOB headers *.h)

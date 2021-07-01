@@ -4,7 +4,7 @@
 
 analysis.py runs the vertex fitter implemented in Vertexing.cc over a collection of tracks.
 This can be run e.g. over a sample of Z to light jets.
-Example file:  /eos/experiment/fcc/ee/examples/p8\_ecm91GeV\_Zuds\_IDEAtrkCov.root
+Example file:  /eos/experiment/fcc/ee/examples/lowerTriangle/p8\_ecm91GeV\_Zuds\_IDEAtrkCov.root
 
 To determine the primary vertex here, two possibilities are shown:
 
@@ -17,6 +17,17 @@ all tracks; exclude the tracks that have a bad chi2 to this vertex fit, and run 
 
 The macro **vertex\_plots.x** makes plots of the chi2 of the fit, of the resolutions of the fitted vertex
 position in (x, y, z), and of the corresponding pulls.
+
+Out-of-the-box recipe:
+```
+git clone https://github.com/HEP-FCC/FCCAnalyses
+source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
+cd FCCAnalyses/examples
+python FCCee/vertex/analysis.py /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zuds_IDEAtrkCov.root
+cd FCCee/vertex/
+root
+.x vertex_plots.x
+```
 
 
 ### Validation of the track parameters
