@@ -52,7 +52,8 @@ class analysis():
                # calculate recoil of zed_leptonic
                .Define("zed_leptonic_recoil",  "ReconstructedParticle::recoilBuilder(240)(zed_leptonic)")
                # write branch with recoil mass
-               .Define("zed_leptonic_recoil_m","ReconstructedParticle::get_mass(zed_leptonic_recoil)") 
+               .Define("zed_leptonic_recoil_m","ReconstructedParticle::get_mass(zed_leptonic_recoil)")
+               .Define("zed_leptonic_charge","ReconstructedParticle::get_charge(zed_leptonic)")
 
         )
 
@@ -68,7 +69,9 @@ class analysis():
                 "selected_muons_e",
                 "zed_leptonic_pt",
                 "zed_leptonic_m",
+                "zed_leptonic_charge",
                 "zed_leptonic_recoil_m",
+                
                
                 ]:
             branchList.push_back(branchName)
@@ -88,6 +91,7 @@ if __name__ == "__main__":
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
     ncpus = 0
+    print ('outfile  ',outfile)
     analysis = analysis(infile, outfile, ncpus)
     analysis.run()
 

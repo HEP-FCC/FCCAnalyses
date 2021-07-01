@@ -402,7 +402,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   TMatrixDSym **Winvi = new TMatrixDSym*[Ntr];	// ACA'
   TMatrixD  **Ai = new TMatrixD*[Ntr];            // A
   TMatrixDSym **Covi = new TMatrixDSym*[Ntr];     // Cov matrix of the track parameters
-	
+  
   //
   // vertex radius approximation
   // Maximum impact parameter
@@ -419,7 +419,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   //
   // Find track pair with largest phi difference
   Int_t isel; Int_t jsel; // selected track indices
-  Double_t dphiMax = 0.0;	// Max phi difference 
+  Double_t dphiMax = -9999.;	// Max phi difference 
   for (Int_t i = 0; i < Ntr-1; i++)
     {
       //ObsTrk* ti = tracks[i];

@@ -62,33 +62,71 @@ class runDataFrameFinal():
         start_time = time.time()
 
         processEvents={}
+        eventsTTree={}
+        processList={}
+        
         for pr in self.processes:
+            processEvents[pr]=0
+            eventsTTree[pr]=0
+
+            fileListRoot = ROOT.vector('string')()    
             fin    = self.baseDir+pr+'.root' #input file
             if not os.path.isfile(fin):
-                print ('file ',fin,'  does not exist. exit')
-                exit(3)
-            tfin = ROOT.TFile.Open(fin)
-            tfin.cd()
-            found=False
-            for key in tfin.GetListOfKeys():
-                if 'eventsProcessed' == key.GetName():
-                    events = tfin.eventsProcessed.GetVal()
-                    processEvents[pr]=events
-                    found=True
-            if not found:
-                processEvents[pr]=1
-            if 'Bc2TauNuTAUHADNU' in pr:
-                processEvents[pr]=self.procDict[pr]["numberOfEvents"]
-            tfin.Close()
+                print ('file ',fin,'  does not exist. Try if it is a directory as it was processed with batch')
+            else:
+                print ('open file ',fin)
+                tfin = ROOT.TFile.Open(fin)
+                tfin.cd()
+                found=False
+                for key in tfin.GetListOfKeys():
+                    if 'eventsProcessed' == key.GetName():
+                        events = tfin.eventsProcessed.GetVal()
+                        processEvents[pr]=events
+                        found=True
+                if not found:
+                    processEvents[pr]=1
+                tt=tfin.Get("events")
+                eventsTTree[pr]+=tt.GetEntries()
+
+                tfin.Close()
+                fileListRoot.push_back(fin)
+
+            if os.path.isdir(self.baseDir+pr):
+                print ('is dir found')
+                import glob
+                flist=glob.glob(self.baseDir+pr+"/flat_chunk_*.root")
+                for f in flist:
+                    tfin = ROOT.TFile.Open(f)
+                    print (f,'    ===    ',tfin, '  ',type(tfin))
+                    tfin.cd()
+                    
+                    found=False
+                    for key in tfin.GetListOfKeys():
+                        if 'eventsProcessed' == key.GetName():
+                            events = tfin.eventsProcessed.GetVal()
+                            processEvents[pr]+=events
+                            found=True
+                    if not found:
+                        processEvents[pr]=1
+                        
+                    tt=tfin.Get("events")
+                    eventsTTree[pr]+=tt.GetEntries()
+                    tfin.Close()
+                    fileListRoot.push_back(f)
+            processList[pr]=fileListRoot
+
+        print('processed events ',processEvents)
+        print('events in ttree  ',eventsTTree)
+
+
 
         length_cuts_names = max([len(cut) for cut in self.cuts])
 
         for pr in self.processes:
             print ('\n   running over process : ',pr)
-            fin    = self.baseDir+pr+'.root' #input file
 
             RDF = ROOT.ROOT.RDataFrame
-            df  = RDF(self.treename,fin )
+            df  = RDF(self.treename, processList[pr] )
             if len(self.defines)>0:
                 print ('     Running extra Define')
                 for define in self.defines:

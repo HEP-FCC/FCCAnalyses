@@ -20,6 +20,7 @@
 #include "Acts/Vertexing/TrackDensityVertexFinder.hpp"
 #include "Acts/Vertexing/Vertex.hpp"
 #include "Acts/Vertexing/VertexingOptions.hpp"
+#include "Acts/Vertexing/TrackAtVertex.hpp"
 
 #include "Acts/Surfaces/PerigeeSurface.hpp"
 #include "Acts/Utilities/Logger.hpp"
@@ -29,9 +30,10 @@
 
 using namespace VertexFinderActs;
 using namespace Acts::UnitLiterals;
+//template <typename input_track_t>
 
-
-VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
+ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> 
+VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
 
   // Create a test context
   //Acts::GeometryContext geoContext = Acts::GeometryContext();
@@ -72,15 +74,15 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
   // Set up the vertex seed finder
   using SeedFinder = Acts::TrackDensityVertexFinder<Fitter, Acts::GaussianTrackDensity<Acts::BoundTrackParameters>>;
   SeedFinder seedFinder;
-
-
+  
+  
   /*
   // Set up Gaussian track density
   Acts::GaussianTrackDensity::Config trackDensityConfig;
   trackDensityConfig.d0MaxSignificance = 10.;
   trackDensityConfig.z0MaxSignificance = 20.;
   Acts::GaussianTrackDensity trackDensity(trackDensityConfig);
-
+  
   
   // Vertex seed finder
   Acts::VertexSeedFinder::Config seedFinderConfig;
@@ -90,6 +92,7 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
 
   // The vertex finder type
   using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
+  //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
   Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;
@@ -115,7 +118,7 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
   //std::vector<const Acts::BoundTrackParameters*> Mytracks;
   std::vector<Acts::BoundTrackParameters> allTracks;
   allTracks.reserve(Ntr);
-  
+
   for (Int_t i = 0; i < Ntr; i++){
     //get the edm4hep track
     edm4hep::TrackState ti = tracks[i] ;
@@ -175,45 +178,37 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
   }
 
 
-  VertexingUtils::FCCAnalysesVertex TheVertex;
-  edm4hep::VertexData edm4hep_vertex;
-  ROOT::VecOps::RVec<float> reco_chi2;
-  ROOT::VecOps::RVec< TVectorD >  updated_track_parameters;
-  ROOT::VecOps::RVec<int> reco_ind;
-  ROOT::VecOps::RVec<float> final_track_phases;
-  ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
-
-  TheVertex.vertex = edm4hep_vertex;
-  TheVertex.reco_chi2 = reco_chi2;
-  TheVertex.updated_track_parameters = updated_track_parameters;
-  TheVertex.reco_ind = reco_ind;
-  TheVertex.final_track_phases = final_track_phases;
-  TheVertex.updated_track_momentum_at_vertex = updated_track_momentum_at_vertex;
-
-
-  TheVertex.ntracks = Ntr; 
-  if ( Ntr <= 1) return TheVertex;   // can not reconstruct a vertex with only one track...
-
-  
-  //std::cout << " --- n trk " << tracksPtr.size() << std::endl;
-  
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> TheVertexColl;
+ 
+  if ( Ntr <= 1)
+    return TheVertexColl;   // can not reconstruct a vertex with only one track...return an empty collection
+ 
   // find vertices
   auto result = finder.find(tracksPtr, finderOpts, state);
   
-
-
-
   //std::cout << "result  " << result.ok() << std::endl;
   if (not result.ok()) {
-    //std::cout << "Error in vertex finder: " << result.error().message() << std::endl;
-    return TheVertex;
+    std::cout << "Error in vertex finder: " << result.error().message() << std::endl;
+    return TheVertexColl;   // return an empty collection, as results of fitting is not ok
   }
 
   auto vertices = *result;
 
   // show some debug output
   //std::cout << "Found " << vertices.size() << " vertices in event" << std::endl;
+  //if (vertices.size()==1){
+  //const auto& vtx = vertices.at(0);
+  
   for (const auto& vtx : vertices) {
+
+    VertexingUtils::FCCAnalysesVertex TheVertex;
+    edm4hep::VertexData edm4hep_vertex;
+    ROOT::VecOps::RVec<float> reco_chi2;
+    ROOT::VecOps::RVec< TVectorD >  updated_track_parameters;
+    ROOT::VecOps::RVec<int> reco_ind;
+    ROOT::VecOps::RVec<float> final_track_phases;
+    ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
+
     //std::cout << "Found vertex at " << vtx.fullPosition().transpose() << " with "
     //	      << vtx.tracks().size() << " tracks." << std::endl;
 
@@ -235,10 +230,30 @@ VertexingUtils::FCCAnalysesVertex VertexFinderActs::VertexFinderAMVF(ROOT::VecOp
     edm4hep_vertex.algorithmType = 2;
     edm4hep_vertex.covMatrix = edm4hep_vtxcov;
 
+    std::vector<Acts::TrackAtVertex<Acts::BoundTrackParameters>> tracksAtVertex = vtx.tracks();
+
+    for (const auto& trk : tracksAtVertex) {
+      
+      reco_chi2.push_back(trk.chi2Track);
+      double ndf = trk.ndf;
+      
+      const Acts::BoundTrackParameters* originalParams = trk.originalParams;
+      for (size_t trkind=0;trkind<tracksPtr.size();trkind++)
+	if (originalParams == tracksPtr.at(trkind))reco_ind.push_back(trkind);
+    }
+    TheVertex.vertex = edm4hep_vertex;
+    TheVertex.reco_ind = reco_ind;
+    TheVertexColl.push_back(TheVertex);
   }
 
+  if (vertices.size()>0){
+    std::cout << "Found more than 0 Primary Vertex " << vertices.size() << std::endl;
+    for (const auto& vtx : vertices) {
+      std::cout << "Found vertex at " << vtx.fullPosition().transpose() << " with "
+		<< vtx.tracks().size() << " tracks." << std::endl;
+    }
+  }
+  
 
-  TheVertex.vertex = edm4hep_vertex;
-
-  return TheVertex;
+  return TheVertexColl;
 }

@@ -116,10 +116,21 @@ namespace Algorithms{
 					    ROOT::VecOps::RVec<float> px, 
 					    ROOT::VecOps::RVec<float> py, 
 					    ROOT::VecOps::RVec<float> pz);
-  
+
+  /// Get the angle cosTheta between one particle and an axis
+  float getAxisCosTheta(ROOT::VecOps::RVec<float> axis, 
+			float px, 
+			float py, 
+			float pz);
+
   /// Get the invariant mass from a list of reconstructed particles
   float getMass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
+  /// if dir == 1. points to minimum hemis if dir == -1, points to maximum energy
+  ROOT::VecOps::RVec<float> getThrustPointing(ROOT::VecOps::RVec<float> in,
+					      ROOT::VecOps::RVec<float> rp_e,
+					      ROOT::VecOps::RVec<float> thrust,
+					      float dir);
 
 }
 #endif
