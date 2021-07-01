@@ -23,7 +23,7 @@ include_directories(${EDM4HEP_INCLUDE_DIRS}
 
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
-                                        MCParticle.h
+					MCParticle.h
 					ReconstructedParticle.h
 					ReconstructedParticle2Track.h
 					ReconstructedParticle2MC.h
