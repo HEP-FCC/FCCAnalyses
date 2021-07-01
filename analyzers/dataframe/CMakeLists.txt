@@ -24,13 +24,14 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
-                                        MCParticle.h
+					MCParticle.h
 					ReconstructedParticle.h
 					ReconstructedParticle2Track.h
 					ReconstructedParticle2MC.h
 					Algorithms.h
 					JetClustering.h
 					JetClusteringUtils.h
+					JetTaggingUtils.h
 					ValenciaPlugin.h
 					VertexingUtils.h
 					VertexFitterSimple.h
@@ -39,8 +40,8 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					awkwardtest.h
 					myUtils.h
 					myFinalSel.h
+					CaloNtupleizer.h
 					LINKDEF LinkDef.h)
-
 
 file(GLOB sources *.cc)
 file(GLOB headers *.h)

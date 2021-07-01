@@ -36,7 +36,7 @@ class runDataFrameFinal():
         try :
             tt=tf.Get(self.treename)
             if tt==None:
-                print ('file do not contains events, selection was too tight, will skip: ',f)
+                print ('file does not contains events, selection was too tight, will skip: ',f)
                 return False
         except IOError as e:
             print ("I/O error({0}): {1}".format(e.errno, e.strerror))

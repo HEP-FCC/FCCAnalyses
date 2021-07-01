@@ -3,7 +3,7 @@
 from config.common_defaults import deffccdicts
 import os
 
-basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/fcc_tmp/"
+basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/spring2021/IDEA/"
 outdir="outputs/FCCee/higgs/mH-recoil/ee/"
 
 import multiprocessing

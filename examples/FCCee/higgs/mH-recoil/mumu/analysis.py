@@ -86,7 +86,7 @@ if __name__ == "__main__":
         print ("python ",sys.argv[0]," file.root")
         sys.exit(3)
     infile = sys.argv[1]
-    outDir = sys.argv[0].replace(sys.argv[0].split('/')[0],'outputs/FCCee').replace('analysis.py','')+'/'
+    outDir = sys.argv[0].replace(sys.argv[0].split('/')[0],'outputs').replace('analysis.py','')+'/'
     import os
     os.system("mkdir -p {}".format(outDir))
     outfile = outDir+infile.split('/')[-1]
