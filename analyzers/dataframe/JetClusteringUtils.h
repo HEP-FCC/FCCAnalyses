@@ -3,11 +3,11 @@
 #define  JETCLUSTERINGUTILS_ANALYZERS_H
 
 #include <vector>
-
+#include "Math/Vector4D.h"
 #include "ROOT/RVec.hxx"
-
+#include "edm4hep/MCParticleData.h"
 #include "fastjet/JetDefinition.hh"
-
+#include "TRandom3.h"
 
 /** Jet clustering utilities interface. 
 This represents a set functions and utilities to perfom jet clustering from a list of.  
@@ -79,6 +79,8 @@ namespace JetClusteringUtils{
 
   bool check(unsigned int n, int exclusive, float cut);
 
+  fastjet::RecombinationScheme recomb_scheme(int recombination);
+  
   ///@}
 }
 
