@@ -76,7 +76,14 @@ def mapHistos(var, label, sel, param):
 #__________________________________________________________
 def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
     legsize = 0.04*(len(hbackgrounds)+len(hsignal))
-    leg = ROOT.TLegend(0.58,0.86 - legsize,0.86,0.88)
+    legCoord=[0.68, 0.86-legsize, 0.96, 0.88]
+    try:
+        legCoord=param.legendCoord
+    except AttributeError:
+        print ('no legCoord, using default one...')
+        legCoord=[0.68, 0.86-legsize, 0.96, 0.88]
+
+    leg = ROOT.TLegend(legCoord[0],legCoord[1],legCoord[2],legCoord[3])
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
@@ -99,6 +106,8 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
     histos=[]
     colors=[]
 
+    nsig=len(hsignal)
+
     for s in hsignal:
         histos.append(hsignal[s][0])
         colors.append(param.colors[s])
@@ -110,31 +119,36 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
     intLumiab = param.intLumi/1e+06 
 
     
-    lt = "FCC-hh Simulation (Delphes)"    
+    lt = "FCCAnalyses: FCC-hh Simulation (Delphes)"    
     rt = "#sqrt{{s}} = {:.1f} TeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
 
     if 'ee' in param.collider:
-        lt = "FCC-ee Simulation (Delphes)"
+        lt = "FCCAnalyses: FCC-ee Simulation (Delphes)"
         rt = "#sqrt{{s}} = {:.1f} GeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
 
+    customLabel=""
+    try:
+        customLabel=param.customLabel
+    except AttributeError:
+        print ('no customLable, using nothing...')
 
     if 'AAAyields' in var:
-        drawStack(var, 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, param.scaleSig, yields)
+        drawStack(var, 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, param.scaleSig, customLabel, nsig, yields)
         return
         
     if 'stack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, param.scaleSig)
+            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, param.scaleSig, customLabel, nsig)
         if 'log' in param.yaxis:
-            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , True , histos, colors, param.ana_tex, extralab, param.scaleSig)
+            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , True , histos, colors, param.ana_tex, extralab, param.scaleSig, customLabel, nsig)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
 
     if 'nostack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , False , histos, colors, param.ana_tex, extralab, param.scaleSig)
+            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , False , histos, colors, param.ana_tex, extralab, param.scaleSig, customLabel, nsig)
         if 'log' in param.yaxis:
-            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , False , histos, colors, param.ana_tex, extralab, param.scaleSig)
+            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , False , histos, colors, param.ana_tex, extralab, param.scaleSig, customLabel, nsig)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
     if 'stack' not in param.stacksig and 'nostack' not in param.stacksig:
@@ -142,10 +156,8 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
 
 
 #_____________________________________________________________________________________________________________
-def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab, scaleSig, yields=None):
+def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab, scaleSig, customLabel, nsig,  yields=None):
 
-
-    
     canvas = ROOT.TCanvas(name, name, 600, 600) 
     canvas.SetLogy(logY)
     canvas.SetTicks(1,1)
@@ -179,116 +191,76 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
        canvas.SetLogy(1)
 
     # define stacked histo
-    hStack = ROOT.THStack("hstack","")
+    hStack    = ROOT.THStack("hstack","")
+    hStackBkg = ROOT.THStack("hstackbkg","")
 
     # first plot backgrounds
-         
-    histos[1].SetLineWidth(0)
-    histos[1].SetFillColor(colors[1])
+    histos[nsig].SetLineWidth(0)
+    histos[nsig].SetLineColor(ROOT.kBlack)
+    histos[nsig].SetFillColor(colors[nsig])
+    hStack.Add(histos[nsig])
+    hStackBkg.Add(histos[nsig])
     
-    hStack.Add(histos[1])
-    
-
     # now loop over other background (skipping first)
     iterh = iter(histos)
-    next(iterh)
+    for i in range(nsig):
+        next(iterh)
     next(iterh)
     
-    k = 2
+    k = nsig+1
     for h in iterh:
        h.SetLineWidth(0)
        h.SetLineColor(ROOT.kBlack)
        h.SetFillColor(colors[k])
        hStack.Add(h)
+       hStackBkg.Add(h)
        k += 1
-    
-    
+
+    if not stacksig:
+       hStack.Draw("hist")
+
+    # define stacked signal histo
+    hStackSig = ROOT.THStack("hstacksig","")
+
     # finally add signal on top
-    histos[0].SetLineWidth(3)
-    histos[0].SetLineColor(colors[0])
-    
+    for l in range(nsig):
+      histos[l].SetLineWidth(3)
+      histos[l].SetLineColor(colors[l])
+      if stacksig:
+        hStack.Add(histos[l])
+      else:
+        hStackSig.Add(histos[l])
+
     if stacksig:
-        hStack.Add(histos[0])
+        hStack.Draw("hist")
 
-    hStack.Draw("hist")
-
-
-    # fix names if needed
     xlabel = histos[1].GetXaxis().GetTitle()
-    if xlabel.find('m_{RSG}')>=0 : xlabel = xlabel.replace('m_{RSG}','m_{G_{RS}}')
-    ## remove/adapt X title content (should be done in config)
-    fix_str=" (pf04)"
-    if xlabel.find(fix_str)>=0 : xlabel = xlabel.replace(fix_str,'')
-    fix_str=" (pf08)"
-    if xlabel.find(fix_str)>=0 : xlabel = xlabel.replace(fix_str,'')
-    fix_str=" (pf08 metcor)"
-    if xlabel.find(fix_str)>=0 : xlabel = xlabel.replace(fix_str,'')
-    if ana_tex.find("Q*")>=0 :
-      fix_str="Z'"
-      if xlabel.find(fix_str)>=0 : xlabel = xlabel.replace(fix_str,'Q*')
 
-    #hStack.GetXaxis().SetTitleFont(font)
-    #hStack.GetXaxis().SetLabelFont(font)
     hStack.GetXaxis().SetTitle(xlabel)
     hStack.GetYaxis().SetTitle(ylabel)
-    #hStack.GetYaxis().SetTitleFont(font)
-    #hStack.GetYaxis().SetLabelFont(font)
-    '''hStack.GetXaxis().SetTitleOffset(1.5)
-    hStack.GetYaxis().SetTitleOffset(1.6)
-    hStack.GetXaxis().SetLabelOffset(0.02)
-    hStack.GetYaxis().SetLabelOffset(0.02)
-    hStack.GetXaxis().SetTitleSize(0.06)
-    hStack.GetYaxis().SetTitleSize(0.06)
-    hStack.GetXaxis().SetLabelSize(0.06)
-    hStack.GetYaxis().SetLabelSize(0.06)
-    hStack.GetXaxis().SetNdivisions(505);
-    hStack.GetYaxis().SetNdivisions(505);
-    hStack.SetTitle("") '''
 
     hStack.GetYaxis().SetTitleOffset(1.95)
     hStack.GetXaxis().SetTitleOffset(1.40)
     
-
-    #hStack.SetMaximum(1.5*maxh) 
-
     lowY=0.
     if logY:
-        # old
-        #highY=100000*maxh
-        #lowY=0.000001*maxh
-        # automatic
         highY=200.*maxh/ROOT.gPad.GetUymax()
-        #
         threshold=0.5
         bin_width=hStack.GetXaxis().GetBinWidth(1)
         lowY=threshold*bin_width
-        if ana_tex.find("Q*")>=0 : lowY=10.
-        if ana_tex.find("tau^")>=0 :
-          lowY=1.
-          highY=220.*maxh/ROOT.gPad.GetUymax()
-        if xlabel.find("Flow")>=0 : 
-          lowY=100.
-          highY=600.*maxh/ROOT.gPad.GetUymax()
-        if xlabel.find("#tau_{")>=0:
-          lowY=1000.
-          highY=500.*maxh/ROOT.gPad.GetUymax()
-        #
         hStack.SetMaximum(highY)
         hStack.SetMinimum(lowY)
     else:
         hStack.SetMaximum(1.3*maxh)
         hStack.SetMinimum(0.)
 
-
-    escape_scale_Xaxis=True
-    if xlabel.find("#tau_{")>=0: escape_scale_Xaxis=True
-    #
+    escape_scale_Xaxis=True    
     hStacklast = hStack.GetStack().Last()
     lowX_is0=True
     lowX=hStacklast.GetBinCenter(1)-(hStacklast.GetBinWidth(1)/2.)
     highX_ismax=False
     highX=hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.)
-    #
+
     if escape_scale_Xaxis==False:
       for i_bin in range( 1, hStacklast.GetNbinsX()+1 ):
          bkg_val=hStacklast.GetBinContent(i_bin)
@@ -296,8 +268,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
          if bkg_val/maxh>0.1 and i_bin<15 and lowX_is0==True :
            lowX_is0=False
            lowX=hStacklast.GetBinCenter(i_bin)-(hStacklast.GetBinWidth(i_bin)/2.)
-           if ana_tex.find("e^")>=0 or ana_tex.find("mu^")>=0 : lowX+=1
-         #
+
          val_to_compare=bkg_val
          if sig_val>bkg_val : val_to_compare=sig_val
          if val_to_compare<lowY and i_bin>15 and highX_ismax==False: 
@@ -314,22 +285,24 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
       highX=hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.)
     hStack.GetXaxis().SetLimits(int(lowX),int(highX))
 
-
     if not stacksig:
-        if 'AAAyields' not in name: histos[0].Draw("same hist")
-   
-    #legend.SetTextFont(font) 
+        if 'AAAyields' not in name: hStackSig.Draw("same hist nostack")
+
     legend.Draw() 
                         
-    Text = ROOT.TLatex()
-    
+    Text = ROOT.TLatex()    
     Text.SetNDC() 
     Text.SetTextAlign(31);
     Text.SetTextSize(0.04) 
 
     text = '#it{' + leftText +'}'
-    
-    Text.DrawLatex(0.90, 0.92, text) 
+    Text.DrawLatex(0.90, 0.94, text) 
+
+    text = '#it{'+customLabel+'}'
+    Text.SetTextAlign(12);
+    Text.SetNDC(ROOT.kTRUE) 
+    Text.SetTextSize(0.04) 
+    Text.DrawLatex(0.18, 0.85, text)
 
     rightText = re.split(",", rightText)
     text = '#bf{#it{' + rightText[0] +'}}'
@@ -337,27 +310,26 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     Text.SetTextAlign(12);
     Text.SetNDC(ROOT.kTRUE) 
     Text.SetTextSize(0.04) 
-    Text.DrawLatex(0.18, 0.83, text)
+    Text.DrawLatex(0.18, 0.81, text)
 
     rightText[1]=rightText[1].replace("   ","")    
     text = '#bf{#it{' + rightText[1] +'}}'
     Text.SetTextSize(0.035) 
-    Text.DrawLatex(0.18, 0.78, text)
+    Text.DrawLatex(0.18, 0.76, text)
 
     text = '#bf{#it{' + ana_tex +'}}'
     Text.SetTextSize(0.04)
-    Text.DrawLatex(0.18, 0.73, text)
+    Text.DrawLatex(0.18, 0.71, text)
 
     text = '#bf{#it{' + extralab +'}}'
     Text.SetTextSize(0.025)
-    Text.DrawLatex(0.18, 0.68, text)
+    Text.DrawLatex(0.18, 0.66, text)
 
     text = '#bf{#it{' + 'Signal scale=' + str(scaleSig)+'}}'
     Text.SetTextSize(0.025)
     if scaleSig!=1:Text.DrawLatex(0.18, 0.63, text)
 
     canvas.RedrawAxis()
-    #canvas.Update()
     canvas.GetFrame().SetBorderSize( 12 )
     canvas.Modified()
     canvas.Update()
