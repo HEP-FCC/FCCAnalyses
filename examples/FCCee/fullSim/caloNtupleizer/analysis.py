@@ -24,12 +24,14 @@ parser.add_argument("-inputFiles", default = '/afs/cern.ch/user/b/brfranco/work/
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
 parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = str2bool)
 parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"], help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
-parser.add_argument("-storeClusterBranches", default = False, help="Whether or not to store cluster information", type = str2bool)
+parser.add_argument("-storeClusterBranches", default = True, help="Whether or not to store cluster information", type = str2bool)
 parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
 parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = str2bool)
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
 parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
+parser.add_argument("-storeSimParticleSecond", default = True, help="Whether to store the SimParticleSecond information", type = str2bool) 
+parser.add_argument("-simParticleSecondaryNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondary branch", type = str) 
 
 args = parser.parse_args()
 
@@ -73,6 +75,7 @@ class analysis():
                 #dict_outputBranchName_function["%s_position"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_positionVector3(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_firstCell"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_firstCell(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_lastCell"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_lastCell(%s)"%clusterBranchName
+               # dict_outputBranchName_function["%s_lastCell"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_PDG(%s)"%clusterBranchName 
 
         # cells attached to clusters
         if args.storeClusterCellsBranches:
@@ -84,6 +87,11 @@ class analysis():
                 dict_outputBranchName_function["%s_theta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_theta(%s)"%clusterCellsBranchName
                 #dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_positionVector3(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%clusterCellsBranchName
+        
+        # SimParticleSecond 
+        if args.storeSimParticleSecond: 
+            for SimParticleSecondariesName in args.simParticleSecondaryNames: 
+                dict_outputBranchName_function["%s_x"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondary_x(%s)"%SimParticleSecondariesName    
 
         # gen particles
         if args.storeGenBranches:

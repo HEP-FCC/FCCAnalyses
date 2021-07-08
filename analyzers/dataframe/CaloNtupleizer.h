@@ -8,7 +8,7 @@
 #include "ROOT/RVec.hxx"
 #include "edm4hep/CalorimeterHitData.h"
 #include "edm4hep/ClusterData.h"
-//#include "edm4hep/MCParticleData.h"
+#include "edm4hep/MCParticleData.h"
 
 #include "TVector3.h"
 #include "TLorentzVector.h"
@@ -36,5 +36,23 @@ ROOT::VecOps::RVec<float> getCaloCluster_energy (ROOT::VecOps::RVec<edm4hep::Clu
 ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
 ROOT::VecOps::RVec<int> getCaloCluster_firstCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
 ROOT::VecOps::RVec<int> getCaloCluster_lastCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
+//ROOT::VecOps::RVec<int> getCaloCluster_PDG (ROOT::VecOps::RVec<edm4hep::ClusterData> in); 
+
+// SimParticleSecondary 
+ROOT::VecOps::RVec<float> getSimParticleSecondary_x (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+//ROOT::VecOps::RVec<float> getSimParticleSecondary_y (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+//ROOT::VecOps::RVec<float> getSimParticleSecondary_z (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
+//ROOT::VecOps::RVec<float> getSimParticleSecondary_z (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+//ROOT::VecOps::RVec<float> getSimParticleSecondary_phi (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
+//ROOT::VecOps::RVec<float> getSimParticleSecondary_theta (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
+//ROOT::VecOps::RVec<float> getSimParticleSecondary_eta (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
+//ROOT::VecOps::RVec<float> getSimParticleSecondary_energy (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
+//ROOT::VecOps::RVec<TVector3> getSimParticleSecondary_positionVector3 (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
+
+
+
+
+
 }
 #endif
