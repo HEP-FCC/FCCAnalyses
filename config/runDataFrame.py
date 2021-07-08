@@ -89,7 +89,7 @@ class runDataFrame():
             print  ('==============================SUMMARY==============================')
             print  ('Elapsed time (H:M:S)     :  ',time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
             print  ('Events Processed/Second  :  ',int(nevents_real/elapsed_time))
-            print  ('Total Events Processed   :  ',int(nevents_real/elapsed_time))
+            print  ('Total Events Processed   :  ',int(nevents_real))
             print  ('===================================================================')
 
             outf = ROOT.TFile( outDir+outName+'.root', 'update' )
@@ -103,3 +103,5 @@ class runDataFrame():
             outf.Write()
             outf.Close()
             counter+=1
+
+        

@@ -285,7 +285,12 @@ TVectorD VertexFitterSimple::Fill_x(TVectorD par, Double_t phi){
 
 VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary, 
 								     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-								     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks )  {
+								     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
+								     bool BeamSpotConstraint,
+								     double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz, 
+                                                                     double bsc_x, double bsc_y, double bsc_z )  {
+
+
 
   // input = a collection of recoparticles (in case one want to make associations to RecoParticles ?)
   // and thetracks = the collection of all TrackState in the event
@@ -298,7 +303,8 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary
   // and run the vertex fitter
   
   //FCCAnalysesVertex thevertex = VertexFitter_Tk( Primary, tracks, thetracks) ;
-  thevertex = VertexFitter_Tk( Primary, tracks);
+  thevertex = VertexFitter_Tk( Primary, tracks,
+			       BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z );
 
   //fill the indices of the tracks
   ROOT::VecOps::RVec<int> reco_ind;
@@ -319,9 +325,14 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary
 
 
 VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Primary, 
-									ROOT::VecOps::RVec<edm4hep::TrackState> tracks){
+									ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                                                                        bool BeamSpotConstraint, 
+                                                                        double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
+									double bsc_x, double bsc_y, double bsc_z )  {
   
-  
+  // Units for the beam-spot : mum
+  // See https://github.com/HEP-FCC/FCCeePhysicsPerformance/tree/master/General#generating-events-under-realistic-fcc-ee-environment-conditions
+
   // final results :
   VertexingUtils::FCCAnalysesVertex TheVertex;
   
@@ -348,6 +359,18 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   bool debug = false;
   if (debug) std::cout << " enter in VertexFitter_Tk for the Bs decay vertex " << std::endl;
   
+  // if a beam-spot constraint is required :
+  TMatrixDSym BeamSpotCovI(3);
+  TVectorD BeamSpotPos(3);
+  if (BeamSpotConstraint) {   // fill in the inverse of the covariance matrix. Convert the units into meters
+     BeamSpotCovI(0,0) = 1./pow( bsc_sigmax * 1e-6, 2) ;   // mum to m
+     BeamSpotCovI(1,1) = 1./pow( bsc_sigmay * 1e-6, 2) ;   
+     BeamSpotCovI(2,2) = 1./pow( bsc_sigmaz * 1e-6, 2) ; 
+     BeamSpotPos(0) = bsc_x * 1e-6;
+     BeamSpotPos(1) = bsc_y * 1e-6 ;
+     BeamSpotPos(2) = bsc_z * 1e-6 ;
+  }
+
   Double_t *final_chi2 = new Double_t[Ntr];
   Double_t *final_phases = new Double_t[Ntr];
   std::vector< TVectorD > final_delta_alpha ;
@@ -379,7 +402,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   TMatrixDSym **Winvi = new TMatrixDSym*[Ntr];	// ACA'
   TMatrixD  **Ai = new TMatrixD*[Ntr];            // A
   TMatrixDSym **Covi = new TMatrixDSym*[Ntr];     // Cov matrix of the track parameters
-	
+  
   //
   // vertex radius approximation
   // Maximum impact parameter
@@ -396,7 +419,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   //
   // Find track pair with largest phi difference
   Int_t isel; Int_t jsel; // selected track indices
-  Double_t dphiMax = 0.0;	// Max phi difference 
+  Double_t dphiMax = -9999.;	// Max phi difference 
   for (Int_t i = 0; i < Ntr-1; i++)
     {
       //ObsTrk* ti = tracks[i];
@@ -439,6 +462,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   //
   Int_t Ntry = 0;
   Int_t TryMax = 100;
+  if (BeamSpotConstraint) TryMax = TryMax * 5;
   Double_t eps = 1.0e-9; // vertex stability
   Double_t epsi = 1000.;
   //
@@ -502,12 +526,22 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 	  cterm += Ds * xs;
 	}				// End loop on tracks
       //
+
+      TMatrixDSym H0 = H;
+
+      if (BeamSpotConstraint) {
+	H += BeamSpotCovI ;
+        cterm += BeamSpotCovI * BeamSpotPos ;
+        DW1D  += BeamSpotCovI ;
+      }
+
       // update vertex position
       TMatrixDSym H1 = RegInv3(H);
       x = H1*cterm;
       
       // Update vertex covariance
       covX = DW1D.Similarity(H1);
+
       // Update phases and chi^2
       Chi2 = 0.0;
       for (Int_t i = 0; i < Ntr; i++)
@@ -529,12 +563,28 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 	  final_delta_alpha[i] =  kk * ta * lambda;  // that's minus delta_alpha
 	}
       //
+
       TVectorD dx = x - x0;
       x0 = x;
       // update vertex stability
       TMatrixDSym Hess = RegInv3(covX);
+
       epsi = Hess.Similarity(dx);
       Ntry++;
+      //if ( Ntry >= TryMax) std::cout << " ... in VertexFitterSimple, Ntry >= TryMax " << std::endl;
+
+      if (BeamSpotConstraint) {
+        
+        // add the following term to the chi2 :
+        TVectorD dx_beamspot = x - BeamSpotPos ;
+        Double_t chi2_bsc = BeamSpotCovI.Similarity( dx_beamspot );
+        //Chi2 += chi2_bsc -3;
+        Chi2 += chi2_bsc ;
+
+      }
+
+
+
       //
       // Cleanup
       //

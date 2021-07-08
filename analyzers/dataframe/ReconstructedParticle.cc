@@ -223,6 +223,12 @@ ROOT::VecOps::RVec<float> ReconstructedParticle::get_p(ROOT::VecOps::RVec<edm4he
   return result;
 }
 
+float ReconstructedParticle::get_p(edm4hep::ReconstructedParticleData in) {
+  TLorentzVector tlv;
+  tlv.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
+  return tlv.P();
+}
+
 ROOT::VecOps::RVec<float> ReconstructedParticle::get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
@@ -286,6 +292,28 @@ ROOT::VecOps::RVec<TLorentzVector> ReconstructedParticle::get_tlv(ROOT::VecOps::
   return result;
 }
 
+TLorentzVector ReconstructedParticle::get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, int index) {
+  TLorentzVector result;
+  auto & p = in[index];
+  result.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+  return result;
+}
+
+TLorentzVector ReconstructedParticle::get_tlv(edm4hep::ReconstructedParticleData in) {
+  TLorentzVector result;
+  result.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
+  return result;
+}
+
+ROOT::VecOps::RVec<int> 
+ReconstructedParticle::get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(p.type);
+  }
+  return result;
+}
+
 
 int ReconstructedParticle::get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x) {
   int result =  x.size();
@@ -297,7 +325,7 @@ ROOT::VecOps::RVec<bool> ReconstructedParticle::getJet_btag(ROOT::VecOps::RVec<i
   ROOT::VecOps::RVec<bool> result;
   //std::cout << "========================new event=======================" <<std::endl;
   for (size_t i = 0; i < index.size(); ++i) {
-    result.push_back(values.at(pid.at(index.at(i)).parameters_begin +1));
+    result.push_back(values.at(pid.at(index.at(i)).parameters_begin));
     
     //std::cout << pid.at(index.at(i)).parameters_begin << "  ==  " << pid.at(index.at(i)).parameters_end << std::endl;
     //for (unsigned j = pid.at(index.at(i)).parameters_begin; j != pid.at(index.at(i)).parameters_end; ++j) {

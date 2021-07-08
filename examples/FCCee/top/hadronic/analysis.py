@@ -30,20 +30,70 @@ class analysis():
     def run(self):
         df2 = (self.df
         #df2 = (self.df.Range(10)
-
+               #alias for dealing with # in python 
                .Alias("Jet3","Jet#3.index")
+               #define the RP px, py, pz and e
                .Define("RP_px",          "ReconstructedParticle::get_px(ReconstructedParticles)")
                .Define("RP_py",          "ReconstructedParticle::get_py(ReconstructedParticles)")
                .Define("RP_pz",          "ReconstructedParticle::get_pz(ReconstructedParticles)")               
                .Define("RP_e",           "ReconstructedParticle::get_e(ReconstructedParticles)")
 
-               #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 6 jets
-               .Define("jets",           "JetClustering::clustering(1, 0.5, 2, 6)(RP_px, RP_py, RP_pz, RP_e)")
-               .Define("jets_px",        "JetClustering::getJet_px(jets)")
-               .Define("jets_py",        "JetClustering::getJet_py(jets)")
-               .Define("jets_pz",        "JetClustering::getJet_pz(jets)")
+               #build pseudo jets with the RP
+               .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
+
+               #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 4 jets, E0-scheme
+               .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 4, 0, 10)(pseudo_jets)")
+               #get the jets out of the struct
+               .Define("jets_kt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_kt)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents_kt","JetClusteringUtils::get_constituents(FCCAnalysesJets_kt)")
+               #get some variables
+               .Define("jets_kt_e",        "JetClusteringUtils::get_e(jets_kt)")
+               .Define("jets_kt_px",        "JetClusteringUtils::get_px(jets_kt)")
+               .Define("jets_kt_py",        "JetClusteringUtils::get_py(jets_kt)")
+               .Define("jets_kt_pz",        "JetClusteringUtils::get_pz(jets_kt)")
+
+               #run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=0.5, inclusive clustering, E-scheme 
+               .Define("FCCAnalysesJets_ee_genkt", "JetClustering::clustering_ee_genkt(0.5, 0, 0, 0, 0, -1)(pseudo_jets)")
+               #get the jets out of the struct
+               .Define("jets_ee_genkt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_ee_genkt)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents_ee_genkt","JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_genkt)")
+               #get some variables
+               .Define("jets_ee_genkt_px",        "JetClusteringUtils::get_px(jets_ee_genkt)")
+               .Define("jets_ee_genkt_py",        "JetClusteringUtils::get_py(jets_ee_genkt)")
+               .Define("jets_ee_genkt_pz",        "JetClusteringUtils::get_pz(jets_ee_genkt)")
+ 
+
+               #run jet clustering with all reconstructed particles. valencia_algorithm, R=0.5, inclusive clustering, E-scheme
+               .Define("FCCAnalysesJets_valencia", "JetClustering::clustering_valencia(0.5, 1, 6, 0, 0, 1., 1.)(pseudo_jets)")
+
+               #get the jets out of the struct
+               .Define("jets_valencia",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_valencia)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents_valencia","JetClusteringUtils::get_constituents(FCCAnalysesJets_valencia)")
+               #get some variables
+               .Define("jets_valencia_px",        "JetClusteringUtils::get_px(jets_valencia)")
+               .Define("jets_valencia_py",        "JetClusteringUtils::get_py(jets_valencia)")
+               .Define("jets_valencia_pz",        "JetClusteringUtils::get_pz(jets_valencia)")
+ 
+               #run jet clustering with all reconstructed particles. jade_algorithm, R=0.5, exclusive clustering, exactly 4 jets, sorted by E, E0-scheme 
+               .Define("FCCAnalysesJets_jade", "JetClustering::clustering_jade(0.5, 2, 4, 1, 10)(pseudo_jets)")
+
+               #get the jets out of the struct
+               .Define("jets_jade",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_jade)")
+               #get the jets constituents out of the struct
+               .Define("jetconstituents_jade","JetClusteringUtils::get_constituents(FCCAnalysesJets_jade)")
+               #get some variables
+               .Define("jets_jade_px",        "JetClusteringUtils::get_px(jets_jade)")
+               .Define("jets_jade_py",        "JetClusteringUtils::get_py(jets_jade)")
+               .Define("jets_jade_pz",        "JetClusteringUtils::get_pz(jets_jade)")
+               .Define("jets_jade_flavour",   "JetTaggingUtils::get_flavour(jets_jade, Particle)")
+               .Define("jets_jade_btag",      "JetTaggingUtils::get_btag(jets_jade_flavour, 0.80)")
+               .Define("jets_jade_btag_true", "JetTaggingUtils::get_btag(jets_jade_flavour, 1.0)")
+               .Define("jets_jade_ctag",      "JetTaggingUtils::get_ctag(jets_jade_flavour, 0.10)")
+               .Define("jets_jade_ctag_true",      "JetTaggingUtils::get_ctag(jets_jade_flavour, 1.0)")
                
-                       
                .Define("JET_btag",       "ReconstructedParticle::getJet_btag(Jet3, ParticleIDs, ParticleIDs_0)")
                .Define("EVT_nbtag",      "ReconstructedParticle::getJet_ntags(JET_btag)")
                
@@ -95,9 +145,30 @@ class analysis():
                 "RP_hemis1_mass",
                 "RP_total_mass",
 
-                "jets_px",
-                "jets_py",
-                "jets_pz",
+                "jets_kt_e",
+                "jets_kt_px",
+                "jets_kt_py",
+                "jets_kt_pz",
+                "jetconstituents_kt",
+                
+                "jets_ee_genkt_px",
+                "jets_ee_genkt_py",
+                "jets_ee_genkt_pz",
+                "jetconstituents_ee_genkt",
+
+                "jets_valencia_px",
+                "jets_valencia_py",
+                "jets_valencia_pz",
+                "jetconstituents_valencia",
+
+                "jets_jade_px",
+                "jets_jade_py",
+                "jets_jade_pz",
+                "jets_jade_ctag",
+                "jets_jade_ctag_true",
+                "jets_jade_btag",
+                "jets_jade_btag_true",
+                "jetconstituents_jade",
                
                 ]:
             branchList.push_back(branchName)
