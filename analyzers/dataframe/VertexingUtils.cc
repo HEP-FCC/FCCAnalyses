@@ -11,8 +11,10 @@ selTracks::selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_
 													    m_d0sig_max( arg_d0sig_max ), 
 													    m_z0sig_min( arg_z0sig_min ), 
 													    m_z0sig_max (arg_z0sig_max) { };
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  VertexingUtils::selTracks::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
-											       ROOT::VecOps::RVec<edm4hep::TrackState> tracks  ) {
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  
+VertexingUtils::selTracks::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+				       ROOT::VecOps::RVec<edm4hep::TrackState> tracks  ) {
+
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  result;
   result.reserve(recop.size());
   
@@ -36,10 +38,11 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  VertexingUtils::selTrack
 // Selection of primary particles based on the matching of RecoParticles
 // to MC particles
 //
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> VertexingUtils::SelPrimaryTracks (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind,
-											 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
-											 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
-											 TVector3 MC_EventPrimaryVertex) {
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> 
+VertexingUtils::SelPrimaryTracks (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind,
+				  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
+				  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
+				  TVector3 MC_EventPrimaryVertex) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(reco.size());
@@ -64,13 +67,16 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> VertexingUtils::SelPrimar
   return result;
 }
 
-int VertexingUtils::get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+
+int 
+VertexingUtils::get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   int nt = tracks.size();
   return nt;
 }
 
 
-TVectorD VertexingUtils::get_trackParam( edm4hep::TrackState & atrack) {
+TVectorD 
+VertexingUtils::get_trackParam( edm4hep::TrackState & atrack) {
     double d0 =atrack.D0 ;
     double phi0 = atrack.phi ;
     double omega = atrack.omega ;
@@ -94,7 +100,8 @@ TVectorD VertexingUtils::get_trackParam( edm4hep::TrackState & atrack) {
     return res;
 }
 
-TMatrixDSym VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
+TMatrixDSym 
+VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
   std::array<float, 15> covMatrix = atrack.covMatrix;
   TMatrixDSym covM(5);
   
@@ -146,14 +153,46 @@ TMatrixDSym VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
 }
 
 
+FCCAnalysesVertex 
+VertexingUtils::get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index ){
+  FCCAnalysesVertex result;
+  if (index<TheVertexColl.size())result=TheVertexColl.at(index);
+  return result;
+}
+
+
+int 
+VertexingUtils::get_Nvertex( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ){
+  return TheVertexColl.size();
+}
+
+
 edm4hep::VertexData VertexingUtils::get_VertexData( FCCAnalysesVertex TheVertex ) {
   return TheVertex.vertex ;
 }
+
+ROOT::VecOps::RVec<edm4hep::VertexData> VertexingUtils::get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ) {
+  ROOT::VecOps::RVec<edm4hep::VertexData> result;
+  for (unsigned int i=0; i<TheVertexColl.size();i++) {
+    result.push_back(TheVertexColl.at(i).vertex);
+  }
+  return result;
+}
+
+edm4hep::VertexData VertexingUtils::get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index) {
+  edm4hep::VertexData result;
+  if (index<TheVertexColl.size())result=TheVertexColl.at(index).vertex;
+  return result;
+}
+
 
 int VertexingUtils::get_VertexNtrk( FCCAnalysesVertex TheVertex ) {
   return TheVertex.ntracks;
 }
 
+ROOT::VecOps::RVec<int> VertexingUtils::get_VertexRecoInd( FCCAnalysesVertex TheVertex ) {
+  return TheVertex.reco_ind;
+}
 
 TVectorD VertexingUtils::ParToACTS(TVectorD Par){
 

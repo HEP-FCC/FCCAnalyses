@@ -1,7 +1,5 @@
-
-cmake_minimum_required(VERSION 2.8)
-
-
+cmake_minimum_required(VERSION 3.1...3.16)
+#cmake_minimum_required(VERSION 2.8)
 
 
 project(FCCAnalyses CXX)
@@ -40,11 +38,27 @@ install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
 #install(DIRECTORY FCCeeAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 #install(DIRECTORY FCChhAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 
+
+execute_process(COMMAND python -m awkward.config --incdir OUTPUT_VARIABLE _AWKWARD_INCLUDE OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(AWKWARD_INCLUDE ${_AWKWARD_INCLUDE})
+execute_process(COMMAND python -m awkward.config --libdir OUTPUT_VARIABLE _AWKWARD_LIBRARIES OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(AWKWARD_LIBRARIES ${_AWKWARD_LIBRARIES})
+
+include_directories(BEFORE "${AWKWARD_INCLUDE}")
+
+
+
+find_library(CPU-KERNELS awkward-cpu-kernels REQUIRED HINTS ${AWKWARD_LIBRARIES})
+find_library(LIBAWKWARD awkward REQUIRED HINTS ${AWKWARD_LIBRARIES})
+find_library(LIBDL dl REQUIRED)
+
+message(STATUS "Libraries: ${CPU-KERNELS} ${LIBAWKWARD} ${LIBDL}")
+message(STATUS "includes--------------------- main: ${AWKWARD_INCLUDE}")
+message(STATUS "Library---------------------- main: ${AWKWARD_LIBRARIES}")
+
+
 add_subdirectory(analyzers/dataframe)
 
-#add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/)
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 

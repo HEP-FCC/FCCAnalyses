@@ -4,7 +4,10 @@ import ROOT
 print ("Load cxx analyzers ... ",)
 ROOT.gSystem.Load("libedm4hep")
 ROOT.gSystem.Load("libpodio")
+ROOT.gSystem.Load("libawkward")
+ROOT.gSystem.Load("libawkward-cpu-kernels")
 ROOT.gSystem.Load("libFCCAnalyses")
+
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
@@ -131,6 +134,10 @@ class analysis():
                .Define("RP_thrusthemis1", "ReconstructedParticle::sel_axis(1)(RP_thrustangle, ReconstructedParticles)")
                .Define("RP_thrusthemis_emax", "if (EVT_thrusthemis0_e.at(0)>EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
                .Define("RP_thrusthemis_emin", "if (EVT_thrusthemis0_e.at(0)<EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
+
+               #.Define("awk", "dummyLoader()")
+               .Define("awk", "awkwardtest()")
+               
                )
 
         # select branches for output file
@@ -153,7 +160,7 @@ class analysis():
                 "RP_thrustangle","RP_sphericityangle","RP_p","RP_px","RP_py","RP_pz","RP_charge","RP_mass",
 
                 "RP_MC_index","RP_MC_parentindex","RP_MC_grandparentindex",
-                
+                "awk"
                 ]:
             branchList.push_back(branchName)
 

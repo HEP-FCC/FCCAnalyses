@@ -10,7 +10,7 @@
 #include "VertexingUtils.h"
 
 namespace VertexFinderActs{
-  VertexingUtils::FCCAnalysesVertex VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 }
 
 #endif

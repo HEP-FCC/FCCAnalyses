@@ -153,8 +153,9 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
 
 
   TheVertex.ntracks = Ntr; 
-  if ( Ntr <= 1) return TheVertex;   // can not reconstruct a vertex with only one track...
-
+  if ( Ntr <= 1) {
+    return TheVertex;   // can not reconstruct a vertex with only one track...
+  }
 
   Acts::Vertex<Acts::BoundTrackParameters> fittedVertex =  
     billoirFitter.fit(tracksPtr, linearizer, vfOptions, state).value();
@@ -168,9 +169,11 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
   //             << fittedVertexConstraint.position() << std::endl;
 
 
-
+  
   TheVertex.ntracks = Ntr;
-  edm4hep_vertex.chi2 = fittedVertex.fitQuality().first/ fittedVertex.fitQuality().second ;   
+  edm4hep_vertex.chi2 = fittedVertex.fitQuality().first/ fittedVertex.fitQuality().second ;  
+  //std::cout << "Fitted chi2: " << edm4hep_vertex.chi2 << std::endl;
+
   edm4hep_vertex.position = edm4hep::Vector3f( fittedVertex.position()[0],
 					       fittedVertex.position()[1], 
 					       fittedVertex.position()[2]) ;  // store the  vertex in mm

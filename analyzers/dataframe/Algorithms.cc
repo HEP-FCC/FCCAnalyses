@@ -162,7 +162,7 @@ ROOT::VecOps::RVec<float> Algorithms::minimize_thrust::operator()(ROOT::VecOps::
   const double *xs_err = min->Errors();
 
   //std::cout << "Minimum: f(" << xs[0] << "," << xs[1] << "," << xs[2] << "): " << min->MinValue()  << std::endl;
-
+  
   ROOT::VecOps::RVec<float> result;
   result.push_back(-1.*min->MinValue());
   result.push_back(xs[0]);
@@ -171,6 +171,7 @@ ROOT::VecOps::RVec<float> Algorithms::minimize_thrust::operator()(ROOT::VecOps::
   result.push_back(xs_err[1]);
   result.push_back(xs[2]);
   result.push_back(xs_err[2]);
+  
   delete min;
   return result;
 }
@@ -277,4 +278,38 @@ ROOT::VecOps::RVec<float> Algorithms::getAxisCosTheta(ROOT::VecOps::RVec<float> 
     result.push_back(value);
   }
   return result;
+}
+
+
+float Algorithms::getAxisCosTheta(ROOT::VecOps::RVec<float> axis, 
+				  float px, 
+				  float py, 
+				  float pz){
+
+  float thrust_mag = sqrt(axis[1]*axis[1] + axis[3]*axis[3] + axis[5]*axis[5]);
+  float result = (px*axis[1] + py*axis[3] + pz*axis[5])/(sqrt(px*px+py*py+pz*pz)*thrust_mag);
+ 
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> Algorithms::getThrustPointing(ROOT::VecOps::RVec<float> in,
+							ROOT::VecOps::RVec<float> rp_e,
+							ROOT::VecOps::RVec<float> thrust,
+							float dir){
+
+  float direction = 1.;
+  float pos_angle=0.;
+  float neg_angle=0.;
+  for (unsigned int i =0; i<rp_e.size(); i++){
+    if (in.at(i)>0.)pos_angle+=rp_e.at(i);
+    else neg_angle+=rp_e.at(i);
+  }
+
+  if (pos_angle>neg_angle)direction=-1.;
+  
+  thrust.at(1)=thrust.at(1)*direction*dir;
+  thrust.at(3)=thrust.at(3)*direction*dir;
+  thrust.at(5)=thrust.at(5)*direction*dir;
+  return thrust;
 }

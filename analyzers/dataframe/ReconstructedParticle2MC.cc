@@ -133,6 +133,23 @@ ReconstructedParticle2MC::getRP2MC_index(ROOT::VecOps::RVec<int> recind,
 }
 
 
+ROOT::VecOps::RVec< ROOT::VecOps::RVec<int> >
+ReconstructedParticle2MC::getRP2MC_indexVec(ROOT::VecOps::RVec<int> recind, 
+					    ROOT::VecOps::RVec<int> mcind, 
+					    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
+  
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
+  for (size_t i=0; i<reco.size();i++) {
+    ROOT::VecOps::RVec<int> tmp;
+    result.push_back(tmp);
+  }
+
+  for (size_t i=0; i<recind.size();i++) {
+    result[recind.at(i)].push_back(mcind.at(i));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<int>
 ReconstructedParticle2MC::getRP2MC_index_test(ROOT::VecOps::RVec<int> recind, 
 					      ROOT::VecOps::RVec<int> mcind, 
@@ -261,6 +278,30 @@ ReconstructedParticle2MC::selRP_PDG::operator() (ROOT::VecOps::RVec<int> recind,
       }
       if ( std::abs( pdg ) == std::abs( m_PDG)  ) {
          result.push_back( reco.at( reco_idx ) ) ;
+      }
+  }
+  return result;
+}
+
+selRP_PDG_index::selRP_PDG_index( int arg_pdg, 
+			    bool arg_chargedOnly ): m_PDG(arg_pdg), m_chargedOnly(arg_chargedOnly)  {} ;
+ROOT::VecOps::RVec<int>
+ReconstructedParticle2MC::selRP_PDG_index::operator() (ROOT::VecOps::RVec<int> recind, 
+						 ROOT::VecOps::RVec<int> mcind, 
+						 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
+						 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+  
+  ROOT::VecOps::RVec<int> result;
+
+  for (int i=0; i<recind.size();i++) {
+      int reco_idx = recind.at(i);
+      int mc_idx = mcind.at(i);
+      int pdg = mc.at(mc_idx).PDG ;
+      if ( m_chargedOnly ) {
+        if ( reco.at( reco_idx ).charge ==0 ) continue;
+      }
+      if ( std::abs( pdg ) == std::abs( m_PDG)  ) {
+         result.push_back( reco_idx ) ;
       }
   }
   return result;

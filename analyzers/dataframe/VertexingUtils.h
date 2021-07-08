@@ -26,11 +26,21 @@ namespace VertexingUtils{
   struct FCCAnalysesVertex{
     edm4hep::VertexData vertex;
     int ntracks;
+    int mc_ind; ///index in the MC vertex collection if any
     ROOT::VecOps::RVec<int> reco_ind;
     ROOT::VecOps::RVec<float> reco_chi2;
     ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
     ROOT::VecOps::RVec< TVectorD >  updated_track_parameters;
     ROOT::VecOps::RVec<float> final_track_phases;
+  };
+
+  /// Structure to keep useful track information that is related to the vertex
+  struct FCCAnalysesVertexMC{
+    TVector3 vertex;
+    ROOT::VecOps::RVec<int> mc_ind;
+    ROOT::VecOps::RVec<int> mc_indneutral;
+    ROOT::VecOps::RVec<int> mother_ind;
+    ROOT::VecOps::RVec<int> gmother_ind;
   };
 
   /// Selection of particles based on the d0 / z0 significances of the associated track
@@ -51,12 +61,26 @@ namespace VertexingUtils{
 									   ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 									   TVector3 MC_EventPrimaryVertex) ;
 
+  /// Retrieve the number of reconstructed vertices from the collection of vertex object
+  int get_Nvertex( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl );
  
+  /// Retrieve a single FCCAnalyses vertex from the collection of vertex object
+  FCCAnalysesVertex get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index );
+  
   /// Retrieve the edm4hep::VertexData from the vertex object
   edm4hep::VertexData get_VertexData( FCCAnalysesVertex TheVertex ) ;
- 
+  
+  /// Retrieve a vector of edm4hep::VertexData from the collection of vertex object
+  ROOT::VecOps::RVec<edm4hep::VertexData> get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ) ;
+  
+  /// Retrieve a edm4hep::VertexData from the collection of vertex object at a given index
+  edm4hep::VertexData get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index);
+  
   /// Retrieve the number of tracks from FCCAnalysesVertex
   int get_VertexNtrk( FCCAnalysesVertex TheVertex ) ;
+
+   /// Retrieve the tracks indices from FCCAnalysesVertex
+  ROOT::VecOps::RVec<int> get_VertexRecoInd( FCCAnalysesVertex TheVertex ) ;
   
   /// Return the number of tracks in a given track collection
   int get_nTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
