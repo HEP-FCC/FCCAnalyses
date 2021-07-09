@@ -30,7 +30,7 @@ parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
 parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
-parser.add_argument("-storeSimParticleSecondaries", default = True, help="Whether to store the SimParticleSecondaries information", type = str2bool) 
+parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool) 
 parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str) 
 
 args = parser.parse_args()
