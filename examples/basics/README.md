@@ -17,6 +17,7 @@ Table of contents
     * [EDM4HEP event model](#edm4hep-event-model)
     * [Structure of EDM4HEP files](#structure-of-edm4hep-files)
   * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
+  * [Association between RecoParticles and MonteCarloParticles](#association-between-RecoParticles-and-MonteCarloParticles)
   * [Writing your own function](#writing-your-own-function)
     * [Inline](#inline)
     * [Using ROOT GInterpreter](#using-root-ginterpreter)
@@ -67,11 +68,12 @@ together with Muon#0, just provides a convenient way to access, among the Recons
 The same holds for the Electron and Photon collections. On the other hand, the MissingET collection is already a ReconstructedParticle, as can be seen
 by inspecting it in the browser:
 
-<img src="figs/browser_missingET.png" alt="drawing" width="480"/>
+<img src="figs/browser_missingET.png" alt="drawing" width="480"/>     
+
 
 The "Particle" collection corresponds to the Monte-Carlo particles. It has two associated collections of references, Particle#0 and Particle#1. As can
 be seen by looking at their collectionID, they both point to collection number 4, i.e.  to the Particle collection itself. Particle#0 and
-Particle#1 contain, respectively, links to the parents and tp the daughters of the MC particles - as can be seen in the [edm4hep yaml description here](https://github.com/key4hep/EDM4hep/blob/master/edm4hep.yaml#L118-L119).
+Particle#1 contain, respectively, links to the parents and to the daughters of the MC particles - as can be seen in the [edm4hep yaml description here](https://github.com/key4hep/EDM4hep/blob/master/edm4hep.yaml#L118-L119).
 Examples will be given below, showing how to navigate through the Monte-Carlo record using Particle, Particle#0 and Particle#1.
 
 
@@ -106,6 +108,54 @@ For the name of the object, in principle the names of the EDM4HEP collections ar
 This example also shows how to apply object selection cuts, for example selecting only reconstructed objects with a transverse momentum pT larger than a given threshold by using the `ReconstructedParticle::sel_pt(<threshold>)(<name_object>)` function. 
 
 In the end of the example you can see how the selected variables are written to branches of the output n-tuple, using the `dataframe.Snapshot("<tree_name>", <branch_list> )`, where in all examples here the name of the output-tree is always `events` and the branch_list is defined as a `ROOT.vector('string')` as demonstrated in the example. Note that branches of variables that exist multiple times per event, i.e. anything derived from a collection such as the pT of jets, result in vector branches. This is also true for some quantities that in principle only exist once per event, but are collections in the EDM4HEP format, such as the missing transverse energy. 
+
+
+
+Association between RecoParticles and MonteCarloParticles
+==========================================================
+
+By design, the association between the reconstructed particles and the Monte-Carlo particles proceeds via the MCRecoAssociations collection, and its two
+associated  collections of references, MCRecoAssociations#0 and MCRecoAssociations#1, all of the same size. The collectionID of MCRecoAssociations#0 is equal to 6, which means
+that MCRecoAssociations#0 points to the ReconstructedParticles. While the collectionID of MCRecoAssociations#1 is equal to 4, i.e. 
+MCRecoAssociations#1 points to the Particle collection (i.e. the Monte-Carlo particles).    
+
+Their usage is best understood by looking into the code of [ReconstructedParticle2MC::getRP2MC_index](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/ReconstructedParticle2MC.cc#L123-L133) reported below:
+```
+ROOT::VecOps::RVec<int>
+ReconstructedParticle2MC::getRP2MC_index(ROOT::VecOps::RVec<int> recind, 
+					 ROOT::VecOps::RVec<int> mcind, 
+					 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
+  ROOT::VecOps::RVec<int> result;
+  result.resize(reco.size(),-1.);
+  for (size_t i=0; i<recind.size();i++) {
+    result[recind.at(i)]=mcind.at(i);	# recind.at(i) is the index of a reco'ed particle in the ReconstructedParticles collection
+					# mcind.at(i) is the index of its associated MC particle, in the Particle collection
+  }
+  return result;
+}
+```
+
+which, in a FCCAnalyses configuration file, will be called via :
+```
+               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
+               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
+               .Define('RP_MC_index',            "ReconstructedParticle2MC::getRP2MC_index(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles)") 
+```
+( the first two lines are needed for RootDataFrame to understand the pound (#) sign).
+
+The method getRP2MC_index creates a vector that maps the reconstructed particles and the MC particles:
+RP\_MC\_index[ ireco ] = imc ,  where ireco is the index of a reco'ed particle in the ReconstructedParticle collection, and imc is the index, in the Particle collection, of its associated MC particle.   
+
+Careful: as can be seen from the code, the method getRP2MC_index must be passed the full collection, ReconstructedParticles, and **not** a subset of reco'ed particles. 
+To retrieve the associated MC particle of one reco'ed particle, or of a subset of reco'ed particles, one should have kept track of the indices of these
+particles in the ReconstructedParticles collection. It can be a good practise to design analyses that primarily use indices of RecoParticles, instead of
+the RecoParticles themselves.
+However, for a charged reco'ed particle RecoPart, one can also use the following workaround:
+```
+     int track_index = RecoPart.tracks_begin ;   // index in the Track array
+     int mc_index = ReconstructedParticle2MC::getTrack2MC_index( track_index, recind, mcind, reco );
+```
+where "recind" refers to "MCRecoAssociations0", "mcind" to "MCRecoAssociations1", and "reco" to "ReconstructedParticles".
 
 <!--
 ======================================================
