@@ -15,6 +15,7 @@ Table of contents
   * [Prerequisites](#prerequisites)
     * [RDataFrame](#rdataframe)
     * [EDM4HEP event model](#edm4hep-event-model)
+    * [Structure of EDM4HEP files](#structure-of-edm4hep-files)
   * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
   * [Writing your own function](#writing-your-own-function)
     * [Inline](#inline)
@@ -36,6 +37,44 @@ EDM4HEP event model
 [Link to EDM4HEP class overview](https://edm4hep.web.cern.ch/namespaceedm4hep.html)
 
 (to add brief intro/pointers)
+
+
+Structure of EDM4HEP files
+==========================
+
+The content of an EDM4HEP file can be seen by opening it in ROOT, and by inspecting the content of the "events" tree with a TBrowser.
+Example:
+```
+root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/wzp6_ee_mumuH_ecm240.root
+root [0] TBrowser b
+```
+<img src="figs/browser_events.png" alt="drawing" width="480"/>
+
+As shown in the screenshot above, there are two types of branches:
+
+  - Branches without a pound (#) in their name:  Electron (1), Muon (2), EFlowNeutralHadron (3), Particle (4), Photon (5), ReconstructedParticles (6), EFlowPhoton (7), MCRecoAssociations (8), MissingET (9), ParticleIDs (10), Jet (11), EFlowTrack (12), EFlowTrack\_1 (13). They refer to collections of objects.
+  - Branches with a pound in their name:  Each of the object collections listed above, e.g. "Collection", has up to six associated collections of references, 
+    i.e. indices that point to another or to the same object collection. They are labeled Collection#i, with i = 0 ... 5. For example, the Muon collection has one single
+    associated collection of references, Muon#0. 
+
+To figure out which collection is pointed to by Muon#0 (or by any other collection of references), one can look at the value of Muon#0.collectionID (see screenshot below). 
+The collectionID of Muon#0 is the collection number 6, which, in the list of "object collections" above, corresponds to the collection of ReconstructedParticles. 
+Indeed, the Muon collection itself contains nothing (see screenshot below): all the information is contained in the ReconstructedParticles. The Muon collection,
+together with Muon#0, just provides a convenient way to access, among the ReconstructedParticles, those that were identified as muons.
+
+<img src="figs/browser_Muon0.png" alt="drawing" width="480"/>
+
+The same holds for the Electron and Photon collections. On the other hand, the MissingET collection is already a ReconstructedParticle, as can be seen
+by inspecting it in the browser:
+
+<img src="figs/browser_missingET.png" alt="drawing" width="480"/>
+
+The "Particle" collection corresponds to the Monte-Carlo particles. It has two associated collections of references, Particle#0 and Particle#1. As can
+be seen by looking at their collectionID, they both point to collection number 4, i.e.  to the Particle collection itself. Particle#0 and
+Particle#1 contain, respectively, links to the parents and tp the daughters of the MC particles - as can be seen in the [edm4hep yaml description here](https://github.com/key4hep/EDM4hep/blob/master/edm4hep.yaml#L118-L119).
+Examples will be given below, showing how to navigate through the Monte-Carlo record using Particle, Particle#0 and Particle#1.
+
+
 
 
 Reading objects from EDM4HEP
