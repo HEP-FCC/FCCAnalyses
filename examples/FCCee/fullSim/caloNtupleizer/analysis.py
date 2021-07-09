@@ -30,8 +30,8 @@ parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
 parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
-parser.add_argument("-storeSimParticleSecond", default = True, help="Whether to store the SimParticleSecond information", type = str2bool) 
-parser.add_argument("-simParticleSecondaryNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondary branch", type = str) 
+parser.add_argument("-storeSimParticleSecondaries", default = True, help="Whether to store the SimParticleSecondaries information", type = str2bool) 
+parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str) 
 
 args = parser.parse_args()
 
@@ -88,11 +88,23 @@ class analysis():
                 #dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_positionVector3(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%clusterCellsBranchName
         
-        # SimParticleSecond 
-        if args.storeSimParticleSecond: 
-            for SimParticleSecondariesName in args.simParticleSecondaryNames: 
-                dict_outputBranchName_function["%s_x"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondary_x(%s)"%SimParticleSecondariesName    
+        # SimParticleSecondaries 
+        if args.storeSimParticleSecondaries: 
+            for SimParticleSecondariesName in args.simParticleSecondariesNames: 
+                dict_outputBranchName_function["%s_x"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_x(%s)"%SimParticleSecondariesName    
+                dict_outputBranchName_function["%s_y"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_y(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_z"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_z(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_phi"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_phi(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_theta"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_theta(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_eta"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_eta(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_energy"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_energy(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_motherPDG"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_motherPDG(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_PDG"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_PDG(%s)"%SimParticleSecondariesName       
 
+
+
+
+ 
         # gen particles
         if args.storeGenBranches:
             dict_outputBranchName_function["genParticle_phi"] = "MCParticle::get_phi(%s)"%args.genBranchName
