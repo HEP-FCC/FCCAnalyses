@@ -458,9 +458,11 @@ std::vector<int> MCParticle::list_of_stable_particles_from_decay( int i, ROOT::V
   int de = in.at(i).daughters_end;
 
   if ( db != de ) {// particle is unstable
-    int d1 = ind[db] ;
-    int d2 = ind[de-1];
-    for (int idaughter = d1; idaughter <= d2; idaughter++) {
+    //int d1 = ind[db] ;
+    //int d2 = ind[de-1];
+    //for (int idaughter = d1; idaughter <= d2; idaughter++) {
+    for (int id = db; id <= de-1; id++) {
+      int idaughter = ind[ id ];
       std::vector<int> rr = list_of_stable_particles_from_decay( idaughter, in, ind) ;
       res.insert( res.end(), rr.begin(), rr.end() );
     }
@@ -487,10 +489,12 @@ std::vector<int> MCParticle::list_of_particles_from_decay(int i, ROOT::VecOps::R
   int db = in.at(i).daughters_begin ;
   int de = in.at(i).daughters_end;
   if  ( db == de ) return res;   // particle is stable
-  int d1 = ind[db] ;
-  int d2 = ind[de-1];
-  for (int idaughter = d1; idaughter <= d2; idaughter++) {
-     res.push_back( idaughter);
+  //int d1 = ind[db] ;
+  //int d2 = ind[de-1];
+  //for (int idaughter = d1; idaughter <= d2; idaughter++) {
+     //res.push_back( idaughter);
+  for (int id = db; id <= de-1; id++) {
+     res.push_back( ind[id] ) ;
   }
   return res;
 }
