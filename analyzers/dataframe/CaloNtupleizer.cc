@@ -1,6 +1,7 @@
 #include "CaloNtupleizer.h"
 #include "TVector3.h"
 #include "TLorentzVector.h"
+#include "edm4hep/MCParticleData.h"
 
 #include <math.h>
 
@@ -167,3 +168,80 @@ ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloCluster_lastCell (ROOT::VecOps::R
   }
   return result;
 }
+
+ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_x (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.vertex.x);
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_y (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+for (auto & p: in) {
+  result.push_back(p.vertex.y);
+}
+return result;
+}
+
+
+ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_z (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+for (auto & p: in) {
+  result.push_back(p.vertex.z);
+}
+return result;
+}
+
+
+  ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_PDG (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+    ROOT::VecOps::RVec<float> result;
+    for (auto & p: in) {
+      result.push_back(p.PDG);
+    }
+    return result;
+  }
+
+ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_phi (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+    result.push_back(tlv.Phi());
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_theta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+    result.push_back(tlv.Theta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_eta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+    result.push_back(tlv.Eta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_energy (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+    result.push_back(tlv.E());
+  }
+  return result;
+}
+

@@ -24,12 +24,14 @@ parser.add_argument("-inputFiles", default = '/afs/cern.ch/user/b/brfranco/work/
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
 parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = str2bool)
 parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"], help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
-parser.add_argument("-storeClusterBranches", default = False, help="Whether or not to store cluster information", type = str2bool)
+parser.add_argument("-storeClusterBranches", default = True, help="Whether or not to store cluster information", type = str2bool)
 parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
 parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = str2bool)
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
 parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
+parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool) 
+parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str) 
 
 args = parser.parse_args()
 
@@ -84,7 +86,20 @@ class analysis():
                 dict_outputBranchName_function["%s_theta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_theta(%s)"%clusterCellsBranchName
                 #dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_positionVector3(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%clusterCellsBranchName
+        
+        # SimParticleSecondaries 
+        if args.storeSimParticleSecondaries: 
+            for SimParticleSecondariesName in args.simParticleSecondariesNames: 
+                dict_outputBranchName_function["%s_x"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_x(%s)"%SimParticleSecondariesName    
+                dict_outputBranchName_function["%s_y"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_y(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_z"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_z(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_phi"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_phi(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_theta"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_theta(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_eta"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_eta(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_energy"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_energy(%s)"%SimParticleSecondariesName
+                dict_outputBranchName_function["%s_PDG"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_PDG(%s)"%SimParticleSecondariesName       
 
+ 
         # gen particles
         if args.storeGenBranches:
             dict_outputBranchName_function["genParticle_phi"] = "MCParticle::get_phi(%s)"%args.genBranchName
