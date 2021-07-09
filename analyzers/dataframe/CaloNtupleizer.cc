@@ -245,16 +245,3 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_energy (ROOT
   return result;
 }
 
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
-
-
-
->>>>>>> e5751c35326c1c5d873dd90fbe4c09ddb4b139ac
