@@ -172,7 +172,7 @@ ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloCluster_lastCell (ROOT::VecOps::R
 ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_x (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
-    result.push_back(p.endpoint.x);
+    result.push_back(p.vertex.x);
   }
   return result;
 }
@@ -181,7 +181,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_x (ROOT::Vec
 ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_y (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
 for (auto & p: in) {
-  result.push_back(p.endpoint.y);
+  result.push_back(p.vertex.y);
 }
 return result;
 }
@@ -190,7 +190,7 @@ return result;
 ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_z (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
 for (auto & p: in) {
-  result.push_back(p.endpoint.z);
+  result.push_back(p.vertex.z);
 }
 return result;
 }
@@ -241,14 +241,6 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_energy (ROOT
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
     result.push_back(tlv.E());
-  }
-  return result;
-}
-
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_motherPDG (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
-  ROOT::VecOps::RVec<float> result;
-  for (auto & p: in) {
-    result.push_back(p.parents_begin);
   }
   return result;
 }

@@ -47,7 +47,6 @@ ROOT::VecOps::RVec<float> getSimParticleSecondaries_phi (ROOT::VecOps::RVec<edm4
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_theta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_eta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_energy (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
-ROOT::VecOps::RVec<float> getSimParticleSecondaries_motherPDG (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_PDG (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 

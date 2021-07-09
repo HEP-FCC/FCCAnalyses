@@ -98,7 +98,6 @@ class analysis():
                 dict_outputBranchName_function["%s_theta"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_theta(%s)"%SimParticleSecondariesName
                 dict_outputBranchName_function["%s_eta"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_eta(%s)"%SimParticleSecondariesName
                 dict_outputBranchName_function["%s_energy"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_energy(%s)"%SimParticleSecondariesName
-                dict_outputBranchName_function["%s_motherPDG"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_motherPDG(%s)"%SimParticleSecondariesName
                 dict_outputBranchName_function["%s_PDG"%SimParticleSecondariesName] = "CaloNtupleizer::getSimParticleSecondaries_PDG(%s)"%SimParticleSecondariesName       
 
 
