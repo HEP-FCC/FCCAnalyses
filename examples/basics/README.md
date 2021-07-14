@@ -18,6 +18,7 @@ Table of contents
     * [Structure of EDM4HEP files](#structure-of-edm4hep-files)
   * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
   * [Association between RecoParticles and MonteCarloParticles](#association-between-RecoParticles-and-MonteCarloParticles)
+  * [Navigation through the history of the Monte-Carlo particles](#Navigation-through-the-history-of-the-Monte-Carlo-particles)
   * [Writing your own function](#writing-your-own-function)
     * [Inline](#inline)
     * [Using ROOT GInterpreter](#using-root-ginterpreter)
@@ -47,7 +48,7 @@ The content of an EDM4HEP file can be seen by opening it in ROOT, and by inspect
 Example:
 ```
 root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/wzp6_ee_mumuH_ecm240.root
-root [0] TBrowser b
+root[0] TBrowser b
 ```
 <img src="figs/browser_events.png" alt="drawing" width="480"/>
 
@@ -156,6 +157,58 @@ However, for a charged reco'ed particle RecoPart, one can also use the following
      int mc_index = ReconstructedParticle2MC::getTrack2MC_index( track_index, recind, mcind, reco );
 ```
 where "recind" refers to "MCRecoAssociations0", "mcind" to "MCRecoAssociations1", and "reco" to "ReconstructedParticles".
+
+
+Navigation through the history of the Monte-Carlo particles
+============================================================
+
+To retrieve the **daughters** of a Monte-Carlo particle (in the "Particle" collection), one should use the
+collection of references to daughters ("Particle#1", which points to "Particles"), together with the "Particle" collection itself.    
+
+Each particle in the "Particle" collection contains two integers, daughters\_begin and daughter\_end.
+The indices, in the "Particle" collection, of the daughters of the particle are stored in "Particle#1", between
+daughters\_begin and daughter\_end. This is illustrated in the code of [MCParticle::get\_list\_of\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/MCParticle.cc#L477) reported below:
+```
+std::vector<int> MCParticle::get_list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
+
+  std::vector<int> res;
+
+  // i = index of a MC particle in the Particle block
+  // in = the Particle collection
+  // ind = the block with the indices for the daughters, Particle#1.index
+
+  // returns a vector with the indices (in the Particle block) of the daughters of the particle i
+
+  int db = in.at(i).daughters_begin ;
+  int de = in.at(i).daughters_end;
+  if  ( db == de ) return res;   // particle is stable
+  for (int id = db; id < de; id++) {
+     res.push_back( ind[id] ) ;
+  }
+  return res;
+}
+```
+
+This returns the "first branching" daughters. For example, if we have a Higgs that decays into ZZ\*, with both Z's decaying into muons, the method get\_list\_of\_daughters\_from\_decay, applied to i = the index of the Higgs, returns the indices of the two Z's in the Particle collection.
+In order to retrieve the indices of the four muons, use instead [MCParticle::get\_list\_of\_stable\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/9937fe77e5702b30d53b5e364b3fa6a4b134197c/analyzers/dataframe/MCParticle.cc#L447)
+
+These functions are not meant to be called directly from the python configuration file, but from some other function that will determine the value of the argument "i". See an example [here](https://github.com/HEP-FCC/FCCeePhysicsPerformance/blob/069b633ab06126546daa0b0ba4719342096a9a4a/case-studies/flavour/VertexExamples/analysis_Bs2DsK.py#L63) in FCCeePhysicsPerformance, the important lines being:
+```
+               .Alias("Particle1", "Particle#1.index")
+               # MC indices of the decay Bs -> Ds+ K-
+               # In the file I process, only the Bs0 (not the Bsbar) has been forced to decay into Ds+ K-
+               # Look for (Ds+ K-) in the list of unstable decays of a Bs - hence oscillations are
+               # not accounted for. So there should be at most one such decay per event. In any case,
+               # would there be > 1, the method gives the first one encountered.
+               # Returns the indices of : mother Bs, Ds+, K-
+
+               .Define("Bs2DsK_indices", "MCParticle::get_indices_ExclusiveDecay( -531, {431, -321}, false, false) ( Particle, Particle1)" )
+```
+
+Again, the first line is needed for RootDataFrame to interpret correctly the pound sign.   
+
+To retrieve the **parents** of a Monte-Carlo particle: the logics is the same, one should use parents\_begin and parents\_end, which point to the "Particle#0" collection.
+
 
 <!--
 ======================================================
