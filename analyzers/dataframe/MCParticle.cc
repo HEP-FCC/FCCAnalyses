@@ -444,7 +444,7 @@ edm4hep::MCParticleData MCParticle::sel_byIndex( int idx, ROOT::VecOps::RVec<edm
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 
-std::vector<int> MCParticle::list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
+std::vector<int> MCParticle::get_list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
 
   std::vector<int> res;
   // i = index of a MC particle in the Particle block
@@ -461,9 +461,9 @@ std::vector<int> MCParticle::list_of_stable_particles_from_decay( int i, ROOT::V
     //int d1 = ind[db] ;
     //int d2 = ind[de-1];
     //for (int idaughter = d1; idaughter <= d2; idaughter++) {
-    for (int id = db; id <= de-1; id++) {
+    for (int id = db; id < de; id++) {
       int idaughter = ind[ id ];
-      std::vector<int> rr = list_of_stable_particles_from_decay( idaughter, in, ind) ;
+      std::vector<int> rr = get_list_of_stable_particles_from_decay( idaughter, in, ind) ;
       res.insert( res.end(), rr.begin(), rr.end() );
     }
   }
@@ -476,7 +476,7 @@ std::vector<int> MCParticle::list_of_stable_particles_from_decay( int i, ROOT::V
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 
-std::vector<int> MCParticle::list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
+std::vector<int> MCParticle::get_list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
 
   std::vector<int> res;
 
@@ -493,11 +493,31 @@ std::vector<int> MCParticle::list_of_particles_from_decay(int i, ROOT::VecOps::R
   //int d2 = ind[de-1];
   //for (int idaughter = d1; idaughter <= d2; idaughter++) {
      //res.push_back( idaughter);
-  for (int id = db; id <= de-1; id++) {
+  for (int id = db; id < de; id++) {
      res.push_back( ind[id] ) ;
   }
   return res;
 }
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+
+// obsolete: keep for the while, for backward compatibility
+
+std::vector<int> MCParticle::list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
+   std::cout << " -------- OBSOLETE -----   call to get_list_of_stable_particles_from_decay , please update your code ----- " << std::endl;
+   return get_list_of_stable_particles_from_decay( i, in, ind );
+}
+
+std::vector<int> MCParticle::list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
+   std::cout << " -------- OBSOLETE -----   call to get_list_of_particles_from_decay , please update your code ----- " << std::endl;
+  return get_list_of_particles_from_decay( i, in, ind );
+}
+
+
+
+
+
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -528,7 +548,7 @@ ROOT::VecOps::RVec<int>  MCParticle::get_indices_ExclusiveDecay_MotherByIndex ( 
 
 
     if (debug) {
-     std::vector<int> unstable_products = list_of_particles_from_decay( imother, in, ind ) ;
+     std::vector<int> unstable_products = get_list_of_particles_from_decay( imother, in, ind ) ;
       for ( auto & k: unstable_products) {
            std::cout << " ......... unstable daughter PDG = " << in[k].PDG << std::endl;
       }
@@ -536,10 +556,10 @@ ROOT::VecOps::RVec<int>  MCParticle::get_indices_ExclusiveDecay_MotherByIndex ( 
 
      std::vector<int> products ;
      if ( m_stableDaughters ) {
-        products = list_of_stable_particles_from_decay( imother, in, ind ) ;
+        products = get_list_of_stable_particles_from_decay( imother, in, ind ) ;
      }
      else {
-        products = list_of_particles_from_decay( imother, in, ind ) ;
+        products = get_list_of_particles_from_decay( imother, in, ind ) ;
      }
 
      if (debug) {
