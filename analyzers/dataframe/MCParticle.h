@@ -183,15 +183,24 @@ namespace MCParticle{
   ROOT::VecOps::RVec<float> AngleBetweenTwoMCParticles( ROOT::VecOps::RVec<edm4hep::MCParticleData> p1, ROOT::VecOps::RVec<edm4hep::MCParticleData> p2 );
 
   /// return the list of stable particles from the decay of a mother particle, looking at the full decay chain recursively. i is the mother index in the Particle block
-  std::vector<int> list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
+  std::vector<int> get_list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
 
   /// return the list of particles from the decay of a mother particle. i is the mother index in the Particle block.
-  std::vector<int> list_of_particles_from_decay( int i, 
+  std::vector<int> get_list_of_particles_from_decay( int i, 
 						 ROOT::VecOps::RVec<edm4hep::MCParticleData> in, 
 						 ROOT::VecOps::RVec<int> ind) ;
 
   /// returns one MCParticle selected by its index in the particle block
   edm4hep::MCParticleData sel_byIndex( int idx, ROOT::VecOps::RVec<edm4hep::MCParticleData> in) ;
+
+  /// obsolete: should use get_list_of_stable_particles_from_decay instead
+  std::vector<int> list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
+  /// obsolete: should use get_list_of_particles_from_decay instead
+  std::vector<int> list_of_particles_from_decay( int i,
+                                                 ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
+                                                 ROOT::VecOps::RVec<int> ind) ;
+
+
 
 
 }
