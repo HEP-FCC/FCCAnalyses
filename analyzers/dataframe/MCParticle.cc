@@ -432,7 +432,7 @@ ROOT::VecOps::RVec<int> MCParticle::get_parentid(ROOT::VecOps::RVec<int> mcind, 
 // returns one MCParticle selected by its index in the particle block
 edm4hep::MCParticleData MCParticle::sel_byIndex( int idx, ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
     edm4hep::MCParticleData dummy;
-    if ( idx < in.size() ) {
+    if ( idx >= 0 && idx < in.size() ) {
            return in.at(idx) ;
     }
     else {
@@ -453,6 +453,8 @@ std::vector<int> MCParticle::get_list_of_stable_particles_from_decay( int i, ROO
 
   // returns a vector with the indices (in the Particle block) of the stable daughters of the particle i,
   // from the complete decay chain.
+
+  if ( i < 0 || i >= in.size() ) return res;
 
   int db = in.at(i).daughters_begin ;
   int de = in.at(i).daughters_end;
@@ -485,6 +487,8 @@ std::vector<int> MCParticle::get_list_of_particles_from_decay(int i, ROOT::VecOp
   // ind = the block with the indices for the daughters, Particle#1.index
 
   // returns a vector with the indices (in the Particle block) of the daughters of the particle i
+
+  if ( i < 0 || i >= in.size() ) return res;
 
   int db = in.at(i).daughters_begin ;
   int de = in.at(i).daughters_end;
