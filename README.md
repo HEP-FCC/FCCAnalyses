@@ -70,7 +70,7 @@ Plotting
 The plotting configuration file ```plots.py``` contains informations about plotting details for plots rendering but also ways of combining samples for plotting. 
 In this example just run like: 
 ```
-doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py
+python config/doPlots.py examples/FCCee/higgs/mH-recoil/mumu/plots.py
 ```
 
 This will produce the plots in the ```outdir``` defined in the configuration file.
