@@ -169,7 +169,7 @@ collection of references to daughters ("Particle#1", which points to "Particles"
 
 Each particle in the "Particle" collection contains two integers, daughters\_begin and daughter\_end.
 The indices, in the "Particle" collection, of the daughters of the particle are stored in "Particle#1", between
-daughters\_begin and daughter\_end. This is illustrated in the code of [MCParticle::get\_list\_of\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/MCParticle.cc#L477) reported below:
+daughters\_begin and daughter\_end. This is illustrated in the code of [MCParticle::get\_list\_of\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/MCParticle.cc#L481) reported below:
 ```
 std::vector<int> MCParticle::get_list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
 
