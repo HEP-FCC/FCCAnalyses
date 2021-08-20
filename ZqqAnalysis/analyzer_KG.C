@@ -85,7 +85,7 @@ int main()
   tree->SetBranchAddress("jets_ee_kt_pz", &jetPz);
   
   // event loop
-  for(unsigned int evt=0; evt<1; evt++)
+  for(unsigned int evt=0; evt<nEvents; evt++)
     {
       tree->GetEntry(evt);
 
@@ -196,11 +196,13 @@ int main()
       // jet constituents
       //int nJetC = jetConst->size();
       vector<int> jet1Const, jet2Const;
-      jet1Const = jetConst->at(0);
-      jet2Const = jetConst->at(1);
-      cout<<"Jet constituent vector "<<jetConst->size()<<endl;
+      if(jetConst->size()>=1)      jet1Const = jetConst->at(0);
+      else cout<<"No jet constituents found"<<endl;
+      if(jetConst->size()>=2)      jet2Const = jetConst->at(1);
+      else cout<<"Second jet constituents not found"<<endl;
+      /*cout<<"Jet constituent vector "<<jetConst->size()<<endl;
       cout<<"vector in vector : "<<jet1Const.size()<<endl;
-      cout<<"vector in vector : "<<jet2Const.size()<<endl;
+      cout<<"vector in vector : "<<jet2Const.size()<<endl;*/
 
       // JET 1
       double px_j1=0, py_j1=0, pz_j1=0, p_j1=0, e_j1=0;
@@ -208,8 +210,8 @@ int main()
 
       for(int ele : jet1Const) 
 	{
-	  cout<<"jet constituent index: "<<ele<<"\t";
-	  /*px_j1 = MCpx->at(ele);
+	  //cout<<"jet constituent index: "<<ele<<"\t";
+	  px_j1 = MCpx->at(ele);
 	  py_j1 = MCpy->at(ele);
 	  pz_j1 = MCpz->at(ele);
 	  p_j1 = MCp->at(ele);
@@ -230,10 +232,10 @@ int main()
 		  // polar angle
 		  h_thetab_jets->Fill(p4_j1.Theta());
 		}
-		}*/
+	    }
 	}
 
-      cout<<endl<<"jet 1 ends, jet 2 begins"<<endl;
+      //      cout<<endl<<"jet 1 ends, jet 2 begins"<<endl;
 
       // JET 2
       double px_j2=0, py_j2=0, pz_j2=0, p_j2=0, e_j2=0;
@@ -241,8 +243,8 @@ int main()
 
       for(int ele : jet2Const) 
 	{
-	  cout<<"jet constituent index: "<<ele<<"\t";
-	  /*px_j2 = MCpx->at(ele);
+	  //cout<<"jet constituent index: "<<ele<<"\t";
+	  px_j2 = MCpx->at(ele);
 	  py_j2 = MCpy->at(ele);
 	  pz_j2 = MCpz->at(ele);
 	  p_j2 = MCp->at(ele);
@@ -263,7 +265,7 @@ int main()
 		  // polar angle
 		  h_thetab_jets->Fill(p4_j2.Theta());
 		}
-		}*/
+	    }
 	}
 
 
