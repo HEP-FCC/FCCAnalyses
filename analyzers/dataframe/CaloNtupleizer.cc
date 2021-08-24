@@ -5,12 +5,55 @@
 
 #include <math.h>
 
+#include "DD4hep/Detector.h"
+
 using namespace CaloNtupleizer;
+
+dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
+
+void CaloNtupleizer::loadGeometry(std::string xmlGeometryPath){
+//void loadGeometry(std::string xmlGeometryPath){
+  dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());
+  //dd4hepgeo->fromCompact("/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/dummy_releases/Mark_Test2/FCCDetectors/Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml");
+  //std::string xml = "/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/dummy_releases/Mark_Test2/FCCDetectors/Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml";
+  dd4hepgeo->fromCompact(xmlGeometryPath);
+  dd4hepgeo->volumeManager();
+  dd4hepgeo->apply("DD4hepVolumeManager", 0, 0);
+  
+  //dd4hep::DDSegmentation::BitFieldCoder* m_decoder = dd4hepgeo->readout("ECalBarrelPhiEta").idSpec().decoder();
+  m_decoder = dd4hepgeo->readout("ECalBarrelPhiEta").idSpec().decoder();
+
+  
+  //dd4hep::DDSegmentation::BitFieldCoder* m_decoder = new dd4hep::DDSegmentation::BitFieldCoder("system:4");
+
+  //auto decoder = m_geoSvc->lcdd()->readout(m_readoutName).idSpec().decoder();
+
+  //dd4hep::DDSegmentation::CellID cellId = positionedHit.getCellID();
+
+  //dd4hep::DDSegmentation::CellID cellId = 103121172484;
+  //auto systemId = m_decoder->get(cellId, "system");
+  //std::cout << "systemId " << systemId << std::endl;
+  //auto layerId = m_decoder->get(cellId, "layer");
+  //auto phiId = m_decoder->get(cellId, "phi");
+  //auto etaId = m_decoder->get(cellId, "eta");
+  //std::cout << "layerId " << layerId << std::endl;
+  //std::cout << "phiId " << phiId << std::endl;
+  //std::cout << "etaId " << etaId << std::endl;
+  
+  //dd4hep::Detector* dd4hepgeo;// = &(dd4hep::Detector::getInstance());
+  //dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());
+  //dd4hepgeo->fromCompact(xmlGeometryPath);
+
+
+
+}
+
 
 // calo hit
 ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_x (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
+     // std::cout << p.cellID << std::endl;
     result.push_back(p.position.x);
   }
   return result;
@@ -42,6 +85,15 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_phi (ROOT::VecOps::RVec<edm
   return result;
 }
 
+ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_phiBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    result.push_back(m_decoder->get(cellId, "phi"));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_theta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
@@ -62,10 +114,28 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_eta (ROOT::VecOps::RVec<edm
   return result;
 }
 
+ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_etaBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    result.push_back(m_decoder->get(cellId, "eta"));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_energy (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.energy);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_layer (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    result.push_back(m_decoder->get(cellId, "layer"));
   }
   return result;
 }

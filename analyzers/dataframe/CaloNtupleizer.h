@@ -13,15 +13,38 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 
+#include "DD4hep/Detector.h"
+
 namespace CaloNtupleizer{
+
+//class geometry_toolbox {
+//  public:
+//    dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
+//    geometry_toolbox(std::string xmlGeometryPath) {
+//      dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());
+//      dd4hepgeo->fromCompact(xmlGeometryPath);
+//      dd4hepgeo->volumeManager();
+//      dd4hepgeo->apply("DD4hepVolumeManager", 0, 0);
+//      m_decoder = dd4hepgeo->readout("ECalBarrelPhiEta").idSpec().decoder();
+//    }
+//};
+
+void loadGeometry(std::string xmlGeometryPath);
+
+//dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
+//dd4hep::Detector* dd4hepgeo;
+//IDDescriptors
 
 // calo hits (single cells)
 ROOT::VecOps::RVec<float> getCaloHit_x (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_y (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_z (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_phi (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
+ROOT::VecOps::RVec<int> getCaloHit_phiBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_theta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_eta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
+ROOT::VecOps::RVec<int> getCaloHit_etaBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
+ROOT::VecOps::RVec<int> getCaloHit_layer (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 ROOT::VecOps::RVec<float> getCaloHit_energy (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 ROOT::VecOps::RVec<TVector3> getCaloHit_positionVector3 (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);
 
