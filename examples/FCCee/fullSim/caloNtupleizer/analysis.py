@@ -95,6 +95,10 @@ class analysis():
                 dict_outputBranchName_function["%s_theta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_theta(%s)"%clusterCellsBranchName
                 #dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_positionVector3(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%clusterCellsBranchName
+                if args.useGeometry:
+                    dict_outputBranchName_function["%s_phiBin"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_phiBin(%s)"%clusterCellsBranchName
+                    dict_outputBranchName_function["%s_layer"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_layer(%s)"%clusterCellsBranchName
+                    dict_outputBranchName_function["%s_etaBin"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_etaBin(%s)"%clusterCellsBranchName
         
         # SimParticleSecondaries 
         if args.storeSimParticleSecondaries: 
