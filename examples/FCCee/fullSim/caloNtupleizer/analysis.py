@@ -30,8 +30,8 @@ parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
 parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
-parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool)
-parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str)
+parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool) 
+parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str) 
 parser.add_argument("-useGeometry", default = True, help="Whether or not to load the FCCSW geometry. Used to get the detector segmentation for e.g. the definition of the cell layer index.", type = str2bool)
 parser.add_argument("-geometryFile", default = '/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/dummy_releases/Mark_Test2/FCCDetectors/Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml',  help = "Path to the xml geometry file", type = str)
 parser.add_argument("-readoutName", default = 'ECalBarrelPhiEta',  help = "Name of the readout to use for the layer/phi/theta bin definition", type = str)
@@ -63,13 +63,14 @@ class analysis():
                 dict_outputBranchName_function["%s_y"%cellBranchName] = "CaloNtupleizer::getCaloHit_y(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_z"%cellBranchName] = "CaloNtupleizer::getCaloHit_z(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_phi"%cellBranchName] = "CaloNtupleizer::getCaloHit_phi(%s)"%cellBranchName
-                dict_outputBranchName_function["%s_phiBin"%cellBranchName] = "CaloNtupleizer::getCaloHit_phiBin(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_theta"%cellBranchName] = "CaloNtupleizer::getCaloHit_theta(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_eta"%cellBranchName] = "CaloNtupleizer::getCaloHit_eta(%s)"%cellBranchName
-                dict_outputBranchName_function["%s_etaBin"%cellBranchName] = "CaloNtupleizer::getCaloHit_etaBin(%s)"%cellBranchName
-                dict_outputBranchName_function["%s_layer"%cellBranchName] = "CaloNtupleizer::getCaloHit_layer(%s)"%cellBranchName
                 #dict_outputBranchName_function["%s_position"%cellBranchName] = "CaloNtupleizer::getCaloHit_positionVector3(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_energy"%cellBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%cellBranchName
+                if args.useGeometry:
+                    dict_outputBranchName_function["%s_phiBin"%cellBranchName] = "CaloNtupleizer::getCaloHit_phiBin(%s)"%cellBranchName
+                    dict_outputBranchName_function["%s_layer"%cellBranchName] = "CaloNtupleizer::getCaloHit_layer(%s)"%cellBranchName
+                    dict_outputBranchName_function["%s_etaBin"%cellBranchName] = "CaloNtupleizer::getCaloHit_etaBin(%s)"%cellBranchName
 
         # clusters
         if args.storeClusterBranches:
