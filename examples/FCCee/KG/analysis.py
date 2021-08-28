@@ -47,17 +47,20 @@ class analysis():
                .Define("MC_pdg", "MCParticle::get_pdg(Particle)")
                .Define("MC_status", "MCParticle::get_genStatus(Particle)")
 
+               #momenta etc of final particles
+               .Define("MC_px_f",  "MCParticle::get_px(MC_final)")
+               .Define("MC_py_f",  "MCParticle::get_py(MC_final)")
+               .Define("MC_pz_f",  "MCParticle::get_pz(MC_final)")
+               .Define("MC_e_f",  "MCParticle::get_e(MC_final)")
+               .Define("MC_theta_f",  "MCParticle::get_theta(MC_final)")
+               .Define("MC_pdg_f", "MCParticle::get_pdg(MC_final)")
+
                #get parent indices
-               .Define("MC_parent", "MCParticle::get_parentid(Particle0, Particle, Particle0)")
+               #.Define("MC_parent", "MCParticle::get_parentid(Particle0, Particle, Particle0)")
                
-               .Define("MC_px_final",  "MCParticle::get_px(MC_final)")
-               .Define("MC_py_final",  "MCParticle::get_py(MC_final)")
-               .Define("MC_pz_final",  "MCParticle::get_pz(MC_final)")
-               .Define("MC_e_final",  "MCParticle::get_e(MC_final)")
-    
                #KT ALGORITHM
                #build psedo-jets with the MC final particles (status = 0)
-               .Define("pseudo_jets", "JetClusteringUtils::set_pseudoJets(MC_px_final, MC_py_final, MC_pz_final, MC_e_final)")
+               .Define("pseudo_jets", "JetClusteringUtils::set_pseudoJets(MC_px_f, MC_py_f, MC_pz_f, MC_e_f)")
 
                #run jet clustering with all MC particles. kt_algorithm, R=0.5, exclusive clustering, exactly 2 jets, E-scheme
                .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 2, 1, 0)(pseudo_jets)")
@@ -125,7 +128,12 @@ class analysis():
                 "MC_pdg",
                 "MC_status",
 
-                "MC_parent",
+                "MC_px_f",
+                "MC_py_f",
+                "MC_pz_f",
+                "MC_e_f",
+                "MC_theta_f",
+                "MC_pdg_f",
 
                 "jets_kt_e",
                 "jets_kt_px",
