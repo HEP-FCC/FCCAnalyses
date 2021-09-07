@@ -6,7 +6,6 @@
 #include <TTree.h>
 #include <TH1.h>
 #include <TH2.h>
-#include <THnSparse.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
 #include <TSystem.h>
@@ -24,28 +23,22 @@ int main()
   cout<<"Number of Events: "<<nEvents<<endl;
   
   TString histfname;
-  histfname = "histZbb_jets_b.root";
+  histfname = "histZbb_jets.root";
   TFile *histFile = new TFile(histfname,"RECREATE");
 
   // Hists for jet-constituents' properties
   //TH1D* h_deltaAngKl = new TH1D("h_deltaAngKl","Angle b/n K_{L} and Jet Axis",100,0.,3.15);
   
   // hists for jet angluar distributions
-  //TH2D* h_JetCKaonB = new TH2D("h_JetCKaonB","K^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetCKaonB = new TH2D("h_JetCKaonB","K^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetNKaonB = new TH2D("h_JetNKaonB","K_{L} in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetCPionB = new TH2D("h_JetCPionB","#pi^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetNPionB = new TH2D("h_JetNPionB","#pi^{0} in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetElecB = new TH2D("h_JetElecB","e^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetMuonB = new TH2D("h_JetMuonB","#mu^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetPhotB = new TH2D("h_JetPhotB","#gamma in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetProtB = new TH2D("h_JetProtB","p in b jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetNeutB = new TH2D("h_JetNeutB","n in b jets",29,-0.5,0.5,29,-0.5,0.5);
   
-  // Using THnSparse for hists
-  int nbin[2] = {29, 29};
-  double xmin[2] = {-0.5, -0.5};
-  double xmax[2] = {0.5, 0.5};
-  THnSparse* h_JetCKaonB = new THnSparseD("h_JetCKaonB","K^{+/-} in b jets",2,nbin,xmin,xmax);
-
   vector<float> *MCpxF=0, *MCpyF=0, *MCpzF=0, *MCeF=0, *MCpdgF=0;
   tree->SetBranchAddress("MC_px_f", &MCpxF);
   tree->SetBranchAddress("MC_py_f", &MCpyF);
@@ -109,7 +102,6 @@ int main()
 
       double p_norm1 = 0.;
       double delta_theta1 = 0., delta_phi1 = 0.;
-      double delta1[2];
 
       //double delta_ang1=0.;
       for(int ele : jet1Const)
@@ -124,9 +116,6 @@ int main()
 	  p_norm1 = p4_j1.P()/p_Jet[0].P();
 	  delta_theta1 = p4_j1.Theta() - p_Jet[0].Theta();
 	  delta_phi1 = p4_j1.Phi() - p_Jet[0].Phi();
-	  delta1[0] = delta_theta1;
-	  delta1[1] = delta_phi1;
-
 	  /*
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130)
 	    {
@@ -134,31 +123,29 @@ int main()
 	      h_deltaAngKl->Fill(delta_ang1);
 	    }
 	  */
-
 	  // K+-
-	  //if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta_theta1,delta_phi1,p_norm1);
-	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta1,p_norm1);
+	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // Kl
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
-	  // pi+-
+	  // K+-
 	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB->Fill(delta_theta1,delta_phi1,p_norm1);
-	  
-	  // pi0
-	  if(MCpdgF->at(ele)==111 || MCpdgF->at(ele)==-111) h_JetNPionB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // e+-
 	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
-	  // mu+-
+	  // Muon
 	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // photon
 	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
-	  // proton
+	  // p
 	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtB->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // n
+	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	}
             
@@ -168,7 +155,6 @@ int main()
 
       double p_norm2 = 0.;
       double delta_theta2 = 0., delta_phi2 = 0.;
-      double delta2[2];
 
       //double delta_ang2=0.;
       for(int ele : jet2Const)
@@ -183,9 +169,6 @@ int main()
 	  p_norm2 = p4_j2.P()/p_Jet[1].P();
 	  delta_theta2 = p4_j2.Theta() - p_Jet[1].Theta();
 	  delta_phi2 = p4_j2.Phi() - p_Jet[1].Phi();
-	  delta2[0] = delta_theta2;
-	  delta2[1] = delta_phi2;
-
 	  /*
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130)
 	    {
@@ -193,31 +176,29 @@ int main()
 	      h_deltaAngKl->Fill(delta_ang2);
 	    }
 	  */
-
 	  // K+-
-	  //if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta_theta2,delta_phi2,p_norm2);
-	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta2,p_norm2);
+	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
-	  // K0
+	  // Kl
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
-	  // pi+-
+	  // K+-
 	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB->Fill(delta_theta2,delta_phi2,p_norm2);
-	  
-	  // pi0
-	  if(MCpdgF->at(ele)==111 || MCpdgF->at(ele)==-111) h_JetNPionB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // e+-
 	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
-	  // mu+-
+	  // Muon
 	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // photon
 	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
-	  // proton
+	  // p
 	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtB->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // n
+	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	}
 
