@@ -27,11 +27,18 @@ int main()
   TFile *histFile = new TFile(histfname,"RECREATE");
 
   // Hists for jet-constituents' properties
-  TH1D* h_deltaAngKl = new TH1D("h_deltaAngKl","Angle b/n K_{L} and Jet Axis",100,0.,3.15);
+  //TH1D* h_deltaAngKl = new TH1D("h_deltaAngKl","Angle b/n K_{L} and Jet Axis",100,0.,3.15);
   
   // hists for jet angluar distributions
-  TH2D* h_JetCKaonC = new TH2D("h_JetCKaonC","K^{+/-} in c jets",100,-1.,1.,100,-1.,1.);
-
+  TH2D* h_JetCKaonC = new TH2D("h_JetCKaonC","K^{+/-} in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetNKaonC = new TH2D("h_JetNKaonC","K_{L} in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetCPionC = new TH2D("h_JetCPionC","#pi^{+/-} in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetElecC = new TH2D("h_JetElecC","e^{+/-} in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetMuonC = new TH2D("h_JetMuonC","#mu^{+/-} in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetPhotC = new TH2D("h_JetPhotC","#gamma in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetProtC = new TH2D("h_JetProtC","p in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetNeutC = new TH2D("h_JetNeutC","n in c jets",29,-0.5,0.5,29,-0.5,0.5);
+  
   vector<float> *MCpxF=0, *MCpyF=0, *MCpzF=0, *MCeF=0, *MCpdgF=0;
   tree->SetBranchAddress("MC_px_f", &MCpxF);
   tree->SetBranchAddress("MC_py_f", &MCpyF);
@@ -96,7 +103,7 @@ int main()
       double p_norm1 = 0.;
       double delta_theta1 = 0., delta_phi1 = 0.;
 
-      double delta_ang1=0.;
+      //double delta_ang1=0.;
       for(int ele : jet1Const)
 	{
 	  px_j1 = MCpxF->at(ele);
@@ -109,15 +116,37 @@ int main()
 	  p_norm1 = p4_j1.P()/p_Jet[0].P();
 	  delta_theta1 = p4_j1.Theta() - p_Jet[0].Theta();
 	  delta_phi1 = p4_j1.Phi() - p_Jet[0].Phi();
-
+	  /*
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130)
 	    {
 	      delta_ang1 = p4_j1.Angle(p_Jet[0].Vect());
 	      h_deltaAngKl->Fill(delta_ang1);
 	    }
-
+	  */
 	  // K+-
 	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // Kl
+	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // K+-
+	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // e+-
+	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // Muon
+	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // photon
+	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // p
+	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
+	  // n
+	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutC->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
 	}
             
       // JET 2
@@ -127,7 +156,7 @@ int main()
       double p_norm2 = 0.;
       double delta_theta2 = 0., delta_phi2 = 0.;
 
-      double delta_ang2=0.;
+      //double delta_ang2=0.;
       for(int ele : jet2Const)
 	{
 	  px_j2 = MCpxF->at(ele);
@@ -140,15 +169,37 @@ int main()
 	  p_norm2 = p4_j2.P()/p_Jet[1].P();
 	  delta_theta2 = p4_j2.Theta() - p_Jet[1].Theta();
 	  delta_phi2 = p4_j2.Phi() - p_Jet[1].Phi();
-
+	  /*
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130)
 	    {
 	      delta_ang2 = p4_j2.Angle(p_Jet[1].Vect());
 	      h_deltaAngKl->Fill(delta_ang2);
 	    }
-
+	  */
 	  // K+-
 	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // Kl
+	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // K+-
+	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // e+-
+	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // Muon
+	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // photon
+	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // p
+	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
+	  // n
+	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutC->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
 	}
 
       jet1Const.clear();
