@@ -31,19 +31,26 @@ int main()
   
   // hists for jet angluar distributions
   TH2D *h_JetCKaonB[nEvents];
+  TH2D *h_JetNKaonB[nEvents];
+  TH2D *h_JetCPionB[nEvents];
+  TH2D *h_JetElecB[nEvents];
+  TH2D *h_JetMuonB[nEvents];
+  TH2D *h_JetPhotB[nEvents];
+  TH2D *h_JetProtB[nEvents];
+  TH2D *h_JetNeutB[nEvents];
+  
   for(int nH=0; nH<nEvents; nH++)
     {
       h_JetCKaonB[nH] = new TH2D("h_JetCKaonB","K^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
+      h_JetNKaonB[nH] = new TH2D("h_JetNKaonB","K_{L} in b jets",29,-0.5,0.5,29,-0.5,0.5);
+      h_JetCPionB[nH] = new TH2D("h_JetCPionB","#pi^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
+      h_JetElecB[nH] = new TH2D("h_JetElecB","e^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
+      h_JetMuonB[nH] = new TH2D("h_JetMuonB","#mu^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
+      h_JetPhotB[nH] = new TH2D("h_JetPhotB","#gamma in b jets",29,-0.5,0.5,29,-0.5,0.5);
+      h_JetProtB[nH] = new TH2D("h_JetProtB","p in b jets",29,-0.5,0.5,29,-0.5,0.5);
+      h_JetNeutB[nH] = new TH2D("h_JetNeutB","n in b jets",29,-0.5,0.5,29,-0.5,0.5);
     }
-  /*
-  TH2D* h_JetNKaonB = new TH2D("h_JetNKaonB","K_{L} in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetCPionB = new TH2D("h_JetCPionB","#pi^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetElecB = new TH2D("h_JetElecB","e^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetMuonB = new TH2D("h_JetMuonB","#mu^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetPhotB = new TH2D("h_JetPhotB","#gamma in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetProtB = new TH2D("h_JetProtB","p in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetNeutB = new TH2D("h_JetNeutB","n in b jets",29,-0.5,0.5,29,-0.5,0.5);
-  */
+  
   vector<float> *MCpxF=0, *MCpyF=0, *MCpzF=0, *MCeF=0, *MCpdgF=0;
   tree->SetBranchAddress("MC_px_f", &MCpxF);
   tree->SetBranchAddress("MC_py_f", &MCpyF);
@@ -130,28 +137,28 @@ int main()
 	  */
 	  // K+-
 	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
-	  /*
+	  
 	  // Kl
-	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // K+-
-	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // e+-
-	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecB->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // Muon
-	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonB->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // photon
-	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotB->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // p
-	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtB->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // n
-	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutB->Fill(delta_theta1,delta_phi1,p_norm1);
-	  */
+	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutB[evt]->Fill(delta_theta1,delta_phi1,p_norm1);
+	  
 	}
             
       // JET 2
@@ -183,28 +190,28 @@ int main()
 	  */
 	  // K+-
 	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
-	  /*
+	  
 	  // Kl
-	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // K+-
-	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // e+-
-	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecB->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // Muon
-	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonB->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // photon
-	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotB->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // p
-	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtB->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // n
-	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutB->Fill(delta_theta2,delta_phi2,p_norm2);
-	  */
+	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
+	  
 	}
 
       jet1Const.clear();
