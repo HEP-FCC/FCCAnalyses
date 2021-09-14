@@ -679,6 +679,48 @@ ROOT::VecOps::RVec<float> MCParticle::AngleBetweenTwoMCParticles( ROOT::VecOps::
 
 }
 
+// --------------------------------------------------------------------------------------------------
+
+int MCParticle::get_lepton_origin( edm4hep::MCParticleData p, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind)  {
+
+ std::cout  << " enter in MCParticle::get_lepton_origin " << std::endl;
+
+/*
+ int pdg = std::abs( p.PDG ) ;
+ if ( pdg != 11 && pdg != 13 && pdg  != 15 ) return -1; 
+
+ int result  = 0;
+
+    for (unsigned j = p.parents_begin; j != p.parents_end; ++j) {
+      int index = ind.at(j);
+      std::cout  << " parent has pdg = " << in.at(index).PDG <<  "  status = " << in.at(index).generatorStatus << std::endl;
+      edm4hep::MCParticleData parent  = in.at(index);
+      std::cout << " parent of the parent = " << parent.parents_begin << std::endl;
+      std::cout << " status of the parent " << in.at( parent.parents_begin ).generatorStatus << std::endl;
+    }
+ 
+ return result;
+*/
+
+ int result = -1;
+ for (int i=0; i < in.size(); i++) {
+   edm4hep::MCParticleData p = in.at( i );
+   std::cout <<  i  << " PDG: " << p.PDG << " parents_begin " << ind.at(p.parents_begin) << " status " << p.generatorStatus << std::endl;
+ }
+
+ return  result;
+}
+
+
+int MCParticle::get_lepton_origin( int index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind)  {
+  if ( index < 0 || index >= in.size() ) return -1;
+  edm4hep::MCParticleData p = in[index];
+  return get_lepton_origin( p, in, ind );
+}
+
+
+
+
 
 
 

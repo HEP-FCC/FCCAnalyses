@@ -200,6 +200,9 @@ namespace MCParticle{
                                                  ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
                                                  ROOT::VecOps::RVec<int> ind) ;
 
+  /// return the pdg ID of the parent of a lepton (pre-FSR)
+  int get_lepton_origin( int idx, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
+  int get_lepton_origin( edm4hep::MCParticleData p, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
 
 
 
