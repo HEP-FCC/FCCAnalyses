@@ -221,6 +221,7 @@ class MyProcessor(processor.ProcessorABC):
 
         theta_diff = jets.theta[:,0] - firstjetGenPartsf.theta
         phi_diff = jets.phi[:,0] - firstjetGenPartsf.phi
+        phi_diff = ((phi_diff+np.pi)%2)-np.pi
         print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
 
         #histogramming in a single event seems simple enough, but now I must proceed and apply it to all while avoiding loops cause speed. Helpful suggestion found here: https://stackoverflow.com/questions/18851471/numpy-histogram-on-multi-dimensional-array 
@@ -421,16 +422,16 @@ output = processor.run_uproot_job(fileset,
     processor_instance=MyProcessor(),
     executor=processor.futures_executor,
     #executor_args={'workers':opt.cpu},
-    executor_args={'schema': None, 'workers':4,},#processor.LazyDataFrame},
-    maxchunks =20,
-    chunksize = 500,
+    executor_args={'schema': None, 'workers':1,},#processor.LazyDataFrame},
+    maxchunks =1,
+    chunksize = 5,
 )
 
 
 #print(output)
 #print(len(output['nConsti'].value))
 #Writeh5(output, 'nConsti_b', 'h5_output')
-Writeh5(output, 'Zuds_weighted_sparse_short', 'h5_output')
+####Writeh5(output, 'Zuds_weighted_sparse_sshort', 'h5_output')
 #print(len(out['ML']['pid']))
 #print(len(out['ML']['global']))
 

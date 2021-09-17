@@ -4,6 +4,7 @@ import awkward as ak
 import os
 import h5py as h5
 import numpy as np
+import sparse
 import matplotlib.pyplot as plt
 from collections import defaultdict
 from coffea import hist, processor
@@ -32,7 +33,11 @@ def Writeh5(output, name,folder):
     if not os.path.exists(folder):
         os.makedirs(folder)
     with h5.File(os.path.join(folder,'{0}.h5'.format(name)), "w") as fh5:
-        dset = fh5.create_dataset("histos", data=output['histos'].value)
+        dset = fh5.create_dataset("data", data=output['data'].value)
+        dset = fh5.create_dataset("data_len", data=output['data_len'].value)
+        dset = fh5.create_dataset("coords", data=output['coords'].value)
+        dset = fh5.create_dataset("shape", data=output['shape'].value)
+        dset = fh5.create_dataset("fill_value", data=output['fill_value'].value)
         #dset = fh5.create_dataset("data", data=output['data'])
         dset = fh5.create_dataset("pid", data=output['pid'].value)
         #dset = fh5.create_dataset("global", data=output['global'])
@@ -85,7 +90,11 @@ class MyProcessor(processor.ProcessorABC):
         ##dict_accumulator = {}
         print('DONT FORGET TO UNCOMMENT')
         ML_accumulator = {
-            'histos': processor.column_accumulator(np.zeros([0,8,29,29])),
+            'data': processor.column_accumulator(np.zeros([0,])),
+            'data_len': processor.column_accumulator(np.zeros([0], dtype=int)),
+            'coords': processor.column_accumulator(np.zeros([0,4], dtype=int)),
+            'shape': processor.column_accumulator(np.zeros([0], dtype=int)),
+            'fill_value': processor.column_accumulator(np.zeros([0])),
             'pid': processor.column_accumulator(np.zeros([0])),
         }
         self._accumulator = processor.dict_accumulator( ML_accumulator )
@@ -159,6 +168,103 @@ class MyProcessor(processor.ProcessorABC):
             #"r": np.sqrt(events.MC_px_final**2+events.MC_py_final**2),
         }, with_name="LorentzVector")
 
+
+        GenParts = ak.zip({
+            "t": events.MC_e,
+            "x": events.MC_px,
+            "y": events.MC_py,
+            "z": events.MC_pz,
+            "pdg": events.MC_pdg,
+            #"K0spipi_indices": events.K0spipi_indices,
+            "MC_status": events.MC_status,
+        }, with_name="LorentzVector")
+        
+        #"indices": np.arange(len(events.MC_e)),
+        #for i in range(len(GenParts.t)):
+        #    print('LENGTH: '+str(len(GenParts.t[i])))
+        
+        print('MC_t')
+        print(GenParts.t[0])
+        print(len(GenParts.t[0]))
+        print('K0psipi_indices')
+        print(events.K0spipi_indices)
+        #Remeber to deal with empty neutral kaon events...
+        print(ak.num(events.K0spipi_indices))
+        #print(events.K0spipi_indices[ak.num(events.K0spipi_indices)>0][:,1:])
+        print(events.K0spipi_indices[ak.num(events.K0spipi_indices)>0][:,1:])
+        print(events.K0spipi_indices[ak.num(events.K0spipi_indices)>0][:,0])
+        print('TransferMask')
+        print((GenParts.MC_status==1)[0])
+        #Below is a built in bug that will fail to run the code if there are more than 250 MC particles in an event. I did this so that one would not clip the event at the tail and miss stable particles in the process...
+        print(ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 300, clip=False), 0))[0][:120])
+        print(ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 300, clip=False), 0))[1][:120])
+        array_size = np.array(ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 300, clip=False), 0))[0][:])
+        array_content = np.array(ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 300, clip=False), 0))[1][:])
+        '''
+        for i in range(len(array_content)):
+            print('n')
+            print(i)
+            print(array_content[i])
+        '''
+        print('DEBUG:x3')
+        print(array_content[44:49])
+        print(array_content[70:75])
+        print(array_content[109:115])
+        print(np.unique(array_size, return_counts=True)[0])
+        print(np.unique(array_size, return_counts=True)[1])
+        print(array_content[40:48])
+        print(array_content[68:72])
+        #array_split_content = np.array_split(array_content, np.unique(array_size, return_counts=True)[1])[0::2]
+        array_split_content = ak.unflatten(array_content, np.unique(array_size, return_counts=True)[1])
+        array_split_content_padded = np.array(ak.fill_none(ak.pad_none(array_split_content, 200, clip=False), -1))
+        mask_padded = events.K0spipi_indices[ak.num(events.K0spipi_indices)>0][:,0]
+        #DO NOT PAD TWICE WITH -1 -> obvious error
+        #Note that here we look at pions. The intent is to then subtract them from final distributions. We will have to do something similar for pi0->2gamma later...
+        print('MASK DEFN')
+        mask_padded_raw = np.delete(np.array(ak.fill_none(ak.pad_none(events.K0spipi_indices, 30, clip=False), -999)), np.arange(0, len(events.K0spipi_indices[0]), 3), axis=1)
+        #mask_padded_raw = np.array(ak.fill_none(ak.pad_none(events.K0spipi_indices, 30, clip=False), -999))
+        print(mask_padded_raw)
+
+        #Below is for Kaons, notice that slicing is much simpler as we take every third element...
+        ##mask_padded_raw = np.array(ak.fill_none(ak.pad_none(events.K0spipi_indices, 30, clip=False), -999))[:,::3]
+        #K0spipi_mask = [array_split_content_padded==np.expand_dims(mask_padded_raw.T[i], axis=1) for i in range(len(mask_padded_raw.T))]
+        print('COMPARISON')
+        print(array_split_content_padded.shape)
+        print(array_split_content_padded[0])
+        print(np.expand_dims(mask_padded_raw.T[0], axis=1).shape)
+        print(np.expand_dims(mask_padded_raw.T[0], axis=1))
+        #For now this is an event wise comparison for the first kaon -> must write this code to support up to 30 kaons
+        #As the Kaons are not stable this code is actually meant to be applied to the pions instead... Kaon selection must proceed otherwise...
+        K0spipi_mask = array_split_content_padded==np.expand_dims(mask_padded_raw.T[0], axis=1)
+        new_indices = np.nonzero(K0spipi_mask)
+        print(new_indices)
+        print('GenPartsf.pdg')
+        print(GenPartsf.t[0, 30])
+        print(GenParts.t[0, 91])
+        #The above mask must be defined for each Kaon...
+        print(K0spipi_mask[0])
+        #after combing back from lunch -> was just trying to get the padded mask (and proceed as in test code)!
+        print('AK DEBUG:')
+        print(array_split_content[0])
+        print(len(array_split_content))
+        '''
+        array_split_content = np.array_split(array_content, np.unique(array_size, return_counts=True)[1])
+        '''
+        print(type(array_split_content))
+        print(array_split_content)
+        print(ak.Array(array_split_content))
+        print(ak.Array(array_split_content)[:,:5])
+        print(ak.Array(array_split_content)[0,40:45])
+        print(ak.Array(array_split_content)[1,0:5])
+        print(ak.num(ak.Array(array_split_content)))
+        print('end of trial...')
+        print(GenParts.MC_status[ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 300, clip=False), 0))])
+        cutdown = GenParts.MC_status[ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 300, clip=False), 0))]
+        print(ak.num(cutdown, axis=0))
+        print(ak.sum((GenPartsf.t>=0)))
+        ##MC_mask = GenParts.indices
+        MC_final_mask = GenParts.MC_status
+        
         #RANDOMIZE FIRST OR SECOND JET!!!
 
         #Note that for now the implementation is hacky and we basically pass the jet constituents mask first for one jet and then for the other (this may become problematic if there are multiple jets), but this is fine for now as we focus on the exclusive ee_kt. In the future we might want to think about how we could pass both jets at once (19/08/2021)...
@@ -311,6 +417,8 @@ class MyProcessor(processor.ProcessorABC):
         
         nphisto = nphisto[pid!=0]
         pid = pid[pid!=0]
+
+        nphisto_sparse = sparse.COO(nphisto)
         '''
         print(firstjetGenPartsf.mass[1])
 
@@ -331,8 +439,15 @@ class MyProcessor(processor.ProcessorABC):
         ##########output['ML']['global']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
         #output['global']+= processor.column_accumulator(np.array(jets.x))#PFCands.pt[0].tolist()
         #print(np.expand_dims(nphisto[1], axis=0).shape)
-        output['histos']+= processor.column_accumulator(nphisto)#PFCands.pt[0].tolist()
-        output['pid']+= processor.column_accumulator(np.array(pid))
+        output['data']+= processor.column_accumulator(np.asarray(nphisto_sparse.data))#PFCands.pt[0].tolist()
+        output['data_len']+= processor.column_accumulator(np.expand_dims(np.asarray(len(nphisto_sparse.data), dtype=int), axis=0))
+        output['coords']+= processor.column_accumulator(np.asarray(nphisto_sparse.coords, dtype=int).T)#PFCands.pt[0].tolist()
+        output['shape']+= processor.column_accumulator(np.asarray(nphisto_sparse.shape, dtype=int))#PFCands.pt[0].tolist()
+        print(np.asarray(nphisto_sparse.fill_value).shape)
+        print((output['fill_value'].value).shape)
+        output['fill_value']+= processor.column_accumulator(np.expand_dims(np.asarray(nphisto_sparse.fill_value), axis=0))#PFCands.pt[0].tolist()
+        output['pid']+= processor.column_accumulator(np.asarray(pid))
+
         ##output['sumw']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
         '''
         output['ML']['pid']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
@@ -369,7 +484,7 @@ class MyProcessor(processor.ProcessorABC):
         return accumulator
 
 #p = MyProcessor()
-filename = "rootFiles//p8_ee_Zuds_ecm91.root"
+filename = "rootFiles/p8_ee_Zuds_ecm91.root"
 file = uproot.open(filename)
 '''
 events = NanoEventsFactory.from_root(
@@ -404,22 +519,27 @@ output = processor.run_uproot_job(fileset,
     processor_instance=MyProcessor(),
     executor=processor.futures_executor,
     #executor_args={'workers':opt.cpu},
-    executor_args={'schema': None, 'workers':4,},#processor.LazyDataFrame},
-    maxchunks =20,
-    chunksize = 500,
+    executor_args={'schema': None, 'workers':1,},#processor.LazyDataFrame},
+    maxchunks =1,
+    chunksize = 5000,
 )
 
 
 #print(output)
 #print(len(output['nConsti'].value))
 #Writeh5(output, 'nConsti_b', 'h5_output')
-Writeh5(output, 'Zuds_weighted_short', 'h5_output')
+####Writeh5(output, 'Zuds_weighted_sparse_sshort', 'h5_output')
 #print(len(out['ML']['pid']))
 #print(len(out['ML']['global']))
 
 print('REMEMBER LOOP MASK')
 
-
+print(len(output['pid'].value))
+print(len(output['data'].value))
+print(len(output['coords'].value))
+print(output['shape'].value)
+print(output['fill_value'].value)
+print('COORDS MUST BE TRANSPOSED IN H5 FILE!!!')
 
 
 ### NOTE FOR MONDAY ######

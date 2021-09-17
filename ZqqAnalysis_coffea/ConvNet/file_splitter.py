@@ -6,7 +6,7 @@ import sparse
 
 # Ideally, I would convert these files to dense matrices just to shuffle them event wise. Given the associated RAM issues, I decided instead to select the data by batches. As I have been running the analysis code in batches of size 20, I will randomly select two batches to use as the eval sets. 
 
-fname = 'Zuds_weighted_sparse_sshort'
+fname = 'Zuds_weighted_sparse'
 sparse_file = h5py.File('../h5_output/{0}.h5'.format(fname), 'r')
 
 # Could draw two ints at once but that risks repetition...
