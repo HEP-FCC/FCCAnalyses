@@ -6,14 +6,18 @@
 
 #include <TObject.h>
 #include <TList.h>
+#include <TKey.h>
 #include <TFile.h>
 #include <TTree.h>
 #include <TH1.h>
 #include <TH2.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
+#include "ROOT/RVec.hxx"
 #include <TSystem.h>
 #include <TInterpreter.h>
+#include <TTreeReader.h>
+#include <TTreeReaderValue.h>
 
 using namespace std;
 
@@ -21,10 +25,11 @@ int main()
 {
   gInterpreter->GenerateDictionary("vector<vector<int> >","vector");
 
-  TFile* file = new TFile("p8_ee_Zbb_ecm91.root","READ");
-  TTree* tree = (TTree*) file->Get("events");
-  int nEvents = tree->GetEntries();
-  cout<<"Number of Events: "<<nEvents<<endl;
+  TFile *file = TFile::Open("p8_ee_Zbb_ecm91.root");
+  TTreeReader tree("events", file);
+  //TTree* tree = (TTree*) file->Get("events");
+  //int nEvents = tree->GetEntries();
+  //cout<<"Number of Events: "<<nEvents<<endl;
   
   // hists for jet angluar distributions
   int one = 1;
@@ -61,15 +66,27 @@ int main()
 
   cout<<"After defining histograms"<<endl;
   
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpxF(tree, "MC_px_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpyF(tree, "MC_py_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpzF(tree, "MC_pz_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCeF(tree, "MC_e_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpdgF(tree, "MC_pdg_f");
+  /*
   vector<float> *MCpxF=0, *MCpyF=0, *MCpzF=0, *MCeF=0, *MCpdgF=0;
   tree->SetBranchAddress("MC_px_f", &MCpxF);
   tree->SetBranchAddress("MC_py_f", &MCpyF);
   tree->SetBranchAddress("MC_pz_f", &MCpzF);
   tree->SetBranchAddress("MC_e_f", &MCeF);
   tree->SetBranchAddress("MC_pdg_f", &MCpdgF);
-  
+  */
   cout<<"Before defining vector of vectors"<<endl;
-
+  
+  TTreeReaderValue<vector<vector<int>>> jetConst(tree, "jetconstituents_ee_kt");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPx(tree, "jets_ee_kt_px");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPy(tree, "jets_ee_kt_py");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPz(tree, "jets_ee_kt_pz");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetE(tree, "jets_ee_kt_e");
+  /*
   vector<float> *jetE=0, *jetPx=0, *jetPy=0, *jetPz=0;
   vector<vector<int>> *jetConst;
   tree->SetBranchAddress("jetconstituents_ee_kt", &jetConst);
@@ -77,13 +94,17 @@ int main()
   tree->SetBranchAddress("jets_ee_kt_px", &jetPx);
   tree->SetBranchAddress("jets_ee_kt_py", &jetPy);
   tree->SetBranchAddress("jets_ee_kt_pz", &jetPz);
-  
+  */
   cout<<"After defining vector of vecotrs... Event loop start"<<endl;
 
+  // event counter
+  int evt = 0;
+
   // event loop
-  for(unsigned int evt=0; evt<one; evt++)
+  //for(unsigned int evt=0; evt<one; evt++)
+  while(tree.Next() && evt<1)
     {
-      tree->GetEntry(evt);
+      //tree->GetEntry(evt);
 
       double jPx=0., jPy=0., jPz=0., jE=0., invMjet=0.;
       int nJet = jetE->size();
@@ -185,13 +206,7 @@ int main()
 	  p_norm2 = p4_j2.P()/p_Jet[1].P();
 	  delta_theta2 = p4_j2.Theta() - p_Jet[1].Theta();
 	  delta_phi2 = p4_j2.Phi() - p_Jet[1].Phi();
-	  /*
-	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130)
-	    {
-	      delta_ang2 = p4_j2.Angle(p_Jet[1].Vect());
-	      h_deltaAngKl->Fill(delta_ang2);
-	    }
-	  */
+
 	  // K+-
 	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB[evt]->Fill(delta_theta2,delta_phi2,p_norm2);
 	  /*
@@ -222,6 +237,8 @@ int main()
 
       jet1Const.clear();
       jet2Const.clear();
+
+      evt++;
     }
 
   cout<<"Event loop ends"<<endl;
@@ -230,7 +247,7 @@ int main()
 
   TList *hist_list = new TList();
 
-  for(TH2D* hist : h_JetCKaonB) hist_list->Add(hist);
+  for(int iH=0; iH<one; iH++) hist_list->Add(h_JetCKaonB[iH]);
 
   cout<<"defining hist file"<<endl;
 
@@ -239,6 +256,7 @@ int main()
   TFile *histFile = new TFile(histfname,"RECREATE");
     
   hist_list->Write("histZbb_jetImages", TObject::kSingleKey);
+  histFile->Write();
   
   cout<<"Hist file written"<<endl;
 
@@ -247,8 +265,8 @@ int main()
 
   cout<<"Hist file closed"<<endl;
       
-  delete jetConst;
-  jetConst = NULL;
+  //delete jetConst;
+  //jetConst = NULL;
   
   return -1;
 }
