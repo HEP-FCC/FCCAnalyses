@@ -37,7 +37,7 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets_xyzm(ROOT::Ve
     double pz_d = pz.at(i);
     double  m_d =  m.at(i);
     double  E_d = sqrt(px_d*px_d + py_d*py_d + pz_d*pz_d + m_d*m_d);
-    result.emplace_back(px_d, py_D, pz_d, E_d);
+    result.emplace_back(px_d, py_d, pz_d, E_d);
     result.back().set_user_index(index);
     ++index;
   }
