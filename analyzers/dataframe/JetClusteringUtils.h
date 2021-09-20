@@ -33,6 +33,19 @@ namespace JetClusteringUtils{
 						 ROOT::VecOps::RVec<float> pz, 
 						 ROOT::VecOps::RVec<float> e);
 
+  /** Set fastjet pseudoJet for later reconstruction using px, py, pz and m
+   * 
+   * This version is to be preferred over the px,py,pz,E version when m is known 
+   * accurately, because it uses double precision to reconstruct the energy, 
+   * reducing the size of rounding errors on FastJet calculations (e.g. of
+   * PseudoJet masses)
+   * 
+  */
+  std::vector<fastjet::PseudoJet> set_pseudoJets_xyzm(ROOT::VecOps::RVec<float> px, 
+						 ROOT::VecOps::RVec<float> py, 
+						 ROOT::VecOps::RVec<float> pz, 
+						 ROOT::VecOps::RVec<float> m);
+
   /** Get fastjet pseudoJet after reconstruction from FCCAnalyses jets*/
   ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(FCCAnalysesJet);
 

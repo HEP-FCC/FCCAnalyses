@@ -36,10 +36,11 @@ class analysis():
                .Define("RP_px",          "ReconstructedParticle::get_px(ReconstructedParticles)")
                .Define("RP_py",          "ReconstructedParticle::get_py(ReconstructedParticles)")
                .Define("RP_pz",          "ReconstructedParticle::get_pz(ReconstructedParticles)")               
-               .Define("RP_e",           "ReconstructedParticle::get_e(ReconstructedParticles)")
+               .Define("RP_m",           "ReconstructedParticle::get_e(ReconstructedParticles)")
 
-               #build pseudo jets with the RP
-               .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
+               #build pseudo jets with the RP, using the interface that takes px,py,pz,m for better
+               #handling of rounding errors
+               .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets_xyzm(RP_px, RP_py, RP_pz, RP_m)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 4 jets, E0-scheme
                .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 4, 0, 10)(pseudo_jets)")

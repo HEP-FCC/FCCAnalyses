@@ -25,6 +25,25 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(ROOT::VecOps:
   return result;
 }
 
+std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets_xyzm(ROOT::VecOps::RVec<float> px, 
+								   ROOT::VecOps::RVec<float> py, 
+								   ROOT::VecOps::RVec<float> pz, 
+								   ROOT::VecOps::RVec<float> m) {
+  std::vector<fastjet::PseudoJet> result;
+  unsigned index = 0;
+  for (size_t i = 0; i < px.size(); ++i) {
+    double px_d = px.at(i);
+    double py_d = py.at(i);
+    double pz_d = pz.at(i);
+    double  m_d =  m.at(i);
+    double  E_d = sqrt(px_d*px_d + py_d*py_d + pz_d*pz_d + m_d*m_d);
+    result.emplace_back(px_d, py_D, pz_d, E_d);
+    result.back().set_user_index(index);
+    ++index;
+  }
+  return result;
+}
+
 
 ROOT::VecOps::RVec<float> JetClusteringUtils::get_px(ROOT::VecOps::RVec<fastjet::PseudoJet> in){
   ROOT::VecOps::RVec<float> result;
