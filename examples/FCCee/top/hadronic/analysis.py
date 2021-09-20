@@ -36,7 +36,7 @@ class analysis():
                .Define("RP_px",          "ReconstructedParticle::get_px(ReconstructedParticles)")
                .Define("RP_py",          "ReconstructedParticle::get_py(ReconstructedParticles)")
                .Define("RP_pz",          "ReconstructedParticle::get_pz(ReconstructedParticles)")               
-               .Define("RP_m",           "ReconstructedParticle::get_e(ReconstructedParticles)")
+               .Define("RP_m",           "ReconstructedParticle::get_m(ReconstructedParticles)")
 
                #build pseudo jets with the RP, using the interface that takes px,py,pz,m for better
                #handling of rounding errors
