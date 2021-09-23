@@ -5,7 +5,7 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TH1.h>
-#include <TH2.h>
+#include <TH2D.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
 #include <TSystem.h>
@@ -25,9 +25,6 @@ int main()
   TString histfname;
   histfname = "histZbb_jets.root";
   TFile *histFile = new TFile(histfname,"RECREATE");
-
-  // Hists for jet-constituents' properties
-  //TH1D* h_deltaAngKl = new TH1D("h_deltaAngKl","Angle b/n K_{L} and Jet Axis",100,0.,3.15);
   
   // hists for jet angluar distributions
   TH2D* h_JetCKaonB = new TH2D("h_JetCKaonB","K^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
@@ -38,6 +35,9 @@ int main()
   TH2D* h_JetPhotB = new TH2D("h_JetPhotB","#gamma in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetProtB = new TH2D("h_JetProtB","p in b jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2D* h_JetNeutB = new TH2D("h_JetNeutB","n in b jets",29,-0.5,0.5,29,-0.5,0.5);
+
+  TH2D* h_JetKs2pipiB = new TH2D("h_JetKs2pipiB","K_{S} #rightarrow #pi^{+}#pi^{-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2D* h_JetKs2pipiPiB = new TH2D("h_JetKs2pipiPiB","#pi's from K_{S} #rightarrow #pi^{+}#pi^{-} in b jets",29,-0.5,0.5,29,-0.5,0.5);
   
   vector<float> *MCpxF=0, *MCpyF=0, *MCpzF=0, *MCeF=0, *MCpdgF=0;
   tree->SetBranchAddress("MC_px_f", &MCpxF);
@@ -46,20 +46,19 @@ int main()
   tree->SetBranchAddress("MC_e_f", &MCeF);
   tree->SetBranchAddress("MC_pdg_f", &MCpdgF);
   
+  vector<float> *MCpx=0, *MCpy=0, *MCpz=0, *MCe=0, *MCpdg=0;
+  tree->SetBranchAddress("MC_px", &MCpx);
+  tree->SetBranchAddress("MC_py", &MCpy);
+  tree->SetBranchAddress("MC_pz", &MCpz);
+  tree->SetBranchAddress("MC_e", &MCe);
+  tree->SetBranchAddress("MC_pdg", &MCpdg);
+  
+  vector<int> *Ks2pipi=0;
+  tree->SetBranchAddress("Ks2pipi_indices", &Ks2pipi);
+
   vector<float> *jetE=0, *jetPx=0, *jetPy=0, *jetPz=0;
   vector<vector<int>> *jetConst;
-  //tree->SetBranchAddress("jetconstituents_ee_genkt", &jetConst);
-  //tree->SetBranchAddress("jets_ee_genkt_e", &jetE);
-  //tree->SetBranchAddress("jets_ee_genkt_px", &jetPx);
-  //tree->SetBranchAddress("jets_ee_genkt_py", &jetPy);
-  //tree->SetBranchAddress("jets_ee_genkt_pz", &jetPz);
-
-  //tree->SetBranchAddress("jetconstituents_kt", &jetConst);
-  //tree->SetBranchAddress("jets_kt_e", &jetE);
-  //tree->SetBranchAddress("jets_kt_px", &jetPx);
-  //tree->SetBranchAddress("jets_kt_py", &jetPy);
-  //tree->SetBranchAddress("jets_kt_pz", &jetPz);
-
+  
   tree->SetBranchAddress("jetconstituents_ee_kt", &jetConst);
   tree->SetBranchAddress("jets_ee_kt_e", &jetE);
   tree->SetBranchAddress("jets_ee_kt_px", &jetPx);
@@ -89,6 +88,62 @@ int main()
 	  p_Jets += p_Jet[j];
 	}
 
+      // Ks->pipi loop
+      double px=0., py=0., pz=0., e=0.;
+      TLorentzVector p4;
+      double KsAngJ1=0., KsAngJ2=0.;
+      double PiAngJ1=0., PiAngJ2=0.;
+      double p_normKsJ1=0., KsThetaJ1=0., KsPhiJ1=0.;
+      double p_normKsJ2=0., KsThetaJ2=0., KsPhiJ2=0.;
+      double p_normPiJ1=0., PiThetaJ1=0., PiPhiJ1=0.;
+      double p_normPiJ2=0., PiThetaJ2=0., PiPhiJ2=0.;
+      for(int iKP=0; iKP<Ks2pipi->size(); iKP++)
+	{
+	  px = MCpx->at(Ks2pipi->at(iKP));
+	  py = MCpy->at(Ks2pipi->at(iKP));
+	  pz = MCpz->at(Ks2pipi->at(iKP));
+	  e = MCe->at(Ks2pipi->at(iKP));
+	  
+	  p4.SetPxPyPzE(px, py, pz, e);
+	  
+	  //cout<<MCpdg->at(Ks2pipi->at(iKP))<<endl;
+	  
+	  if(iKP%3 == 0)
+	    {
+	      KsAngJ1 = p4.Angle(p_Jet[0].Vect());
+	      KsAngJ2 = p4.Angle(p_Jet[1].Vect());
+	      
+	      p_normKsJ1 = p4.P()/p_Jet[0].P();
+	      KsThetaJ1 = p4.Theta() - p_Jet[0].Theta();
+	      KsPhiJ1 = p4.DeltaPhi(p_Jet[0]);
+	      
+	      p_normKsJ2 = p4.P()/p_Jet[1].P();
+	      KsThetaJ2 = p4.Theta() - p_Jet[1].Theta();
+	      KsPhiJ2 = p4.DeltaPhi(p_Jet[1]);
+
+	      if(KsAngJ1<0.5) h_JetKs2pipiB->Fill(KsThetaJ1, KsPhiJ1, p_normKsJ1);
+	      else if(KsAngJ2<0.5) h_JetKs2pipiB->Fill(KsThetaJ2, KsPhiJ2, p_normKsJ2);
+	    }
+	  
+	  if(abs(MCpdg->at(Ks2pipi->at(iKP))) == 211)
+	    {
+	      PiAngJ1 = p4.Angle(p_Jet[0].Vect());
+	      PiAngJ2 = p4.Angle(p_Jet[1].Vect());
+	      
+	      p_normPiJ1 = p4.P()/p_Jet[0].P();
+	      PiThetaJ1 = p4.Theta() - p_Jet[0].Theta();
+	      PiPhiJ1 = p4.DeltaPhi(p_Jet[0]);
+	      
+	      p_normPiJ2 = p4.P()/p_Jet[1].P();
+	      PiThetaJ2 = p4.Theta() - p_Jet[1].Theta();
+	      PiPhiJ2 = p4.DeltaPhi(p_Jet[1]);
+
+	      if(abs(PiThetaJ1)<0.5 && abs(PiPhiJ1)<0.5) h_JetKs2pipiPiB->Fill(PiThetaJ1, PiPhiJ1, p_normPiJ1);
+	      else if(abs(PiThetaJ2)<0.5 && abs(PiPhiJ2)<0.5) h_JetKs2pipiB->Fill(PiThetaJ2, PiPhiJ2, p_normPiJ2);
+	    }
+	  
+	}
+      
       // jet constituents
       vector<int> jet1Const, jet2Const;
       if(jetConst->size()>=1)      jet1Const = jetConst->at(0);
@@ -115,21 +170,15 @@ int main()
 
 	  p_norm1 = p4_j1.P()/p_Jet[0].P();
 	  delta_theta1 = p4_j1.Theta() - p_Jet[0].Theta();
-	  delta_phi1 = p4_j1.Phi() - p_Jet[0].Phi();
-	  /*
-	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130)
-	    {
-	      delta_ang1 = p4_j1.Angle(p_Jet[0].Vect());
-	      h_deltaAngKl->Fill(delta_ang1);
-	    }
-	  */
+	  delta_phi1 = p4_j1.DeltaPhi(p_Jet[0]);
+	  
 	  // K+-
 	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // Kl
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
-	  // K+-
+	  // pi+-
 	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // e+-
@@ -168,21 +217,15 @@ int main()
 
 	  p_norm2 = p4_j2.P()/p_Jet[1].P();
 	  delta_theta2 = p4_j2.Theta() - p_Jet[1].Theta();
-	  delta_phi2 = p4_j2.Phi() - p_Jet[1].Phi();
-	  /*
-	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130)
-	    {
-	      delta_ang2 = p4_j2.Angle(p_Jet[1].Vect());
-	      h_deltaAngKl->Fill(delta_ang2);
-	    }
-	  */
+	  delta_phi2 = p4_j2.DeltaPhi(p_Jet[1]);
+	  
 	  // K+-
 	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // Kl
 	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
-	  // K+-
+	  // pi+-
 	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionB->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // e+-
@@ -204,13 +247,16 @@ int main()
 
       jet1Const.clear();
       jet2Const.clear();
+      
+
+      //cout<<"============================"<<endl;
     }
       
   histFile->Write();
   histFile->Close();
       
-  delete jetConst;
-  jetConst = NULL;
+  //delete jetConst;
+  //jetConst = NULL;
   
   file->Close();
   return -1;

@@ -9,9 +9,8 @@
 #include <TKey.h>
 #include <TFile.h>
 #include <TTree.h>
-#include <TH1.h>
 #include <TH2.h>
-#include <TH2D.h>
+#include <TH2F.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
 #include "ROOT/RVec.hxx"
@@ -51,14 +50,14 @@ int main() {
   histfname = "histZbb_jetImages.root";
   TFile histFile(histfname,"RECREATE");
   
-  vector<TH2D*> h_JetCKaonB;
-  vector<TH2D*> h_JetNKaonB;
-  vector<TH2D*> h_JetCPionB;
-  vector<TH2D*> h_JetElecB;
-  vector<TH2D*> h_JetMuonB;
-  vector<TH2D*> h_JetPhotB;
-  vector<TH2D*> h_JetProtB;
-  vector<TH2D*> h_JetNeutB;
+  vector<TH2F*> h_JetCKaonB;
+  vector<TH2F*> h_JetNKaonB;
+  vector<TH2F*> h_JetCPionB;
+  vector<TH2F*> h_JetElecB;
+  vector<TH2F*> h_JetMuonB;
+  vector<TH2F*> h_JetPhotB;
+  vector<TH2F*> h_JetProtB;
+  vector<TH2F*> h_JetNeutB;
   
   for(int nH=0; nH<2*nEvents; nH++)
     {
@@ -80,14 +79,14 @@ int main() {
       string sp = ssp.str();
       string sn = ssn.str();
       
-      h_JetCKaonB.push_back(new TH2D(sck.c_str(),"K^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
-      h_JetNKaonB.push_back(new TH2D(snk.c_str(),"K_{L} in b jets",29,-0.5,0.5,29,-0.5,0.5));
-      h_JetCPionB.push_back(new TH2D(scp.c_str(),"#pi^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
-      h_JetElecB.push_back(new TH2D(se.c_str(),"e^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
-      h_JetMuonB.push_back(new TH2D(smu.c_str(),"#mu^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
-      h_JetPhotB.push_back(new TH2D(sph.c_str(),"#gamma in b jets",29,-0.5,0.5,29,-0.5,0.5));
-      h_JetProtB.push_back(new TH2D(sp.c_str(),"p in b jets",29,-0.5,0.5,29,-0.5,0.5));
-      h_JetNeutB.push_back(new TH2D(sn.c_str(),"n in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetCKaonB.push_back(new TH2F(sck.c_str(),"K^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetNKaonB.push_back(new TH2F(snk.c_str(),"K_{L} in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetCPionB.push_back(new TH2F(scp.c_str(),"#pi^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetElecB.push_back(new TH2F(se.c_str(),"e^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetMuonB.push_back(new TH2F(smu.c_str(),"#mu^{+/-} in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetPhotB.push_back(new TH2F(sph.c_str(),"#gamma in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetProtB.push_back(new TH2F(sp.c_str(),"p in b jets",29,-0.5,0.5,29,-0.5,0.5));
+      h_JetNeutB.push_back(new TH2F(sn.c_str(),"n in b jets",29,-0.5,0.5,29,-0.5,0.5));
     }
 
   
@@ -101,7 +100,7 @@ int main() {
     if(evt%10000==0) cout<<evt<<" done"<<endl;
     
     // jets
-    double jPx=0., jPy=0., jPz=0., jE=0., invMjet=0.;
+    float jPx=0., jPy=0., jPz=0., jE=0., invMjet=0.;
     int nJet = jetE->size();
     TLorentzVector p_Jet[nJet], p_Jets;
     
@@ -129,11 +128,11 @@ int main() {
     //cout<<"after writing jet consitituents"<<endl;
     
     // JET 1
-    double px_j1=0, py_j1=0, pz_j1=0, e_j1=0;
+    float px_j1=0, py_j1=0, pz_j1=0, e_j1=0;
     TLorentzVector p4_j1;
     
-    double p_norm1 = 0.;
-    double delta_theta1 = 0., delta_phi1 = 0.;
+    float p_norm1 = 0.;
+    float delta_theta1 = 0., delta_phi1 = 0.;
     
     for(int ele : jet1Const) {
       px_j1 = MCpxF->at(ele);
@@ -142,6 +141,10 @@ int main() {
       e_j1 = MCeF->at(ele);
       
       p4_j1.SetPxPyPzE(px_j1, py_j1, pz_j1, e_j1);
+
+      // cuts
+      if(p4_j1.Pt() < 0.5) continue;
+      if(abs(cos(p4_j1.Theta())) > 0.97) continue;
       
       p_norm1 = p4_j1.P()/p_Jet[0].P();
       delta_theta1 = p4_j1.Theta() - p_Jet[0].Theta();
@@ -173,11 +176,11 @@ int main() {
     }
 
     // JET 2
-    double px_j2=0, py_j2=0, pz_j2=0, e_j2=0;
+    float px_j2=0, py_j2=0, pz_j2=0, e_j2=0;
     TLorentzVector p4_j2;
     
-    double p_norm2 = 0.;
-    double delta_theta2 = 0., delta_phi2 = 0.;
+    float p_norm2 = 0.;
+    float delta_theta2 = 0., delta_phi2 = 0.;
     
     //double delta_ang2=0.;
     for(int ele : jet2Const) {
@@ -188,6 +191,10 @@ int main() {
       
       p4_j2.SetPxPyPzE(px_j2, py_j2, pz_j2, e_j2);
       
+      // cuts
+      if(p4_j2.Pt() < 0.5) continue;
+      if(abs(cos(p4_j2.Theta())) > 0.97) continue;
+
       p_norm2 = p4_j2.P()/p_Jet[1].P();
       delta_theta2 = p4_j2.Theta() - p_Jet[1].Theta();
       delta_phi2 = p4_j2.DeltaPhi(p_Jet[1]);
@@ -243,7 +250,7 @@ int main() {
     h_JetNeutB[iH]->Write();
   }
   
-  cout<<"defining hist file"<<endl;
+  cout<<"hists written to file"<<endl;
   
   //hist_list->Write("histZbb_jemages");
   //histFile.Write();
