@@ -204,6 +204,7 @@ namespace MCParticle{
   int get_lepton_origin( int idx, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
   int get_lepton_origin( edm4hep::MCParticleData p, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
 
+  ROOT::VecOps::RVec<int> get_leptons_origin( ROOT::VecOps::RVec<edm4hep::MCParticleData> particles, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
 
 
 }

@@ -683,32 +683,66 @@ ROOT::VecOps::RVec<float> MCParticle::AngleBetweenTwoMCParticles( ROOT::VecOps::
 
 int MCParticle::get_lepton_origin( edm4hep::MCParticleData p, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind)  {
 
- std::cout  << " enter in MCParticle::get_lepton_origin " << std::endl;
+ // std::cout  << std::endl << " enter in MCParticle::get_lepton_origin  PDG = " << p.PDG << std::endl;
 
-/*
  int pdg = std::abs( p.PDG ) ;
  if ( pdg != 11 && pdg != 13 && pdg  != 15 ) return -1; 
 
  int result  = 0;
 
+ // std::cout << " p.parents_begin p.parents_end " << p.parents_begin <<  " "  << p.parents_end << std::endl;
     for (unsigned j = p.parents_begin; j != p.parents_end; ++j) {
       int index = ind.at(j);
-      std::cout  << " parent has pdg = " << in.at(index).PDG <<  "  status = " << in.at(index).generatorStatus << std::endl;
-      edm4hep::MCParticleData parent  = in.at(index);
-      std::cout << " parent of the parent = " << parent.parents_begin << std::endl;
-      std::cout << " status of the parent " << in.at( parent.parents_begin ).generatorStatus << std::endl;
+      int pdg_parent = in.at(index).PDG ;
+      // std::cout  << " parent has pdg = " << in.at(index).PDG <<  "  status = " << in.at(index).generatorStatus << std::endl;
+
+      if ( abs( pdg_parent ) == 23 || abs( pdg_parent ) == 24 ) {
+        result = pdg_parent ;
+        //std::cout <<  " ... Lepton is from W or Z ,  return code = " << result <<  std::endl;
+        break;
+      }
+
+      if ( abs( pdg_parent ) == 22 ) {
+        result = pdg_parent ;
+        //std::cout <<  " ... Lepton is from a virtual photon ,  return code = " << result <<  std::endl;
+        break;
+      }
+
+      if ( abs( pdg_parent ) == 15 ) {
+         result = pdg_parent ;
+         //std::cout <<  " ... Lepton is from a tau,  return code = " << result <<  std::endl;
+         break;
+      }
+
+      if ( abs( pdg_parent ) == 11 ) {    // beam particle ?
+			// beam particles should have generatorStatus = 4,
+			// but that is not the case in files produced from Whizard + p6
+        if ( in.at(index).generatorStatus == 4 || ind.at  ( in.at(index).parents_begin ) == 0 ) {
+           result = 0;
+           //std::cout <<  " ... Lepton is from the hard subprocess, return code = " << result <<  std::endl;
+           break;
+        }
+      }
+
+      if ( pdg == 11 && abs( pdg_parent ) == 13 ) {	// mu -> e
+          result  = pdg_parent;
+          //std::cout <<  " ... Electron from a muon decay, return code = " << result <<  std::endl;
+          break;
+      }
+
+      if ( abs( pdg_parent ) == pdg  ) {
+	//std::cout << " ... iterate ... " << std::endl;
+	return get_lepton_origin( in.at(index),  in, ind  );
+      }
+
+      // This must come from a hadron decay
+      result = pdg_parent;
+      //std::cout <<  " ... Lepton from a hadron decay " << std::endl;
+
     }
  
  return result;
-*/
 
- int result = -1;
- for (int i=0; i < in.size(); i++) {
-   edm4hep::MCParticleData p = in.at( i );
-   std::cout <<  i  << " PDG: " << p.PDG << " parents_begin " << ind.at(p.parents_begin) << " status " << p.generatorStatus << std::endl;
- }
-
- return  result;
 }
 
 
@@ -716,6 +750,21 @@ int MCParticle::get_lepton_origin( int index, ROOT::VecOps::RVec<edm4hep::MCPart
   if ( index < 0 || index >= in.size() ) return -1;
   edm4hep::MCParticleData p = in[index];
   return get_lepton_origin( p, in, ind );
+}
+
+
+ROOT::VecOps::RVec<int> MCParticle::get_leptons_origin( ROOT::VecOps::RVec<edm4hep::MCParticleData> particles, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind)  {
+
+  ROOT::VecOps::RVec<int> result;
+  result.reserve(particles.size());
+  for (size_t i = 0; i < particles.size(); ++i) {
+    auto & p = particles[i];
+    int origin = MCParticle::get_lepton_origin( p, in, ind );
+    result.push_back( origin );
+  }
+
+  return result;
+
 }
 
 
