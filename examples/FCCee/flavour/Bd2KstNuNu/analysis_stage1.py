@@ -52,6 +52,7 @@ class analysis():
                .Define("MC_M2",  "myUtils::get_MCMother2(Particle,Particle0)")
                .Define("MC_D1",  "myUtils::get_MCDaughter1(Particle,Particle1)")
                .Define("MC_D2",  "myUtils::get_MCDaughter2(Particle,Particle1)")
+               #.Define("MC_D3",  "myUtils::get_MCDaughter3(Particle,Particle1)")
                .Define("MC_x",   "MCParticle::get_vertex_x(Particle)")
                .Define("MC_y",   "MCParticle::get_vertex_y(Particle)")
                .Define("MC_z",   "MCParticle::get_vertex_z(Particle)")
@@ -247,12 +248,21 @@ class analysis():
                .Define("KiPiCandidates_pion2d0", "myUtils::getFCCAnalysesComposite_d0(KiPiCandidates, VertexObject, 1)")
                .Define("KiPiCandidates_pion2z0", "myUtils::getFCCAnalysesComposite_z0(KiPiCandidates, VertexObject, 1)")
                
-               .Define("TrueKiPiBc_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 541)")
-               .Define("TrueKiPiBc_track",         "myUtils::get_truetrack(TrueKiPiBc_vertex, MCVertexObject, Particle)")
-               .Define("TrueKiPiBc_d0",            "myUtils::get_trackd0(TrueKiPiBc_track)")
-               .Define("TrueKiPiBc_z0",            "myUtils::get_trackz0(TrueKiPiBc_track)")
+               .Define("TrueKBu_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 321, 521)")
+               .Define("TrueKBu_track",         "myUtils::get_truetrack(TrueKBu_vertex, MCVertexObject, Particle)")
+               .Define("TrueKBu_d0",            "myUtils::get_trackd0(TrueKBu_track)")
+               .Define("TrueKBu_z0",            "myUtils::get_trackz0(TrueKBu_track)")
 
-               .Define("TrueKiPiBu_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 521)")
+               .Define("TrueKPiBd_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 313, 511)")
+               .Define("TrueKPiBd_track",         "myUtils::get_truetrack(TrueKPiBd_vertex, MCVertexObject, Particle)")
+               .Define("TrueKPiBd_d0",            "myUtils::get_trackd0(TrueKPiBd_track)")
+               .Define("TrueKPiBd_z0",            "myUtils::get_trackz0(TrueKPiBd_track)")
+
+               .Define("TrueKKBs_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 333, 531)")
+               .Define("TrueKKBs_track",         "myUtils::get_truetrack(TrueKKBs_vertex, MCVertexObject, Particle)")
+               .Define("TrueKKBs_d0",            "myUtils::get_trackd0(TrueKKBs_track)")
+               .Define("TrueKKBs_z0",            "myUtils::get_trackz0(TrueKKBs_track)")
+
 
            )
         # select branches for output file
@@ -291,9 +301,10 @@ class analysis():
                 "Vertex_d2PVErr", "Vertex_d2PVxErr", "Vertex_d2PVyErr", "Vertex_d2PVzErr",
                 "Vertex_mass",
                 "DV_d0","DV_z0",
-
-                "TrueKiPiBc_vertex","TrueKiPiBc_d0","TrueKiPiBc_z0",
-                "TrueKiPiBu_vertex",
+                
+                "TrueKBu_vertex", "TrueKBu_d0", "TrueKBu_z0", 
+                "TrueKPiBd_vertex", "TrueKPiBd_d0", "TrueKPiBd_z0", 
+                "TrueKKBs_vertex", "TrueKKBs_d0", "TrueKKBs_z0", 
                 
                 "KiPiCandidates_mass", "KiPiCandidates_vertex", "KiPiCandidates_mcvertex", "KiPiCandidates_B",
                 "KiPiCandidates_px", "KiPiCandidates_py", "KiPiCandidates_pz", "KiPiCandidates_p", "KiPiCandidates_q",
