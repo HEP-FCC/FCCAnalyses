@@ -5,11 +5,14 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TH1.h>
-#include <TH2D.h>
+#include <TH2F.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
+#include "ROOT/RVec.hxx"
 #include <TSystem.h>
 #include <TInterpreter.h>
+#include <TTreeReader.h>
+#include <TTreeReaderValue.h>
 
 using namespace std;
 
@@ -17,60 +20,63 @@ int main()
 {
   gInterpreter->GenerateDictionary("vector<vector<int> >","vector");
 
-  TFile* file = new TFile("p8_ee_Zuds_ecm91.root","READ");
-  TTree* tree = (TTree*) file->Get("events");
-  int nEvents = tree->GetEntries();
-  cout<<"Number of Events: "<<nEvents<<endl;
+  TFile *file = TFile::Open("p8_ee_Zuds_ecm91.root");
+  TTreeReader tree("events", file);
+
+  // All particles                                                                                     
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpx(tree, "MC_px");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpy(tree, "MC_py");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpz(tree, "MC_pz");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCe(tree,  "MC_e");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpdg(tree,"MC_pdg");
+
+  // final particles                                                                                     
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpxF(tree, "MC_px_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpyF(tree, "MC_py_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpzF(tree, "MC_pz_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCeF(tree,  "MC_e_f");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpdgF(tree,"MC_pdg_f");
+
+  //jet constituents                                                                                     
+  TTreeReaderValue<vector<vector<int>>> jetConst(tree, "jetconstituents_ee_kt");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPx(tree, "jets_ee_kt_px");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPy(tree, "jets_ee_kt_py");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPz(tree, "jets_ee_kt_pz");
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetE(tree,  "jets_ee_kt_e");
+  TTreeReaderValue<vector<int,ROOT::Detail::VecOps::RAdoptAllocator<int>>> jetFlavour(tree,"jets_ee_kt_flavour");
+
+  //Ks->pi+pi-
+  TTreeReaderValue<vector<int,ROOT::Detail::VecOps::RAdoptAllocator<int>>> Ks2pipi(tree, "Ks2pipi_indices");
   
+  int nEvents = tree.GetEntries();
+  cout<<"Number of Events: "<<nEvents<<endl;
+
   TString histfname;
-  histfname = "histZuds_jets.root";
-  TFile *histFile = new TFile(histfname,"RECREATE");
+  histfname = "histZuds_jetImages_summed.root";
+  TFile histFile(histfname,"RECREATE");
   
   // hists for jet angluar distributions
-  TH2D* h_JetCKaonL = new TH2D("h_JetCKaonB","K^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetNKaonL = new TH2D("h_JetNKaonB","K_{L} in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetCPionL = new TH2D("h_JetCPionB","#pi^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetElecL = new TH2D("h_JetElecB","e^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetMuonL = new TH2D("h_JetMuonB","#mu^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetPhotL = new TH2D("h_JetPhotB","#gamma in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetProtL = new TH2D("h_JetProtB","p in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetNeutL = new TH2D("h_JetNeutB","n in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetCKaonL = new TH2F("h_JetCKaonL","K^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetNKaonL = new TH2F("h_JetNKaonL","K_{L} in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetCPionL = new TH2F("h_JetCPionL","#pi^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetElecL = new TH2F("h_JetElecL","e^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetMuonL = new TH2F("h_JetMuonL","#mu^{+/-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetPhotL = new TH2F("h_JetPhotL","#gamma in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetProtL = new TH2F("h_JetProtL","p in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetNeutL = new TH2F("h_JetNeutL","n in light jets",29,-0.5,0.5,29,-0.5,0.5);
 
-  TH2D* h_JetKs2pipiL = new TH2D("h_JetKs2pipiB","K_{S} #rightarrow #pi^{+}#pi^{-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  TH2D* h_JetKs2pipiPiL = new TH2D("h_JetKs2pipiPiB","#pi's from K_{S} #rightarrow #pi^{+}#pi^{-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
-  
-  vector<float> *MCpxF=0, *MCpyF=0, *MCpzF=0, *MCeF=0, *MCpdgF=0;
-  tree->SetBranchAddress("MC_px_f", &MCpxF);
-  tree->SetBranchAddress("MC_py_f", &MCpyF);
-  tree->SetBranchAddress("MC_pz_f", &MCpzF);
-  tree->SetBranchAddress("MC_e_f", &MCeF);
-  tree->SetBranchAddress("MC_pdg_f", &MCpdgF);
-  
-  vector<float> *MCpx=0, *MCpy=0, *MCpz=0, *MCe=0, *MCpdg=0;
-  tree->SetBranchAddress("MC_px", &MCpx);
-  tree->SetBranchAddress("MC_py", &MCpy);
-  tree->SetBranchAddress("MC_pz", &MCpz);
-  tree->SetBranchAddress("MC_e", &MCe);
-  tree->SetBranchAddress("MC_pdg", &MCpdg);
-  
-  vector<int> *Ks2pipi=0;
-  tree->SetBranchAddress("Ks2pipi_indices", &Ks2pipi);
+  TH2F* h_JetKs2pipiL = new TH2F("h_JetKs2pipiL","K_{S} #rightarrow #pi^{+}#pi^{-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
+  TH2F* h_JetKs2pipiPiL = new TH2F("h_JetKs2pipiPiL","#pi's from K_{S} #rightarrow #pi^{+}#pi^{-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
 
-  vector<float> *jetE=0, *jetPx=0, *jetPy=0, *jetPz=0;
-  vector<vector<int>> *jetConst;
+  // event counter
+  int evt = 0;
   
-  tree->SetBranchAddress("jetconstituents_ee_kt", &jetConst);
-  tree->SetBranchAddress("jets_ee_kt_e", &jetE);
-  tree->SetBranchAddress("jets_ee_kt_px", &jetPx);
-  tree->SetBranchAddress("jets_ee_kt_py", &jetPy);
-  tree->SetBranchAddress("jets_ee_kt_pz", &jetPz);
-  
-  // event loop
-  for(unsigned int evt=0; evt<nEvents; evt++)
+  while(tree.Next())
     {
-      tree->GetEntry(evt);
 
-      double jPx=0., jPy=0., jPz=0., jE=0., invMjet=0.;
+      if(evt%10000==0) cout<<evt<<" events processed"<<endl;
+      
+      float jPx=0., jPy=0., jPz=0., jE=0., invMjet=0.;
       int nJet = jetE->size();
       TLorentzVector p_Jet[nJet], p_Jets;
       
@@ -89,14 +95,14 @@ int main()
 	}
 
       // Ks->pipi loop
-      double px=0., py=0., pz=0., e=0.;
+      float px=0., py=0., pz=0., e=0.;
       TLorentzVector p4;
-      double KsAngJ1=0., KsAngJ2=0.;
-      double PiAngJ1=0., PiAngJ2=0.;
-      double p_normKsJ1=0., KsThetaJ1=0., KsPhiJ1=0.;
-      double p_normKsJ2=0., KsThetaJ2=0., KsPhiJ2=0.;
-      double p_normPiJ1=0., PiThetaJ1=0., PiPhiJ1=0.;
-      double p_normPiJ2=0., PiThetaJ2=0., PiPhiJ2=0.;
+      float KsAngJ1=0., KsAngJ2=0.;
+      float PiAngJ1=0., PiAngJ2=0.;
+      float p_normKsJ1=0., KsThetaJ1=0., KsPhiJ1=0.;
+      float p_normKsJ2=0., KsThetaJ2=0., KsPhiJ2=0.;
+      float p_normPiJ1=0., PiThetaJ1=0., PiPhiJ1=0.;
+      float p_normPiJ2=0., PiThetaJ2=0., PiPhiJ2=0.;
       for(int iKP=0; iKP<Ks2pipi->size(); iKP++)
 	{
 	  px = MCpx->at(Ks2pipi->at(iKP));
@@ -110,6 +116,8 @@ int main()
 	  
 	  if(iKP%3 == 0)
 	    {
+	      // angle to assign to a jet, normalise with momentum magnitude, get delta theta and delta phi (NOTE: delta phi is not simply the difference between phi's of the particle and the jet)
+	      
 	      KsAngJ1 = p4.Angle(p_Jet[0].Vect());
 	      KsAngJ2 = p4.Angle(p_Jet[1].Vect());
 	      
@@ -121,12 +129,15 @@ int main()
 	      KsThetaJ2 = p4.Theta() - p_Jet[1].Theta();
 	      KsPhiJ2 = p4.DeltaPhi(p_Jet[1]);
 
+	      // assign to a jet if within 0.5 rad to that jet's axis
 	      if(KsAngJ1<0.5) h_JetKs2pipiL->Fill(KsThetaJ1, KsPhiJ1, p_normKsJ1);
 	      else if(KsAngJ2<0.5) h_JetKs2pipiL->Fill(KsThetaJ2, KsPhiJ2, p_normKsJ2);
 	    }
 	  
 	  if(abs(MCpdg->at(Ks2pipi->at(iKP))) == 211)
 	    {
+	      // same as for Ks but twice for each decay
+	      
 	      PiAngJ1 = p4.Angle(p_Jet[0].Vect());
 	      PiAngJ2 = p4.Angle(p_Jet[1].Vect());
 	      
@@ -138,13 +149,14 @@ int main()
 	      PiThetaJ2 = p4.Theta() - p_Jet[1].Theta();
 	      PiPhiJ2 = p4.DeltaPhi(p_Jet[1]);
 
+	      // assign to a jet if within 05 rad to that jet's axis
 	      if(abs(PiThetaJ1)<0.5 && abs(PiPhiJ1)<0.5) h_JetKs2pipiPiL->Fill(PiThetaJ1, PiPhiJ1, p_normPiJ1);
-	      else if(abs(PiThetaJ2)<0.5 && abs(PiPhiJ2)<0.5) h_JetKs2pipiL->Fill(PiThetaJ2, PiPhiJ2, p_normPiJ2);
+	      else if(abs(PiThetaJ2)<0.5 && abs(PiPhiJ2)<0.5) h_JetKs2pipiPiL->Fill(PiThetaJ2, PiPhiJ2, p_normPiJ2);
 	    }
 	  
 	}
       
-      // jet constituents
+      // extract jet constituents
       vector<int> jet1Const, jet2Const;
       if(jetConst->size()>=1)      jet1Const = jetConst->at(0);
       else cout<<"No jet constituents found"<<endl;
@@ -152,11 +164,11 @@ int main()
       else cout<<"Second jet constituents not found"<<endl;
 
       // JET 1
-      double px_j1=0, py_j1=0, pz_j1=0, e_j1=0;
+      float px_j1=0, py_j1=0, pz_j1=0, e_j1=0;
       TLorentzVector p4_j1;
 
-      double p_norm1 = 0.;
-      double delta_theta1 = 0., delta_phi1 = 0.;
+      float p_norm1 = 0.;
+      float delta_theta1 = 0., delta_phi1 = 0.;
 
       //double delta_ang1=0.;
       for(int ele : jet1Const)
@@ -173,37 +185,37 @@ int main()
 	  delta_phi1 = p4_j1.DeltaPhi(p_Jet[0]);
 	  
 	  // K+-
-	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==321) h_JetCKaonL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // Kl
-	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==130) h_JetNKaonL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // pi+-
-	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==211) h_JetCPionL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // e+-
-	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==11) h_JetElecL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // Muon
-	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==13) h_JetMuonL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // photon
-	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==22) h_JetPhotL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // p
-	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==2212) h_JetProtL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	  // n
-	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutL->Fill(delta_theta1,delta_phi1,p_norm1);
+	  if(abs(MCpdgF->at(ele))==2112) h_JetNeutL->Fill(delta_theta1,delta_phi1,p_norm1);
 	  
 	}
             
       // JET 2
-      double px_j2=0, py_j2=0, pz_j2=0, e_j2=0;
+      float px_j2=0, py_j2=0, pz_j2=0, e_j2=0;
       TLorentzVector p4_j2;
 
-      double p_norm2 = 0.;
-      double delta_theta2 = 0., delta_phi2 = 0.;
+      float p_norm2 = 0.;
+      float delta_theta2 = 0., delta_phi2 = 0.;
 
       //double delta_ang2=0.;
       for(int ele : jet2Const)
@@ -220,44 +232,61 @@ int main()
 	  delta_phi2 = p4_j2.DeltaPhi(p_Jet[1]);
 	  
 	  // K+-
-	  if(MCpdgF->at(ele)==321 || MCpdgF->at(ele)==-321) h_JetCKaonL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==321) h_JetCKaonL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // Kl
-	  if(MCpdgF->at(ele)==130 || MCpdgF->at(ele)==-130) h_JetNKaonL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==130) h_JetNKaonL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // pi+-
-	  if(MCpdgF->at(ele)==211 || MCpdgF->at(ele)==-211) h_JetCPionL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==211) h_JetCPionL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // e+-
-	  if(MCpdgF->at(ele)==11 || MCpdgF->at(ele)==-11) h_JetElecL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==11) h_JetElecL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // Muon
-	  if(MCpdgF->at(ele)==13 || MCpdgF->at(ele)==-13) h_JetMuonL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==13) h_JetMuonL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // photon
-	  if(MCpdgF->at(ele)==22 || MCpdgF->at(ele)==-22) h_JetPhotL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==22) h_JetPhotL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // p
-	  if(MCpdgF->at(ele)==2212 || MCpdgF->at(ele)==-2212) h_JetProtL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==2212) h_JetProtL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	  // n
-	  if(MCpdgF->at(ele)==2112 || MCpdgF->at(ele)==-2112) h_JetNeutL->Fill(delta_theta2,delta_phi2,p_norm2);
+	  if(abs(MCpdgF->at(ele))==2112) h_JetNeutL->Fill(delta_theta2,delta_phi2,p_norm2);
 	  
 	}
 
+      // empty the jet constituent vectors
       jet1Const.clear();
       jet2Const.clear();
       
-
+      evt++;
       //cout<<"============================"<<endl;
     }
-      
-  histFile->Write();
-  histFile->Close();
+
+  cout<<"processed all events"<<endl;
+  
+  file->Close();
+  cout<<"event file closed"<<endl;
+
+  h_JetCKaonL->Write();
+  h_JetNKaonL->Write();
+  h_JetCPionL->Write();
+  h_JetElecL->Write();
+  h_JetMuonL->Write();
+  h_JetPhotL->Write();
+  h_JetProtL->Write();
+  h_JetNeutL->Write();
+  h_JetKs2pipiL->Write();
+  h_JetKs2pipiPiL->Write();
+  cout<<"hists written to file"<<endl;
+
+  histFile.Close();
+  cout<<"hist file closed"<<endl;
       
   //delete jetConst;
   //jetConst = NULL;
   
-  file->Close();
   return -1;
 }

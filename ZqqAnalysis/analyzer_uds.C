@@ -8,7 +8,7 @@
 #include "ROOT/RVec.hxx"
 #include <TFile.h>
 #include <TTree.h>
-#include <TH1D.h>
+#include <TH1I.h>
 #include <TPie.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
@@ -60,19 +60,21 @@ int main()
   // hists for the jet loop
   
   // hists for the jet constituents
-  /*
-  TH1D* h_nKl = new TH1D("h_nKl", "No. of K_{L} in jets", 8, 0, 8);
-  TH1D* h_nN = new TH1D("h_nN", "No. of n in jets", 8, 0, 8);
-  TH1D* h_nLambda = new TH1D("h_nLambda", "No. of #Lambda in jets", 5, 0, 5);
-  TH1D* h_nSigma = new TH1D("h_nSigma", "No. of #Sigma in jets", 5, 0, 5);
-  TH1D* h_nKs = new TH1D("h_nKs", "No. of k_{S} in jets", 5, 0, 5);
-  TH1D* h_nE = new TH1D("h_nE", "No. of e in jets", 8, 0, 8);
-  TH1D* h_nMu = new TH1D("h_nMu", "No. of #mu in jets", 5, 0, 5);
-  TH1D* h_nPhoton = new TH1D("h_nPhoton", "No. of #gamma in jets", 50, 0, 50);
-  */
-
-  //event counter
+  
+  TH1I* h_nKl = new TH1I("h_nKl", "No. of K_{L} in jets", 8, 0, 8);
+  TH1I* h_nN = new TH1I("h_nN", "No. of n in jets", 8, 0, 8);
+  TH1I* h_nLambda = new TH1I("h_nLambda", "No. of #Lambda in jets", 5, 0, 5);
+  TH1I* h_nSigma = new TH1I("h_nSigma", "No. of #Sigma in jets", 5, 0, 5);
+  TH1I* h_nKs = new TH1I("h_nKs", "No. of k_{S} in jets", 5, 0, 5);
+  TH1I* h_nE = new TH1I("h_nE", "No. of e in jets", 8, 0, 8);
+  TH1I* h_nMu = new TH1I("h_nMu", "No. of #mu in jets", 5, 0, 5);
+  TH1I* h_nPhoton = new TH1I("h_nPhoton", "No. of #gamma in jets", 45, 0, 45);
+  
+  // event counter
   int evt = 0;
+
+  // flavour counter
+  int nU=0, nD=0, nS=0;
 
   // particle counters
   double nPiS=0, nKS=0, nKlS=0, nNS=0, nPS=0, nLeptonS=0, nPhotonS=0;
@@ -82,11 +84,14 @@ int main()
   // event loop
   while(tree.Next())
     {
-      if(evt%20000==0) cout<<evt<<" events processed"<<endl;
+      if(evt%10000==0) cout<<evt<<" events processed"<<endl<<"jet flavours: "<<jetFlavour->at(0)<<" & "<<jetFlavour->at(1)<<endl;
 
+      // only use events with both jets tagged as s, d, or u (to avoid having to loop over jets)
       // s-jets
       if(jetFlavour->at(0)==3 && jetFlavour->at(1)==3)
 	{
+	  nS++;
+
 	  for(int ipar=0; ipar<MCpdgF->size(); ipar++)
 	    {
 	      if(abs(MCpdgF->at(ipar))==211) nPiS++;
@@ -106,6 +111,8 @@ int main()
       // u-jets
       if(jetFlavour->at(0)==2 && jetFlavour->at(1)==2)
 	{
+	  nU++;
+
 	  for(int ipar=0; ipar<MCpdgF->size(); ipar++)
 	    {
 	      if(abs(MCpdgF->at(ipar))==211) nPiU++;
@@ -125,6 +132,8 @@ int main()
       // d-jets
       if(jetFlavour->at(0)==1 && jetFlavour->at(1)==1)
 	{
+	  nD++;
+
 	  for(int ipar=0; ipar<MCpdgF->size(); ipar++)
 	    {
 	      if(abs(MCpdgF->at(ipar))==211) nPiD++;
@@ -141,7 +150,7 @@ int main()
 	    }
 	}
 
-      // jet constituents
+      // extract jet constituents
       //int nJetC = jetConst->size();
       vector<int> jet1Const, jet2Const;
       if(jetConst->size()>=1)      jet1Const = jetConst->at(0);
@@ -149,9 +158,11 @@ int main()
       if(jetConst->size()>=2)      jet2Const = jetConst->at(1);
       else cout<<"Second jet constituents not found"<<endl;
       
+      // without discriminating among uds
+
       // JET 1
-      //int nKl=0, nN=0, nKs=0, nLambda=0, nSigma=0, nE=0, nMu=0, nPhoton=0;
-      /*
+      int nKl=0, nN=0, nKs=0, nLambda=0, nSigma=0, nE=0, nMu=0, nPhoton=0;
+      
       for(int ele : jet1Const) 
 	{
 	  if(abs(MCpdgF->at(ele))==130) nKl++;
@@ -163,8 +174,7 @@ int main()
 	  if(abs(MCpdgF->at(ele))==13) nMu++;
 	  if(abs(MCpdgF->at(ele))==22) nPhoton++;
 	}
-      */
-      /*
+            
       h_nKl->Fill(nKl);
       h_nN->Fill(nN);
       h_nKs->Fill(nKs);
@@ -173,10 +183,11 @@ int main()
       h_nE->Fill(nE);
       h_nMu->Fill(nMu);
       h_nPhoton->Fill(nPhoton);
-      */
+      
       // JET 2
-      //nKl=0, nN=0, nKs=0, nLambda=0, nSigma=0, nE=0, nMu=0, nPhoton;
-      /*
+      // need counts for each jet separately so zeroed all counters
+      nKl=0, nN=0, nKs=0, nLambda=0, nSigma=0, nE=0, nMu=0, nPhoton=0;
+      
       for(int ele : jet2Const) 
 	{
 	  if(abs(MCpdgF->at(ele))==130) nKl++;
@@ -188,8 +199,7 @@ int main()
 	  if(abs(MCpdgF->at(ele))==13) nMu++;
 	  if(abs(MCpdgF->at(ele))==22) nPhoton++;
 	}
-      */
-      /*
+      
       h_nKl->Fill(nKl);
       h_nN->Fill(nN);
       h_nKs->Fill(nKs);
@@ -198,14 +208,18 @@ int main()
       h_nE->Fill(nE);
       h_nMu->Fill(nMu);
       h_nPhoton->Fill(nPhoton);
-      */
+      
       jet1Const.clear();
       jet2Const.clear();
 
       evt++;
     }
 
-  cout<<"processed all evetns"<<endl;
+  cout<<"processed all events"<<endl;
+
+  cout<<"There are "<<nS<<" events with both jets tagged as s"<<endl;
+  cout<<"There are "<<nD<<" events with both jets tagged as d"<<endl;
+  cout<<"There are "<<nU<<" events with both jets tagged as u"<<endl;
 
   double valsS[] = {nPiS,nKS,nKlS,nPS,nNS,nLeptonS,nPhotonS};
   double valsD[] = {nPiD,nKD,nKlD,nPD,nND,nLeptonD,nPhotonD};
@@ -223,14 +237,14 @@ int main()
 
   file->Close();
 
-  //h_nKl->Write();
-  //h_nN->Write();
-  //h_nKs->Write();
-  //h_nLambda->Write();
-  //h_nSigma->Write();
-  //h_nE->Write();
-  //h_nMu->Write();
-  //h_nPhoton->Write();
+  h_nKl->Write();
+  h_nN->Write();
+  h_nKs->Write();
+  h_nLambda->Write();
+  h_nSigma->Write();
+  h_nE->Write();
+  h_nMu->Write();
+  h_nPhoton->Write();
   sJets->Write();
   dJets->Write();
   uJets->Write();
