@@ -1,3 +1,11 @@
+'''
+Firstly, a disclaimer: This is an adaptation of analysis_sparse_nKaons_.py to include both jets in events. The idea is to flatten the index array
+and save both jets in a line. The output can then be sliced depending on whether a single or both jets are needed.
+Note that for evaluating the classifier on both jets there should be no shuffling in the eval script!
+'''
+
+
+
 import timeit
 import uproot
 import awkward as ak
@@ -150,9 +158,7 @@ class MyProcessor(processor.ProcessorABC):
             "pdg": events.MC_pdg_final,
             #"r": np.sqrt(events.MC_px_final**2+events.MC_py_final**2),
         }, with_name="LorentzVector")
-        print('NEUTRINO TESTS')
-        print('GenPartsf')
-        print(GenPartsf.pdg)
+        
         GenParts = ak.zip({
             "t": events.MC_e,
             "x": events.MC_px,
@@ -213,40 +219,31 @@ class MyProcessor(processor.ProcessorABC):
             K0spipi_mask = np.add(K0spipi_mask, holder_pi)
             pi0gammagamma_mask = np.add(pi0gammagamma_mask, holder_gamma)
 
-        #Finally, we define new_indices as the positions of non zero elements with respect to the array_split_content, in other words the indices of the daughter pions in the MC_status==1 collection that we are clustering
-        print('---------------------------------------------------------------')
-        print(events.pi0gammagamma_indices[0])
-
-         
         
+        #structmask is defined as the "False" padded array of a trivial mask (all 1's)  
+
         structmask = ak.fill_none(ak.pad_none((np.abs(GenPartsf.pdg)>=0), 200, clip=False), False)
-        print(ak.type(GenPartsf))
+        
+        #We then add K0spipi_mask and pi0gammagamma as features to GenPartsf by passing structmask as a way to move from the padded numpy array to the 
+        #jagged awkward array
+
         GenPartsf['K0spipi_mask'] = ak.Array(K0spipi_mask)[structmask]
         GenPartsf['pi0gammagamma_mask'] = ak.Array(pi0gammagamma_mask)[structmask]
-        print(ak.type(GenPartsf))
-        print(ak.where(GenPartsf.pi0gammagamma_mask[0]))
         
-
+ 
         #Here we check whether or not the indices are correctly matching (any shuffling at FCCAnalyses level would change this)
-
+ 
         if (not np.array_equal(np.delete(np.array(ak.fill_none(ak.pad_none(GenParts.x[events.K0spipi_indices], 30, clip=False), -999)), np.arange(0, 30, 3), axis=1), np.array(ak.fill_none(ak.pad_none(GenPartsf.x[GenPartsf.K0spipi_mask], 20, clip=False), -999)))):
             print("Failed matching, have a look...")
             quit()
         
-        print('P4')
-        print(jets[:,0].t)
-        print(jets[:,0].x)
-        print(jets[:,0].y)
-        print(jets[:,0].z)
-        print(ak.concatenate([ak.unflatten(jets[:,0].t, 1, axis=0), ak.unflatten(jets[:,0].x, 1, axis=0),ak.unflatten(jets[:,0].y, 1, axis=0),ak.unflatten(jets[:,0].z, 1, axis=0)], axis=1))
-
-        #RANDOMIZE FIRST OR SECOND JET!!!
-
-        #Here we begin with the selection of Kaon_shorts, by selecting every third element from events.K0spipi_indices
-
+ 
+        '''
+        #Here we begin with the selection of Kaon_shorts, by selecting every third element from events.K0spipi_indices, similarly for neutralPions
+ 
         Kaon_short = ak.copy(GenParts[events.K0spipi_indices[:,::3]])
         neutralPion = ak.copy(GenParts[events.pi0gammagamma_indices[:,::3]])
-
+        
         #For unstable particles it is required that the full MC collection be referenced, and as such that angles are computed separately. I begin here with the K0s->pipi by defining angular differences with respect to each jet.
         
         shortKaon_theta_diff1 = jets.theta[:,0] - Kaon_short.theta
@@ -269,61 +266,120 @@ class MyProcessor(processor.ProcessorABC):
         
         vec_angle1 = (shortKaon_theta_diff1**2+shortKaon_phi_diff1**2)
         vec_angle2 = (shortKaon_theta_diff2**2+shortKaon_phi_diff2**2)
-
+ 
         vec_angle1_neutralPion = (neutralPion_theta_diff1**2+neutralPion_phi_diff1**2)
         vec_angle2_neutralPion = (neutralPion_theta_diff2**2+neutralPion_phi_diff2**2)
         
         #Note that henceforth shortKaon will be treated as an additional category
-
+ 
         shortKaon_theta_diff1 = shortKaon_theta_diff1[vec_angle1<vec_angle2]
         shortKaon_phi_diff1 = shortKaon_phi_diff1[vec_angle1<vec_angle2]
         
         neutralPion_theta_diff1 = neutralPion_theta_diff1[vec_angle1_neutralPion<vec_angle2_neutralPion]
         neutralPion_phi_diff1 = neutralPion_phi_diff1[vec_angle1_neutralPion<vec_angle2_neutralPion]
-
-
+        '''
+ 
         #Note that for now the implementation is hacky and we basically pass the jet constituents mask first for one jet and then for the other (this may become problematic if there are multiple jets), but this is fine for now as we focus on the exclusive ee_kt. In the future we might want to think about how we could pass both jets at once (19/08/2021)...
         
         
         #Here we simply defined the quark mask for each case, used to define the pid, refer to FCCAnalyses for the jet flavour algorithm (should we continue using this even in the case of Z->jj?)
-
+        #Also, it might make sense to adapt this to the current way to processing dijets... 
+        '''
         up_mask = (np.abs(jets.partonFlavour[:,0])==2)&(np.abs(jets.partonFlavour[:,1])==2)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])<0)
         down_mask = (np.abs(jets.partonFlavour[:,0])==1)&(np.abs(jets.partonFlavour[:,1])==1)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])<0)
         strange_mask = (np.abs(jets.partonFlavour[:,0])==3)&(np.abs(jets.partonFlavour[:,1])==3)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])<0)
         charm_mask = (np.abs(jets.partonFlavour[:,0])==4)&(np.abs(jets.partonFlavour[:,1])==4)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])<0)
         bottom_mask = (np.abs(jets.partonFlavour[:,0])==5)&(np.abs(jets.partonFlavour[:,1])==5)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])<0)
+        '''
+         
+        #Note sign change for flavour defn -> abs() applied in FCCAnalyses code...
+
+        up_mask = (np.abs(jets.partonFlavour[:,0])==2)&(np.abs(jets.partonFlavour[:,1])==2)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])>0)
+        down_mask = (np.abs(jets.partonFlavour[:,0])==1)&(np.abs(jets.partonFlavour[:,1])==1)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])>0)
+        strange_mask = (np.abs(jets.partonFlavour[:,0])==3)&(np.abs(jets.partonFlavour[:,1])==3)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])>0)
+        charm_mask = (np.abs(jets.partonFlavour[:,0])==4)&(np.abs(jets.partonFlavour[:,1])==4)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])>0)
+        bottom_mask = (np.abs(jets.partonFlavour[:,0])==5)&(np.abs(jets.partonFlavour[:,1])==5)&((jets.partonFlavour[:,0]*jets.partonFlavour[:,1])>0)
 
         pid = 2*up_mask+down_mask+3*strange_mask+4*charm_mask+5*bottom_mask
+
+        #The pid is then repeated in a theme that will appear throughout the code s.t. [1,1,3,4,2] -> [1,1,1,1,3,3,4,4,2,2]
+
+        pid = pid[np.repeat(np.arange(len(pid)), 2)]
+        
+ 
+        #Then, we cut out the jet constituents for each jet for each event.
+        
+        #We flatten the jet and doubled jet contituent collections into dijets and dijetGenPartsf, while applying a flattened array of the jet 
+        #constituent indices for the ee-kt algorithm, i.e. we end up with jet = [[jet1, jet2], [jet3, jet4]] -> jet = [jet1, jet2, jet3, jet4]
+        #and GenPartsf = [[allMC1], [allMC2]] -> [[jet1MC1], [jet2MC1], [jet3MC2], [jet4MC2]]
+
+        dijetGenPartsf = ak.copy(GenPartsf[np.repeat(np.arange(len(GenPartsf)), 2)][ak.flatten(events.jetconstituents_ee_kt, axis=1)])
+        dijets = ak.copy(ak.flatten(jets, axis=1)) 
+        
+        #Here we begin with the selection of Kaon_shorts, by selecting every third element from events.K0spipi_indices, similarly for neutralPions
+ 
+        Kaon_short = ak.copy(GenParts[events.K0spipi_indices[:,::3]][np.repeat(np.arange(len(GenPartsf)), 2)])
+        neutralPion = ak.copy(GenParts[events.pi0gammagamma_indices[:,::3]][np.repeat(np.arange(len(GenPartsf)), 2)])
+        
+        #Then the angular differences are computed between the dijets, and all Kaons/neutralPions 
+
+        shortKaon_theta_diff = dijets.theta - Kaon_short.theta
+        shortKaon_phi_diff = dijets.phi - Kaon_short.phi
+        shortKaon_phi_diff = ((shortKaon_phi_diff+np.pi)%(2*np.pi))-np.pi
+        
+        neutralPion_theta_diff = dijets.theta - neutralPion.theta
+        neutralPion_phi_diff = dijets.phi - neutralPion.phi
+        neutralPion_phi_diff = ((neutralPion_phi_diff+np.pi)%(2*np.pi))-np.pi
+
+        #From the angular differences the distance from the beam axis in the jet images in computed for both jets in each event
+
+        shortKaon_vec_angle = (shortKaon_theta_diff**2+shortKaon_phi_diff**2)
+
+        #An angle_mask is defined as the shortKaons closer to the leading jet (E) of each event having structure [[shortKaons closer to jet 1 in event 1], [shortKaons closer to jet 1 in event 2], ...]
+        #Clearly, this angle_mask will have half the size of dijet, dijetGenPartsf, or any of the angular differences, as these refer to both jets
+
+        shortKaon_angle_mask = (shortKaon_vec_angle[::2]<shortKaon_vec_angle[1::2])
+        
+        #Next, mask_indices are computed in order to reshuffle the extended angle_mask (defined below)
+        #e.g. for a length of 500, mask_indices = [0,250,1,251,...,249,499]
+
+        shortKaon_angle_mask_indices = np.insert(np.arange(2*len(shortKaon_angle_mask))[int(len(shortKaon_angle_mask)):], np.arange(int(len(shortKaon_angle_mask))), np.arange(2*len(shortKaon_angle_mask))[:int(len(shortKaon_angle_mask))])
+        
+        #Here angle_mask is extended s.t. [[shortKaons closer to jet 1 in event 1], ...] -> [[shortKaons closer to jet 1 in event 1], [shortKaons closer to jet 1 in event 2], ..., [shortKaons not closer to jet 1 in event 1], ...] 
+        #It is then reshuffled s.t. [[shortKaons closer to jet 1 in event 1], ..., [shortKaons not closer to jet 1 in event 1]] -> [[shortKaons closer to jet 1 in event 1], [shortKaons not clsoer to jet 1 in event 1], ...] 
+        
+        shortKaon_angle_mask = np.concatenate((shortKaon_angle_mask, ~shortKaon_angle_mask), axis=0)[shortKaon_angle_mask_indices]
+        
+        #The extended and reshuffled angle_mask now has the dijet structure of [[jet 1 of event 1], [jet 2 of event 2], [jet 1 of event 1], ...] and 
+        #can be used to assign to correct angle diffs to the closer jet in each event
+        
+        shortKaon_theta_diff = shortKaon_theta_diff[shortKaon_angle_mask]
+        shortKaon_phi_diff = shortKaon_phi_diff[shortKaon_angle_mask]
+        
+        neutralPion_vec_angle = (neutralPion_theta_diff**2+neutralPion_phi_diff**2)
+        neutralPion_angle_mask = (neutralPion_vec_angle[::2]<neutralPion_vec_angle[1::2])
+        neutralPion_angle_mask_indices = np.insert(np.arange(2*len(neutralPion_angle_mask))[int(len(neutralPion_angle_mask)):], np.arange(int(len(neutralPion_angle_mask))), np.arange(2*len(neutralPion_angle_mask))[:int(len(neutralPion_angle_mask))])
+        neutralPion_angle_mask = np.concatenate((neutralPion_angle_mask, ~neutralPion_angle_mask), axis=0)[neutralPion_angle_mask_indices]
+        neutralPion_theta_diff = neutralPion_theta_diff[neutralPion_angle_mask]
+        neutralPion_phi_diff = neutralPion_phi_diff[neutralPion_angle_mask]
         
 
-
-        #Here firstjetGenPartsf is defined as the collection of stable MC particles corresponding to the first jet
-
-        firstjetGenPartsf = ak.copy(GenPartsf[events.jetconstituents_ee_kt[:,0]])
-        
-
-        #more attempts to free up memory...
-        secondjetGenPartsf = ak.copy(GenPartsf[events.jetconstituents_ee_kt[:,1]])
         del GenPartsf
         
-        print('INDEX CHECK')
-        print(ak.where(K0spipi_mask[0]))
-        print((events.jetconstituents_ee_kt[0,0]))
-        print((events.jetconstituents_ee_kt[0,1]))
 
         #Here the different categories are defined, corresponding to the different (optimistically) distinguishable particle types 
 
-        neutralKaon_mask = (np.abs(firstjetGenPartsf.pdg)==130)|(np.abs(firstjetGenPartsf.pdg)==310)
-        chargedKaon_mask = (np.abs(firstjetGenPartsf.pdg)==321)
+        neutralKaon_mask = (np.abs(dijetGenPartsf.pdg)==130)|(np.abs(dijetGenPartsf.pdg)==310)
+        chargedKaon_mask = (np.abs(dijetGenPartsf.pdg)==321)
 
         #Worthwhile REMOVING the neutral Pion category (from here)!
 
-        neutralPion_mask = (np.abs(firstjetGenPartsf.pdg)==111)
-        chargedPion_mask = (np.abs(firstjetGenPartsf.pdg)==211)&(~firstjetGenPartsf.K0spipi_mask)
-        electron_mask = (np.abs(firstjetGenPartsf.pdg)==11)
-        muon_mask = (np.abs(firstjetGenPartsf.pdg)==13)
-        photon_mask = (np.abs(firstjetGenPartsf.pdg)==22)&(~firstjetGenPartsf.pi0gammagamma_mask)
-        protonNeutron_mask = (np.abs(firstjetGenPartsf.pdg)==2212)|(np.abs(firstjetGenPartsf.pdg)==2112)
+        #neutralPion_mask = (np.abs(dijetGenPartsf.pdg)==111)
+        chargedPion_mask = (np.abs(dijetGenPartsf.pdg)==211)&(~dijetGenPartsf.K0spipi_mask)
+        electron_mask = (np.abs(dijetGenPartsf.pdg)==11)
+        muon_mask = (np.abs(dijetGenPartsf.pdg)==13)
+        photon_mask = (np.abs(dijetGenPartsf.pdg)==22)&(~dijetGenPartsf.pi0gammagamma_mask)
+        protonNeutron_mask = (np.abs(dijetGenPartsf.pdg)==2212)|(np.abs(dijetGenPartsf.pdg)==2112)
         
         '''
         kaon_mask = ak.copy(np.abs(firstjetGenPartsf.pdg)==321)
@@ -336,8 +392,8 @@ class MyProcessor(processor.ProcessorABC):
 
         #Here the angular differences for each stable MC particle and the jet is computed
 
-        theta_diff = jets.theta[:,0] - firstjetGenPartsf.theta
-        phi_diff = jets.phi[:,0] - firstjetGenPartsf.phi
+        theta_diff = dijets.theta - dijetGenPartsf.theta
+        phi_diff = dijets.phi - dijetGenPartsf.phi
         phi_diff = ((phi_diff+np.pi)%(2*np.pi))-np.pi
 
         '''
@@ -347,12 +403,13 @@ class MyProcessor(processor.ProcessorABC):
         
         #Here nphisto is defined to hold all histograms (9 classes, 29x29 resolution), for now -0.5->0.5 rad for phi, theta
 
-        nphisto = np.zeros([len(firstjetGenPartsf.phi),9,29,29])
+        nphisto = np.zeros([len(dijetGenPartsf.phi),9,29,29])
+        print('REEVAL BOUNDS')
         bins = np.linspace(-0.5,0.5,30)
         
         neutralKaon_phi_diff = phi_diff[neutralKaon_mask]
         chargedKaon_phi_diff = phi_diff[chargedKaon_mask]
-        neutralPion_phi_diff = phi_diff[neutralPion_mask]
+        #neutralPion_phi_diff = phi_diff[neutralPion_mask]
         chargedPion_phi_diff = phi_diff[chargedPion_mask]
         electron_phi_diff = phi_diff[electron_mask]
         muon_phi_diff = phi_diff[muon_mask]
@@ -361,59 +418,57 @@ class MyProcessor(processor.ProcessorABC):
         
         neutralKaon_theta_diff = theta_diff[neutralKaon_mask]
         chargedKaon_theta_diff = theta_diff[chargedKaon_mask]
-        neutralPion_theta_diff = theta_diff[neutralPion_mask]
+        #neutralPion_theta_diff = theta_diff[neutralPion_mask]
         chargedPion_theta_diff = theta_diff[chargedPion_mask]
         electron_theta_diff = theta_diff[electron_mask]
         muon_theta_diff = theta_diff[muon_mask]
         photon_theta_diff = theta_diff[photon_mask]
         protonNeutron_theta_diff = theta_diff[protonNeutron_mask]
         
-        neutralKaon_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[neutralKaon_mask]
-        chargedKaon_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[chargedKaon_mask]
-        neutralPion_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[neutralPion_mask]
-        chargedPion_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[chargedPion_mask]
-        electron_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[electron_mask]
-        muon_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[muon_mask]
-        photon_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[photon_mask]
-        protonNeutron_weights = ((firstjetGenPartsf.p)/(jets.p[:,0]))[protonNeutron_mask]
+        neutralKaon_weights = ((dijetGenPartsf.p)/(dijets.p))[neutralKaon_mask]
+        chargedKaon_weights = ((dijetGenPartsf.p)/(dijets.p))[chargedKaon_mask]
+        #neutralPion_weights = ((dijetGenPartsf.p)/(dijets.p))[neutralPion_mask]
+        chargedPion_weights = ((dijetGenPartsf.p)/(dijets.p))[chargedPion_mask]
+        electron_weights = ((dijetGenPartsf.p)/(dijets.p))[electron_mask]
+        muon_weights = ((dijetGenPartsf.p)/(dijets.p))[muon_mask]
+        photon_weights = ((dijetGenPartsf.p)/(dijets.p))[photon_mask]
+        protonNeutron_weights = ((dijetGenPartsf.p)/(dijets.p))[protonNeutron_mask]
 
-        shortKaon_weights = ((Kaon_short.p[vec_angle1<vec_angle2])/(jets.p[:,0]))
+        shortKaon_weights = ((Kaon_short[shortKaon_angle_mask].p)/(dijets.p))
         
-        neutralPion_weights = ((neutralPion.p[vec_angle1_neutralPion<vec_angle2_neutralPion])/(jets.p[:,0]))
+        neutralPion_weights = ((neutralPion[neutralPion_angle_mask].p)/(dijets.p))
         
         #Can shortened from 30, esp. for things like muons where we will never have 30 muons per jet, can also set clip to False
         neutralKaon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralKaon_phi_diff, 70, clip=True), 999))
         chargedKaon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(chargedKaon_phi_diff, 70, clip=True), 999))
-        neutralPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_phi_diff, 70, clip=True), 999))
+        #neutralPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_phi_diff, 70, clip=True), 999))
         chargedPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(chargedPion_phi_diff, 70, clip=True), 999))
         electron_phi_diff = np.asarray(ak.fill_none(ak.pad_none(electron_phi_diff, 70, clip=True), 999))
         muon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(muon_phi_diff, 70, clip=True), 999))
         photon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(photon_phi_diff, 70, clip=True), 999))
         protonNeutron_phi_diff = np.asarray(ak.fill_none(ak.pad_none(protonNeutron_phi_diff, 70, clip=True), 999))
         
-        shortKaon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(shortKaon_phi_diff1, 70, clip=True), 999))
+        shortKaon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(shortKaon_phi_diff, 70, clip=True), 999))
         
-        neutralPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_phi_diff1, 70, clip=True), 999))
-        #print('SHORT KAON PHI DIFF')
-        #print(shortKaon_phi_diff)
+        neutralPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_phi_diff, 70, clip=True), 999))
         
         neutralKaon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralKaon_theta_diff, 70, clip=True), 999))
         chargedKaon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(chargedKaon_theta_diff, 70, clip=True), 999))
-        neutralPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_theta_diff, 70, clip=True), 999))
+        #neutralPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_theta_diff, 70, clip=True), 999))
         chargedPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(chargedPion_theta_diff, 70, clip=True), 999))
         electron_theta_diff = np.asarray(ak.fill_none(ak.pad_none(electron_theta_diff, 70, clip=True), 999))
         muon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(muon_theta_diff, 70, clip=True), 999))
         photon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(photon_theta_diff, 70, clip=True), 999))
         protonNeutron_theta_diff = np.asarray(ak.fill_none(ak.pad_none(protonNeutron_theta_diff, 70, clip=True), 999))
         
-        shortKaon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(shortKaon_theta_diff1, 70, clip=True), 999))
+        shortKaon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(shortKaon_theta_diff, 70, clip=True), 999))
         
-        neutralPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_theta_diff1, 70, clip=True), 999))
+        neutralPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_theta_diff, 70, clip=True), 999))
         
         #Write this padding into a function, and a subsequent loop from a list, or maybe channels? Turned out longer and uglier than I expected...
         neutralKaon_weights = np.asarray(ak.fill_none(ak.pad_none(neutralKaon_weights, 70, clip=True), 0))
         chargedKaon_weights = np.asarray(ak.fill_none(ak.pad_none(chargedKaon_weights, 70, clip=True), 0))
-        neutralPion_weights = np.asarray(ak.fill_none(ak.pad_none(neutralPion_weights, 70, clip=True), 0))
+        #neutralPion_weights = np.asarray(ak.fill_none(ak.pad_none(neutralPion_weights, 70, clip=True), 0))
         chargedPion_weights = np.asarray(ak.fill_none(ak.pad_none(chargedPion_weights, 70, clip=True), 0))
         electron_weights = np.asarray(ak.fill_none(ak.pad_none(electron_weights, 70, clip=True), 0))
         muon_weights = np.asarray(ak.fill_none(ak.pad_none(muon_weights, 70, clip=True), 0))
@@ -429,7 +484,7 @@ class MyProcessor(processor.ProcessorABC):
         # https://iscinumpy.gitlab.io/post/histogram-speeds-in-python/ -> could follow one of these approaches or simply histogram in root entirely... The upside to histogramming in root is that we will have to save generic h5 files which we could feed to any network...
         
         start_time = timeit.default_timer()
-        for i in range(len(firstjetGenPartsf.phi)):
+        for i in range(len(dijets.phi)):
             nphisto[i,0] = np.histogram2d(neutralKaon_phi_diff[i], neutralKaon_theta_diff[i], bins=bins, weights=neutralKaon_weights[i])[0]
             nphisto[i,1] = np.histogram2d(chargedKaon_phi_diff[i], chargedKaon_theta_diff[i], bins=bins, weights=chargedKaon_weights[i])[0]
             nphisto[i,2] = np.histogram2d(neutralPion_phi_diff[i], neutralPion_theta_diff[i], bins=bins, weights=neutralPion_weights[i])[0]
@@ -443,20 +498,22 @@ class MyProcessor(processor.ProcessorABC):
         print('ELAPSED TIME -> '+str(elapsed))
         
         nphisto = nphisto[pid!=0]
+        dijets = dijets[pid!=0]
         pid = pid[pid!=0]
-
         nphisto_sparse = sparse.COO(nphisto)
 
         #Here we save the batch output to the accumulators
         #note for p4 that the final addition is an index indication whether the jet is leading or subleading (trivial for now)
 
+        print(ak.unflatten(np.insert(np.ones(int(len(pid)/2)), np.arange(int(len(pid)/2)), np.zeros(int(len(pid)/2))), 1, axis=0))
+        print(ak.unflatten(dijets.z, 1, axis=0))
         output['data']+= processor.column_accumulator(np.asarray(nphisto_sparse.data))#PFCands.pt[0].tolist()
         output['data_len']+= processor.column_accumulator(np.expand_dims(np.asarray(len(nphisto_sparse.data), dtype=int), axis=0))
         output['coords']+= processor.column_accumulator(np.asarray(nphisto_sparse.coords, dtype=int).T)#PFCands.pt[0].tolist()
         output['shape']+= processor.column_accumulator(np.asarray(nphisto_sparse.shape, dtype=int))#PFCands.pt[0].tolist()
         output['fill_value']+= processor.column_accumulator(np.expand_dims(np.asarray(nphisto_sparse.fill_value), axis=0))#PFCands.pt[0].tolist()
         output['pid']+= processor.column_accumulator(np.asarray(pid))
-        output['p4']+= processor.column_accumulator(np.asarray(ak.concatenate([ak.unflatten(jets[:,0].t, 1, axis=0), ak.unflatten(jets[:,0].x, 1, axis=0),ak.unflatten(jets[:,0].y, 1, axis=0),ak.unflatten(jets[:,0].z, 1, axis=0),(ak.unflatten(jets[:,0].t,1,axis=0)<0)*1], axis=1)))
+        output['p4']+= processor.column_accumulator(np.asarray(ak.concatenate([ak.unflatten(dijets.t, 1, axis=0), ak.unflatten(dijets.x, 1, axis=0),ak.unflatten(dijets.y, 1, axis=0),ak.unflatten(dijets.z, 1, axis=0),ak.unflatten(np.insert(np.ones(int(len(pid)/2)), np.arange(int(len(pid)/2)), np.zeros(int(len(pid)/2))), 1, axis=0)], axis=1)))
         ##output['sumw']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
         '''
         output['ML']['pid']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
@@ -513,9 +570,9 @@ output = processor.run_uproot_job(fileset,
     processor_instance=MyProcessor(),
     executor=processor.futures_executor,
     #executor_args={'workers':opt.cpu},
-    executor_args={'schema': None, 'workers':4,},#processor.LazyDataFrame},
-    maxchunks =4,
-    chunksize = 5000,
+    executor_args={'schema': None, 'workers':1,},#processor.LazyDataFrame},
+    maxchunks =1,
+    chunksize = 500,
 )
 
 

@@ -221,7 +221,7 @@ class MyProcessor(processor.ProcessorABC):
 
         theta_diff = jets.theta[:,0] - firstjetGenPartsf.theta
         phi_diff = jets.phi[:,0] - firstjetGenPartsf.phi
-        phi_diff = ((phi_diff+np.pi)%2)-np.pi
+        phi_diff = ((phi_diff+np.pi)%(2*np.pi))-np.pi
         print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
 
         #histogramming in a single event seems simple enough, but now I must proceed and apply it to all while avoiding loops cause speed. Helpful suggestion found here: https://stackoverflow.com/questions/18851471/numpy-histogram-on-multi-dimensional-array 
