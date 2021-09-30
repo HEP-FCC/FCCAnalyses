@@ -55,7 +55,8 @@ class analysis():
                .Define("MC_pdg_f", "MCParticle::get_pdg(MC_final)")
 
                #get Ks->pi+-
-               .Define("Ks2pipi_indices", "MCParticle::get_indices_ExclusiveDecay(310, {211, -211}, true, true) (Particle, Particle1)")
+               .Define("K0spipi_indices", "MCParticle::get_indices_ExclusiveDecay(310, {211, -211}, true, true) (Particle, Particle1)")
+               .Define("pi0gammagamma_indices", "MCParticle::get_indices_ExclusiveDecay( 111, {22, 22}, true, true) ( Particle, Particle1)" )
 
                #get parent indices
                #.Define("MC_parent", "MCParticle::get_parentid(Particle0, Particle, Particle0)")
