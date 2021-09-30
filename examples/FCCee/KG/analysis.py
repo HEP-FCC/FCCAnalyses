@@ -141,7 +141,8 @@ class analysis():
                 "MC_theta_f",
                 "MC_pdg_f",
 
-                "Ks2pipi_indices",
+                "K0spipi_indices",
+                "pi0gammagamma_indices",
 
                 "jets_kt_e",
                 "jets_kt_px",
