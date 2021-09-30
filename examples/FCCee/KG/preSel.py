@@ -9,7 +9,7 @@ outdir="outputs/FCCee/KG/"
 import multiprocessing
 NUM_CPUS = int(multiprocessing.cpu_count()-2)
 
-process_list=['p8_ee_Zbb_ecm91']
+process_list=['p8_ee_Zuds_ecm91']
 fraction=0.000001
 
 import config.runDataFrame as rdf

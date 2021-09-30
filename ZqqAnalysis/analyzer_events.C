@@ -159,7 +159,7 @@ int main()
 	      // theta of final particles
 	      h_theta_f->Fill(p4.Theta());
 	      // theta of final particles - after cut (~14 degrees)
-	      if(cos(p4.Theta()) < 0.97) h_theta_fCut->Fill(p4.Theta());
+	      if(abs(cos(p4.Theta())) < 0.97) h_theta_fCut->Fill(p4.Theta());
 	    }	      
 	}
 
