@@ -24,7 +24,7 @@ int main() {
   
   gInterpreter->GenerateDictionary("vector<vector<int> >","vector");
  
-  TFile *file = TFile::Open("p8_ee_Zbb_ecm91.root");
+  TFile *file = TFile::Open("p8_ee_Zuds_ecm91.root");
   TTreeReader tree("events", file);
 
   // final particles
@@ -43,9 +43,7 @@ int main() {
   
   int nEvents = tree.GetEntries();
   cout<<"Number of Events: "<<nEvents<<endl;
-  
-  cout<<"Before defining histograms"<<endl;
-  
+    
   TString histfname;
   histfname = "histZbb_jetImages.root";
   TFile histFile(histfname,"RECREATE");
@@ -89,15 +87,14 @@ int main() {
       h_JetNeutB.push_back(new TH2F(sn.c_str(),"n in b jets",29,-0.5,0.5,29,-0.5,0.5));
     }
 
-  
-  cout<<"After defining histograms"<<endl;
+  cout<<"defined histograms"<<endl;
   
   // event counter
   int evt = 0;
   
   while(tree.Next()) {
 
-    if(evt%10000==0) cout<<evt<<" done"<<endl;
+    if(evt%10000==0) cout<<evt<<" events processed"<<endl;
     
     // jets
     float jPx=0., jPy=0., jPz=0., jE=0., invMjet=0.;
@@ -182,7 +179,6 @@ int main() {
     float p_norm2 = 0.;
     float delta_theta2 = 0., delta_phi2 = 0.;
     
-    //double delta_ang2=0.;
     for(int ele : jet2Const) {
       px_j2 = MCpxF->at(ele);
       py_j2 = MCpyF->at(ele);
@@ -232,7 +228,7 @@ int main() {
     evt++;
   }
   
-  cout<<"Event loop ends"<<endl;
+  cout<<"processed all events"<<endl;
   
   file->Close();
   
@@ -260,7 +256,7 @@ int main() {
   //histFile->Write();
   histFile.Close();
   
-  cout<<"Hist file closed"<<endl;
+  cout<<"hist file closed"<<endl;
   
   //delete jetConst;
   //jetConst = NULL;

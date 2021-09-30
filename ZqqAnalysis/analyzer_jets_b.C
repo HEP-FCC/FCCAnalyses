@@ -139,7 +139,7 @@ int main()
 	      PiPhiJ2 = p4.DeltaPhi(p_Jet[1]);
 
 	      if(abs(PiThetaJ1)<0.5 && abs(PiPhiJ1)<0.5) h_JetKs2pipiPiB->Fill(PiThetaJ1, PiPhiJ1, p_normPiJ1);
-	      else if(abs(PiThetaJ2)<0.5 && abs(PiPhiJ2)<0.5) h_JetKs2pipiB->Fill(PiThetaJ2, PiPhiJ2, p_normPiJ2);
+	      else if(abs(PiThetaJ2)<0.5 && abs(PiPhiJ2)<0.5) h_JetKs2pipiPiB->Fill(PiThetaJ2, PiPhiJ2, p_normPiJ2);
 	    }
 	  
 	}

@@ -4,7 +4,7 @@
 
 #include <TFile.h>
 #include <TTree.h>
-#include <TH1.h>
+#include <TH1F.h>
 #include <TH2F.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
@@ -68,8 +68,12 @@ int main()
   TH2F* h_JetKs2pipiL = new TH2F("h_JetKs2pipiL","K_{S} #rightarrow #pi^{+}#pi^{-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
   TH2F* h_JetKs2pipiPiL = new TH2F("h_JetKs2pipiPiL","#pi's from K_{S} #rightarrow #pi^{+}#pi^{-} in light jets",29,-0.5,0.5,29,-0.5,0.5);
 
+  TH1F* h_Kspipi = new TH1F("h_Kspipi","No. of K_{S} #rightarrow #pi^{+}#pi^{-}",8,0,8);
+
   // event counter
   int evt = 0;
+
+  int nKspipi_max=0; // checking max no of Ks
   
   while(tree.Next())
     {
@@ -95,6 +99,10 @@ int main()
 	}
 
       // Ks->pipi loop
+      int nKspipi = Ks2pipi->size()/3; // Ks counter
+      h_Kspipi->Fill(nKspipi);
+      if(nKspipi > nKspipi_max) nKspipi_max = nKspipi;  // max Ks counter
+
       float px=0., py=0., pz=0., e=0.;
       TLorentzVector p4;
       float KsAngJ1=0., KsAngJ2=0.;
@@ -113,7 +121,7 @@ int main()
 	  p4.SetPxPyPzE(px, py, pz, e);
 	  
 	  //cout<<MCpdg->at(Ks2pipi->at(iKP))<<endl;
-	  
+	  // K-shorts
 	  if(iKP%3 == 0)
 	    {
 	      // angle to assign to a jet, normalise with momentum magnitude, get delta theta and delta phi (NOTE: delta phi is not simply the difference between phi's of the particle and the jet)
@@ -133,7 +141,7 @@ int main()
 	      if(KsAngJ1<0.5) h_JetKs2pipiL->Fill(KsThetaJ1, KsPhiJ1, p_normKsJ1);
 	      else if(KsAngJ2<0.5) h_JetKs2pipiL->Fill(KsThetaJ2, KsPhiJ2, p_normKsJ2);
 	    }
-	  
+	  // Pions
 	  if(abs(MCpdg->at(Ks2pipi->at(iKP))) == 211)
 	    {
 	      // same as for Ks but twice for each decay
@@ -267,6 +275,8 @@ int main()
 
   cout<<"processed all events"<<endl;
   
+  cout<<"Max number of Ks-pipi is "<<nKspipi_max<<endl;
+  
   file->Close();
   cout<<"event file closed"<<endl;
 
@@ -280,6 +290,9 @@ int main()
   h_JetNeutL->Write();
   h_JetKs2pipiL->Write();
   h_JetKs2pipiPiL->Write();
+
+  h_Kspipi->Write();
+
   cout<<"hists written to file"<<endl;
 
   histFile.Close();

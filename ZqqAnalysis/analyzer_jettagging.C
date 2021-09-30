@@ -8,8 +8,7 @@
 #include "ROOT/RVec.hxx"
 #include <TFile.h>
 #include <TTree.h>
-#include <TH1I.h>
-#include <TPie.h>
+#include <TH1F.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
 #include <TSystem.h>
@@ -27,13 +26,13 @@ int main()
   cout<<"Number of Events: "<<nEvents<<endl;
 
   // All particles                                                       
-  /*
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpx(tree, "MC_px");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpy(tree, "MC_py");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpz(tree, "MC_pz");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCe(tree, "MC_e");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpdg(tree, "MC_pdg");
-  */
+  TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCstatus(tree, "MC_status");
+  
   // final particles   
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpxF(tree, "MC_px_f");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpyF(tree, "MC_py_f");
@@ -41,7 +40,7 @@ int main()
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCeF(tree, "MC_e_f");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> MCpdgF(tree, "MC_pdg_f");
 
-  //jet constituents      
+  // jet constituents      
   TTreeReaderValue<vector<vector<int>>> jetConst(tree, "jetconstituents_ee_kt");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPx(tree, "jets_ee_kt_px");
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> jetPy(tree, "jets_ee_kt_py");
@@ -50,102 +49,75 @@ int main()
   TTreeReaderValue<vector<int,ROOT::Detail::VecOps::RAdoptAllocator<int>>> jetFlavour(tree, "jets_ee_kt_flavour");
 
   TString histfname;
-  histfname = "histZuds.root";
+  histfname = "histZuds_ghostmatching.root";
   TFile histFile(histfname,"RECREATE");
 
   // histograms
-  TH1I* h_nEB = new TH1I("h_nEB", "No. of e in b-jets", 8, 0, 8);
+  TH1F* h_angJP = new TH1F("h_angJP","Angle between the parton and the corresponding jet",100,0,1.6);
+  TH1F* h_angJPs = new TH1F("h_angJPs","Angle between the parton and the corresponding jet (s-jets)",100,0,1.6);
+  TH1F* h_angJPd = new TH1F("h_angJPd","Angle between the parton and the corresponding jet (d-jets)",100,0,1.6);
+  TH1F* h_angJPu = new TH1F("h_angJPu","Angle between the parton and the corresponding jet (u-jets)",100,0,1.6);
 
-  TH1I* h_nES = new TH1I("h_nES", "No. of e in s-jets", 8, 0, 8);
-  TH1I* h_nEU = new TH1I("h_nEU", "No. of e in u-jets", 8, 0, 8);
-  TH1I* h_nED = new TH1I("h_nED", "No. of e in d-jets", 8, 0, 8);
-  
   // event counter
   int evt = 0;
-  int untagged = 0;
-  int c_tags=0, b_tags=0;
 
   // event loop
   while(tree.Next())
     {
-      if(evt%10000==0) cout<<evt<<" events processed"<<endl<<"jet flavours: "<<jetFlavour->at(0)<<" & "<<jetFlavour->at(1)<<endl;	
+      if(evt%10000==0) cout<<evt<<" events processed"<<endl;
 
-      if(jetFlavour->at(0)==0) untagged++;
-      if(jetFlavour->at(1)==0) untagged++;
-
-      if(jetFlavour->at(0)==4) c_tags++;
-      if(jetFlavour->at(1)==4) c_tags++;
-
-      if(jetFlavour->at(0)==5) b_tags++;
-      if(jetFlavour->at(1)==5) b_tags++;
-
-
-      // extract jet constituents
-      //int nJetC = jetConst->size();
-      vector<int> jet1Const, jet2Const;
-      if(jetConst->size()>=1)      jet1Const = jetConst->at(0);
-      else cout<<"No jet constituents found"<<endl;
-      if(jetConst->size()>=2)      jet2Const = jetConst->at(1);
-      else cout<<"Second jet constituents not found"<<endl;
-      
-      // without discriminating among uds
-
-      // JET 1
-      int nES=0, nEU=0, nED=0, nEB=0;
-      
-      for(int ele : jet1Const) 
+      // jet loop
+      float px_Jet=0, py_Jet=0, pz_Jet=0, e_Jet=0; // partons
+      TLorentzVector p4_Jet[2];
+      for(unsigned int ij=0 ; ij<jetE->size(); ij++)
 	{
-	  if(abs(MCpdgF->at(ele))==11)
-	    {
-	      nEB++;
-
-	      if(jetFlavour->at(0)==3) nES++;
-	      if(jetFlavour->at(0)==2) nEU++;
-	      if(jetFlavour->at(0)==1) nED++;
-	    }
+	  px_Jet = jetPx->at(ij);
+	  py_Jet = jetPy->at(ij);
+	  pz_Jet = jetPz->at(ij);
+	  e_Jet = jetE->at(ij);
+	  p4_Jet[ij].SetPxPyPzE(px_Jet,py_Jet,pz_Jet,e_Jet);
 	}
-      
-      h_nEB->Fill(nEB);
-      if(jetFlavour->at(0)==3) h_nES->Fill(nES);
-      if(jetFlavour->at(0)==2) h_nEU->Fill(nEU);
-      if(jetFlavour->at(0)==1) h_nED->Fill(nED);
-      
-      // JET 2
-      // need counts for each jet separately so zeroed all counters
-      nES=0, nEU=0, nED=0, nEB=0;
-      
-      for(int ele : jet2Const) 
+
+      // particle loop
+      float px_p=0, py_p=0, pz_p=0, e_p=0; // partons
+      TLorentzVector p4_p[2];
+      //int flavour[2];
+      float angJ1=0,angJ2=0; // angles between the jets and partons
+      int iq=0; // parton counter
+      for(unsigned int ip=0; ip<MCpdg->size(); ip++)
 	{
-	  if(abs(MCpdgF->at(ele))==11)
-	    {
-	      nEB++;
+	  if(MCstatus->at(ip)<20 || MCstatus->at(ip)>30) continue;
+	  if(abs(MCpdg->at(ip))!=3 && abs(MCpdg->at(ip))!=2 && abs(MCpdg->at(ip))!=1) continue;
+	  
+	  px_p = MCpx->at(ip);
+	  py_p = MCpy->at(ip);
+	  pz_p = MCpz->at(ip);
+	  e_p = MCe->at(ip);
+	  p4_p[iq].SetPxPyPzE(px_p,py_p,pz_p,e_p);
 
-	      if(jetFlavour->at(1)==3) nES++;
-	      if(jetFlavour->at(1)==2) nEU++;
-	      if(jetFlavour->at(1)==1) nED++;
-	    }
+	  // angle between the jet and the parton
+	  angJ1 = p4_p[iq].Angle(p4_Jet[0].Vect());
+	  angJ2 = p4_p[iq].Angle(p4_Jet[1].Vect());
+	  h_angJP->Fill(min(angJ1,angJ2));
+	  if(abs(MCpdg->at(ip))==3) h_angJPs->Fill(min(angJ1,angJ2));
+	  if(abs(MCpdg->at(ip))==1) h_angJPd->Fill(min(angJ1,angJ2));
+	  if(abs(MCpdg->at(ip))==2) h_angJPu->Fill(min(angJ1,angJ2));
+
+	  iq++;
 	}
-      
-      h_nEB->Fill(nEB);
-      if(jetFlavour->at(1)==3) h_nES->Fill(nES);
-      if(jetFlavour->at(1)==2) h_nEU->Fill(nEU);
-      if(jetFlavour->at(1)==1) h_nED->Fill(nED);
-      
-      jet1Const.clear();
-      jet2Const.clear();
 
       evt++;
     }
 
-  cout<<"processed all events"<<endl<<"there are "<<untagged<<" untagged jets, "<<c_tags<<" c-tagged jets, and "<<b_tags<<" b-tagged jets"<<endl;
+  cout<<"processed all events"<<endl;
 
   file->Close();
   cout<<"closed the event file"<<endl;
 
-  h_nES->Write();
-  h_nEU->Write();
-  h_nED->Write();
-  h_nEB->Write();
+  h_angJP->Write();
+  h_angJPs->Write();
+  h_angJPd->Write();
+  h_angJPu->Write();
   histFile.Close();
   cout<<"hists written and file closed"<<endl;
 
