@@ -4,6 +4,7 @@ import awkward as ak
 import os
 import h5py as h5
 import numpy as np
+import sparse
 import matplotlib.pyplot as plt
 from collections import defaultdict
 from coffea import hist, processor
@@ -32,14 +33,11 @@ def Writeh5(output, name,folder):
     if not os.path.exists(folder):
         os.makedirs(folder)
     with h5.File(os.path.join(folder,'{0}.h5'.format(name)), "w") as fh5:
-        dset = fh5.create_dataset("histos_neutralKaon", data=output['histos_neutralKaon'].value)
-        dset = fh5.create_dataset("histos_chargedKaon", data=output['histos_chargedKaon'].value)
-        dset = fh5.create_dataset("histos_neutralPion", data=output['histos_neutralPion'].value)
-        dset = fh5.create_dataset("histos_chargedPion", data=output['histos_chargedPion'].value)
-        dset = fh5.create_dataset("histos_electron", data=output['histos_electron'].value)
-        dset = fh5.create_dataset("histos_muon", data=output['histos_muon'].value)
-        dset = fh5.create_dataset("histos_photon", data=output['histos_photon'].value)
-        dset = fh5.create_dataset("histos_protonNeutron", data=output['histos_protonNeutron'].value)
+        dset = fh5.create_dataset("data", data=output['data'].value)
+        dset = fh5.create_dataset("data_len", data=output['data_len'].value)
+        dset = fh5.create_dataset("coords", data=output['coords'].value)
+        dset = fh5.create_dataset("shape", data=output['shape'].value)
+        dset = fh5.create_dataset("fill_value", data=output['fill_value'].value)
         #dset = fh5.create_dataset("data", data=output['data'])
         dset = fh5.create_dataset("pid", data=output['pid'].value)
         #dset = fh5.create_dataset("global", data=output['global'])
@@ -92,16 +90,11 @@ class MyProcessor(processor.ProcessorABC):
         ##dict_accumulator = {}
         print('DONT FORGET TO UNCOMMENT')
         ML_accumulator = {
-            #'histos': processor.column_accumulator(np.zeros([0,8,29,29])),
-            #'histos_chargedKaon': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_neutralKaon': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_chargedKaon': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_neutralPion': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_chargedPion': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_electron': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_muon': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_photon': processor.column_accumulator(np.zeros([0,29,29])),
-            'histos_protonNeutron': processor.column_accumulator(np.zeros([0,29,29])),
+            'data': processor.column_accumulator(np.zeros([0,])),
+            'data_len': processor.column_accumulator(np.zeros([0], dtype=int)),
+            'coords': processor.column_accumulator(np.zeros([0,4], dtype=int)),
+            'shape': processor.column_accumulator(np.zeros([0], dtype=int)),
+            'fill_value': processor.column_accumulator(np.zeros([0])),
             'pid': processor.column_accumulator(np.zeros([0])),
         }
         self._accumulator = processor.dict_accumulator( ML_accumulator )
@@ -137,7 +130,7 @@ class MyProcessor(processor.ProcessorABC):
     def process(self, events):
         print('before')
         #why does commenting out the identity seem to work? No clue!
-        output = self.accumulator#.identity()
+        output = self.accumulator.identity()
         print('or after?')
         print('output type')
         #print(type(output['ML']['global']))
@@ -236,8 +229,8 @@ class MyProcessor(processor.ProcessorABC):
         #I will leave things off here, as a note for Monday -> implement this for arrays of all events. Once I have one image per event I can build NN and try to feed it images (even if they are baloney!)
         ##nphisto = np.histogram2d(firstjetGenPartsf.phi[0], firstjetGenPartsf.theta[0])
         #decrease image resolution to have low memory footprint
-        nphisto = np.zeros([8,29,29])
-        #nphisto = np.zeros([len(firstjetGenPartsf.phi),8,19,19])
+        #nphisto = np.zeros([8,29,29])
+        nphisto = np.zeros([len(firstjetGenPartsf.phi),8,29,29])
         bins = np.linspace(-0.5,0.5,30)
         #histoZ, xbins, ybins = np.histogram2d(np.array(firstjetGenPartsf.phi[0]), np.array(firstjetGenPartsf.theta[0]), bins=bins)
         
@@ -314,22 +307,21 @@ class MyProcessor(processor.ProcessorABC):
             nphisto[i,7] = np.histogram2d(np.array(phi_diff[protonNeutron_mask][i]), np.array(theta_diff[protonNeutron_mask][i]), bins=bins)[0]
         '''
         for i in range(len(firstjetGenPartsf.phi)):
-            if(bottom_mask[i]): 
-                nphisto[0] += np.histogram2d(neutralKaon_phi_diff[i], neutralKaon_theta_diff[i], bins=bins, weights=neutralKaon_weights[i])[0]
-                nphisto[1] += np.histogram2d(chargedKaon_phi_diff[i], chargedKaon_theta_diff[i], bins=bins, weights=chargedKaon_weights[i])[0]
-                nphisto[2] += np.histogram2d(neutralPion_phi_diff[i], neutralPion_theta_diff[i], bins=bins, weights=neutralPion_weights[i])[0]
-                nphisto[3] += np.histogram2d(chargedPion_phi_diff[i], chargedPion_theta_diff[i], bins=bins, weights=chargedPion_weights[i])[0]
-                nphisto[4] += np.histogram2d(electron_phi_diff[i], electron_theta_diff[i], bins=bins, weights=electron_weights[i])[0]
-                nphisto[5] += np.histogram2d(muon_phi_diff[i], muon_theta_diff[i], bins=bins, weights=muon_weights[i])[0]
-                nphisto[6] += np.histogram2d(photon_phi_diff[i], photon_theta_diff[i], bins=bins, weights=photon_weights[i])[0]
-                nphisto[7] += np.histogram2d(protonNeutron_phi_diff[i], protonNeutron_theta_diff[i], bins=bins, weights=protonNeutron_weights[i])[0]
-            else:
-                continue
+            nphisto[i,0] = np.histogram2d(neutralKaon_phi_diff[i], neutralKaon_theta_diff[i], bins=bins, weights=neutralKaon_weights[i])[0]
+            nphisto[i,1] = np.histogram2d(chargedKaon_phi_diff[i], chargedKaon_theta_diff[i], bins=bins, weights=chargedKaon_weights[i])[0]
+            nphisto[i,2] = np.histogram2d(neutralPion_phi_diff[i], neutralPion_theta_diff[i], bins=bins, weights=neutralPion_weights[i])[0]
+            nphisto[i,3] = np.histogram2d(chargedPion_phi_diff[i], chargedPion_theta_diff[i], bins=bins, weights=chargedPion_weights[i])[0]
+            nphisto[i,4] = np.histogram2d(electron_phi_diff[i], electron_theta_diff[i], bins=bins, weights=electron_weights[i])[0]
+            nphisto[i,5] = np.histogram2d(muon_phi_diff[i], muon_theta_diff[i], bins=bins, weights=muon_weights[i])[0]
+            nphisto[i,6] = np.histogram2d(photon_phi_diff[i], photon_theta_diff[i], bins=bins, weights=photon_weights[i])[0]
+            nphisto[i,7] = np.histogram2d(protonNeutron_phi_diff[i], protonNeutron_theta_diff[i], bins=bins, weights=protonNeutron_weights[i])[0]
         elapsed = timeit.default_timer() - start_time
         print('ELAPSED TIME -> '+str(elapsed))
         
-        #nphisto = nphisto[pid!=0]
-        #pid = pid[pid!=0]
+        nphisto = nphisto[pid!=0]
+        pid = pid[pid!=0]
+
+        nphisto_sparse = sparse.COO(nphisto)
         '''
         print(firstjetGenPartsf.mass[1])
 
@@ -349,21 +341,16 @@ class MyProcessor(processor.ProcessorABC):
         #print(type(output['ML']['global']))
         ##########output['ML']['global']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
         #output['global']+= processor.column_accumulator(np.array(jets.x))#PFCands.pt[0].tolist()
-        print('?????????????????')
-        print((output['histos_chargedKaon'].value).shape)
-        print(nphisto[1].shape)
         #print(np.expand_dims(nphisto[1], axis=0).shape)
-        output['histos_neutralKaon']+= processor.column_accumulator(np.expand_dims(nphisto[0], axis=0))#PFCands.pt[0].tolist()
-        output['histos_chargedKaon']+= processor.column_accumulator(np.expand_dims(nphisto[1], axis=0))#PFCands.pt[0].tolist()
-        output['histos_neutralPion']+= processor.column_accumulator(np.expand_dims(nphisto[2], axis=0))#PFCands.pt[0].tolist()
-        output['histos_chargedPion']+= processor.column_accumulator(np.expand_dims(nphisto[3], axis=0))#PFCands.pt[0].tolist()
-        output['histos_electron']+= processor.column_accumulator(np.expand_dims(nphisto[4], axis=0))#PFCands.pt[0].tolist()
-        output['histos_muon']+= processor.column_accumulator(np.expand_dims(nphisto[5], axis=0))#PFCands.pt[0].tolist()
-        output['histos_photon']+= processor.column_accumulator(np.expand_dims(nphisto[6], axis=0))#PFCands.pt[0].tolist()
-        output['histos_protonNeutron']+= processor.column_accumulator(np.expand_dims(nphisto[7], axis=0))#PFCands.pt[0].tolist()
-        #output['histos_chargedKaon']+= processor.column_accumulator(nphisto[1])#PFCands.pt[0].tolist()
-        output['pid']+= processor.column_accumulator(np.array(pid))
-        print((output['histos_chargedKaon'].value).shape)
+        output['data']+= processor.column_accumulator(np.asarray(nphisto_sparse.data))#PFCands.pt[0].tolist()
+        output['data_len']+= processor.column_accumulator(np.expand_dims(np.asarray(len(nphisto_sparse.data), dtype=int), axis=0))
+        output['coords']+= processor.column_accumulator(np.asarray(nphisto_sparse.coords, dtype=int).T)#PFCands.pt[0].tolist()
+        output['shape']+= processor.column_accumulator(np.asarray(nphisto_sparse.shape, dtype=int))#PFCands.pt[0].tolist()
+        print(np.asarray(nphisto_sparse.fill_value).shape)
+        print((output['fill_value'].value).shape)
+        output['fill_value']+= processor.column_accumulator(np.expand_dims(np.asarray(nphisto_sparse.fill_value), axis=0))#PFCands.pt[0].tolist()
+        output['pid']+= processor.column_accumulator(np.asarray(pid))
+
         ##output['sumw']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
         '''
         output['ML']['pid']+= jets.partonFlavour.tolist()#PFCands.pt[0].tolist()
@@ -400,7 +387,7 @@ class MyProcessor(processor.ProcessorABC):
         return accumulator
 
 #p = MyProcessor()
-filename = "rootFiles//p8_ee_Zbb_ecm91.root"
+filename = "rootFiles/p8_ee_Zuds_ecm91.root"
 file = uproot.open(filename)
 '''
 events = NanoEventsFactory.from_root(
@@ -435,30 +422,27 @@ output = processor.run_uproot_job(fileset,
     processor_instance=MyProcessor(),
     executor=processor.futures_executor,
     #executor_args={'workers':opt.cpu},
-    executor_args={'schema': None, 'workers':4,},#processor.LazyDataFrame},
-    maxchunks =20,
-    chunksize = 5000,
+    executor_args={'schema': None, 'workers':1,},#processor.LazyDataFrame},
+    maxchunks =1,
+    chunksize = 5,
 )
 
 
 #print(output)
 #print(len(output['nConsti'].value))
 #Writeh5(output, 'nConsti_b', 'h5_output')
-output['histos_neutralKaon'] = processor.column_accumulator(np.sum(output['histos_neutralKaon'].value, axis=0))
-output['histos_chargedKaon'] = processor.column_accumulator(np.sum(output['histos_chargedKaon'].value, axis=0))
-output['histos_neutralPion'] = processor.column_accumulator(np.sum(output['histos_neutralPion'].value, axis=0))
-output['histos_chargedPion'] = processor.column_accumulator(np.sum(output['histos_chargedPion'].value, axis=0))
-output['histos_electron'] = processor.column_accumulator(np.sum(output['histos_electron'].value, axis=0))
-output['histos_muon'] = processor.column_accumulator(np.sum(output['histos_muon'].value, axis=0))
-output['histos_photon'] = processor.column_accumulator(np.sum(output['histos_photon'].value, axis=0))
-output['histos_protonNeutron'] = processor.column_accumulator(np.sum(output['histos_protonNeutron'].value, axis=0))
-Writeh5(output, 'Zbb_weighted_summed', 'h5_output')
+####Writeh5(output, 'Zuds_weighted_sparse_sshort', 'h5_output')
 #print(len(out['ML']['pid']))
 #print(len(out['ML']['global']))
 
 print('REMEMBER LOOP MASK')
 
-
+print(len(output['pid'].value))
+print(len(output['data'].value))
+print(len(output['coords'].value))
+print(output['shape'].value)
+print(output['fill_value'].value)
+print('COORDS MUST BE TRANSPOSED IN H5 FILE!!!')
 
 
 ### NOTE FOR MONDAY ######
