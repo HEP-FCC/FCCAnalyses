@@ -21,7 +21,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 #Here I will very simply load the data. Note that I should in theory also split a set for validation, and shuffle the data...
 #Can write the decompressor here if I want
 
-dense, pid = sparse2dense('Zuds_weighted_sparse.h5')
+dense, pid = sparse2dense('Zuds_weighted_sparse_train.h5')
 print(pid)
 #f = h5py.File('Zuds_weighted_short.h5', 'r')
 #y = np.array(f['pid'][:])
