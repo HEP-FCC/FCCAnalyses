@@ -3,7 +3,7 @@ import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredText
 
-f = np.load('eval.npz')
+f = np.load('eval_filesplitter.npz')
 
 pid = f['arr_1']
 DNN = f['arr_0']
@@ -114,10 +114,10 @@ plt.plot(ftr_s, tpr_s, label='strange quarks (AUC='+str(round(AUC_s, 4))+')', li
 ##plt.plot(ftr_g, tpr_g, label='ABCNet gluon (Small) (AUC='+str(round(AUC_g, 4))+')', linestyle='-', color='g')
 ##plt.plot(ftr_qgl, tpr_qgl, label='QGL (AUC='+str(round(AUC_q, 4))+')', linestyle='-.', color='r')
 ##plt.plot(ftr_DFQG, tpr_DFQG, label='DeepFlavQG (AUC='+str(round(AUC_DFQG, 4))+')', linestyle='-.', color='b')
-plt.plot(np.linspace(0, 1, 40), 1-np.linspace(0, 1, 40), linestyle='-', color='k')
-plt.xlabel(r'Jet Rejection')
-plt.ylabel('Jet Efficiency')
-plt.title(r'$\mathbf{FCCee}$ Simulation - (LodeNet on $\mathbf{QCD}$ Jets), $\sqrt{s}$ = 13 TeV')
+plt.plot(1-np.linspace(0, 1, 40), np.linspace(0, 1, 40), linestyle='-', color='k')
+plt.xlabel(r'Background Rejection ($\mathbf{1- \varepsilon_{bkg}}$)')
+plt.ylabel(r'Signal Efficiency ($\mathbf{\varepsilon_{sig}}$)')
+plt.title(r'$\mathbf{FCCee}$ Delphes Sim. - (LodeNet on $\mathbf{Zuds}$ Jets), $\sqrt{s}$ = 91 GeV')
 plt.xticks(np.linspace(0, 1, 11))
 plt.yticks(np.linspace(0, 1, 11))
 plt.grid()
@@ -129,7 +129,7 @@ plt.ylim([0,1])
 plt.legend(loc="lower left")
 #plt.savefig('thesis_standard/ROCJetFlavours_Zjets_2306_cut_mixed_noL_1705_comp.png')
 #plt.savefig('thesis_standard/ref_QCD.png')
-plt.savefig('plots/LodeNet.png')
+plt.savefig('plots/LodeNet_filesplitter.png')
 
 
 
