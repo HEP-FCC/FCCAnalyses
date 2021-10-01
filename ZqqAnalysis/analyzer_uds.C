@@ -69,6 +69,8 @@ int main()
   TH1I* h_nE = new TH1I("h_nE", "No. of e in jets", 8, 0, 8);
   TH1I* h_nMu = new TH1I("h_nMu", "No. of #mu in jets", 5, 0, 5);
   TH1I* h_nPhoton = new TH1I("h_nPhoton", "No. of #gamma in jets", 45, 0, 45);
+
+  TH1I* h_nNu = new TH1I("h_nNu", "No. of #nu in jets", 7, 0, 7);
   
   // event counter
   int evt = 0;
@@ -81,10 +83,21 @@ int main()
   double nPiD=0, nKD=0, nKlD=0, nND=0, nPD=0, nLeptonD=0, nPhotonD=0;
   double nPiU=0, nKU=0, nKlU=0, nNU=0, nPU=0, nLeptonU=0, nPhotonU=0;
 
+  int nNu_max=0;
+
   // event loop
   while(tree.Next())
     {
       if(evt%10000==0) cout<<evt<<" events processed"<<endl<<"jet flavours: "<<jetFlavour->at(0)<<" & "<<jetFlavour->at(1)<<endl;
+
+      // Neutrinos
+      int nNu=0;
+      for(unsigned int iNu=0; iNu<MCpdgF->size(); iNu++)
+	{
+	  if(abs(MCpdgF->at(iNu)) == 12 || abs(MCpdgF->at(iNu)) == 14 || abs(MCpdgF->at(iNu)) == 16) nNu++;
+	}
+      h_nNu->Fill(nNu);
+      if(nNu>nNu_max) nNu_max=nNu;
 
       // only use events with both jets tagged as s, d, or u (to avoid having to loop over jets)
       // s-jets
@@ -221,6 +234,8 @@ int main()
   cout<<"There are "<<nD<<" events with both jets tagged as d"<<endl;
   cout<<"There are "<<nU<<" events with both jets tagged as u"<<endl;
 
+  cout<<"Max number of neutrinos among all events is "<<nNu_max<<endl;
+
   double valsS[] = {nPiS,nKS,nKlS,nPS,nNS,nLeptonS,nPhotonS};
   double valsD[] = {nPiD,nKD,nKlD,nPD,nND,nLeptonD,nPhotonD};
   double valsU[] = {nPiU,nKU,nKlU,nPU,nNU,nLeptonU,nPhotonU};
@@ -245,6 +260,7 @@ int main()
   h_nE->Write();
   h_nMu->Write();
   h_nPhoton->Write();
+  h_nNu->Write();
   sJets->Write();
   dJets->Write();
   uJets->Write();

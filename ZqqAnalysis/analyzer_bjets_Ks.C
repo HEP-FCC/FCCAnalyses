@@ -60,7 +60,7 @@ int main()
   tree->SetBranchAddress("MC_pdg", &MCpdg);
 
   vector<int> *Ks2pipi=0;
-  tree->SetBranchAddress("Ks2pipi_indices", &Ks2pipi);
+  tree->SetBranchAddress("K0spipi_indices", &Ks2pipi);
   
   vector<float> *jetE=0, *jetPx=0, *jetPy=0, *jetPz=0;
   //vector<vector<int>> *jetConst;

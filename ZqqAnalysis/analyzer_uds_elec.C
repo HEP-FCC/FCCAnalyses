@@ -63,7 +63,7 @@ int main()
   // event counter
   int evt = 0;
   int untagged = 0;
-  int c_tags=0, b_tags=0;
+  int d_tags=0, u_tags=0, s_tags=0, c_tags=0, b_tags=0;
 
   // event loop
   while(tree.Next())
@@ -72,6 +72,15 @@ int main()
 
       if(jetFlavour->at(0)==0) untagged++;
       if(jetFlavour->at(1)==0) untagged++;
+
+      if(jetFlavour->at(0)==1) d_tags++;
+      if(jetFlavour->at(1)==1) d_tags++;
+
+      if(jetFlavour->at(0)==2) u_tags++;
+      if(jetFlavour->at(1)==2) u_tags++;
+
+      if(jetFlavour->at(0)==3) s_tags++;
+      if(jetFlavour->at(1)==3) s_tags++;
 
       if(jetFlavour->at(0)==4) c_tags++;
       if(jetFlavour->at(1)==4) c_tags++;
@@ -137,7 +146,7 @@ int main()
       evt++;
     }
 
-  cout<<"processed all events"<<endl<<"there are "<<untagged<<" untagged jets, "<<c_tags<<" c-tagged jets, and "<<b_tags<<" b-tagged jets"<<endl;
+  cout<<"processed all events"<<endl<<"there are "<<untagged<<" untagged jets, "<<d_tags<<" d-tagged jets, "<<u_tags<<" u-tagged jets, "<<s_tags<<" s-tagged jets, "<<c_tags<<" c-tagged jets, and "<<b_tags<<" b-tagged jets"<<endl;
 
   file->Close();
   cout<<"closed the event file"<<endl;
