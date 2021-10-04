@@ -151,12 +151,12 @@ class MyProcessor(processor.ProcessorABC):
         
 
         GenPartsf = ak.zip({
-            "t": events.MC_e_final,
-            "x": events.MC_px_final,
-            "y": events.MC_py_final,
-            "z": events.MC_pz_final,
-            "pdg": events.MC_pdg_final,
-            #"r": np.sqrt(events.MC_px_final**2+events.MC_py_final**2),
+            "t": events.MC_e_f,
+            "x": events.MC_px_f,
+            "y": events.MC_py_f,
+            "z": events.MC_pz_f,
+            "pdg": events.MC_pdg_f,
+            #"r": np.sqrt(events.MC_px_f**2+events.MC_py_f**2),
         }, with_name="LorentzVector")
         
         GenParts = ak.zip({
@@ -182,7 +182,7 @@ class MyProcessor(processor.ProcessorABC):
 
         array_size = np.array(ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 400, clip=False), 0))[0][:])
         
-        #array_content gives the incdices of the stable MC particles within each event
+        #array_content gives the indices of the stable MC particles within each event
 
         array_content = np.array(ak.where(ak.fill_none(ak.pad_none((GenParts.MC_status==1), 400, clip=False), 0))[1][:])
         
@@ -203,7 +203,7 @@ class MyProcessor(processor.ProcessorABC):
         # e.g. mask_padded_raw = [78,79,96,97,-999, ..., -999]
 
         mask_padded_raw_K0spipi = np.delete(np.array(ak.fill_none(ak.pad_none(events.K0spipi_indices, 30, clip=False), -999)), np.arange(0, 30, 3), axis=1)
-        mask_padded_raw_pi0gammagamma = np.delete(np.array(ak.fill_none(ak.pad_none(events.pi0gammagamma_indices, 30, clip=False), -999)), np.arange(0, 30, 3), axis=1)
+        mask_padded_raw_pi0gammagamma = np.delete(np.array(ak.fill_none(ak.pad_none(events.pi0gammagamma_indices, 200, clip=False), -999)), np.arange(0, 200, 3), axis=1)
 
         #Below we use the mask_padded_raw and equate it to array_split_content to create a truth mask
         #Due to broadcasting issues we can actually only do this for one pion per event at a time, across all events, below is the first
@@ -365,11 +365,24 @@ class MyProcessor(processor.ProcessorABC):
         
 
         del GenPartsf
+       
+
+        #At this point we will implement some kinematic cuts. In particular pt>0.5 GeV & |cos(theta)|<0.97 ~ 14 deg cut
         
+
+        print('KIN CUTS!')
+        print(dijetGenPartsf.r[:10])
+        print(np.sqrt(dijetGenPartsf.x**2+dijetGenPartsf.y**2)[:10])
+        kin_mask = (np.abs(np.cos(dijetGenPartsf.theta))<0.97)&(dijetGenPartsf.r>0.5)
+        print(len(dijetGenPartsf[0]))
+        dijetGenPartsf = dijetGenPartsf[kin_mask]
+        print(len(dijetGenPartsf[0]))
+
+
 
         #Here the different categories are defined, corresponding to the different (optimistically) distinguishable particle types 
 
-        neutralKaon_mask = (np.abs(dijetGenPartsf.pdg)==130)|(np.abs(dijetGenPartsf.pdg)==310)
+        longKaon_mask = (np.abs(dijetGenPartsf.pdg)==130)|(np.abs(dijetGenPartsf.pdg)==310)
         chargedKaon_mask = (np.abs(dijetGenPartsf.pdg)==321)
 
         #Worthwhile REMOVING the neutral Pion category (from here)!
@@ -407,7 +420,7 @@ class MyProcessor(processor.ProcessorABC):
         print('REEVAL BOUNDS')
         bins = np.linspace(-0.5,0.5,30)
         
-        neutralKaon_phi_diff = phi_diff[neutralKaon_mask]
+        longKaon_phi_diff = phi_diff[longKaon_mask]
         chargedKaon_phi_diff = phi_diff[chargedKaon_mask]
         #neutralPion_phi_diff = phi_diff[neutralPion_mask]
         chargedPion_phi_diff = phi_diff[chargedPion_mask]
@@ -416,7 +429,7 @@ class MyProcessor(processor.ProcessorABC):
         photon_phi_diff = phi_diff[photon_mask]
         protonNeutron_phi_diff = phi_diff[protonNeutron_mask]
         
-        neutralKaon_theta_diff = theta_diff[neutralKaon_mask]
+        longKaon_theta_diff = theta_diff[longKaon_mask]
         chargedKaon_theta_diff = theta_diff[chargedKaon_mask]
         #neutralPion_theta_diff = theta_diff[neutralPion_mask]
         chargedPion_theta_diff = theta_diff[chargedPion_mask]
@@ -425,7 +438,7 @@ class MyProcessor(processor.ProcessorABC):
         photon_theta_diff = theta_diff[photon_mask]
         protonNeutron_theta_diff = theta_diff[protonNeutron_mask]
         
-        neutralKaon_weights = ((dijetGenPartsf.p)/(dijets.p))[neutralKaon_mask]
+        longKaon_weights = ((dijetGenPartsf.p)/(dijets.p))[longKaon_mask]
         chargedKaon_weights = ((dijetGenPartsf.p)/(dijets.p))[chargedKaon_mask]
         #neutralPion_weights = ((dijetGenPartsf.p)/(dijets.p))[neutralPion_mask]
         chargedPion_weights = ((dijetGenPartsf.p)/(dijets.p))[chargedPion_mask]
@@ -439,7 +452,7 @@ class MyProcessor(processor.ProcessorABC):
         neutralPion_weights = ((neutralPion[neutralPion_angle_mask].p)/(dijets.p))
         
         #Can shortened from 30, esp. for things like muons where we will never have 30 muons per jet, can also set clip to False
-        neutralKaon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralKaon_phi_diff, 70, clip=True), 999))
+        longKaon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(longKaon_phi_diff, 70, clip=True), 999))
         chargedKaon_phi_diff = np.asarray(ak.fill_none(ak.pad_none(chargedKaon_phi_diff, 70, clip=True), 999))
         #neutralPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_phi_diff, 70, clip=True), 999))
         chargedPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(chargedPion_phi_diff, 70, clip=True), 999))
@@ -452,7 +465,7 @@ class MyProcessor(processor.ProcessorABC):
         
         neutralPion_phi_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_phi_diff, 70, clip=True), 999))
         
-        neutralKaon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralKaon_theta_diff, 70, clip=True), 999))
+        longKaon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(longKaon_theta_diff, 70, clip=True), 999))
         chargedKaon_theta_diff = np.asarray(ak.fill_none(ak.pad_none(chargedKaon_theta_diff, 70, clip=True), 999))
         #neutralPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_theta_diff, 70, clip=True), 999))
         chargedPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(chargedPion_theta_diff, 70, clip=True), 999))
@@ -466,7 +479,7 @@ class MyProcessor(processor.ProcessorABC):
         neutralPion_theta_diff = np.asarray(ak.fill_none(ak.pad_none(neutralPion_theta_diff, 70, clip=True), 999))
         
         #Write this padding into a function, and a subsequent loop from a list, or maybe channels? Turned out longer and uglier than I expected...
-        neutralKaon_weights = np.asarray(ak.fill_none(ak.pad_none(neutralKaon_weights, 70, clip=True), 0))
+        longKaon_weights = np.asarray(ak.fill_none(ak.pad_none(longKaon_weights, 70, clip=True), 0))
         chargedKaon_weights = np.asarray(ak.fill_none(ak.pad_none(chargedKaon_weights, 70, clip=True), 0))
         #neutralPion_weights = np.asarray(ak.fill_none(ak.pad_none(neutralPion_weights, 70, clip=True), 0))
         chargedPion_weights = np.asarray(ak.fill_none(ak.pad_none(chargedPion_weights, 70, clip=True), 0))
@@ -485,7 +498,7 @@ class MyProcessor(processor.ProcessorABC):
         
         start_time = timeit.default_timer()
         for i in range(len(dijets.phi)):
-            nphisto[i,0] = np.histogram2d(neutralKaon_phi_diff[i], neutralKaon_theta_diff[i], bins=bins, weights=neutralKaon_weights[i])[0]
+            nphisto[i,0] = np.histogram2d(longKaon_phi_diff[i], longKaon_theta_diff[i], bins=bins, weights=longKaon_weights[i])[0]
             nphisto[i,1] = np.histogram2d(chargedKaon_phi_diff[i], chargedKaon_theta_diff[i], bins=bins, weights=chargedKaon_weights[i])[0]
             nphisto[i,2] = np.histogram2d(neutralPion_phi_diff[i], neutralPion_theta_diff[i], bins=bins, weights=neutralPion_weights[i])[0]
             nphisto[i,3] = np.histogram2d(chargedPion_phi_diff[i], chargedPion_theta_diff[i], bins=bins, weights=chargedPion_weights[i])[0]
@@ -535,7 +548,7 @@ class MyProcessor(processor.ProcessorABC):
         return accumulator
 
 #p = MyProcessor()
-filename = "rootFiles/p8_ee_Zuds_ecm91.root"
+filename = "rootFiles/3009/p8_ee_Zuds_ecm91.root"
 file = uproot.open(filename)
 '''
 events = NanoEventsFactory.from_root(
@@ -570,16 +583,16 @@ output = processor.run_uproot_job(fileset,
     processor_instance=MyProcessor(),
     executor=processor.futures_executor,
     #executor_args={'workers':opt.cpu},
-    executor_args={'schema': None, 'workers':1,},#processor.LazyDataFrame},
-    maxchunks =1,
-    chunksize = 500,
+    executor_args={'schema': None, 'workers':4,},#processor.LazyDataFrame},
+    maxchunks =40,
+    chunksize =2500,
 )
 
 
 #print(output)
 #print(len(output['nConsti'].value))
 #Writeh5(output, 'nConsti_b', 'h5_output')
-###Writeh5(output, 'Zuds_weighted_sparse_nKaons', 'h5_output')
+Writeh5(output, 'Zuds_sparse_100k', 'h5_output')
 #print(len(out['ML']['pid']))
 #print(len(out['ML']['global']))
 

@@ -9,7 +9,7 @@ filename = "p8_ee_Zuds_ecm91_k.root"
 file = uproot.open(filename)
 events = NanoEventsFactory.from_root(
     file,
-    entry_stop=10000,
+    entry_stop=100000,
     #metadata={"dataset": "DoubleMuon"},
     schemaclass=BaseSchema,
     treepath='/events'

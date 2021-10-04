@@ -21,6 +21,7 @@ print(second_eval_batch)
 
 pid = sparse_file['pid'][:]
 pid_lens = sparse_file['shape'][::4]
+p4 = sparse_file['p4'][:]
 shape = sparse_file['shape'][:]
 data = sparse_file['data'][:]
 coords = sparse_file['coords'][:]
@@ -34,6 +35,7 @@ second_pid_index = np.array([np.sum(pid_lens[:second_eval_batch]), (np.sum(pid_l
 
 eval_pid_mask = np.arange(len(pid))
 eval_pid_mask = ((eval_pid_mask>=first_pid_index[0])&(eval_pid_mask<first_pid_index[1]))|((eval_pid_mask>=second_pid_index[0])&(eval_pid_mask<second_pid_index[1]))
+
 
 first_data_index = np.array([np.sum(data_lens[:first_eval_batch]), (np.sum(data_lens[:first_eval_batch])+data_lens[first_eval_batch])])
 second_data_index = np.array([np.sum(data_lens[:second_eval_batch]), (np.sum(data_lens[:second_eval_batch])+data_lens[second_eval_batch])])
@@ -54,6 +56,9 @@ eval_shape_mask = (eval_shape_mask==first_eval_batch)|(eval_shape_mask==second_e
 pid_eval = pid[eval_pid_mask]
 pid_train = pid[~eval_pid_mask]
 
+p4_eval = p4[eval_pid_mask]
+p4_train = p4[~eval_pid_mask]
+
 data_eval = data[eval_data_mask]
 data_train = data[~eval_data_mask]
 
@@ -70,12 +75,14 @@ f_eval = h5py.File('{0}_eval.h5'.format(fname), 'w')
 f_train = h5py.File('{0}_train.h5'.format(fname), 'w')
 
 f_eval['pid'] = pid_eval
+f_eval['p4'] = p4_eval
 f_eval['shape'] = shape_eval
 f_eval['data'] = data_eval
 f_eval['coords'] = coords_eval
 f_eval['data_len'] = data_lens_eval
 
 f_train['pid'] = pid_train
+f_train['p4'] = p4_train
 f_train['shape'] = shape_train
 f_train['data'] = data_train
 f_train['coords'] = coords_train
