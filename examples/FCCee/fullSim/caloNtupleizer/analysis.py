@@ -50,7 +50,7 @@ class analysis():
 
         self.df = ROOT.RDataFrame("events", inputlist)
         if args.useGeometry:
-            ROOT.CaloNtupleizer.loadGeometry(args.geometryFile)
+            ROOT.CaloNtupleizer.loadGeometry(args.geometryFile, args.readoutName)
 
     def run(self):
 

@@ -15,7 +15,7 @@
 
 namespace CaloNtupleizer{
 
-void loadGeometry(std::string xmlGeometryPath);
+void loadGeometry(std::string xmlGeometryPath, std::string readoutName);
 
 // calo hits (single cells)
 ROOT::VecOps::RVec<float> getCaloHit_x (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in);

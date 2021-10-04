@@ -11,12 +11,12 @@ using namespace CaloNtupleizer;
 
 dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
 
-void CaloNtupleizer::loadGeometry(std::string xmlGeometryPath){
+void CaloNtupleizer::loadGeometry(std::string xmlGeometryPath, std::string readoutName){
   dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());
   dd4hepgeo->fromCompact(xmlGeometryPath);
   dd4hepgeo->volumeManager();
   dd4hepgeo->apply("DD4hepVolumeManager", 0, 0);
-  m_decoder = dd4hepgeo->readout("ECalBarrelPhiEta").idSpec().decoder();
+  m_decoder = dd4hepgeo->readout(readoutName).idSpec().decoder();
 }
 
 
