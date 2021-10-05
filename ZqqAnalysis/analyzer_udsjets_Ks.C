@@ -1,3 +1,7 @@
+// studying uds jets, gets summed jet-images of all categories, includs Ks not pi0
+// also studying the Ks->pipi decays - angluar distributions to decide on jet assignment, momentum distribution to see the effect by cuts, and multiplicity of the decays in the events
+// tried the "consecutive pion" strategy instead of index matching: didn't work
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -74,6 +78,8 @@ int main()
   TH1F* h_Kspipi = new TH1F("h_Kspipi","No. of K_{S} #rightarrow #pi^{+}#pi^{-}",8,0,8);
   TH1F* h_Ks_pipi_consec = new TH1F("h_Ks_pipi_consec","No. of K_{S} #rightarrow #pi^{+}#pi^{-} (Consecutive Pions)",8,0,8);
 
+  TH1F* h_Ks_p = new TH1F("h_Ks_p","K_{S} momentum",100,0,20);
+
   // event counter
   int evt = 0;
 
@@ -123,12 +129,18 @@ int main()
 	  e = MCe->at(Ks2pipi->at(iKP));
 	  
 	  p4.SetPxPyPzE(px, py, pz, e);
+
+	  // cuts
+	  //if(p4.Pt()<0.5) continue;
+	  //if(abs(cos(p4.Theta()))>0.97) continue;
 	  
 	  //cout<<MCpdg->at(Ks2pipi->at(iKP))<<endl;
 	  // K-shorts
 	  if(iKP%3 == 0)
 	    {
 	      // angle to assign to a jet, normalise with momentum magnitude, get delta theta and delta phi (NOTE: delta phi is not simply the difference between phi's of the particle and the jet)
+
+	      h_Ks_p->Fill(p4.Pt());
 	      
 	      KsAngJ1 = p4.Angle(p_Jet[0].Vect());
 	      KsAngJ2 = p4.Angle(p_Jet[1].Vect());
@@ -311,6 +323,7 @@ int main()
 
   h_Kspipi->Write();
   h_Ks_pipi_consec->Write();
+  h_Ks_p->Write();
 
   cout<<"hists written to file"<<endl;
 

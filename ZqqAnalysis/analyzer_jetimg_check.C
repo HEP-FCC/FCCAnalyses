@@ -1,3 +1,7 @@
+// Histogram jet images for first 5 events (i.e. first 10 jets) of the Zuds file to compare with Edi's; if they match, use the h5py files, wouldn't need to edit the network code to read root files
+// No Ks or pi0
+// Cuts: pt>0.5, |cos(theta)|<0.97 (~14deg)
+
 #include <iostream>
 #include <cmath>
 #include <vector>

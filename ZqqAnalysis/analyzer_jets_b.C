@@ -1,3 +1,7 @@
+// Summed histograms for b-jets, includes Ks but not pi0
+// Note: Prefer using "TTreeReader" and "TTreeReaderValue" instead of "SetBranchAddress" - include the library "ROOT/RVec.hxx" while using TTreeReader 
+// No cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -54,7 +58,7 @@ int main()
   tree->SetBranchAddress("MC_pdg", &MCpdg);
   
   vector<int> *Ks2pipi=0;
-  tree->SetBranchAddress("Ks2pipi_indices", &Ks2pipi);
+  tree->SetBranchAddress("K0spipi_indices", &Ks2pipi);
 
   vector<float> *jetE=0, *jetPx=0, *jetPy=0, *jetPz=0;
   vector<vector<int>> *jetConst;
@@ -251,13 +255,14 @@ int main()
 
       //cout<<"============================"<<endl;
     }
-      
+
+  file->Close();
+  
   histFile->Write();
   histFile->Close();
       
   //delete jetConst;
   //jetConst = NULL;
   
-  file->Close();
   return -1;
 }

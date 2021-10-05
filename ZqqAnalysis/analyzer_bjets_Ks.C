@@ -1,3 +1,7 @@
+// Studying Ks->pipi in b-jets: Multiplicity, angular distribution, etc
+// Wrote for Zbb, changed to Zuds at some point (no idea why)
+// No cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -23,7 +27,7 @@ int main()
   cout<<"Number of Events: "<<nEvents<<endl;
   
   TString histfname;
-  histfname = "histZbb_Ks.root";
+  histfname = "histZuds_Ks.root";
   TFile *histFile = new TFile(histfname,"RECREATE");
 
   // Hists for jet-constituents' properties

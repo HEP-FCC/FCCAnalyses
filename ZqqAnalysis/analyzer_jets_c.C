@@ -1,3 +1,7 @@
+// copy of the summed b-jet images with names changed to get hists for c
+// no updates except closing event file before writing hists, may even have segmentation fault (unlikely but didn't check)
+// no cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -205,13 +209,14 @@ int main()
       jet1Const.clear();
       jet2Const.clear();
     }
-      
+  
+  file->Close();
+    
   histFile->Write();
   histFile->Close();
       
   delete jetConst;
   jetConst = NULL;
   
-  file->Close();
   return -1;
 }

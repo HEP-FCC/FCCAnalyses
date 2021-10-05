@@ -1,3 +1,9 @@
+// Studying the Spring2021 event files (Zbb files in particular, but trivial to edit for uds): events, partons, jets
+// Encountered the segmentation error - fixed
+// Note: Close the event file before writing histograms/jet images
+// Note: Prefer using "TTreeReader" and "TTreeReaderValue" instead of "SetBranchAddress" - include the library "ROOT/RVec.hxx" while using TTreeReader
+// No cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>

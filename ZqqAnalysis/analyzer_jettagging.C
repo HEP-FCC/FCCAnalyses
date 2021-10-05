@@ -1,3 +1,9 @@
+// studying the performance of jet tagging algorithm used in FCCAnalyses by analysing the angular distributions of jets, partons and their ngular separations
+// also separates the u/d/s events plus gets the statistics of the 3
+// Note: planning to use the MC truth parton for the label instead of the output of jettagging tool from FCCAnalyses - debatable
+// still don't understand the distributions entirely
+// No cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>

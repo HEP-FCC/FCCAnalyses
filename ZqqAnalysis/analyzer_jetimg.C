@@ -1,3 +1,7 @@
+// jet-images (wrote for Zbb, practically no changes for Zuds): 8 categories- K+-, Kl, pi+-, e+-, mu+-, photon, p, n (plan to remove muons, maybe also electrons - too few)
+// Note: Give each jet image a different name, event if of same type. e.g. h_JetCKaon[i] needs to have a unique name for each i
+// Cuts: pt>0.5, |cos(theta)|<0.97 (~14deg)
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -45,7 +49,7 @@ int main() {
   cout<<"Number of Events: "<<nEvents<<endl;
     
   TString histfname;
-  histfname = "histZbb_jetImages.root";
+  histfname = "histZuds_jetImages.root";
   TFile histFile(histfname,"RECREATE");
   
   vector<TH2F*> h_JetCKaonB;

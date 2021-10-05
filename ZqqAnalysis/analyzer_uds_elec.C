@@ -1,3 +1,7 @@
+// studying the jet tagging from FCCAnalyses by checking the statistics - too many untagged events
+// also studying the e+- multiplicity in u/d/s jets - not as few as muons but still not comparable to other categories
+// no cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>

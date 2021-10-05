@@ -1,3 +1,8 @@
+// Trial to implement THnSparse to reduce the file size for the jet-image file (uses Zbb, change file name to get Zuds)
+// File size is reduced but still stores everything until histograms are written, therefore fails when not enough RAM; tried writing histograms inside the event loop, didn't work. NEED A FIX (run in batches? How?)
+// Note: Give each jet image a different name, event if of same type. e.g. h_JetCKaon[i] needs to have a unique name for each i                             
+// No cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>

@@ -1,3 +1,6 @@
+// Summed jet-images for uds events; includes all categories except pi0 (has Ks) - no index matching so pi+- histogram has all pi+-, even the ones coming from Ks
+// No cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>

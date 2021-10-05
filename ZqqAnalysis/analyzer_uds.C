@@ -1,3 +1,7 @@
+// studying Zuds events to study the distribution of the jets - multiplicities of the categories being used in the network
+// also makes pie charts of the jet distribution - better to write a plotting file to print the pie charts
+// no cuts
+
 #include <iostream>
 #include <cmath>
 #include <vector>
