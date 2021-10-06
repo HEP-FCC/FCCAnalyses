@@ -1,5 +1,5 @@
 // studying Zuds events to study the distribution of the jets - multiplicities of the categories being used in the network
-// also makes pie charts of the jet distribution - better to write a plotting file to print the pie charts
+// also makes pie charts of the jet distribution - jet flavours are the ones you get from jettagging tool in FCCAnalyses, not MC truth
 // no cuts
 
 #include <iostream>
@@ -83,11 +83,11 @@ int main()
   int nU=0, nD=0, nS=0;
 
   // particle counters
-  double nPiS=0, nKS=0, nKlS=0, nNS=0, nPS=0, nLeptonS=0, nPhotonS=0;
-  double nPiD=0, nKD=0, nKlD=0, nND=0, nPD=0, nLeptonD=0, nPhotonD=0;
-  double nPiU=0, nKU=0, nKlU=0, nNU=0, nPU=0, nLeptonU=0, nPhotonU=0;
+  double nPiS=0, nKS=0, nKlS=0, nNS=0, nPS=0, nLeptonS=0, nPhotonS=0, nOthersS=0;
+  double nPiD=0, nKD=0, nKlD=0, nND=0, nPD=0, nLeptonD=0, nPhotonD=0, nOthersD=0;
+  double nPiU=0, nKU=0, nKlU=0, nNU=0, nPU=0, nLeptonU=0, nPhotonU=0, nOthersU=0;
 
-  int nNu_max=0;
+  int nNu_max=0, nNuS=0, nNuD=0, nNuU=0;
 
   // event loop
   while(tree.Next())
@@ -102,6 +102,14 @@ int main()
 	}
       h_nNu->Fill(nNu);
       if(nNu>nNu_max) nNu_max=nNu;
+
+      // extract jet constituents
+      //int nJetC = jetConst->size();
+      vector<int> jet1Const, jet2Const;
+      if(jetConst->size()>=1)      jet1Const = jetConst->at(0);
+      else cout<<"No jet constituents found"<<endl;
+      if(jetConst->size()>=2)      jet2Const = jetConst->at(1);
+      else cout<<"Second jet constituents not found"<<endl;
 
       // only use events with both jets tagged as s, d, or u (to avoid having to loop over jets)
       // s-jets
@@ -122,7 +130,12 @@ int main()
 	      if(abs(MCpdgF->at(ipar))==11) nLeptonS++;
 	      if(abs(MCpdgF->at(ipar))==13) nLeptonS++;
 	      if(abs(MCpdgF->at(ipar))==22) nPhotonS++;
+
+	      if(abs(MCpdgF->at(ipar)) == 12 || abs(MCpdgF->at(ipar)) == 14 || abs(MCpdgF->at(ipar)) == 16) nNuS++;
 	    }
+
+	  // add all final particles to get the total and subtract all the categories outside the event loop
+	  nOthersS += MCpdgF->size();
 	}
 
       // u-jets
@@ -143,7 +156,11 @@ int main()
 	      if(abs(MCpdgF->at(ipar))==11) nLeptonU++;
 	      if(abs(MCpdgF->at(ipar))==13) nLeptonU++;
 	      if(abs(MCpdgF->at(ipar))==22) nPhotonU++;
+
+	      if(abs(MCpdgF->at(ipar)) == 12 || abs(MCpdgF->at(ipar)) == 14 || abs(MCpdgF->at(ipar)) == 16) nNuU++;
 	    }
+
+	  nOthersU += MCpdgF->size();
 	}
 
       // d-jets
@@ -164,17 +181,13 @@ int main()
 	      if(abs(MCpdgF->at(ipar))==11) nLeptonD++;
 	      if(abs(MCpdgF->at(ipar))==13) nLeptonD++;
 	      if(abs(MCpdgF->at(ipar))==22) nPhotonD++;
+
+	      if(abs(MCpdgF->at(ipar)) == 12 || abs(MCpdgF->at(ipar)) == 14 || abs(MCpdgF->at(ipar)) == 16) nNuD++;
 	    }
+
+	  nOthersD += MCpdgF->size();
 	}
 
-      // extract jet constituents
-      //int nJetC = jetConst->size();
-      vector<int> jet1Const, jet2Const;
-      if(jetConst->size()>=1)      jet1Const = jetConst->at(0);
-      else cout<<"No jet constituents found"<<endl;
-      if(jetConst->size()>=2)      jet2Const = jetConst->at(1);
-      else cout<<"Second jet constituents not found"<<endl;
-      
       // without discriminating among uds
 
       // JET 1
@@ -238,12 +251,25 @@ int main()
   cout<<"There are "<<nD<<" events with both jets tagged as d"<<endl;
   cout<<"There are "<<nU<<" events with both jets tagged as u"<<endl;
 
-  cout<<"Max number of neutrinos among all events is "<<nNu_max<<endl;
+  cout<<"Max number of neutrinos per event among "<< nEvents <<" events is "<<nNu_max<<endl;
+
+  // subtract all categories from the total and put in "others" category- expecting it to contain only neutrinos [yes, they are]
+  nOthersS = nOthersS -nPiS-nKS-nKlS-nPS-nNS-nLeptonS-nPhotonS;
+  nOthersU = nOthersU -nPiU-nKU-nKlU-nPU-nNU-nLeptonU-nPhotonU;
+  nOthersD = nOthersD -nPiD-nKD-nKlD-nPD-nND-nLeptonD-nPhotonD;
+
+  cout<<"Number of neutrinos in events with both s-jets is "<<nNuS<<endl;
+  cout<<"Number of neutrinos in events with both d-jets is "<<nNuD<<endl;
+  cout<<"Number of neutrinos in events with both u-jets is "<<nNuU<<endl;
+
+  cout<<"Other particles in events with both s-jets is "<<nOthersS<<endl;
+  cout<<"Other particles in events with both d-jets is "<<nOthersD<<endl;
+  cout<<"Other particles in events with both u-jets is "<<nOthersU<<endl;
 
   double valsS[] = {nPiS,nKS,nKlS,nPS,nNS,nLeptonS,nPhotonS};
   double valsD[] = {nPiD,nKD,nKlD,nPD,nND,nLeptonD,nPhotonD};
   double valsU[] = {nPiU,nKU,nKlU,nPU,nNU,nLeptonU,nPhotonU};
-  int colors[] = {46,32,41,38,34,8,9};
+  int colors[] = {46,32,42,9,34,45,38};
   int nvals = sizeof(valsS)/sizeof(valsS[0]);
   //const char labels[] = {"#pi^{+-}","K^{+-}","K_{S}","K_{L}","p","n","NSB","e^{+-}","#mu^{+-}","#gamma"};
   
