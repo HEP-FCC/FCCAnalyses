@@ -121,6 +121,9 @@ namespace myUtils{
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2KstNuNu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 							     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
 
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bs2PhiNuNu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2MuMu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
   
@@ -295,6 +298,16 @@ namespace myUtils{
 
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 							 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+						    int index);
+
+  ROOT::VecOps::RVec<int> getFCCAnalysesComposite_type(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+						    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+						    int index);
 
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 						      int type);
