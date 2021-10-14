@@ -1950,8 +1950,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_B2Kstee(ROOT::VecOps::R
     FCCAnalysesComposite2 comp;
     comp.vertex = counter;
     comp.particle = build_tlv(recop,p.reco_ind);
-    comp.charge = charge_ee+charge_pi+charge_pi
-;
+    comp.charge = charge_ee+charge_pi+charge_k;
     
     result.push_back(comp);
     counter+=1;
