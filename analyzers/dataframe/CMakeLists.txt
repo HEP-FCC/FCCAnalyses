@@ -17,11 +17,20 @@ include_directories(${EDM4HEP_INCLUDE_DIRS}
                     ${VDT_INCLUDE_DIR}
                     )
 
-message(STATUS "includes-------------------------- dataframe awkward: ${AWKWARD_INCLUDE}")
-message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
-message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
-message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_INCLUDE_DIRS}")
+message(STATUS "includes-------------------------- dataframe awkward:     ${AWKWARD_INCLUDE}")
+message(STATUS "includes-------------------------- dataframe edm4hep:     ${EDM4HEP_INCLUDE_DIRS}")
+message(STATUS "includes-------------------------- dataframe podio  :     ${podio_INCLUDE_DIR}")
+message(STATUS "includes-------------------------- dataframe fastjet:     ${FASTJET_INCLUDE_DIRS}")
 
+set(EXTRA_INCLUDE_DIRS)
+set(EXTRA_LIBRARIES)
+
+find_package(ONNXRuntime)
+if(ONNXRuntime_FOUND)
+    message(STATUS "includes-------------------------- dataframe onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
+    list(APPEND EXTRA_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIRS})
+    list(APPEND EXTRA_LIBRARIES ${ONNXRUNTIME_LIBRARIES})
+endif()
 
 
 file(GLOB sources src/*.cc)
@@ -47,6 +56,7 @@ target_include_directories(FCCAnalyses  PUBLIC
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
+			                     ${EXTRA_INCLUDE_DIRS}
                            )
 
 target_link_libraries(FCCAnalyses
@@ -65,6 +75,7 @@ target_link_libraries(FCCAnalyses
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
                       ${LIBDL}
+		                  ${EXTRA_LIBRARIES}
                       gfortran # todo: why necessary?
                       )
 
