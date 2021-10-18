@@ -35,6 +35,7 @@ def mapHistos(var, label, sel, param):
                     scaleSig=param.scaleSig
                 except AttributeError:
                     print ('no scale signal, using 1')
+                    param.scaleSig=scaleSig
                 print ('scaleSig ',scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
 
