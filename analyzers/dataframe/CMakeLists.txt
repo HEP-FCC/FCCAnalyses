@@ -1,6 +1,5 @@
 
 find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps TMVA)
-find_package(DD4hep)
 include(${ROOT_USE_FILE})
 #include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
@@ -63,8 +62,6 @@ target_link_libraries(FCCAnalyses
 		      EDM4HEP::edm4hep 
 		      EDM4HEP::edm4hepDict 
 		      podio::podio 
-              DD4hep::DDCore
-
 		      ${FASTJET_LIBRARY} fastjetplugins
 		      ${acts_LIBRARY} ActsCore
 		      #${AWKWARD_LIBRARIES}
@@ -72,6 +69,11 @@ target_link_libraries(FCCAnalyses
 		      ${CPU-KERNELS} ${LIBDL})
 
 
+option(LINKDD4HEP "Switch ON if you plan to use DD4hep geometry information" OFF)
+if(LINKDD4HEP)
+    find_package(DD4hep)
+    target_link_libraries(FCCAnalyses DD4hep::DDCore)
+endif()
 
 
 set_target_properties(FCCAnalyses PROPERTIES
