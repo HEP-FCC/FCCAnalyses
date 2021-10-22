@@ -426,6 +426,13 @@ ROOT::VecOps::RVec<int> MCParticle::get_parentid(ROOT::VecOps::RVec<int> mcind, 
   return result;
 }
 
+ROOT::VecOps::RVec<int> get_index(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
+ROOT::VecOps::RVec<int> result;
+for (size_t i = 0; i < mc.size(); ++i) {
+  result.push_back(i);
+  }
+  return result;
+}
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -676,8 +683,19 @@ ROOT::VecOps::RVec<float> MCParticle::AngleBetweenTwoMCParticles( ROOT::VecOps::
   }
 
   return result;
-
 }
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> MCParticle::get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  for (size_t i = 0; i < index.size(); ++i) {
+    if (index[i]>-1)
+      result.push_back(in.at(index[i]));
+    //else
+    //  std::cout << "electron index negative " << index[i]<<std::endl;
+  }  
+  return result;
+}
+
 
 
 
