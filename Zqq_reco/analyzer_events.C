@@ -57,18 +57,11 @@ int main()
   TH1F* h_invMjets_s = new TH1F("h_invMjets_s","s-jets",100,75,100);
   TH1F* h_invMjets_u = new TH1F("h_invMjets_u","u-jets",100,75,100);
   TH1F* h_invMjets_d = new TH1F("h_invMjets_d","d-jets",100,75,100);
+  
+  // hists for the jet constituents
   TH1F* h_angJP = new TH1F("h_angJP","Angle b/n Jet Constituents and Jet Axis",100,0,3.14);
   TH1F* h_thetaJP = new TH1F("h_thetaJP","#Delta#theta Jet Constituents & Jet Axis",100,-3.14,3.14);
   TH1F* h_phiJP = new TH1F("h_phiJP","#Delta#phi Jet Constituents & Jet Axis",100,-3.14,3.14);
-  /*
-  // hists for the jet constituents
-  TH1F* h_deltaAngKs1 =new TH1F("h_deltaAngKs1","Angle between K_{S} and jet axis",100,0,3.15);
-  TH1F* h_deltaAngKs2 =new TH1F("h_deltaAngKs2","Angle between K_{S} and jet axis",100,0,3.15);
-  TH1F* h_deltaThetaKs1 =new TH1F("h_deltaThetaKs1","#Delta #theta between K_{S} and jet axis",100,0,3.15);
-  TH1F* h_deltaPhiKs1 =new TH1F("h_deltaPhiKs1","#Delta #phi between K_{S} and jet axis",100,0,3.15);
-  TH1F* h_deltaThetaKs2 =new TH1F("h_deltaThetaKs2","#Delta #theta between K_{S} and jet axis",100,0,3.15);
-  TH1F* h_deltaPhiKs2 =new TH1F("h_deltaPhiKs2","#Delta #phi between K_{S} and jet axis",100,0,3.15);
-  */
 
   // reco particles                                                       
   TTreeReaderValue<vector<float,ROOT::Detail::VecOps::RAdoptAllocator<float>>> RPpx(tree, "RP_px");
