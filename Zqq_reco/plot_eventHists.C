@@ -24,9 +24,14 @@ int main()
   TH1F* jetTheta = (TH1F*)hists->Get("h_jetTheta");
   TH1F* jetPhi = (TH1F*)hists->Get("h_jetPhi");
   TH1F* invMjets = (TH1F*)hists->Get("h_invMjets");
+  TH1F* invMjets_b = (TH1F*)hists->Get("h_invMjets_b");
+  TH1F* invMjets_c = (TH1F*)hists->Get("h_invMjets_c");
   TH1F* invMjets_s = (TH1F*)hists->Get("h_invMjets_s");
   TH1F* invMjets_u = (TH1F*)hists->Get("h_invMjets_u");
   TH1F* invMjets_d = (TH1F*)hists->Get("h_invMjets_d");
+  TH1F* angJP = (TH1F*)hists->Get("h_angJP");
+  TH1F* thetaJP = (TH1F*)hists->Get("h_thetaJP");
+  TH1F* phiJP = (TH1F*)hists->Get("h_phiJP");
 
   //hists->Close();
 
@@ -135,11 +140,33 @@ int main()
   hs->Add(invMjets_u);
   //invMjets_d->SetFillColor(kGreen);
   hs->Add(invMjets_d);
+  hs->Add(invMjets_c);
+  hs->Add(invMjets_b);
   hs->Draw("pfc");
   hs->GetXaxis()->SetTitle("M_{inv} [GeV]");
   gPad->BuildLegend(0.75,0.75,0.95,0.95,"");
   //
   c7->Print("invM_stack_eekt.pdf");
+
+  TCanvas *c8 = new TCanvas("c8","Jet Constituents - Angular Distribution (eekt)",770,770);
+  c8->Divide(2,2);
+  //
+  c8->cd(1);
+  angJP->GetXaxis()->SetTitle("[rad]");
+  c8->cd(1)->SetLogy();
+  angJP->Draw();
+  //
+  c8->cd(2);
+  thetaJP->GetXaxis()->SetTitle("#Delta#theta [rad]");
+  c8->cd(2)->SetLogy();
+  thetaJP->Draw();
+  //
+  c8->cd(3);
+  phiJP->GetXaxis()->SetTitle("#Delta#phi [rad]");
+  c8->cd(3)->SetLogy();
+  phiJP->Draw();
+  //
+  c8->Print("jetConstAngularDist_eekt.pdf");
   
   hists->Close();
   

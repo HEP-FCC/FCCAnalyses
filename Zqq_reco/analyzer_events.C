@@ -52,9 +52,14 @@ int main()
   TH1F* h_jetTheta = new TH1F("h_jetTheta","Jet Polar Angle (#theta)",100,0,3.15);
   TH1F* h_jetPhi = new TH1F("h_jetPhi","Jet Azimuthal Angle (#phi)",100,-3.15,3.15);
   TH1F* h_invMjets = new TH1F("h_invMjets","Invariant Mass - sum of jets [GeV]",100,75,100);
+  TH1F* h_invMjets_b = new TH1F("h_invMjets_b","b-jets",100,75,100);
+  TH1F* h_invMjets_c = new TH1F("h_invMjets_c","c-jets",100,75,100);
   TH1F* h_invMjets_s = new TH1F("h_invMjets_s","s-jets",100,75,100);
   TH1F* h_invMjets_u = new TH1F("h_invMjets_u","u-jets",100,75,100);
   TH1F* h_invMjets_d = new TH1F("h_invMjets_d","d-jets",100,75,100);
+  TH1F* h_angJP = new TH1F("h_angJP","Angle b/n Jet Constituents and Jet Axis",100,0,3.14);
+  TH1F* h_thetaJP = new TH1F("h_thetaJP","#Delta#theta Jet Constituents & Jet Axis",100,-3.14,3.14);
+  TH1F* h_phiJP = new TH1F("h_phiJP","#Delta#phi Jet Constituents & Jet Axis",100,-3.14,3.14);
   /*
   // hists for the jet constituents
   TH1F* h_deltaAngKs1 =new TH1F("h_deltaAngKs1","Angle between K_{S} and jet axis",100,0,3.15);
@@ -186,6 +191,8 @@ int main()
       h_invMjets->Fill(p_Jets.M());     // entire dataset
       if(jetFlavour->size()>0)
 	{
+	  if(jetFlavour->at(0)==5 && jetFlavour->at(1)==5) h_invMjets_b->Fill(p_Jets.M()); // b-jets
+	  if(jetFlavour->at(0)==4 && jetFlavour->at(1)==4) h_invMjets_c->Fill(p_Jets.M()); // c-jets
 	  if(jetFlavour->at(0)==3 && jetFlavour->at(1)==3) h_invMjets_s->Fill(p_Jets.M()); // s-jets
 	  if(jetFlavour->at(0)==2 && jetFlavour->at(1)==2) h_invMjets_u->Fill(p_Jets.M()); // u-jets
 	  if(jetFlavour->at(0)==1 && jetFlavour->at(1)==1) h_invMjets_d->Fill(p_Jets.M()); // d-jets
@@ -213,6 +220,10 @@ int main()
 	  e_j1 = RPe->at(ele);
 	  
 	  p4_j1.SetPxPyPzE(px_j1, py_j1, pz_j1, e_j1);
+
+	  h_angJP->Fill(p4_j1.Angle(p_Jet[0].Vect()));     // angle b/n jet const and jet
+	  h_thetaJP->Fill(p4_j1.Theta()-p_Jet[0].Theta()); // delta theta
+	  h_phiJP->Fill(p4_j1.DeltaPhi(p_Jet[0]));         // delta phi
 	}
 
       // JET 2
@@ -227,6 +238,10 @@ int main()
 	  e_j2 = RPe->at(ele);
 	  
 	  p4_j2.SetPxPyPzE(px_j2, py_j2, pz_j2, e_j2);
+
+	  h_angJP->Fill(p4_j2.Angle(p_Jet[1].Vect()));     // angle b/n jet const and jet
+	  h_thetaJP->Fill(p4_j2.Theta()-p_Jet[1].Theta()); // delta theta
+	  h_phiJP->Fill(p4_j2.DeltaPhi(p_Jet[1]));         // delta phi
 	}
            
       jet1Const.clear();
@@ -261,9 +276,14 @@ int main()
   h_jetTheta->Write();
   h_jetPhi->Write();
   h_invMjets->Write();
+  h_invMjets_b->Write();
+  h_invMjets_c->Write();
   h_invMjets_s->Write();
   h_invMjets_u->Write();
   h_invMjets_d->Write();
+  h_angJP->Write();
+  h_thetaJP->Write();
+  h_phiJP->Write();
   histFile->Close();
   cout<<"Histograms written to file and file closed"<<endl;
 
