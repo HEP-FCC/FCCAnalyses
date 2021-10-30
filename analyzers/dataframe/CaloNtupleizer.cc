@@ -5,7 +5,20 @@
 
 #include <math.h>
 
+#include "DD4hep/Detector.h"
+
 using namespace CaloNtupleizer;
+
+dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
+
+void CaloNtupleizer::loadGeometry(std::string xmlGeometryPath, std::string readoutName){
+  dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());
+  dd4hepgeo->fromCompact(xmlGeometryPath);
+  dd4hepgeo->volumeManager();
+  dd4hepgeo->apply("DD4hepVolumeManager", 0, 0);
+  m_decoder = dd4hepgeo->readout(readoutName).idSpec().decoder();
+}
+
 
 // calo hit
 ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_x (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
@@ -42,6 +55,15 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_phi (ROOT::VecOps::RVec<edm
   return result;
 }
 
+ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_phiBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    result.push_back(m_decoder->get(cellId, "phi"));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_theta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
@@ -62,10 +84,28 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_eta (ROOT::VecOps::RVec<edm
   return result;
 }
 
+ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_etaBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    result.push_back(m_decoder->get(cellId, "eta"));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_energy (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.energy);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_layer (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    result.push_back(m_decoder->get(cellId, "layer"));
   }
   return result;
 }

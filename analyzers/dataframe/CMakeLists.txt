@@ -69,6 +69,11 @@ target_link_libraries(FCCAnalyses
 		      ${CPU-KERNELS} ${LIBDL})
 
 
+option(LINKDD4HEP "Switch ON if you plan to use DD4hep geometry information" OFF)
+if(LINKDD4HEP)
+    find_package(DD4hep)
+    target_link_libraries(FCCAnalyses DD4hep::DDCore)
+endif()
 
 
 set_target_properties(FCCAnalyses PROPERTIES
