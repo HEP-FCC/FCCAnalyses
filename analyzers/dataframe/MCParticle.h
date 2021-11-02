@@ -91,6 +91,23 @@ namespace MCParticle{
                                         			     ROOT::VecOps::RVec<edm4hep::MCParticleData> in , 
 								     ROOT::VecOps::RVec<int> ind);
 
+  ///same as above, except the list of daughters is the minimum required for the mother's decay
+  struct get_indices_InclusiveDecay{
+    get_indices_InclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugate ) ;
+    int m_pdg_mother;
+    std::vector<int> m_pdg_daughters;
+    bool m_stableDaughters;
+    bool m_chargeConjugate;
+    ROOT::VecOps::RVec<int>   operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in , ROOT::VecOps::RVec<int> ind);
+  };
+
+  /// return a list of indices that correspond to a given MC decay
+  ROOT::VecOps::RVec<int>  get_indices_InclusiveDecay_MotherByIndex( int imother,
+								     std::vector<int> m_pdg_daughters,
+								     bool m_stableDaughters,
+								     ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
+								     ROOT::VecOps::RVec<int> ind);
+
 
   /// return the parent index of a given list of MC particles
   ROOT::VecOps::RVec<int> get_parentid(ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents);
