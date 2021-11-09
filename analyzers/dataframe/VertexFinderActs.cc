@@ -1,10 +1,10 @@
 #include "VertexFinderActs.h"
 
 // ACTS
+#include "Acts/MagneticField/ConstantBField.hpp"
 #include "Acts/Propagator/EigenStepper.hpp"
 #include "Acts/Propagator/Propagator.hpp"
 #include "Acts/Utilities/AnnealingUtility.hpp"
-#include "Acts/MagneticField/ConstantBField.hpp"
 #include "Acts/Vertexing/ImpactPointEstimator.hpp"
 #include "Acts/Vertexing/HelicalTrackLinearizer.hpp"
 //V5.0
@@ -35,6 +35,8 @@ using namespace Acts::UnitLiterals;
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> 
 VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
 
+  using Propagator = Acts::Propagator<Acts::EigenStepper<>>;
+
   // Create a test context
   //Acts::GeometryContext geoContext = Acts::GeometryContext();
   //Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
@@ -42,11 +44,13 @@ VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> track
   const auto& magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
-  Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
-  Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
+  //Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
+  //Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
+  auto bField = std::make_shared<Acts::ConstantBField>(Acts::Vector3(0., 0., 2_T));
+  Acts::EigenStepper<> stepper(bField);
 
   // Set up the propagator
-  using Propagator = Acts::Propagator<Acts::EigenStepper<Acts::ConstantBField>>;
+  //using Propagator = Acts::Propagator<Acts::EigenStepper<Acts::ConstantBField>>;
   auto propagator = std::make_shared<Propagator>(stepper);
 
   // Set up ImpactPointEstimator
@@ -93,7 +97,9 @@ VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> track
   // The vertex finder type
   using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
   //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
-  Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
+  //Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
+  Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer, bField);
+
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;
   //finderConfig.useSeedConstraint = false;

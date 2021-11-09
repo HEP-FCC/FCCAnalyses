@@ -27,6 +27,8 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
 									    ROOT::VecOps::RVec<edm4hep::TrackState> thetracks ){
 
 
+  using Propagator = Acts::Propagator<Acts::EigenStepper<>>;
+
   // retrieve the tracks associated to the recoparticles
   ROOT::VecOps::RVec<edm4hep::TrackState> tracks = ReconstructedParticle2Track::getRP2TRK( recoparticles, thetracks );
  
@@ -38,11 +40,13 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
   const auto& magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
-  Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
-  Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
+  //Acts::ConstantBField bField(Acts::Vector3(0., 0., 2_T));
+  //Acts::EigenStepper<Acts::ConstantBField> stepper(bField);
+  auto bField = std::make_shared<Acts::ConstantBField>(Acts::Vector3(0., 0., 2_T));
+  Acts::EigenStepper<> stepper(bField);
 
   // Set up the propagator
-  using Propagator = Acts::Propagator<Acts::EigenStepper<Acts::ConstantBField>>;
+  //using Propagator = Acts::Propagator<Acts::EigenStepper<Acts::ConstantBField>>;
   auto propagator = std::make_shared<Propagator>(stepper);
 
 
@@ -54,8 +58,8 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
   using VertexFitter = Acts::FullBilloirVertexFitter<Acts::BoundTrackParameters, Linearizer>;
   VertexFitter::Config vertexFitterCfg;
   VertexFitter billoirFitter(vertexFitterCfg);
-  VertexFitter::State state(magFieldContext);
-
+  //VertexFitter::State state(magFieldContext);
+  VertexFitter::State state(bField->makeCache(magFieldContext));
 
   // Constraint for vertex fit
   Acts::Vertex<Acts::BoundTrackParameters> myConstraint;
