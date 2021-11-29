@@ -93,11 +93,12 @@ namespace MCParticle{
 
   ///same as above, except the list of daughters is the minimum required for the mother's decay
   struct get_indices_InclusiveDecay{
-    get_indices_InclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugate ) ;
+    get_indices_InclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugateMother, bool chargeConjugateDaughters ) ;
     int m_pdg_mother;
     std::vector<int> m_pdg_daughters;
     bool m_stableDaughters;
-    bool m_chargeConjugate;
+    bool m_chargeConjugateMother;
+    bool m_chargeConjugateDaughters;
     ROOT::VecOps::RVec<int>   operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in , ROOT::VecOps::RVec<int> ind);
   };
 
@@ -105,6 +106,7 @@ namespace MCParticle{
   ROOT::VecOps::RVec<int>  get_indices_InclusiveDecay_MotherByIndex( int imother,
 								     std::vector<int> m_pdg_daughters,
 								     bool m_stableDaughters,
+								     bool m_chargeConjugateDaughters,
 								     ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
 								     ROOT::VecOps::RVec<int> ind);
 

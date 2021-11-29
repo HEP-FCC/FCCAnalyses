@@ -662,6 +662,7 @@ ROOT::VecOps::RVec<int>  MCParticle::get_indices_ExclusiveDecay::operator() ( RO
 ROOT::VecOps::RVec<int>  MCParticle::get_indices_InclusiveDecay_MotherByIndex ( int imother,
 										std::vector<int> m_pdg_daughters,
 										bool m_stableDaughters,
+										bool m_chargeConjugateDaughters,
 										ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
 										ROOT::VecOps::RVec<int> ind) {
 
@@ -710,7 +711,7 @@ ROOT::VecOps::RVec<int>  MCParticle::get_indices_InclusiveDecay_MotherByIndex ( 
   for (auto & pdg_d: m_pdg_daughters ) {
     if (debug) std::cout << " -- looking for PDG = " << pdg_d << std::endl;
     for (auto & idx_d: products) {
-      if ( in[idx_d].PDG == pdg_d ) {
+      if ( (m_chargeConjugateDaughters && abs(in[idx_d].PDG) == abs(pdg_d)) || in[idx_d].PDG == pdg_d) {
 	// careful, there can be several particles with the same PDG !
 	if (std::find(found.begin(), found.end(), idx_d) == found.end())  {  // idx_d has NOT already been "used"
 	  found.push_back( idx_d );
@@ -740,11 +741,12 @@ ROOT::VecOps::RVec<int>  MCParticle::get_indices_InclusiveDecay_MotherByIndex ( 
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 
-MCParticle::get_indices_InclusiveDecay::get_indices_InclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugate) {
+MCParticle::get_indices_InclusiveDecay::get_indices_InclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugateMother, bool chargeConjugateDaughters) {
   m_pdg_mother = pdg_mother;
   m_pdg_daughters = pdg_daughters;
   m_stableDaughters = stableDaughters;
-  m_chargeConjugate = chargeConjugate;
+  m_chargeConjugateMother = chargeConjugateMother;
+  m_chargeConjugateDaughters = chargeConjugateDaughters;
 } ;
 
 ROOT::VecOps::RVec<int>  MCParticle::get_indices_InclusiveDecay::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
@@ -774,15 +776,15 @@ ROOT::VecOps::RVec<int>  MCParticle::get_indices_InclusiveDecay::operator() ( RO
   for ( int imother =0; imother < in.size(); imother ++){
     int pdg = in[imother].PDG ;
     bool found_a_mother = false;
-    if ( ! m_chargeConjugate ) found_a_mother = ( pdg == m_pdg_mother );
-    if ( m_chargeConjugate )   found_a_mother = ( abs(pdg) == abs(m_pdg_mother) ) ;
+    if ( ! m_chargeConjugateMother ) found_a_mother = ( pdg == m_pdg_mother );
+    if ( m_chargeConjugateMother )   found_a_mother = ( abs(pdg) == abs(m_pdg_mother) ) ;
     if ( ! found_a_mother ) continue;
 
     if (debug) std::cout << " --- found a mother " << std::endl;
 
     //if ( pdg != m_pdg_mother ) continue;
 
-    ROOT::VecOps::RVec<int> a = get_indices_InclusiveDecay_MotherByIndex( imother, m_pdg_daughters, m_stableDaughters, in, ind );
+    ROOT::VecOps::RVec<int> a = get_indices_InclusiveDecay_MotherByIndex( imother, m_pdg_daughters, m_stableDaughters, m_chargeConjugateDaughters, in, ind );
     if ( a.size() != 0 ) {
       result = a;
       break;    // return the first decay found
