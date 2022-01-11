@@ -1059,7 +1059,7 @@ ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RV
       tlvtmp.SetXYZM( updated_track_momentum_at_vertex.at(i).Px(),
 		      updated_track_momentum_at_vertex.at(i).Py(),
 		      updated_track_momentum_at_vertex.at(i).Pz(),
-		      0.13957039);
+		      p.particle.M());
       tlv+=tlvtmp;
       
     }
@@ -1067,6 +1067,38 @@ ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RV
   }
   return result;
 }
+
+ROOT::VecOps::RVec<float> myUtils::getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							   int index){
+
+
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+
+    int recoind = vertex.at(p.vertex).reco_ind.at(index);
+    result.push_back(recop.at(recoind).mass);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_type(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+							   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+							   int index){
+
+
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+
+    int recoind = vertex.at(p.vertex).reco_ind.at(index);
+    result.push_back(recop.at(recoind).type);
+  }
+  return result;
+}
+
+
 
 ROOT::VecOps::RVec<int> myUtils::getFCCAnalysesComposite_vertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
   ROOT::VecOps::RVec<int> result;
@@ -1585,7 +1617,6 @@ myUtils::PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 	     ROOT::VecOps::RVec<int> mcind, 
 	     ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
 
-
   for (size_t i = 0; i < recind.size(); ++i) {
     
     //id a pion
@@ -1650,11 +1681,11 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> myUtils::get_RP_atVertex(
       recop.at(reco_ind.at(i)).momentum.x = updated_track_momentum_at_vertex.at(i).Px();
       recop.at(reco_ind.at(i)).momentum.y = updated_track_momentum_at_vertex.at(i).Py();
       recop.at(reco_ind.at(i)).momentum.z = updated_track_momentum_at_vertex.at(i).Pz();
-      recop.at(reco_ind.at(i)).mass = 0.13957039;
+      //recop.at(reco_ind.at(i)).mass = 0.13957039;
       recop.at(reco_ind.at(i)).energy = sqrt(pow(updated_track_momentum_at_vertex.at(i).Px(),2) + 
 					     pow(updated_track_momentum_at_vertex.at(i).Py(),2) + 
 					     pow(updated_track_momentum_at_vertex.at(i).Pz(),2) + 
-					     pow(0.13957039,2));
+					     pow(recop.at(reco_ind.at(i)).mass,2));
     }
   }
   return recop;
@@ -1919,8 +1950,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_B2Kstee(ROOT::VecOps::R
     FCCAnalysesComposite2 comp;
     comp.vertex = counter;
     comp.particle = build_tlv(recop,p.reco_ind);
-    comp.charge = charge_ee+charge_pi+charge_pi
-;
+    comp.charge = charge_ee+charge_pi+charge_k;
     
     result.push_back(comp);
     counter+=1;
@@ -2030,6 +2060,43 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bd2KstNuNu(ROOT::VecOps
     
     result.push_back(comp);
     counter+=1;
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<FCCAnalysesComposite2> myUtils::build_Bs2PhiNuNu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+  //loop over the reconstructed vertex collection
+  for (size_t i=0;i<vertex.size();i++){
+    
+    //not consider PV, exactly 2 tracks
+    if (vertex.at(i).vertex.primary==1)continue;
+    if (vertex.at(i).ntracks!=2)       continue;
+    
+    //2 tracks id as kaons
+    int charge_phi=0;
+    int nobj_phi=0;
+    for (auto &r:vertex.at(i).reco_ind){
+      if (recop.at(r).type==321 ){
+	nobj_phi+=1;
+	charge_phi+=recop.at(r).charge;
+      }
+    }
+    //select candidates with exactly 2 kaons and charge 0 
+    if (nobj_phi!=2)   continue;
+    if (charge_phi!=0) continue;
+     
+    //build a composite vertex
+    FCCAnalysesComposite2 comp;
+    comp.vertex = i;
+    comp.particle = build_tlv(recop,vertex.at(i).reco_ind);
+    comp.charge = charge_phi;
+    
+    //add the composite vertex to the collection
+    result.push_back(comp);
   }
   return result;
 }
