@@ -7,11 +7,12 @@ import os
 class runDataFrameFinal():
 
     #__________________________________________________________
-    def __init__(self, baseDir, procDict, processes, cuts, variables, treename="events", defines={}):
+    def __init__(self, baseDir, procDict, processes, cuts, variables, intLumi=1., treename="events", defines={}):
         self.baseDir   = baseDir
         self.processes = processes
         self.variables = variables
         self.cuts      = cuts
+        self.intLumi   = intLumi
         self.treename  = treename
         self.defines   = defines
         self.procDict  = None
@@ -50,7 +51,7 @@ class runDataFrameFinal():
             return False
         return True
     #__________________________________________________________
-    def run(self,ncpu=5,doTree=False):
+    def run(self,ncpu=5,doTree=False,doScale=True):
         print ("EnableImplicitMT: {}".format(ncpu))
         ROOT.ROOT.EnableImplicitMT(ncpu)
         print ("Load cxx analyzers ... ")
@@ -182,11 +183,12 @@ class runDataFrameFinal():
                 fhisto = self.baseDir+pr+'_'+cut+'_histo.root' #output file for histograms
                 tf    = ROOT.TFile.Open(fhisto,'RECREATE')
                 for h in histos_list[i]:
-                    try :
-                        h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
-                    except KeyError:
-                        print ('no value found for something')
-                        h.Scale(1./h.Integral(0,-1))
+                    if doScale:
+                        try :
+                            h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr])
+                        except KeyError:
+                            print ('no value found for something')
+                            h.Scale(1./h.Integral(0,-1))
                     h.Write()
                 tf.Close()
 
