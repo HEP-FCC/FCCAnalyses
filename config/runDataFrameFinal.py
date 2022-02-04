@@ -169,12 +169,17 @@ class runDataFrameFinal():
 
             nevents_real += all_events
 
+            if doScale:
+                all_events = all_events*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                print('  Printing scaled number of events!!! ')
+
             print ('     Cutflow')
-            print ('       {cutname:{width}} : {nevents}'.format(cutname='All events',
-                width=16+length_cuts_names, nevents=all_events))
+            print ('       {cutname:{width}} : {nevents:.2e}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
             for i, cut in enumerate(self.cuts):
-                print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut,
-                    width=length_cuts_names, nevents=count_list[i].GetValue()))
+                neventsThisCut = count_list[i].GetValue()
+                if doScale:
+                    neventsThisCut = neventsThisCut*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                print ('       After selection {cutname:{width}} : {nevents:.2e}'.format(cutname=cut, width=length_cuts_names, nevents=neventsThisCut))
 
 
             # And save everything
