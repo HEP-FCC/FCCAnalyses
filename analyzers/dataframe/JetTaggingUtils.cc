@@ -36,12 +36,25 @@ JetTaggingUtils::get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
                      + parton.momentum.z * parton.momentum.z;
       Float_t norm = sqrt(lenSq1*lenSq2);
       Float_t angle = acos(dot/norm);
+
       if (angle <= 0.3) {
-        if (result[j]==21)
+        if (result[j]==21 or result[j]==0) {
+          // if no match before, or matched to gluon, match to
+          // this particle (favour quarks over gluons)
           result[j] = std::abs ( parton.PDG );
-        else
+        }
+        else if (parton.PDG!=21) {
+          // if matched to quark, and this is a quark, favour
+          // heavier flavours
           result[j] = std::max(result[j], std::abs ( parton.PDG ));
-      }
+        } else {
+          // if matched to quark, and this is a gluon, keep
+          // previous result (favour quark)
+           ;
+        }       
+       }
+
+
     }
   }
 
