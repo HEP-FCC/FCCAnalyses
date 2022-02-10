@@ -10,11 +10,7 @@ jobs:
         cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org,sft-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch'
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d clicdp/cc7-lcg /bin/bash
-    - name: Setup container
-      run: |
-        docker exec CI_container /bin/bash -c " ln -s /usr/lib64/liblzma.so.5.2.2 /usr/lib64/liblzma.so;"
-
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest  /bin/bash
     - name: Setup Spack
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
