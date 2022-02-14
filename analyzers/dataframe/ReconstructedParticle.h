@@ -42,8 +42,9 @@ namespace ReconstructedParticle{
   
   /// select ReconstructedParticles with momentum greater than a minimum value [GeV]
   struct sel_p {
-    sel_p(float arg_min_p);
+    sel_p(float arg_min_p, float arg_max_p = 1e10);
     float m_min_p = 1.; //> momentum threshold [GeV]
+    float m_max_p = 1e10; //< momentum threshold [GeV]
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
@@ -60,6 +61,13 @@ namespace ReconstructedParticle{
     bool m_pos = 0; //> Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0
     sel_axis(bool arg_pos);
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+  };
+
+  /// select a list of reconstructed particles depending on the status of a certain boolean flag
+  struct sel_tag {
+    bool m_pass; // if pass is true, select tagged jets. Otherwise select anti-tagged ones
+    sel_tag(bool arg_pass);
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<bool> tags, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
   
@@ -122,6 +130,9 @@ namespace ReconstructedParticle{
   /// concatenate both input vectors and return the resulting vector
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
   
+  /// remove elements of vector y from vector x
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> remove( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
+
   /// return the size of the input collection
   int get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
