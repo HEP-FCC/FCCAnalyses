@@ -32,14 +32,14 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        #ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df.Range(0,5000)
-        df2 = (self.df
+        df2 = (self.df.Range(0,1000)
+        #df2 = (self.df
 
                # MC event primary vertex
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
@@ -91,7 +91,6 @@ class analysis():
                # the final primary vertex : 
                .Define("FinalVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
                .Define("FinalVertex",   "VertexingUtils::get_VertexData( FinalVertexObject )")
-               .Define("FinalVertex_TracksChi2",   "VertexingUtils::get_VertexTracksChi2( FinalVertexObject )")
 
                # the secondary tracks
                .Define("SecondaryTracks",   "VertexFitterSimple::get_NonPrimaryTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
