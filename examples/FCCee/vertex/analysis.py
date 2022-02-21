@@ -32,14 +32,14 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        #ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df.Range(0,5000)
-        df2 = (self.df
+        df2 = (self.df.Range(0,1000)
+        #df2 = (self.df
 
                # MC event primary vertex
                .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
@@ -53,28 +53,55 @@ class analysis():
 		  # gen-level primary vertex  is not  (0,0,0)
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Define("PrimaryTracks",  "VertexingUtils::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
-               .Define("nPrimaryTracks", "ReconstructedParticle::get_n(PrimaryTracks)")
+               # the recoParticles corresponding  to the tracks that are primaries, according to MC-matching :
+               .Define("MC_PrimaryTracks_RP",  "VertexingUtils::SelPrimaryTracks(MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle, MC_PrimaryVertex)" )
+               # and the corresponding tracks :
+               .Define("MC_PrimaryTracks",  "ReconstructedParticle2Track::getRP2TRK( MC_PrimaryTracks_RP, EFlowTrack_1)" )
+
+               .Define("nPrimaryTracks", "ReconstructedParticle::get_n(MC_PrimaryTracks_RP)")
 
                # Reconstruct the vertex from these primary tracks :
-               .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1) ")  
+               .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1) ")  
                .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
 
                # Idem, but adding the beam-spot constraint to the vertex fitter
                   # At the Z peak, the beam-spot size is ( 4.5 mum, 20 nm, 0.3 mm) 
 		  # The beam-spot dimensions are passed in mum :
-               .Define("VertexObject_primaryTracks_BSC",  "VertexFitterSimple::VertexFitter ( 1, PrimaryTracks, EFlowTrack_1, true, 4.5, 20e-3, 300) ")
+               .Define("VertexObject_primaryTracks_BSC",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1, true, 4.5, 20e-3, 300) ")
                .Define("Vertex_primaryTracks_BSC",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks_BSC )")   # primary vertex, in mm
 
 
                #Run the Acts AMVF vertex finder
-               .Define("VertexObject_actsFinder","VertexFinderActs::VertexFinderAMVF( EFlowTrack_1)")
-               .Define("Vertex_actsFinder",   "VertexingUtils::get_VertexData( VertexObject_actsFinder )")   # primary vertex, in mm
-               .Define("nPrimaryTracks_actsFinder", "VertexingUtils::get_VertexNtrk(VertexObject_actsFinder)")
+               #.Define("VertexObject_actsFinder","VertexFinderActs::VertexFinderAMVF( EFlowTrack_1)")
+               #.Define("Vertex_actsFinder",   "VertexingUtils::get_VertexData( VertexObject_actsFinder )")   # primary vertex, in mm
+               #.Define("nPrimaryTracks_actsFinder", "VertexingUtils::get_VertexNtrk(VertexObject_actsFinder)")
 
                #Run the Acts full Billoir vertex fitter
-               .Define("VertexObject_primaryTracks_actsFitter","VertexFitterActs::VertexFitterFullBilloir(PrimaryTracks, EFlowTrack_1)")
-               .Define("Vertex_primaryTracks_actsFitter", "VertexingUtils::get_VertexData( VertexObject_primaryTracks_actsFitter )")   # primary vertex, in mm
+               #.Define("VertexObject_primaryTracks_actsFitter","VertexFitterActs::VertexFitterFullBilloir(PrimaryTracks, EFlowTrack_1)")
+               #.Define("Vertex_primaryTracks_actsFitter", "VertexingUtils::get_VertexData( VertexObject_primaryTracks_actsFitter )")   # primary vertex, in mm
+
+
+               # --- now, determime the primary (and secondary) tracks without using the MC-matching:
+
+               # First, reconstruct a vertex from all tracks
+               .Define("VertexObject_allTracks",  "VertexFitterSimple::VertexFitter_Tk ( 1, EFlowTrack_1, true, 4.5, 20e-3, 300)")
+               # Select the tracks that are reconstructed  as primaries
+               .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
+               .Define("n_RecoedPrimaryTracks",  "ReconstructedParticle2Track::getTK_n( RecoedPrimaryTracks )")
+               # the final primary vertex : 
+               .Define("FinalVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
+               .Define("FinalVertex",   "VertexingUtils::get_VertexData( FinalVertexObject )")
+
+               # the secondary tracks
+               .Define("SecondaryTracks",   "VertexFitterSimple::get_NonPrimaryTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
+               .Define("n_SecondaryTracks",  "ReconstructedParticle2Track::getTK_n( SecondaryTracks )" )
+
+               # which of the tracks are primary according to the reco algprithm
+               .Define("IsPrimary_based_on_reco",  "VertexFitterSimple::IsPrimary_forTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
+               # which of the tracks are primary according to the MC-matching
+               .Define("IsPrimary_based_on_MC",  "VertexFitterSimple::IsPrimary_forTracks( EFlowTrack_1,  MC_PrimaryTracks )")
+
+
 
 
 
@@ -87,8 +114,10 @@ class analysis():
                 "MC_PrimaryVertex",
                 "ntracks",
                 "nPrimaryTracks",
+		# primary vertex, seeded by the tracks that are MC-matched to MC-primaries
                 "Vertex_primaryTracks",     
                 "Vertex_primaryTracks_BSC",     
+                "IsPrimary_based_on_MC",
 
                 #"nPrimaryTracks_actsFinder",
 		#
@@ -97,6 +126,9 @@ class analysis():
                 #"Vertex_actsFinder",     # on Zuds: both track selections lead to very similar results for the vertex
                 #"Vertex_primaryTracks_actsFitter",     # on Zuds: both track selections lead to very similar results for the vertex
 
+		#  primary vertex and primary tracks w/o any MC-matching :
+		"IsPrimary_based_on_reco",
+		"FinalVertex",
 
                 ]:
             branchList.push_back(branchName)
