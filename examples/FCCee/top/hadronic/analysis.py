@@ -22,14 +22,14 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.ROOT.EnableImplicitMT(ncpu)
 
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" done")
     #__________________________________________________________
     def run(self):
-        #df2 = (self.df
-        df2 = (self.df.Range(20)
+        df2 = (self.df
+        #df2 = (self.df.Range(10)
                #alias for dealing with # in python 
                .Alias("Jet3","Jet#3.index")
                #define the RP px, py, pz and e
@@ -43,7 +43,7 @@ class analysis():
                #build pseudo jets with the RP, using the interface that takes px,py,pz,m for better
                #handling of rounding errors
                .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets_xyzm(RP_px, RP_py, RP_pz, RP_m)")
-               .Define("pseudo_jets2",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
+               #.Define("pseudo_jets2",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 4 jets, E0-scheme
                .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 4, 0, 10)(pseudo_jets)")
