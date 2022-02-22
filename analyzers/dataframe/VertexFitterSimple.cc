@@ -722,3 +722,108 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 
 
 ////////////////////////////////////////////////////
+
+
+
+ROOT::VecOps::RVec<edm4hep::TrackState>   VertexFitterSimple::get_PrimaryTracks( VertexingUtils::FCCAnalysesVertex  initialVertex,
+                                                                        ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                                                                        bool BeamSpotConstraint,
+                                                                        double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
+                                                                        double bsc_x, double bsc_y, double bsc_z,
+                                                                        int ipass  )  {
+
+
+// iterative procedure to determine the primary vertex - and the primary tracks
+// Start from a vertex reconstructed from all tracks, remove the one with the highest chi2, fit again etc
+
+// tracks = the collection of tracks that was used in the first step
+
+//bool debug  = true ;
+  bool debug = false;
+float CHI2MAX = 25  ;
+
+if (debug) {
+        if (ipass == 0) std::cout << " \n --------------------------------------------------------\n" << std::endl;
+        std::cout << " ... enter in VertexFitterSimple::get_PrimaryTracks   ipass = " << ipass <<  std::endl;
+        if (ipass == 0) std::cout  << "    initial number of tracks =  " << tracks.size() <<  std::endl;
+}
+
+ROOT::VecOps::RVec<edm4hep::TrackState> seltracks = tracks;
+ROOT::VecOps::RVec<float> reco_chi2 = initialVertex.reco_chi2;
+
+if ( seltracks.size() <= 1 ) return seltracks;
+
+int isPrimaryVertex = initialVertex.vertex.primary  ;
+
+int maxElementIndex = std::max_element(reco_chi2.begin(),reco_chi2.end()) - reco_chi2.begin();
+auto minmax = std::minmax_element(reco_chi2.begin(), reco_chi2.end());
+float chi2max = *minmax.second ;
+
+if ( chi2max < CHI2MAX ) {
+        if (debug) {
+            std::cout << " --- DONE, all tracks have chi2 < CHI2MAX " << std::endl;
+            std::cout  << "     number of primary tracks selected = " << seltracks.size() << std::endl;
+
+        }
+        return seltracks ;
+}
+
+        if (debug) {
+                std::cout << " remove a track that has chi2 = " << chi2max << std::endl;
+        }
+
+seltracks.erase( seltracks.begin() + maxElementIndex );
+ipass ++;
+
+ VertexingUtils::FCCAnalysesVertex vtx = VertexFitterSimple::VertexFitter_Tk(  isPrimaryVertex,
+                                                                                seltracks,
+                                                                         BeamSpotConstraint,
+                                                                         bsc_sigmax, bsc_sigmay, bsc_sigmaz,
+                                                                         bsc_x, bsc_y, bsc_z )  ;
+
+ return VertexFitterSimple::get_PrimaryTracks( vtx, seltracks, BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz,
+                                                bsc_x,  bsc_y, bsc_z, ipass ) ;
+
+
+
+}
+
+
+ROOT::VecOps::RVec<edm4hep::TrackState>   VertexFitterSimple::get_NonPrimaryTracks( ROOT::VecOps::RVec<edm4hep::TrackState> allTracks,
+                                                                                    ROOT::VecOps::RVec<edm4hep::TrackState> primaryTracks ) {
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+  for (auto & track: allTracks) {
+     bool isInPrimary = false;
+     for ( auto &  primary:  primaryTracks) {
+        if ( track.D0 == primary.D0 && track.Z0 == primary.Z0 &&  track.phi == primary.phi &&  track.omega == primary.omega && track.tanLambda == primary.tanLambda ) {
+                isInPrimary = true;
+                break;
+        }
+     }
+     if ( !isInPrimary) result.push_back( track );
+  }
+
+ return result;
+}
+
+
+ROOT::VecOps::RVec<bool> VertexFitterSimple::IsPrimary_forTracks( ROOT::VecOps::RVec<edm4hep::TrackState> allTracks,
+                                                                  ROOT::VecOps::RVec<edm4hep::TrackState> primaryTracks ) {
+
+  ROOT::VecOps::RVec<bool> result;
+  for (auto & track: allTracks) {
+     bool isInPrimary = false;
+     for ( auto &  primary:  primaryTracks) {
+        if ( track.D0 == primary.D0 && track.Z0 == primary.Z0 &&  track.phi == primary.phi &&  track.omega == primary.omega && track.tanLambda == primary.tanLambda ) {
+                isInPrimary = true;
+                break;
+        }
+     }
+     result.push_back( isInPrimary );
+  }
+ return result;
+}
+
+
+
