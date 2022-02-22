@@ -46,7 +46,7 @@ class analysis():
                .Define("pseudo_jets2",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 4 jets, E0-scheme
-               .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(1.5, 2, 2, 0, 10)(pseudo_jets)")
+               .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 4, 0, 10)(pseudo_jets)")
                #get the jets out of the struct
                .Define("jets_kt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_kt)")
                #get the jets constituents out of the struct
@@ -58,22 +58,6 @@ class analysis():
                .Define("jets_kt_pz",        "JetClusteringUtils::get_pz(jets_kt)")
                .Define("jets_kt_m",        "JetClusteringUtils::get_m(jets_kt)")
 
-              #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 4 jets, E0-scheme
-               .Define("FCCAnalysesJets_kt2", "JetClustering::clustering_kt(1.5, 2, 2, 0, 10)(pseudo_jets2)")
-               #get the jets out of the struct
-               .Define("jets_kt2",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_kt2)")
-               #get the jets constituents out of the struct
-               .Define("jetconstituents_kt2","JetClusteringUtils::get_constituents(FCCAnalysesJets_kt2)")
-               #get some variables
-               .Define("jets_kt2_e",        "JetClusteringUtils::get_e(jets_kt2)")
-               .Define("jets_kt2_px",        "JetClusteringUtils::get_px(jets_kt2)")
-               .Define("jets_kt2_py",        "JetClusteringUtils::get_py(jets_kt2)")
-               .Define("jets_kt2_pz",        "JetClusteringUtils::get_pz(jets_kt2)")
-               .Define("jets_kt2_m",        "JetClusteringUtils::get_m(jets_kt2)")
-
-
-
-               
                #run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=0.5, inclusive clustering, E-scheme 
                .Define("FCCAnalysesJets_ee_genkt", "JetClustering::clustering_ee_genkt(0.5, 0, 0, 0, 0, -1)(pseudo_jets)")
                #get the jets out of the struct
@@ -178,12 +162,6 @@ class analysis():
                 "jets_kt_py",
                 "jets_kt_pz",
                 "jets_kt_m",
-                "jets_kt2_e",
-                "jets_kt2_px",
-                "jets_kt2_py",
-                "jets_kt2_pz",
-                "jets_kt2_m",
-
                 "jetconstituents_kt",
                 
                 "jets_ee_genkt_px",
