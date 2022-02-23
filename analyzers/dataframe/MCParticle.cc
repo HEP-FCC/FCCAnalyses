@@ -685,7 +685,7 @@ ROOT::VecOps::RVec<float> MCParticle::AngleBetweenTwoMCParticles( ROOT::VecOps::
   return result;
 }
 
-ROOT::VecOps::RVec<edm4hep::MCParticleData> MCParticle::get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<edm4hep::MCParticleData> MCParticle::get_MC_from_indices(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   for (size_t i = 0; i < index.size(); ++i) {
     if (index[i]>-1)
