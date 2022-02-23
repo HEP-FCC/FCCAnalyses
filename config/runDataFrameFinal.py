@@ -51,7 +51,7 @@ class runDataFrameFinal():
             return False
         return True
     #__________________________________________________________
-    def run(self,ncpu=5,doTree=False,doScale=True):
+    def run(self,ncpu=5,doTree=False,doScale=True,saveTabular=False):
         print ("EnableImplicitMT: {}".format(ncpu))
         ROOT.ROOT.EnableImplicitMT(ncpu)
         print ("Load cxx analyzers ... ")
@@ -65,6 +65,7 @@ class runDataFrameFinal():
         processEvents={}
         eventsTTree={}
         processList={}
+        saveTab=[]
         
         for pr in self.processes:
             processEvents[pr]=0
@@ -123,9 +124,15 @@ class runDataFrameFinal():
 
         length_cuts_names = max([len(cut) for cut in self.cuts])
 
+        if saveTabular:
+            f = open("outputTabular.txt","w")
+            cutNames = [cut for cut in self.cuts]
+            cutNames.insert(0,'All events')
+            cutNames.insert(0,'Proscesses')
+            saveTab.append(cutNames)
+
         for pr in self.processes:
             print ('\n   running over process : ',pr)
-
             RDF = ROOT.ROOT.RDataFrame
             df  = RDF(self.treename, processList[pr] )
             if len(self.defines)>0:
@@ -137,6 +144,8 @@ class runDataFrameFinal():
             histos_list = []
             tdf_list = []
             count_list = []
+            cuts_list = []
+            cuts_list.append(pr)
 
             # Define all histos, snapshots, etc...
             print ('     Defining snapshots and histograms')
@@ -169,12 +178,30 @@ class runDataFrameFinal():
 
             nevents_real += all_events
 
+            if doScale:
+                all_events = all_events*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                print('  Printing scaled number of events!!! ')
+
             print ('     Cutflow')
-            print ('       {cutname:{width}} : {nevents}'.format(cutname='All events',
-                width=16+length_cuts_names, nevents=all_events))
+            print ('       {cutname:{width}} : {nevents:.2e}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
+
+            if saveTabular:
+                cuts_list.append('{all_events:.2e}'.format(all_events=all_events))
+
             for i, cut in enumerate(self.cuts):
-                print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut,
-                    width=length_cuts_names, nevents=count_list[i].GetValue()))
+                neventsThisCut = count_list[i].GetValue()
+                if doScale:
+                    neventsThisCut = neventsThisCut*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                print ('       After selection {cutname:{width}} : {nevents:.2e}'.format(cutname=cut, width=length_cuts_names, nevents=neventsThisCut))
+                if saveTabular:
+                    uncertainty = ROOT.Math.sqrt(neventsThisCut)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                    if neventsThisCut != 0:
+                        cuts_list.append('{nevents:.2e} \\pm {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty))
+                    elif '\\pm' in cuts_list[-1]:
+                        cut = (cuts_list[-1]).split()
+                        cuts_list.append('\\leq {uncertainty}'.format(uncertainty=cut[2]))
+                    else:
+                        cuts_list.append(cuts_list[-1])
 
 
             # And save everything
@@ -197,6 +224,20 @@ class runDataFrameFinal():
                     validfile = self.testfile(fout_list[i])
                     if not validfile: continue
 
+            if saveTabular:
+                saveTab.append(cuts_list)
+        if saveTabular:
+            # Printing the results in format of a LaTeX table
+            print('\\begin{table}[H] \n    \\centering \n    \\begin{tabular}{|l||',end='',file=f)
+            print('c|' * (len(saveTab)-1),end='',file=f)
+            print('} \hline',file=f)
+            for i in range(len(cuts_list)):
+                v = [row[i] for row in saveTab]
+                print('        ', end='', file=f)
+                print(*v, sep = ' & ', end='', file=f)
+                print(' \\\\ ', file=f)
+            print('        \\hline \n    \\end{tabular} \n    \\caption{Caption} \n    \\label{tab:my_label} \n\\end{table}', file=f)
+            f.close()
 
         elapsed_time = time.time() - start_time
         print  ('==============================SUMMARY==============================')
