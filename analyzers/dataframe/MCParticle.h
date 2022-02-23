@@ -204,8 +204,8 @@ namespace MCParticle{
                                                  ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
                                                  ROOT::VecOps::RVec<int> ind) ;
 
-
-ROOT::VecOps::RVec<edm4hep::MCParticleData> get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+/// get a list of MCParticle from a list of indices
+ROOT::VecOps::RVec<edm4hep::MCParticleData> get_MC_from_indices(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 
 }
