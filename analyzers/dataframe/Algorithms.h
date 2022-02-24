@@ -1,4 +1,3 @@
-
 #ifndef  ALGORITHM_ANALYZERS_H
 #define  ALGORITHM_ANALYZERS_H
 
@@ -15,7 +14,7 @@
 #include "edm4hep/Vector3d.h"
 #include "edm4hep/Vector2i.h"
 #include "TFitter.h"
-
+#include "Math/Minimizer.h"
 
 namespace Algorithms{
 
@@ -29,9 +28,9 @@ namespace Algorithms{
 
 
   struct sphericityFit {
-    sphericityFit(ROOT::VecOps::RVec<float> arg_px, 
-		  ROOT::VecOps::RVec<float> arg_py, 
-		  ROOT::VecOps::RVec<float> arg_pz);
+    sphericityFit(const ROOT::VecOps::RVec<float> & arg_px, 
+		  const ROOT::VecOps::RVec<float> & arg_py, 
+		  const ROOT::VecOps::RVec<float> & arg_pz);
     ROOT::VecOps::RVec<float> m_px;
     ROOT::VecOps::RVec<float> m_py;
     ROOT::VecOps::RVec<float> m_pz;
@@ -43,17 +42,18 @@ namespace Algorithms{
     minimize_sphericity(std::string arg_minname, std::string arg_algoname);
     char const *m_minname  = "Minuit2";
     char const *m_algoname = "";
-    ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<float> px, 
-					 ROOT::VecOps::RVec<float> py, 
-					 ROOT::VecOps::RVec<float> pz);
+    ROOT::Math::Minimizer *m_min;
+    ROOT::VecOps::RVec<float> operator()(const ROOT::VecOps::RVec<float> & px, 
+					 const ROOT::VecOps::RVec<float> & py, 
+					 const ROOT::VecOps::RVec<float> & pz);
   };
   
   
   
   struct thrustFit {
-    thrustFit(ROOT::VecOps::RVec<float> arg_px, 
-	      ROOT::VecOps::RVec<float> arg_py, 
-	      ROOT::VecOps::RVec<float> arg_pz);
+    thrustFit(const ROOT::VecOps::RVec<float> & arg_px, 
+	      const ROOT::VecOps::RVec<float> & arg_py, 
+	      const ROOT::VecOps::RVec<float> & arg_pz);
     ROOT::VecOps::RVec<float> m_px;
     ROOT::VecOps::RVec<float> m_py;
     ROOT::VecOps::RVec<float> m_pz;
@@ -65,9 +65,10 @@ namespace Algorithms{
     minimize_thrust(std::string arg_minname, std::string arg_algoname);
     char const *m_minname  = "Minuit2";
     char const *m_algoname = "";
-    ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<float> px, 
-					 ROOT::VecOps::RVec<float> py, 
-					 ROOT::VecOps::RVec<float> pz);
+    ROOT::Math::Minimizer *m_min;
+    ROOT::VecOps::RVec<float> operator()(const ROOT::VecOps::RVec<float> & px, 
+					 const ROOT::VecOps::RVec<float> & py, 
+					 const ROOT::VecOps::RVec<float> & pz);
   };
   
   /// Get the weighted charge in a given hemisphere (defined by it's angle wrt to axis). For definition see eq1 https://arxiv.org/pdf/1209.2421.pdf
