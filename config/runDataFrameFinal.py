@@ -198,12 +198,15 @@ class runDataFrameFinal():
                 if doScale:
                     neventsThisCut = neventsThisCut*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                 print ('       After selection {cutname:{width}} : {nevents:.2e}'.format(cutname=cut, width=length_cuts_names, nevents=neventsThisCut))
+
+                # Saving the number of events, uncertainty and efficiency for the output-file
                 if saveTabular:
                     uncertainty = ROOT.Math.sqrt(neventsThisCut)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                     if neventsThisCut != 0:
                         cuts_list.append('{nevents:.2e} \\pm {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty))
                         prevNevents = cuts_list[-2].split()
                         eff_list.append('{:.2e}'.format(neventsThisCut/float(prevNevents[0])))
+                    # if number of events is zero, the previous uncertainty is saved instead:
                     elif '\\pm' in cuts_list[-1]:
                         cut = (cuts_list[-1]).split()
                         cuts_list.append('\\leq {uncertainty}'.format(uncertainty=cut[2]))
@@ -237,7 +240,7 @@ class runDataFrameFinal():
                 saveTab.append(cuts_list)
                 efficiencyList.append(eff_list)
         if saveTabular:
-            # Printing the results in format of a LaTeX table
+            # Printing the number of events in format of a LaTeX table
             print('\\begin{table}[H] \n    \\centering \n    \\begin{tabular}{|l||',end='',file=f)
             print('c|' * (len(saveTab)-1),end='',file=f)
             print('} \hline',file=f)
