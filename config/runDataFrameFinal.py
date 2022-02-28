@@ -129,7 +129,7 @@ class runDataFrameFinal():
             f = open("outputTabular.txt","w")
             cutNames = [cut for cut in self.cuts]
             cutNames.insert(0,'All events')
-            cutNames.insert(0,'Proscesses')
+            cutNames.insert(0,'Processes')
             saveTab.append(cutNames)
             efficiencyList.append(cutNames)
 
