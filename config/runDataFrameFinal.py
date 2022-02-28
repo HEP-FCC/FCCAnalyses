@@ -190,7 +190,8 @@ class runDataFrameFinal():
             print ('       {cutname:{width}} : {nevents:.2e}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
 
             if saveTabular:
-                cuts_list.append('{all_events:.2e}'.format(all_events=all_events))
+                uncertainty = ROOT.Math.sqrt(nevents_real)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=all_events,uncertainty=uncertainty))
                 eff_list.append(1)
 
             for i, cut in enumerate(self.cuts):
@@ -204,13 +205,13 @@ class runDataFrameFinal():
                 if saveTabular:
                     uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                     if neventsThisCut != 0:
-                        cuts_list.append('{nevents:.2e} \\pm {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty))
+                        cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty))
                         prevNevents = cuts_list[-2].split()
                         eff_list.append('{:.2e}'.format(neventsThisCut/float(prevNevents[0])))
                     # if number of events is zero, the previous uncertainty is saved instead:
-                    elif '\\pm' in cuts_list[-1]:
+                    elif '$\\pm$' in cuts_list[-1]:
                         cut = (cuts_list[-1]).split()
-                        cuts_list.append('\\leq {uncertainty}'.format(uncertainty=cut[2]))
+                        cuts_list.append('$\\leq$ {uncertainty}'.format(uncertainty=cut[2]))
                         eff_list.append(1)
                     else:
                         cuts_list.append(cuts_list[-1])
@@ -242,7 +243,7 @@ class runDataFrameFinal():
                 efficiencyList.append(eff_list)
         if saveTabular:
             # Printing the number of events in format of a LaTeX table
-            print('\\begin{table}[H] \n    \\centering \n    \\begin{tabular}{|l||',end='',file=f)
+            print('\\begin{table}[H] \n    \\centering \n    \\resizebox{\\textwidth}{!}{ \n    \\begin{tabular}{|l||',end='',file=f)
             print('c|' * (len(saveTab)-1),end='',file=f)
             print('} \hline',file=f)
             for i in range(len(cuts_list)):
@@ -250,7 +251,9 @@ class runDataFrameFinal():
                 print('        ', end='', file=f)
                 print(*v, sep = ' & ', end='', file=f)
                 print(' \\\\ ', file=f)
-            print('        \\hline \n    \\end{tabular} \n    \\caption{Caption} \n    \\label{tab:my_label} \n\\end{table}', file=f)
+                if (i == 0):
+                    print('        \\hline',file=f)
+            print('        \\hline \n    \\end{tabular}} \n    \\caption{Caption} \n    \\label{tab:my_label} \n\\end{table}', file=f)
             
             # Efficiency:
             print('\n\nEfficiency: ', file=f)
