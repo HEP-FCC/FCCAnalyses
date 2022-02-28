@@ -51,7 +51,7 @@ class runDataFrameFinal():
             return False
         return True
     #__________________________________________________________
-    def run(self,ncpu=5,doTree=False,doScale=True):
+    def run(self,ncpu=5,doTree=False,doScale=True,saveTabular=False):
         print ("EnableImplicitMT: {}".format(ncpu))
         ROOT.ROOT.EnableImplicitMT(ncpu)
         print ("Load cxx analyzers ... ")
@@ -65,6 +65,8 @@ class runDataFrameFinal():
         processEvents={}
         eventsTTree={}
         processList={}
+        saveTab=[]
+        efficiencyList=[]
         
         for pr in self.processes:
             processEvents[pr]=0
@@ -123,9 +125,16 @@ class runDataFrameFinal():
 
         length_cuts_names = max([len(cut) for cut in self.cuts])
 
+        if saveTabular:
+            f = open("outputTabular.txt","w")
+            cutNames = [cut for cut in self.cuts]
+            cutNames.insert(0,'All events')
+            cutNames.insert(0,'Processes')
+            saveTab.append(cutNames)
+            efficiencyList.append(cutNames)
+
         for pr in self.processes:
             print ('\n   running over process : ',pr)
-
             RDF = ROOT.ROOT.RDataFrame
             df  = RDF(self.treename, processList[pr] )
             if len(self.defines)>0:
@@ -137,6 +146,10 @@ class runDataFrameFinal():
             histos_list = []
             tdf_list = []
             count_list = []
+            cuts_list = []
+            cuts_list.append(pr)
+            eff_list=[]
+            eff_list.append(pr)
 
             # Define all histos, snapshots, etc...
             print ('     Defining snapshots and histograms')
@@ -175,11 +188,34 @@ class runDataFrameFinal():
 
             print ('     Cutflow')
             print ('       {cutname:{width}} : {nevents:.2e}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
+
+            if saveTabular:
+                uncertainty = ROOT.Math.sqrt(nevents_real)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=all_events,uncertainty=uncertainty))
+                eff_list.append(1)
+
             for i, cut in enumerate(self.cuts):
                 neventsThisCut = count_list[i].GetValue()
+                neventsThisCut_raw = neventsThisCut
                 if doScale:
                     neventsThisCut = neventsThisCut*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                 print ('       After selection {cutname:{width}} : {nevents:.2e}'.format(cutname=cut, width=length_cuts_names, nevents=neventsThisCut))
+
+                # Saving the number of events, uncertainty and efficiency for the output-file
+                if saveTabular:
+                    uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                    if neventsThisCut != 0:
+                        cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty))
+                        prevNevents = cuts_list[-2].split()
+                        eff_list.append('{:.2e}'.format(neventsThisCut/float(prevNevents[0])))
+                    # if number of events is zero, the previous uncertainty is saved instead:
+                    elif '$\\pm$' in cuts_list[-1]:
+                        cut = (cuts_list[-1]).split()
+                        cuts_list.append('$\\leq$ {uncertainty}'.format(uncertainty=cut[2]))
+                        eff_list.append(1)
+                    else:
+                        cuts_list.append(cuts_list[-1])
+                        eff_list.append(1)
 
 
             # And save everything
@@ -202,6 +238,29 @@ class runDataFrameFinal():
                     validfile = self.testfile(fout_list[i])
                     if not validfile: continue
 
+            if saveTabular:
+                saveTab.append(cuts_list)
+                efficiencyList.append(eff_list)
+        if saveTabular:
+            # Printing the number of events in format of a LaTeX table
+            print('\\begin{table}[H] \n    \\centering \n    \\resizebox{\\textwidth}{!}{ \n    \\begin{tabular}{|l||',end='',file=f)
+            print('c|' * (len(saveTab)-1),end='',file=f)
+            print('} \hline',file=f)
+            for i in range(len(cuts_list)):
+                v = [row[i] for row in saveTab]
+                print('        ', end='', file=f)
+                print(*v, sep = ' & ', end='', file=f)
+                print(' \\\\ ', file=f)
+                if (i == 0):
+                    print('        \\hline',file=f)
+            print('        \\hline \n    \\end{tabular}} \n    \\caption{Caption} \n    \\label{tab:my_label} \n\\end{table}', file=f)
+            
+            # Efficiency:
+            print('\n\nEfficiency: ', file=f)
+            for i in range(len(eff_list)):
+                v = [row[i] for row in efficiencyList]
+                print(*v, sep = ' & ', file=f)
+            f.close()
 
         elapsed_time = time.time() - start_time
         print  ('==============================SUMMARY==============================')
