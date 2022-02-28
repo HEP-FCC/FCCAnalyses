@@ -195,13 +195,14 @@ class runDataFrameFinal():
 
             for i, cut in enumerate(self.cuts):
                 neventsThisCut = count_list[i].GetValue()
+                neventsThisCut_raw = neventsThisCut
                 if doScale:
                     neventsThisCut = neventsThisCut*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                 print ('       After selection {cutname:{width}} : {nevents:.2e}'.format(cutname=cut, width=length_cuts_names, nevents=neventsThisCut))
 
                 # Saving the number of events, uncertainty and efficiency for the output-file
                 if saveTabular:
-                    uncertainty = ROOT.Math.sqrt(neventsThisCut)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                    uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                     if neventsThisCut != 0:
                         cuts_list.append('{nevents:.2e} \\pm {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty))
                         prevNevents = cuts_list[-2].split()
