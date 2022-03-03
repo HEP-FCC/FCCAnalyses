@@ -93,9 +93,6 @@ namespace MCParticle{
                                         			     ROOT::VecOps::RVec<edm4hep::MCParticleData> in , 
 								     ROOT::VecOps::RVec<int> ind);
 
-  /// return indices of MC particles
-  ROOT::VecOps::RVec<int> get_index(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
-
   /// return the parent index of a given list of MC particles
   ROOT::VecOps::RVec<int> get_parentid(ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents);
 
