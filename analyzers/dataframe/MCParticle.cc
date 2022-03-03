@@ -426,14 +426,6 @@ ROOT::VecOps::RVec<int> MCParticle::get_parentid(ROOT::VecOps::RVec<int> mcind, 
   return result;
 }
 
-ROOT::VecOps::RVec<int> get_index(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
-ROOT::VecOps::RVec<int> result;
-for (size_t i = 0; i < mc.size(); ++i) {
-  result.push_back(i);
-  }
-  return result;
-}
-
 // ----------------------------------------------------------------------------------------------------------------------------------
 
 // returns one MCParticle selected by its index in the particle block
