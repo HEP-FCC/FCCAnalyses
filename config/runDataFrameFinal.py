@@ -7,7 +7,7 @@ import os
 class runDataFrameFinal():
 
     #__________________________________________________________
-    def __init__(self, baseDir, procDict, processes, cuts, variables, cut_labels={}, intLumi=1., treename="events", defines={}):
+    def __init__(self, baseDir, procDict, processes, cuts, variables, intLumi=1., treename="events", defines={},cut_labels={}):
         self.baseDir   = baseDir
         self.processes = processes
         self.variables = variables
