@@ -7,11 +7,12 @@ import os
 class runDataFrameFinal():
 
     #__________________________________________________________
-    def __init__(self, baseDir, procDict, processes, cuts, variables, intLumi=1., treename="events", defines={}):
+    def __init__(self, baseDir, procDict, processes, cuts, variables, cut_labels={}, intLumi=1., treename="events", defines={}):
         self.baseDir   = baseDir
         self.processes = processes
         self.variables = variables
         self.cuts      = cuts
+        self.cut_labels= cut_labels
         self.intLumi   = intLumi
         self.treename  = treename
         self.defines   = defines
@@ -127,7 +128,10 @@ class runDataFrameFinal():
 
         if saveTabular:
             f = open("outputTabular.txt","w")
-            cutNames = [cut for cut in self.cuts]
+            if self.cut_labels:
+                cutNames = list(self.cut_labels.values())
+            else:
+                cutNames = [cut for cut in self.cuts]
             cutNames.insert(0,' ')
             saveTab.append(cutNames)
             efficiencyList.append(cutNames)
