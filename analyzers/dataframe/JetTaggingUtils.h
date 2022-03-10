@@ -5,8 +5,12 @@
 #include "Math/Vector4D.h"
 #include "ROOT/RVec.hxx"
 #include "edm4hep/MCParticleData.h"
+#include "edm4hep/ReconstructedParticleData.h"
 #include "fastjet/JetDefinition.hh"
 #include "TRandom3.h"
+#include "JetClustering.h"
+#include "JetClusteringUtils.h"
+#include "MCParticle.h"
 
 /** Jet tagging utilities interface.
 This represents a set functions and utilities to perfom jet tagging from a list of jets.

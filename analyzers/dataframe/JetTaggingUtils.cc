@@ -71,7 +71,7 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
 
   ghostFlavour result;
 
-  unsigned index = pseudoJets.size();
+  unsigned int index = pseudoJets.size();
   std::vector<float> pdg(pseudoJets.size(),0);
   std::vector<float> ghostStatus(pseudoJets.size(),0);
   std::vector<int> MCindex(pseudoJets.size(),-1);
@@ -79,7 +79,7 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
 
   std::vector<int> partonStatus = {20, 30};
 
-  // In below loop ghosts are selected from MCParticle collection
+  // In loop below ghosts are selected from MCParticle collection
   for (size_t i = 0; i < Particle.size(); ++i) {
     bool isGhost = false;
 
@@ -177,7 +177,7 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
 
 
 
-  // Flav vector is defined before jets are check for clustered ghosts
+  // Flav vector is defined before jets are checked for clustered ghosts
   std::vector<std::vector<float>> flav_vector;
 
 
