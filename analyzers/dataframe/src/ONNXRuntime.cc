@@ -25,6 +25,3 @@ ROOT::VecOps::RVec<float> ONNXRuntime::run(ROOT::VecOps::RVec<int> in) const {
   ROOT::VecOps::RVec<float> out;
   return out;
 }
-
-
-ClassImp(ONNXRuntime)
