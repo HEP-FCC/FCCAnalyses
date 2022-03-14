@@ -5,6 +5,8 @@
 
 #include <fstream>
 
+ONNXRuntime::ONNXRuntime() {}
+
 ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::string& preprocess_json) {
   if (!preprocess_json.empty()) {
     // the preprocessing JSON was found ; extract the variables listing and all useful information
@@ -19,14 +21,10 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::string& prepr
 
 ONNXRuntime::~ONNXRuntime() {}
 
-ROOT::VecOps::RVec<float> ONNXRuntime::operator()(ROOT::VecOps::RVec<int> in) {
+ROOT::VecOps::RVec<float> ONNXRuntime::run(ROOT::VecOps::RVec<int> in) const {
   ROOT::VecOps::RVec<float> out;
   return out;
 }
 
-ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > ONNXRuntime::run() const {
-  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > out;
-  return out;
-}
 
 ClassImp(ONNXRuntime)

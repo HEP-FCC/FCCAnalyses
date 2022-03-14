@@ -10,17 +10,16 @@
 
 class ONNXRuntime : public TObject {
 public:
-  ONNXRuntime() = default;
+  ONNXRuntime();
   explicit ONNXRuntime(const std::string& model_path, const std::string& preprocess_json="");
   ONNXRuntime(const ONNXRuntime&) = delete;
-  ~ONNXRuntime();
+  virtual ~ONNXRuntime();
 
   ONNXRuntime& operator=(const ONNXRuntime&) = delete;
 
-  ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<int> in);
+  ROOT::VecOps::RVec<float> run(ROOT::VecOps::RVec<int> in) const;
 
 private:
-  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > run() const;
 
 public:
   ClassDef(ONNXRuntime, 0);

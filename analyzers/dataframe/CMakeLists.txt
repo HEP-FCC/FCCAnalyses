@@ -31,12 +31,16 @@ if(ONNXRuntime_FOUND)
     message(STATUS "includes-------------------------- dataframe onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
     list(APPEND EXTRA_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIRS})
     list(APPEND EXTRA_LIBRARIES ${ONNXRUNTIME_LIBRARIES})
-    list(APPEND EXTRA_ROOT_INCLUDES ONNXRuntime.h)
+    list(APPEND EXTRA_ROOT_INCLUDES FCCAnalyses/ONNXRuntime.h)
     include_directories(${ONNXRUNTIME_INCLUDE_DIRS})
 endif()
 
 
 file(GLOB sources src/*.cc)
+if(NOT ONNXRuntime_FOUND)
+    file(GLOB onnx_src src/ONNXRuntime.cc)
+    list(REMOVE_ITEM sources ${onnx_src})
+endif()
 file(GLOB headers RELATIVE ${CMAKE_CURRENT_LIST_DIR} FCCAnalyses/*.h)
 
 message(STATUS "includes headers ${headers}")
