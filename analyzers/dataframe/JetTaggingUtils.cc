@@ -72,12 +72,12 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
   ghostFlavour result;
 
   unsigned int index = pseudoJets.size();
-  std::vector<float> pdg(pseudoJets.size(),0);
-  std::vector<float> ghostStatus(pseudoJets.size(),0);
-  std::vector<int> MCindex(pseudoJets.size(),-1);
+  ROOT::VecOps::RVec<float> pdg(pseudoJets.size(),0);
+  ROOT::VecOps::RVec<float> ghostStatus(pseudoJets.size(),0);
+  ROOT::VecOps::RVec<int> MCindex(pseudoJets.size(),-1);
 
 
-  std::vector<int> partonStatus = {20, 30};
+  ROOT::VecOps::RVec<int> partonStatus = {20, 30};
 
   // In loop below ghosts are selected from MCParticle collection
   for (size_t i = 0; i < Particle.size(); ++i) {
@@ -172,7 +172,7 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
 
   auto jetconstituents = JetClusteringUtils::get_constituents(FCCAnalysesGhostJets);
 
-
+  result.jet_constituents = jetconstituents;
 
 
 
@@ -254,11 +254,15 @@ JetClusteringUtils::FCCAnalysesJet JetTaggingUtils::get_jets(ghostFlavour ghostS
   return ghostStruct.jets;
 }
 
-std::vector<float> JetTaggingUtils::get_ghostStatus(ghostFlavour ghostStruct){
+std::vector<std::vector<int>> JetTaggingUtils::get_jetconstituents(ghostFlavour ghostStruct){
+  return ghostStruct.jet_constituents;
+}
+
+ROOT::VecOps::RVec<float> JetTaggingUtils::get_ghostStatus(ghostFlavour ghostStruct){
   return ghostStruct.ghostStatus;
 }
 
-std::vector<int> JetTaggingUtils::get_MCindex(ghostFlavour ghostStruct){
+ROOT::VecOps::RVec<int> JetTaggingUtils::get_MCindex(ghostFlavour ghostStruct){
   return ghostStruct.MCindex;
 }
 

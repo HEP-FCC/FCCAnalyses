@@ -22,24 +22,33 @@ namespace JetTaggingUtils{
    *  Jet tagging interface utilities.
   */
 
-  //Get flavour association of jet 
+  /** Get flavour association of jet */
   ROOT::VecOps::RVec<int> get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in, ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin);
-  
+
+  /** structure to output the following:
+   *  - vector of parton and hadron flavours
+   *  - FCCAnalyses jets clustered by user defined algorithm
+   *  - jet constituent indices
+   *  - ghostStatus (0 = not ghost, 1 = ghost parton, 2 = ghost hadron)
+   *  - MCindex vector of indices of ghosts to MC collection (and -1 if not a ghost)
+   */
   struct ghostFlavour {
     std::vector<std::vector<float>> flavour;
     JetClusteringUtils::FCCAnalysesJet jets;
-    std::vector<float> ghostStatus;
-    std::vector<int> MCindex;
+    std::vector<std::vector<int>> jet_constituents;
+    ROOT::VecOps::RVec<float> ghostStatus;
+    ROOT::VecOps::RVec<int> MCindex;
   };
 
 
-  //Get ghost flavour (MC flavour) of jet described here: ..
-  //a struct is returned containing
-  // - vector of flavours: <<partonFlav Jet 1, partonFlav Jet 2, ...>, <hadronFlav Jet 1, hadron Flav Jet 2, ...>>
-  // - FCCAnalysesJet struct containing resulting jets (on which functions defined in JetClusteringUtils.cc can be called)
-  // - vector of jet constituent indices <<constis jet 1>, <constis jet 2>, ...>
-  // - ghostStatus (0 = not ghost, 1 = ghost parton, 2 = ghost hadron)
-  // - MCindex vector of indices of ghosts to MC collection (and -1 if not a ghost) <part 1, ..., part n>
+  /** Get ghost flavour (MC flavour) of jet described here: ..
+   *  a struct is returned containing
+   *  - vector of flavours: <<partonFlav Jet 1, partonFlav Jet 2, ...>, <hadronFlav Jet 1, hadron Flav Jet 2, ...>>
+   *  - FCCAnalysesJet struct containing resulting jets (on which functions defined in JetClusteringUtils.cc can be called)
+   *  - vector of jet constituent indices <<constis jet 1>, <constis jet 2>, ...>
+   *  - ghostStatus (0 = not ghost, 1 = ghost parton, 2 = ghost hadron)
+   *  - MCindex vector of indices of ghosts to MC collection (and -1 if not a ghost) <part 1, ..., part n>
+   */
   struct get_ghostFlavour {
     get_ghostFlavour(int algo, float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination, float arg_add1=0, float arg_add2=0);
 
@@ -54,13 +63,20 @@ namespace JetTaggingUtils{
     ghostFlavour operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> Particle, ROOT::VecOps::RVec<int> ind, std::vector<fastjet::PseudoJet> pseudoJets, int partonFlag);
   };
 
+  /** get the vector of flavours: <<partonFlav Jet 1, partonFlav Jet 2, ...>, <hadronFlav Jet 1, hadron Flav Jet 2, ...>> */
   std::vector<std::vector<float>> get_flavour(ghostFlavour ghostStruct);
 
+  /** get the FCCAnalysesJet struct containing resulting jets (on which functions defined in JetClusteringUtils.cc can be called) */
   JetClusteringUtils::FCCAnalysesJet get_jets(ghostFlavour ghostStruct);
 
-  std::vector<float> get_ghostStatus(ghostFlavour ghostStruct);
+  /** get the vector of jet constituent indices <<constis jet 1>, <constis jet 2>, ...> */
+  std::vector<std::vector<int>> get_jetconstituents(ghostFlavour ghostStruct);
+  
+  /** get ghostStatus (0 = not ghost, 1 = ghost parton, 2 = ghost hadron) */
+  ROOT::VecOps::RVec<float> get_ghostStatus(ghostFlavour ghostStruct);
 
-  std::vector<int> get_MCindex(ghostFlavour ghostStruct);
+  /** get the MCindex vector of indices of ghosts to MC collection (and -1 if not a ghost) <part 1, ..., part n> */
+  ROOT::VecOps::RVec<int> get_MCindex(ghostFlavour ghostStruct);
 
   //Get b-tags with an efficiency applied
   ROOT::VecOps::RVec<int> get_btag(ROOT::VecOps::RVec<int> in, float efficiency, float mistag_c=0., float mistag_l=0., float mistag_g=0.);
