@@ -62,10 +62,14 @@ JetTaggingUtils::get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
 }
 
 
-get_ghostFlavour::get_ghostFlavour(int algo, float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination, float arg_add1, float arg_add2)
-{m_algo = algo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination; m_add1 = arg_add1; m_add2 = arg_add2;}
+get_ghostFlavour::get_ghostFlavour(int arg_algo, float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination,
+				   float arg_add1, float arg_add2)
+{m_algo = arg_algo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination; m_add1 = arg_add1; m_add2 = arg_add2;}
 
-ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> Particle, ROOT::VecOps::RVec<int> ind, std::vector<fastjet::PseudoJet> pseudoJets, int partonFlag) {
+ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> Particle,
+							    ROOT::VecOps::RVec<int> ind,
+							    std::vector<fastjet::PseudoJet> pseudoJets,
+							    int partonFlag) {
 
 
 
