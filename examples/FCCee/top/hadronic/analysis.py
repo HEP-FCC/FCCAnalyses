@@ -36,12 +36,14 @@ class analysis():
                .Define("RP_px",          "ReconstructedParticle::get_px(ReconstructedParticles)")
                .Define("RP_py",          "ReconstructedParticle::get_py(ReconstructedParticles)")
                .Define("RP_pz",          "ReconstructedParticle::get_pz(ReconstructedParticles)")               
-               .Define("RP_m",           "ReconstructedParticle::get_mass(ReconstructedParticles)")
                .Define("RP_e",           "ReconstructedParticle::get_e(ReconstructedParticles)")
+               .Define("RP_m",           "ReconstructedParticle::get_mass(ReconstructedParticles)")
+               .Define("RP_q",           "ReconstructedParticle::get_charge(ReconstructedParticles)")
 
                #build pseudo jets with the RP, using the interface that takes px,py,pz,m for better
                #handling of rounding errors
                .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets_xyzm(RP_px, RP_py, RP_pz, RP_m)")
+               #.Define("pseudo_jets2",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
 
                #run jet clustering with all reconstructed particles. kt_algorithm, R=0.5, exclusive clustering, exactly 4 jets, E0-scheme
                .Define("FCCAnalysesJets_kt", "JetClustering::clustering_kt(0.5, 2, 4, 0, 10)(pseudo_jets)")
@@ -54,6 +56,7 @@ class analysis():
                .Define("jets_kt_px",        "JetClusteringUtils::get_px(jets_kt)")
                .Define("jets_kt_py",        "JetClusteringUtils::get_py(jets_kt)")
                .Define("jets_kt_pz",        "JetClusteringUtils::get_pz(jets_kt)")
+               .Define("jets_kt_m",        "JetClusteringUtils::get_m(jets_kt)")
 
                #run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=0.5, inclusive clustering, E-scheme 
                .Define("FCCAnalysesJets_ee_genkt", "JetClustering::clustering_ee_genkt(0.5, 0, 0, 0, 0, -1)(pseudo_jets)")
@@ -127,6 +130,13 @@ class analysis():
         branchList = ROOT.vector('string')()
         for branchName in [
 
+                "RP_px",
+                "RP_py",
+                "RP_pz",
+                "RP_e",
+                "RP_m",
+                "RP_q",
+
                 "JET_btag",
                 "EVT_nbtag",
 
@@ -151,6 +161,7 @@ class analysis():
                 "jets_kt_px",
                 "jets_kt_py",
                 "jets_kt_pz",
+                "jets_kt_m",
                 "jetconstituents_kt",
                 
                 "jets_ee_genkt_px",
