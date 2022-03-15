@@ -7,11 +7,12 @@ import os
 class runDataFrameFinal():
 
     #__________________________________________________________
-    def __init__(self, baseDir, procDict, processes, cuts, variables, intLumi=1., treename="events", defines={}):
+    def __init__(self, baseDir, procDict, processes, cuts, variables, intLumi=1., treename="events", defines={},cut_labels={}):
         self.baseDir   = baseDir
         self.processes = processes
         self.variables = variables
         self.cuts      = cuts
+        self.cut_labels= cut_labels
         self.intLumi   = intLumi
         self.treename  = treename
         self.defines   = defines
@@ -127,9 +128,11 @@ class runDataFrameFinal():
 
         if saveTabular:
             f = open("outputTabular.txt","w")
-            cutNames = [cut for cut in self.cuts]
-            cutNames.insert(0,'All events')
-            cutNames.insert(0,'Processes')
+            if self.cut_labels:
+                cutNames = list(self.cut_labels.values())
+            else:
+                cutNames = [cut for cut in self.cuts]
+            cutNames.insert(0,' ')
             saveTab.append(cutNames)
             efficiencyList.append(cutNames)
 
@@ -181,41 +184,45 @@ class runDataFrameFinal():
             print ('     Done')
 
             nevents_real += all_events
+            uncertainty = ROOT.Math.sqrt(all_events)
 
             if doScale:
                 all_events = all_events*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                uncertainty = ROOT.Math.sqrt(nevents_real)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                 print('  Printing scaled number of events!!! ')
 
             print ('     Cutflow')
             print ('       {cutname:{width}} : {nevents:.2e}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
 
             if saveTabular:
-                uncertainty = ROOT.Math.sqrt(nevents_real)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
-                cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=all_events,uncertainty=uncertainty))
-                eff_list.append(1)
+                cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=all_events,uncertainty=uncertainty)) # scientific notation - recomended for backgrounds
+                # cuts_list.append('{nevents:.3f} $\\pm$ {uncertainty:.3f}'.format(nevents=all_events,uncertainty=uncertainty)) # float notation - recomended for signals with few events
+                eff_list.append(100)
 
             for i, cut in enumerate(self.cuts):
                 neventsThisCut = count_list[i].GetValue()
                 neventsThisCut_raw = neventsThisCut
+                uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)
                 if doScale:
                     neventsThisCut = neventsThisCut*1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                    uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
                 print ('       After selection {cutname:{width}} : {nevents:.2e}'.format(cutname=cut, width=length_cuts_names, nevents=neventsThisCut))
 
                 # Saving the number of events, uncertainty and efficiency for the output-file
-                if saveTabular:
-                    uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]*self.intLumi/eventsTTree[pr]
+                if saveTabular and cut != 'selNone':
                     if neventsThisCut != 0:
-                        cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty))
+                        cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty)) # scientific notation - recomended for backgrounds
+                        # cuts_list.append('{nevents:.3f} $\\pm$ {uncertainty:.3f}'.format(nevents=neventsThisCut,uncertainty=uncertainty)) # # float notation - recomended for signals with few events
                         prevNevents = cuts_list[-2].split()
-                        eff_list.append('{:.2e}'.format(neventsThisCut/float(prevNevents[0])))
+                        eff_list.append('{eff:.2g}'.format(eff=100*neventsThisCut/float(prevNevents[0])))
                     # if number of events is zero, the previous uncertainty is saved instead:
                     elif '$\\pm$' in cuts_list[-1]:
                         cut = (cuts_list[-1]).split()
                         cuts_list.append('$\\leq$ {uncertainty}'.format(uncertainty=cut[2]))
-                        eff_list.append(1)
+                        eff_list.append('-')
                     else:
                         cuts_list.append(cuts_list[-1])
-                        eff_list.append(1)
+                        eff_list.append('-')
 
 
             # And save everything
@@ -238,18 +245,17 @@ class runDataFrameFinal():
                     validfile = self.testfile(fout_list[i])
                     if not validfile: continue
 
-            if saveTabular:
+            if saveTabular and cut != 'selNone':
                 saveTab.append(cuts_list)
                 efficiencyList.append(eff_list)
         if saveTabular:
             # Printing the number of events in format of a LaTeX table
             print('\\begin{table}[H] \n    \\centering \n    \\resizebox{\\textwidth}{!}{ \n    \\begin{tabular}{|l||',end='',file=f)
-            print('c|' * (len(saveTab)-1),end='',file=f)
+            print('c|' * (len(cuts_list)-1),end='',file=f)
             print('} \hline',file=f)
-            for i in range(len(cuts_list)):
-                v = [row[i] for row in saveTab]
+            for i, row in enumerate(saveTab):
                 print('        ', end='', file=f)
-                print(*v, sep = ' & ', end='', file=f)
+                print(*row, sep = ' & ', end='', file=f)
                 print(' \\\\ ', file=f)
                 if (i == 0):
                     print('        \\hline',file=f)
@@ -257,9 +263,17 @@ class runDataFrameFinal():
             
             # Efficiency:
             print('\n\nEfficiency: ', file=f)
+            print('\\begin{table}[H] \n    \\centering \n    \\resizebox{\\textwidth}{!}{ \n    \\begin{tabular}{|l||',end='',file=f)
+            print('c|' * (len(cuts_list)-1),end='',file=f)
+            print('} \hline',file=f)
             for i in range(len(eff_list)):
+                print('        ', end='', file=f)
                 v = [row[i] for row in efficiencyList]
-                print(*v, sep = ' & ', file=f)
+                print(*v, sep = ' & ', end='', file=f)
+                print(' \\\\ ', file=f)
+                if (i == 0):
+                    print('        \\hline',file=f)
+            print('        \\hline \n    \\end{tabular}} \n    \\caption{Caption} \n    \\label{tab:my_label} \n\\end{table}', file=f)
             f.close()
 
         elapsed_time = time.time() - start_time
