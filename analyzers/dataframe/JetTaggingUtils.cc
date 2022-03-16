@@ -62,22 +62,25 @@ JetTaggingUtils::get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
 }
 
 
-get_ghostFlavour::get_ghostFlavour(int algo, float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination, float arg_add1, float arg_add2)
-{m_algo = algo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination; m_add1 = arg_add1; m_add2 = arg_add2;}
+get_ghostFlavour::get_ghostFlavour(const int & arg_algo, const float & arg_radius, const int & arg_exclusive, const float & arg_cut, const int & arg_sorted, const int & arg_recombination,
+				   const float & arg_add1, const float & arg_add2)
+{m_algo = arg_algo; m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination; m_add1 = arg_add1; m_add2 = arg_add2;}
 
-ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> Particle, ROOT::VecOps::RVec<int> ind, std::vector<fastjet::PseudoJet> pseudoJets, int partonFlag) {
-
+ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData> & Particle,
+							    const ROOT::VecOps::RVec<int> & ind,
+							    std::vector<fastjet::PseudoJet> & pseudoJets,
+							    const int & partonFlag) {
 
 
   ghostFlavour result;
 
   unsigned int index = pseudoJets.size();
-  std::vector<float> pdg(pseudoJets.size(),0);
-  std::vector<float> ghostStatus(pseudoJets.size(),0);
-  std::vector<int> MCindex(pseudoJets.size(),-1);
+  ROOT::VecOps::RVec<int> pdg(pseudoJets.size(),0);
+  ROOT::VecOps::RVec<int> ghostStatus(pseudoJets.size(),0);
+  ROOT::VecOps::RVec<int> MCindex(pseudoJets.size(),-1);
 
 
-  std::vector<int> partonStatus = {20, 30};
+  ROOT::VecOps::RVec<int> partonStatus = {20, 30};
 
   // In loop below ghosts are selected from MCParticle collection
   for (size_t i = 0; i < Particle.size(); ++i) {
@@ -176,20 +179,19 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
 
 
 
-
   // Flav vector is defined before jets are checked for clustered ghosts
-  std::vector<std::vector<float>> flav_vector;
+  std::vector<std::vector<int>> flav_vector;
 
 
-  std::vector<float> partonFlavs;
-  std::vector<float> hadronFlavs;
+  std::vector<int> partonFlavs;
+  std::vector<int> hadronFlavs;
   for (auto& consti_index : jetconstituents) {
 
-  float partonFlav = 0;
+  int partonFlav = 0;
   float partonMom2 = 0;
   float partonMom2_b = 0;
   float partonMom2_c = 0;
-  float hadronFlav = 0;
+  int hadronFlav = 0;
   float hadronMom2_b = 0;
   float hadronMom2_c = 0;
 
@@ -237,7 +239,6 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
     hadronFlavs.push_back(hadronFlav);
   }
 
-
   flav_vector.push_back(partonFlavs);
   flav_vector.push_back(hadronFlavs);
 
@@ -246,7 +247,7 @@ ghostFlavour JetTaggingUtils::get_ghostFlavour::operator() (ROOT::VecOps::RVec<e
 
 }
 
-std::vector<std::vector<float>> JetTaggingUtils::get_flavour(ghostFlavour ghostStruct){
+std::vector<std::vector<int>> JetTaggingUtils::get_flavour(ghostFlavour ghostStruct){
   return ghostStruct.flavour;
 }
 
@@ -254,11 +255,12 @@ JetClusteringUtils::FCCAnalysesJet JetTaggingUtils::get_jets(ghostFlavour ghostS
   return ghostStruct.jets;
 }
 
-std::vector<float> JetTaggingUtils::get_ghostStatus(ghostFlavour ghostStruct){
+
+ROOT::VecOps::RVec<int> JetTaggingUtils::get_ghostStatus(ghostFlavour ghostStruct){
   return ghostStruct.ghostStatus;
 }
 
-std::vector<int> JetTaggingUtils::get_MCindex(ghostFlavour ghostStruct){
+ROOT::VecOps::RVec<int> JetTaggingUtils::get_MCindex(ghostFlavour ghostStruct){
   return ghostStruct.MCindex;
 }
 
