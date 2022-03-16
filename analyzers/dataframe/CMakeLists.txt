@@ -8,9 +8,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
 
-include_directories(${EDM4HEP_INCLUDE_DIRS} 
-		    ${podio_INCLUDE_DIR} 
-                    ${FASTJET_INCLUDE_DIR} 
+include_directories(${EDM4HEP_INCLUDE_DIRS}
+		    ${podio_INCLUDE_DIR}
+                    ${FASTJET_INCLUDE_DIR}
 		    ${acts_INCLUDE_DIR}
 		    ${AWKWARD_INCLUDE}
 		    #${Boost_INCLUDE_DIRS}
@@ -35,9 +35,8 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses dummyLoader.h
 					ValenciaPlugin.h
 					VertexingUtils.h
 					VertexFitterSimple.h
-					VertexFinderActs.h					
+					VertexFinderActs.h
 					VertexFitterActs.h
-					awkwardtest.h
 					myUtils.h
 					myFinalSel.h
 					CaloNtupleizer.h
@@ -53,15 +52,15 @@ target_include_directories(FCCAnalyses  PUBLIC
 		           ${acts_INCLUDE_DIR}
 			   ${AWKWARD_INCLUDE})
 
-target_link_libraries(FCCAnalyses 
-                      ROOT::Physics 
-		      ROOT::MathCore 
+target_link_libraries(FCCAnalyses
+                      ROOT::Physics
+		      ROOT::MathCore
 		      ROOT::ROOTVecOps
 		      ROOT::ROOTDataFrame
 		      ROOT::TMVA
-		      EDM4HEP::edm4hep 
-		      EDM4HEP::edm4hepDict 
-		      podio::podio 
+		      EDM4HEP::edm4hep
+		      EDM4HEP::edm4hepDict
+		      podio::podio
 		      ${FASTJET_LIBRARY} fastjetplugins
 		      ${acts_LIBRARY} ActsCore
 		      #${AWKWARD_LIBRARIES}
