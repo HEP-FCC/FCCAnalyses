@@ -50,6 +50,8 @@ namespace Algorithms{
     int m_maxcalls; ///Maximum call to minimization function, default=100000
     float m_tolerance; ///Tolerance for minimization, default=0.001
     ROOT::Math::Minimizer *m_min; ///internal ROOT minimizer
+    double _step[3];
+    double _variable[3];
   };
 
 
