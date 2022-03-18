@@ -27,9 +27,9 @@ namespace Algorithms{
     float operator()(const double *par);
 
   private:
-    ROOT::VecOps::RVec<float> m_px; ///vector of px
-    ROOT::VecOps::RVec<float> m_py; ///vector of py
-    ROOT::VecOps::RVec<float> m_pz; ///vector of pz
+    ROOT::VecOps::RVec<float> _px; ///vector of px
+    ROOT::VecOps::RVec<float> _py; ///vector of py
+    ROOT::VecOps::RVec<float> _pz; ///vector of pz
   };
 
 
@@ -45,13 +45,13 @@ namespace Algorithms{
                                          const ROOT::VecOps::RVec<float> & pz);
 
   private:
-    char const *m_minname; ///Minimizer to use, Minuit2 default
-    char const *m_algoname; ///Optimisation algorithm, Migrad default
-    int m_maxcalls; ///Maximum call to minimization function, default=100000
-    float m_tolerance; ///Tolerance for minimization, default=0.001
+    char const *_minname; ///Minimizer to use, Minuit2 default
+    char const *_algoname; ///Optimisation algorithm, Migrad default
+    int _maxcalls; ///Maximum call to minimization function, default=100000
+    float _tolerance; ///Tolerance for minimization, default=0.001
     ROOT::Math::Minimizer *m_min; ///internal ROOT minimizer
-    double _step[3];
-    double _variable[3];
+    double _step[3]={0.001,0.001,0.001};
+    double _variable[3]={1.0,1.0,1.0};
   };
 
 
@@ -64,9 +64,9 @@ namespace Algorithms{
     float operator()(const double *par);
 
   private:
-    ROOT::VecOps::RVec<float> m_px; ///vector of px
-    ROOT::VecOps::RVec<float> m_py; ///vector of py
-    ROOT::VecOps::RVec<float> m_pz; ///vector of pz
+    ROOT::VecOps::RVec<float> _px; ///vector of px
+    ROOT::VecOps::RVec<float> _py; ///vector of py
+    ROOT::VecOps::RVec<float> _pz; ///vector of pz
   };
 
 
@@ -81,11 +81,11 @@ namespace Algorithms{
                                          const ROOT::VecOps::RVec<float> & pz);
 
   private:
-    char const *m_minname; ///Minimizer to use, Minuit2 default
-    char const *m_algoname; ///Optimisation algorithm, Migrad default
-    int m_maxcalls;///Maximum call to minimization function, default=100000
-    float m_tolerance;///Tolerance for minimization, default=0.001
-    ROOT::Math::Minimizer *m_min; ///internal ROOT minimizer
+    char const *_minname; ///Minimizer to use, Minuit2 default
+    char const *_algoname; ///Optimisation algorithm, Migrad default
+    int _maxcalls;///Maximum call to minimization function, default=100000
+    float _tolerance;///Tolerance for minimization, default=0.001
+    ROOT::Math::Minimizer *_min; ///internal ROOT minimizer
     double _step[3]={0.001,0.001,0.001};
     double _variable[3]={1.0,1.0,1.0};
   };
@@ -102,8 +102,8 @@ namespace Algorithms{
                       const ROOT::VecOps::RVec<float> & py,
                       const ROOT::VecOps::RVec<float> & pz);
   private:
-    bool m_pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
-    float m_power; /// kappa parameter for the weighting. Default=1
+    bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
+    float _power; /// kappa parameter for the weighting. Default=1
   };
 
 
@@ -117,7 +117,7 @@ namespace Algorithms{
                       const ROOT::VecOps::RVec<float> & py,
                       const ROOT::VecOps::RVec<float> & pz);
   private:
-    bool m_pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
+    bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
   };
 
 
@@ -129,7 +129,7 @@ namespace Algorithms{
                                           const ROOT::VecOps::RVec<float> & charge,
                                           const ROOT::VecOps::RVec<float> & energy);
     private:
-      bool m_pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
+      bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
   };
 
 
@@ -140,7 +140,7 @@ namespace Algorithms{
     ROOT::VecOps::RVec<int> operator() (const ROOT::VecOps::RVec<float> & angle,
                                         const ROOT::VecOps::RVec<float> & charge);
   private:
-    bool m_pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
+    bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
   };
 
 
@@ -152,7 +152,7 @@ namespace Algorithms{
                                           const ROOT::VecOps::RVec<float> & rp_e,
                                           const ROOT::VecOps::RVec<float> & thrust);
   private:
-    float m_dir;///if dir > 0. points to minimum hemis if dir < 0, points to maximum energy. Default is 1. (minimum energy)
+    float _dir;///if dir > 0. points to minimum hemis if dir < 0, points to maximum energy. Default is 1. (minimum energy)
   };
 
 
