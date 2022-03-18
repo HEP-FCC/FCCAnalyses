@@ -127,18 +127,18 @@ minimize_thrust::minimize_thrust(std::string arg_minname,
   m_min->SetTolerance(m_tolerance);
   m_min->SetPrintLevel(0);
 
-  double step[3] = {0.001,0.001,0.001};
+  _step = {0.001,0.001,0.001};
   // starting point
-  double variable[3] = { 1.,1.,1.};
+  _variable = { 1.,1.,1.};
 
-  m_min->SetVariable(0,"x",variable[0], step[0]);
-  m_min->SetVariable(1,"y",variable[1], step[1]);
-  m_min->SetVariable(2,"z",variable[2], step[2]);
+
 }
 ROOT::VecOps::RVec<float> Algorithms::minimize_thrust::operator()(const ROOT::VecOps::RVec<float> & px,
 	                                                                const ROOT::VecOps::RVec<float> & py,
 																																	const ROOT::VecOps::RVec<float> & pz){
-
+  m_min->SetVariable(0,"x",variable[0], step[0]);
+	m_min->SetVariable(1,"y",variable[1], step[1]);
+	m_min->SetVariable(2,"z",variable[2], step[2]);
   // create functon wrapper for minmizer
   // a IMultiGenFunction type
   ROOT::Math::Functor f(thrustFit(px,py,pz),3);
