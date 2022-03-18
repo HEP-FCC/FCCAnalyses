@@ -15,44 +15,42 @@ clustering_kt::clustering_kt(float arg_radius,
                              float arg_cut,
                              int arg_sorted,
                              int arg_recombination){
-  m_radius = arg_radius;
-  m_exclusive = arg_exclusive;
-  m_cut = arg_cut;
-  m_sorted = arg_sorted;
-  m_recombination = arg_recombination;
+  _radius = arg_radius;
+  _exclusive = arg_exclusive;
+  _cut = arg_cut;
+  _sorted = arg_sorted;
+  _recombination = arg_recombination;
 
   // initialize jet algorithm
   //fastjet::JetAlgorithm jetAlgorithm{fastjet::JetAlgorithm::undefined_jet_algorithm};
-  m_jetAlgorithm = fastjet::JetAlgorithm::kt_algorithm;
+  _jetAlgorithm = fastjet::JetAlgorithm::kt_algorithm;
 
   // initialize recombination scheme
-  m_recombScheme = JetClusteringUtils::recomb_scheme(m_recombination);
+  _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
 
   //define the clustering sequence and jet definition
-  fastjet::ClusterSequence m_cs;
-  m_def = fastjet::JetDefinition(m_jetAlgorithm, m_radius, m_recombScheme);
-  std::cout <<"fastjet::RecombinationScheme::external_scheme "<<fastjet::RecombinationScheme::external_scheme<<std::endl;
-  if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.set_recombiner(new ExternalRecombiner(m_recombination));
+  fastjet::ClusterSequence _cs;
+  _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _recombScheme);
+  if (_recombScheme == fastjet::RecombinationScheme::external_scheme) _def.set_recombiner(new ExternalRecombiner(_recombination));
 }
 JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (const std::vector<fastjet::PseudoJet> &input) {
 
   //return empty struct
-  if (JetClusteringUtils::check(input.size(),m_exclusive, m_cut)==false) return JetClusteringUtils::initialise_FCCAnalysesJet();
+  if (JetClusteringUtils::check(input.size(),_exclusive, _cut)==false) return JetClusteringUtils::initialise_FCCAnalysesJet();
 
-  m_cs = fastjet::ClusterSequence(input, m_def);
+  _cs = fastjet::ClusterSequence(input, _def);
 
   //cluster jets
-  std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(m_cs, m_exclusive, m_cut, m_sorted);
+  std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
 
   //transform to FCCAnalysesJet
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
 
-  //if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
   return result;
 }
 
 
-clustering_antikt::clustering_antikt(float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination){m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination;}
+clustering_antikt::clustering_antikt(float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination){_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination;}
 JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_antikt::operator() (const std::vector<fastjet::PseudoJet> &input) {
 
   if (JetClusteringUtils::check(input.size(),m_exclusive, m_cut)==false) return JetClusteringUtils::initialise_FCCAnalysesJet();
