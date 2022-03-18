@@ -14,9 +14,9 @@ using namespace Algorithms;
 sphericityFit::sphericityFit(const ROOT::VecOps::RVec<float> & arg_px,
 	                           const ROOT::VecOps::RVec<float> & arg_py,
 														 const ROOT::VecOps::RVec<float> & arg_pz){
-  m_px=arg_px;
-	m_py=arg_py;
-	m_pz=arg_pz;
+  _px=arg_px;
+	_py=arg_py;
+	_pz=arg_pz;
 }
 float Algorithms::sphericityFit::operator()(const double *pars){
 
@@ -24,9 +24,9 @@ float Algorithms::sphericityFit::operator()(const double *pars){
   double den = 0.;
   double mag = sqrt(pars[0]*pars[0] + pars[1]*pars[1] + pars[2]*pars[2]);
 
-  for (unsigned int i =0; i<m_px.size(); i++){
-    double part = m_px[i]*m_px[i] + m_py[i]*m_py[i] + m_pz[i]*m_pz[i];
-    double pl = m_px[i]*(pars[0]/mag) + m_py[i]*(pars[1]/mag) + m_pz[i]*(pars[2]/mag);
+  for (unsigned int i =0; i<_px.size(); i++){
+    double part = _px[i]*_px[i] + _py[i]*_py[i] + _pz[i]*_pz[i];
+    double pl = _px[i]*(pars[0]/mag) + _py[i]*(pars[1]/mag) + _pz[i]*(pars[2]/mag);
     num += part - pl*pl;
     den += part;
   }
@@ -41,41 +41,35 @@ minimize_sphericity::minimize_sphericity(std::string arg_minname,
 	                                       std::string arg_algoname,
 																				 int arg_maxcalls,
 																				 float arg_tolerance){
-  m_minname=arg_minname.c_str();
-  m_algoname=arg_algoname.c_str();
-  m_maxcalls=arg_maxcalls;
-	m_tolerance=arg_tolerance;
+  _minname=arg_minname.c_str();
+  _algoname=arg_algoname.c_str();
+  _maxcalls=arg_maxcalls;
+	_tolerance=arg_tolerance;
 
-  m_min = ROOT::Math::Factory::CreateMinimizer(m_minname, m_algoname);
-  m_min->SetMaxFunctionCalls(m_maxcalls); // for Minuit/Minuit2
-  m_min->SetMaxIterations(10000);  // for GSL
-  m_min->SetTolerance(m_tolerance);
-  m_min->SetPrintLevel(0);
-
-  // create functon wrapper for minmizer
-  // a IMultiGenFunction type
-  double step[3] = {0.001,0.001,0.001};
-
-  // starting point
-  double variable[3] = { 1.0,1.0,1.0};
-
-  m_min->SetVariable(0,"x",variable[0], step[0]);
-  m_min->SetVariable(1,"y",variable[1], step[1]);
-  m_min->SetVariable(2,"z",variable[2], step[2]);
+  _min = ROOT::Math::Factory::CreateMinimizer(_minname, _algoname);
+  _min->SetMaxFunctionCalls(_maxcalls); // for Minuit/Minuit2
+  _min->SetMaxIterations(10000);  // for GSL
+  _min->SetTolerance(_tolerance);
+  _min->SetPrintLevel(0);
 }
 ROOT::VecOps::RVec<float> Algorithms::minimize_sphericity::operator()(const ROOT::VecOps::RVec<float> & px,
 	                                                                    const ROOT::VecOps::RVec<float> & py,
 																																			const ROOT::VecOps::RVec<float> & pz){
+  _min->SetVariable(0,"x",variable[0], step[0]);
+	_min->SetVariable(0,"y",variable[1], step[1]);
+	_min->SetVariable(2,"z",variable[2], step[2]);
 
+	// create functon wrapper for minmizer
+  // a IMultiGenFunction type
   ROOT::Math::Functor f(sphericityFit(px,py,pz),3);
-  m_min->SetFunction(f);
-  m_min->Minimize();
+  _min->SetFunction(f);
+  _min->Minimize();
 
-  const double *xs     = m_min->X();
-  const double *xs_err = m_min->Errors();
+  const double *xs     = _min->X();
+  const double *xs_err = _min->Errors();
 
   ROOT::VecOps::RVec<float> result;
-  result.push_back(m_min->MinValue());
+  result.push_back(_min->MinValue());
   result.push_back(xs[0]);
   result.push_back(xs_err[0]);
   result.push_back(xs[1]);
@@ -90,9 +84,9 @@ ROOT::VecOps::RVec<float> Algorithms::minimize_sphericity::operator()(const ROOT
 thrustFit::thrustFit(const ROOT::VecOps::RVec<float> & arg_px,
 	                   const ROOT::VecOps::RVec<float> & arg_py,
 										 const ROOT::VecOps::RVec<float> & arg_pz){
-  m_px=arg_px;
-	m_py=arg_py;
-	m_pz=arg_pz;
+  _px=arg_px;
+	_py=arg_py;
+	_pz=arg_pz;
 }
 float Algorithms::thrustFit::operator()(const double *pars){
 
@@ -100,9 +94,9 @@ float Algorithms::thrustFit::operator()(const double *pars){
   double den = 0.;
   double mag = sqrt(pars[0]*pars[0] + pars[1]*pars[1] + pars[2]*pars[2]);
 
-  for (unsigned int i =0; i<m_px.size(); i++){
-    num += abs(m_px[i]*(pars[0]/mag) + m_py[i]*(pars[1]/mag) + m_pz[i]*(pars[2]/mag));
-    den += sqrt(m_px[i]*m_px[i] + m_py[i]*m_py[i] + m_pz[i]*m_pz[i]);
+  for (unsigned int i =0; i<_px.size(); i++){
+    num += abs(_px[i]*(pars[0]/mag) + _py[i]*(pars[1]/mag) + _pz[i]*(pars[2]/mag));
+    den += sqrt(_px[i]*_px[i] + _py[i]*_py[i] + _pz[i]*_pz[i]);
   }
   if (den>0.){
     double val = num / den;
@@ -116,49 +110,43 @@ minimize_thrust::minimize_thrust(std::string arg_minname,
 	                               std::string arg_algoname,
 																 int arg_maxcalls,
 																 float arg_tolerance){
-  m_minname=arg_minname.c_str();
-  m_algoname=arg_algoname.c_str();
-	m_maxcalls=arg_maxcalls;
-	m_tolerance=arg_tolerance;
+  _minname=arg_minname.c_str();
+  _algoname=arg_algoname.c_str();
+	_maxcalls=arg_maxcalls;
+	_tolerance=arg_tolerance;
 
-  m_min = ROOT::Math::Factory::CreateMinimizer(m_minname, m_algoname);
-  m_min->SetMaxFunctionCalls(m_maxcalls); // for Minuit/Minuit2
-  m_min->SetMaxIterations(10000);  // for GSL
-  m_min->SetTolerance(m_tolerance);
-  m_min->SetPrintLevel(0);
-
-  //_step = {0.001,0.001,0.001};
-  // starting point
-  //_variable = { 1.,1.,1.};
-
-
+  _min = ROOT::Math::Factory::CreateMinimizer(_minname, _algoname);
+  _min->SetMaxFunctionCalls(_maxcalls); // for Minuit/Minuit2
+  _min->SetMaxIterations(10000);  // for GSL
+  _min->SetTolerance(_tolerance);
+  _min->SetPrintLevel(0);
 }
 ROOT::VecOps::RVec<float> Algorithms::minimize_thrust::operator()(const ROOT::VecOps::RVec<float> & px,
 	                                                                const ROOT::VecOps::RVec<float> & py,
 																																	const ROOT::VecOps::RVec<float> & pz){
-  m_min->SetVariable(0,"x",_variable[0], _step[0]);
-	m_min->SetVariable(1,"y",_variable[1], _step[1]);
-	m_min->SetVariable(2,"z",_variable[2], _step[2]);
+  _min->SetVariable(0,"x",_variable[0], _step[0]);
+	_min->SetVariable(1,"y",_variable[1], _step[1]);
+	_min->SetVariable(2,"z",_variable[2], _step[2]);
   // create functon wrapper for minmizer
   // a IMultiGenFunction type
   ROOT::Math::Functor f(thrustFit(px,py,pz),3);
-  m_min->SetFunction(f);
+  _min->SetFunction(f);
 
   //min->SetValidError(true);
   //min->ProvidesError();
-  m_min->Minimize();
+  _min->Minimize();
   //std::cout << "is valid error before hesse " << min->IsValidError() <<std::endl;
   //min->Hesse();
   //std::cout << "is valid error after hesse  " << min->IsValidError() <<std::endl;
   //std::cout << "Ncalls  " << min->NCalls() << "  Niter " << min->NIterations() <<std::endl;
   //min->PrintResults();
-  const double *xs = m_min->X();
-  const double *xs_err = m_min->Errors();
+  const double *xs = _min->X();
+  const double *xs_err = _min->Errors();
 
   //std::cout << "Minimum: f(" << xs[0] << "," << xs[1] << "," << xs[2] << "): " << min->MinValue()  << std::endl;
 
   ROOT::VecOps::RVec<float> result;
-  result.push_back(-1.*m_min->MinValue());
+  result.push_back(-1.*_min->MinValue());
   result.push_back(xs[0]);
   result.push_back(xs_err[0]);
   result.push_back(xs[1]);
@@ -173,8 +161,8 @@ ROOT::VecOps::RVec<float> Algorithms::minimize_thrust::operator()(const ROOT::Ve
 
 getAxisCharge::getAxisCharge(bool arg_pos,
 	                           float arg_power){
-  m_pos = arg_pos;
-	m_power = arg_power;
+  _pos = arg_pos;
+	_power = arg_power;
 }
 float  Algorithms::getAxisCharge::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                            const ROOT::VecOps::RVec<float> & charge,
@@ -186,16 +174,16 @@ float  Algorithms::getAxisCharge::operator() (const ROOT::VecOps::RVec<float> & 
   for (size_t i = 0; i < angle.size(); ++i) {
     norm+=px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i];
 
-    if (m_pos==1 && angle[i]>0.) result+=charge[i]*std::pow(sqrt(px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i]),m_power);
-    if (m_pos==0 && angle[i]<0.) result+=charge[i]*std::pow(sqrt(px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i]),m_power);
+    if (_pos==1 && angle[i]>0.) result+=charge[i]*std::pow(sqrt(px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i]),_power);
+    if (_pos==0 && angle[i]<0.) result+=charge[i]*std::pow(sqrt(px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i]),_power);
   }
-  return result/std::pow(norm,m_power);
+  return result/std::pow(norm,_power);
 }
 
 
 
 getAxisMass::getAxisMass(bool arg_pos){
-  m_pos=arg_pos;
+  _pos=arg_pos;
 }
 float  Algorithms::getAxisMass::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                          const ROOT::VecOps::RVec<float> & energy,
@@ -207,26 +195,26 @@ float  Algorithms::getAxisMass::operator() (const ROOT::VecOps::RVec<float> & an
   for (size_t i = 0; i < angle.size(); ++i) {
     ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double>> tmp;
     tmp.SetPxPyPzE(px[i], py[i], pz[i], energy[i]);
-    if (m_pos==1 && angle[i]>0.) result+=tmp;
-    if (m_pos==0 && angle[i]<0.) result+=tmp;
+    if (_pos==1 && angle[i]>0.) result+=tmp;
+    if (_pos==0 && angle[i]<0.) result+=tmp;
   }
   return result.M();
 }
 
 getAxisEnergy::getAxisEnergy(bool arg_pos){
-	m_pos=arg_pos;
+	_pos=arg_pos;
 }
 ROOT::VecOps::RVec<float>  Algorithms::getAxisEnergy::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                                                const ROOT::VecOps::RVec<float> & charge,
 																																	const ROOT::VecOps::RVec<float> & energy){
   ROOT::VecOps::RVec<float> result={0.,0.,0.};
   for (size_t i = 0; i < angle.size(); ++i) {
-    if (m_pos==1 && angle[i]>0.){
+    if (_pos==1 && angle[i]>0.){
       result[0]+=energy[i];
       if (abs(charge[i])>0) result[1]+=energy[i];
       else result[2]+=energy[i];
     }
-    if (m_pos==0 && angle[i]<0.){
+    if (_pos==0 && angle[i]<0.){
       result[0]+=energy[i];
       if (abs(charge[i])>0) result[1]+=energy[i];
       else result[2]+=energy[i];
@@ -237,18 +225,18 @@ ROOT::VecOps::RVec<float>  Algorithms::getAxisEnergy::operator() (const ROOT::Ve
 
 
 getAxisN::getAxisN(bool arg_pos){
-	m_pos=arg_pos;
+	_pos=arg_pos;
 }
 ROOT::VecOps::RVec<int>  Algorithms::getAxisN::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                                         const ROOT::VecOps::RVec<float> & charge){
   ROOT::VecOps::RVec<int> result={0,0,0};
   for (size_t i = 0; i < angle.size(); ++i) {
-    if (m_pos==1 && angle[i]>0.){
+    if (_pos==1 && angle[i]>0.){
       result[0]+=1;
       if (abs(charge[i])>0) result[1]+=1;
       else result[2]+=1;
     }
-    if (m_pos==0 && angle[i]<0.){
+    if (_pos==0 && angle[i]<0.){
       result[0]+=1;
       if (abs(charge[i])>0) result[1]+=1;
       else result[2]+=1;
@@ -258,7 +246,7 @@ ROOT::VecOps::RVec<int>  Algorithms::getAxisN::operator() (const ROOT::VecOps::R
 }
 
 getThrustPointing::getThrustPointing(float arg_dir){
-  m_dir=arg_dir;
+  _dir=arg_dir;
 }
 ROOT::VecOps::RVec<float> Algorithms::getThrustPointing::operator()(const ROOT::VecOps::RVec<float> & in,
 	                                                                  const ROOT::VecOps::RVec<float> & rp_e,
@@ -276,9 +264,9 @@ ROOT::VecOps::RVec<float> Algorithms::getThrustPointing::operator()(const ROOT::
 
   if (pos_angle>neg_angle)direction=-1.;
 
-  result[1]=thrust[1]*direction*m_dir;
-  result[3]=thrust[3]*direction*m_dir;
-  result[5]=thrust[5]*direction*m_dir;
+  result[1]=thrust[1]*direction*_dir;
+  result[3]=thrust[3]*direction*_dir;
+  result[5]=thrust[5]*direction*_dir;
   return thrust;
 }
 
