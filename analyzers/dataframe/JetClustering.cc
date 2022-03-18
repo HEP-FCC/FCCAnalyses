@@ -47,7 +47,7 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (con
   //transform to FCCAnalysesJet
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
 
-  if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
+  //if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
   return result;
 }
 
