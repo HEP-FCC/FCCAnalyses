@@ -11,7 +11,7 @@
 using namespace JetClustering;
 
 
-MyRDFOp::MyRDFOp(int dm){_datamember=dm; std::std::cout << "dm "<< dm << std::endl;}
+MyRDFOp::MyRDFOp(int dm){_datamember=dm; std::cout << "dm "<< dm << std::endl;}
 double JetClustering::MyRDFOp::operator()(double input1, double input2){ return input1 + input2 + _datamember; }
 
 clustering_kt::clustering_kt(float arg_radius,
