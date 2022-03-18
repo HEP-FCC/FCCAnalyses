@@ -39,7 +39,7 @@ namespace JetClustering{
   private:
     int _datamember;
   public:
-    MyRDFOp();
+    MyRDFOp(int dm);
     double operator()(double input1, double input2);
   };
 
