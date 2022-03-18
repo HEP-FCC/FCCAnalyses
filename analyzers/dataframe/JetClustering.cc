@@ -46,13 +46,13 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (con
   //transform to FCCAnalysesJet
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
 
-  if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
+  if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
   return result;
 }
 
 
 clustering_antikt::clustering_antikt(float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination){m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination;}
-JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_antikt::operator() (cont std::vector<fastjet::PseudoJet> &input) {
+JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_antikt::operator() (const std::vector<fastjet::PseudoJet> &input) {
 
   if (JetClusteringUtils::check(input.size(),m_exclusive, m_cut)==false) return JetClusteringUtils::initialise_FCCAnalysesJet();
 
