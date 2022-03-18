@@ -127,9 +127,9 @@ minimize_thrust::minimize_thrust(std::string arg_minname,
   m_min->SetTolerance(m_tolerance);
   m_min->SetPrintLevel(0);
 
-  _step = {0.001,0.001,0.001};
+  //_step = {0.001,0.001,0.001};
   // starting point
-  _variable = { 1.,1.,1.};
+  //_variable = { 1.,1.,1.};
 
 
 }
