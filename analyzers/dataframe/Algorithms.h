@@ -49,7 +49,7 @@ namespace Algorithms{
     char const *_algoname; ///Optimisation algorithm, Migrad default
     int _maxcalls; ///Maximum call to minimization function, default=100000
     float _tolerance; ///Tolerance for minimization, default=0.001
-    ROOT::Math::Minimizer *m_min; ///internal ROOT minimizer
+    ROOT::Math::Minimizer *_min; ///internal ROOT minimizer
     double _step[3]={0.001,0.001,0.001};
     double _variable[3]={1.0,1.0,1.0};
   };
