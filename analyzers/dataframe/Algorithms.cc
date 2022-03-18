@@ -55,9 +55,9 @@ minimize_sphericity::minimize_sphericity(std::string arg_minname,
 ROOT::VecOps::RVec<float> Algorithms::minimize_sphericity::operator()(const ROOT::VecOps::RVec<float> & px,
 	                                                                    const ROOT::VecOps::RVec<float> & py,
 																																			const ROOT::VecOps::RVec<float> & pz){
-  _min->SetVariable(0,"x",variable[0], step[0]);
-	_min->SetVariable(0,"y",variable[1], step[1]);
-	_min->SetVariable(2,"z",variable[2], step[2]);
+  _min->SetVariable(0,"x",_variable[0], _step[0]);
+	_min->SetVariable(0,"y",_variable[1], _step[1]);
+	_min->SetVariable(2,"z",_variable[2], _step[2]);
 
 	// create functon wrapper for minmizer
   // a IMultiGenFunction type
