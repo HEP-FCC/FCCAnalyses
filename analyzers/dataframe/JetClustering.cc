@@ -10,10 +10,6 @@
 
 using namespace JetClustering;
 
-
-MyRDFOp::MyRDFOp(int dm){_datamember=dm; std::cout << "dm "<< dm << std::endl;}
-double JetClustering::MyRDFOp::operator()(double input1, double input2){ return input1 + input2 + _datamember; }
-
 clustering_kt::clustering_kt(float arg_radius,
                              int arg_exclusive,
                              float arg_cut,
@@ -51,7 +47,7 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (con
   //transform to FCCAnalysesJet
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
 
-  //if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
+  if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
   return result;
 }
 

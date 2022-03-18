@@ -35,14 +35,6 @@ namespace JetClustering{
 
   ///Jet Clustering interface for kt
 
-  class MyRDFOp {
-  private:
-    int _datamember;
-  public:
-    MyRDFOp(int dm);
-    double operator()(double input1, double input2);
-  };
-
   struct clustering_kt {
   public:
     clustering_kt (float arg_radius = 0.5,
