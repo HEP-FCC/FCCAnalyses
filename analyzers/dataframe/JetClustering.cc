@@ -31,6 +31,7 @@ clustering_kt::clustering_kt(float arg_radius,
   //define the clustering sequence and jet definition
   fastjet::ClusterSequence m_cs;
   m_def = fastjet::JetDefinition(m_jetAlgorithm, m_radius, m_recombScheme);
+  std::cout <<"fastjet::RecombinationScheme::external_scheme "<<fastjet::RecombinationScheme::external_scheme<<std::endl;
   if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.set_recombiner(new ExternalRecombiner(m_recombination));
 }
 JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (const std::vector<fastjet::PseudoJet> &input) {
@@ -46,7 +47,7 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (con
   //transform to FCCAnalysesJet
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
 
-  if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
+  //if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.delete_recombiner_when_unused();
   return result;
 }
 
