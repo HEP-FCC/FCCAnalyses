@@ -30,7 +30,7 @@ clustering_kt::clustering_kt(float arg_radius,
 
   //define the clustering sequence and jet definition
   fastjet::ClusterSequence m_cs;
-  m_def(m_jetAlgorithm, m_radius, m_recombScheme);
+  m_def = fastjet::JetDefinition(m_jetAlgorithm, m_radius, m_recombScheme);
   if (m_recombScheme == fastjet::RecombinationScheme::external_scheme) m_def.set_recombiner(new ExternalRecombiner(m_recombination));
 }
 JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (const std::vector<fastjet::PseudoJet> &input) {
