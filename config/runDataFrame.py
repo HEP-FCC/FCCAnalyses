@@ -84,15 +84,15 @@ class runDataFrame():
             print ('About to run process {} with {} events in {} consecutive local jobs with {} files per job'.format(pr,nevents_real,noutfiles,nfilesperjob))
             import analysis as ana
             import time
-
+            outNameFull=''
             for nout in range(noutfiles):
                 filecount=0
                 print ("For job {}, create list object from ".format(nout),)
                 fileListRoot = ROOT.vector('string')()
                 if noutfiles>1:
-                    outName='{}/chunk_{}.root'.format(outName,nout)
+                    outNameFull='{}/chunk_{}.root'.format(outName,nout)
+                else: outNameFull=outName+'.root'
 
-                else: outName=outName+'.root'
                 for fileName in filelist:
                     if (filecount>=nout*nfilesperjob and filecount<(nout+1)*nfilesperjob) or (filecount>=nout*nfilesperjob and nout==noutfiles-1):
                         fileListRoot.push_back(fileName)
@@ -101,7 +101,7 @@ class runDataFrame():
                     filecount+=1
 
                 start_time = time.time()
-                myana=ana.analysis(fileListRoot,outDir+outName,ncpu)
+                myana=ana.analysis(fileListRoot,outDir+outNameFull,ncpu)
                 myana.run()
                 elapsed_time = time.time() - start_time
                 print  ('==============================SUMMARY==============================')
@@ -110,7 +110,7 @@ class runDataFrame():
                 print  ('Total Events Processed   :  ',int(nevents_real))
                 print  ('===================================================================')
 
-                outf = ROOT.TFile( outDir+outName, 'update' )
+                outf = ROOT.TFile( outDir+outNameFull, 'update' )
                 meta = ROOT.TTree( 'metadata', 'metadata informations' )
                 n = array( 'i', [ 0 ] )
                 meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
