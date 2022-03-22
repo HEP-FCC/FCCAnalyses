@@ -75,7 +75,8 @@ class runDataFrame():
 
             noutfiles=1
             if isinstance(self.process_list, dict): noutfiles=self.process_list[pr]
-            nfilesperjob=int(len(filelist)/noutfiles)+1
+            nfilesperjob=int(len(filelist)/noutfiles)
+            #if len(filelist)/noutfiles>nfilesperjob:nfilesperjob+=1
             print ('About to run process {} with {} events in {} consecutive local jobs with {} files per job'.format(pr,nevents_real,noutfiles,nfilesperjob))
             import analysis as ana
             import time
@@ -85,7 +86,7 @@ class runDataFrame():
                 print ("For job {}, create list object from ".format(nout),)
                 fileListRoot = ROOT.vector('string')()
                 for fileName in filelist:
-                    if filecount>=nout*nfilesperjob and filecount<(nout+1)*nfilesperjob:
+                    if (filecount>=nout*nfilesperjob and filecount<(nout+1)*nfilesperjob) or (filecount>=nout*nfilesperjob and nout==noutfiles-1):
                         fileListRoot.push_back(fileName)
                         print (fileName, " ",)
                         print (" ...")
