@@ -99,7 +99,7 @@ class runDataFrame():
                 print  ('Total Events Processed   :  ',int(nevents_real))
                 print  ('===================================================================')
 
-                outf = ROOT.TFile( outDir+outName+'.root', 'update' )
+                outf = ROOT.TFile( outDir+outName+'_'+nout+'.root', 'update' )
                 meta = ROOT.TTree( 'metadata', 'metadata informations' )
                 n = array( 'i', [ 0 ] )
                 meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
