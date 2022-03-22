@@ -77,6 +77,8 @@ class runDataFrame():
             if isinstance(self.process_list, dict):
                 noutfiles=self.process_list[pr]
                 if noutfiles > len(filelist) : noutfiles = len(filelist)
+                if noutfiles>1 and not os.path.exists(outDir+outName):
+                    os.system("mkdir -p {}".format(outDir+outName))
             nfilesperjob=int(len(filelist)/noutfiles)
             #if len(filelist)/noutfiles>nfilesperjob:nfilesperjob+=1
             print ('About to run process {} with {} events in {} consecutive local jobs with {} files per job'.format(pr,nevents_real,noutfiles,nfilesperjob))
@@ -89,8 +91,7 @@ class runDataFrame():
                 fileListRoot = ROOT.vector('string')()
                 if noutfiles>1:
                     outName='{}/chunk_{}.root'.format(outName,nout)
-                    if not os.path.exists(outDir+outName):
-                        os.system("mkdir -p {}".format(outDir+outName))
+
                 else: outName=outName+'.root'
                 for fileName in filelist:
                     if (filecount>=nout*nfilesperjob and filecount<(nout+1)*nfilesperjob) or (filecount>=nout*nfilesperjob and nout==noutfiles-1):
