@@ -81,13 +81,15 @@ class runDataFrame():
             import time
 
             for nout in range(noutfiles):
+                filecount=0
                 print ("For job {}, create list object from ".format(nout),)
                 fileListRoot = ROOT.vector('string')()
                 for fileName in filelist:
-                    if fileListRoot.size()>=nout*nfilesperjob and fileListRoot.size()<(nout+1)*nfilesperjob:
+                    if filecount>=nout*nfilesperjob and filecount<(nout+1)*nfilesperjob:
                         fileListRoot.push_back(fileName)
                         print (fileName, " ",)
                         print (" ...")
+                        filecount+=1
 
                 start_time = time.time()
                 myana=ana.analysis(fileListRoot,outDir+outName+'_'+nout+'.root',ncpu)
