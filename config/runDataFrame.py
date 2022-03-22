@@ -74,7 +74,9 @@ class runDataFrame():
                 sys.exit(3)
 
             noutfiles=1
-            if isinstance(self.process_list, dict): noutfiles=self.process_list[pr]
+            if isinstance(self.process_list, dict):
+                noutfiles=self.process_list[pr]
+                if noutfiles > len(filelist) : noutfiles = len(filelist)   
             nfilesperjob=int(len(filelist)/noutfiles)
             #if len(filelist)/noutfiles>nfilesperjob:nfilesperjob+=1
             print ('About to run process {} with {} events in {} consecutive local jobs with {} files per job'.format(pr,nevents_real,noutfiles,nfilesperjob))
