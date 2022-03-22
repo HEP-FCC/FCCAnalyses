@@ -93,7 +93,7 @@ class runDataFrame():
                         filecount+=1
 
                 start_time = time.time()
-                myana=ana.analysis(fileListRoot,outDir+outName+'_'+nout+'.root',ncpu)
+                myana=ana.analysis(fileListRoot,outDir+outName+'_'+str(nout)+'.root',ncpu)
                 myana.run()
                 elapsed_time = time.time() - start_time
                 print  ('==============================SUMMARY==============================')
@@ -102,7 +102,7 @@ class runDataFrame():
                 print  ('Total Events Processed   :  ',int(nevents_real))
                 print  ('===================================================================')
 
-                outf = ROOT.TFile( outDir+outName+'_'+nout+'.root', 'update' )
+                outf = ROOT.TFile( outDir+outName+'_'+str(nout)+'.root', 'update' )
                 meta = ROOT.TTree( 'metadata', 'metadata informations' )
                 n = array( 'i', [ 0 ] )
                 meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
