@@ -89,6 +89,8 @@ class runDataFrame():
                 fileListRoot = ROOT.vector('string')()
                 if noutfiles>1:
                     outName='{}/chunk_{}.root'.format(outName,nout)
+                    if not os.path.exists(outDir+outName):
+                        os.system("mkdir -p {}".format(outDir+outName))
                 else: outName=outName+'.root'
                 for fileName in filelist:
                     if (filecount>=nout*nfilesperjob and filecount<(nout+1)*nfilesperjob) or (filecount>=nout*nfilesperjob and nout==noutfiles-1):
