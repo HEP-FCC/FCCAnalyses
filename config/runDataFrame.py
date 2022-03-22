@@ -75,7 +75,7 @@ class runDataFrame():
 
             noutfiles=1
             if isinstance(self.process_list, dict): noutfiles=self.process_list[pr]
-            nfilesperjob=int(len(fileListRoot)/noutfiles)+1
+            nfilesperjob=int(len(filelist)/noutfiles)+1
             print ('About to run process {} with {} events in {} consecutive local jobs with {} files per job'.format(pr,nevents_real,noutfiles,nfilesperjob))
             import analysis as ana
             import time
