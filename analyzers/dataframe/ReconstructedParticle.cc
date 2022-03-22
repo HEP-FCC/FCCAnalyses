@@ -209,7 +209,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::re
 	   abs(py1-py2) < epsilon &&
 	   abs(pz1-pz2) < epsilon ) {
         result.erase(it);
-        //break;
+        break;
       }
     }
   }
