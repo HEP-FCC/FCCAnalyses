@@ -76,7 +76,7 @@ class runDataFrame():
             noutfiles=1
             if isinstance(self.process_list, dict):
                 noutfiles=self.process_list[pr]
-                if noutfiles > len(filelist) : noutfiles = len(filelist)   
+                if noutfiles > len(filelist) : noutfiles = len(filelist)
             nfilesperjob=int(len(filelist)/noutfiles)
             #if len(filelist)/noutfiles>nfilesperjob:nfilesperjob+=1
             print ('About to run process {} with {} events in {} consecutive local jobs with {} files per job'.format(pr,nevents_real,noutfiles,nfilesperjob))
@@ -87,15 +87,18 @@ class runDataFrame():
                 filecount=0
                 print ("For job {}, create list object from ".format(nout),)
                 fileListRoot = ROOT.vector('string')()
+                if noutfiles>1:
+                    outName='{}/chunk_{}.root'.format(outName,nout)
+                else: outName=outName+'.root'
                 for fileName in filelist:
                     if (filecount>=nout*nfilesperjob and filecount<(nout+1)*nfilesperjob) or (filecount>=nout*nfilesperjob and nout==noutfiles-1):
                         fileListRoot.push_back(fileName)
                         print (fileName, " ",)
                         print (" ...")
-                        filecount+=1
+                    filecount+=1
 
                 start_time = time.time()
-                myana=ana.analysis(fileListRoot,outDir+outName+'_'+str(nout)+'.root',ncpu)
+                myana=ana.analysis(fileListRoot,outDir+outName,ncpu)
                 myana.run()
                 elapsed_time = time.time() - start_time
                 print  ('==============================SUMMARY==============================')
@@ -104,7 +107,7 @@ class runDataFrame():
                 print  ('Total Events Processed   :  ',int(nevents_real))
                 print  ('===================================================================')
 
-                outf = ROOT.TFile( outDir+outName+'_'+str(nout)+'.root', 'update' )
+                outf = ROOT.TFile( outDir+outName, 'update' )
                 meta = ROOT.TTree( 'metadata', 'metadata informations' )
                 n = array( 'i', [ 0 ] )
                 meta.Branch( 'eventsProcessed', n, 'eventsProcessed/I' )
