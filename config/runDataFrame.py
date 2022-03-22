@@ -90,7 +90,7 @@ class runDataFrame():
                 print ("For job {}, create list object from ".format(nout),)
                 fileListRoot = ROOT.vector('string')()
                 if noutfiles>1:
-                    outNameFull='{}/chunk_{}.root'.format(outName,nout)
+                    outNameFull='{}/flat_chunk_{}.root'.format(outName,nout)
                 else: outNameFull=outName+'.root'
 
                 for fileName in filelist:
