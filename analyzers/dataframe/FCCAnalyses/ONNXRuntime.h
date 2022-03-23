@@ -19,7 +19,10 @@ public:
 
   ONNXRuntime& operator=(const ONNXRuntime&) = delete;
 
-  ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>) const;
+  template <typename... Args> ROOT::VecOps::RVec<float> operator()(Args&&... args) const {
+    return operator()(std::vector<ROOT::RVec<float> >{std::forward<Args>(args)...});
+  }
+  ROOT::VecOps::RVec<float> operator()(std::vector<ROOT::VecOps::RVec<float> >) const;
 
 private:
   explicit ONNXRuntime(const std::string& model_path = "", const std::string& preprocess_json = "");
