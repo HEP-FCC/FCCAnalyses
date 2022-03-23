@@ -10,10 +10,11 @@ public:
   WeaverInterface(const WeaverInterface&) = delete;
   WeaverInterface& operator=(const WeaverInterface&) = delete;
 
-  template <typename... Args> ROOT::VecOps::RVec<float> operator()(Args&&... args) const {
-    return operator()(std::vector<ROOT::RVec<float> >{std::forward<Args>(args)...});
-  }
+  //template <typename... Args> ROOT::VecOps::RVec<float> operator()(Args&&... args) const {
+  //  return operator()(std::vector<ROOT::RVec<float> >{std::forward<Args>(args)...});
+  //}
   ROOT::VecOps::RVec<float> operator()(std::vector<ROOT::VecOps::RVec<float> >) const;
+  ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >) const;
 
 private:
   explicit WeaverInterface(const std::string& onnx_filename);

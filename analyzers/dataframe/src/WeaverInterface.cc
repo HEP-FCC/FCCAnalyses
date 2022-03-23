@@ -43,3 +43,22 @@ ROOT::VecOps::RVec<float> WeaverInterface::operator()(std::vector<ROOT::VecOps::
 
   return ROOT::VecOps::RVec<float>(output_values);
 }
+
+ROOT::VecOps::RVec<float> WeaverInterface::operator()(ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > points, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > features, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > mask) const {
+  std::vector<std::vector<float> > input_values;
+  input_values.reserve(3);
+  for (const auto& point : points) {
+    for (const auto& it : point)
+      input_values[0].emplace_back(it);
+  }
+  for (const auto& feature : features) {
+    for (const auto& it : feature)
+      input_values[1].emplace_back(it);
+  }
+  for (const auto& msk : mask) {
+    for (const auto& it : msk)
+      input_values[2].emplace_back(it);
+  }
+  const auto output_values = onnx_->run(input_values);
+  return ROOT::VecOps::RVec<float>(output_values);
+}

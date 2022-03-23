@@ -18,12 +18,6 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 
-#ROOT.gInterpreter.ProcessLine("#include \"ONNXRuntime.h\"")
-#ROOT.gInterpreter.ProcessLine('''
-#ONNXRuntime onnxrt("/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx", "/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json");
-#onnxRuntime = ONNXRuntime::run(onnxrt);
-#''')
-
 class analysis():
 
     #__________________________________________________________
@@ -36,11 +30,8 @@ class analysis():
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" init done, about to run")
-        self.onnxrt = ROOT.ONNXRuntime.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-                                           '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
+        self.onnxrt = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx')
         translation = {'pfcand_e': '', 'pfcand_theta': '', 'pfcand_phi': '', 'pfcand_pid': '', 'pfcand_charge': ''}
-        #self.onnxrt = ROOT.ONNXRuntime('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-        #                               '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
         #exit(0)
 
     #__________________________________________________________
@@ -48,16 +39,16 @@ class analysis():
         #df2 = (self.df.Range(1000)
         print('before')
         df2 = (self.df
-               #.Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
-               #.Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               #.Define("RP_e",          "ReconstructedParticle::get_e(ReconstructedParticles)")
+               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
+               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
+               .Define("RP_e",          "ReconstructedParticle::get_e(ReconstructedParticles)")
                .Define("RP_theta",      "ReconstructedParticle::get_theta(ReconstructedParticles)")
                .Define("RP_phi",        "ReconstructedParticle::get_phi(ReconstructedParticles)")
-               #.Define("RP_charge",     "ReconstructedParticle::get_charge(ReconstructedParticles)")
-               #.Define("RP_pid" ,       "myUtils::PID(ReconstructedParticles, MCRecoAssociations0, MCRecoAssociations1, Particle)")
+               .Define("RP_charge",     "ReconstructedParticle::get_charge(ReconstructedParticles)")
+               .Define("RP_pid" ,       "myUtils::PID(ReconstructedParticles, MCRecoAssociations0, MCRecoAssociations1, Particle)")
 
                #.Define("MVAVec", "ONNXRuntime::get()(RP_e, RP_theta, RP_phi, RP_pid, RP_charge)")
-               .Define("MVAVec", "ONNXRuntime::get()(RP_theta, RP_phi)")
+               .Define("MVAVec", "WeaverInterface::get()(ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_theta, RP_phi}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_e, RP_theta, RP_phi, RP_pid, RP_charge}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{})")
                #.Define("MVAVec", "ONNXRuntime::get()({RP_e, RP_theta, RP_phi, RP_pid, RP_charge})")
         )
         print('after')
@@ -65,8 +56,8 @@ class analysis():
         branchList = ROOT.vector('string')()
         for branchName in [
             'RP_theta', 'RP_phi',
-            'MVAVec',
-            #'RP_pid',
+            #'MVAVec',
+            'RP_pid',
             ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
