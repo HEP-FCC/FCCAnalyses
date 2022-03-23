@@ -11,15 +11,6 @@
 ONNXRuntime::ONNXRuntime(const std::string& model_path) :
     env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")) {
   std::cout << "building new ONNXRuntime object" << std::endl;
-  /*if (!preprocess_json.empty()) {
-    // the preprocessing JSON was found ; extract the variables listing and all useful information
-    std::ifstream json_file(preprocess_json);
-    std::stringstream json_content;
-    json_content << json_file.rdbuf();
-    const std::shared_ptr<awkward::Form> json = awkward::Form::fromjson(json_content.str());
-    for (const auto& key : json->keys())
-      std::cout << ">> " << key << std::endl;
-  }*/
   Ort::SessionOptions options;
   auto path = model_path;
   session_ = std::make_unique<Ort::Experimental::Session>(*env_, path, options);

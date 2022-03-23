@@ -13,6 +13,7 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.dummyLoader
+_wea  = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx')
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -30,7 +31,6 @@ class analysis():
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" init done, about to run")
-        self.onnxrt = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx')
         translation = {'pfcand_e': '', 'pfcand_theta': '', 'pfcand_phi': '', 'pfcand_pid': '', 'pfcand_charge': ''}
         #exit(0)
 
@@ -47,9 +47,9 @@ class analysis():
                .Define("RP_charge",     "ReconstructedParticle::get_charge(ReconstructedParticles)")
                .Define("RP_pid" ,       "myUtils::PID(ReconstructedParticles, MCRecoAssociations0, MCRecoAssociations1, Particle)")
 
-               #.Define("MVAVec", "ONNXRuntime::get()(RP_e, RP_theta, RP_phi, RP_pid, RP_charge)")
-               .Define("MVAVec", "WeaverInterface::get()(ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_theta, RP_phi}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_e, RP_theta, RP_phi, RP_pid, RP_charge}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{})")
-               #.Define("MVAVec", "ONNXRuntime::get()({RP_e, RP_theta, RP_phi, RP_pid, RP_charge})")
+               #.Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_phi, RP_pid, RP_charge)")
+               #.Define("MVAVec", "WeaverInterface::get()(ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_theta, RP_phi}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_e, RP_theta, RP_phi, RP_pid, RP_charge}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{})")
+               #.Define("MVAVec", "WeaverInterface::get()({RP_e, RP_theta, RP_phi, RP_pid, RP_charge})")
         )
         print('after')
         # select branches for output file

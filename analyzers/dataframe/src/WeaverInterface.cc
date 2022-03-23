@@ -2,11 +2,20 @@
 
 WeaverInterface::WeaverInterface(const std::string& onnx_filename)
   : onnx_(new ONNXRuntime(onnx_filename)) {
+  /*if (!preprocess_json.empty()) {
+    // the preprocessing JSON was found ; extract the variables listing and all useful information
+    std::ifstream json_file(preprocess_json);
+    std::stringstream json_content;
+    json_content << json_file.rdbuf();
+    const std::shared_ptr<awkward::Form> json = awkward::Form::fromjson(json_content.str());
+    for (const auto& key : json->keys())
+      std::cout << ">> " << key << std::endl;
+  }*/
 }
 
 WeaverInterface& WeaverInterface::get(const std::string& onnx_filename) {
-  static WeaverInterface interf(onnx_filename);
-  return interf;
+  static WeaverInterface interface(onnx_filename);
+  return interface;
 }
 
 ROOT::VecOps::RVec<float> WeaverInterface::operator()(std::vector<ROOT::VecOps::RVec<float> > in) const {
