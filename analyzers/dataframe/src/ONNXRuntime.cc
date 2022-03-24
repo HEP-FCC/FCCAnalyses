@@ -5,8 +5,8 @@
 #include <fstream>
 #include <iostream>
 
-ONNXRuntime::ONNXRuntime(const std::string& model_path) :
-    env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")) {
+ONNXRuntime::ONNXRuntime(const std::string& model_path)
+    : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")) {
   std::cout << "building new ONNXRuntime object" << std::endl;
   Ort::SessionOptions options;
   auto path = model_path;
@@ -27,11 +27,12 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path) :
 
 ONNXRuntime::~ONNXRuntime() {}
 
-template<typename T>
+template <typename T>
 ONNXRuntime::Tensor<T> ONNXRuntime::run(const Tensor<T>& input) const {
   std::vector<Ort::Value> tensors_in;
   for (const auto& val : input) {
-    auto tensor = Ort::Experimental::Value::CreateTensor<T>(const_cast<T*>(val.data()), val.size(), session_->GetInputShapes()[0]);
+    auto tensor = Ort::Experimental::Value::CreateTensor<T>(
+        const_cast<T*>(val.data()), val.size(), session_->GetInputShapes()[0]);
     if (!tensor.IsTensor())
       throw std::runtime_error("Failed to create a tensor for input values");
     tensors_in.emplace_back(std::move(tensor));

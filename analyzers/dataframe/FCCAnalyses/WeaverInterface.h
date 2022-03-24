@@ -6,26 +6,37 @@
 
 class WeaverInterface {
 public:
-  static WeaverInterface& get(const std::string& onnx_filename = "", const std::string& json_filename = "", int npoints = 0, int nfeatures = 0);
+  static WeaverInterface& get(const std::string& onnx_filename = "",
+                              const std::string& json_filename = "",
+                              int npoints = 0,
+                              int nfeatures = 0);
 
   WeaverInterface(const WeaverInterface&) = delete;
   WeaverInterface& operator=(const WeaverInterface&) = delete;
 
-  template <typename... Args> ROOT::VecOps::RVec<float> operator()(Args&&... args) {
+  template <typename... Args>
+  ROOT::VecOps::RVec<float> operator()(Args&&... args) {
     std::vector<ROOT::VecOps::RVec<float> > vars{std::forward<Args>(args)...};
-    std::vector<ROOT::VecOps::RVec<float> > points(vars.begin(), vars.begin() + npoints_), features(vars.begin() + npoints_, vars.begin() + npoints_ + nfeatures_);
+    std::vector<ROOT::VecOps::RVec<float> > points(vars.begin(), vars.begin() + npoints_),
+        features(vars.begin() + npoints_, vars.begin() + npoints_ + nfeatures_);
     return run(points, features);
   }
 
 private:
   explicit WeaverInterface(const std::string&, const std::string&, int, int);
-  ROOT::VecOps::RVec<float> run(const std::vector<ROOT::VecOps::RVec<float> >&, const std::vector<ROOT::VecOps::RVec<float> >&);
+  ROOT::VecOps::RVec<float> run(const std::vector<ROOT::VecOps::RVec<float> >&,
+                                const std::vector<ROOT::VecOps::RVec<float> >&);
 
   struct PreprocessParams {
     struct VarInfo {
       VarInfo() {}
       VarInfo(float median, float norm_factor, float replace_inf_value, float lower_bound, float upper_bound, float pad)
-        : center(median), norm_factor(norm_factor), replace_inf_value(replace_inf_value), lower_bound(lower_bound), upper_bound(upper_bound), pad(pad) {}
+          : center(median),
+            norm_factor(norm_factor),
+            replace_inf_value(replace_inf_value),
+            lower_bound(lower_bound),
+            upper_bound(upper_bound),
+            pad(pad) {}
 
       float center{0.};
       float norm_factor{1.};

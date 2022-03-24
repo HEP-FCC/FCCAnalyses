@@ -3,8 +3,11 @@
 #include "nlohmann/json.hpp"
 #include <fstream>
 
-WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::string& json_filename, int npoints, int nfeatures)
-  : onnx_(new ONNXRuntime(onnx_filename)), npoints_(npoints), nfeatures_(nfeatures) {
+WeaverInterface::WeaverInterface(const std::string& onnx_filename,
+                                 const std::string& json_filename,
+                                 int npoints,
+                                 int nfeatures)
+    : onnx_(new ONNXRuntime(onnx_filename)), npoints_(npoints), nfeatures_(nfeatures) {
   if (json_filename.empty())
     throw std::runtime_error("JSON preprocessed input file not specified!");
 
@@ -30,12 +33,13 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::st
     const auto& var_info_params = group_params.at("var_infos");
     for (const auto& name : info.var_names) {
       const auto& var_params = var_info_params.at(name);
-      info.var_info_map[name] = PreprocessParams::VarInfo(var_params.at("median"),
-                                                          var_params.at("norm_factor"),
-                                                          var_params.at("replace_inf_value"),
-                                                          var_params.at("lower_bound"),
-                                                          var_params.at("upper_bound"),
-                                                          var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
+      info.var_info_map[name] =
+          PreprocessParams::VarInfo(var_params.at("median"),
+                                    var_params.at("norm_factor"),
+                                    var_params.at("replace_inf_value"),
+                                    var_params.at("lower_bound"),
+                                    var_params.at("upper_bound"),
+                                    var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
     }
     // create data storage with a fixed size vector initialised with 0's
     const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
@@ -43,12 +47,16 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::st
   }
 }
 
-WeaverInterface& WeaverInterface::get(const std::string& onnx_filename, const std::string& json_filename, int npoints, int nfeatures) {
+WeaverInterface& WeaverInterface::get(const std::string& onnx_filename,
+                                      const std::string& json_filename,
+                                      int npoints,
+                                      int nfeatures) {
   static WeaverInterface interface(onnx_filename, json_filename, npoints, nfeatures);
   return interface;
 }
 
-ROOT::VecOps::RVec<float> WeaverInterface::run(const std::vector<ROOT::VecOps::RVec<float> >& points, const std::vector<ROOT::VecOps::RVec<float> >& features) {
+ROOT::VecOps::RVec<float> WeaverInterface::run(const std::vector<ROOT::VecOps::RVec<float> >& points,
+                                               const std::vector<ROOT::VecOps::RVec<float> >& features) {
   /*input_values.reserve(3);
   for (const auto& point : points) {
     for (const auto& it : point)
@@ -63,7 +71,8 @@ ROOT::VecOps::RVec<float> WeaverInterface::run(const std::vector<ROOT::VecOps::R
   //    input_values[2].emplace_back(it);
   //}*/
   std::vector<float> output_values;
-  for (size_t i = 0; i < features.at(0).size(); ++i) { // loop over candidates
+  std::cout << "operator() -> " << data_.size() << std::endl;
+  for (size_t i = 0; i < features.at(0).size(); ++i) {  // loop over candidates
     data_[i].resize(features.at(0).size());
     for (size_t j = 0; j < features.size(); ++j) {
       data_[i][j] = features.at(j).at(i);
