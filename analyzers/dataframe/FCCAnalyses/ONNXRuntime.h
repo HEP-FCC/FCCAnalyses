@@ -1,8 +1,8 @@
 #ifndef analyzers_ONNXRuntime_h
 #define analyzers_ONNXRuntime_h
 
-#include "ROOT/RVec.hxx"
-//#include "edm4hep/ReconstructedParticleData.h"
+#include <vector>
+#include <memory>
 
 namespace Ort {
   class Env;
@@ -16,10 +16,14 @@ public:
   explicit ONNXRuntime(const std::string& model_path = "");
   virtual ~ONNXRuntime();
 
+  template<typename T>
+  using Tensor = std::vector<std::vector<T> >;
+
   ONNXRuntime(const ONNXRuntime&) = delete;
   ONNXRuntime& operator=(const ONNXRuntime&) = delete;
 
-  std::vector<float> run(const std::vector<std::vector<float> >& input) const;
+  template<typename T>
+  Tensor<T> run(const Tensor<T>& input) const;
 
 private:
   std::unique_ptr<Ort::Env> env_;

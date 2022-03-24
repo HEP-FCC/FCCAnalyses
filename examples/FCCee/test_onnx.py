@@ -13,7 +13,10 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.dummyLoader
-_wea  = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx')
+_wea  = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
+                                 '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json',
+                                 2,
+                                 5)
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -47,16 +50,14 @@ class analysis():
                .Define("RP_charge",     "ReconstructedParticle::get_charge(ReconstructedParticles)")
                .Define("RP_pid" ,       "myUtils::PID(ReconstructedParticles, MCRecoAssociations0, MCRecoAssociations1, Particle)")
 
-               #.Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_phi, RP_pid, RP_charge)")
-               #.Define("MVAVec", "WeaverInterface::get()(ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_theta, RP_phi}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{RP_e, RP_theta, RP_phi, RP_pid, RP_charge}, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >{})")
-               #.Define("MVAVec", "WeaverInterface::get()({RP_e, RP_theta, RP_phi, RP_pid, RP_charge})")
+               .Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_e, RP_theta, RP_phi, RP_phi, RP_charge)")
         )
         print('after')
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
             'RP_theta', 'RP_phi',
-            #'MVAVec',
+            'MVAVec',
             'RP_pid',
             ]:
             branchList.push_back(branchName)

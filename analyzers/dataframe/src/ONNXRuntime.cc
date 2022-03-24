@@ -2,9 +2,6 @@
 
 #include "core/session/experimental_onnxruntime_cxx_api.h"
 
-#include "awkward/Content.h"
-#include "awkward/io/json.h"
-
 #include <fstream>
 #include <iostream>
 
@@ -30,12 +27,11 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path) :
 
 ONNXRuntime::~ONNXRuntime() {}
 
-std::vector<float> ONNXRuntime::run(const std::vector<std::vector<float> >& input) const {
-  // convert the input values to tensors
+template<typename T>
+ONNXRuntime::Tensor<T> ONNXRuntime::run(const Tensor<T>& input) const {
   std::vector<Ort::Value> tensors_in;
-  //for (size_t i = 0; i < session_->GetOutputCount(); ++i) {
   for (const auto& val : input) {
-    auto tensor = Ort::Experimental::Value::CreateTensor<float>(const_cast<float*>(val.data()), val.size(), session_->GetInputShapes()[0]);
+    auto tensor = Ort::Experimental::Value::CreateTensor<T>(const_cast<T*>(val.data()), val.size(), session_->GetInputShapes()[0]);
     if (!tensor.IsTensor())
       throw std::runtime_error("Failed to create a tensor for input values");
     tensors_in.emplace_back(std::move(tensor));
@@ -46,14 +42,14 @@ std::vector<float> ONNXRuntime::run(const std::vector<std::vector<float> >& inpu
   auto tensors_out = session_->Run(session_->GetInputNames(), tensors_in, session_->GetOutputNames());
 
   // convert output to floats
-  std::vector<std::vector<float> > output_values;
+  Tensor<T> output_values;
   for (auto& tensor : tensors_out) {
     if (!tensor.IsTensor())
-      continue; //FIXME
-    // get output shape
+      throw std::runtime_error("(At least) one of the inference outputs is not a tensor.");
+    // recast the output given its shape/arrays length
     const auto length = tensor.GetTensorTypeAndShapeInfo().GetElementCount();
-    const auto floatarr = tensor.GetTensorMutableData<float>();
-    output_values.emplace_back(floatarr, floatarr + length);
+    const auto data = tensor.GetTensorMutableData<T>();
+    output_values.emplace_back(data, data + length);
   }
-  return output_values.at(0); //FIXME
+  return output_values;
 }

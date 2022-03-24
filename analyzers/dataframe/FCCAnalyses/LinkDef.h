@@ -21,9 +21,6 @@
 #pragma link C++ class ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>+;
 #pragma link C++ class ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>>+;
 
-#pragma link C++ class ONNXRuntime+;
-#pragma link C++ class WeaverInterface+;
-
 //to load all other functions
 #pragma link C++ function dummyLoader;
 

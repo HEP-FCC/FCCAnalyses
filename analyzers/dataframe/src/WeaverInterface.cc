@@ -1,61 +1,55 @@
 #include "WeaverInterface.h"
 
-WeaverInterface::WeaverInterface(const std::string& onnx_filename)
-  : onnx_(new ONNXRuntime(onnx_filename)) {
-  /*if (!preprocess_json.empty()) {
-    // the preprocessing JSON was found ; extract the variables listing and all useful information
-    std::ifstream json_file(preprocess_json);
-    std::stringstream json_content;
-    json_content << json_file.rdbuf();
-    const std::shared_ptr<awkward::Form> json = awkward::Form::fromjson(json_content.str());
-    for (const auto& key : json->keys())
-      std::cout << ">> " << key << std::endl;
-  }*/
+#include "nlohmann/json.hpp"
+#include <fstream>
+
+WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::string& json_filename, int npoints, int nfeatures)
+  : onnx_(new ONNXRuntime(onnx_filename)), npoints_(npoints), nfeatures_(nfeatures) {
+  if (json_filename.empty())
+    throw std::runtime_error("JSON preprocessed input file not specified!");
+
+  // the preprocessing JSON was found ; extract the variables listing and all useful information
+  std::ifstream json_file(json_filename);
+  const auto json = nlohmann::json::parse(json_file);
+  json.at("input_names").get_to(input_names_);
+  for (const auto& input : input_names_) {
+    const auto& group_params = json.at(input);
+    auto& info = prep_info_map_[input];
+    // retrieve the variables names
+    group_params.at("var_names").get_to(info.var_names);
+    // retrieve the shapes for all variables
+    if (group_params.contains("var_length")) {
+      info.min_length = group_params.at("var_length");
+      info.max_length = info.min_length;
+    } else {
+      info.min_length = group_params.at("min_length");
+      info.max_length = group_params.at("max_length");
+      input_shapes_.push_back({1, (int64_t)info.var_names.size(), -1});
+    }
+    // for all variables, retrieve the allowed range
+    const auto& var_info_params = group_params.at("var_infos");
+    for (const auto& name : info.var_names) {
+      const auto& var_params = var_info_params.at(name);
+      info.var_info_map[name] = PreprocessParams::VarInfo(var_params.at("median"),
+                                                          var_params.at("norm_factor"),
+                                                          var_params.at("replace_inf_value"),
+                                                          var_params.at("lower_bound"),
+                                                          var_params.at("upper_bound"),
+                                                          var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
+    }
+    // create data storage with a fixed size vector initialised with 0's
+    const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
+    data_.emplace_back(len, 0);
+  }
 }
 
-WeaverInterface& WeaverInterface::get(const std::string& onnx_filename) {
-  static WeaverInterface interface(onnx_filename);
+WeaverInterface& WeaverInterface::get(const std::string& onnx_filename, const std::string& json_filename, int npoints, int nfeatures) {
+  static WeaverInterface interface(onnx_filename, json_filename, npoints, nfeatures);
   return interface;
 }
 
-ROOT::VecOps::RVec<float> WeaverInterface::operator()(std::vector<ROOT::VecOps::RVec<float> > in) const {
-  ROOT::VecOps::RVec<float> out;
-  if (in.empty())
-    throw std::runtime_error("Invalid size for the input collection: " + std::to_string(in.size()));
-
-  // convert the input vector{var: RVec<float>} into a vector{var: vector{part: float}}
-  std::vector<std::vector<float> > input_values, input_vars;
-  for (const auto& var : in) {
-    std::vector<float> vals;
-    for (const auto& it : var)
-      vals.emplace_back(it);
-    input_vars.emplace_back(vals);
-  }
-  for (size_t ipart = 0; ipart != in.at(0).size(); ++ipart) {
-    std::vector<float> vals;
-    for (const auto& var : in)
-      vals.emplace_back(var.at(ipart));
-    input_values.emplace_back(vals);
-  }
-
-  std::cout << "operator() -> " << input_values.size() << std::endl;
-
-  /*std::cout << "input: \n";
-  for (const auto& iv : input_vars) {
-    std::cout << " >>>";
-    for (const auto& v : iv)
-      std::cout << " " << v;
-    std::cout << "\n";
-  }*/
-
-  const auto output_values = onnx_->run(input_values);
-
-  return ROOT::VecOps::RVec<float>(output_values);
-}
-
-ROOT::VecOps::RVec<float> WeaverInterface::operator()(ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > points, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > features, ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > mask) const {
-  std::vector<std::vector<float> > input_values;
-  input_values.reserve(3);
+ROOT::VecOps::RVec<float> WeaverInterface::run(const std::vector<ROOT::VecOps::RVec<float> >& points, const std::vector<ROOT::VecOps::RVec<float> >& features) {
+  /*input_values.reserve(3);
   for (const auto& point : points) {
     for (const auto& it : point)
       input_values[0].emplace_back(it);
@@ -64,10 +58,17 @@ ROOT::VecOps::RVec<float> WeaverInterface::operator()(ROOT::VecOps::RVec<ROOT::V
     for (const auto& it : feature)
       input_values[1].emplace_back(it);
   }
-  for (const auto& msk : mask) {
-    for (const auto& it : msk)
-      input_values[2].emplace_back(it);
+  //for (const auto& msk : mask) {
+  //  for (const auto& it : msk)
+  //    input_values[2].emplace_back(it);
+  //}*/
+  std::vector<float> output_values;
+  for (size_t i = 0; i < features.at(0).size(); ++i) { // loop over candidates
+    data_[i].resize(features.at(0).size());
+    for (size_t j = 0; j < features.size(); ++j) {
+      data_[i][j] = features.at(j).at(i);
+    }
+    output_values.emplace_back(onnx_->run<float>(data_)[0][0]);
   }
-  const auto output_values = onnx_->run(input_values);
   return ROOT::VecOps::RVec<float>(output_values);
 }
