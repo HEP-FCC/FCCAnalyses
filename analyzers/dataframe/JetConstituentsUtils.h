@@ -13,6 +13,7 @@ namespace JetConstituentsUtils {
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> > get_constituents(
       ROOT::VecOps::RVec<FCCAnalysesJetConstituents>, ROOT::VecOps::RVec<int>);
 
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_pt(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_e(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_theta(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_phi(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);

@@ -6,11 +6,11 @@ namespace JetConstituentsUtils {
       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> jets,
       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> rps) {
     ROOT::VecOps::RVec<FCCAnalysesJetConstituents> jets_constituents;
-    jets_constituents.reserve(jets.size());
-    for (size_t i = 0; i < jets.size(); ++i)
-      for (auto it = jets.at(i).particles_begin; it < jets.at(i).particles_end; ++it)
-        jets_constituents[i].emplace_back(rps.at(it));
-    std::cout << jets.size() << ":" << jets_constituents.size() << std::endl;
+    for (const auto& jet : jets) {
+      auto& jc = jets_constituents.emplace_back();
+      for (auto it = jet.particles_begin; it < jet.particles_end; ++it)
+        jc.emplace_back(rps.at(it));
+    }
     return jets_constituents;
   }
 
@@ -21,6 +21,14 @@ namespace JetConstituentsUtils {
       if (jets.at(i) >= 0)
         jets_constituents.emplace_back(constituents.at(i));
     return jets_constituents;
+  }
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_pt(
+      ROOT::VecOps::RVec<FCCAnalysesJetConstituents> jets_constituents) {
+    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > pts;
+    for (const auto& constituent : jets_constituents)
+      pts.emplace_back(ReconstructedParticle::get_pt(constituent));
+    return pts;
   }
 
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_e(
