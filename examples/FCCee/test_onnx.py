@@ -14,9 +14,7 @@ _edm  = ROOT.edm4hep.ReconstructedParticleData()
 _pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.dummyLoader
 _wea  = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-                                 '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json',
-                                 2,
-                                 5)
+                                 '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
 
 print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
@@ -42,23 +40,21 @@ class analysis():
         #df2 = (self.df.Range(1000)
         print('before')
         df2 = (self.df
-               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
-               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Define("RP_e",          "ReconstructedParticle::get_e(ReconstructedParticles)")
-               .Define("RP_theta",      "ReconstructedParticle::get_theta(ReconstructedParticles)")
-               .Define("RP_phi",        "ReconstructedParticle::get_phi(ReconstructedParticles)")
-               .Define("RP_charge",     "ReconstructedParticle::get_charge(ReconstructedParticles)")
-               .Define("RP_pid" ,       "myUtils::PID(ReconstructedParticles, MCRecoAssociations0, MCRecoAssociations1, Particle)")
+               .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
 
-               .Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_e, RP_theta, RP_phi, RP_phi, RP_charge)")
+               .Define("RP_e",          "JetConstituentsUtils::get_e(JetsConstituents)")
+               .Define("RP_theta",      "JetConstituentsUtils::get_theta(JetsConstituents)")
+               .Define("RP_phi",        "JetConstituentsUtils::get_phi(JetsConstituents)")
+               .Define("RP_charge",     "JetConstituentsUtils::get_charge(JetsConstituents)")
+
+               .Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_phi, RP_phi, RP_charge)")
+               #.Define("MVAVec", _wea, ("RP_e", "RP_theta", "RP_phi", "RP_phi", "RP_charge"))
         )
         print('after')
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-            'RP_theta', 'RP_phi',
             'MVAVec',
-            'RP_pid',
             ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)

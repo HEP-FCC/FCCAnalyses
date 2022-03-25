@@ -3,11 +3,8 @@
 #include "nlohmann/json.hpp"
 #include <fstream>
 
-WeaverInterface::WeaverInterface(const std::string& onnx_filename,
-                                 const std::string& json_filename,
-                                 int npoints,
-                                 int nfeatures)
-    : onnx_(new ONNXRuntime(onnx_filename)), npoints_(npoints), nfeatures_(nfeatures) {
+WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::string& json_filename)
+    : onnx_(new ONNXRuntime(onnx_filename)) {
   if (json_filename.empty())
     throw std::runtime_error("JSON preprocessed input file not specified!");
 
@@ -47,37 +44,52 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
   }
 }
 
-WeaverInterface& WeaverInterface::get(const std::string& onnx_filename,
-                                      const std::string& json_filename,
-                                      int npoints,
-                                      int nfeatures) {
-  static WeaverInterface interface(onnx_filename, json_filename, npoints, nfeatures);
+WeaverInterface& WeaverInterface::get(const std::string& onnx_filename, const std::string& json_filename) {
+  static WeaverInterface interface(onnx_filename, json_filename);
   return interface;
 }
 
-ROOT::VecOps::RVec<float> WeaverInterface::run(const std::vector<ROOT::VecOps::RVec<float> >& points,
-                                               const std::vector<ROOT::VecOps::RVec<float> >& features) {
-  /*input_values.reserve(3);
-  for (const auto& point : points) {
-    for (const auto& it : point)
-      input_values[0].emplace_back(it);
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > WeaverInterface::run(
+    const std::vector<ROOT::VecOps::RVec<CollectionVars> >& features) {
+  // features are of type {vars{jet{particles}}
+  const auto& one_var = features.at(0);
+  const size_t num_features = features.size(), num_jets = one_var.size();
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > output;
+  output.reserve(num_jets);
+  if (num_jets == 0 || one_var.empty())
+    return output;
+
+  // convert into a {jet{vars{particles}} collection
+  std::vector<std::vector<std::vector<float> > > input_colls;
+  input_colls.reserve(one_var.size());
+  for (const auto& var : features) {
+    for (size_t i = 0; i < one_var.size(); ++i) {
+      auto& jet_vars = input_colls[i];  // {vars{particles}}
+      jet_vars.reserve(num_features);
+      for (size_t j = 0; j < num_features; ++j) {
+        auto& components = jet_vars[j];  // {particles}
+        components.reserve(features.at(j).at(i).size());
+        for (size_t k = 0; k < features.at(j).at(i).size(); ++k)
+          components[k] = features.at(j).at(i).at(k);
+      }
+    }
   }
-  for (const auto& feature : features) {
-    for (const auto& it : feature)
-      input_values[1].emplace_back(it);
-  }
-  //for (const auto& msk : mask) {
-  //  for (const auto& it : msk)
-  //    input_values[2].emplace_back(it);
-  //}*/
+
   std::vector<float> output_values;
   std::cout << "operator() -> " << data_.size() << std::endl;
-  for (size_t i = 0; i < features.at(0).size(); ++i) {  // loop over candidates
-    data_[i].resize(features.at(0).size());
-    for (size_t j = 0; j < features.size(); ++j) {
-      data_[i][j] = features.at(j).at(i);
+  output.reserve(num_jets);
+  for (size_t i = 0; i < num_jets; ++i) {  // loop over candidates
+    auto& result = output[i];
+    for (size_t j = 0; j < num_features; ++j) {
+      data_[j].resize(input_colls.at(i).at(j).size());
+      for (size_t k = 0; k < input_colls.at(i).at(j).size(); ++k)
+        data_[j][k] = input_colls.at(i).at(j).at(k);
     }
-    output_values.emplace_back(onnx_->run<float>(data_)[0][0]);
+    result = onnx_->run<float>(data_)[0];
   }
-  return ROOT::VecOps::RVec<float>(output_values);
+  std::cout << "return values:";
+  for (const auto& val : output_values)
+    std::cout << " " << val;
+  std::cout << std::endl;
+  return output;
 }

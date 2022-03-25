@@ -6,26 +6,21 @@
 
 class WeaverInterface {
 public:
-  static WeaverInterface& get(const std::string& onnx_filename = "",
-                              const std::string& json_filename = "",
-                              int npoints = 0,
-                              int nfeatures = 0);
+  static WeaverInterface& get(const std::string& onnx_filename = "", const std::string& json_filename = "");
 
   WeaverInterface(const WeaverInterface&) = delete;
   WeaverInterface& operator=(const WeaverInterface&) = delete;
 
+  using CollectionVars = ROOT::VecOps::RVec<float>;
+
   template <typename... Args>
-  ROOT::VecOps::RVec<float> operator()(Args&&... args) {
-    std::vector<ROOT::VecOps::RVec<float> > vars{std::forward<Args>(args)...};
-    std::vector<ROOT::VecOps::RVec<float> > points(vars.begin(), vars.begin() + npoints_),
-        features(vars.begin() + npoints_, vars.begin() + npoints_ + nfeatures_);
-    return run(points, features);
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > operator()(Args&&... args) {
+    return run(std::vector<ROOT::VecOps::RVec<CollectionVars> >{std::forward<Args>(args)...});
   }
 
 private:
-  explicit WeaverInterface(const std::string&, const std::string&, int, int);
-  ROOT::VecOps::RVec<float> run(const std::vector<ROOT::VecOps::RVec<float> >&,
-                                const std::vector<ROOT::VecOps::RVec<float> >&);
+  explicit WeaverInterface(const std::string&, const std::string&);
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > run(const std::vector<ROOT::VecOps::RVec<CollectionVars> >&);
 
   struct PreprocessParams {
     struct VarInfo {
@@ -58,8 +53,6 @@ private:
   std::vector<unsigned int> input_sizes_;
   std::unordered_map<std::string, PreprocessParams> prep_info_map_;
   ONNXRuntime::Tensor<float> data_;
-  int npoints_;
-  int nfeatures_;
 };
 
 #endif
