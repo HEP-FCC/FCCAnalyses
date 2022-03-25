@@ -75,21 +75,19 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > WeaverInterface::run(
     }
   }
 
-  std::vector<float> output_values;
   std::cout << "operator() -> " << data_.size() << std::endl;
-  output.reserve(num_jets);
   for (size_t i = 0; i < num_jets; ++i) {  // loop over candidates
-    auto& result = output[i];
+    auto& result = output.emplace_back();
     for (size_t j = 0; j < num_features; ++j) {
       data_[j].resize(input_colls.at(i).at(j).size());
       for (size_t k = 0; k < input_colls.at(i).at(j).size(); ++k)
         data_[j][k] = input_colls.at(i).at(j).at(k);
     }
     result = onnx_->run<float>(data_)[0];
+    std::cout << "(jet " << i << ") return values:";
+    for (const auto& val : result)
+      std::cout << " " << val;
+    std::cout << std::endl;
   }
-  std::cout << "return values:";
-  for (const auto& val : output_values)
-    std::cout << " " << val;
-  std::cout << std::endl;
   return output;
 }

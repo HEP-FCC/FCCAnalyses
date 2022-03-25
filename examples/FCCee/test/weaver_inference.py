@@ -47,14 +47,16 @@ class analysis():
                .Define("RP_phi",        "JetConstituentsUtils::get_phi(JetsConstituents)")
                .Define("RP_charge",     "JetConstituentsUtils::get_charge(JetsConstituents)")
 
-               .Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_phi, RP_phi, RP_charge)")
+               .Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_phi, RP_phi, RP_charge).at(0)")
                #.Define("MVAVec", _wea, ("RP_e", "RP_theta", "RP_phi", "RP_phi", "RP_charge"))
+
+               .Define("MVAb", "MVAVec.at(0)")
         )
         print('after')
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-            'MVAVec',
+            'MVAb',
             ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
