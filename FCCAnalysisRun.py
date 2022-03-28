@@ -1,6 +1,7 @@
 import ROOT
 import os, sys
 import importlib.util
+from array import array
 
 print ("Load cxx analyzers ... ",)
 ROOT.gSystem.Load("libedm4hep")
@@ -29,24 +30,17 @@ def getElement(foo, element):
 
 #__________________________________________________________
 def runRDF(foo, inputlist, outFile):
-    ROOT.ROOT.EnableImplicitMT(getElement(foo, "nCPUS"))
+    #ROOT.ROOT.EnableImplicitMT(getElement(foo, "nCPUS"))
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
     print (" init done, about to run")
     df2 = getElement(foo.RDFanalysis, "analysers")(df)
-    print('type df2 ',type(df2))
-    df2.Display()
-    branchList=getElement(foo.RDFanalysis, "output")()
-    print(type(branchList))
-    print(branchList[0])
-    print(branchList[1])
+    branchList = getElement(foo.RDFanalysis, "output")()
 
     branchListVec = ROOT.vector('string')()
     for branchName in branchList:
         branchListVec.push_back(branchName)
-    #df2.Snapshot("events", outFile, branchListVec)
-    df2.Snapshot("events", outFile)
-
+    df2.Snapshot("events", outFile, branchListVec)
 
 #__________________________________________________________
 def runLocal(foo, fileList=""):

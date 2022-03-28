@@ -25,16 +25,14 @@ class RDFanalysis():
     def analysers(df):
         #df2 = (self.df.Range(100)
         df2 = (df
-        .Define("x", "gRandom->Rndm()")
-        .Define("y", "gRandom->Rndm()")
+        .Define("v", "rdfentry_")
+        .Define("w", "return 1./(v+1)")
         )
-        print(' =======',df2.Count())
-        print(' =======',df2.Display())
         return df2
 
     #__________________________________________________________
     def output():
         branchList = []
-        branchList.append("x")
-        branchList.append("y")
+        branchList.append("v")
+        branchList.append("w")
         return branchList
