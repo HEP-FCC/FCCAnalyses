@@ -58,7 +58,7 @@ def runLocal(foo, fileList=""):
         nevents_local+=tt.GetEntries()
     print ("nevents meta  ", nevents_meta)
     print ("nevents local ", nevents_local)
-    outFile = getElement(foo,"outputDir")+file.split("/")[-1].replace(".root","_output.root")
+    outFile = getElement(foo,"outputDir")+fileName.split("/")[-1].replace(".root","_output.root")
     runRDF(foo, fileListRoot, outFile)
 
     outf = ROOT.TFile( outFile, "update" )
