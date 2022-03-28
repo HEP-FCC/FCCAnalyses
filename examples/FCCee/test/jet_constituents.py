@@ -46,7 +46,7 @@ class analysis():
         branchList = ROOT.vector('string')()
         for branchName in [
             #'JetsConstituents',
-            'JC_Jet0_pt',
+            'JC_Jet0_pt', 'JC_pt'
             ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
