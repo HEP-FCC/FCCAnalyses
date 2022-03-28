@@ -34,6 +34,7 @@ def runRDF(foo, inputlist, outFile):
     df = ROOT.RDataFrame("events", inputlist)
     print (" init done, about to run")
     df2 = getElement(foo.RDFanalysis, "analysers")(df)
+    print('type df2 ',type(df2))
     df2.Display()
     branchList=getElement(foo.RDFanalysis, "output")()
     print(type(branchList))
