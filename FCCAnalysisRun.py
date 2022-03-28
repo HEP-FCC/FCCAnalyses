@@ -106,7 +106,7 @@ if __name__ == "__main__":
     #check if a single file is specified, and if so run the analysis on it
     if args.file!="":
         runLocal(foo, args.file)
-        return
+        sys.exit(0)
 
     #check if batch mode and set start and end file from original list
     runBatch = getElement(foo,"runBatch")
