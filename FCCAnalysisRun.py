@@ -37,7 +37,7 @@ def runRDF(foo, inputlist, outFile):
     branchList=getElement(foo.RDFanalysis, "output")()
     print(type(branchList))
     print(branchList[0])
-    print(branchList[1],' ',branchList.size())
+    print(branchList[1])
 
     branchListVec = ROOT.vector('string')()
     for branchName in branchList:
