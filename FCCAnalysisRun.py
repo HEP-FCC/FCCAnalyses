@@ -1,22 +1,22 @@
-#import ROOT
+import ROOT
 import os, sys
 import importlib.util
 
 print ("Load cxx analyzers ... ",)
-#ROOT.gSystem.Load("libedm4hep")
-#ROOT.gSystem.Load("libpodio")
-#ROOT.gSystem.Load("libawkward")
-#ROOT.gSystem.Load("libawkward-cpu-kernels")
-#ROOT.gSystem.Load("libFCCAnalyses")
+ROOT.gSystem.Load("libedm4hep")
+ROOT.gSystem.Load("libpodio")
+ROOT.gSystem.Load("libawkward")
+ROOT.gSystem.Load("libawkward-cpu-kernels")
+ROOT.gSystem.Load("libFCCAnalyses")
 
-#ROOT.gErrorIgnoreLevel = ROOT.kFatal
-#_edm  = ROOT.edm4hep.ReconstructedParticleData()
-#_pod  = ROOT.podio.ObjectID()
-#_fcc  = ROOT.dummyLoader
+ROOT.gErrorIgnoreLevel = ROOT.kFatal
+_edm  = ROOT.edm4hep.ReconstructedParticleData()
+_pod  = ROOT.podio.ObjectID()
+_fcc  = ROOT.dummyLoader
 
-#print ('edm4hep  ',_edm)
-#print ('podio    ',_pod)
-#print ('fccana   ',_fcc)
+print ('edm4hep  ',_edm)
+print ('podio    ',_pod)
+print ('fccana   ',_fcc)
 
 #__________________________________________________________
 def getElement(foo, element):
