@@ -28,6 +28,8 @@ class RDFanalysis():
         .Define("x", "gRandom->Rndm()")
         .Define("y", "gRandom->Rndm()")
         )
+        print(' =======',df2.Count())
+        print(' =======',df2.Display())
         return df2
 
     #__________________________________________________________
