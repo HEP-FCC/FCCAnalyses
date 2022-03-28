@@ -36,6 +36,9 @@ def runRDF(foo, inputlist, outFile):
     df2 = getElement(foo.RDFanalysis, "analysers")(df)
     branchList=getElement(foo.RDFanalysis, "output")()
     print(type(branchList))
+    print(branchList[0])
+    print(branchList[1],' ',branchList.size())
+
     df2.Snapshot("events", outFile, branchList)
 
 
