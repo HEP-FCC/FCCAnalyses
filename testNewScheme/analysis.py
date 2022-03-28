@@ -8,6 +8,7 @@ fraction    = 1.
 runBatch    = False
 
 #RDFanalysis class where the use defines the operations on the TTree
+import ROOT
 class RDFanalysis():
 
     #__________________________________________________________
