@@ -39,7 +39,10 @@ def runRDF(foo, inputlist, outFile):
     print(branchList[0])
     print(branchList[1],' ',branchList.size())
 
-    df2.Snapshot("events", outFile, branchList)
+    branchListVec = ROOT.vector('string')()
+    for branchName in branchList:
+        branchListVec.push_back(branchName)
+    df2.Snapshot("events", outFile, branchListVec)
 
 
 #__________________________________________________________

@@ -8,7 +8,6 @@ fraction    = 1.
 runBatch    = False
 
 #RDFanalysis class where the use defines the operations on the TTree
-import ROOT
 class RDFanalysis():
 
     #__________________________________________________________
@@ -33,7 +32,7 @@ class RDFanalysis():
 
     #__________________________________________________________
     def output():
-        branchList = ROOT.vector('string')()
-        branchList.push_back("x")
-        branchList.push_back("y")
+        branchList = []
+        branchList.append("x")
+        branchList.append("y")
         return branchList
