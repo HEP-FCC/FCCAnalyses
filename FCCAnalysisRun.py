@@ -30,7 +30,7 @@ def getElement(foo, element):
         print (element, "does not exist, please check. Exit")
         sys.exit(3)
 
-#__________________________________________________________                                                                                                                                                                                     
+#__________________________________________________________
 def getElementDict(d, element):
     try:
         value=d[element]
@@ -39,7 +39,7 @@ def getElementDict(d, element):
         print (element, "does not exist using default value")
         return None
 
-#__________________________________________________________                                                                                                                                                                    
+#__________________________________________________________
 def getProcessInfo(process, prodTag):
 
     doc = None
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     #check if batch mode and set start and end file from original list
     runBatch = getElement(foo,"runBatch")
 
-    #check if the process list is specified                                                                                                                                                                                                
+    #check if the process list is specified
     processList = getElement(foo,"processList")
 
     #run locally
@@ -241,9 +241,9 @@ if __name__ == "__main__":
             #run locally
             outputchunk=''
             if runBatch == False:
-                if len(chunkList)>1: 
+                if len(chunkList)>1:
                     outputchunk="/{}/chunk{}.root".format(output,ch)
-                else: 
+                else:
                     outputchunk="{}.root".format(output)
                 print('output  -------   ',output)
                 runLocal(foo, chunkList[ch], outputchunk)
@@ -257,72 +257,3 @@ if __name__ == "__main__":
    # endFile=-1
    # if runBatch == True and args.first<0 and args.last<0:
    #     send2Batch(foo)
-
-
-
-
-
-
-
-
-
-
-
-
-    if len(sys.argv)==3 and "*" in sys.argv[2]:
-        import glob
-        filelist = glob.glob(sys.argv[2])
-        for fileName in filelist:
-            fileListRoot.push_back(fileName)
-            print (fileName, " ",)
-            print (" ...")
-
-
-    elif len(sys.argv)>2:
-        for i in range(2,len(sys.argv)):
-            try:
-                nevents=int(sys.argv[i])
-                print ("nevents found (will be in the processed events branch in root tree):",nevents)
-            except ValueError:
-                fileListRoot.push_back(sys.argv[i])
-                print (sys.argv[i], " ",)
-                print (" ...")
-
-
-    outfile=sys.argv[1]
-    print("output file:  ",outfile)
-    if len(outfile.split("/"))>1:
-        import os
-        os.system("mkdir -p {}".format(outfile.replace(outfile.split("/")[-1],"")))
-
-    nevents_meta=0
-    nevents_local=0
-    if nevents==0:
-        for f in fileListRoot:
-            tf=ROOT.TFile.Open(str(f),"READ")
-            tf.cd()
-            for key in tf.GetListOfKeys():
-                if 'eventsProcessed' == key.GetName():
-                    nevents_meta += tf.eventsProcessed.GetVal()
-                    break
-            tt=tf.Get("events")
-            nevents_local+=tt.GetEntries()
-    print ("nevents meta  ", nevents_meta)
-    print ("nevents local ", nevents_local)
-
-
-    if nevents_meta>nevents_local:nevents=nevents_meta
-    else :nevents=nevents_local
-
-    import time
-    start_time = time.time()
-    ncpus = 8
-    analysis = analysis(fileListRoot, outfile, ncpus)
-    analysis.run()
-
-    elapsed_time = time.time() - start_time
-    print  ("==============================SUMMARY==============================")
-    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-    print  ("Events Processed/Second  :  ",int(nevents_local/elapsed_time))
-    print  ("Total Events Processed   :  ",int(nevents_local))
-    print  ("===================================================================")
