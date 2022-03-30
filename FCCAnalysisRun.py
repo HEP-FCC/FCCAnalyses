@@ -64,7 +64,7 @@ def getProcessInfoFiles(process, inputDir):
     dirtest='{}/{}'.format(inputDir, process)
     print('dirtest ',dirtest)
     if os.path.isdir(dirtest):
-        flist=glob.glob(dirtest+"/chunk*.root")
+        flist=glob.glob(dirtest+"/*.root")
         for f in flist:
             filelist.append(f)
             eventlist.append(getEntries(f))
