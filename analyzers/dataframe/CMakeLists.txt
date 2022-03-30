@@ -3,6 +3,7 @@ find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps TMVA)
 include(${ROOT_USE_FILE})
 #include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
+find_package(Vdt)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
@@ -13,6 +14,7 @@ include_directories(${EDM4HEP_INCLUDE_DIRS}
                     ${FASTJET_INCLUDE_DIR} 
 		    ${acts_INCLUDE_DIR}
 		    ${AWKWARD_INCLUDE}
+        ${VDT_INCLUDE_DIR}
 		    #${Boost_INCLUDE_DIRS}
 		    )
 
@@ -62,7 +64,7 @@ target_link_libraries(FCCAnalyses
 		      EDM4HEP::edm4hep 
 		      EDM4HEP::edm4hepDict 
 		      podio::podio 
-		      ${FASTJET_LIBRARY} fastjetplugins
+		      ${FASTJET_LIBRARY} ${FASTJET_LIBRARY_DIRS}/libfastjetplugins.so
 		      ${acts_LIBRARY} ActsCore
 		      #${AWKWARD_LIBRARIES}
 		      ${LIBAWKWARD}

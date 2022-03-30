@@ -1,5 +1,7 @@
 #include "VertexFinderActs.h"
 
+#include <iostream>
+
 // ACTS
 #include "Acts/MagneticField/ConstantBField.hpp"
 #include "Acts/Propagator/EigenStepper.hpp"
