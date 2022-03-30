@@ -1,6 +1,10 @@
 #USER DEFINED MANDATORY ARGUMENTS
 processList = ['p8_ee_Zbb_ecm91','p8_ee_Zcc_ecm91','p8_ee_Zuds_ecm91']
 outputList  = []
+processList = {'p8_ee_Zbb_ecm91':{'fraction':1,'output':'p8_ee_Zbb_ecm91_out','nchunks':10},
+               'p8_ee_Zcc_ecm91':{'fraction':1,'output':'p8_ee_Zcc_ecm91_out','nchunks':10},
+               'p8_ee_Zuds_ecm91':{'fraction':1,'output':'p8_ee_uds_ecm91_out','nchunks':10}}
+
 prodTag     = "FCCee/spring2021/IDEA/"
 outputDir   = "/eos/experiment/fcc/ee/tmp/testnewscheme/"
 nCPUS       = 8
