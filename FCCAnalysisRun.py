@@ -30,6 +30,14 @@ def getElement(foo, element):
         print (element, "does not exist, please check. Exit")
         sys.exit(3)
 
+#__________________________________________________________                                                                                                                                                                                     
+def getElementDict(d, element):
+    try:
+        value=d(element)
+        return value
+    except KeyError:
+        print (element, "does not exist using default value")
+        return None
 
 #__________________________________________________________                                                                                                                                                                    
 def getProcessInfo(process, prodTag):
@@ -51,6 +59,20 @@ def getProcessInfo(process, prodTag):
     filelist  = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]
     return filelist,eventlist
+
+#__________________________________________________________
+def getsubfileList(fileList, eventList, fraction):
+    nevts=sum(eventList)
+    print('nevents tot ' nevts)
+    nevts_target=nevts*fraction
+    nevts_real=0
+    tmplist=[]
+    for ev in range(len(eventList)):
+        if nevts_real>nevts_target:break
+        nevts_real+=eventList[ev]
+        tmplist.append(fileList[ev])
+    return tmplist
+
 
 #__________________________________________________________
 def runRDF(foo, inputlist, outFile, nevt):
@@ -175,8 +197,24 @@ if __name__ == "__main__":
             print ('---- process   ',process)
             print ('---- fileList  ',len(fileList))
             print ('---- eventList ',len(eventList))
-            fraction=1
-            print ('processList[process]  ',processList[process])
+            processDict={}
+            fraction = 1
+            output = process+'.root'
+            chunks = 1
+            try:
+                processDict=processList[process]
+            except TypeError:
+                print ('no values set for process {} will use default values'.format(process))
+            finally:
+                if getElementDict(processList[process], 'fraction') != None: fration = getElementDict(processList[process], 'fraction')
+                if getElementDict(processList[process], 'output')   != None: output  = getElementDict(processList[process], 'output')
+                if getElementDict(processList[process], 'chunks')   != None: chunks  = getElementDict(processList[process], 'chunks')
+
+            print ('fraction={}, output={}, chunks={}'.format(fraction, output, chunks))
+
+            if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
+            chunkList=[fileList]
+            if chunks>1: chunkList = getchunkList(fileList, chunks)
 
     #run on batch
     startFile=-1
