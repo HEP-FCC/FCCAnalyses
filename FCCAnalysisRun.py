@@ -75,6 +75,23 @@ def getsubfileList(fileList, eventList, fraction):
 
 
 #__________________________________________________________
+def getchunkList(fileList, chunks):
+    chunklist=[]
+    if chunks>len(fileList):chunks=len(fileList)
+    nfilesperchunk=int(len(fileList)/chunks)
+    for ch in range(chunks):
+        filecount=0
+        listtmp=[]
+        for fileName in fileList:
+            if (filecount>=ch*nfilesperchunk and filecount<(ch+1)*nfilesperchunk) or (filecount>=ch*nfilesperchunk and ch==chunks-1):
+                listtmp.append(fileName)
+            filecount+=1
+
+        chunklist.append(tmplist)
+    return chunklist
+
+
+#__________________________________________________________
 def runRDF(foo, inputlist, outFile, nevt):
     ROOT.ROOT.EnableImplicitMT(getElement(foo, "nCPUS"))
     ROOT.EnableThreadSafety()
@@ -191,30 +208,38 @@ if __name__ == "__main__":
     processList = getElement(foo,"processList")
 
     #run locally
-    if runBatch == False:
-        for process in processList:
-            fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"))
-            print ('---- process   ',process)
-            print ('---- fileList  ',len(fileList))
-            print ('---- eventList ',len(eventList))
-            processDict={}
-            fraction = 1
-            output = process+'.root'
-            chunks = 1
-            try:
-                processDict=processList[process]
-            except TypeError:
-                print ('no values set for process {} will use default values'.format(process))
-            finally:
-                if getElementDict(processList[process], 'fraction') != None: fration = getElementDict(processList[process], 'fraction')
-                if getElementDict(processList[process], 'output')   != None: output  = getElementDict(processList[process], 'output')
-                if getElementDict(processList[process], 'chunks')   != None: chunks  = getElementDict(processList[process], 'chunks')
+    #if runBatch == False:
+    for process in processList:
+        fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"))
+        print ('---- process   ',process)
+        print ('---- fileList  ',len(fileList))
+        print ('---- eventList ',len(eventList))
+        processDict={}
+        fraction = 1
+        output = process+'.root'
+        chunks = 1
+        try:
+            processDict=processList[process]
+        except TypeError:
+            print ('no values set for process {} will use default values'.format(process))
+        finally:
+            if getElementDict(processList[process], 'fraction') != None: fration = getElementDict(processList[process], 'fraction')
+            if getElementDict(processList[process], 'output')   != None: output  = getElementDict(processList[process], 'output')
+            if getElementDict(processList[process], 'chunks')   != None: chunks  = getElementDict(processList[process], 'chunks')
 
-            print ('fraction={}, output={}, chunks={}'.format(fraction, output, chunks))
+        print ('fraction={}, output={}, chunks={}'.format(fraction, output, chunks))
 
-            if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
-            chunkList=[fileList]
-            if chunks>1: chunkList = getchunkList(fileList, chunks)
+        if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
+        chunkList=[fileList]
+        if chunks>1: chunkList = getchunkList(fileList, chunks)
+
+        for ch in chunkList:
+            #run locally
+            if runBatch == False:   
+                runLocal(foo, ch, output)
+            #run on batch
+            elif runBatch == True:
+                runBatch()
 
     #run on batch
     startFile=-1
@@ -230,14 +255,6 @@ if __name__ == "__main__":
 
 
 
-
-
-
-
-
-    #check in case run
-    #foo.RDFanalysis.run()
-    runBatch = getElement(foo.RDFanalysis,"run")
 
 
 
@@ -298,15 +315,3 @@ if __name__ == "__main__":
     print  ("Events Processed/Second  :  ",int(nevents_local/elapsed_time))
     print  ("Total Events Processed   :  ",int(nevents_local))
     print  ("===================================================================")
-
-
-    outf = ROOT.TFile( outfile, "update" )
-    meta = ROOT.TTree( "metadata", "metadata informations" )
-    n = array( "i", [ 0 ] )
-    meta.Branch( "eventsProcessed", n, "eventsProcessed/I" )
-    n[0]=nevents
-    meta.Fill()
-    p = ROOT.TParameter(int)( "eventsProcessed", n[0])
-    p.Write()
-    outf.Write()
-    outf.Close()
