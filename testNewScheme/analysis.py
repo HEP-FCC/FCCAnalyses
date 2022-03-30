@@ -1,9 +1,10 @@
 #USER DEFINED MANDATORY ARGUMENTS
-processList = {'wzp6_egamma_tbnu_ecm240':{'chunks':1}}
-
 processList = {'p8_ee_Zbb_ecm91':{'fraction':0.001,'output':'p8_ee_Zbb_ecm91_out','chunks':2},
-               #'p8_ee_Zcc_ecm91':{'fraction':0.001,'chunks':2}}
-               'p8_ee_Zuds_ecm91':{'fraction':0.001,'output':'p8_ee_Zuds_ecm91_out','chunks':2}}
+               'p8_ee_Zcc_ecm91':{'fraction':0.001,'chunks':2},
+               'p8_ee_Zuds_ecm91':{'fraction':0.001,'output':'p8_ee_Zuds_ecm91_out','chunks':2},
+               'wzp6_gammae_tbnu_ecm240':{},
+               'wzp6_egamma_tbnu_ecm240':{}
+               }
 
 prodTag     = "FCCee/spring2021/IDEA/"
 outputDir   = "/eos/experiment/fcc/ee/tmp/testnewscheme/"

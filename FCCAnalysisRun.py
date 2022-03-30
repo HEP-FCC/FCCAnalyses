@@ -2,6 +2,7 @@ import ROOT
 import os, sys
 import time
 import yaml
+import glob
 import importlib.util
 from array import array
 from config.common_defaults import deffccdicts
@@ -27,8 +28,8 @@ def getElement(foo, element):
     try:
         return getattr(foo, element)
     except AttributeError:
-        print (element, "does not exist, please check. Exit")
-        sys.exit(3)
+        print (element, "does not exist, please check. Return None, might crash...")
+        return None
 
 #__________________________________________________________
 def getElementDict(d, element):
@@ -40,8 +41,47 @@ def getElementDict(d, element):
         return None
 
 #__________________________________________________________
-def getProcessInfo(process, prodTag):
+def getProcessInfo(process, prodTag, inputDir):
+    print('in getProcessInfo')
+    if prodTag!=None:
+        return getProcessInfoYaml(process, prodTag)
+    elif inputDir!=None:
+        return getProcessInfoFiles(process, inputDir)
+    else:
+        print('problem, exit')
+        sys.exist(3)
+#__________________________________________________________
+def getProcessInfoFiles(process, inputDir):
+    print('in getProcessInfofiles')
 
+    filelist=[]
+    eventlist=[]
+    filetest='{}/{}.root'.format(inputDir, process)
+    print ('filetest ',filetest)
+    if os.path.isfile(filetest):
+        filelist.append(filetest)
+        eventlist.append(getEntries(filetest))
+    dirtest='{}/{}'.format(inputDir, process)
+    print('dirtest ',dirtest)
+    if os.path.isdir(dirtest):
+        flist=glob.glob(dirtest+"/chunk*.root")
+        for f in flist:
+            filelist.append(f)
+            eventlist.append(getEntries(f))
+    print('filelist ',filelist)
+    return filelist, eventlist
+
+#__________________________________________________________
+def getEntries(f):
+    tf=ROOT.TFile.Open(f,"READ")
+    tf.cd()
+    tt=tf.Get("events")
+    nevents=tt.GetEntries()
+    tf.Close()
+    return nevents
+
+#__________________________________________________________
+def getProcessInfoYaml(process, prodTag):
     doc = None
     if prodTag[-1]!="/":prodTag+="/"
     yamlfile=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '')+"yaml/"+prodTag+process+'/merge.yaml'
@@ -59,6 +99,7 @@ def getProcessInfo(process, prodTag):
     filelist  = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]
     return filelist,eventlist
+
 
 #__________________________________________________________
 def getsubfileList(fileList, eventList, fraction):
@@ -209,7 +250,11 @@ if __name__ == "__main__":
     #run locally
     #if runBatch == False:
     for process in processList:
-        fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"))
+        fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"), getElement(foo, "inputDir"))
+        if len(fileList)==0:
+            print('==== No files to process, Exit')
+            sys.exit(3)
+
         print ('---- running process  ',process)
         processDict={}
         fraction = 1
