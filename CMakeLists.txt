@@ -7,6 +7,16 @@ project(FCCAnalyses CXX)
 #needed for ACTS
 cmake_policy(SET CMP0057 NEW)
 
+
+#--- Declare C++ Standard -----------------------------------------------------
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
+if(NOT CMAKE_CXX_STANDARD MATCHES "17")
+  message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}")
+endif()
+message (STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
+
+
+
 find_package(ROOT COMPONENTS ROOTDataFrame)
 include(${ROOT_USE_FILE})
 
