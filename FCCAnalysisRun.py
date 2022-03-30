@@ -7,10 +7,10 @@ from array import array
 from config.common_defaults import deffccdicts
 
 print ("Load cxx analyzers ... ",)
-ROOT.gSystem.Load("libedm4hep")
-ROOT.gSystem.Load("libpodio")
-ROOT.gSystem.Load("libawkward")
-ROOT.gSystem.Load("libawkward-cpu-kernels")
+#ROOT.gSystem.Load("libedm4hep")
+#ROOT.gSystem.Load("libpodio")
+#ROOT.gSystem.Load("libawkward")
+#ROOT.gSystem.Load("libawkward-cpu-kernels")
 ROOT.gSystem.Load("libFCCAnalyses")
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
@@ -33,7 +33,7 @@ def getElement(foo, element):
 #__________________________________________________________                                                                                                                                                                                     
 def getElementDict(d, element):
     try:
-        value=d(element)
+        value=d[element]
         return value
     except KeyError:
         print (element, "does not exist using default value")
@@ -54,7 +54,7 @@ def getProcessInfo(process, prodTag):
             print ("I/O error({0}): {1}".format(exc.errno, exc.strerror))
             print ("outfile ",outfile)
         finally:
-            print ('file succesfully opened')
+            print ('yaml file {} succesfully opened'.format(yamlfile))
 
     filelist  = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]
@@ -63,12 +63,11 @@ def getProcessInfo(process, prodTag):
 #__________________________________________________________
 def getsubfileList(fileList, eventList, fraction):
     nevts=sum(eventList)
-    print('nevents tot ' nevts)
     nevts_target=nevts*fraction
     nevts_real=0
     tmplist=[]
     for ev in range(len(eventList)):
-        if nevts_real>nevts_target:break
+        if nevts_real>=nevts_target:break
         nevts_real+=eventList[ev]
         tmplist.append(fileList[ev])
     return tmplist
@@ -87,7 +86,7 @@ def getchunkList(fileList, chunks):
                 listtmp.append(fileName)
             filecount+=1
 
-        chunklist.append(tmplist)
+        chunklist.append(listtmp)
     return chunklist
 
 
@@ -211,41 +210,53 @@ if __name__ == "__main__":
     #if runBatch == False:
     for process in processList:
         fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"))
-        print ('---- process   ',process)
-        print ('---- fileList  ',len(fileList))
-        print ('---- eventList ',len(eventList))
+        print ('---- running process  ',process)
         processDict={}
         fraction = 1
-        output = process+'.root'
+        output = process
         chunks = 1
         try:
             processDict=processList[process]
+            if getElementDict(processList[process], 'fraction') != None: fraction = getElementDict(processList[process], 'fraction')
+            if getElementDict(processList[process], 'output')   != None: output   = getElementDict(processList[process], 'output')
+            if getElementDict(processList[process], 'chunks')   != None: chunks   = getElementDict(processList[process], 'chunks')
+
         except TypeError:
             print ('no values set for process {} will use default values'.format(process))
-        finally:
-            if getElementDict(processList[process], 'fraction') != None: fration = getElementDict(processList[process], 'fraction')
-            if getElementDict(processList[process], 'output')   != None: output  = getElementDict(processList[process], 'output')
-            if getElementDict(processList[process], 'chunks')   != None: chunks  = getElementDict(processList[process], 'chunks')
 
         print ('fraction={}, output={}, chunks={}'.format(fraction, output, chunks))
 
         if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
+        print ('file list after fraction ',len(fileList))
         chunkList=[fileList]
         if chunks>1: chunkList = getchunkList(fileList, chunks)
 
-        for ch in chunkList:
+        #create dir if more than 1 chunk
+        if chunks>1:
+            outputdir=outputDir+"/"+output
+            if not os.path.exists(outputdir) and outputdir!='':
+                os.system("mkdir -p {}".format(outputdir))
+
+        for ch in range(len(chunkList)):
             #run locally
-            if runBatch == False:   
-                runLocal(foo, ch, output)
+            outputchunk=''
+            if runBatch == False:
+                if len(chunkList)>1: 
+                    outputchunk="/{}/chunk{}.root".format(output,ch)
+                else: 
+                    outputchunk="{}.root".format(output)
+                print('output  -------   ',output)
+                runLocal(foo, chunkList[ch], outputchunk)
+
             #run on batch
             elif runBatch == True:
-                runBatch()
+                runBatch(foo, chunkList[ch], output)
 
-    #run on batch
-    startFile=-1
-    endFile=-1
-    if runBatch == True and args.first<0 and args.last<0:
-        send2Batch(foo)
+   # #run on batch
+   # startFile=-1
+   # endFile=-1
+   # if runBatch == True and args.first<0 and args.last<0:
+   #     send2Batch(foo)
 
 
 
