@@ -3,7 +3,7 @@ FCCAnalyses
 
 This package produces flat ROOT trees using FCCSW EDM root files produced with the [EventProducer](https://github.com/HEP-FCC/EventProducer). As usual, if you aim at contributing to the repository, please fork it, develop and submit pull requests. To have access to the FCC samples, you need to subscribe to one of the following e-group (with owner approval) ```fcc-eos-read-xx``` with ```xx=ee,hh,eh```. For the time being, the configuration files are accessible on ```helsens``` public ```afs```. This is not optimal and will be changed in the future, thus you are also kindly asked to contact ```clement.helsens@cern.ch``` and request access to ```/afs/cern.ch/work/h/helsens/public/FCCDicts/```.
 
-Analysers documentation [here](http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html)
+Detailed code documentation [here](http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html)
 
 Table of contents
 =================
@@ -33,11 +33,11 @@ cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make install
 cd ..
 ```
-Each time changes are made in ```analyzers/dataframe/``` please re-compile!
+Each time changes are made in ```analyzers/dataframe/``` please do not forget to re-compile!
 
 Generalities
 ============
-Each analysis is hosted in a single directory, for example ```examples/FCCee/higgs/mH-recoil/mumu/``` and contains the same kind of files.
+The way we suggest to use this analysis framework is to host every analysis in a single directory, for example ```examples/FCCee/higgs/mH-recoil/mumu/```. The workflow and contains the same kind of files.
 
 1. ```analysis.py```: This class of type ```RDFanalysis``` that is used to define the list of analysers and filters to run on (```analysers``` function) as well as the output variables (```output``` function). I also contains the configuration parameters ```processList```, ```prodTag```, ```outputDir```, ```inputDir```, ```nCPUS``` and ```runBatch```. User could define multiple stages of ```analysis.py```. The first stage will most likely run on centrally produced edm4hep events, thus the usage of ```prodTag```. For a second processing, user will point the directory where there samples are located using ```inputDir```.
 
