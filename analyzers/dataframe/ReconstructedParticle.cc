@@ -1,4 +1,5 @@
 #include "ReconstructedParticle.h"
+#include <iostream>
 using namespace ReconstructedParticle;
 
 ReconstructedParticle::sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
@@ -209,7 +210,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::re
 	   abs(py1-py2) < epsilon &&
 	   abs(pz1-pz2) < epsilon ) {
         result.erase(it);
-        //break;
+        break;
       }
     }
   }
