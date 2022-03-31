@@ -7,21 +7,14 @@ import importlib.util
 from array import array
 from config.common_defaults import deffccdicts
 
-print ("Load cxx analyzers ... ",)
-#ROOT.gSystem.Load("libedm4hep")
-#ROOT.gSystem.Load("libpodio")
-#ROOT.gSystem.Load("libawkward")
-#ROOT.gSystem.Load("libawkward-cpu-kernels")
+print ("Load cxx analyzers from libFCCAnalyses... ",)
 ROOT.gSystem.Load("libFCCAnalyses")
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
-_edm  = ROOT.edm4hep.ReconstructedParticleData()
-_pod  = ROOT.podio.ObjectID()
+#Is this still needed??
+#_edm  = ROOT.edm4hep.ReconstructedParticleData()
+#_pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.dummyLoader
-
-print ('edm4hep  ',_edm)
-print ('podio    ',_pod)
-print ('fccana   ',_fcc)
 
 #__________________________________________________________
 def getElement(foo, element):
