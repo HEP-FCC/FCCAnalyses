@@ -12,8 +12,6 @@ ROOT.gSystem.Load("libFCCAnalyses")
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 #Is this still needed??
-#_edm  = ROOT.edm4hep.ReconstructedParticleData()
-#_pod  = ROOT.podio.ObjectID()
 _fcc  = ROOT.dummyLoader
 
 #__________________________________________________________
@@ -21,7 +19,32 @@ def getElement(foo, element):
     try:
         return getattr(foo, element)
     except AttributeError:
-        print (element, "does not exist, please check. Return None, might crash...")
+
+        #return default values or crash if mandatory
+        if element=='processList':
+            print('The variable <processList> is mandatory in your analysis.py file, will exit')
+            sys.exit(3)
+
+        elif element=='analysers':
+            print('The function <analysers> is mandatory in your analysis.py file, will exit')
+            sys.exit(3)
+
+        elif element=='output':
+            print('The function <output> is mandatory in your analysis.py file, will exit')
+            sys.exit(3)
+
+        elif element=='nCPUs':
+            print('The variable <nCPUs> is optional in your analysis.py file, return default value 4')
+            return 4
+
+        elif element=='runBatch':
+            print('The variable <runBatch> is optional in your analysis.py file, return default value False')
+            return False
+
+        elif element=='outputDir':
+            print('The variable <outputDir> is optional in your analysis.py file, return default value running dir')
+            return ""
+
         return None
 
 #__________________________________________________________
@@ -35,7 +58,13 @@ def getElementDict(d, element):
 
 #__________________________________________________________
 def getProcessInfo(process, prodTag, inputDir):
-    print('in getProcessInfo')
+    if prodTag==None and inputDir==None:
+        print('The variable <prodTag> or <inputDir> is mandatory your analysis.py file, will exit')
+        sys.exit(3)
+    elif prodTag!=None and inputDir!=None:
+        print('The variable <prodTag> and <inputDir> can not be set both at the same time in your analysis.py file, will exit')
+        sys.exit(3)
+
     if prodTag!=None:
         return getProcessInfoYaml(process, prodTag)
     elif inputDir!=None:
@@ -45,7 +74,6 @@ def getProcessInfo(process, prodTag, inputDir):
         sys.exist(3)
 #__________________________________________________________
 def getProcessInfoFiles(process, inputDir):
-    print('in getProcessInfofiles')
 
     filelist=[]
     eventlist=[]
