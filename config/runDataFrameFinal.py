@@ -54,7 +54,6 @@ class runDataFrameFinal():
         print ("EnableImplicitMT: {}".format(ncpu))
         ROOT.ROOT.EnableImplicitMT(ncpu)
         print ("Load cxx analyzers ... ")
-        ROOT.gSystem.Load("libdatamodel")
         ROOT.gSystem.Load("libFCCAnalyses")
         ROOT.gErrorIgnoreLevel = ROOT.kFatal
         nevents_real=0
@@ -185,8 +184,8 @@ class runDataFrameFinal():
                     try :
                         h.Scale(1.*self.procDict[pr]["crossSection"]*self.procDict[pr]["kfactor"]*self.procDict[pr]["matchingEfficiency"]/processEvents[pr])
                     except KeyError:
-                        print ('no value found for something')
-                        h.Scale(1./h.Integral(0,-1))
+                        #print ('no value found for something')
+                        if h.Integral(0,-1)>0:h.Scale(1./h.Integral(0,-1))
                     h.Write()
                 tf.Close()
 
