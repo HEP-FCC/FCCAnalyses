@@ -1,4 +1,4 @@
-#python examples/FCCee/higgs/mH-recoil/mumu/finalSel.py 
+#python examples/FCCee/higgs/mH-recoil/mumu/finalSel.py
 
 from config.common_defaults import deffccdicts
 
@@ -48,7 +48,7 @@ variables = {
 }
 
 ###Number of CPUs to use
-NUM_CPUS = 5
+NUM_CPUS = 4
 
 ###This part is standard to all analyses
 import config.runDataFrameFinal as rdf
