@@ -9,7 +9,7 @@ processList = {
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local dir
-outputDir   = "ZH_mumu_recoil"
+outputDir   = "ZH_mumu_recoil/stage1"
 
 #Optional: ncpus, default is 4
 nCPUS       = 4

@@ -7,7 +7,7 @@ import importlib.util
 from array import array
 from config.common_defaults import deffccdicts
 
-print ("Load cxx analyzers from libFCCAnalyses... ",)
+print ("----> Load cxx analyzers from libFCCAnalyses... ",)
 ROOT.gSystem.Load("libFCCAnalyses")
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
@@ -53,7 +53,7 @@ def getElementDict(d, element):
         value=d[element]
         return value
     except KeyError:
-        print (element, "does not exist using default value")
+#        print (element, "does not exist using default value")
         return None
 
 #__________________________________________________________
@@ -70,26 +70,37 @@ def getProcessInfo(process, prodTag, inputDir):
     elif inputDir!=None:
         return getProcessInfoFiles(process, inputDir)
     else:
-        print('problem, exit')
+        print('problem, why are you here???, exit')
         sys.exist(3)
+
 #__________________________________________________________
 def getProcessInfoFiles(process, inputDir):
-
     filelist=[]
     eventlist=[]
     filetest='{}/{}.root'.format(inputDir, process)
-    print ('filetest ',filetest)
+    dirtest='{}/{}'.format(inputDir, process)
+
+    if os.path.isfile(filetest) and os.path.isdir(dirtest):
+        print ("----> For process {} both a file {} and a directory {} exist".format(process,filetest,dirtest))
+        print ("----> Exactly one should be used, please check. Exit")
+        sys.exit(3)
+
+    if not os.path.isfile(filetest) and not os.path.isdir(dirtest):
+        print ("----> For process {} neither a file {} nor a directory {} exist".format(process,filetest,dirtest))
+        print ("----> Exactly one should be used, please check. Exit")
+        sys.exit(3)
+
     if os.path.isfile(filetest):
         filelist.append(filetest)
         eventlist.append(getEntries(filetest))
-    dirtest='{}/{}'.format(inputDir, process)
-    print('dirtest ',dirtest)
+
     if os.path.isdir(dirtest):
         flist=glob.glob(dirtest+"/*.root")
         for f in flist:
             filelist.append(f)
             eventlist.append(getEntries(f))
-    print('filelist ',filelist)
+
+
     return filelist, eventlist
 
 #__________________________________________________________
@@ -158,7 +169,7 @@ def runRDF(foo, inputlist, outFile, nevt):
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
 
-    print (" init done, about to run {} events on {} CPUs".format(nevt, getElement(foo, "nCPUS")))
+    print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(foo, "nCPUS")))
 
     df2 = getElement(foo.RDFanalysis, "analysers")(df)
 
@@ -172,14 +183,13 @@ def runRDF(foo, inputlist, outFile, nevt):
 #__________________________________________________________
 def runLocal(foo, fileList, output):
     #Create list of files to be Processed
-    print ("Create dataframe object from ", )
+    print ("----> Create dataframe object from files: ", )
     fileListRoot = ROOT.vector('string')()
     nevents_meta = 0
     nevents_local = 0
     for fileName in fileList:
         fileListRoot.push_back(fileName)
-        print (fileName, " ",)
-        print (" ...")
+        print ("   ",fileName)
         tf=ROOT.TFile.Open(str(fileName),"READ")
         tf.cd()
         for key in tf.GetListOfKeys():
@@ -188,8 +198,7 @@ def runLocal(foo, fileList, output):
                 break
         tt=tf.Get("events")
         nevents_local+=tt.GetEntries()
-    print ("nevents meta  ", nevents_meta)
-    print ("nevents local ", nevents_local)
+    print ("----> nevents original={}  local={}".format(nevents_meta,nevents_local))
     outFile = getElement(foo,"outputDir")
     if outFile[-1]!="/":outFile+="/"
     outFile+=output
@@ -199,14 +208,9 @@ def runLocal(foo, fileList, output):
     runRDF(foo, fileListRoot, outFile, nevents_local)
 
     elapsed_time = time.time() - start_time
-    print  ("==============================SUMMARY==============================")
-    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-    print  ("Events Processed/Second  :  ",int(nevents_local/elapsed_time))
-    print  ("Total Events Processed   :  ",int(nevents_local))
-    print  ("===================================================================")
-
-
     outf = ROOT.TFile( outFile, "update" )
+    outt = outf.Get("events")
+    outn = outt.GetEntries()
     n = array( "i", [ 0 ] )
     n[0]=nevents_local
     if nevents_meta>nevents_local:n[0]=nevents_meta
@@ -214,6 +218,17 @@ def runLocal(foo, fileList, output):
     p.Write()
     outf.Write()
     outf.Close()
+
+    elapsed_time = time.time() - start_time
+    print  ("==============================SUMMARY==============================")
+    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
+    print  ("Events Processed/Second  :  ",int(nevents_local/elapsed_time))
+    print  ("Total Events Processed   :  ",int(nevents_local))
+    print  ("Reduction factor local   :  ",outn/nevents_local)
+    print  ("Reduction factor total   :  ",outn/nevents_meta)
+    print  ("===================================================================")
+    print  (" ")   
+    print  (" ")
 
 
 
@@ -273,10 +288,9 @@ if __name__ == "__main__":
     for process in processList:
         fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"), getElement(foo, "inputDir"))
         if len(fileList)==0:
-            print('==== No files to process, Exit')
+            print('----> ERROR: No files to process. Exit')
             sys.exit(3)
 
-        print ('---- running process  ',process)
         processDict={}
         fraction = 1
         output = process
@@ -288,12 +302,11 @@ if __name__ == "__main__":
             if getElementDict(processList[process], 'chunks')   != None: chunks   = getElementDict(processList[process], 'chunks')
 
         except TypeError:
-            print ('no values set for process {} will use default values'.format(process))
+            print ('----> no values set for process {} will use default values'.format(process))
 
-        print ('fraction={}, output={}, chunks={}'.format(fraction, output, chunks))
+        print ('----> Running process {} with fraction={}, output={}, chunks={}'.format(process, fraction, output, chunks))
 
         if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
-        print ('file list after fraction ',len(fileList))
         chunkList=[fileList]
         if chunks>1: chunkList = getchunkList(fileList, chunks)
 
@@ -311,7 +324,6 @@ if __name__ == "__main__":
                     outputchunk="/{}/chunk{}.root".format(output,ch)
                 else:
                     outputchunk="{}.root".format(output)
-                print('output  -------   ',output)
                 runLocal(foo, chunkList[ch], outputchunk)
 
             #run on batch
