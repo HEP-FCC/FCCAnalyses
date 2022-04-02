@@ -11,7 +11,7 @@ baseDir  = "ZH_mumu_recoil/stage2/"
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_spring2021_IDEA.json"
 
-###Process list that should match the produced files. 
+###Process list that should match the produced files.
 process_list=['p8_ee_ZZ_ecm240','p8_ee_WW_ecm240','MySample_p8_ee_ZH_ecm240']
 
 ###Add MySample_p8_ee_ZH_ecm240 as it is not an offical process
@@ -41,11 +41,7 @@ variables = {
 }
 
 ###Number of CPUs to use
-<<<<<<< HEAD
-NUM_CPUS = 4
-=======
 NUM_CPUS = 2
->>>>>>> 96eb86f38488c7ae3b85d0e30e926b41282fc2fc
 
 ###This part is standard to all analyses
 import config.runDataFrameFinal as rdf
