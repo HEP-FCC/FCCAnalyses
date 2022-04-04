@@ -38,15 +38,19 @@ class analysis():
                #.Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("Jet0", "Jet#0.index")
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
+               .Define("JC_pt", "JetConstituentsUtils::get_pt(JetsConstituents)")
                .Define("JC_Jet0", "JetConstituentsUtils::get_constituents(JetsConstituents, Jet0)")
                .Define("JC_Jet0_pt", "JetConstituentsUtils::get_pt(JC_Jet0)")
-               .Define("JC_pt", "JetConstituentsUtils::get_pt(JetsConstituents)")
+                # constituents for one single jet
+               #.Define("JC_Jet0c", "JetConstituentsUtils::get_jet_constituents(JetsConstituents, 0)")
+               #.Define("JC_Jet0c_pt", "ReconstructedParticle::get_pt(JC_Jet0c)")
         )
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-            #'JetsConstituents',
-            'JC_Jet0_pt', 'JC_pt'
+            'JetsConstituents',
+            'JC_Jet0_pt',
+            #'JC_Jet0c_pt'
             ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)
