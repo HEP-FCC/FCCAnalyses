@@ -32,8 +32,6 @@ class analysis():
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" init done, about to run")
-        translation = {'pfcand_e': '', 'pfcand_theta': '', 'pfcand_phi': '', 'pfcand_pid': '', 'pfcand_charge': ''}
-        #exit(0)
 
     #__________________________________________________________
     def run(self):
