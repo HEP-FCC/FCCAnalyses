@@ -54,3 +54,5 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(const Tensor<T>& input) const {
   }
   return output_values;
 }
+
+template ONNXRuntime::Tensor<float> ONNXRuntime::run(const Tensor<float>& input) const;

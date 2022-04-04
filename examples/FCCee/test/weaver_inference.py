@@ -42,13 +42,14 @@ class analysis():
         df2 = (self.df
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
 
-               .Define("RP_e",          "JetConstituentsUtils::get_e(JetsConstituents)")
-               .Define("RP_theta",      "JetConstituentsUtils::get_theta(JetsConstituents)")
-               .Define("RP_phi",        "JetConstituentsUtils::get_phi(JetsConstituents)")
-               .Define("RP_charge",     "JetConstituentsUtils::get_charge(JetsConstituents)")
+               .Define("JC_e",          "JetConstituentsUtils::get_e(JetsConstituents)")
+               .Define("JC_theta",      "JetConstituentsUtils::get_theta(JetsConstituents)")
+               .Define("JC_phi",        "JetConstituentsUtils::get_phi(JetsConstituents)")
+               .Define("JC_pid",        "JetConstituentsUtils::get_type(JetsConstituents)")
+               .Define("JC_charge",     "JetConstituentsUtils::get_charge(JetsConstituents)")
 
-               .Define("MVAVec", "WeaverInterface::get()(RP_e, RP_theta, RP_phi, RP_phi, RP_charge)")
-               #.Define("MVAVec", _wea, ("RP_e", "RP_theta", "RP_phi", "RP_phi", "RP_charge"))
+               .Define("MVAVec", "WeaverInterface::get()(JC_e, JC_theta, JC_phi, JC_pid, JC_charge)")
+               #.Define("MVAVec", _wea, ("JC_e", "JC_theta", "JC_phi", "JC_pid", "JC_charge"))
 
                .Define("MVAb", "MVAVec.at(0)")
         )

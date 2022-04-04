@@ -11,16 +11,16 @@ public:
   WeaverInterface(const WeaverInterface&) = delete;
   WeaverInterface& operator=(const WeaverInterface&) = delete;
 
-  using CollectionVars = ROOT::VecOps::RVec<float>;
+  using CollectionVars = std::vector<float>;
 
   template <typename... Args>
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > operator()(Args&&... args) {
-    return run(std::vector<ROOT::VecOps::RVec<CollectionVars> >{std::forward<Args>(args)...});
+    return run(std::vector<std::vector<CollectionVars> >{std::forward<Args>(args)...});
   }
 
 private:
   explicit WeaverInterface(const std::string&, const std::string&);
-  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > run(const std::vector<ROOT::VecOps::RVec<CollectionVars> >&);
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > run(const std::vector<std::vector<CollectionVars> >&);
 
   struct PreprocessParams {
     struct VarInfo {
@@ -40,12 +40,20 @@ private:
       float upper_bound{5.};
       float pad{0.};
     };
-    unsigned int min_length{0};
-    unsigned max_length = 0;
+    size_t min_length{0}, max_length{0};
     std::vector<std::string> var_names;
     std::unordered_map<std::string, VarInfo> var_info_map;
     VarInfo info(const std::string& name) const { return var_info_map.at(name); }
   };
+  std::vector<float> center_norm_pad(const std::vector<float>& input,
+                                     float center,
+                                     float scale,
+                                     size_t min_length,
+                                     size_t max_length,
+                                     float pad_value = 0,
+                                     float replace_inf_value = 0,
+                                     float min = 0,
+                                     float max = -1);
 
   std::unique_ptr<ONNXRuntime> onnx_;
   std::vector<std::string> input_names_;

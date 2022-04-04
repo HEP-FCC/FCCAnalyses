@@ -1,6 +1,7 @@
 #ifndef analyzers_ONNXRuntime_h
 #define analyzers_ONNXRuntime_h
 
+#include <string>
 #include <vector>
 #include <memory>
 
