@@ -17,6 +17,12 @@ nCPUS       = 4
 #Optional running on HTCondor, default is False
 runBatch    = False
 
+#Optional batch queue name when running on HTCondor, default is workday
+#batchQueue = "espresso"
+
+#Optional computing account when running on HTCondor, default is group_u_FCC.local_gen
+#compGroup = "group_u_FCC.local_gen"
+
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
 
