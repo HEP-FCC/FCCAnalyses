@@ -54,7 +54,6 @@ class runDataFrameFinal():
         print ("EnableImplicitMT: {}".format(ncpu))
         ROOT.ROOT.EnableImplicitMT(ncpu)
         print ("Load cxx analyzers ... ")
-        ROOT.gSystem.Load("libdatamodel")
         ROOT.gSystem.Load("libFCCAnalyses")
         ROOT.gErrorIgnoreLevel = ROOT.kFatal
         nevents_real=0
