@@ -1,27 +1,27 @@
 #Mandatory: List of processes
 processList = {
-    'p8_ee_ZZ_ecm240':{},#Run the full statistics in one output file named <outputDir>/p8_ee_ZZ_ecm240.root
-    'p8_ee_WW_ecm240':{'fraction':0.5, 'chunks':2}, #Run 50% of the statistics in two files named <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
-    'p8_ee_ZH_ecm240':{'fraction':0.2, 'output':'p8_ee_ZH_ecm240_out'} #Run 20% of the statistics in one file named <outputDir>/p8_ee_ZH_ecm240_out.root (example on how to change the output name)
+    'p8_ee_ZZ_ecm240':{'chunks':20},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_ZZ_ecm240/chunk<N>.root
+    'p8_ee_WW_ecm240':{'chunks':20},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
+    'p8_ee_ZH_ecm240':{'chunks':20} #Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_ZH_ecm240/chunk<N>.root
 }
 
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local dir
-outputDir   = "ZH_mumu_recoil/stage1"
+outputDir   = "ZH_mumu_recoil_batch/stage1"
 
 #Optional: ncpus, default is 4
-nCPUS       = 8
+nCPUS       = 4
 
 #Optional running on HTCondor, default is False
-runBatch    = False
+runBatch    = True
 
 #Optional batch queue name when running on HTCondor, default is workday
-#batchQueue = "longlunch"
+batchQueue = "longlunch"
 
 #Optional computing account when running on HTCondor, default is group_u_FCC.local_gen
-#compGroup = "group_u_FCC.local_gen"
+compGroup = "group_u_FCC.local_gen"
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():

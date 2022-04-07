@@ -3,6 +3,7 @@ import os, sys
 import time
 import yaml
 import glob
+import subprocess
 import importlib.util
 from array import array
 from config.common_defaults import deffccdicts
@@ -11,7 +12,7 @@ print ("----> Load cxx analyzers from libFCCAnalyses... ",)
 ROOT.gSystem.Load("libFCCAnalyses")
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
-#Is this still needed??
+#Is this still needed?? 01/04/2022 still to be the case
 _fcc  = ROOT.dummyLoader
 
 #__________________________________________________________
@@ -44,6 +45,14 @@ def getElement(foo, element):
         elif element=='outputDir':
             print('The variable <outputDir> is optional in your analysis.py file, return default value running dir')
             return ""
+
+        elif element=='batchQueue':
+            print('The variable <batchQueue> is optional in your analysys.py file, return default value workday')
+            return "workday"
+
+        elif element=='compGroup':
+             print('The variable <compGroup> is optional in your analysys.py file, return default value group_u_FCC.local_gen')
+             return "group_u_FCC.local_gen"
 
         return None
 
@@ -126,7 +135,7 @@ def getProcessInfoYaml(process, prodTag):
             print ("I/O error({0}): {1}".format(exc.errno, exc.strerror))
             print ("outfile ",outfile)
         finally:
-            print ('yaml file {} succesfully opened'.format(yamlfile))
+            print ('----> yaml file {} succesfully opened'.format(yamlfile))
 
     filelist  = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]
@@ -164,6 +173,41 @@ def getchunkList(fileList, chunks):
 
 
 #__________________________________________________________
+def getCommandOutput(command):
+    p = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE,universal_newlines=True)
+    (stdout,stderr) = p.communicate()
+    return {"stdout":stdout, "stderr":stderr, "returncode":p.returncode}
+
+
+#__________________________________________________________
+def SubmitToCondor(cmd,nbtrials):
+    submissionStatus=0
+    cmd=cmd.replace('//','/') # -> dav : is it needed?
+    for i in range(nbtrials):            
+        outputCMD = getCommandOutput(cmd)
+        stderr=outputCMD["stderr"].split('\n')
+        stdout=outputCMD["stdout"].split('\n') # -> dav : is it needed?
+
+        if len(stderr)==1 and stderr[0]=='' :
+            print ("----> GOOD SUBMISSION")
+            submissionStatus=1
+        else:
+            print ("----> ERROR submitting, will retry")
+            print ("----> Trial : "+str(i)+" / "+str(nbtrials))
+            print ("----> stderr : ",len(stderr))
+            print (stderr)
+
+            time.sleep(10)
+            
+        if submissionStatus==1:
+            return 1
+        
+        if i==nbtrials-1:
+            print ("failed sumbmitting after: "+str(nbtrials)+" trials, stop trying to submit")
+            return 0
+
+
+#__________________________________________________________
 def runRDF(foo, inputlist, outFile, nevt):
     ROOT.ROOT.EnableImplicitMT(getElement(foo, "nCPUS"))
     ROOT.EnableThreadSafety()
@@ -180,9 +224,101 @@ def runRDF(foo, inputlist, outFile, nevt):
 
     df2.Snapshot("events", outFile, branchListVec)
 
+
 #__________________________________________________________
-def runLocal(foo, fileList, output):
+def sendToBatch(foo, chunkList, process, analysisFile):
+    localDir = os.environ["LOCAL_DIR"]
+    logDir = localDir+"/BatchOutputs/{}".format(output)
+    outputDir = getElement(foo, "outputDir")
+    if not os.path.exists(logDir):
+        os.system("mkdir -p {}".format(logDir))
+
+    condor_file_str=''
+    for ch in range(len(chunkList)):
+        frunname = '{}/job{}_chunk{}.sh'.format(logDir,process,ch)
+        print('----> script to run : ',frunname)
+        condor_file_str+=frunname+" "
+
+        frun = None
+        try:
+            frun = open(frunname, 'w')
+        except IOError as e:
+            print ("I/O error({0}): {1}".format(e.errno, e.strerror))
+            time.sleep(10)
+            frun = open(frunname, 'w')
+
+        subprocess.getstatusoutput('chmod 777 %s'%(frunname))
+        frun.write('#!/bin/bash\n')
+        #frun.write('source /cvmfs/sw.hsf.org/key4hep/setup.sh\n')
+        #frun.write('export PYTHONPATH=$LOCAL_DIR:$PYTHONPATH\n')
+        #frun.write('export LD_LIBRARY_PATH=$LOCAL_DIR/install/lib:$LD_LIBRARY_PATH\n')
+        #frun.write('export ROOT_INCLUDE_PATH=$LOCAL_DIR/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH\n')
+        #frun.write('export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH\n')
+        frun.write('echo PYTHONPATH\n')
+        frun.write('echo $PYTHONPATH\n')
+        frun.write('echo LD_LIBRARY_PATH\n')
+        frun.write('echo $LD_LIBRARY_PATH\n')
+        frun.write('echo ROOT_INCLUDE_PATH\n')
+        frun.write('echo $ROOT_INCLUDE_PATH\n')
+
+        frun.write('mkdir job{}_chunk{}\n'.format(process,ch))
+        frun.write('cd job{}_chunk{}\n'.format(process,ch))
+        frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}/chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
+        for ff in range(len(chunkList[ch])): 
+            frun.write(' %s'%(chunkList[ch][ff]))
+        frun.write('\n')
+        frun.write('echo "ls -altr"\n')
+        frun.write('ls -altr\n')
+
+        frun.write('echo "ls -altr ZH_mumu_recoil_batch"\n')
+        frun.write('ls -altr ZH_mumu_recoil_batch/\n')
+
+        frun.write('echo "ls -altr ZH_mumu_recoil_batch/stage1"\n')
+        frun.write('ls -altr ZH_mumu_recoil_batch/stage1\n')
+
+        frun.write('echo "ls -altr p8_ee_ZZ_ecm240"\n')
+        frun.write('ls -altr p8_ee_ZZ_ecm240/\n')
+
+        if not os.path.isabs(outputDir):
+            frun.write('cp {}/chunk{}.root  {}/{}/{}/chunk{}.root\n'.format(outputDir,ch,localDir,outputDir,process,ch))
+        frun.close()
+                
+
+    condor_file_str=condor_file_str.replace("//","/")
+    frunname_condor = 'job_desc_{}.cfg'.format(process)
+    frunfull_condor = '%s/%s'%(logDir,frunname_condor)
+    frun_condor = None
+    try:
+        frun_condor = open(frunfull_condor, 'w')
+    except IOError as e:
+        print ("I/O error({0}): {1}".format(e.errno, e.strerror))
+        time.sleep(10)
+        frun_condor = open(frunfull_condor, 'w')
+    subprocess.getstatusoutput('chmod 777 {}'.format(frunfull_condor))
+    frun_condor.write('executable       = $(filename)\n')
+    frun_condor.write('Log              = {}/condor_job.{}.$(ClusterId).$(ProcId).log\n'.format(logDir,process))
+    frun_condor.write('Output           = {}/condor_job.{}.$(ClusterId).$(ProcId).out\n'.format(logDir,process))
+    frun_condor.write('Error            = {}/condor_job.{}.$(ClusterId).$(ProcId).error\n'.format(logDir,process))
+    frun_condor.write('getenv           = True\n')
+    frun_condor.write('environment      = "LS_SUBCWD={}"\n'.format(logDir)) # not sure
+    frun_condor.write('requirements     = ( (OpSysAndVer =?= "CentOS7") && (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n')
+    frun_condor.write('on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n')
+    frun_condor.write('max_retries      = 3\n')
+    frun_condor.write('+JobFlavour      = "{}"\n'.format(getElement(foo, "batchQueue")))
+    frun_condor.write('+AccountingGroup = "{}"\n'.format(getElement(foo, "compGroup")))
+    frun_condor.write('RequestCpus      = {}\n'.format(getElement(foo, "nCPUS")))
+    frun_condor.write('queue filename matching files {}\n'.format(condor_file_str))
+    frun_condor.close()
+            
+    cmdBatch="condor_submit {}".format(frunfull_condor)
+    print ('----> batch command  : ',cmdBatch)
+    job=SubmitToCondor(cmdBatch,10)
+
+
+#__________________________________________________________
+def runLocal(foo, fileList, output, batch):
     #Create list of files to be Processed
+    print ("running local from batch = ",batch)
     print ("----> Create dataframe object from files: ", )
     fileListRoot = ROOT.vector('string')()
     nevents_meta = 0
@@ -201,8 +337,11 @@ def runLocal(foo, fileList, output):
     print ("----> nevents original={}  local={}".format(nevents_meta,nevents_local))
     outFile = getElement(foo,"outputDir")
     if outFile[-1]!="/":outFile+="/"
-    outFile+=output
 
+    if batch==False: 
+        outFile+=output
+    else: 
+        outFile=output
     start_time = time.time()
     #run RDF
     runRDF(foo, fileListRoot, outFile, nevents_local)
@@ -248,10 +387,7 @@ if __name__ == "__main__":
     publicOptions.add_argument("--output", help="Specify ouput file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
 
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
-    internalOptions.add_argument("--batch", action='store_true', help="Submit on batch")
-    internalOptions.add_argument("--process", type=str, help="Process from the processList", default="")
-    internalOptions.add_argument("--first", type=int, help="First file for process in the full list", default=-1)
-    internalOptions.add_argument("--last", type=int, help="Last file for process in the full list", default=-1)
+    internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
 
     args, _ = parser.parse_known_args()
     #check that the analysis file exists
@@ -273,8 +409,10 @@ if __name__ == "__main__":
 
     #check first if files are specified, and if so run the analysis on it/them (this will exit after)
     if len(args.files_list)>0:
-        print("Running locally with user command defined user file list")
-        runLocal(foo, args.files_list, args.output)
+        print("----> Running  with user defined list of files (either locally or from batch)")
+        path, filename = os.path.split(args.output)
+        if path!='': os.system("mkdir -p {}".format(path))
+        runLocal(foo, args.files_list, args.output, True)
         sys.exit(0)
 
     #check if batch mode and set start and end file from original list
@@ -283,8 +421,6 @@ if __name__ == "__main__":
     #check if the process list is specified
     processList = getElement(foo,"processList")
 
-    #run locally
-    #if runBatch == False:
     for process in processList:
         fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"), getElement(foo, "inputDir"))
         if len(fileList)==0:
@@ -313,25 +449,22 @@ if __name__ == "__main__":
         #create dir if more than 1 chunk
         if chunks>1:
             outputdir=outputDir+"/"+output
+
             if not os.path.exists(outputdir) and outputdir!='':
                 os.system("mkdir -p {}".format(outputdir))
 
         for ch in range(len(chunkList)):
-            #run locally
             outputchunk=''
+            if len(chunkList)>1: outputchunk="/{}/chunk{}.root".format(output,ch)
+            else:                outputchunk="{}.root".format(output)
+            #run locally
             if runBatch == False:
-                if len(chunkList)>1:
-                    outputchunk="/{}/chunk{}.root".format(output,ch)
-                else:
-                    outputchunk="{}.root".format(output)
-                runLocal(foo, chunkList[ch], outputchunk)
+                print ('----> Running Locally')
+                runLocal(foo, chunkList[ch], outputchunk, args.batch)
 
             #run on batch
-            elif runBatch == True:
-                runBatch(foo, chunkList[ch], output)
-
-   # #run on batch
-   # startFile=-1
-   # endFile=-1
-   # if runBatch == True and args.first<0 and args.last<0:
-   #     send2Batch(foo)
+        if runBatch == True:
+            print ('----> Running on Batch')
+            if len(chunkList)==1:
+                print ('----> \033[4m\033[1m\033[91mWARNING Running on batch with only one chunk might not be optimal\033[0m')
+            sendToBatch(foo, chunkList, process, analysisFile)
