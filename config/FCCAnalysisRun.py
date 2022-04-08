@@ -260,18 +260,6 @@ def sendToBatch(foo, chunkList, process, analysisFile):
         for ff in range(len(chunkList[ch])): 
             frun.write(' %s'%(chunkList[ch][ff]))
         frun.write('\n')
-        frun.write('echo "ls -altr"\n')
-        frun.write('ls -altr\n')
-
-        frun.write('echo "ls -altr ZH_mumu_recoil_batch"\n')
-        frun.write('ls -altr ZH_mumu_recoil_batch/\n')
-
-        frun.write('echo "ls -altr ZH_mumu_recoil_batch/stage1"\n')
-        frun.write('ls -altr ZH_mumu_recoil_batch/stage1\n')
-
-        frun.write('echo "ls -altr p8_ee_ZZ_ecm240"\n')
-        frun.write('ls -altr p8_ee_ZZ_ecm240/\n')
-
         if not os.path.isabs(outputDir):
             frun.write('cp {}/chunk{}.root  {}/{}/{}/chunk{}.root\n'.format(outputDir,ch,localDir,outputDir,process,ch))
         frun.close()
