@@ -27,12 +27,6 @@ computeModel = TMVA::Experimental::Compute<21, float>(bdt);
 
 ROOT.gInterpreter.ProcessLine('''
 TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_vtx.root");
-computeModelBc = TMVA::Experimental::Compute<18, float>(bdt);
-''')
-
-
-ROOT.gInterpreter.ProcessLine('''
-TMVA::Experimental::RBDT<> bdt("Bu2TauNu_BDT", "/afs/cern.ch/work/x/xzuo/public/FCC_files/Bc2TauNu/data/ROOT/xgb_bdt_Bu2TauNu_vtx.root");
 computeModelBis = TMVA::Experimental::Compute<18, float>(bdt);
 ''')
 
@@ -136,18 +130,6 @@ class analysis():
                                                         "EVT_ThrustEmax_NDV",      "EVT_dPV2DVmin",
                                                         "EVT_dPV2DVmax",           "EVT_dPV2DVave"))
                .Define("EVT_MVA1Bis", "MVAVecBis.at(0)")
-
-               .Define("MVAVecBc", ROOT.computeModelBc, ("EVT_ThrustEmin_E",        "EVT_ThrustEmax_E",
-                                                        "EVT_ThrustEmin_Echarged", "EVT_ThrustEmax_Echarged",
-                                                        "EVT_ThrustEmin_Eneutral", "EVT_ThrustEmax_Eneutral",
-                                                        "EVT_ThrustEmin_Ncharged", "EVT_ThrustEmax_Ncharged",
-                                                        "EVT_ThrustEmin_Nneutral", "EVT_ThrustEmax_Nneutral",
-                                                        "EVT_NtracksPV",           "EVT_NVertex",
-                                                        "EVT_NTau23Pi",            "EVT_ThrustEmin_NDV",
-                                                        "EVT_ThrustEmax_NDV",      "EVT_dPV2DVmin",
-                                                        "EVT_dPV2DVmax",           "EVT_dPV2DVave"))
-               .Define("EVT_MVA1Bc", "MVAVecBc.at(0)")
-
   
                
                .Define("EVT_minRhoMass", "if (EVT_CandRho1Mass<EVT_CandRho2Mass) return EVT_CandRho1Mass; else return EVT_CandRho2Mass;")
@@ -197,8 +179,8 @@ class analysis():
                 "EVT_CandPx","EVT_CandP","EVT_CandPz","EVT_CandPy",
                 "EVT_CandD0","EVT_CandZ0","EVT_CandAngleThrust",
                 "EVT_minRhoMass", "EVT_maxRhoMass",
-                "EVT_MVA1", "EVT_MVA2","EVT_MVA1Bis", "EVT_MVA1Bc",
-                 
+                "EVT_MVA1", "EVT_MVA2","EVT_MVA1Bis",
+                
                 "EVT_CandPion1P","EVT_CandPion1D0","EVT_CandPion1Z0",
                 "EVT_CandPion2P","EVT_CandPion2D0","EVT_CandPion2Z0",
                 "EVT_CandPion3P","EVT_CandPion3D0","EVT_CandPion3Z0",
