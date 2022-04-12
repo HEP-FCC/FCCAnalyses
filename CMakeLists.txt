@@ -9,6 +9,9 @@ cmake_policy(SET CMP0057 NEW)
 
 
 #--- Declare C++ Standard -----------------------------------------------------
+
+option(WITH_DD4HEP "Build analyzers that need DD4hep" OFF)
+
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
 if(NOT CMAKE_CXX_STANDARD MATCHES "17")
   message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}")
