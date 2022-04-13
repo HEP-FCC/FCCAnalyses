@@ -54,6 +54,10 @@ def getElement(foo, element):
              print('The variable <compGroup> is optional in your analysys.py file, return default value group_u_FCC.local_gen')
              return "group_u_FCC.local_gen"
 
+        elif element=='outputDirEos':
+            print('The variable <outputDirEos> is optional in your analysis.py file, return empty string')
+            return ""
+
         return None
 
 #__________________________________________________________
@@ -183,7 +187,7 @@ def getCommandOutput(command):
 def SubmitToCondor(cmd,nbtrials):
     submissionStatus=0
     cmd=cmd.replace('//','/') # -> dav : is it needed?
-    for i in range(nbtrials):            
+    for i in range(nbtrials):
         outputCMD = getCommandOutput(cmd)
         stderr=outputCMD["stderr"].split('\n')
         stdout=outputCMD["stdout"].split('\n') # -> dav : is it needed?
@@ -198,10 +202,10 @@ def SubmitToCondor(cmd,nbtrials):
             print (stderr)
 
             time.sleep(10)
-            
+
         if submissionStatus==1:
             return 1
-        
+
         if i==nbtrials-1:
             print ("failed sumbmitting after: "+str(nbtrials)+" trials, stop trying to submit")
             return 0
@@ -230,6 +234,7 @@ def sendToBatch(foo, chunkList, process, analysisFile):
     localDir = os.environ["LOCAL_DIR"]
     logDir = localDir+"/BatchOutputs/{}".format(output)
     outputDir = getElement(foo, "outputDir")
+    outputDirEos = getElement(foo, "outputDirEos")
     if not os.path.exists(logDir):
         os.system("mkdir -p {}".format(logDir))
 
@@ -257,13 +262,20 @@ def sendToBatch(foo, chunkList, process, analysisFile):
         frun.write('mkdir job{}_chunk{}\n'.format(process,ch))
         frun.write('cd job{}_chunk{}\n'.format(process,ch))
         frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}/chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
-        for ff in range(len(chunkList[ch])): 
+        for ff in range(len(chunkList[ch])):
             frun.write(' %s'%(chunkList[ch][ff]))
         frun.write('\n')
         if not os.path.isabs(outputDir):
-            frun.write('cp {}/chunk{}.root  {}/{}/{}/chunk{}.root\n'.format(outputDir,ch,localDir,outputDir,process,ch))
+            if outputDirEos=="":
+                frun.write('cp {}/chunk{}.root  {}/{}/{}/chunk{}.root\n'.format(outputDir,ch,localDir,outputDir,process,ch))
+            else:
+                frun.write('xrdcp {}/chunk{}.root  root://eospublic.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,outputDirEos,process,ch))
+        else:
+            if outputDirEos!="":
+                frun.write('xrdcp {}/chunk{}.root  root://eospublic.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,outputDirEos,process,ch))
+
         frun.close()
-                
+
 
     condor_file_str=condor_file_str.replace("//","/")
     frunname_condor = 'job_desc_{}.cfg'.format(process)
@@ -290,7 +302,7 @@ def sendToBatch(foo, chunkList, process, analysisFile):
     frun_condor.write('RequestCpus      = {}\n'.format(getElement(foo, "nCPUS")))
     frun_condor.write('queue filename matching files {}\n'.format(condor_file_str))
     frun_condor.close()
-            
+
     cmdBatch="condor_submit {}".format(frunfull_condor)
     print ('----> batch command  : ',cmdBatch)
     job=SubmitToCondor(cmdBatch,10)
@@ -319,9 +331,9 @@ def runLocal(foo, fileList, output, batch):
     outFile = getElement(foo,"outputDir")
     if outFile[-1]!="/":outFile+="/"
 
-    if batch==False: 
+    if batch==False:
         outFile+=output
-    else: 
+    else:
         outFile=output
     start_time = time.time()
     #run RDF
@@ -347,7 +359,7 @@ def runLocal(foo, fileList, output, batch):
     if (nevents_local>0): print  ("Reduction factor local   :  ",outn/nevents_local)
     if (nevents_meta>0):  print  ("Reduction factor total   :  ",outn/nevents_meta)
     print  ("===================================================================")
-    print  (" ")   
+    print  (" ")
     print  (" ")
 
 
@@ -387,6 +399,11 @@ if __name__ == "__main__":
     outputDir = getElement(foo,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
         os.system("mkdir -p {}".format(outputDir))
+
+    #check if outputDir exist and if not create it
+    outputDirEos = getElement(foo,"outputDirEos")
+    if not os.path.exists(outputDirEos) and outputDirEos!='':
+        os.system("mkdir -p {}".format(outputDirEos))
 
     #check first if files are specified, and if so run the analysis on it/them (this will exit after)
     if len(args.files_list)>0:
