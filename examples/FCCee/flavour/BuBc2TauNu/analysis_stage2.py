@@ -18,11 +18,11 @@ print ('edm4hep  ',_edm)
 print ('podio    ',_pod)
 print ('fccana   ',_fcc)
 
-MVA1Filter="EVT_MVA1Bis>0.5"
-MVA2Filter="EVT_MVA2>0.6"
+MVA1Filter="EVT_MVA1Bis>0.6"
+MVA2Filter="EVT_MVA2_bu>0.6||EVT_MVA2_bc>0.6"
 
 ROOT.gInterpreter.ProcessLine('''
-TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT2", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_stage2.root");
+TMVA::Experimental::RBDT<> bdt("BuBc_BDT2", "/afs/cern.ch/work/x/xzuo/public/FCC_files/BuBc2TauNu/data/ROOT/xgb_bdt_stage2_Bu_vs_Bc_vs_qq_multi.root");
 computeModel = TMVA::Experimental::Compute<21, float>(bdt);
 ''')
 
@@ -130,7 +130,10 @@ class analysis():
                                                      "EVT_DVz0_ave",        "EVT_PVmass",       "EVT_Nominal_B_E"))
 
 
-               .Define("EVT_MVA2", "MVAVec.at(0)")
+               .Define("EVT_MVA2_bkg", "MVAVec.at(0)")
+               .Define("EVT_MVA2_bu", "MVAVec.at(1)")
+               .Define("EVT_MVA2_bc", "MVAVec.at(2)")
+
                .Filter(MVA2Filter)
 
                .Define("EVT_minRhoMass", "if (EVT_CandRho1Mass<EVT_CandRho2Mass) return EVT_CandRho1Mass; else return EVT_CandRho2Mass;")
@@ -180,7 +183,7 @@ class analysis():
                 "EVT_CandPx","EVT_CandP","EVT_CandPz","EVT_CandPy",
                 "EVT_CandD0","EVT_CandZ0","EVT_CandAngleThrust",
                 "EVT_minRhoMass", "EVT_maxRhoMass",
-                "EVT_MVA1", "EVT_MVA2", "EVT_MVA1Bis",
+                "EVT_MVA1", "EVT_MVA2_bkg", "EVT_MVA2_bu", "EVT_MVA2_bc",  "EVT_MVA1Bis",
                  
                 "EVT_CandPion1P","EVT_CandPion1D0","EVT_CandPion1Z0",
                 "EVT_CandPion2P","EVT_CandPion2D0","EVT_CandPion2Z0",
@@ -226,7 +229,7 @@ if __name__ == "__main__":
     nevents=0
 
     if "_Training_" in sys.argv[2]:
-        MVA2Filter="EVT_MVA2>-1.0"
+        MVA2Filter="1"
     
     if len(sys.argv)==3 and "*" in sys.argv[2]:
         import glob
