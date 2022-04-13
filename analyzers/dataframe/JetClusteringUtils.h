@@ -25,6 +25,8 @@ namespace JetClusteringUtils{
   struct FCCAnalysesJet{
     ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
     std::vector<std::vector<int>> constituents;
+    std::vector<float> exclusive_dmerge;   // vector of 10 values associated with merging from n + 1 to n jets, for n =1, 2, ... 10
+    std::vector<float> exclusive_dmerge_max ;
   };
 
   /** Set fastjet pseudoJet for later reconstruction*/
@@ -51,6 +53,12 @@ namespace JetClusteringUtils{
 
   /** Get fastjet constituents after reconstruction from FCCAnalyses jets*/
   std::vector<std::vector<int>> get_constituents(FCCAnalysesJet);
+
+
+  /// return the dmin corresponding to the recombination that went from n+1 to n jets
+  float get_exclusive_dmerge( FCCAnalysesJet in, int n );
+  float get_exclusive_dmerge_max( FCCAnalysesJet in, int n );
+
   
   /** Get jet px. Details. */
   ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
@@ -86,13 +94,15 @@ namespace JetClusteringUtils{
   ///Internal methods
   FCCAnalysesJet initialise_FCCAnalysesJet();
 
-  FCCAnalysesJet build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in);
+  FCCAnalysesJet build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in, std::vector<float> dmerge, std::vector<float> dmerge_max );
   
   std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence & cs, int exclusive, float cut, int sorted);
 
   bool check(unsigned int n, int exclusive, float cut);
 
   fastjet::RecombinationScheme recomb_scheme(int recombination);
+
+  std::vector<float> exclusive_dmerge( fastjet::ClusterSequence & cs, int do_dmarge_max)  ;
   
   ///@}
 }

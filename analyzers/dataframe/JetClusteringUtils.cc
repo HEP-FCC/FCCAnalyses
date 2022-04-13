@@ -11,6 +11,21 @@ std::vector<std::vector<int>> JetClusteringUtils::get_constituents(FCCAnalysesJe
   return jets.constituents;
 }
 
+
+float get_exclusive_dmerge( FCCAnalysesJet in, int n ) {
+  float d = -1;
+  if ( n >= 1 &&  n <= 10) d= in.exclusive_dmerge[n] ;
+  return d;
+}
+
+float get_exclusive_dmerge_max( FCCAnalysesJet in, int n ) {
+  float d = -1;
+  if ( n >= 1 &&  n <= 10) d= in.exclusive_dmerge_max[n] ;
+  return d;
+}
+
+
+
 std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(ROOT::VecOps::RVec<float> px, 
 								   ROOT::VecOps::RVec<float> py, 
 								   ROOT::VecOps::RVec<float> pz, 
@@ -129,10 +144,18 @@ FCCAnalysesJet JetClusteringUtils::initialise_FCCAnalysesJet(){
   result.jets = jets;
   result.constituents = constituents;
 
+  std::vector<float> exclusive_dmerge;
+  std::vector<float> exclusive_dmerge_max;
+  exclusive_dmerge.reserve(10);
+  exclusive_dmerge_max.reserve(10);
+
+  result.exclusive_dmerge = exclusive_dmerge;
+  result.exclusive_dmerge_max = exclusive_dmerge_max;
+
   return result;
 };
 
-FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in){
+FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in, std::vector<float> dmerge, std::vector<float> dmerge_max ){
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::initialise_FCCAnalysesJet();
   for (const auto& pjet : in) {
     result.jets.push_back(pjet);
@@ -144,6 +167,8 @@ FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(std::vector<fastjet::Pse
     }
     result.constituents.push_back(tmpvec);
   }
+  result.exclusive_dmerge = dmerge;
+  result.exclusive_dmerge_max = dmerge_max;
   return result;
 }
 
@@ -167,6 +192,20 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterS
     else if( exclusive ==  4)  pjets = fastjet::sorted_by_E(cs.exclusive_jets_ycut(cut));
   }
   return pjets;
+}
+
+std::vector<float> JetClusteringUtils::exclusive_dmerge( fastjet::ClusterSequence & cs, int do_dmarge_max) {
+
+  const int Nmax = 10;
+  std::vector<float>  result;
+  for (int i=1; i <= Nmax; i++) {
+     	float  d;
+	const int j = i;
+     	if ( do_dmarge_max == 0) d = cs.exclusive_dmerge( j );
+	else d = cs.exclusive_dmerge_max( j ) ;
+	result.push_back( d );
+  }
+  return result;
 }
 
 
