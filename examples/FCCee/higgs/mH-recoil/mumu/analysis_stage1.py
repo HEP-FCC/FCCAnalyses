@@ -9,13 +9,13 @@ processList = {
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local running directory
-outputDir   = "ZH_mumu_recoil/stage1"
+outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
 
 #Optional: ncpus, default is 4
-nCPUS       = 8
+#nCPUS       = 8
 
 #Optional running on HTCondor, default is False
-runBatch    = False
+#runBatch    = False
 
 #Optional batch queue name when running on HTCondor, default is workday
 #batchQueue = "longlunch"
