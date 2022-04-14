@@ -55,7 +55,11 @@ def getElement(foo, element):
              return "group_u_FCC.local_gen"
 
         elif element=='outputDirEos':
-            print('The variable <outputDirEos> is optional in your analysis.py file, return empty string')
+            print('The variable <outputDirEos> is optional in your analysis.py file, return default empty string')
+            return ""
+
+        elif element=='userBatchConfig':
+            print('The variable <userBatchConfig> is optional in your analysis.py file, return default empty string')
             return ""
 
         return None
@@ -232,11 +236,13 @@ def runRDF(foo, inputlist, outFile, nevt):
 #__________________________________________________________
 def sendToBatch(foo, chunkList, process, analysisFile):
     localDir = os.environ["LOCAL_DIR"]
-    logDir = localDir+"/BatchOutputs/{}".format(output)
-    outputDir = getElement(foo, "outputDir")
-    outputDirEos = getElement(foo, "outputDirEos")
+    logDir   = localDir+"/BatchOutputs/{}".format(output)
     if not os.path.exists(logDir):
         os.system("mkdir -p {}".format(logDir))
+
+    outputDir       = getElement(foo, "outputDir")
+    outputDirEos    = getElement(foo, "outputDirEos")
+    userBatchConfig = getElement(foo, "userBatchConfig")
 
     condor_file_str=''
     for ch in range(len(chunkList)):
@@ -254,11 +260,20 @@ def sendToBatch(foo, chunkList, process, analysisFile):
 
         subprocess.getstatusoutput('chmod 777 %s'%(frunname))
         frun.write('#!/bin/bash\n')
+
+        #add userBatchConfig if any
+        if userBatchConfig!="":
+            if not os.path.isfile(userBatchConfig):
+                print('----> userBatchConfig file does not exist, will not add it to default config, please check')
+            else:
+                configFile=open(userBatchConfig)
+                for line in configFile:
+                    frun.write(line+'\n)
+                    
         frun.write('source /cvmfs/sw.hsf.org/key4hep/setup.sh\n')
         #frun.write('export PYTHONPATH=$LOCAL_DIR:$PYTHONPATH\n')
         #frun.write('export LD_LIBRARY_PATH=$LOCAL_DIR/install/lib:$LD_LIBRARY_PATH\n')
         #frun.write('export ROOT_INCLUDE_PATH=$LOCAL_DIR/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH\n')
-
         frun.write('mkdir job{}_chunk{}\n'.format(process,ch))
         frun.write('cd job{}_chunk{}\n'.format(process,ch))
         frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}/chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
