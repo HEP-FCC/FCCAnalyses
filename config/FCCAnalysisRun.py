@@ -58,6 +58,10 @@ def getElement(foo, element):
             print('The variable <outputDirEos> is optional in your analysis.py file, return default empty string')
             return ""
 
+        elif element=='eosType':
+            print('The variable <outputDirEos> is optional in your analysis.py file, return default eospublic')
+            return "eospublic"
+
         elif element=='userBatchConfig':
             print('The variable <userBatchConfig> is optional in your analysis.py file, return default empty string')
             return ""
@@ -242,6 +246,7 @@ def sendToBatch(foo, chunkList, process, analysisFile):
 
     outputDir       = getElement(foo, "outputDir")
     outputDirEos    = getElement(foo, "outputDirEos")
+    eosType         = getElement(foo, "eosType")
     userBatchConfig = getElement(foo, "userBatchConfig")
 
     condor_file_str=''
@@ -284,10 +289,10 @@ def sendToBatch(foo, chunkList, process, analysisFile):
             if outputDirEos=="":
                 frun.write('cp {}/chunk{}.root  {}/{}/{}/chunk{}.root\n'.format(outputDir,ch,localDir,outputDir,process,ch))
             else:
-                frun.write('xrdcp {}/chunk{}.root  root://eospublic.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,outputDirEos,process,ch))
+                frun.write('xrdcp {}/chunk{}.root  root://{}.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,eosType,outputDirEos,process,ch))
         else:
             if outputDirEos!="":
-                frun.write('xrdcp {}/chunk{}.root  root://eospublic.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,outputDirEos,process,ch))
+                frun.write('xrdcp {}/chunk{}.root  root://{}.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,eosType,outputDirEos,process,ch))
 
         frun.close()
 
