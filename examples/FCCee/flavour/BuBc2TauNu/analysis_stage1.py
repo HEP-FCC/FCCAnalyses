@@ -57,7 +57,7 @@ outputDirEos = outputDirEos_analysis
 prodTag      = prodTag_analysis
 MVAFilter    = "EVT_MVA1>0.6"
 
-runTraining==False
+runTraining=False
 if runTraining:
     processList  = processList_training
     outputDirEos = outputDirEos_training
@@ -337,7 +337,7 @@ class RDFanalysis():
 
                .Define("TrueTau23PiBu_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 521)")
            )
-           return df2
+        return df2
 
     #__________________________________________________________
     #Mandatory: output function, please make sure you return the branchlist as a python list
