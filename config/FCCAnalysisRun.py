@@ -268,8 +268,8 @@ def sendToBatch(foo, chunkList, process, analysisFile):
             else:
                 configFile=open(userBatchConfig)
                 for line in configFile:
-                    frun.write(line+'\n)
-                    
+                    frun.write(line+'\n')
+
         frun.write('source /cvmfs/sw.hsf.org/key4hep/setup.sh\n')
         #frun.write('export PYTHONPATH=$LOCAL_DIR:$PYTHONPATH\n')
         #frun.write('export LD_LIBRARY_PATH=$LOCAL_DIR/install/lib:$LD_LIBRARY_PATH\n')
