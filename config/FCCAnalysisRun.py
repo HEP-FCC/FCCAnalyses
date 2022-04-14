@@ -349,7 +349,7 @@ def runLocal(foo, fileList, output, batch):
         nevents_local+=tt.GetEntries()
     print ("----> nevents original={}  local={}".format(nevents_meta,nevents_local))
     outFile = getElement(foo,"outputDir")
-    if outFile[-1]!="/":outFile+="/"
+    if outFile!="" and outFile[-1]!="/": outFile+="/"
 
     if batch==False:
         outFile+=output
