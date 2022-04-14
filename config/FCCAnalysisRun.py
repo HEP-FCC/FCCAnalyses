@@ -249,6 +249,8 @@ def sendToBatch(foo, chunkList, process, analysisFile):
     eosType         = getElement(foo, "eosType")
     userBatchConfig = getElement(foo, "userBatchConfig")
 
+    if outputDir!="" and outputDir[-1]!="/": outputDir+="/"
+
     condor_file_str=''
     for ch in range(len(chunkList)):
         frunname = '{}/job{}_chunk{}.sh'.format(logDir,process,ch)
@@ -281,18 +283,18 @@ def sendToBatch(foo, chunkList, process, analysisFile):
         #frun.write('export ROOT_INCLUDE_PATH=$LOCAL_DIR/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH\n')
         frun.write('mkdir job{}_chunk{}\n'.format(process,ch))
         frun.write('cd job{}_chunk{}\n'.format(process,ch))
-        frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}/chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
+        frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
         for ff in range(len(chunkList[ch])):
             frun.write(' %s'%(chunkList[ch][ff]))
         frun.write('\n')
         if not os.path.isabs(outputDir):
             if outputDirEos=="":
-                frun.write('cp {}/chunk{}.root  {}/{}/{}/chunk{}.root\n'.format(outputDir,ch,localDir,outputDir,process,ch))
+                frun.write('cp {}chunk{}.root  {}/{}/{}/chunk{}.root\n'.format(outputDir,ch,localDir,outputDir,process,ch))
             else:
-                frun.write('xrdcp {}/chunk{}.root  root://{}.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,eosType,outputDirEos,process,ch))
+                frun.write('xrdcp {}chunk{}.root  root://{}.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,eosType,outputDirEos,process,ch))
         else:
             if outputDirEos!="":
-                frun.write('xrdcp {}/chunk{}.root  root://{}.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,eosType,outputDirEos,process,ch))
+                frun.write('xrdcp {}chunk{}.root  root://{}.cern.ch/{}/{}/chunk{}.root\n'.format(outputDir,ch,eosType,outputDirEos,process,ch))
 
         frun.close()
 
