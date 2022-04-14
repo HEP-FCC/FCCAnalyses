@@ -268,6 +268,9 @@ def sendToBatch(foo, chunkList, process, analysisFile):
         subprocess.getstatusoutput('chmod 777 %s'%(frunname))
         frun.write('#!/bin/bash\n')
         frun.write('source /cvmfs/sw.hsf.org/key4hep/setup.sh\n')
+        frun.write('export PYTHONPATH=$LOCAL_DIR:$PYTHONPATH\n')
+        frun.write('export LD_LIBRARY_PATH=$LOCAL_DIR/install/lib:$LD_LIBRARY_PATH\n')
+        frun.write('export ROOT_INCLUDE_PATH=$LOCAL_DIR/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH\n')
 
         #add userBatchConfig if any
         if userBatchConfig!="":
@@ -278,9 +281,6 @@ def sendToBatch(foo, chunkList, process, analysisFile):
                 for line in configFile:
                     frun.write(line+'\n')
 
-        #frun.write('export PYTHONPATH=$LOCAL_DIR:$PYTHONPATH\n')
-        #frun.write('export LD_LIBRARY_PATH=$LOCAL_DIR/install/lib:$LD_LIBRARY_PATH\n')
-        #frun.write('export ROOT_INCLUDE_PATH=$LOCAL_DIR/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH\n')
         frun.write('mkdir job{}_chunk{}\n'.format(process,ch))
         frun.write('cd job{}_chunk{}\n'.format(process,ch))
         frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
