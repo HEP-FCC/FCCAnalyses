@@ -20,12 +20,13 @@ namespace JetClusteringUtils{
   */
   ///@{
   
+  const int Nmax_dmerge = 10;  // maximum number of d_{n, n+1} that are kept in FCCAnalysesJet
 
   /** Structure to keep useful informations for the jets*/
   struct FCCAnalysesJet{
     ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
     std::vector<std::vector<int>> constituents;
-    std::vector<float> exclusive_dmerge;   // vector of 10 values associated with merging from n + 1 to n jets, for n =1, 2, ... 10
+    std::vector<float> exclusive_dmerge;   // vector of Nmax_dmerge  values associated with merging from n + 1 to n jets, for n =1, 2, ... 10
     std::vector<float> exclusive_dmerge_max ;
   };
 

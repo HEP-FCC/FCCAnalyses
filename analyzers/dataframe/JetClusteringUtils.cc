@@ -12,15 +12,15 @@ std::vector<std::vector<int>> JetClusteringUtils::get_constituents(FCCAnalysesJe
 }
 
 
-float get_exclusive_dmerge( FCCAnalysesJet in, int n ) {
+float JetClusteringUtils::get_exclusive_dmerge( FCCAnalysesJet in, int n ) {
   float d = -1;
-  if ( n >= 1 &&  n <= 10) d= in.exclusive_dmerge[n] ;
+  if ( n >= 1 &&  n <= Nmax_dmerge) d= in.exclusive_dmerge[n-1] ;
   return d;
 }
 
-float get_exclusive_dmerge_max( FCCAnalysesJet in, int n ) {
+float JetClusteringUtils::get_exclusive_dmerge_max( FCCAnalysesJet in, int n ) {
   float d = -1;
-  if ( n >= 1 &&  n <= 10) d= in.exclusive_dmerge_max[n] ;
+  if ( n >= 1 &&  n <= Nmax_dmerge) d= in.exclusive_dmerge_max[n-1] ;
   return d;
 }
 
@@ -146,8 +146,8 @@ FCCAnalysesJet JetClusteringUtils::initialise_FCCAnalysesJet(){
 
   std::vector<float> exclusive_dmerge;
   std::vector<float> exclusive_dmerge_max;
-  exclusive_dmerge.reserve(10);
-  exclusive_dmerge_max.reserve(10);
+  exclusive_dmerge.reserve(Nmax_dmerge);
+  exclusive_dmerge_max.reserve(Nmax_dmerge);
 
   result.exclusive_dmerge = exclusive_dmerge;
   result.exclusive_dmerge_max = exclusive_dmerge_max;
@@ -196,7 +196,7 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterS
 
 std::vector<float> JetClusteringUtils::exclusive_dmerge( fastjet::ClusterSequence & cs, int do_dmarge_max) {
 
-  const int Nmax = 10;
+  const int Nmax = Nmax_dmerge;
   std::vector<float>  result;
   for (int i=1; i <= Nmax; i++) {
      	float  d;
