@@ -283,7 +283,12 @@ def sendToBatch(foo, chunkList, process, analysisFile):
 
         frun.write('mkdir job{}_chunk{}\n'.format(process,ch))
         frun.write('cd job{}_chunk{}\n'.format(process,ch))
-        frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
+
+        if not os.path.isabs(outputDir):
+            frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
+        else:
+            frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}{}/chunk{}.root --files-list '.format(analysisFile, outputDir, process,ch))
+
         for ff in range(len(chunkList[ch])):
             frun.write(' %s'%(chunkList[ch][ff]))
         frun.write('\n')
