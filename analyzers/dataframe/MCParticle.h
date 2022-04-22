@@ -49,6 +49,8 @@ namespace MCParticle{
     bool m_chargeconjugate = true;
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
+
+
   
   /// get MC history tree for a given MCParticle index
   struct get_tree{
@@ -90,7 +92,6 @@ namespace MCParticle{
 								     bool m_stableDaughters,
                                         			     ROOT::VecOps::RVec<edm4hep::MCParticleData> in , 
 								     ROOT::VecOps::RVec<int> ind);
-
 
   /// return the parent index of a given list of MC particles
   ROOT::VecOps::RVec<int> get_parentid(ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents);
@@ -200,7 +201,8 @@ namespace MCParticle{
                                                  ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
                                                  ROOT::VecOps::RVec<int> ind) ;
 
-
+/// return a sub list of MCParticles from a given list of indices
+ROOT::VecOps::RVec<edm4hep::MCParticleData> get_subMC(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 
 }

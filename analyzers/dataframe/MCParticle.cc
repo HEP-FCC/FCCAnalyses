@@ -428,7 +428,6 @@ ROOT::VecOps::RVec<int> MCParticle::get_parentid(ROOT::VecOps::RVec<int> mcind, 
   return result;
 }
 
-
 // ----------------------------------------------------------------------------------------------------------------------------------
 
 // returns one MCParticle selected by its index in the particle block
@@ -678,8 +677,19 @@ ROOT::VecOps::RVec<float> MCParticle::AngleBetweenTwoMCParticles( ROOT::VecOps::
   }
 
   return result;
-
 }
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> MCParticle::get_subMC(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  for (size_t i = 0; i < index.size(); ++i) {
+    if (index[i]>-1)
+      result.push_back(in.at(index[i]));
+    //else
+    //  std::cout << "electron index negative " << index[i]<<std::endl;
+  }  
+  return result;
+}
+
 
 
 
