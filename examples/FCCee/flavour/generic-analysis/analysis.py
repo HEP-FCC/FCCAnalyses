@@ -135,8 +135,6 @@ class analysis():
                .Define("RP_thrusthemis_emax", "if (EVT_thrusthemis0_e.at(0)>EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
                .Define("RP_thrusthemis_emin", "if (EVT_thrusthemis0_e.at(0)<EVT_thrusthemis1_e.at(0)) return RP_thrusthemis0; else return RP_thrusthemis1;")
 
-               #.Define("awk", "dummyLoader()")
-               .Define("awk", "awkwardtest()")
                
                )
 
@@ -159,8 +157,7 @@ class analysis():
 
                 "RP_thrustangle","RP_sphericityangle","RP_p","RP_px","RP_py","RP_pz","RP_charge","RP_mass",
 
-                "RP_MC_index","RP_MC_parentindex","RP_MC_grandparentindex",
-                "awk"
+                "RP_MC_index","RP_MC_parentindex","RP_MC_grandparentindex"
                 ]:
             branchList.push_back(branchName)
 

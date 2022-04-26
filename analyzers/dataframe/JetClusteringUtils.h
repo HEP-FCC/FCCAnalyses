@@ -9,14 +9,14 @@
 #include "fastjet/JetDefinition.hh"
 #include "TRandom3.h"
 
-/** Jet clustering utilities interface. 
-This represents a set functions and utilities to perfom jet clustering from a list of.  
+/** Jet clustering utilities interface.
+This represents a set functions and utilities to perfom jet clustering from a list of.
 */
 
 namespace JetClusteringUtils{
 
   /** @name JetClusteringUtils
-   *  Jet clustering interface utilities. 
+   *  Jet clustering interface utilities.
   */
   ///@{
   
@@ -31,80 +31,88 @@ namespace JetClusteringUtils{
   };
 
   /** Set fastjet pseudoJet for later reconstruction*/
-  std::vector<fastjet::PseudoJet> set_pseudoJets(ROOT::VecOps::RVec<float> px, 
-						 ROOT::VecOps::RVec<float> py, 
-						 ROOT::VecOps::RVec<float> pz, 
-						 ROOT::VecOps::RVec<float> e);
+  std::vector<fastjet::PseudoJet> set_pseudoJets(const ROOT::VecOps::RVec<float> &px,
+                                                 const ROOT::VecOps::RVec<float> &py,
+                                                 const ROOT::VecOps::RVec<float> &pz,
+                                                 const ROOT::VecOps::RVec<float> &e);
 
   /** Set fastjet pseudoJet for later reconstruction using px, py, pz and m
-   * 
-   * This version is to be preferred over the px,py,pz,E version when m is known 
-   * accurately, because it uses double precision to reconstruct the energy, 
+   *
+   * This version is to be preferred over the px,py,pz,E version when m is known
+   * accurately, because it uses double precision to reconstruct the energy,
    * reducing the size of rounding errors on FastJet calculations (e.g. of
    * PseudoJet masses)
-   * 
+   *
   */
-  std::vector<fastjet::PseudoJet> set_pseudoJets_xyzm(ROOT::VecOps::RVec<float> px, 
-						 ROOT::VecOps::RVec<float> py, 
-						 ROOT::VecOps::RVec<float> pz, 
-						 ROOT::VecOps::RVec<float> m);
+  std::vector<fastjet::PseudoJet> set_pseudoJets_xyzm(const ROOT::VecOps::RVec<float> &px,
+                                                      const ROOT::VecOps::RVec<float> &py,
+                                                      const ROOT::VecOps::RVec<float> &pz,
+                                                      const ROOT::VecOps::RVec<float> &m);
 
   /** Get fastjet pseudoJet after reconstruction from FCCAnalyses jets*/
-  ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(FCCAnalysesJet);
+  ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(const FCCAnalysesJet &in);
 
   /** Get fastjet constituents after reconstruction from FCCAnalyses jets*/
-  std::vector<std::vector<int>> get_constituents(FCCAnalysesJet);
+  std::vector<std::vector<int>> get_constituents(const FCCAnalysesJet &in);
 
 
   /// return the dmin corresponding to the recombination that went from n+1 to n jets
-  float get_exclusive_dmerge( FCCAnalysesJet in, int n );
-  float get_exclusive_dmerge_max( FCCAnalysesJet in, int n );
-
+  float get_exclusive_dmerge(const FCCAnalysesJet &in, int n);
+  
+  float get_exclusive_dmerge_max(const FCCAnalysesJet &in, int n);
   
   /** Get jet px. Details. */
-  ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_px(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet py. Details. */
-  ROOT::VecOps::RVec<float> get_py(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_py(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet pz. Details. */
-  ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_pz(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet energy. Details. */
-  ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_e(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet pt. Details. */
-  ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_pt(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet p. Details. */
-  ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_p(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet mass. Details. */
-  ROOT::VecOps::RVec<float> get_m(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_m(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet eta. Details. */
-  ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+  ROOT::VecOps::RVec<float> get_eta(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
 
   /** Get jet phi. Details. */
-  ROOT::VecOps::RVec<float> get_phi(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
+  ROOT::VecOps::RVec<float> get_phi(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
+
   /** Get jet theta. Details. */
-  ROOT::VecOps::RVec<float> get_theta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+  ROOT::VecOps::RVec<float> get_theta(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in);
 
 
   ///Internal methods
   FCCAnalysesJet initialise_FCCAnalysesJet();
 
-  FCCAnalysesJet build_FCCAnalysesJet(std::vector<fastjet::PseudoJet> in, std::vector<float> dmerge, std::vector<float> dmerge_max );
+  FCCAnalysesJet build_FCCAnalysesJet(const std::vector<fastjet::PseudoJet> &in, 
+                                      const std::vector<float> &dmerge, 
+                                      const std::vector<float> &dmerge_max);
   
-  std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence & cs, int exclusive, float cut, int sorted);
+  std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence & cs, 
+                                             int exclusive, float cut, 
+                                             int sorted);
 
-  bool check(unsigned int n, int exclusive, float cut);
+  bool check(unsigned int n, 
+             int exclusive, 
+             float cut);
 
   fastjet::RecombinationScheme recomb_scheme(int recombination);
 
-  std::vector<float> exclusive_dmerge( fastjet::ClusterSequence & cs, int do_dmarge_max)  ;
+  std::vector<float> exclusive_dmerge(fastjet::ClusterSequence & cs, 
+                                      int do_dmarge_max)  ;
   
+
   ///@}
 }
 

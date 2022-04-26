@@ -1,136 +1,177 @@
-
 #ifndef  ALGORITHM_ANALYZERS_H
 #define  ALGORITHM_ANALYZERS_H
 
 #include <cmath>
 #include <vector>
 
-#include "TLorentzVector.h"
-#include "ROOT/RVec.hxx"
-#include "edm4hep/MCParticleData.h"
-#include "edm4hep/ParticleIDData.h"
 #include "edm4hep/ReconstructedParticleData.h"
 
-#include "edm4hep/Vector3f.h"
-#include "edm4hep/Vector3d.h"
-#include "edm4hep/Vector2i.h"
-#include "TFitter.h"
-
+//#include "TFitter.h"
+#include "Math/Minimizer.h"
+#include "ROOT/RVec.hxx"
 
 namespace Algorithms{
 
-  struct getRP_combination{
-    getRP_combination(int arg_n, int arg_charge, bool arg_abs);
-    int  m_n;
-    int  m_charge;
-    bool m_abs;
-    ROOT::VecOps::RVec<int> operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-  };
+  /** @name Algorithms
+   * Algorithms class .
+   This represents a set functions and utilities to perfom algorithmics in FCCAnalyses.
+  */
+  ///@{
 
-
+  /// Function that runs the fit for the sphericity axis determination
   struct sphericityFit {
-    sphericityFit(ROOT::VecOps::RVec<float> arg_px, 
-		  ROOT::VecOps::RVec<float> arg_py, 
-		  ROOT::VecOps::RVec<float> arg_pz);
-    ROOT::VecOps::RVec<float> m_px;
-    ROOT::VecOps::RVec<float> m_py;
-    ROOT::VecOps::RVec<float> m_pz;
+  public:
+    sphericityFit(const ROOT::VecOps::RVec<float> & arg_px,
+                  const ROOT::VecOps::RVec<float> & arg_py,
+                  const ROOT::VecOps::RVec<float> & arg_pz);
     float operator()(const double *par);
+
+  private:
+    ROOT::VecOps::RVec<float> _px; ///vector of px
+    ROOT::VecOps::RVec<float> _py; ///vector of py
+    ROOT::VecOps::RVec<float> _pz; ///vector of pz
   };
-  
-  
+
+
+  /// Calculates the sphericity axis based on a list of px, py, pz
   struct minimize_sphericity {
-    minimize_sphericity(std::string arg_minname, std::string arg_algoname);
-    char const *m_minname  = "Minuit2";
-    char const *m_algoname = "";
-    ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<float> px, 
-					 ROOT::VecOps::RVec<float> py, 
-					 ROOT::VecOps::RVec<float> pz);
+  public:
+    minimize_sphericity(std::string arg_minname="Minuit2",
+                        std::string arg_algoname="Migrad",
+                        int arg_maxcalls=100000,
+                        float arg_tolerance=0.001);
+    ROOT::VecOps::RVec<float> operator()(const ROOT::VecOps::RVec<float> & px,
+                                         const ROOT::VecOps::RVec<float> & py,
+                                         const ROOT::VecOps::RVec<float> & pz);
+
+  private:
+    char const *_minname; ///Minimizer to use, Minuit2 default
+    char const *_algoname; ///Optimisation algorithm, Migrad default
+    int _maxcalls; ///Maximum call to minimization function, default=100000
+    float _tolerance; ///Tolerance for minimization, default=0.001
+    ROOT::Math::Minimizer *_min; ///internal ROOT minimizer
+    double _step[3]={0.001,0.001,0.001};
+    double _variable[3]={1.0,1.0,1.0};
   };
-  
-  
-  
+
+
+  /// Function that runs the fit for the thrust axis determination
   struct thrustFit {
-    thrustFit(ROOT::VecOps::RVec<float> arg_px, 
-	      ROOT::VecOps::RVec<float> arg_py, 
-	      ROOT::VecOps::RVec<float> arg_pz);
-    ROOT::VecOps::RVec<float> m_px;
-    ROOT::VecOps::RVec<float> m_py;
-    ROOT::VecOps::RVec<float> m_pz;
+  public:
+    thrustFit(const ROOT::VecOps::RVec<float> & arg_px,
+	      const ROOT::VecOps::RVec<float> & arg_py,
+	      const ROOT::VecOps::RVec<float> & arg_pz);
     float operator()(const double *par);
+
+  private:
+    ROOT::VecOps::RVec<float> _px; ///vector of px
+    ROOT::VecOps::RVec<float> _py; ///vector of py
+    ROOT::VecOps::RVec<float> _pz; ///vector of pz
   };
-  
-  
+
+
+  /// Calculates the thrust axis based on a list of px, py, pz
   struct minimize_thrust {
-    minimize_thrust(std::string arg_minname, std::string arg_algoname);
-    char const *m_minname  = "Minuit2";
-    char const *m_algoname = "";
-    ROOT::VecOps::RVec<float> operator()(ROOT::VecOps::RVec<float> px, 
-					 ROOT::VecOps::RVec<float> py, 
-					 ROOT::VecOps::RVec<float> pz);
+    minimize_thrust(std::string arg_minname="Minuit2",
+                    std::string arg_algoname="Migrad",
+                    int arg_maxcalls=100000,
+                    float arg_tolerance=0.001);
+    ROOT::VecOps::RVec<float> operator()(const ROOT::VecOps::RVec<float> & px,
+                                         const ROOT::VecOps::RVec<float> & py,
+                                         const ROOT::VecOps::RVec<float> & pz);
+
+  private:
+    char const *_minname; ///Minimizer to use, Minuit2 default
+    char const *_algoname; ///Optimisation algorithm, Migrad default
+    int _maxcalls;///Maximum call to minimization function, default=100000
+    float _tolerance;///Tolerance for minimization, default=0.001
+    ROOT::Math::Minimizer *_min; ///internal ROOT minimizer
+    double _step[3]={0.001,0.001,0.001};
+    double _variable[3]={1.0,1.0,1.0};
   };
-  
+
+
   /// Get the weighted charge in a given hemisphere (defined by it's angle wrt to axis). For definition see eq1 https://arxiv.org/pdf/1209.2421.pdf
   struct getAxisCharge {
-    getAxisCharge(bool arg_pos, float arg_power);
-    bool m_pos = 0; //> Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0
-    float m_power = 1; //> kappa parameter for the weighting
-    float operator() (ROOT::VecOps::RVec<float> angle, 
-		      ROOT::VecOps::RVec<float> charge, 
-		      ROOT::VecOps::RVec<float> px, 
-		      ROOT::VecOps::RVec<float> py, 
-		      ROOT::VecOps::RVec<float> pz);
+  public:
+    getAxisCharge(bool arg_pos=0,
+                  float arg_power=1);
+    float operator() (const ROOT::VecOps::RVec<float> & angle,
+                      const ROOT::VecOps::RVec<float> & charge,
+                      const ROOT::VecOps::RVec<float> & px,
+                      const ROOT::VecOps::RVec<float> & py,
+                      const ROOT::VecOps::RVec<float> & pz);
+  private:
+    bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
+    float _power; /// kappa parameter for the weighting. Default=1
   };
-  
+
+
   /// Get the invariant mass in a given hemisphere (defined by it's angle wrt to axis).
   struct getAxisMass {
-    getAxisMass(bool arg_pos);
-    bool m_pos = 0; //> Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0
-    float operator() (ROOT::VecOps::RVec<float> angle, 
-		      ROOT::VecOps::RVec<float> energy, 
-		      ROOT::VecOps::RVec<float> px, 
-		      ROOT::VecOps::RVec<float> py, 
-		      ROOT::VecOps::RVec<float> pz);
+  public:
+    getAxisMass(bool arg_pos=0);
+    float operator() (const ROOT::VecOps::RVec<float> & angle,
+                      const ROOT::VecOps::RVec<float> & energy,
+                      const ROOT::VecOps::RVec<float> & px,
+                      const ROOT::VecOps::RVec<float> & py,
+                      const ROOT::VecOps::RVec<float> & pz);
+  private:
+    bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
   };
-  
-    
+
+
   /// Get the energy in a given hemisphere (defined by it's angle wrt to axis). Returns 3 values: total, charged, neutral energies
   struct getAxisEnergy {
-    getAxisEnergy(bool arg_pos);
-    bool m_pos = 0; //> Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0
-    ROOT::VecOps::RVec<float> operator() (ROOT::VecOps::RVec<float> angle, 
-					  ROOT::VecOps::RVec<float> charge, 
-					  ROOT::VecOps::RVec<float> energy);
+  public:
+    getAxisEnergy(bool arg_pos=0);
+    ROOT::VecOps::RVec<float> operator() (const ROOT::VecOps::RVec<float> & angle,
+                                          const ROOT::VecOps::RVec<float> & charge,
+                                          const ROOT::VecOps::RVec<float> & energy);
+    private:
+      bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
   };
-  
+
+
   /// Get the number of particles in a given hemisphere (defined by it's angle wrt to axis). Returns 3 values: total, charged, neutral multiplicity
   struct getAxisN {
-    getAxisN(bool arg_pos);
-    bool m_pos = 0; //> Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0
-    ROOT::VecOps::RVec<int> operator() (ROOT::VecOps::RVec<float> angle,  
-					ROOT::VecOps::RVec<float> charge);
+  public:
+    getAxisN(bool arg_pos=0);
+    ROOT::VecOps::RVec<int> operator() (const ROOT::VecOps::RVec<float> & angle,
+                                        const ROOT::VecOps::RVec<float> & charge);
+  private:
+    bool _pos; /// Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0. Default=0
   };
 
+
+  ///Make the thrust axis points to hemisphere with maximum or minimum energy
+  struct getThrustPointing {
+  public:
+    getThrustPointing(float arg_dir=1.);
+    ROOT::VecOps::RVec<float> operator() (const ROOT::VecOps::RVec<float> & in,
+                                          const ROOT::VecOps::RVec<float> & rp_e,
+                                          const ROOT::VecOps::RVec<float> & thrust);
+  private:
+    float _dir;///if dir > 0. points to minimum hemis if dir < 0, points to maximum energy. Default is 1. (minimum energy)
+  };
+
+
   /// Get the angle cosTheta between particles and an axis
-  ROOT::VecOps::RVec<float> getAxisCosTheta(ROOT::VecOps::RVec<float> axis, 
-					    ROOT::VecOps::RVec<float> px, 
-					    ROOT::VecOps::RVec<float> py, 
-					    ROOT::VecOps::RVec<float> pz);
+  ROOT::VecOps::RVec<float> getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
+                                            const ROOT::VecOps::RVec<float> & px,
+                                            const ROOT::VecOps::RVec<float> & py,
+                                            const ROOT::VecOps::RVec<float> & pz);
 
   /// Get the angle cosTheta between one particle and an axis
-  float getAxisCosTheta(ROOT::VecOps::RVec<float> axis, 
-			float px, 
-			float py, 
-			float pz);
+  float getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
+                        float px,
+                        float py,
+                        float pz);
 
   /// Get the invariant mass from a list of reconstructed particles
-  float getMass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+  float getMass(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> & in);
 
-  /// if dir == 1. points to minimum hemis if dir == -1, points to maximum energy
-  ROOT::VecOps::RVec<float> getThrustPointing(ROOT::VecOps::RVec<float> in,
-					      ROOT::VecOps::RVec<float> rp_e,
-					      ROOT::VecOps::RVec<float> thrust,
-					      float dir);
+  ///@}
 
 }
 #endif
