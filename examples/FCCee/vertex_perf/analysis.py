@@ -38,12 +38,12 @@ class analysis():
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
                .Alias("Particle0", "Particle#0.index")
 
-               
-               .Define("MC_p",    "MCParticle::get_p(Particle)")
-               .Define("MC_theta","MCParticle::get_theta(Particle)")
-               .Define("MC_charge","MCParticle::get_charge(Particle)")
-               .Define("MC_phi","MCParticle::get_phi(Particle)")
-              
+
+               .Define("MC_p",    "FCCAnalyses::MCParticle::get_p(Particle)")
+               .Define("MC_theta","FCCAnalyses::MCParticle::get_theta(Particle)")
+               .Define("MC_charge","FCCAnalyses::MCParticle::get_charge(Particle)")
+               .Define("MC_phi","FCCAnalyses::MCParticle::get_phi(Particle)")
+
                .Define("RP_p",    "ReconstructedParticle::get_p(ReconstructedParticles)")
                .Define("RP_theta","ReconstructedParticle::get_theta(ReconstructedParticles)")
                .Define("RP_charge","ReconstructedParticle::get_charge(ReconstructedParticles)")
@@ -87,12 +87,12 @@ class analysis():
                .Define("Vertex_d2PVx", "myUtils::get_Vertex_d2PV(VertexObject,0)")
                .Define("Vertex_d2PVy", "myUtils::get_Vertex_d2PV(VertexObject,1)")
                .Define("Vertex_d2PVz", "myUtils::get_Vertex_d2PV(VertexObject,2)")
-               
+
                .Define("Vertex_d2PVErr", "myUtils::get_Vertex_d2PVError(VertexObject,-1)")
                .Define("Vertex_d2PVxErr","myUtils::get_Vertex_d2PVError(VertexObject,0)")
                .Define("Vertex_d2PVyErr","myUtils::get_Vertex_d2PVError(VertexObject,1)")
                .Define("Vertex_d2PVzErr","myUtils::get_Vertex_d2PVError(VertexObject,2)")
-               
+
                .Define("Vertex_d2PVSig",  "Vertex_d2PV/Vertex_d2PVErr")
                .Define("Vertex_d2PVxSig", "Vertex_d2PVx/Vertex_d2PVxErr")
                .Define("Vertex_d2PVySig", "Vertex_d2PVy/Vertex_d2PVyErr")
@@ -104,8 +104,8 @@ class analysis():
                .Define("Vertex_d2MCz",  "myUtils::get_Vertex_d2MC(VertexObject,MCVertexObject,Vertex_mcind,2)")
 
 
-               
-               
+
+
            )
         # select branches for output file
         branchList = ROOT.vector('string')()
@@ -126,7 +126,7 @@ class analysis():
                 "RP_theta",
                 "RP_charge",
                 "RP_phi",
-                
+
                 "Vertex_x",
                 "Vertex_y",
                 "Vertex_z",
@@ -150,17 +150,17 @@ class analysis():
                 "Vertex_d2MCx",
                 "Vertex_d2MCy",
                 "Vertex_d2MCz",
- 
+
                 "Vertex_d2PVErr",
                 "Vertex_d2PVxErr",
                 "Vertex_d2PVyErr",
                 "Vertex_d2PVzErr",
-                
+
                 "Vertex_d2PVSig",
                 "Vertex_d2PVxSig",
                 "Vertex_d2PVySig",
                 "Vertex_d2PVzSig",
-                
+
                 ]:
             branchList.push_back(branchName)
 
@@ -187,14 +187,14 @@ if __name__ == "__main__":
 
     import glob
     filelist = glob.glob(sys.argv[1])
-    
+
     print ("Create dataframe object from ", )
     fileListRoot = ROOT.vector('string')()
     for fileName in filelist:
         fileListRoot.push_back(fileName)
         print (fileName, " ",)
         print (" ...")
-        
+
     outDir = sys.argv[0].replace(sys.argv[0].split('/')[0],'outputs/').replace('analysis_Bc2TauNu.py','')+'/'
     import os
     os.system("mkdir -p {}".format(outDir))
@@ -209,5 +209,3 @@ if __name__ == "__main__":
     #p = ROOT.TParameter(int)( "eventsProcessed", entries)
     #outf=ROOT.TFile(outfile,"UPDATE")
     #p.Write()
-
-

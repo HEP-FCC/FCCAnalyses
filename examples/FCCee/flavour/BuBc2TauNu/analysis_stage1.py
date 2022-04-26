@@ -98,7 +98,7 @@ class RDFanalysis():
                #############################################
                ##MC record to study the Z->bb events types##
                #############################################
-               .Define("MC_PDG", "MCParticle::get_pdg(Particle)")
+               .Define("MC_PDG", "FCCAnalyses::MCParticle::get_pdg(Particle)")
                .Define("MC_n",   "int(MC_PDG.size())")
                .Define("MC_M1",  "myUtils::get_MCMother1(Particle,Particle0)")
                .Define("MC_M2",  "myUtils::get_MCMother2(Particle,Particle0)")

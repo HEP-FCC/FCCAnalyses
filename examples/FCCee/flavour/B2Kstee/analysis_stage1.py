@@ -33,17 +33,17 @@ class RDFanalysis():
                #############################################
                ##MC record to study the Z->bb events types##
                #############################################
-               .Define("MC_PDG", "MCParticle::get_pdg(Particle)")
+               .Define("MC_PDG", "FCCAnalyses::MCParticle::get_pdg(Particle)")
                .Define("MC_n",   "int(MC_PDG.size())")
                .Define("MC_M1",  "myUtils::get_MCMother1(Particle,Particle0)")
                .Define("MC_M2",  "myUtils::get_MCMother2(Particle,Particle0)")
                .Define("MC_D1",  "myUtils::get_MCDaughter1(Particle,Particle1)")
                .Define("MC_D2",  "myUtils::get_MCDaughter2(Particle,Particle1)")
-               .Define("MC_x",   "MCParticle::get_vertex_x(Particle)")
-               .Define("MC_y",   "MCParticle::get_vertex_y(Particle)")
-               .Define("MC_z",   "MCParticle::get_vertex_z(Particle)")
-               .Define("MC_e",   "MCParticle::get_e(Particle)")
-               .Define("MC_m",   "MCParticle::get_mass(Particle)")
+               .Define("MC_x",   "FCCAnalyses::MCParticle::get_vertex_x(Particle)")
+               .Define("MC_y",   "FCCAnalyses::MCParticle::get_vertex_y(Particle)")
+               .Define("MC_z",   "FCCAnalyses::MCParticle::get_vertex_z(Particle)")
+               .Define("MC_e",   "FCCAnalyses::MCParticle::get_e(Particle)")
+               .Define("MC_m",   "FCCAnalyses::MCParticle::get_mass(Particle)")
 
                #############################################
                ##               Build MC Vertex           ##
