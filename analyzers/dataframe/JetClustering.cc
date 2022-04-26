@@ -43,8 +43,8 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (con
   //cluster jets
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
 
-  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
-  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
   //transform to FCCAnalysesJet
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);

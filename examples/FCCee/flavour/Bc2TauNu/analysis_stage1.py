@@ -53,15 +53,15 @@ class analysis():
 
                #############################################
                ##MC record to study the Z->bb events types##
-               #############################################               
-               .Define("MC_PDG", "MCParticle::get_pdg(Particle)")
+               #############################################
+               .Define("MC_PDG", "FCCAnalyses::MCParticle::get_pdg(Particle)")
                .Define("MC_n",   "int(MC_PDG.size())")
                .Define("MC_M1",  "myUtils::get_MCMother1(Particle,Particle0)")
                .Define("MC_M2",  "myUtils::get_MCMother2(Particle,Particle0)")
                .Define("MC_D1",  "myUtils::get_MCDaughter1(Particle,Particle1)")
                .Define("MC_D2",  "myUtils::get_MCDaughter2(Particle,Particle1)")
 
-               
+
                #############################################
                ##               Build MC Vertex           ##
                #############################################
@@ -95,7 +95,7 @@ class analysis():
                ##          Build RECO P with PID          ##
                #############################################
                .Define("RecoPartPID" ,"myUtils::PID(ReconstructedParticles, MCRecoAssociations0,MCRecoAssociations1,Particle)")
-               
+
                #############################################
                ##    Build RECO P with PID at vertex      ##
                #############################################
@@ -123,12 +123,12 @@ class analysis():
                .Define("Vertex_d2PVx",    "myUtils::get_Vertex_d2PV(VertexObject,0)")
                .Define("Vertex_d2PVy",    "myUtils::get_Vertex_d2PV(VertexObject,1)")
                .Define("Vertex_d2PVz",    "myUtils::get_Vertex_d2PV(VertexObject,2)")
-               
+
                .Define("Vertex_d2PVErr",  "myUtils::get_Vertex_d2PVError(VertexObject,-1)")
                .Define("Vertex_d2PVxErr", "myUtils::get_Vertex_d2PVError(VertexObject,0)")
                .Define("Vertex_d2PVyErr", "myUtils::get_Vertex_d2PVError(VertexObject,1)")
                .Define("Vertex_d2PVzErr", "myUtils::get_Vertex_d2PVError(VertexObject,2)")
-               
+
                .Define("Vertex_d2PVSig",  "Vertex_d2PV/Vertex_d2PVErr")
                .Define("Vertex_d2PVxSig", "Vertex_d2PVx/Vertex_d2PVxErr")
                .Define("Vertex_d2PVySig", "Vertex_d2PVy/Vertex_d2PVyErr")
@@ -142,37 +142,37 @@ class analysis():
                .Define("EVT_dPV2DVmin",   "myUtils::get_dPV2DV_min(Vertex_d2PV)")
                .Define("EVT_dPV2DVmax",   "myUtils::get_dPV2DV_max(Vertex_d2PV)")
                .Define("EVT_dPV2DVave",   "myUtils::get_dPV2DV_ave(Vertex_d2PV)")
-               
+
                #############################################
                ##        Build Tau -> 3Pi candidates      ##
                #############################################
                .Define("Tau23PiCandidates",         "myUtils::build_tau23pi(VertexObject,RecoPartPIDAtVertex)")
-               
+
                #############################################
                ##       Filter Tau -> 3Pi candidates      ##
-               ############################################# 
+               #############################################
                .Define("EVT_NTau23Pi",              "float(myUtils::getFCCAnalysesComposite_N(Tau23PiCandidates))")
                .Filter("EVT_NTau23Pi>0")
 
-               
+
                #############################################
                ##              Build the thrust           ##
-               ############################################# 
+               #############################################
                .Define("RP_e",          "ReconstructedParticle::get_e(RecoPartPIDAtVertex)")
                .Define("RP_px",         "ReconstructedParticle::get_px(RecoPartPIDAtVertex)")
                .Define("RP_py",         "ReconstructedParticle::get_py(RecoPartPIDAtVertex)")
                .Define("RP_pz",         "ReconstructedParticle::get_pz(RecoPartPIDAtVertex)")
                .Define("RP_charge",     "ReconstructedParticle::get_charge(RecoPartPIDAtVertex)")
-              
+
                .Define("EVT_thrustNP",      'Algorithms::minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz)')
                .Define("RP_thrustangleNP",  'Algorithms::getAxisCosTheta(EVT_thrustNP, RP_px, RP_py, RP_pz)')
                .Define("EVT_thrust",        'Algorithms::getThrustPointing(RP_thrustangleNP, RP_e, EVT_thrustNP, 1.)')
                .Define("RP_thrustangle",    'Algorithms::getAxisCosTheta(EVT_thrust, RP_px, RP_py, RP_pz)')
 
-               
+
                #############################################
                ##        Get thrust related values        ##
-               ############################################# 
+               #############################################
                ##hemis0 == negative angle == max energy hemisphere if pointing
                ##hemis1 == positive angle == min energy hemisphere if pointing
                .Define("EVT_thrusthemis0_n",    "Algorithms::getAxisN(0)(RP_thrustangle, RP_charge)")
@@ -230,7 +230,7 @@ class analysis():
                                                      "EVT_dPV2DVmax",           "EVT_dPV2DVave"))
                .Define("EVT_MVA1", "MVAVec.at(0)")
                .Filter(MVAFilter)
- 
+
                .Define("Tau23PiCandidates_mass",    "myUtils::getFCCAnalysesComposite_mass(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_q",       "myUtils::getFCCAnalysesComposite_charge(Tau23PiCandidates)")
                .Define("Tau23PiCandidates_vertex",  "myUtils::getFCCAnalysesComposite_vertex(Tau23PiCandidates)")
@@ -240,7 +240,7 @@ class analysis():
                .Define("Tau23PiCandidates_pz",      "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,2)")
                .Define("Tau23PiCandidates_p",       "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates,-1)")
                .Define("Tau23PiCandidates_B",       "myUtils::getFCCAnalysesComposite_B(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex)")
-               
+
                .Define("Tau23PiCandidates_track",   "myUtils::getFCCAnalysesComposite_track(Tau23PiCandidates, VertexObject)")
                .Define("Tau23PiCandidates_d0",      "myUtils::get_trackd0(Tau23PiCandidates_track)")
                .Define("Tau23PiCandidates_z0",      "myUtils::get_trackz0(Tau23PiCandidates_track)")
@@ -248,7 +248,7 @@ class analysis():
                .Define("Tau23PiCandidates_anglethrust", "myUtils::getFCCAnalysesComposite_anglethrust(Tau23PiCandidates, EVT_thrust)")
                .Define("CUT_hasCandEmin",           "myUtils::has_anglethrust_emin(Tau23PiCandidates_anglethrust)")
                .Filter("CUT_hasCandEmin>0")
-               
+
                .Define("Tau23PiCandidates_rho",     "myUtils::build_rho(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex)")
                .Define("Tau23PiCandidates_rho1mass","myUtils::get_mass(Tau23PiCandidates_rho, 0)")
                .Define("Tau23PiCandidates_rho2mass","myUtils::get_mass(Tau23PiCandidates_rho, 1)")
@@ -268,7 +268,7 @@ class analysis():
                .Define("Tau23PiCandidates_pion1q",  "myUtils::getFCCAnalysesComposite_q(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 0)")
                .Define("Tau23PiCandidates_pion1d0", "myUtils::getFCCAnalysesComposite_d0(Tau23PiCandidates, VertexObject, 0)")
                .Define("Tau23PiCandidates_pion1z0", "myUtils::getFCCAnalysesComposite_z0(Tau23PiCandidates, VertexObject, 0)")
-               
+
                .Define("Tau23PiCandidates_pion2px", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 1, 0)")
                .Define("Tau23PiCandidates_pion2py", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 1, 1)")
                .Define("Tau23PiCandidates_pion2pz", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 1, 2)")
@@ -276,7 +276,7 @@ class analysis():
                .Define("Tau23PiCandidates_pion2q",  "myUtils::getFCCAnalysesComposite_q(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 1)")
                .Define("Tau23PiCandidates_pion2d0", "myUtils::getFCCAnalysesComposite_d0(Tau23PiCandidates, VertexObject, 1)")
                .Define("Tau23PiCandidates_pion2z0", "myUtils::getFCCAnalysesComposite_z0(Tau23PiCandidates, VertexObject, 1)")
-               
+
                .Define("Tau23PiCandidates_pion3px", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 2, 0)")
                .Define("Tau23PiCandidates_pion3py", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 2, 1)")
                .Define("Tau23PiCandidates_pion3pz", "myUtils::getFCCAnalysesComposite_p(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 2, 2)")
@@ -284,8 +284,8 @@ class analysis():
                .Define("Tau23PiCandidates_pion3q",  "myUtils::getFCCAnalysesComposite_q(Tau23PiCandidates, VertexObject, RecoPartPIDAtVertex, 2)")
                .Define("Tau23PiCandidates_pion3d0", "myUtils::getFCCAnalysesComposite_d0(Tau23PiCandidates, VertexObject, 2)")
                .Define("Tau23PiCandidates_pion3z0", "myUtils::getFCCAnalysesComposite_z0(Tau23PiCandidates, VertexObject, 2)")
-               
-               
+
+
                .Define("TrueTau23PiBc_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 541)")
                .Define("TrueTau23PiBc_track",         "myUtils::get_truetrack(TrueTau23PiBc_vertex, MCVertexObject, Particle)")
                .Define("TrueTau23PiBc_d0",            "myUtils::get_trackd0(TrueTau23PiBc_track)")
@@ -294,27 +294,27 @@ class analysis():
                .Define("TrueTau23PiBu_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 521)")
 
 
-               
-               
+
+
                #.Define("TrueRho", "myUtils::build_truerho(TrueTau23Pi_vertex,MCVertexObject,Particle)")
                #.Define("TrueRho1M", "TrueRho.at(0).mass")
                #.Define("TrueRho2M", "TrueRho.at(1).mass")
-               
 
 
-               
-               
+
+
+
            )
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-                
+
                 "MC_PDG","MC_M1","MC_M2","MC_n","MC_D1","MC_D2",
 
                 "EVT_ThrustEmin_E",          "EVT_ThrustEmax_E",
                 "EVT_ThrustEmin_Echarged",   "EVT_ThrustEmax_Echarged",
                 "EVT_ThrustEmin_Eneutral",   "EVT_ThrustEmax_Eneutral",
-                "EVT_ThrustEmin_N",          "EVT_ThrustEmax_N",                
+                "EVT_ThrustEmin_N",          "EVT_ThrustEmax_N",
                 "EVT_ThrustEmin_Ncharged",   "EVT_ThrustEmax_Ncharged",
                 "EVT_ThrustEmin_Nneutral",   "EVT_ThrustEmax_Nneutral",
                 "EVT_ThrustEmin_NDV",        "EVT_ThrustEmax_NDV",
@@ -324,14 +324,14 @@ class analysis():
                 "EVT_Thrust_Z",  "EVT_Thrust_ZErr",
 
                 "EVT_NtracksPV", "EVT_NVertex", "EVT_NTau23Pi",
-                
+
                 "EVT_dPV2DVmin","EVT_dPV2DVmax","EVT_dPV2DVave",
 
-                "MC_Vertex_x", "MC_Vertex_y", "MC_Vertex_z", 
+                "MC_Vertex_x", "MC_Vertex_y", "MC_Vertex_z",
                 "MC_Vertex_ntrk", "MC_Vertex_n",
-                
+
                 "MC_Vertex_PDG","MC_Vertex_PDGmother","MC_Vertex_PDGgmother",
-                
+
                 "Vertex_x", "Vertex_y", "Vertex_z",
                 "Vertex_xErr", "Vertex_yErr", "Vertex_zErr",
                 "Vertex_isPV", "Vertex_ntrk", "Vertex_chi2", "Vertex_n",
@@ -345,25 +345,25 @@ class analysis():
 
                 "TrueTau23PiBc_vertex","TrueTau23PiBc_d0","TrueTau23PiBc_z0",
                 "TrueTau23PiBu_vertex",
-                
+
                 "Tau23PiCandidates_mass", "Tau23PiCandidates_vertex", "Tau23PiCandidates_mcvertex", "Tau23PiCandidates_B",
                 "Tau23PiCandidates_px", "Tau23PiCandidates_py", "Tau23PiCandidates_pz", "Tau23PiCandidates_p", "Tau23PiCandidates_q",
                 "Tau23PiCandidates_d0",  "Tau23PiCandidates_z0","Tau23PiCandidates_anglethrust",
-                
+
                 "Tau23PiCandidates_rho1px", "Tau23PiCandidates_rho1py", "Tau23PiCandidates_rho1pz","Tau23PiCandidates_rho1mass",
                 "Tau23PiCandidates_rho2px", "Tau23PiCandidates_rho2py", "Tau23PiCandidates_rho2pz","Tau23PiCandidates_rho2mass",
-                
+
                 "Tau23PiCandidates_pion1px", "Tau23PiCandidates_pion1py", "Tau23PiCandidates_pion1pz",
                 "Tau23PiCandidates_pion1p", "Tau23PiCandidates_pion1q", "Tau23PiCandidates_pion1d0", "Tau23PiCandidates_pion1z0",
                 "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2py", "Tau23PiCandidates_pion2pz",
                 "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q", "Tau23PiCandidates_pion2d0", "Tau23PiCandidates_pion2z0",
                 "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3py", "Tau23PiCandidates_pion3pz",
                 "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q", "Tau23PiCandidates_pion3d0", "Tau23PiCandidates_pion3z0",
-                
+
                 #"TrueRho1M",
                 #"TrueRho2M",
-                
-                
+
+
                 ]:
             branchList.push_back(branchName)
 
@@ -422,7 +422,7 @@ if __name__ == "__main__":
                 print (sys.argv[i], " ",)
                 print (" ...")
 
-                         
+
     outfile=sys.argv[1]
     print("output file:  ",outfile)
     if len(outfile.split("/"))>1:
@@ -435,7 +435,7 @@ if __name__ == "__main__":
             tt=tf.Get("events")
             nevents+=tt.GetEntries()
     print ("nevents ", nevents)
-    
+
     import time
     start_time = time.time()
     ncpus = 8
@@ -449,7 +449,7 @@ if __name__ == "__main__":
     print  ("Total Events Processed   :  ",int(nevents))
     print  ("===================================================================")
 
-    
+
     outf = ROOT.TFile( outfile, "update" )
     meta = ROOT.TTree( "metadata", "metadata informations" )
     n = array( "i", [ 0 ] )
@@ -460,4 +460,3 @@ if __name__ == "__main__":
     p.Write()
     outf.Write()
     outf.Close()
-

@@ -8,10 +8,10 @@ PDGID=541 #Bc
 Filter=""
 if PDGID==541:
     #very small BR so filter to be more efficient in CPU
-    Filter="MCParticle::filter_pdgID(541, true)(Particle)==true"
+    Filter="FCCAnalyses::MCParticle::filter_pdgID(541, true)(Particle)==true"
 elif PDGID==521:
     #Complex filter not to have two B in the event that would decay exclusively
-    Filter="(MCParticle::filter_pdgID(521, false)(Particle)==true && MCParticle::filter_pdgID(-521, false)(Particle)==false) || (MCParticle::filter_pdgID(521, false)(Particle)==false && MCParticle::filter_pdgID(-521, false)(Particle)==true)"
+    Filter="(FCCAnalyses::MCParticle::filter_pdgID(521, false)(Particle)==true && FCCAnalyses::MCParticle::filter_pdgID(-521, false)(Particle)==false) || (FCCAnalyses::MCParticle::filter_pdgID(521, false)(Particle)==false && FCCAnalyses::MCParticle::filter_pdgID(-521, false)(Particle)==true)"
 
 print ("Load cxx analyzers ... ",)
 ROOT.gSystem.Load("libedm4hep")
@@ -33,7 +33,7 @@ print ('fccana   ',_fcc)
 ROOT.gInterpreter.Declare("""
 edm4hep::Vector3d MyMCDecayVertex(ROOT::VecOps::RVec<edm4hep::Vector3d> in1, ROOT::VecOps::RVec<edm4hep::Vector3d> in2) {
 
-   edm4hep::Vector3d vertex(1e12, 1e12, 1e12); 
+   edm4hep::Vector3d vertex(1e12, 1e12, 1e12);
    if ( in1.size() == 0 && in2.size()==0) {
       std::cout <<"no vtx " <<std::endl;
       return vertex;
@@ -84,34 +84,34 @@ class analysis():
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
+               .Define("MC_PrimaryVertex",  "FCCAnalyses::MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
                .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
                # Retrieve the decay vertex of all MC particles
-               .Define("MC_DecayVertices",  "MCParticle::get_endPoint( Particle, Particle1)" )
+               .Define("MC_DecayVertices",  "FCCAnalyses::MCParticle::get_endPoint( Particle, Particle1)" )
 
                # MC indices of the decay Bc/Bu -> nu nu pi+ pi- pi+
                #     - if the event contains > 1 such decays, the first one is kept
                #     - the cases Bs -> Bsbar -> mu mu K K are included here
                #   first boolean: if true, look at the stable daughters, otherwise at the intermediate daughters
-               #   second boolean: if true, include the charge conjugate decays 
-               .Define("B2NuNuPiPiPi_indices",   "MCParticle::get_indices_ExclusiveDecay( %s, { 16, -16, 211, -211, 211 }, true, false)( Particle, Particle1)"%(PDGID))
-               .Define("Bbar2NuNuPiPiPi_indices","MCParticle::get_indices_ExclusiveDecay( -%s, { -16, 16, -211, 211, -211 }, true, false)( Particle, Particle1)"%(PDGID))
+               #   second boolean: if true, include the charge conjugate decays
+               .Define("B2NuNuPiPiPi_indices",   "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( %s, { 16, -16, 211, -211, 211 }, true, false)( Particle, Particle1)"%(PDGID))
+               .Define("Bbar2NuNuPiPiPi_indices","FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( -%s, { -16, 16, -211, 211, -211 }, true, false)( Particle, Particle1)"%(PDGID))
 
                .Define("Piminus", "selMC_leg(4) ( B2NuNuPiPiPi_indices , Particle)" )
                .Define("Piplus",  "selMC_leg(4) ( Bbar2NuNuPiPiPi_indices , Particle)" )
-               .Define("TauMCDecayVertex",  "MyMCDecayVertex(MCParticle::get_vertex(Piminus),MCParticle::get_vertex(Piplus))")
+               .Define("TauMCDecayVertex",  "MyMCDecayVertex(FCCAnalyses::MCParticle::get_vertex(Piminus),FCCAnalyses::MCParticle::get_vertex(Piplus))")
 
                # the MC Bc or Bcbar:
                .Define("B",  "if (B2NuNuPiPiPi_indices.size()>0) return selMC_leg(0) (B2NuNuPiPiPi_indices , Particle ); else return selMC_leg(0) (Bbar2NuNuPiPiPi_indices , Particle );")
 
                 # Kinematics of the B :
-               .Define("B_theta", "MCParticle::get_theta( B )")
-               .Define("B_phi",   "MCParticle::get_phi( B )")
-               .Define("B_e",     "MCParticle::get_e( B )")
-               .Define("B_charge","MCParticle::get_charge( B )")
+               .Define("B_theta", "FCCAnalyses::MCParticle::get_theta( B )")
+               .Define("B_phi",   "FCCAnalyses::MCParticle::get_phi( B )")
+               .Define("B_e",     "FCCAnalyses::MCParticle::get_e( B )")
+               .Define("B_charge","FCCAnalyses::MCParticle::get_charge( B )")
 
                 # and the MC legs of the B :
                .Define("Nu1_vec",  "if (B2NuNuPiPiPi_indices.size()>0) return selMC_leg(1) (B2NuNuPiPiPi_indices , Particle ); else return selMC_leg(1) (Bbar2NuNuPiPiPi_indices , Particle );")
@@ -120,11 +120,11 @@ class analysis():
                .Define("Pion2_vec",  "if (B2NuNuPiPiPi_indices.size()>0) return selMC_leg(4) (B2NuNuPiPiPi_indices , Particle ); else return selMC_leg(4) (Bbar2NuNuPiPiPi_indices , Particle );")
                .Define("Pion3_vec",  "if (B2NuNuPiPiPi_indices.size()>0) return selMC_leg(5) (B2NuNuPiPiPi_indices , Particle ); else return selMC_leg(5) (Bbar2NuNuPiPiPi_indices , Particle );")
 
-               .Define("Nu1e_vec",     "MCParticle::get_e( Nu1_vec )")
-               .Define("Nu2e_vec",     "MCParticle::get_e( Nu2_vec )")
-               .Define("Pion1e_vec",   "MCParticle::get_e( Pion1_vec )")
-               .Define("Pion2e_vec",   "MCParticle::get_e( Pion2_vec )")
-               .Define("Pion3e_vec",   "MCParticle::get_e( Pion3_vec )")
+               .Define("Nu1e_vec",     "FCCAnalyses::MCParticle::get_e( Nu1_vec )")
+               .Define("Nu2e_vec",     "FCCAnalyses::MCParticle::get_e( Nu2_vec )")
+               .Define("Pion1e_vec",   "FCCAnalyses::MCParticle::get_e( Pion1_vec )")
+               .Define("Pion2e_vec",   "FCCAnalyses::MCParticle::get_e( Pion2_vec )")
+               .Define("Pion3e_vec",   "FCCAnalyses::MCParticle::get_e( Pion3_vec )")
 
 
                # as the size can be 0, need to do this trick to avoid crashes
@@ -134,37 +134,37 @@ class analysis():
                .Define("Pion2", "if (Pion1e_vec.size()>0 && Pion2e_vec.size()>0 && Pion3e_vec.size()>0 && Pion1e_vec[0] < Pion2e_vec[0] && Pion1e_vec[0] > Pion3e_vec[0]) return Pion1_vec; else if (Pion1e_vec.size()>0 && Pion2e_vec.size()>0 && Pion3e_vec.size()>0 && Pion2e_vec[0]<Pion1e_vec[0] && Pion2e_vec[0]>Pion3e_vec[0]) return Pion2_vec; else return Pion3_vec;")
                .Define("Pion3", "if (Pion1e_vec.size()>0 && Pion2e_vec.size()>0 && Pion3e_vec.size()>0 && Pion1e_vec[0] < Pion2e_vec[0] && Pion1e_vec[0] < Pion3e_vec[0]) return Pion1_vec; else if (Pion1e_vec.size()>0 && Pion2e_vec.size()>0 && Pion3e_vec.size()>0 && Pion2e_vec[0]<Pion1e_vec[0] && Pion2e_vec[0]<Pion3e_vec[0]) return Pion2_vec; else return Pion3_vec;")
 
-               
+
                # Kinematics of the B decay:
-               .Define("Nu1_theta", "MCParticle::get_theta( Nu1 )")
-               .Define("Nu1_phi",   "MCParticle::get_phi( Nu1 )")
-               .Define("Nu1_e",     "MCParticle::get_e( Nu1 )")
-               .Define("Nu1_charge","MCParticle::get_charge( Nu1 )")
+               .Define("Nu1_theta", "FCCAnalyses::MCParticle::get_theta( Nu1 )")
+               .Define("Nu1_phi",   "FCCAnalyses::MCParticle::get_phi( Nu1 )")
+               .Define("Nu1_e",     "FCCAnalyses::MCParticle::get_e( Nu1 )")
+               .Define("Nu1_charge","FCCAnalyses::MCParticle::get_charge( Nu1 )")
 
-               .Define("Nu2_theta", "MCParticle::get_theta( Nu2 )")
-               .Define("Nu2_phi",   "MCParticle::get_phi( Nu2 )")
-               .Define("Nu2_e",     "MCParticle::get_e( Nu2 )")
-               .Define("Nu2_charge","MCParticle::get_charge( Nu2 )")
+               .Define("Nu2_theta", "FCCAnalyses::MCParticle::get_theta( Nu2 )")
+               .Define("Nu2_phi",   "FCCAnalyses::MCParticle::get_phi( Nu2 )")
+               .Define("Nu2_e",     "FCCAnalyses::MCParticle::get_e( Nu2 )")
+               .Define("Nu2_charge","FCCAnalyses::MCParticle::get_charge( Nu2 )")
 
-               .Define("Pion1_theta", "MCParticle::get_theta( Pion1 )")
-               .Define("Pion1_phi",   "MCParticle::get_phi( Pion1 )")
-               .Define("Pion1_e",     "MCParticle::get_e( Pion1 )")
-               .Define("Pion1_charge","MCParticle::get_charge( Pion1 )")
+               .Define("Pion1_theta", "FCCAnalyses::MCParticle::get_theta( Pion1 )")
+               .Define("Pion1_phi",   "FCCAnalyses::MCParticle::get_phi( Pion1 )")
+               .Define("Pion1_e",     "FCCAnalyses::MCParticle::get_e( Pion1 )")
+               .Define("Pion1_charge","FCCAnalyses::MCParticle::get_charge( Pion1 )")
 
-               .Define("Pion2_theta", "MCParticle::get_theta( Pion2 )")
-               .Define("Pion2_phi",   "MCParticle::get_phi( Pion2 )")
-               .Define("Pion2_e",     "MCParticle::get_e( Pion2 )")
-               .Define("Pion2_charge","MCParticle::get_charge( Pion2 )")
+               .Define("Pion2_theta", "FCCAnalyses::MCParticle::get_theta( Pion2 )")
+               .Define("Pion2_phi",   "FCCAnalyses::MCParticle::get_phi( Pion2 )")
+               .Define("Pion2_e",     "FCCAnalyses::MCParticle::get_e( Pion2 )")
+               .Define("Pion2_charge","FCCAnalyses::MCParticle::get_charge( Pion2 )")
 
-               .Define("Pion3_theta", "MCParticle::get_theta( Pion3 )")
-               .Define("Pion3_phi",   "MCParticle::get_phi( Pion3 )")
-               .Define("Pion3_e",     "MCParticle::get_e( Pion3 )")
-               .Define("Pion3_charge","MCParticle::get_charge( Pion3 )")
+               .Define("Pion3_theta", "FCCAnalyses::MCParticle::get_theta( Pion3 )")
+               .Define("Pion3_phi",   "FCCAnalyses::MCParticle::get_phi( Pion3 )")
+               .Define("Pion3_e",     "FCCAnalyses::MCParticle::get_e( Pion3 )")
+               .Define("Pion3_charge","FCCAnalyses::MCParticle::get_charge( Pion3 )")
 
                # Returns the RecoParticles associated with the 5 Bc decay products.
                # The size of this collection is always 5 provided that Bc2TauNuNuPiPiPi_indices is not empty,
                # possibly including "dummy" particles in case one of the leg did not make a RecoParticle.
-               # This is on purpose, to maintain the mapping with the indices - i.e. the 1st particle in 
+               # This is on purpose, to maintain the mapping with the indices - i.e. the 1st particle in
                # the list is the Nu_taubar, then the Nu_tau, etc.
                .Define("BRecoParticles",  "if (B2NuNuPiPiPi_indices.size()>0) return ReconstructedParticle2MC::selRP_matched_to_list( B2NuNuPiPiPi_indices, MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle); else return ReconstructedParticle2MC::selRP_matched_to_list( Bbar2NuNuPiPiPi_indices, MCRecoAssociations0,MCRecoAssociations1,ReconstructedParticles,Particle);")
 
@@ -174,7 +174,7 @@ class analysis():
                # the corresponding tracks - here, dummy particles, if any, are removed
                .Define("BTracks",   "ReconstructedParticle2Track::getRP2TRK( BRecoParticles, EFlowTrack_1)" )
 
-               # number of tracks used to reconstruct the Bc vertex 
+               # number of tracks used to reconstruct the Bc vertex
                .Define("n_BTracks", "ReconstructedParticle2Track::getTK_n( BTracks )")
 
                # the reco'ed vertex :
@@ -192,7 +192,7 @@ class analysis():
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-               
+
                 "ntracks",
                 "BVertex",
                 "TauMCDecayVertex",
@@ -200,13 +200,13 @@ class analysis():
                 "deltaAlpha_max","deltaAlpha_min","deltaAlpha_ave",
                 "minPionE",
                 "B_theta","B_phi","B_e","B_charge",
-                
+
                 "Nu1_theta","Nu1_phi","Nu1_e","Nu1_charge",
-                
+
                 "Nu2_theta","Nu2_phi","Nu2_e","Nu2_charge",
 
                 "Pion1_theta","Pion1_phi","Pion1_e","Pion1_charge",
- 
+
                 "Pion2_theta","Pion2_phi","Pion2_e","Pion2_charge",
 
                 "Pion3_theta","Pion3_phi","Pion3_e","Pion3_charge",
@@ -236,17 +236,14 @@ if __name__ == "__main__":
         fileListRoot.push_back(fileName)
         print (fileName, " ",)
         print (" ...")
-        
+
     outDir = sys.argv[0].replace(sys.argv[0].split('/')[0],'outputs/').replace('analysis_Bc2TauNu.py','')+'/'
     import os
     os.system("mkdir -p {}".format(outDir))
-    
+
     outfile = outDir+'events.root'
     if len(sys.argv)==3:outfile=sys.argv[2]
 
     ncpus = 8
     analysis = analysis(fileListRoot, outfile, ncpus)
     analysis.run()
-
-    
-
