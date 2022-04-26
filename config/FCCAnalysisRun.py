@@ -16,9 +16,9 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _fcc  = ROOT.dummyLoader
 
 #__________________________________________________________
-def getElement(foo, element):
+def getElement(rdfModule, element):
     try:
-        return getattr(foo, element)
+        return getattr(rdfModule, element)
     except AttributeError:
 
         #return default values or crash if mandatory
@@ -34,7 +34,7 @@ def getElement(foo, element):
             print('The function <output> is mandatory in your analysis.py file, will exit')
             sys.exit(3)
 
-        elif element=='nCPUs':
+        elif element=='nCPUS':
             print('The variable <nCPUs> is optional in your analysis.py file, return default value 4')
             return 4
 
@@ -220,16 +220,16 @@ def SubmitToCondor(cmd,nbtrials):
 
 
 #__________________________________________________________
-def runRDF(foo, inputlist, outFile, nevt):
-    ROOT.ROOT.EnableImplicitMT(getElement(foo, "nCPUS"))
+def runRDF(rdfModule, inputlist, outFile, nevt):
+    ROOT.ROOT.EnableImplicitMT(getElement(rdfModule, "nCPUS"))
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
 
-    print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(foo, "nCPUS")))
+    print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(rdfModule, "nCPUS")))
 
-    df2 = getElement(foo.RDFanalysis, "analysers")(df)
+    df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
 
-    branchList = getElement(foo.RDFanalysis, "output")()
+    branchList = getElement(rdfModule.RDFanalysis, "output")()
     branchListVec = ROOT.vector('string')()
     for branchName in branchList:
         branchListVec.push_back(branchName)
@@ -238,16 +238,16 @@ def runRDF(foo, inputlist, outFile, nevt):
 
 
 #__________________________________________________________
-def sendToBatch(foo, chunkList, process, analysisFile):
+def sendToBatch(rdfModule, chunkList, process, analysisFile):
     localDir = os.environ["LOCAL_DIR"]
     logDir   = localDir+"/BatchOutputs/{}".format(output)
     if not os.path.exists(logDir):
         os.system("mkdir -p {}".format(logDir))
 
-    outputDir       = getElement(foo, "outputDir")
-    outputDirEos    = getElement(foo, "outputDirEos")
-    eosType         = getElement(foo, "eosType")
-    userBatchConfig = getElement(foo, "userBatchConfig")
+    outputDir       = getElement(rdfModule, "outputDir")
+    outputDirEos    = getElement(rdfModule, "outputDirEos")
+    eosType         = getElement(rdfModule, "eosType")
+    userBatchConfig = getElement(rdfModule, "userBatchConfig")
 
     if outputDir!="" and outputDir[-1]!="/": outputDir+="/"
 
@@ -324,9 +324,9 @@ def sendToBatch(foo, chunkList, process, analysisFile):
     frun_condor.write('requirements     = ( (OpSysAndVer =?= "CentOS7") && (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n')
     frun_condor.write('on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n')
     frun_condor.write('max_retries      = 3\n')
-    frun_condor.write('+JobFlavour      = "{}"\n'.format(getElement(foo, "batchQueue")))
-    frun_condor.write('+AccountingGroup = "{}"\n'.format(getElement(foo, "compGroup")))
-    frun_condor.write('RequestCpus      = {}\n'.format(getElement(foo, "nCPUS")))
+    frun_condor.write('+JobFlavour      = "{}"\n'.format(getElement(rdfModule, "batchQueue")))
+    frun_condor.write('+AccountingGroup = "{}"\n'.format(getElement(rdfModule, "compGroup")))
+    frun_condor.write('RequestCpus      = {}\n'.format(getElement(rdfModule, "nCPUS")))
     frun_condor.write('queue filename matching files {}\n'.format(condor_file_str))
     frun_condor.close()
 
@@ -336,7 +336,7 @@ def sendToBatch(foo, chunkList, process, analysisFile):
 
 
 #__________________________________________________________
-def runLocal(foo, fileList, output, batch):
+def runLocal(rdfModule, fileList, output, batch):
     #Create list of files to be Processed
     print ("running local from batch = ",batch)
     print ("----> Create dataframe object from files: ", )
@@ -355,7 +355,7 @@ def runLocal(foo, fileList, output, batch):
         tt=tf.Get("events")
         nevents_local+=tt.GetEntries()
     print ("----> nevents original={}  local={}".format(nevents_meta,nevents_local))
-    outFile = getElement(foo,"outputDir")
+    outFile = getElement(rdfModule,"outputDir")
     if outFile!="" and outFile[-1]!="/": outFile+="/"
 
     if batch==False:
@@ -364,7 +364,7 @@ def runLocal(foo, fileList, output, batch):
         outFile=output
     start_time = time.time()
     #run RDF
-    runRDF(foo, fileListRoot, outFile, nevents_local)
+    runRDF(rdfModule, fileListRoot, outFile, nevents_local)
 
     elapsed_time = time.time() - start_time
     outf = ROOT.TFile( outFile, "update" )
@@ -418,17 +418,17 @@ if __name__ == "__main__":
 
     #load the analysis
     analysisFile=os.path.abspath(analysisFile)
-    spec = importlib.util.spec_from_file_location("rdfanalysis", analysisFile)
-    foo  = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(foo)
+    rdfSpec   = importlib.util.spec_from_file_location("rdfanalysis", analysisFile)
+    rdfModule = importlib.util.module_from_spec(rdfSpec)
+    rdfSpec.loader.exec_module(rdfModule)
 
     #check if outputDir exist and if not create it
-    outputDir = getElement(foo,"outputDir")
+    outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
         os.system("mkdir -p {}".format(outputDir))
 
     #check if outputDir exist and if not create it
-    outputDirEos = getElement(foo,"outputDirEos")
+    outputDirEos = getElement(rdfModule,"outputDirEos")
     if not os.path.exists(outputDirEos) and outputDirEos!='':
         os.system("mkdir -p {}".format(outputDirEos))
 
@@ -437,17 +437,17 @@ if __name__ == "__main__":
         print("----> Running  with user defined list of files (either locally or from batch)")
         path, filename = os.path.split(args.output)
         if path!='': os.system("mkdir -p {}".format(path))
-        runLocal(foo, args.files_list, args.output, True)
+        runLocal(rdfModule, args.files_list, args.output, True)
         sys.exit(0)
 
     #check if batch mode and set start and end file from original list
-    runBatch = getElement(foo,"runBatch")
+    runBatch = getElement(rdfModule,"runBatch")
 
     #check if the process list is specified
-    processList = getElement(foo,"processList")
+    processList = getElement(rdfModule,"processList")
 
     for process in processList:
-        fileList, eventList = getProcessInfo(process, getElement(foo,"prodTag"), getElement(foo, "inputDir"))
+        fileList, eventList = getProcessInfo(process, getElement(rdfModule,"prodTag"), getElement(rdfModule, "inputDir"))
         if len(fileList)==0:
             print('----> ERROR: No files to process. Exit')
             sys.exit(3)
@@ -485,11 +485,11 @@ if __name__ == "__main__":
             #run locally
             if runBatch == False:
                 print ('----> Running Locally')
-                runLocal(foo, chunkList[ch], outputchunk, args.batch)
+                runLocal(rdfModule, chunkList[ch], outputchunk, args.batch)
 
             #run on batch
         if runBatch == True:
             print ('----> Running on Batch')
             if len(chunkList)==1:
                 print ('----> \033[4m\033[1m\033[91mWARNING Running on batch with only one chunk might not be optimal\033[0m')
-            sendToBatch(foo, chunkList, process, analysisFile)
+            sendToBatch(rdfModule, chunkList, process, analysisFile)
