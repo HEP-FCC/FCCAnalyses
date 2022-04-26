@@ -44,7 +44,7 @@ class analysis():
 
                # MC event primary vertex
                .Define("MC_PrimaryVertex",
-                       "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
+                       "FCCAnalyses::MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                .Define("RP_TRK_D0",
                        "ReconstructedParticle2Track::getRP2TRK_D0(ReconstructedParticles, EFlowTrack_1)")    #  d0 and z0 in mm
@@ -58,7 +58,7 @@ class analysis():
                        "ReconstructedParticle2Track::getRP2TRK_tanLambda(ReconstructedParticles, EFlowTrack_1)")
 
                .Define("RP_TRK_D0_cov",
-                       "ReconstructedParticle2Track::getRP2TRK_D0_cov(ReconstructedParticles, EFlowTrack_1)")    
+                       "ReconstructedParticle2Track::getRP2TRK_D0_cov(ReconstructedParticles, EFlowTrack_1)")
                .Define("RP_TRK_Z0_cov",
                        "ReconstructedParticle2Track::getRP2TRK_Z0_cov(ReconstructedParticles, EFlowTrack_1)")
                .Define("RP_TRK_omega_cov",
@@ -184,4 +184,3 @@ if __name__ == "__main__":
     p = ROOT.TParameter(int)( "eventsProcessed", entries)
     outf=ROOT.TFile(outfile,"UPDATE")
     p.Write()
-

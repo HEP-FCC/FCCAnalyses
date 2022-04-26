@@ -16,7 +16,7 @@ print ('fccana   ',_fcc)
 
 
 #
-# Example file : 
+# Example file :
 #    /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zuds_IDEAtrkCov.root
 #    ( these events were generated at (0,0,0) i.e. no vertex smearing
 #
@@ -42,12 +42,12 @@ class analysis():
         #df2 = (self.df
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
+               .Define("MC_PrimaryVertex",  "FCCAnalyses::MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
                .Define("ntracks","ReconstructedParticle2Track::getTK_n(EFlowTrack_1)")
 
-               
+
                # Select primary tracks based on the matching to MC
 		  # This can be used  to select primary tracks when the
 		  # gen-level primary vertex  is not  (0,0,0)
@@ -61,11 +61,11 @@ class analysis():
                .Define("nPrimaryTracks", "ReconstructedParticle::get_n(MC_PrimaryTracks_RP)")
 
                # Reconstruct the vertex from these primary tracks :
-               .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1) ")  
+               .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1) ")
                .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
 
                # Idem, but adding the beam-spot constraint to the vertex fitter
-                  # At the Z peak, the beam-spot size is ( 4.5 mum, 20 nm, 0.3 mm) 
+                  # At the Z peak, the beam-spot size is ( 4.5 mum, 20 nm, 0.3 mm)
 		  # The beam-spot dimensions are passed in mum :
                .Define("VertexObject_primaryTracks_BSC",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1, true, 4.5, 20e-3, 300) ")
                .Define("Vertex_primaryTracks_BSC",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks_BSC )")   # primary vertex, in mm
@@ -88,7 +88,7 @@ class analysis():
                # Select the tracks that are reconstructed  as primaries
                .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
                .Define("n_RecoedPrimaryTracks",  "ReconstructedParticle2Track::getTK_n( RecoedPrimaryTracks )")
-               # the final primary vertex : 
+               # the final primary vertex :
                .Define("FinalVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
                .Define("FinalVertex",   "VertexingUtils::get_VertexData( FinalVertexObject )")
 
@@ -115,8 +115,8 @@ class analysis():
                 "ntracks",
                 "nPrimaryTracks",
 		# primary vertex, seeded by the tracks that are MC-matched to MC-primaries
-                "Vertex_primaryTracks",     
-                "Vertex_primaryTracks_BSC",     
+                "Vertex_primaryTracks",
+                "Vertex_primaryTracks_BSC",
                 "IsPrimary_based_on_MC",
 
                 #"nPrimaryTracks_actsFinder",

@@ -33,20 +33,20 @@ class analysis():
         df2 = (self.df
                .Alias("Particle1", "Particle#1.index")
 
-               .Define("MC_status1",    "MCParticle::sel_genStatus(1)(Particle)")
-               .Define("MC_px",         "MCParticle::get_px(MC_status1)")
-               .Define("MC_py",         "MCParticle::get_py(MC_status1)")
-               .Define("MC_pz",         "MCParticle::get_pz(MC_status1)")
-               .Define("MC_pdg",        "MCParticle::get_pdg(MC_status1)")
-               .Define("MC_charge",     "MCParticle::get_charge(MC_status1)")
-               .Define("MC_mass",       "MCParticle::get_mass(MC_status1)")
-               .Define("MC_e",          "MCParticle::get_e(MC_status1)")
-               .Define("MC_theta",      "MCParticle::get_theta(MC_status1)")
-               .Define("MC_phi",        "MCParticle::get_phi(MC_status1)")
-               .Define("MC_isZbb",      "MCParticle::get_decay(23,5,false)(Particle,Particle1)")
-               .Define("MC_isZcc",      "MCParticle::get_decay(23,4,false)(Particle,Particle1)")
-               .Define("MC_isZqq",      "MCParticle::get_decay(23,3,true)(Particle,Particle1)")
-               .Define("MC_isHgg",      "MCParticle::get_decay(25,21,false)(Particle,Particle1)")
+               .Define("MC_status1",    "FCCAnalyses::MCParticle::sel_genStatus(1)(Particle)")
+               .Define("MC_px",         "FCCAnalyses::MCParticle::get_px(MC_status1)")
+               .Define("MC_py",         "FCCAnalyses::MCParticle::get_py(MC_status1)")
+               .Define("MC_pz",         "FCCAnalyses::MCParticle::get_pz(MC_status1)")
+               .Define("MC_pdg",        "FCCAnalyses::MCParticle::get_pdg(MC_status1)")
+               .Define("MC_charge",     "FCCAnalyses::MCParticle::get_charge(MC_status1)")
+               .Define("MC_mass",       "FCCAnalyses::MCParticle::get_mass(MC_status1)")
+               .Define("MC_e",          "FCCAnalyses::MCParticle::get_e(MC_status1)")
+               .Define("MC_theta",      "FCCAnalyses::MCParticle::get_theta(MC_status1)")
+               .Define("MC_phi",        "FCCAnalyses::MCParticle::get_phi(MC_status1)")
+               .Define("MC_isZbb",      "FCCAnalyses::MCParticle::get_decay(23,5,false)(Particle,Particle1)")
+               .Define("MC_isZcc",      "FCCAnalyses::MCParticle::get_decay(23,4,false)(Particle,Particle1)")
+               .Define("MC_isZqq",      "FCCAnalyses::MCParticle::get_decay(23,3,true)(Particle,Particle1)")
+               .Define("MC_isHgg",      "FCCAnalyses::MCParticle::get_decay(25,21,false)(Particle,Particle1)")
 
                )
 
@@ -68,7 +68,7 @@ class analysis():
 
                 #"RP_TRK_D0",
                 #"RP_TRK_Z0",
-                
+
                 #"event_thrust_x",
                 #"event_thrust_y",
                 #"event_thrust_z",
@@ -83,7 +83,7 @@ class analysis():
                 #"RP_MC_pdg","RP_MC_charge","RP_MC_index","RP_MC_parentindex",
 
 
-                
+
                 ]:
             branchList.push_back(branchName)
 
@@ -94,7 +94,7 @@ class analysis():
         df2.Snapshot("events", self.outname, branchList, opts)
 
 # example call for standalone file
-# python FCCeeAnalyses/eeH/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_H_Hcc_ecm125/events_108949551.root 
+# python FCCeeAnalyses/eeH/analysis.py /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp/p8_ee_H_Hcc_ecm125/events_108949551.root
 
 if __name__ == "__main__":
 
