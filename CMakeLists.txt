@@ -7,6 +7,7 @@ project(FCCAnalyses CXX)
 #needed for ACTS
 cmake_policy(SET CMP0057 NEW)
 
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 #--- Declare C++ Standard -----------------------------------------------------
 
@@ -31,7 +32,7 @@ find_package(podio)
 # Use GNU-style hierarchy for installing build products
 include(GNUInstallDirs)
 
-	
+
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 find_package(FastJet)
