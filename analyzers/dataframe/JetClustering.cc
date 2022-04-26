@@ -27,7 +27,7 @@ clustering_kt::clustering_kt(float arg_radius,
 
   // initialize recombination scheme
   _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
-
+  
   //define the clustering sequence and jet definition
   fastjet::ClusterSequence _cs;
   _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _recombScheme);
@@ -43,12 +43,14 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_kt::operator() (con
   //cluster jets
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
 
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
+
   //transform to FCCAnalysesJet
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
 
   return result;
 }
-
 
 clustering_antikt::clustering_antikt(float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination){m_radius = arg_radius; m_exclusive = arg_exclusive; m_cut = arg_cut; m_sorted = arg_sorted; m_recombination = arg_recombination;}
 JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_antikt::operator() (const std::vector<fastjet::PseudoJet> &input) {
@@ -68,8 +70,12 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_antikt::operator() 
   cs = fastjet::ClusterSequence(input, def);
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
+ 
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
 
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max );
+  
   if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;
 }
@@ -92,8 +98,12 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_cambridge::operator
   cs = fastjet::ClusterSequence(input, def);
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
+  
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
 
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+  
   if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;
 }
@@ -119,8 +129,12 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_ee_kt::operator() (
   cs = fastjet::ClusterSequence(input, def);
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
+ 
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
 
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max );
+  
   if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;
 }
@@ -145,8 +159,12 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_ee_genkt::operator(
   cs = fastjet::ClusterSequence(input, def);
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
+ 
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
 
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+  
   if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;
 }
@@ -170,8 +188,12 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_genkt::operator() (
   cs = fastjet::ClusterSequence(input, def);
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
+ 
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
 
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max );
+  
   if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;
 }
@@ -196,9 +218,12 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_valencia::operator(
   cs = fastjet::ClusterSequence(input, def);
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
+ 
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
 
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
-
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max );
+  
   delete static_cast<fastjet::JetDefinition::Plugin *>(jetAlgorithm);
   if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;
@@ -224,8 +249,11 @@ JetClusteringUtils::FCCAnalysesJet JetClustering::clustering_jade::operator() (c
 
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(cs, m_exclusive, m_cut, m_sorted);
 
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets);
+  std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(cs, 0);
+  std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(cs, 1);
 
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max );
+  
   delete static_cast<fastjet::JetDefinition::Plugin *>(jetAlgorithm);
   if (recomb_scheme == fastjet::RecombinationScheme::external_scheme) def.delete_recombiner_when_unused();
   return result;

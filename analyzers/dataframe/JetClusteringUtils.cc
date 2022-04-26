@@ -11,6 +11,21 @@ std::vector<std::vector<int>> JetClusteringUtils::get_constituents(const FCCAnal
   return jets.constituents;
 }
 
+
+float JetClusteringUtils::get_exclusive_dmerge(const FCCAnalysesJet &in, 
+                                               int n) {
+  float d = -1;
+  if ( n >= 1 &&  n <= Nmax_dmerge) d= in.exclusive_dmerge[n-1] ;
+  return d;
+}
+
+float JetClusteringUtils::get_exclusive_dmerge_max(const FCCAnalysesJet &in, 
+                                                   int n) {
+  float d = -1;
+  if ( n >= 1 &&  n <= Nmax_dmerge) d= in.exclusive_dmerge_max[n-1] ;
+  return d;
+}
+
 std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(const ROOT::VecOps::RVec<float> &px,
                                                                    const ROOT::VecOps::RVec<float> &py,
                                                                    const ROOT::VecOps::RVec<float> &pz,
@@ -129,10 +144,21 @@ FCCAnalysesJet JetClusteringUtils::initialise_FCCAnalysesJet(){
   result.jets = jets;
   result.constituents = constituents;
 
+  std::vector<float> exclusive_dmerge;
+  std::vector<float> exclusive_dmerge_max;
+  exclusive_dmerge.reserve(Nmax_dmerge);
+  exclusive_dmerge_max.reserve(Nmax_dmerge);
+
+  result.exclusive_dmerge = exclusive_dmerge;
+  result.exclusive_dmerge_max = exclusive_dmerge_max;
+
   return result;
 };
 
-FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(const std::vector<fastjet::PseudoJet> &in){
+FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(const std::vector<fastjet::PseudoJet> &in, 
+                                                        const std::vector<float> &dmerge, 
+                                                        const std::vector<float> &dmerge_max){
+
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::initialise_FCCAnalysesJet();
   for (const auto& pjet : in) {
     result.jets.push_back(pjet);
@@ -144,12 +170,17 @@ FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(const std::vector<fastje
     }
     result.constituents.push_back(tmpvec);
   }
+  result.exclusive_dmerge = dmerge;
+  result.exclusive_dmerge_max = dmerge_max;
   return result;
 }
 
 
 
-std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterSequence & cs, int exclusive, float cut, int sorted){
+std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterSequence &cs, 
+                                                               int exclusive, 
+                                                               float cut, 
+                                                               int sorted){
   std::vector<fastjet::PseudoJet> pjets;
 
   if (sorted == 0){
@@ -169,8 +200,25 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::build_jets(fastjet::ClusterS
   return pjets;
 }
 
+std::vector<float> JetClusteringUtils::exclusive_dmerge(fastjet::ClusterSequence &cs, 
+                                                        int do_dmarge_max) {
 
-bool JetClusteringUtils::check(unsigned int n, int exclusive, float cut){
+  const int Nmax = Nmax_dmerge;
+  std::vector<float>  result;
+  for (int i=1; i <= Nmax; i++) {
+     	float  d;
+	const int j = i;
+     	if ( do_dmarge_max == 0) d = cs.exclusive_dmerge( j );
+	else d = cs.exclusive_dmerge_max( j ) ;
+	result.push_back( d );
+  }
+  return result;
+}
+
+
+bool JetClusteringUtils::check(unsigned int n, 
+                               int exclusive, 
+                               float cut){
   if (exclusive>0 && n<=int(cut)) return false;
   return true;
 }
