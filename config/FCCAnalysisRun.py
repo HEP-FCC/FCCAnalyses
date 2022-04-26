@@ -34,7 +34,7 @@ def getElement(rdfModule, element):
             print('The function <output> is mandatory in your analysis.py file, will exit')
             sys.exit(3)
 
-        elif element=='nCPUs':
+        elif element=='nCPUS':
             print('The variable <nCPUs> is optional in your analysis.py file, return default value 4')
             return 4
 
