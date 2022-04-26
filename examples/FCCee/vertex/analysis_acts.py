@@ -40,7 +40,7 @@ class analysis():
         #df2 = (self.df
 
                # MC event primary vertex
-               .Define("MC_PrimaryVertex",  "MCParticle::get_EventPrimaryVertex(21)( Particle )" )
+               .Define("MC_PrimaryVertex",  "FCCAnalyses::MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
                # number of tracks
                #.Define("ntracks","Vertexing::get_nTracks(EFlowTrack_1)")
@@ -56,7 +56,7 @@ class analysis():
                #.Define("nSeltracks",  "getRP_n(SelTracks)")
                # Reconstruct the vertex from these tracks :
                #.Define("Vertex",  "Vertexing::VertexFitter( 1, SelTracks, EFlowTrack_1 )")	# primary vertex, in mm
-               
+
                # Select primary tracks based on the matching to MC
 		  # This can be used  to select primary tracks when the
 		  # gen-level primary vertex  is not  (0,0,0)
