@@ -19,6 +19,7 @@
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/JetDefinition.hh"
 
+#include "JetClusteringUtils.h"
 
 /** Jet clustering interface. 
 This represents a set functions and utilities to perfom jet clustering from a list of.  
@@ -32,48 +33,109 @@ namespace JetClustering{
   */
   ///@{
   
-  ///Jet Clustering interface
-  struct clustering {
-    clustering (int arg_jetalgo, float arg_radius, int arg_exclusive, float arg_cut);
+  ///Jet Clustering interface for kt
+  struct clustering_kt {
+    clustering_kt (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination);
     
-    int m_jetalgo = 1; ///< jet algorithm to choose. Possible choices are 1=kt_algorithm, 2=antikt_algorithm, 3=cambridge_algorithm
     float m_radius = 0.5; ///< jet cone radius
     int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
     float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
-    ROOT::VecOps::RVec<fastjet::PseudoJet>  operator() (ROOT::VecOps::RVec<float> p_x, ROOT::VecOps::RVec<float> p_y, ROOT::VecOps::RVec<float> p_z, ROOT::VecOps::RVec<float> E);
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
   };
   
-  
-  /** Get jet px. Details. */
-  ROOT::VecOps::RVec<float> getJet_px(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet py. Details. */
-  ROOT::VecOps::RVec<float> getJet_py(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet pz. Details. */
-  ROOT::VecOps::RVec<float> getJet_pz(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet energy. Details. */
-  ROOT::VecOps::RVec<float> getJet_e(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet pt. Details. */
-  ROOT::VecOps::RVec<float> getJet_pt(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet p. Details. */
-  ROOT::VecOps::RVec<float> getJet_p(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet mass. Details. */
-  ROOT::VecOps::RVec<float> getJet_m(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
-  
-  /** Get jet eta. Details. */
-  ROOT::VecOps::RVec<float> getJet_eta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
 
-  /** Get jet phi. Details. */
-  ROOT::VecOps::RVec<float> getJet_phi(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+  ///Jet Clustering interface for antikt
+  struct clustering_antikt {
+    clustering_antikt (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
   
-  /** Get jet theta. Details. */
-  ROOT::VecOps::RVec<float> getJet_theta(ROOT::VecOps::RVec<fastjet::PseudoJet> in);
 
+  ///Jet Clustering interface for Cambridge
+  struct clustering_cambridge {
+    clustering_cambridge (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11, 
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
+
+  ///Jet Clustering interface for ee_kt
+  struct clustering_ee_kt {
+    clustering_ee_kt (int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination);
+    
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
+
+
+  ///Jet Clustering interface for ee_genkt
+  struct clustering_ee_genkt {
+    clustering_ee_genkt (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination, float arg_exponent);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
+    float m_exponent = 0; /// anti-kT algorithm=-1, cambridge algorithm=0, kT algorithm=1
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
+
+
+  ///Jet Clustering interface for genkt
+  struct clustering_genkt {
+    clustering_genkt (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination, float arg_exponent);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
+    float m_exponent = 0; /// anti-kT algorithm=-1, cambridge algorithm=0, kT algorithm=1
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
+
+
+  ///Jet Clustering interface for valencia
+  struct clustering_valencia {
+    clustering_valencia (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination, float arg_beta, float arg_gamma);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
+    float m_beta = 1.; /// beta parameter
+    float m_gamma = 1.; /// gamma parameter
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
+  
+  ///Jet Clustering interface for jade
+  struct clustering_jade {
+    clustering_jade (float arg_radius, int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination);
+    
+    float m_radius = 0.5; ///< jet cone radius
+    int   m_exclusive = 0; ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut 
+    float m_cut = 5.; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int m_sorted = 0; ///< pT ordering=0, E ordering=1
+    int m_recombination = 0; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
+    JetClusteringUtils::FCCAnalysesJet  operator() (std::vector<fastjet::PseudoJet>);
+  };
   ///@}
 }
 

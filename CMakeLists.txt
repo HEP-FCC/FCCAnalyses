@@ -1,15 +1,28 @@
-
-cmake_minimum_required(VERSION 2.8)
-
-
+cmake_minimum_required(VERSION 3.1...3.16)
+#cmake_minimum_required(VERSION 2.8)
 
 
 project(FCCAnalyses CXX)
 
+#needed for ACTS
+cmake_policy(SET CMP0057 NEW)
+
+
+#--- Declare C++ Standard -----------------------------------------------------
+
+option(WITH_DD4HEP "Build analyzers that need DD4hep" OFF)
+
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
+if(NOT CMAKE_CXX_STANDARD MATCHES "17")
+  message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}")
+endif()
+message (STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
+
+
+
 find_package(ROOT COMPONENTS ROOTDataFrame)
 include(${ROOT_USE_FILE})
 
-find_package(fccedm)
 find_package(EDM4HEP)
 find_package(podio)
 
@@ -22,6 +35,7 @@ include(GNUInstallDirs)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 find_package(FastJet)
+find_package( Acts COMPONENTS Core )
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
@@ -37,11 +51,27 @@ install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
 #install(DIRECTORY FCCeeAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 #install(DIRECTORY FCChhAnalyses DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 
+
+execute_process(COMMAND python -m awkward.config --incdir OUTPUT_VARIABLE _AWKWARD_INCLUDE OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(AWKWARD_INCLUDE ${_AWKWARD_INCLUDE})
+execute_process(COMMAND python -m awkward.config --libdir OUTPUT_VARIABLE _AWKWARD_LIBRARIES OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(AWKWARD_LIBRARIES ${_AWKWARD_LIBRARIES})
+
+include_directories(BEFORE "${AWKWARD_INCLUDE}")
+
+
+
+find_library(CPU-KERNELS awkward-cpu-kernels REQUIRED HINTS ${AWKWARD_LIBRARIES})
+find_library(LIBAWKWARD awkward REQUIRED HINTS ${AWKWARD_LIBRARIES})
+find_library(LIBDL dl REQUIRED)
+
+message(STATUS "Libraries: ${CPU-KERNELS} ${LIBAWKWARD} ${LIBDL}")
+message(STATUS "includes--------------------- main: ${AWKWARD_INCLUDE}")
+message(STATUS "Library---------------------- main: ${AWKWARD_LIBRARIES}")
+
+
 add_subdirectory(analyzers/dataframe)
 
-#add_subdirectory(FCChhAnalyses/FCChh/tth_4l/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zqq/dataframe)
-#add_subdirectory(FCCeeAnalyses/Z_Zbb_Flavor/)
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 

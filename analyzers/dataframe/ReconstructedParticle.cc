@@ -1,4 +1,5 @@
 #include "ReconstructedParticle.h"
+#include <iostream>
 using namespace ReconstructedParticle;
 
 ReconstructedParticle::sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
@@ -14,13 +15,16 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  ReconstructedParticle::s
   return result;
 }
 
-ReconstructedParticle::sel_p::sel_p(float arg_min_p) : m_min_p(arg_min_p) {};
+ReconstructedParticle::sel_p::sel_p(float arg_min_p, float arg_max_p) : m_min_p(arg_min_p), m_max_p(arg_max_p)  {};
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  ReconstructedParticle::sel_p::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
     auto & p = in[i];
-    if (std::sqrt(std::pow(p.momentum.x,2) + std::pow(p.momentum.y,2) + std::pow(p.momentum.z,2) ) > m_min_p) {
+    float momentum = std::sqrt(   std::pow(p.momentum.x,2)
+                                + std::pow(p.momentum.y,2)
+                                + std::pow(p.momentum.z,2) );
+    if ( momentum > m_min_p && momentum < m_max_p ) {
       result.emplace_back(p);
     }
   }
@@ -111,6 +115,22 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::se
 }
 
 
+ReconstructedParticle::sel_tag::sel_tag(bool arg_pass): m_pass(arg_pass) {};
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::sel_tag::operator()(ROOT::VecOps::RVec<bool> tags, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  for (size_t i = 0; i < in.size(); ++i) {
+    if (m_pass) {
+      if (tags.at(i)) result.push_back(in.at(i));
+    }
+    else {
+      if (!tags.at(i)) result.push_back(in.at(i));
+    }
+  }
+  return result;
+}
+
+
+
 // Angular separation between the particles of a collection:
 //   arg_delta = 0 / 1 / 2 :   return delta_max, delta_min, delta_average
 
@@ -164,6 +184,41 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::me
   result.insert( result.end(), y.begin(), y.end() );
   return ROOT::VecOps::RVec(result);
 }
+
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::remove(
+  		ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
+  		ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y) {
+  //to be kept as ROOT::VecOps::RVec
+  std::vector<edm4hep::ReconstructedParticleData> result;
+  result.reserve( x.size() );
+  result.insert( result.end(), x.begin(), x.end() );
+  float epsilon = 1e-8;
+  for (size_t i = 0; i < y.size(); ++i) {
+    float mass1 = y.at(i).mass;
+    float px1 = y.at(i).momentum.x;
+    float py1 = y.at(i).momentum.y;
+    float pz1 = y.at(i).momentum.z;
+    for(std::vector<edm4hep::ReconstructedParticleData>::iterator
+          it = std::begin(result); it != std::end(result); ++it) {
+      float mass2 = it->mass;
+      float px2 = it->momentum.x;
+      float py2 = it->momentum.y;
+      float pz2 = it->momentum.z;
+      if ( abs(mass1-mass2) < epsilon && 
+	   abs(px1-px2) < epsilon &&
+	   abs(py1-py2) < epsilon &&
+	   abs(pz1-pz2) < epsilon ) {
+        result.erase(it);
+        break;
+      }
+    }
+  }
+  return ROOT::VecOps::RVec(result);
+}
+
+
+
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
@@ -221,6 +276,12 @@ ROOT::VecOps::RVec<float> ReconstructedParticle::get_p(ROOT::VecOps::RVec<edm4he
     result.push_back(tlv.P());
   }
   return result;
+}
+
+float ReconstructedParticle::get_p(edm4hep::ReconstructedParticleData in) {
+  TLorentzVector tlv;
+  tlv.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
+  return tlv.P();
 }
 
 ROOT::VecOps::RVec<float> ReconstructedParticle::get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
@@ -286,6 +347,28 @@ ROOT::VecOps::RVec<TLorentzVector> ReconstructedParticle::get_tlv(ROOT::VecOps::
   return result;
 }
 
+TLorentzVector ReconstructedParticle::get_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in, int index) {
+  TLorentzVector result;
+  auto & p = in[index];
+  result.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+  return result;
+}
+
+TLorentzVector ReconstructedParticle::get_tlv(edm4hep::ReconstructedParticleData in) {
+  TLorentzVector result;
+  result.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
+  return result;
+}
+
+ROOT::VecOps::RVec<int> 
+ReconstructedParticle::get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(p.type);
+  }
+  return result;
+}
+
 
 int ReconstructedParticle::get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x) {
   int result =  x.size();
@@ -297,7 +380,7 @@ ROOT::VecOps::RVec<bool> ReconstructedParticle::getJet_btag(ROOT::VecOps::RVec<i
   ROOT::VecOps::RVec<bool> result;
   //std::cout << "========================new event=======================" <<std::endl;
   for (size_t i = 0; i < index.size(); ++i) {
-    result.push_back(values.at(pid.at(index.at(i)).parameters_begin +1));
+    result.push_back(values.at(pid.at(index.at(i)).parameters_begin));
     
     //std::cout << pid.at(index.at(i)).parameters_begin << "  ==  " << pid.at(index.at(i)).parameters_end << std::endl;
     //for (unsigned j = pid.at(index.at(i)).parameters_begin; j != pid.at(index.at(i)).parameters_end; ++j) {

@@ -1,0 +1,43 @@
+name: linux
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        SETUP: ['/cvmfs/sw.hsf.org/key4hep/setup.sh', '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cvmfs-contrib/github-action-cvmfs@v2
+    - name: Start container
+      run: |
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest /bin/bash
+    - name: CMake Configure
+      run: |
+        docker exec CI_container /bin/bash -c 'cd Package;\
+         mkdir -p build install;\
+         source ${{ matrix.SETUP }};\
+         cd build;\
+         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -G Ninja ..;'
+    - name: Compile 
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        source ${{ matrix.SETUP }};\
+        cd build;\
+        ninja -k0;'
+    - name: Install
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+          source ${{ matrix.SETUP }};\
+          cd build;\
+          ninja -k0 install;'
+    - name: Test
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        source ${{ matrix.SETUP }};\
+        cd build;\
+        ninja -k0 && ctest --output-on-failure;'
+
