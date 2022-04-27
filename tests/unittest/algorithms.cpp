@@ -1,11 +1,6 @@
 #include "catch2/catch_test_macros.hpp"
 #include "Algorithms.h"
 
-TEST_CASE("RecoPartCombination", "[algoritms]") {
-  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> pVec;
-  edm4hep::ReconstructedParticleData p;
-
-
 TEST_CASE("Mass", "[algoritms]") {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> pVec;
   edm4hep::ReconstructedParticleData p;
