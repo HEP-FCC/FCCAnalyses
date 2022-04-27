@@ -1,7 +1,7 @@
 #include "catch2/catch_test_macros.hpp"
 #include "Algorithms.h"
 
-TEST_CASE("Mass", "[algoritms]") {
+TEST_CASE("Mass", "[algorithms]") {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> pVec;
   edm4hep::ReconstructedParticleData p;
   p.momentum.x = 1.;
@@ -13,7 +13,7 @@ TEST_CASE("Mass", "[algoritms]") {
 }
 
 
-TEST_CASE("AxisCosThetaInVec", "[algoritms]") {
+TEST_CASE("AxisCosThetaInVec", "[algorithms]") {
   ROOT::VecOps::RVec<float> ax {0., 1., 0., 0., 0., 0.};
   ROOT::VecOps::RVec<float> x {1., 0., -1};
   ROOT::VecOps::RVec<float> y {0., 1., 0.};
@@ -25,7 +25,7 @@ TEST_CASE("AxisCosThetaInVec", "[algoritms]") {
 }
 
 
-TEST_CASE("AxisCosTheta", "[algoritms]") {
+TEST_CASE("AxisCosTheta", "[algorithms]") {
   ROOT::VecOps::RVec<float> ax {0., 1., 0., 0., 0., 0.};
   REQUIRE(Algorithms::getAxisCosTheta(ax, 1., 0., 0.) == 1.);
   REQUIRE(Algorithms::getAxisCosTheta(ax, 0., 1., 0.) == 0.);
@@ -33,7 +33,7 @@ TEST_CASE("AxisCosTheta", "[algoritms]") {
 }
 
 
-TEST_CASE("ThrustPointing", "[algoritms]") {
+TEST_CASE("ThrustPointing", "[algorithms]") {
   ROOT::VecOps::RVec<float> np {1., -1., 1., -1., 1.};
   ROOT::VecOps::RVec<float> e {1., 1., 1., 1., 1.};
   ROOT::VecOps::RVec<float> t {0., -1., 0., 1., 0., -3.};
