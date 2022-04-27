@@ -7,7 +7,7 @@ project(FCCAnalyses CXX)
 #needed for ACTS
 cmake_policy(SET CMP0057 NEW)
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH CACHE BOOL TRUE)
 
 #--- enable unit testing capabilities ------------------------------------------
 include(CTest)
@@ -16,6 +16,13 @@ option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, o
 
 
 option(WITH_DD4HEP "Build analyzers that need DD4hep" OFF)
+
+#--- Set a better default for installation directory---------------------------
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}/install" CACHE PATH "default install path" FORCE)
+endif()
+
+
 
 #--- Declare C++ Standard -----------------------------------------------------
 
