@@ -17,6 +17,13 @@ option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, o
 
 option(WITH_DD4HEP "Build analyzers that need DD4hep" OFF)
 
+#--- Set a better default for installation directory---------------------------
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}/install" CACHE PATH "default install path" FORCE)
+endif()
+
+
+
 #--- Declare C++ Standard -----------------------------------------------------
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
