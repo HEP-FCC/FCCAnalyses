@@ -7,7 +7,7 @@ project(FCCAnalyses CXX)
 #needed for ACTS
 cmake_policy(SET CMP0057 NEW)
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH CACHE BOOL TRUE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 #--- enable unit testing capabilities ------------------------------------------
 include(CTest)
