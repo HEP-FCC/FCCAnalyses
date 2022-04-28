@@ -1,8 +1,9 @@
+#include "FCCAnalyses/myFinalSel.h"
+
 #include <iostream>
 #include <cstdlib>
 #include <vector>
 
-#include "myFinalSel.h"
 
 using namespace myFinalSel;
 
@@ -18,7 +19,7 @@ int myFinalSel::selTauCand( ROOT::VecOps::RVec<float> mass,
     if (vertex_chi2.at(vertex_ind.at(i))>10.) continue;
     //if (fabs(vertex_chi2.at(vertex_ind.at(i))-1.)<bestchi2)bestchi2=vertex_chi2.at(vertex_ind.at(i));
     if (vertex_chi2.at(vertex_ind.at(i)) < bestchi2) {bestchi2=vertex_chi2.at(vertex_ind.at(i)); indbestchi2=i;}
-    
+
   }
   return indbestchi2;
 }
@@ -32,7 +33,7 @@ int myFinalSel::selTauCandTM(ROOT::VecOps::RVec<int> mcvertex,
   for (auto &p:truevertex)
     if (p==cand)return 1;
   return 0;
-  
+
 }
 
 
@@ -71,7 +72,7 @@ float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
   for (auto &p:in){
     if (abs(p-val)<0.000000001)
       continue;
-    
+
     ave+=p;
     aven+=1.;
   }
@@ -116,7 +117,7 @@ float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
   for (size_t i = 0; i < in.size(); ++i){
     if (ispv.at(i)>0)continue;
     if (index==i)continue;
-    
+
     ave+=in.at(i);
     aven+=1.;
   }
@@ -124,4 +125,3 @@ float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
     return ave/aven;
   return -999999.;
 }
-

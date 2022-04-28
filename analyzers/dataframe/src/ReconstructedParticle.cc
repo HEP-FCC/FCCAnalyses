@@ -1,4 +1,4 @@
-#include "ReconstructedParticle.h"
+#include "FCCAnalyses/ReconstructedParticle.h"
 #include <iostream>
 using namespace ReconstructedParticle;
 
@@ -56,7 +56,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::re
     std::fill(v.end() - 2, v.end(), true);
     do {
       edm4hep::ReconstructedParticleData reso;
-      TLorentzVector reso_lv; 
+      TLorentzVector reso_lv;
       for (int i = 0; i < n; ++i) {
           if (v[i]) {
             reso.charge += legs[i].charge;
@@ -205,7 +205,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::re
       float px2 = it->momentum.x;
       float py2 = it->momentum.y;
       float pz2 = it->momentum.z;
-      if ( abs(mass1-mass2) < epsilon && 
+      if ( abs(mass1-mass2) < epsilon &&
 	   abs(px1-px2) < epsilon &&
 	   abs(py1-py2) < epsilon &&
 	   abs(pz1-pz2) < epsilon ) {
@@ -227,7 +227,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> ReconstructedParticle::ge
       result.push_back(in.at(index[i]));
     //else
     //  std::cout << "electron index negative " << index[i]<<std::endl;
-  }  
+  }
   return result;
 }
 
@@ -360,7 +360,7 @@ TLorentzVector ReconstructedParticle::get_tlv(edm4hep::ReconstructedParticleData
   return result;
 }
 
-ROOT::VecOps::RVec<int> 
+ROOT::VecOps::RVec<int>
 ReconstructedParticle::get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in) {
@@ -381,7 +381,7 @@ ROOT::VecOps::RVec<bool> ReconstructedParticle::getJet_btag(ROOT::VecOps::RVec<i
   //std::cout << "========================new event=======================" <<std::endl;
   for (size_t i = 0; i < index.size(); ++i) {
     result.push_back(values.at(pid.at(index.at(i)).parameters_begin));
-    
+
     //std::cout << pid.at(index.at(i)).parameters_begin << "  ==  " << pid.at(index.at(i)).parameters_end << std::endl;
     //for (unsigned j = pid.at(index.at(i)).parameters_begin; j != pid.at(index.at(i)).parameters_end; ++j) {
     //  std::cout << " values : " << values.at(j) << std::endl;
@@ -396,4 +396,3 @@ int ReconstructedParticle::getJet_ntags(ROOT::VecOps::RVec<bool> in) {
     if (in.at(i))result+=1;
   return result;
 }
-

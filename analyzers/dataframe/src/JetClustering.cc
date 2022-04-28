@@ -1,9 +1,9 @@
 #include "FCCAnalyses/JetClustering.h"
+#include "FCCAnalyses/ValenciaPlugin.h"
 
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Selector.hh"
-#include "ValenciaPlugin.h"
 #include "fastjet/EECambridgePlugin.hh"
 #include "fastjet/JadePlugin.hh"
 
