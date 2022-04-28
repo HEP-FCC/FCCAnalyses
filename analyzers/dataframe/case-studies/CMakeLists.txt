@@ -32,7 +32,7 @@ if(NOT ${WITH_DD4HEP})
   list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
 endif()
 
-ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
+ROOT_GENERATE_DICTIONARY(G__FCCAnalysesCS
                          ${headers}
                          LINKDEF LinkDef.h
                          )
