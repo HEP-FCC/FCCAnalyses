@@ -34,7 +34,7 @@ endif()
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalysesCS
                          ${headers}
-                         LINKDEF ${CMAKE_SOURCE_DIR}/analyzers/dataframe/LinkDef.h
+                         LINKDEF LinkDef.h
                          )
 
 add_library(FCCAnalysesCS SHARED ${sources} ${headers} G__FCCAnalysesCS.cxx )
