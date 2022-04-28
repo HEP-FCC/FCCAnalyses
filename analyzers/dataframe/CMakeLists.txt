@@ -9,9 +9,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
 
-include_directories(${EDM4HEP_INCLUDE_DIRS} 
+include_directories(${EDM4HEP_INCLUDE_DIRS}
                     ${podio_INCLUDE_DIR}
-                    ${FASTJET_INCLUDE_DIR} 
+                    ${FASTJET_INCLUDE_DIR}
                     ${acts_INCLUDE_DIR}
                     ${AWKWARD_INCLUDE}
                     ${VDT_INCLUDE_DIR}
@@ -24,8 +24,8 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 
 
 
-file(GLOB sources *.cc)
-file(GLOB headers *.h)
+file(GLOB sources src/*.cc)
+file(GLOB headers include/FCCAnalyses/*.h)
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
 if(NOT ${WITH_DD4HEP})
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
@@ -46,7 +46,7 @@ target_include_directories(FCCAnalyses  PUBLIC
                            ${AWKWARD_INCLUDE}
                            )
 
-target_link_libraries(FCCAnalyses 
+target_link_libraries(FCCAnalyses
                       ROOT::Physics
                       ROOT::MathCore
                       ROOT::ROOTVecOps
