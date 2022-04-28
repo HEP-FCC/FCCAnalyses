@@ -88,8 +88,9 @@ add_subdirectory(analyzers/dataframe)
 
 
 option(FCCANALYSES_CASESTUDIES "Build the case studies" OFF)
-add_subdirectory_if(analyzers/dataframe/case-studies FCCANALYSES_CASESTUDIES)
-
+if(FCCANALYSES_CASESTUDIES)
+  add_subdirectory(analyzers/dataframe/case-studies FCCANALYSES_CASESTUDIES)
+endif()
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
