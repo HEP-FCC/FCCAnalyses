@@ -1,4 +1,4 @@
-#include "awkwardtest.h"
+#include "FCCAnalyses/awkwardtest.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -17,10 +17,10 @@
 #include "ReconstructedParticle.h"
 
 
-ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,  
+ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 				      ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-				      ROOT::VecOps::RVec<int> recind, 
-				      ROOT::VecOps::RVec<int> mcind, 
+				      ROOT::VecOps::RVec<int> recind,
+				      ROOT::VecOps::RVec<int> mcind,
 				      ROOT::VecOps::RVec<edm4hep::MCParticleData> mc){
 
   ROOT::VecOps::RVec<float> result;
@@ -52,7 +52,7 @@ ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedP
   std::cout <<"beofre"<<std::endl;
   ROOT::VecOps::RVec<int> pions = ReconstructedParticle2MC::selRP_PDG_index(211,true)(recind, mcind, recop, mc) ;
   ROOT::VecOps::RVec<int> kaons = ReconstructedParticle2MC::selRP_PDG_index(321,true)(recind, mcind, recop, mc) ;
-  
+
   std::cout << "n pions " << pions.size() << std::endl;
   std::cout << "n kaons " << kaons.size() << std::endl;
 
@@ -64,15 +64,15 @@ ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedP
     builder.endlist();
   }
 
-  std::shared_ptr<awkward::Content> array = builder.snapshot();  
+  std::shared_ptr<awkward::Content> array = builder.snapshot();
   std::shared_ptr<awkward::Content> comb  = array.get()->combinations(2, false, nullptr, awkward::util::Parameters(), 0, 0);
   int64_t length = comb->length();
- 
+
   std::cout << "recarray ntracks     : " << tracks.size()<< "  length 2 comb " << length << std::endl;
 
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> vec_rp;
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> vec_tk;
-  
+
   //loop over combinations
   for (int64_t i=0;i<length;i++){
     awkward::ContentPtr item = comb.get()->getitem_at(i);
@@ -89,7 +89,7 @@ ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedP
       //loop over the items of the items and get the data (if nested array)
       for (int64_t k=0;k<lengthnp;k++){
 	awkward::ContentPtr item2 = numpyraw->getitem_at(k);
-	awkward::NumpyArray* npitem = dynamic_cast<awkward::NumpyArray*>(item2.get());	
+	awkward::NumpyArray* npitem = dynamic_cast<awkward::NumpyArray*>(item2.get());
 	int32_t value = *reinterpret_cast<int32_t*>(npitem->data());
 	if (k==0)tmpvec_rp.push_back(value);
 	else tmpvec_tk.push_back(value);
@@ -108,7 +108,7 @@ ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedP
     }
     if (charge!=0)continue;
     if (pcut==true)continue;
-    
+
     //PID
     //if( (std::find(pions.begin(), pions.end(), tmpvec_rp.at(0)) != pions.end()) && (std::find(pions.begin(), pions.end(), tmpvec_rp.at(1)) != pions.end())) continue;
     //if( (std::find(kaons.begin(), kaons.end(), tmpvec_rp.at(0)) != kaons.end()) && (std::find(kaons.begin(), kaons.end(), tmpvec_rp.at(1)) != kaons.end())) continue;
@@ -132,25 +132,25 @@ ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedP
     }
     else mass=-9999;
     //float mass=build_invmass(recop,tmpvec_rp);
-    
+
 
 
     if (fabs(mass-1.86483)>0.05)continue;
 
 
 
-    
+
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles;
     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks;
     for (size_t k=0;k<tmpvec_rp.size();k++){
       recoparticles.push_back(recop.at(tmpvec_rp.at(k)));
       thetracks.push_back(tracks.at(tmpvec_tk.at(k)));
     }
- 
+
     //VertexingUtils::FCCAnalysesVertex TheVertexActs = VertexFitterActs::VertexFitterFullBilloir(recoparticles, tracks );
     VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks );
     float chi2 = TheVertex.vertex.chi2;
-  
+
     if (chi2<0.01)continue;
     if (chi2>10.)continue;
 
