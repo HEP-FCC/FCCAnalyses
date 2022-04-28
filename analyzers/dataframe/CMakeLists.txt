@@ -25,7 +25,7 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 
 
 file(GLOB sources src/*.cc)
-file(GLOB headers include/FCCAnalyses/*.h)
+file(GLOB headers include/*.h)
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
 if(NOT ${WITH_DD4HEP})
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
@@ -39,7 +39,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
 
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
 target_include_directories(FCCAnalyses  PUBLIC
-                           ${CMAKE_SOURCE_DIR}/analyzers/dataframe
+                           ${CMAKE_SOURCE_DIR}/analyzers/dataframe/include
                            ${FCCEDM_INCLUDE_DIRS}
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
