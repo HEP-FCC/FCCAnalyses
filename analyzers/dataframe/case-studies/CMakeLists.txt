@@ -37,7 +37,7 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
                          LINKDEF LinkDef.h
                          )
 
-add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
+add_library(FCCAnalysesCS SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
 target_include_directories(FCCAnalyses  PUBLIC
                            ${CMAKE_SOURCE_DIR}/analyzers/dataframe/case-studies/include
                            ${FCCEDM_INCLUDE_DIRS}
