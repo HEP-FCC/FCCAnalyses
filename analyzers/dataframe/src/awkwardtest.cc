@@ -1,4 +1,7 @@
 #include "FCCAnalyses/awkwardtest.h"
+#include "FCCAnalyses/VertexFitterActs.h"
+#include "FCCAnalyses/VertexFitterSimple.h"
+#include "FCCAnalyses/ReconstructedParticle.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -12,9 +15,6 @@
 #include "awkward/builder/ArrayBuilder.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 
-#include "VertexFitterActs.h"
-#include "VertexFitterSimple.h"
-#include "ReconstructedParticle.h"
 
 
 ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
