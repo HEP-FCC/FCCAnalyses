@@ -44,6 +44,16 @@ target_include_directories(unittest PUBLIC ${VDT_INCLUDE_DIR})
       TEST_SPEC ${filter_tests} # discover only tests that are known to not fail
   )
 
+add_executable(unittest_myutils myutils.cpp)
+target_link_libraries(unittest_myutils PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain)
+target_include_directories(unittest_myutils PUBLIC ${VDT_INCLUDE_DIR})
+  include(Catch)
+  catch_discover_tests(unittest_myutils
+      WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+      TEST_PREFIX "UT_" # make it possible to filter easily with -R ^UT
+      TEST_SPEC ${filter_tests} # discover only tests that are known to not fail
+  )
+
 add_executable(unittest_algorithms algorithms.cpp)
 target_link_libraries(unittest_algorithms PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain)
 target_include_directories(unittest_algorithms PUBLIC ${VDT_INCLUDE_DIR})
