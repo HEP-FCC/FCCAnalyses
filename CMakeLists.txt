@@ -58,6 +58,12 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
   "Installation directory for header files")
 
 
+
+
+#--- add CMake infrastructure --------------------------------------------------
+include(cmake/FCCAnalysesCreateConfig.cmake)
+
+
 file(GLOB _run_python_files config/*.py)
 install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
 install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)

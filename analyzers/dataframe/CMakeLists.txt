@@ -43,11 +43,13 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
 
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
 target_include_directories(FCCAnalyses  PUBLIC
-                           ${CMAKE_SOURCE_DIR}/analyzers/dataframe/include
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                            ${FCCEDM_INCLUDE_DIRS}
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
+                           # ${CMAKE_SOURCE_DIR}/analyzers/dataframe
                            )
 
 target_link_libraries(FCCAnalyses
@@ -67,6 +69,7 @@ target_link_libraries(FCCAnalyses
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
                       ${LIBDL}
+                      gfortran # todo: why necessary?
                       )
 
 if(${WITH_DD4HEP})
@@ -74,11 +77,11 @@ if(${WITH_DD4HEP})
   target_link_libraries(FCCAnalyses DD4hep::DDCore)
 endif()
 
-
 set_target_properties(FCCAnalyses PROPERTIES
   PUBLIC_HEADER "${headers}")
 
 install(TARGETS FCCAnalyses
+    EXPORT FCCAnalysesTargets
     RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
     LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
     PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/FCCAnalyses"
