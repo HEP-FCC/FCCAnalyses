@@ -25,7 +25,11 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 
 
 file(GLOB sources src/*.cc)
-file(GLOB headers include/*.h)
+file(GLOB headers include/FCCAnalyses/*.h)
+
+message(STATUS "includes headers ${headers}")
+message(STATUS "includes sources ${sources}")
+
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
 if(NOT ${WITH_DD4HEP})
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
@@ -34,7 +38,7 @@ endif()
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
                          ${headers}
-                         LINKDEF LinkDef.h
+                         LINKDEF include/FCCAnalyses/LinkDef.h
                          )
 
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )

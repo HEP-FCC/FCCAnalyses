@@ -34,7 +34,7 @@ endif()
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalysesCS
                          ${headers}
-                         LINKDEF LinkDef.h
+                         LINKDEF include/case-studies/LinkDef.h
                          )
 
 add_library(FCCAnalysesCS SHARED ${sources} ${headers} G__FCCAnalysesCS.cxx )
@@ -82,11 +82,11 @@ install(TARGETS FCCAnalysesCS
     )
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/analyzers/dataframe/libFCCAnalysesCS.rootmap"
+  "${PROJECT_BINARY_DIR}/FCCANALYSES_CASESTUDIES/libFCCAnalysesCS.rootmap"
     DESTINATION "${INSTALL_LIB_DIR}" COMPONENT dev)
 
 if (${ROOT_VERSION} GREATER 6)
     install(FILES
-          "${PROJECT_BINARY_DIR}/analyzers/dataframe/libFCCAnalysesCS_rdict.pcm"
+          "${PROJECT_BINARY_DIR}/FCCANALYSES_CASESTUDIES/libFCCAnalysesCS_rdict.pcm"
                 DESTINATION "${INSTALL_LIB_DIR}" COMPONENT dev)
     endif()
