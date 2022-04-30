@@ -41,6 +41,9 @@ ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
                          LINKDEF include/FCCAnalyses/LinkDef.h
                          )
 
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
+
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
 target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
