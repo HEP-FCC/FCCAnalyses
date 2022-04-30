@@ -47,7 +47,7 @@ message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
 target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/FCCAnalyses>
                            ${FCCEDM_INCLUDE_DIRS}
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
