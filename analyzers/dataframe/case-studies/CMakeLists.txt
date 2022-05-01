@@ -27,10 +27,6 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 file(GLOB sources src/*.cc)
 file(GLOB headers include/case-studies/*.h)
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
-if(NOT ${WITH_DD4HEP})
-  list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
-  list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
-endif()
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalysesCS
                          ${headers}
@@ -64,11 +60,6 @@ target_link_libraries(FCCAnalysesCS
                       ${CPU-KERNELS}
                       ${LIBDL}
                       )
-
-if(${WITH_DD4HEP})
-  find_package(DD4hep)
-  target_link_libraries(FCCAnalysesCS DD4hep::DDCore)
-endif()
 
 
 set_target_properties(FCCAnalysesCS PROPERTIES
