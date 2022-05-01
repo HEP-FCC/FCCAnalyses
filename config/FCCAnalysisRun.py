@@ -437,7 +437,7 @@ if __name__ == "__main__":
         os.system("mkdir -p {}".format(outputDirEos))
 
     #check if test mode is specified, and if so run the analysis on it (this will exit after)
-    if args.testFile:
+    if args.test:
         print("----> Running test file mode")
         path, filename = os.path.split(args.output)
         if path!='': os.system("mkdir -p {}".format(path))
