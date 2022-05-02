@@ -697,7 +697,7 @@ def runFinal(rdfModule):
             print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut, width=length_cuts_names, nevents=count_list[i].GetValue()))
 
         # And save everything
-        print ('---->     Saving outputs')
+        print ('----> Saving outputs')
         for i, cut in enumerate(cutList):
             fhisto = outputDir+pr+'_'+cut+'_histo.root' #output file for histograms
             tf    = ROOT.TFile.Open(fhisto,'RECREATE')
@@ -725,10 +725,11 @@ def runFinal(rdfModule):
 
 
 #__________________________________________________________
-def runPlots():
+def runPlots(analysisFile):
 
-    import config.doPlots
-
+    import config.doPlots as dp
+    dp.run(analysisFile)
+    
 #__________________________________________________________
 if __name__ == "__main__":
     #check the arguments
