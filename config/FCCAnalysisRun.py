@@ -566,10 +566,12 @@ def runFinal(args, rdfModule):
     processList={}
 
     inputDir = getElement(rdfModule,"inputDir", True)
-    if inputDir[-1]!="/":inputDir+="/"
+    if inputDir!="":
+        if inputDir[-1]!="/":inputDir+="/"
 
     outputDir = getElement(rdfModule,"outputDir", True)
-    if outputDir[-1]!="/":outputDir+="/"
+    if outputDir!="":
+        if outputDir[-1]!="/":outputDir+="/"
 
     for pr in getElement(rdfModule,"processList", True):
         processEvents[pr]=0
