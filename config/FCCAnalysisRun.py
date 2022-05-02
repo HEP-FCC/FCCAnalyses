@@ -568,8 +568,8 @@ def runFinal(args, rdfModule):
     inputDir = getElement(rdfModule,"inputDir", True)
     if inputDir[-1]!="/":inputDir+="/"
 
-    ouputDir = getElement(rdfModule,"ouputDir", True)
-    if ouputDir[-1]!="/":ouputDir+="/"
+    outputDir = getElement(rdfModule,"outputDir", True)
+    if outputDir[-1]!="/":outputDir+="/"
 
     for pr in getElement(rdfModule,"processList", True):
         processEvents[pr]=0
@@ -719,7 +719,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument("--files-list", help="Specify input file to bypass the processList", default=[], nargs='+')
-    publicOptions.add_argument("--output", help="Specify ouput file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
+    publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
 
