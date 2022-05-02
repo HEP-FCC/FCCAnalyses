@@ -55,7 +55,7 @@ def getElement(rdfModule, element, isFinal=False):
 
         elif element=='compGroup':
              print('The variable <{}> is optional in your analysys.py file, return default value group_u_FCC.local_gen'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
+             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
              return "group_u_FCC.local_gen"
 
         elif element=='outputDirEos':
