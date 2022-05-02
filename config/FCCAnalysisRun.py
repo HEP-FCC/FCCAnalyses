@@ -629,6 +629,7 @@ def runFinal(args, rdfModule):
 
     histoList = getElement(rdfModule,"histoList", True)
 
+    doTree = getElement(rdfModule,"doTree", True)
     for pr in getElement(rdfModule,"processList", True):
         print ('\n---->  Running over process : ',pr)
 
@@ -661,7 +662,7 @@ def runFinal(args, rdfModule):
                 histos.append(df_cut.Histo1D(model,histoList[v]["name"]))
             histos_list.append(histos)
 
-            if getElement(rdfModule,"doTree", True):
+            if doTree:
                 opts = ROOT.RDF.RSnapshotOptions()
                 opts.fLazy = True
                 snapshot_tdf = df_cut.Snapshot(self.treename, fout, "", opts)
