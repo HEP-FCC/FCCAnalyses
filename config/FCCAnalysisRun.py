@@ -563,7 +563,7 @@ def runFinal(rdfModule):
             procDict=json.load(f)
 
 
-    procDictAdd = getElement(rdfModule,"nCPUS", True)
+    procDictAdd = getElement(rdfModule,"procDictAdd", True)
     for procAdd in procDictAdd:
         if getElementDict(procDict, procAdd) == None:
             procDict[procAdd] = procDictAdd[procAdd]
