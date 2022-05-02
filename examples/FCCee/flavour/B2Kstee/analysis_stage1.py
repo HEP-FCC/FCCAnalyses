@@ -9,7 +9,7 @@ prodTag     = "FCCee/spring2021/IDEA/"
 #Optional: output directory, default is local running directory
 outputDir   = "outputs/FCCee/flavour/B2Kstee/stage1"
 
-#Optional: ncpus, default is 4
+#Optional
 nCPUS       = 8
 runBatch    = False
 #batchQueue = "longlunch"
