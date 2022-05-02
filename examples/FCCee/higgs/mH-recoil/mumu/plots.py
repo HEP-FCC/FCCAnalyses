@@ -30,13 +30,13 @@ colors['ZZ'] = ROOT.kGreen+2
 colors['VV'] = ROOT.kGreen+3
 
 plots = {}
-plots['ZH'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
+plots['ZH'] = {'signal':{'ZH':['MySample_p8_ee_ZH_ecm240']},
                'backgrounds':{'WW':['p8_ee_WW_ecm240'],
                               'ZZ':['p8_ee_ZZ_ecm240']}
            }
 
 
-plots['ZH_2'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
+plots['ZH_2'] = {'signal':{'ZH':['MySample_p8_ee_ZH_ecm240']},
                  'backgrounds':{'VV':['p8_ee_WW_ecm240','p8_ee_ZZ_ecm240']}
              }
 
