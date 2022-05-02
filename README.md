@@ -1,14 +1,15 @@
 # FCCAnalyses
 
-A framework for FCC related analyses. This framework works with flat ROOT trees
-using [EDM4hep](https://github.com/key4hep/EDM4hep) root files.
+Common framework for FCC related analyses. This framework allows one to write
+full analysis, taking [EDM4hep](https://github.com/key4hep/EDM4hep) input ROOT
+files and producing the plots.
 
 >
 > As usual, if you aim at contributing to the repository, please fork it,
-> develop and submit pull requests.
+> develop your feature/analysis and submit a pull requests.
 >
-> To have access to the FCC samples, you need to subscribe to one of the
-> following e-group (with owner approval) `fcc-eos-read-xx` with `xx=ee,hh,eh`.
+> To have access to the FCC samples, you need to be subscribed to one of the
+> following e-groups (with owner approval) `fcc-eos-read-xx` with `xx=ee,hh,eh`.
 > For the time being, the configuration files are accessible on `helsens` public
 > AFS. This is not optimal and will be changed in the future, thus you are
 > also kindly asked to contact `clement.helsens@cern.ch` and request access to
@@ -27,17 +28,17 @@ Detailed code documentation can be found
   * [Getting started](#getting-started)
   * [Generalities](#generalities)
   * [Example analysis](#example-analysis)
-    * [Pre selection](#pre-selection)
+    * [Pre-selection](#pre-selection)
     * [Final selection](#final-selection)
     * [Plotting](#plotting)
 
 
 ## RootDataFrame based
 
-Using ROOT dataframe allows very quick processing time as it natively supports
-multithreading. In this README, everything from reading EDM4hep files on
-EOS and producing flat n-tuples, to running a final selection and plotting the
-results will be explained.
+Using ROOT dataframe allows to use modern, high-level interface and very quick
+processing time as it natively supports multithreading. In this README,
+everything from reading EDM4hep files on EOS and producing flat n-tuples, to
+running a final selection and plotting the results will be explained.
 
 ROOT dataframe documentation is available
 [here](https://root.cern/doc/master/classROOT_1_1RDataFrame.html).
