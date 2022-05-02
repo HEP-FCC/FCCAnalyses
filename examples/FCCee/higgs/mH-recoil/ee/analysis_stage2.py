@@ -6,10 +6,10 @@ processList = {
 
 #Mandatory: input directory when not running over centrally produced edm4hep events.
 #It can still be edm4hep files produced standalone or files from a first analysis step (this is the case in this example it runs over the files produced from analysis.py)
-inputDir    = "ZH_ee_recoil/stage1"
+inputDir    = "outputs/FCCee/higgs/mH-recoil/ee/stage1"
 
 #Optional: output directory, default is local dir
-outputDir   = "ZH_ee_recoil/stage2"
+outputDir   = "outputs/FCCee/higgs/mH-recoil/ee/stage2"
 
 #Optional: ncpus, default is 4
 nCPUS       = 2

@@ -6,7 +6,7 @@ ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow e^{+}e^{-} + X"
 delphesVersion = "3.4.2"
 energy         = 240.0
 collider       = "FCC-ee"
-inputDir       = "outputs/FCCee/higgs/mH-recoil/ee/"
+inputDir       = "outputs/FCCee/higgs/mH-recoil/ee/stage2/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
@@ -45,7 +45,3 @@ legend['ZH'] = 'ZH'
 legend['WW'] = 'WW'
 legend['ZZ'] = 'ZZ'
 legend['VV'] = 'VV boson'
-
-
-
-
