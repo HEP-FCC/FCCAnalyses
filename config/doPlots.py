@@ -96,7 +96,7 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
         leg.AddEntry(hsignal[s][0],param.legend[s],"l")
     for b in hbackgrounds:
         leg.AddEntry(hbackgrounds[b][0],param.legend[b],"f")
- 
+
 
     yields={}
     for s in hsignal:
@@ -117,10 +117,10 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
         histos.append(hbackgrounds[b][0])
         colors.append(param.colors[b])
 
-    intLumiab = param.intLumi/1e+06 
+    intLumiab = param.intLumi/1e+06
 
-    
-    lt = "FCCAnalyses: FCC-hh Simulation (Delphes)"    
+
+    lt = "FCCAnalyses: FCC-hh Simulation (Delphes)"
     rt = "#sqrt{{s}} = {:.1f} TeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
 
     if 'ee' in param.collider:
@@ -143,7 +143,7 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
     if 'AAAyields' in var:
         drawStack(var, 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, yields)
         return
-        
+
     if 'stack' in param.stacksig:
         if 'lin' in param.yaxis:
             drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig)
@@ -166,14 +166,14 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab):
 #_____________________________________________________________________________________________________________
 def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab, scaleSig, customLabel, nsig,  yields=None):
 
-    canvas = ROOT.TCanvas(name, name, 600, 600) 
+    canvas = ROOT.TCanvas(name, name, 600, 600)
     canvas.SetLogy(logY)
     canvas.SetTicks(1,1)
     canvas.SetLeftMargin(0.14)
     canvas.SetRightMargin(0.08)
- 
 
-    # first retrieve maximum 
+
+    # first retrieve maximum
     sumhistos = histos[0].Clone()
     iterh = iter(histos)
     next(iterh)
@@ -181,7 +181,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     unit = 'GeV'
     if 'TeV' in str(histos[1].GetXaxis().GetTitle()):
         unit = 'TeV'
-    
+
     if unit in str(histos[1].GetXaxis().GetTitle()):
         bwidth=sumhistos.GetBinWidth(1)
         if bwidth.is_integer():
@@ -195,7 +195,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     maxh = sumhistos.GetMaximum()
     minh = sumhistos.GetMinimum()
 
-    if logY: 
+    if logY:
        canvas.SetLogy(1)
 
     # define stacked histo
@@ -208,13 +208,13 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     histos[nsig].SetFillColor(colors[nsig])
     hStack.Add(histos[nsig])
     hStackBkg.Add(histos[nsig])
-    
+
     # now loop over other background (skipping first)
     iterh = iter(histos)
     for i in range(nsig):
         next(iterh)
     next(iterh)
-    
+
     k = nsig+1
     for h in iterh:
        h.SetLineWidth(0)
@@ -249,7 +249,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
 
     hStack.GetYaxis().SetTitleOffset(1.95)
     hStack.GetXaxis().SetTitleOffset(1.40)
-    
+
     lowY=0.
     if logY:
         highY=200.*maxh/ROOT.gPad.GetUymax()
@@ -262,7 +262,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         hStack.SetMaximum(1.3*maxh)
         hStack.SetMinimum(0.)
 
-    escape_scale_Xaxis=True    
+    escape_scale_Xaxis=True
     hStacklast = hStack.GetStack().Last()
     lowX_is0=True
     lowX=hStacklast.GetBinCenter(1)-(hStacklast.GetBinWidth(1)/2.)
@@ -279,7 +279,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
 
          val_to_compare=bkg_val
          if sig_val>bkg_val : val_to_compare=sig_val
-         if val_to_compare<lowY and i_bin>15 and highX_ismax==False: 
+         if val_to_compare<lowY and i_bin>15 and highX_ismax==False:
            highX_ismax=True
            highX=hStacklast.GetBinCenter(i_bin)+(hStacklast.GetBinWidth(i_bin)/2.)
            highX*=1.1
@@ -296,33 +296,33 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     if not stacksig:
         if 'AAAyields' not in name: hStackSig.Draw("same hist nostack")
 
-    legend.Draw() 
-                        
-    Text = ROOT.TLatex()    
-    Text.SetNDC() 
+    legend.Draw()
+
+    Text = ROOT.TLatex()
+    Text.SetNDC()
     Text.SetTextAlign(31);
-    Text.SetTextSize(0.04) 
+    Text.SetTextSize(0.04)
 
     text = '#it{' + leftText +'}'
-    Text.DrawLatex(0.90, 0.94, text) 
+    Text.DrawLatex(0.90, 0.94, text)
 
     text = '#it{'+customLabel+'}'
     Text.SetTextAlign(12);
-    Text.SetNDC(ROOT.kTRUE) 
-    Text.SetTextSize(0.04) 
+    Text.SetNDC(ROOT.kTRUE)
+    Text.SetTextSize(0.04)
     Text.DrawLatex(0.18, 0.85, text)
 
     rightText = re.split(",", rightText)
     text = '#bf{#it{' + rightText[0] +'}}'
-    
+
     Text.SetTextAlign(12);
-    Text.SetNDC(ROOT.kTRUE) 
-    Text.SetTextSize(0.04) 
+    Text.SetNDC(ROOT.kTRUE)
+    Text.SetTextSize(0.04)
     Text.DrawLatex(0.18, 0.81, text)
 
-    rightText[1]=rightText[1].replace("   ","")    
+    rightText[1]=rightText[1].replace("   ","")
     text = '#bf{#it{' + rightText[1] +'}}'
-    Text.SetTextSize(0.035) 
+    Text.SetTextSize(0.035)
     Text.DrawLatex(0.18, 0.76, text)
 
     text = '#bf{#it{' + ana_tex +'}}'
@@ -351,28 +351,28 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         dummyh.GetYaxis().SetLabelSize(0)
         dummyh.Draw("AH")
         legend.Draw()
-        
-        Text.SetNDC() 
+
+        Text.SetNDC()
         Text.SetTextAlign(31);
-        Text.SetTextSize(0.04) 
+        Text.SetTextSize(0.04)
 
         text = '#it{' + leftText +'}'
         Text.DrawLatex(0.90, 0.92, text)
-        
+
         text = '#bf{#it{' + rightText[0] +'}}'
         Text.SetTextAlign(12);
-        Text.SetNDC(ROOT.kTRUE) 
-        Text.SetTextSize(0.04) 
+        Text.SetNDC(ROOT.kTRUE)
+        Text.SetTextSize(0.04)
         Text.DrawLatex(0.18, 0.83, text)
 
         text = '#bf{#it{' + rightText[1] +'}}'
-        Text.SetTextSize(0.035) 
+        Text.SetTextSize(0.035)
         Text.DrawLatex(0.18, 0.78, text)
 
         text = '#bf{#it{' + ana_tex +'}}'
         Text.SetTextSize(0.04)
         Text.DrawLatex(0.18, 0.73, text)
-        
+
         text = '#bf{#it{' + extralab +'}}'
         Text.SetTextSize(0.025)
         Text.DrawLatex(0.18, 0.68, text)
@@ -385,11 +385,11 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         text = '#bf{#it{' + 'Process' +'}}'
         Text.SetTextSize(0.035)
         Text.DrawLatex(0.18, 0.45, text)
-        
+
         text = '#bf{#it{' + 'Yields' +'}}'
         Text.SetTextSize(0.035)
         Text.DrawLatex(0.5, 0.45, text)
-        
+
         text = '#bf{#it{' + 'Raw MC' +'}}'
         Text.SetTextSize(0.035)
         Text.DrawLatex(0.75, 0.45, text)
@@ -404,22 +404,22 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
             text = '#bf{#it{' + stry +'}}'
             Text.SetTextSize(0.035)
             Text.DrawLatex(0.5, 0.4-dy*0.05, text)
-            
+
             stry=str(yields[y][2])
             stry=stry.split('.')[0]
             text = '#bf{#it{' + stry +'}}'
             Text.SetTextSize(0.035)
             Text.DrawLatex(0.75, 0.4-dy*0.05, text)
 
-            
+
             dy+=1
         #canvas.Modified()
         #canvas.Update()
-       
-        
-    printCanvas(canvas, name, formats, directory) 
 
-    
+
+    printCanvas(canvas, name, formats, directory)
+
+
 
 
 #____________________________________________________
@@ -435,19 +435,17 @@ def printCanvas(canvas, name, formats, directory):
 
 
 #__________________________________________________________
-if __name__=="__main__":
+def run(paramFile):
     ROOT.gROOT.SetBatch(True)
     ROOT.gErrorIgnoreLevel = ROOT.kWarning
-    # param file
-    paramFile = sys.argv[1]
-
+    
     module_path = os.path.abspath(paramFile)
     module_dir = os.path.dirname(module_path)
     base_name = os.path.splitext(ntpath.basename(paramFile))[0]
 
     sys.path.insert(0, module_dir)
     param = importlib.import_module(base_name)
-        
+
     counter=0
     for var in param.variables:
         for label, sels in param.selections.items():

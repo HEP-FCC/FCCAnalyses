@@ -109,6 +109,12 @@ def getElement(rdfModule, element, isFinal=False):
                 return False
             else: print('The option <{}> is not available in presel analysis'.format(element))
 
+        elif element=='procDictAdd':
+            if isFinal:
+                print('The variable <{}> is optional in your analysis_final.py file return default value {}'.format(element))
+                return {}
+            else: print('The option <{}> is not available in presel analysis'.format(element))
+
         return None
 
 #__________________________________________________________
@@ -538,7 +544,7 @@ def testfile(self,f):
     return True
 
 #__________________________________________________________
-def runFinal(args, rdfModule):
+def runFinal(rdfModule):
 
     procFile = getElement(rdfModule,"procDict", True)
     procDict = None
@@ -555,6 +561,12 @@ def runFinal(args, rdfModule):
             sys.exit(3)
         with open(procFile, 'r') as f:
             procDict=json.load(f)
+
+
+    procDictAdd = getElement(rdfModule,"nCPUS", True)
+    for procAdd in procDictAdd:
+        if getElementDict(procDict, procAdd) == None:
+            procDict[procAdd] = procDictAdd[procAdd]
 
     ROOT.ROOT.EnableImplicitMT(getElement(rdfModule,"nCPUS", True))
 
@@ -640,7 +652,7 @@ def runFinal(args, rdfModule):
         df  = RDF("events", processList[pr])
         defineList = getElement(rdfModule,"defineList", True)
         if len(defineList)>0:
-            print ('---->     Running extra Define')
+            print ('----> Running extra Define')
             for define in defineList:
                 df=df.Define(define, defineList[define])
 
@@ -650,7 +662,7 @@ def runFinal(args, rdfModule):
         count_list = []
 
         # Define all histos, snapshots, etc...
-        print ('---->     Defining snapshots and histograms')
+        print ('----> Defining snapshots and histograms')
         for cut in cutList:
             fout = outputDir+pr+'_'+cut+'.root' #output file for tree
             fout_list.append(fout)
@@ -673,14 +685,14 @@ def runFinal(args, rdfModule):
                 tdf_list.append(snapshot_tdf)
 
         # Now perform the loop and evaluate everything at once.
-        print ('---->     Evaluating...')
+        print ('----> Evaluating...')
         all_events = df.Count().GetValue()
-        print ('---->     Done')
+        print ('----> Done')
 
         nevents_real += all_events
 
-        print ('---->     Cutflow')
-        print ('---->       {cutname:{width}} : {nevents}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
+        print ('----> Cutflow')
+        print ('       {cutname:{width}} : {nevents}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
         for i, cut in enumerate(cutList):
             print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut, width=length_cuts_names, nevents=count_list[i].GetValue()))
 
@@ -693,7 +705,7 @@ def runFinal(args, rdfModule):
                 try :
                     h.Scale(1.*procDict[pr]["crossSection"]*procDict[pr]["kfactor"]*procDict[pr]["matchingEfficiency"]/processEvents[pr])
                 except KeyError:
-                    #print ('no value found for something')
+                    print ('----> No value defined for process {} in dictionary'.format(pr))
                     if h.Integral(0,-1)>0:h.Scale(1./h.Integral(0,-1))
                 h.Write()
             tf.Close()
@@ -713,6 +725,11 @@ def runFinal(args, rdfModule):
 
 
 #__________________________________________________________
+def runPlots():
+
+    import config.doPlots
+
+#__________________________________________________________
 if __name__ == "__main__":
     #check the arguments
     if len(sys.argv)<2:
@@ -728,6 +745,7 @@ if __name__ == "__main__":
     publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
+    publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
 
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
     internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
@@ -748,6 +766,8 @@ if __name__ == "__main__":
     rdfSpec.loader.exec_module(rdfModule)
 
     #check if this is final analysis
-    if args.final: runFinal(args, rdfModule)
+    if args.final: runFinal(rdfModule)
+
+    elif args.plots: runPlots(analysisFile)
 
     else: runStages(args, rdfModule)
