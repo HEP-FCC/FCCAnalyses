@@ -10,14 +10,13 @@ baseDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNt
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_spring2021_IDEA.json"
 
-
 process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen',
               'p8_ee_Zbb_ecm91',
               'p8_ee_Zcc_ecm91',
               'p8_ee_Zuds_ecm91',
-              
+
               'p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
               'p8_ee_Zbb_ecm91_EvtGen_Bd2DDs',
               'p8_ee_Zbb_ecm91_EvtGen_Bd2DTauNu',
@@ -33,7 +32,7 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDs',
               'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst',
               'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstTauNu',
-              
+
               'p8_ee_Zbb_ecm91_EvtGen_Bu2D03Pi',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2D0Ds',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2D0TauNu',
@@ -106,8 +105,8 @@ variables = {
     "EVT_DVz0_min"           :{"name":"EVT_DVz0_min","title":"Displaced Vertex z0 Min [mm]","bin":100,"xmin":-10.,"xmax":10.},
     "EVT_DVz0_max"           :{"name":"EVT_DVz0_max","title":"Displaced Vertex z0 Max [mm]","bin":100,"xmin":-10.,"xmax":10.},
     "EVT_DVz0_ave"           :{"name":"EVT_DVz0_ave","title":"Displaced Vertex z0 Ave [mm]","bin":100,"xmin":-10.,"xmax":10.},
- 
-    
+
+
 }
 
 ###Number of CPUs to use
