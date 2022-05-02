@@ -2,7 +2,7 @@
 inputDir  = "outputs/FCCee/higgs/mH-recoil/mumu/stage2/"
 
 #Input directory where the files produced at the pre-selection level are
-ouputDir  = "outputs/FCCee/higgs/mH-recoil/mumu/final/"
+outputDir  = "outputs/FCCee/higgs/mH-recoil/mumu/final/"
 
 processList = {
     'p8_ee_ZZ_ecm240':{},#Run over the full statistics from stage2 input file <inputDir>/p8_ee_ZZ_ecm240.root. Keep the same output name as input
