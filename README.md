@@ -52,9 +52,9 @@ The way we suggest to use this analysis framework is to host every analysis in a
 
 1. `analysis.py`: This class of type `RDFanalysis` is used to define the list of analysers and filters to run on (`analysers` function) as well as the output variables (`output` function). It also contains the configuration parameters `processList`, `prodTag`, `outputDir`, `inputDir`, `nCPUS` and `runBatch`. User could define multiple stages of `analysis.py`. The first stage will most likely run on centrally produced EDM4hep events, thus the usage of `prodTag`. When running a second analysis stage, user should point to the directory where the samples are located using `inputDir`.
 
-2. `finalSel.py`: This configuration file contains the final selections and it runs over the locally produced n-tuples from the various stages of `analysis.py`. It contains a link to the `procDict.json` such that the samples can be properly normalised by getting centrally produced cross sections. (this might be removed later to include everything in the yaml, closer to the sample). It also contains the list of processes (matching the standard names), the number of CPU, the cut list, and the variables (that will be both written in a `TTree` and in the form of `TH1` properly normalised to an integrated luminosity of 1pb<sup>-1</sup>.
+2. `analysis_final.py`: This configuration file contains the final selections and it runs over the locally produced n-tuples from the various stages of `analysis.py`. It contains a link to the `procDict.json` such that the samples can be properly normalised by getting centrally produced cross sections. (this might be removed later to include everything in the yaml, closer to the sample). It also contains the list of processes (matching the standard names), the number of CPU, the cut list, and the variables (that will be both written in a `TTree` and in the form of `TH1` properly normalised to an integrated luminosity of 1pb<sup>-1</sup>.
 
-3. `plots.py`: This configuration file is used to select the final selections from running `finalSel.py` to plot. Information about how to merge processes, write some extra text, normalise to a given integrated luminosity etc... For the moment it is possible to only plot one signal at the time, but several backgrounds.
+3. `plots.py`: This configuration file is used to select the final selections from running `analysis_final.py` to plot. Information about how to merge processes, write some extra text, normalise to a given integrated luminosity etc... For the moment it is possible to only plot one signal at the time, but several backgrounds.
 
 >
 > Example analysis: `examples/FCCee/higgs/mH-recoil/mumu/`
@@ -91,12 +91,13 @@ It is also possible to run the pre-selection step on the batch. For that the `ru
 Final selection
 ============
 The final selection runs on the pre-selection files that were produced in the [Pre-selection](#pre-selection) step.
-In the configuration file `finalSel.py` various cuts are defined to be run on and the final variables to be stored in both a `TTree` and histograms. This is why the variables needs extra fields like `title`, number of bins and range for the histogram creation.
-In the example analysis `examples/FCCee/higgs/mH-recoil/mumu/` it cen be run like this:
+In the configuration file `analysis_final.py` various cuts are defined to be run on and the final variables to be stored in both a `TTree` and histograms. This is why the variables needs extra fields like `title`, number of bins and range for the histogram creation.
+In the example analysis `examples/FCCee/higgs/mH-recoil/mumu/` it can be run like this:
 
 ```shell
-python examples/FCCee/higgs/mH-recoil/mumu/finalSel.py
-```
+python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \
+       --final
+       ```
 
 This will create 2 files per selection `SAMPLENAME_SELECTIONNAME.root` for the `TTree` and `SAMPLENAME_SELECTIONNAME_histo.root` for the histograms. `SAMPLENAME` and `SELECTIONNAME` corresponds to the name of the sample and selection respectively in the configuration file.
 
