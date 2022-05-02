@@ -573,6 +573,9 @@ def runFinal(args, rdfModule):
     if outputDir!="":
         if outputDir[-1]!="/":outputDir+="/"
 
+    if not os.path.exists(outputDir) and outputDir!='':
+        os.system("mkdir -p {}".format(outputDir))
+
     for pr in getElement(rdfModule,"processList", True):
         processEvents[pr]=0
         eventsTTree[pr]=0
