@@ -6,7 +6,7 @@ ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow e^{+}e^{-} + X"
 delphesVersion = "3.4.2"
 energy         = 240.0
 collider       = "FCC-ee"
-inputDir       = "outputs/FCCee/higgs/mH-recoil/ee/stage2/"
+inputDir       = "outputs/FCCee/higgs/mH-recoil/ee/final/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
@@ -30,13 +30,13 @@ colors['ZZ'] = ROOT.kGreen+2
 colors['VV'] = ROOT.kGreen+3
 
 plots = {}
-plots['ZH'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
+plots['ZH'] = {'signal':{'ZH':['MySample_p8_ee_ZH_ecm240']},
                'backgrounds':{'WW':['p8_ee_WW_ecm240'],
                               'ZZ':['p8_ee_ZZ_ecm240']}
            }
 
 
-plots['ZH_2'] = {'signal':{'ZH':['p8_ee_ZH_ecm240']},
+plots['ZH_2'] = {'signal':{'ZH':['MySample_p8_ee_ZH_ecm240']},
                  'backgrounds':{'VV':['p8_ee_WW_ecm240','p8_ee_ZZ_ecm240']}
              }
 
