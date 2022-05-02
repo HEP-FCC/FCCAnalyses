@@ -683,7 +683,7 @@ def runFinal(args, rdfModule):
         # And save everything
         print ('---->     Saving outputs')
         for i, cut in enumerate(cutList):
-            fhisto = outDir+pr+'_'+cut+'_histo.root' #output file for histograms
+            fhisto = outputDir+pr+'_'+cut+'_histo.root' #output file for histograms
             tf    = ROOT.TFile.Open(fhisto,'RECREATE')
             for h in histos_list[i]:
                 try :
