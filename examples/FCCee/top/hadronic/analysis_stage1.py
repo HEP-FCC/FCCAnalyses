@@ -1,19 +1,19 @@
 #Mandatory: List of processes
 processList = {
-'p8_ee_ZZ_ecm365':{},
-'p8_ee_WW_ecm365':{},
-'p8_ee_ZH_ecm365':{},
-'p8_ee_tt_fullhad_ecm365':{},
-'p8_ee_ZZ_fullhad_ecm365':{},
-'p8_ee_WW_fullhad_ecm365':{},
-'p8_ee_tt_fullhad_ecm365':{}
-}
+            'p8_ee_ZZ_ecm365':{},
+            'p8_ee_WW_ecm365':{},
+            'p8_ee_ZH_ecm365':{},
+            'p8_ee_tt_fullhad_ecm365':{},
+            'p8_ee_ZZ_fullhad_ecm365':{},
+            'p8_ee_WW_fullhad_ecm365':{},
+            'p8_ee_tt_fullhad_ecm365':{}
+            }
 
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local running directory
-outputDir   = "outputs/FCCee/top/hadronic/stage1"
+outputDir   = "outputs/FCCee/top/hadronic/analysis_stage1/"
 
 #Optional
 nCPUS       = 8
