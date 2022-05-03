@@ -9,7 +9,7 @@ processList_training = {
     'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU':{'chunks':50}
 }
 prodTag_training     = "FCCee/spring2021_training/IDEA/"
-outputDirEos_training   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Training_stage1/"
+outputDirEos_training   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/training_stage1/"
 
 #analysis_stage1
 processList_analysis = {
@@ -51,7 +51,7 @@ processList_analysis = {
     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstTauNu':{'chunks':50}
     }
 prodTag_analysis     = "FCCee/spring2021/IDEA/"
-outputDirEos_analysis   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Analysis_stage1/"
+outputDirEos_analysis   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/analysis_stage1/"
 
 
 processList  = processList_analysis

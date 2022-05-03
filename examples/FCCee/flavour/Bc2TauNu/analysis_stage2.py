@@ -8,8 +8,8 @@ processList_training = {
     'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU':{},
     'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU':{}
 }
-inputDir_training   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Training_stage1/"
-outputDir_training  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Training_stage2/"
+inputDir_training   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/training_stage1/"
+outputDir_training  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/training_stage2/"
 
 #analysis_stage1
 processList_analysis = {
@@ -50,8 +50,8 @@ processList_analysis = {
     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstDsst':{},
     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstTauNu':{}
     }
-inputDir_analysis   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Analysis_stage1/"
-outputDir_analysis  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Analysis_stage2/"
+inputDir_analysis   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/analysis_stage1/"
+outputDir_analysis  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/analysis_stage2/"
 
 processList  = processList_analysis
 outputDir    = outputDir_analysis
