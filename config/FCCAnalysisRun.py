@@ -267,13 +267,30 @@ def SubmitToCondor(cmd,nbtrials):
             print ("failed sumbmitting after: "+str(nbtrials)+" trials, stop trying to submit")
             return 0
 
+#__________________________________________________________
+def runPreprocess(df):
+    mom_abbrevs = {
+    'ReconstructedParticle.momentum.x': 'RP_px'
+    'ReconstructedParticle.momentum.y': 'RP_py'
+    'ReconstructedParticle.momentum.z': 'RP_pz'
+}
 
+    for branch, abbrev in mom_abbrevs.items():
+        df.Alias(f'{branch}', f'{abbrev}')
+
+    d1 = df.Display("")
+    d1.Print()
+    sys.exit(3)
+    return df
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt):
     ROOT.ROOT.EnableImplicitMT(getElement(rdfModule, "nCPUS"))
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
 
+    preprocess=True
+    if preprocess:
+        df2 = runPreprocess(df)
     print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(rdfModule, "nCPUS")))
 
     df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
@@ -439,7 +456,7 @@ def runLocal(rdfModule, fileList, output, batch):
 
 
 #__________________________________________________________
-def runStages(args, rdfModule):
+def runStages(args, rdfModule, preprocess):
     #check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
@@ -729,7 +746,7 @@ def runPlots(analysisFile):
 
     import config.doPlots as dp
     dp.run(analysisFile)
-    
+
 #__________________________________________________________
 if __name__ == "__main__":
     #check the arguments
@@ -747,6 +764,7 @@ if __name__ == "__main__":
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
     publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
+    publicOptions.add_argument("--preprocess", action='store_true', help="Run preprocessing", default=False)
 
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
     internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
@@ -767,8 +785,30 @@ if __name__ == "__main__":
     rdfSpec.loader.exec_module(rdfModule)
 
     #check if this is final analysis
-    if args.final: runFinal(rdfModule)
+    if args.final:
+        if args.plots:
+            print ('----> Can not have --plots with --final, exit')
+            sys.exit(3)
+        if args.preprocess:
+            print ('----> Can not have --preprocess with --final, exit')
+            sys.exit(3)
+        runFinal(rdfModule)
 
-    elif args.plots: runPlots(analysisFile)
+    elif args.plots:
+        if args.final:
+            print ('----> Can not have --final with --plots, exit')
+            sys.exit(3)
+        if args.preprocess:
+            print ('----> Can not have --preprocess with --plots, exit')
+            sys.exit(3)
+        runPlots(analysisFile)
 
-    else: runStages(args, rdfModule)
+    else:
+        if args.preprocess:
+            if args.plots:
+                print ('----> Can not have --plots with --preprocess, exit')
+                sys.exit(3)
+            if args.final:
+                print ('----> Can not have --final with --preprocess, exit')
+                sys.exit(3)
+        runStages(args, rdfModule, args.preprocess)
