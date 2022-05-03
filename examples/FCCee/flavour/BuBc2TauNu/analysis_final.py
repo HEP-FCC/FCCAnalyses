@@ -1,6 +1,6 @@
 #Input directory where the files produced at the pre-selection level are
-inputDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/analysis_stage2/"
-outputDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/analysis_final/"
+inputDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/BuBc2TauNu/flatNtuples/spring2021/prod_04/analysis_stage2/"
+outputDir  = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/BuBc2TauNu/flatNtuples/spring2021/prod_04/analysis_final/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = "FCCee_procDict_spring2021_IDEA.json"
