@@ -1,40 +1,28 @@
-import sys
-import ROOT
-from array import array
+#Mandatory: List of processes
+processList = {
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2KstNuNu':{}
+}
 
-print ("Load cxx analyzers ... ",)
-ROOT.gSystem.Load("libedm4hep")
-ROOT.gSystem.Load("libpodio")
-ROOT.gSystem.Load("libawkward")
-ROOT.gSystem.Load("libawkward-cpu-kernels")
-ROOT.gSystem.Load("libFCCAnalyses")
+#Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
+prodTag     = "FCCee/spring2021/IDEA/"
 
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
-_edm  = ROOT.edm4hep.ReconstructedParticleData()
-_pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyLoader
+#Optional: output directory, default is local running directory
+outputDir   = "outputs/FCCee/flavour/Bd2KstNuNu/stage1"
 
-print ('edm4hep  ',_edm)
-print ('podio    ',_pod)
-print ('fccana   ',_fcc)
+#Optional
+nCPUS       = 8
+runBatch    = False
+#batchQueue = "longlunch"
+#compGroup = "group_u_FCC.local_gen"
 
-
-class analysis():
+#Mandatory: RDFanalysis class where the use defines the operations on the TTree
+class RDFanalysis():
 
     #__________________________________________________________
-    def __init__(self, inputlist, outname, ncpu):
-        self.outname = outname
-        if ".root" not in outname:
-            self.outname+=".root"
+    #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
+    def analysers(df):
+        df2 = (df
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
-        ROOT.EnableThreadSafety()
-        self.df = ROOT.RDataFrame("events", inputlist)
-        print (" init done, about to run")
-    #__________________________________________________________
-    def run(self):
-        #df2 = (self.df.Range(10)
-        df2 = (self.df
                #############################################
                ##          Aliases for # in python        ##
                #############################################
@@ -256,10 +244,13 @@ class analysis():
                .Define("TrueKPiBd_d0",            "myUtils::get_trackd0(TrueKPiBd_track)")
                .Define("TrueKPiBd_z0",            "myUtils::get_trackz0(TrueKPiBd_track)")
 
-           )
-        # select branches for output file
-        branchList = ROOT.vector('string')()
-        for branchName in [
+        )
+        return df2
+
+    #__________________________________________________________
+    #Mandatory: output function, please make sure you return the branchlist as a python list
+    def output():
+        branchList = [
 
                 "MC_PDG","MC_M1","MC_M2","MC_n","MC_D1","MC_D2",#"MC_D3",
                 "MC_x","MC_y","MC_z","MC_e","MC_m",
@@ -307,93 +298,5 @@ class analysis():
                 "KPiCandidates_h2p", "KPiCandidates_h2q", "KPiCandidates_h2m", "KPiCandidates_h2type",
                 "KPiCandidates_h2d0", "KPiCandidates_h2z0",
 
-                ]:
-            branchList.push_back(branchName)
-
-        #opts = ROOT.RDF.RSnapshotOptions()
-        #opts.fCompressionAlgorithm = ROOT.ROOT.kLZ4
-        #opts.fCompressionLevel = 3
-        #opts.fAutoFlush = -1024*1024*branchList.size()
-        #df2.Snapshot("events", self.outname, branchList, opts)
-        df2.Snapshot("events", self.outname, branchList)
-
-# example call for standalone file
-# python examples/FCCee/flavour/Bd2KstNuNu/analysis_stage1.py p8_ee_Zbb_Bd2KstNuNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bd2KstNuNu/events_035370064.root
-
-
-
-
-
-if __name__ == "__main__":
-
-    if len(sys.argv)<3:
-        print ("usage:")
-        print ("python ",sys.argv[0]," output.root input.root")
-        print ("python ",sys.argv[0]," output.root \"inputdir/*.root\"")
-        print ("python ",sys.argv[0]," output.root file1.root file2.root file3.root <nevents>")
-        sys.exit(3)
-
-
-    print ("Create dataframe object from ", )
-    fileListRoot = ROOT.vector('string')()
-    nevents=0
-
-    print("===============================", sys.argv[2])
-
-    if len(sys.argv)==3 and "*" in sys.argv[2]:
-        import glob
-        filelist = glob.glob(sys.argv[2])
-        for fileName in filelist:
-            fileListRoot.push_back(fileName)
-            print (fileName, " ",)
-            print (" ...")
-
-
-    elif len(sys.argv)>2:
-        for i in range(2,len(sys.argv)):
-            try:
-                nevents=int(sys.argv[i])
-                print ("nevents found (will be in the processed events branch in root tree):",nevents)
-            except ValueError:
-                fileListRoot.push_back(sys.argv[i])
-                print (sys.argv[i], " ",)
-                print (" ...")
-
-
-    outfile=sys.argv[1]
-    print("output file:  ",outfile)
-    if len(outfile.split("/"))>1:
-        import os
-        os.system("mkdir -p {}".format(outfile.replace(outfile.split("/")[-1],"")))
-
-    if nevents==0:
-        for f in fileListRoot:
-            tf=ROOT.TFile.Open(str(f),"READ")
-            tt=tf.Get("events")
-            nevents+=tt.GetEntries()
-    print ("nevents ", nevents)
-
-    import time
-    start_time = time.time()
-    ncpus = 8
-    analysis = analysis(fileListRoot, outfile, ncpus)
-    analysis.run()
-
-    elapsed_time = time.time() - start_time
-    print  ("==============================SUMMARY==============================")
-    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-    print  ("Events Processed/Second  :  ",int(nevents/elapsed_time))
-    print  ("Total Events Processed   :  ",int(nevents))
-    print  ("===================================================================")
-
-
-    outf = ROOT.TFile( outfile, "update" )
-    meta = ROOT.TTree( "metadata", "metadata informations" )
-    n = array( "i", [ 0 ] )
-    meta.Branch( "eventsProcessed", n, "eventsProcessed/I" )
-    n[0]=nevents
-    meta.Fill()
-    p = ROOT.TParameter(int)( "eventsProcessed", n[0])
-    p.Write()
-    outf.Write()
-    outf.Close()
+                ]
+        return branchList
