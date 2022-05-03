@@ -262,7 +262,7 @@ class RDFanalysis():
 
                .Define("TrueKPiEEBu_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 521)")
            )
-           return df2
+        return df2
 
     #__________________________________________________________
     #Mandatory: output function, please make sure you return the branchlist as a python list
@@ -320,4 +320,4 @@ class RDFanalysis():
                 "KPiEECandidates_pion3p", "KPiEECandidates_pion3q", "KPiEECandidates_pion3d0", "KPiEECandidates_pion3z0",
 
                 ]
-            return branchList
+        return branchList
