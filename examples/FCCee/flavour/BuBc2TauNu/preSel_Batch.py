@@ -5,7 +5,7 @@ import config.runDataFrameBatch as rdf
 import os
 
 basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCCee/spring2021/IDEA/"
-# May need a different path name 
+# May need a different path name
 outdir="/eos/experiment/fcc/ee/analyses/case-studies/flavour/BuBc2TauNu/flatNtuples/spring2022/prod_04/Batch_Analysis_stage1/"
 NUM_CPUS=8
 output_list=[]
@@ -40,7 +40,7 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
               'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDs',
               'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst',
               'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstTauNu',
-              
+
               'p8_ee_Zbb_ecm91_EvtGen_Bu2D03Pi',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2D0Ds',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2D0TauNu',
@@ -63,14 +63,14 @@ process_list=['p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi',
 #myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana)
 
 
-process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',    
+process_list=['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU',
               'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU'
               ]
 #myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
 #myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=100 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
 
-process_list=[#'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTau23PiPi0NuTAUOLA',    
-    'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTau23PiPi0NuTAUOLA',    
+process_list=[#'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTau23PiPi0NuTAUOLA',
+    'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTau23PiPi0NuTAUOLA',
               ]
 myana=rdf.runDataFrameBatch(basedir,process_list, outlist=output_list)
 myana.run(ncpu=NUM_CPUS,fraction=fraction, chunks=50 ,outDir=outdir, inputana=inputana, comp="group_u_ATLAST3.all")
