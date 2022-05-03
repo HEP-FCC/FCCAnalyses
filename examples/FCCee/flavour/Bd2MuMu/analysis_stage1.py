@@ -1,14 +1,15 @@
 Mandatory: List of processes
 processList = {
-    'p8_ee_Zbb_ecm91_EvtGen_Bd2MuMu':{}
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2MuMu':{},
+    'p8_ee_Zbb_ecm91':{'fraction':0.1}
 }
 
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local running directory
-outputDir   = "outputs/FCCee/flavour/Bd2MuMu/stage1"
-
+outputDir   = ""
+outputDirEos   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bd2MuMu/flatNtuples/spring2021/analysis_stage1/"
 #Optional
 nCPUS       = 8
 runBatch    = False
