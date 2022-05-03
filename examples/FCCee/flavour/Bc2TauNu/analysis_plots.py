@@ -6,7 +6,7 @@ ana_tex        = "Z #rightarrow q#bar{q}"
 delphesVersion = "3.4.2"
 energy         = 91.0
 collider       = "FCC-ee"
-inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/Analysis_stage2/"
+inputDir       = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/analysis_final/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['nostack']
@@ -39,7 +39,7 @@ variables = [ "EVT_CandMass",
               "EVT_DVz0_max",
               "EVT_DVz0_ave",
 
-              
+
               ]
 
 scaleSig=1.
@@ -107,7 +107,7 @@ plots['ExclusiveMerged'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTA
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDs',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstTauNu',
-              
+
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bu2D03Pi',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bu2D0Ds',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bu2D0TauNu',
@@ -115,7 +115,7 @@ plots['ExclusiveMerged'] = {'signal':{'Z_Bc':['p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTA
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Ds',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Dsst',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0TauNu',
-                                                     
+
                                                      'p8_ee_Zbb_ecm91_EvtGen_Lb2Lc3Pi',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Lb2LcDs',
                                                      'p8_ee_Zbb_ecm91_EvtGen_Lb2LcTauNu',
@@ -138,7 +138,3 @@ legend['Z_bb_B']  = 'Z#rightarrow b#bar{b} B_{u}+B_{d}+B_{s}+L_{b}'
 legend['Z_cc']    = 'Z#rightarrow c#bar{c}'
 legend['Z_uds']   = 'Z#rightarrow q#bar{q}'
 legend['Z_Bu']    = 'B_{u}#rightarrow #tau#nu (#tau#rightarrow 3#pi)'
-
-
-
-

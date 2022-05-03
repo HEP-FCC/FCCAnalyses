@@ -2,17 +2,17 @@ import ROOT
 
 # global parameters
 intLumi        = 5.0e+06 #in pb-1
-ana_tex        = 'e^{+}e^{-} #rightarrow ZH #rightarrow #mu^{+}#mu^{-} + X'
-delphesVersion = '3.4.2'
+ana_tex        = "e^{+}e^{-} #rightarrow ZH #rightarrow e^{+}e^{-} + X"
+delphesVersion = "3.4.2"
 energy         = 240.0
-collider       = 'FCC-ee'
-inputDir       = 'outputs/FCCee/higgs/mH-recoil/mumu/final/'
+collider       = "FCC-ee"
+inputDir       = "outputs/FCCee/higgs/mH-recoil/ee/final/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
-outdir         = 'outputs/FCCee/higgs/mH-recoil/mumu/plots/'
+outdir         = 'outputs/FCCee/higgs/mH-recoil/ee/plots/'
 
-variables = ['mz','mz_zoom','leptonic_recoil_m','leptonic_recoil_m_zoom','leptonic_recoil_m_zoom2']
+variables = ['mz','mz_zoom','leptonic_recoil_m','leptonic_recoil_m_zoom','leptonic_recoil_m_zoom2','leptonic_recoil_m_zoom3','leptonic_recoil_m_zoom4']
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}

@@ -9,11 +9,11 @@ ana_tex        = "e^{+}e^{-} #rightarrow t#bar{t} full hadronic"
 delphesVersion = "3.4.2"
 energy         = 365.0
 collider       = "FCC-ee"
-inputDir       = "outputs/FCCee/top/template-analysis/"
+inputDir       = "outputs/FCCee/top/hadronic/analysis_final/"
 formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
-outdir         = 'outputs/FCCee/top/template-analysis/plots/'
+outdir         = 'outputs/FCCee/top/hadronic/analysis_plots/'
 
 variables = ["thrust_val", "sphericity_val", "thrust_angle", "sphericity_angle", "hemis0_mass", "hemis1_mass", "total_mass"]
 
@@ -42,7 +42,3 @@ legend['tt'] = 'tt'
 legend['WW'] = 'WW'
 legend['ZZ'] = 'ZZ'
 legend['ZH'] = 'ZH'
-
-
-
-
