@@ -270,15 +270,19 @@ def SubmitToCondor(cmd,nbtrials):
 #__________________________________________________________
 def runPreprocess(df):
     mom_abbrevs = {
-    'ReconstructedParticle.momentum.x': 'RP_px'
-    'ReconstructedParticle.momentum.y': 'RP_py'
-    'ReconstructedParticle.momentum.z': 'RP_pz'
+    'ReconstructedParticles.momentum.x': 'RP_px',
+    'ReconstructedParticles.momentum.y': 'RP_py',
+    'ReconstructedParticles.momentum.z': 'RP_pz'
 }
 
     for branch, abbrev in mom_abbrevs.items():
-        df.Alias(f'{branch}', f'{abbrev}')
+        df.Alias(f'{abbrev}', f'{branch}')
 
-    d1 = df.Display("")
+    cols = ROOT.vector('string')()
+    cols.push_back("RP_px")
+    cols.push_back("RP_py")
+    cols.push_back("RP_pz")
+    d1 = df.Display(cols)
     d1.Print()
     sys.exit(3)
     return df
@@ -288,7 +292,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt):
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
 
-    preprocess=True
+    preprocess=False
     if preprocess:
         df2 = runPreprocess(df)
     print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(rdfModule, "nCPUS")))
