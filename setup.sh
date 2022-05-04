@@ -12,7 +12,7 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   export ROOT_INCLUDE_PATH=$PWD/install/include:$ROOT_INCLUDE_PATH
   export LOCAL_DIR=$PWD
   export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
-  export ONNXRUNTIME_ROOT_DIR=/cvmfs/sft.cern.ch/lcg/releases/onnxruntime/1.8.0-83623/x86_64-centos7-gcc11-opt
+  export ONNXRUNTIME_ROOT_DIR=/cvmfs/sft.cern.ch/lcg/releases/LCG_102/onnxruntime/1.11.1/x86_64-centos7-gcc11-opt/
   export LD_LIBRARY_PATH=$ONNXRUNTIME_ROOT_DIR/lib:$LD_LIBRARY_PATH
 else
   echo "ERROR: This script is meant to be sourced!"

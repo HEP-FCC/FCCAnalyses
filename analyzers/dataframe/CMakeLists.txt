@@ -67,7 +67,7 @@ target_include_directories(FCCAnalyses  PUBLIC
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
-			                     ${EXTRA_INCLUDE_DIRS}
+                           ${EXTRA_INCLUDE_DIRS}
                            )
 
 target_link_libraries(FCCAnalyses
@@ -86,7 +86,7 @@ target_link_libraries(FCCAnalyses
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
                       ${LIBDL}
-		                  ${EXTRA_LIBRARIES}
+                      ${EXTRA_LIBRARIES}
                       gfortran # todo: why necessary?
                       )
 
