@@ -310,7 +310,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt):
 #__________________________________________________________
 def sendToBatch(rdfModule, chunkList, process, analysisFile):
     localDir = os.environ["LOCAL_DIR"]
-    logDir   = localDir+"/BatchOutputs/{}".format(output)
+    logDir   = localDir+"/BatchOutputs/{}".format(process)
     if not os.path.exists(logDir):
         os.system("mkdir -p {}".format(logDir))
 
@@ -523,7 +523,7 @@ def runStages(args, rdfModule, preprocess):
         if chunks>1:
             outputdir=outputDir+"/"+output
 
-            if not os.path.exists(outputdir) and outputdir!='':
+            if not os.path.exists(outputdir) and outputDir!='':
                 os.system("mkdir -p {}".format(outputdir))
 
         for ch in range(len(chunkList)):
