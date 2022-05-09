@@ -8,12 +8,16 @@ import subprocess
 import importlib.util
 from array import array
 from config.common_defaults import deffccdicts
+import datetime
 
 print ("----> Load cxx analyzers from libFCCAnalyses... ",)
 ROOT.gSystem.Load("libFCCAnalyses")
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
 #Is this still needed?? 01/04/2022 still to be the case
 _fcc  = ROOT.dummyLoader
+
+
+date=datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
 
 #__________________________________________________________
 def getElement(rdfModule, element, isFinal=False):
@@ -310,7 +314,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt):
 #__________________________________________________________
 def sendToBatch(rdfModule, chunkList, process, analysisFile):
     localDir = os.environ["LOCAL_DIR"]
-    logDir   = localDir+"/BatchOutputs/{}".format(process)
+    logDir   = localDir+"/BatchOutputs/{}/{}".format(date,process)
     if not os.path.exists(logDir):
         os.system("mkdir -p {}".format(logDir))
 
@@ -752,6 +756,20 @@ def runPlots(analysisFile):
     dp.run(analysisFile)
 
 #__________________________________________________________
+def runValidate(jobdir):
+    listdir=os.listdir(jobdir)
+    if jobdir[-1]!="/":jobdir+="/"
+    for dir in listdir:
+        if not os.path.isdir(jobdir+dir): continue
+        listfile=glob.glob(jobdir+dir+"/*.sh")
+        for file on listfile:
+            with open(file) as f:
+                for line in f:
+                    pass
+                lastLine = line
+            print(line)
+
+#__________________________________________________________
 if __name__ == "__main__":
     #check the arguments
     if len(sys.argv)<2:
@@ -769,6 +787,9 @@ if __name__ == "__main__":
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
     publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
     publicOptions.add_argument("--preprocess", action='store_true', help="Run preprocessing", default=False)
+    publicOptions.add_argument("--validate", action='store_true', help="Validate a given production", default=False)
+    publicOptions.add_argument("--rerunfailed", action='store_true', help="Rerun failed jobs", default=False)
+    publicOptions.add_argument("--jobdir", help="Specify the batch job directory", type=str, default="output.root")
 
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
     internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
@@ -806,6 +827,9 @@ if __name__ == "__main__":
             print ('----> Can not have --preprocess with --plots, exit')
             sys.exit(3)
         runPlots(analysisFile)
+
+    elif args.validate:
+        runValidate(args.jobdir)
 
     else:
         if args.preprocess:
