@@ -681,9 +681,9 @@ ROOT::VecOps::RVec<float> AngleBetweenTwoMCParticles( ROOT::VecOps::RVec<edm4hep
   return result;
 }
 
-int MCParticle::get_lepton_origin(const edm4hep::MCParticleData &p,
-                                  const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
-                                  const ROOT::VecOps::RVec<int> &ind){
+int get_lepton_origin(const edm4hep::MCParticleData &p,
+                      const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
+                      const ROOT::VecOps::RVec<int> &ind){
 
  // std::cout  << std::endl << " enter in MCParticle::get_lepton_origin  PDG = " << p.PDG << std::endl;
 
@@ -744,18 +744,18 @@ int MCParticle::get_lepton_origin(const edm4hep::MCParticleData &p,
 }
 
 
-int MCParticle::get_lepton_origin(int index,
-                                  const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
-                                  const ROOT::VecOps::RVec<int> &ind){
+int get_lepton_origin(int index,
+                      const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
+                      const ROOT::VecOps::RVec<int> &ind){
   if ( index < 0 || index >= in.size() ) return -1;
   edm4hep::MCParticleData p = in[index];
   return get_lepton_origin( p, in, ind );
 }
 
 
-ROOT::VecOps::RVec<int> MCParticle::get_leptons_origin(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &particles,
-                                                       const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
-                                                       const ROOT::VecOps::RVec<int> &ind)  {
+ROOT::VecOps::RVec<int> get_leptons_origin(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &particles,
+                                           const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
+                                           const ROOT::VecOps::RVec<int> &ind)  {
 
   ROOT::VecOps::RVec<int> result;
   result.reserve(particles.size());
@@ -766,9 +766,6 @@ ROOT::VecOps::RVec<int> MCParticle::get_leptons_origin(const ROOT::VecOps::RVec<
   }
   return result;
 }
-
-
-
 
 }//#end NS MCParticle
 
