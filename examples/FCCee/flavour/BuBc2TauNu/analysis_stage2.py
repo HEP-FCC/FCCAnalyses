@@ -73,8 +73,8 @@ ROOT.gInterpreter.ProcessLine('''
 TMVA::Experimental::RBDT<> bdt("BuBc_BDT2", "/afs/cern.ch/work/x/xzuo/public/FCC_files/BuBc2TauNu/data/ROOT/xgb_bdt_stage2_Bu_vs_Bc_vs_qq_multi.root");
 computeModel = TMVA::Experimental::Compute<21, float>(bdt);
 
-TMVA::Experimental::RBDT<> bdt("BuBc_BDT", "/afs/cern.ch/work/x/xzuo/public/FCC_files/BuBc2TauNu/data/ROOT/xgb_bdt_BuBc_vtx.root");
-computeModel1 = TMVA::Experimental::Compute<18, float>(bdt);
+TMVA::Experimental::RBDT<> bdt1("BuBc_BDT", "/afs/cern.ch/work/x/xzuo/public/FCC_files/BuBc2TauNu/data/ROOT/xgb_bdt_BuBc_vtx.root");
+computeModel1 = TMVA::Experimental::Compute<18, float>(bdt1);
 ''')
 
 
