@@ -267,7 +267,7 @@ ROOT::VecOps::RVec<float> Algorithms::getThrustPointing::operator()(const ROOT::
   result[1]=thrust[1]*direction*_dir;
   result[3]=thrust[3]*direction*_dir;
   result[5]=thrust[5]*direction*_dir;
-  return thrust;
+  return result;
 }
 
 
