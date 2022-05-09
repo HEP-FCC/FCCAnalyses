@@ -19,7 +19,7 @@ TEST_CASE("AxisCosThetaInVec", "[algorithms]") {
   ROOT::VecOps::RVec<float> x {1., 0., -1};
   ROOT::VecOps::RVec<float> y {0., 1., 0.};
   ROOT::VecOps::RVec<float> z {0., 0., 0.};
-  ROOT::VecOps::RVec<float> res = Algorithms::getAxisCosTheta(ax)(x, y, z);
+  ROOT::VecOps::RVec<float> res = Algorithms::getAxisCosTheta(ax, x, y, z);
   REQUIRE(res[0] == Catch::Approx( 1. ));
   REQUIRE(res[1] == Catch::Approx( 0. ));
   REQUIRE(res[2] == Catch::Approx( -1. ));
