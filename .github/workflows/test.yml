@@ -40,4 +40,15 @@ jobs:
         source ${{ matrix.SETUP }};\
         cd build;\
         ninja -k0 && ctest --output-on-failure;'
+    - name: Test using local Setup.sh
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package
+        source ${{ matrix.SETUP }}
+        export PYTHONPATH=$PWD:$PYTHONPATH
+        export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH
+        export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
+        export LOCAL_DIR=$PWD
+        export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
+        python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root
+        '
 

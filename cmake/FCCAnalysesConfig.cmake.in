@@ -1,0 +1,29 @@
+# - Config file for the FCCANALYSES package
+
+# - Define exported version
+set(FCCANALYSES_VERSION "@PROJECT_VERSION@")
+
+# - Init CMakePackageConfigHelpers
+@PACKAGE_INIT@
+
+# - Create relocatable paths to headers.
+# NOTE: Do not strictly need paths as all usage requirements are encoded in
+# the imported targets created later.
+set_and_check(FCCANALYSES_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+
+include(CMakeFindDependencyMacro)
+find_dependency(EDM4HEP REQUIRED)
+find_dependency(podio)
+find_dependency(Acts)
+find_dependency(ROOT COMPONENTS ROOTDataFrame)
+
+
+
+# - Include the targets file to create the imported targets that a client can
+# link to (libraries) or execute (programs)
+include("${CMAKE_CURRENT_LIST_DIR}/FCCAnalysesTargets.cmake")
+
+# print the default "Found:" message and check library location
+include(FindPackageHandleStandardArgs)
+get_property(TEST_FCCANALYSES_LIBRARY TARGET FCCAnalyses::FCCAnalyses PROPERTY LOCATION)
+find_package_handle_standard_args(FCCAnalyses DEFAULT_MSG CMAKE_CURRENT_LIST_FILE TEST_FCCANALYSES_LIBRARY)
