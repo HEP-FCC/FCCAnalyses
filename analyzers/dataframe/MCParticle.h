@@ -18,7 +18,7 @@
 This represents a set functions and utilities to access and perform operations on the MCParticle collection.
 */
 namespace FCCAnalyses{
-  
+
 namespace MCParticle{
 
   /// Filter events based on a MCParticles PDGID
@@ -189,18 +189,31 @@ namespace MCParticle{
   /// return the list of particles from the decay of a mother particle. i is the mother index in the Particle block.
   std::vector<int> get_list_of_particles_from_decay( int i,
 						 ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
-						 ROOT::VecOps::RVec<int> ind) ;
+						 ROOT::VecOps::RVec<int> ind);
 
   /// returns one MCParticle selected by its index in the particle block
-  edm4hep::MCParticleData sel_byIndex( int idx, ROOT::VecOps::RVec<edm4hep::MCParticleData> in) ;
+  edm4hep::MCParticleData sel_byIndex( int idx, ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
   /// obsolete: should use get_list_of_stable_particles_from_decay instead
   std::vector<int> list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
   /// obsolete: should use get_list_of_particles_from_decay instead
   std::vector<int> list_of_particles_from_decay( int i,
                                                  ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
-                                                 ROOT::VecOps::RVec<int> ind) ;
+                                                 ROOT::VecOps::RVec<int> ind);
 
+
+  /// return the pdg ID of the parent of a lepton (pre-FSR)
+  int get_lepton_origin(int idx,
+                        const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
+                        const ROOT::VecOps::RVec<int> &ind);
+
+  int get_lepton_origin(const edm4hep::MCParticleData &p,
+                        const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
+                        const ROOT::VecOps::RVec<int> &ind);
+
+  ROOT::VecOps::RVec<int> get_leptons_origin(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &particles,
+                                             const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
+                                             const ROOT::VecOps::RVec<int> &ind);
 
 
 
