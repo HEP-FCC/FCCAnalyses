@@ -21,7 +21,7 @@ outputDir = "/eos/experiment/fcc/ee/analyses/case-studies/bsm/LLPs/HNLs/"
 
 outputDirEos = "/eos/experiment/fcc/ee/analyses/case-studies/bsm/LLPs/HNLs/"
 #outputDirEos = "/eos/user/j/jalimena/FCCeeLLP/"
-eosType = "eosuser"
+#eosType = "eosuser"
 
 #Optional: ncpus, default is 4
 nCPUS       = 4
