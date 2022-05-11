@@ -762,7 +762,7 @@ def runValidate(jobdir):
     for dir in listdir:
         if not os.path.isdir(jobdir+dir): continue
         listfile=glob.glob(jobdir+dir+"/*.sh")
-        for file on listfile:
+        for file in listfile:
             with open(file) as f:
                 for line in f:
                     pass
