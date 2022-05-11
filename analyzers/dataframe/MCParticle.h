@@ -75,22 +75,26 @@ namespace MCParticle{
   };
 
 
- /// return a list of indices that correspond to a given MC decay. The list contains the index of the mother, followed by the indices of the daughters, in the order specified. In case there are several such decays in the event, keep only the first one.
-  struct get_indices_ExclusiveDecay{
-     get_indices_ExclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugate ) ;
-     int m_pdg_mother;
-     std::vector<int> m_pdg_daughters;
-     bool m_stableDaughters;
-     bool m_chargeConjugate;
-     ROOT::VecOps::RVec<int>   operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in , ROOT::VecOps::RVec<int> ind);
+ /// return a list of indices that correspond to a given MC decay. The list contains the index of the mother, followed by the indices of the daughters, in the order specified. If m_inclusiveDecay is true, the list of daughters is the minimum required for the mother's decay (otherwise, the list is the exact daughters required for the mother's decay). In case there are several such decays in the event, keep only the first one.
+  struct get_indices{
+    get_indices( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugateMother, bool chargeConjugateDaughters, bool inclusiveDecay ) ;
+    int m_pdg_mother;
+    std::vector<int> m_pdg_daughters;
+    bool m_stableDaughters;
+    bool m_chargeConjugateMother;
+    bool m_chargeConjugateDaughters;
+    bool m_inclusiveDecay;
+    ROOT::VecOps::RVec<int>   operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in , ROOT::VecOps::RVec<int> ind);
   };
 
   /// return a list of indices that correspond to a given MC decay
-  ROOT::VecOps::RVec<int>  get_indices_ExclusiveDecay_MotherByIndex( int imother,
-								     std::vector<int> m_pdg_daughters,
-								     bool m_stableDaughters,
-                                        			     ROOT::VecOps::RVec<edm4hep::MCParticleData> in ,
-								     ROOT::VecOps::RVec<int> ind);
+  ROOT::VecOps::RVec<int>  get_indices_MotherByIndex( int imother,
+						      std::vector<int> m_pdg_daughters,
+						      bool m_stableDaughters,
+						      bool m_chargeConjugateDaughters,
+						      bool m_inclusiveDecay,
+						      ROOT::VecOps::RVec<edm4hep::MCParticleData> in ,
+						      ROOT::VecOps::RVec<int> ind);
 
 
   /// return the parent index of a given list of MC particles
