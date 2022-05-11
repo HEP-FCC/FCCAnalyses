@@ -7,7 +7,7 @@ project(FCCAnalyses CXX)
 #needed for ACTS
 cmake_policy(SET CMP0057 NEW)
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH CACHE BOOL TRUE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE BOOL "RPATH USE LINK PATH")
 
 #--- enable unit testing capabilities ------------------------------------------
 include(CTest)
@@ -56,6 +56,12 @@ set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
 set(INSTALL_INCLUDE_DIR include CACHE PATH
   "Installation directory for header files")
+
+
+
+
+#--- add CMake infrastructure --------------------------------------------------
+include(cmake/FCCAnalysesCreateConfig.cmake)
 
 
 file(GLOB _run_python_files config/*.py)

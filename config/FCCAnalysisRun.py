@@ -66,6 +66,10 @@ def getElement(rdfModule, element):
             print('The variable <userBatchConfig> is optional in your analysis.py file, return default empty string')
             return ""
 
+        elif element=='testFile':
+            print('The variable <testFile> is optional in your analysys.py file, return default file')
+            return "root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root"
+
         return None
 
 #__________________________________________________________
@@ -338,7 +342,6 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
 #__________________________________________________________
 def runLocal(rdfModule, fileList, output, batch):
     #Create list of files to be Processed
-    print ("running local from batch = ",batch)
     print ("----> Create dataframe object from files: ", )
     fileListRoot = ROOT.vector('string')()
     nevents_meta = 0
@@ -405,6 +408,7 @@ if __name__ == "__main__":
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument("--files-list", help="Specify input file to bypass the processList", default=[], nargs='+')
     publicOptions.add_argument("--output", help="Specify ouput file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
+    publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
 
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
     internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
@@ -432,9 +436,18 @@ if __name__ == "__main__":
     if not os.path.exists(outputDirEos) and outputDirEos!='':
         os.system("mkdir -p {}".format(outputDirEos))
 
-    #check first if files are specified, and if so run the analysis on it/them (this will exit after)
+    #check if test mode is specified, and if so run the analysis on it (this will exit after)
+    if args.test:
+        print("----> Running test file mode")
+        path, filename = os.path.split(args.output)
+        if path!='': os.system("mkdir -p {}".format(path))
+        testFile = getElement(rdfModule,"testFile")
+        runLocal(rdfModule, [testFile], args.output, True)
+        sys.exit(0)
+
+    #check if files are specified, and if so run the analysis on it/them (this will exit after)
     if len(args.files_list)>0:
-        print("----> Running  with user defined list of files (either locally or from batch)")
+        print("----> Running with user defined list of files (either locally or from batch)")
         path, filename = os.path.split(args.output)
         if path!='': os.system("mkdir -p {}".format(path))
         runLocal(rdfModule, args.files_list, args.output, True)
