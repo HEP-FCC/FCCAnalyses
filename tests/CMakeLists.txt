@@ -4,7 +4,7 @@ add_subdirectory(unittest)
 function(add_integration_test _testname)
 
   add_test(NAME ${_testname} 
-          COMMAND python config/FCCAnalysisRun.py ${_testname} --test
+          COMMAND python config/FCCAnalysisRun.py ${_testname} --test --nevents 10
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
           )
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
@@ -14,5 +14,7 @@ function(add_integration_test _testname)
     )
 endfunction()
 
+
 add_integration_test("examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py")
 add_integration_test("examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py")
+

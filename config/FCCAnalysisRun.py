@@ -292,13 +292,21 @@ def runPreprocess(df):
     return df
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt):
-    ROOT.ROOT.EnableImplicitMT(getElement(rdfModule, "nCPUS"))
+
+    # cannot use MT with Range()
+    if args.nevents < 0:
+      ROOT.ROOT.EnableImplicitMT(getElement(rdfModule, "nCPUS"))
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
+
+    # limit number of events processed
+    if args.nevents > 0:
+      df = df.Range(0, args.nevents)
 
     preprocess=False
     if preprocess:
         df2 = runPreprocess(df)
+
     print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(rdfModule, "nCPUS")))
 
     df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
@@ -427,6 +435,10 @@ def runLocal(rdfModule, fileList, output, batch):
                 break
         tt=tf.Get("events")
         nevents_local+=tt.GetEntries()
+
+    # adjust number of events in case --nevents was specified
+    if args.nevents > 0:
+      nevents_local = args.nevents
     print ("----> nevents original={}  local={}".format(nevents_meta,nevents_local))
     outFile = getElement(rdfModule,"outputDir")
     if outFile!="" and outFile[-1]!="/": outFile+="/"
@@ -783,6 +795,7 @@ if __name__ == "__main__":
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument("--files-list", help="Specify input file to bypass the processList", default=[], nargs='+')
     publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
+    publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
     publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
