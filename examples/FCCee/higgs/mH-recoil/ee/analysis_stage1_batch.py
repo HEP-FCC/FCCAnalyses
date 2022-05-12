@@ -1,4 +1,4 @@
-#Mandatory: List of processes
+electron#Mandatory: List of processes
 processList = {
     'p8_ee_ZZ_ecm240':{'chunks':20},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_ZZ_ecm240/chunk<N>.root
     'p8_ee_WW_ecm240':{'chunks':20},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
@@ -9,7 +9,7 @@ processList = {
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local dir
-outputDir   = "ZH_mumu_recoil_batch/stage1"
+outputDir   = "ZH_ee_recoil_batch/stage1"
 
 #Optional: ncpus, default is 4
 nCPUS       = 4
@@ -23,7 +23,7 @@ batchQueue = "longlunch"
 #Optional computing account when running on HTCondor, default is group_u_FCC.local_gen
 compGroup = "group_u_FCC.local_gen"
 
-Optional output directory on eos, if specified files will be copied there once the batch job is done, default is empty
+#Optional output directory on eos, if specified files will be copied there once the batch job is done, default is empty
 outputDirEos = "/eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/"
 
 #Optional type for eos, needed when <outputDirEos> is specified. The default is FCC eos which is eospublic
@@ -37,22 +37,22 @@ class RDFanalysis():
     def analysers(df):
         df2 = (
             df
-            # define an alias for muon index collection
-            .Alias("Muon0", "Muon#0.index")
-            # define the muon collection
-            .Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
-            #select muons on pT
-            .Define("selected_muons", "ReconstructedParticle::sel_pt(10.)(muons)")
-            # create branch with muon transverse momentum
-            .Define("selected_muons_pt", "ReconstructedParticle::get_pt(selected_muons)")
-            # create branch with muon rapidity
-            .Define("selected_muons_y",  "ReconstructedParticle::get_y(selected_muons)")
-            # create branch with muon total momentum
-            .Define("selected_muons_p",     "ReconstructedParticle::get_p(selected_muons)")
-            # create branch with muon energy
-            .Define("selected_muons_e",     "ReconstructedParticle::get_e(selected_muons)")
-            # find zed candidates from  di-muon resonances
-            .Define("zed_leptonic",         "ReconstructedParticle::resonanceBuilder(91)(selected_muons)")
+            # define an alias for electronon index collection
+            .Alias("Electron0", "Electron#0.index")
+            # define the electron collection
+            .Define("electrons",  "ReconstructedParticle::get(Electron0, ReconstructedParticles)")
+            #select electrons on pT
+            .Define("selected_electrons", "ReconstructedParticle::sel_pt(10.)(electrons)")
+            # create branch with electron transverse momentum
+            .Define("selected_electrons_pt", "ReconstructedParticle::get_pt(selected_electrons)")
+            # create branch with electron rapidity
+            .Define("selected_electrons_y",  "ReconstructedParticle::get_y(selected_electrons)")
+            # create branch with electron total momentum
+            .Define("selected_electrons_p",     "ReconstructedParticle::get_p(selected_electrons)")
+            # create branch with electron energy
+            .Define("selected_electrons_e",     "ReconstructedParticle::get_e(selected_electrons)")
+            # find zed candidates from  di-electron resonances
+            .Define("zed_leptonic",         "ReconstructedParticle::resonanceBuilder(91)(selected_electrons)")
             # create branch with zed mass
             .Define("zed_leptonic_m",       "ReconstructedParticle::get_mass(zed_leptonic)")
             # create branch with zed transverse momenta
@@ -72,9 +72,9 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-            "selected_muons_pt",
-            "selected_muons_y",
-            "selected_muons_p",
+            "selected_electrons_pt",
+            "selected_electrons_y",
+            "selected_electrons_p",
             "selected_muons_e",
             "zed_leptonic_pt",
             "zed_leptonic_m",

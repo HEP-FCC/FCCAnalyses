@@ -1,3 +1,5 @@
+runTraining=False
+
 #TRAINING
 processList_training = {
     'p8_ee_Zbb_ecm91':{'chunks':50},
@@ -7,15 +9,17 @@ processList_training = {
     'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU':{'chunks':50}
 }
 prodTag_training     = "FCCee/spring2021_training/IDEA/"
-outputDirEos_training   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/BuBc2TauNu/flatNtuples/spring2022/prod_04/Batch_Training_stage1/"
+outputDirEos_training   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/BuBc2TauNu/flatNtuples/spring2021/prod_04/training_stage1/"
 
 #analysis_stage1
 processList_analysis = {
     'p8_ee_Zbb_ecm91':{'chunks':50},
     'p8_ee_Zcc_ecm91':{'chunks':50},
     'p8_ee_Zuds_ecm91':{'chunks':50},
+
     'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU':{'chunks':50},
     'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU':{'chunks':50},
+
     'p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi':{'chunks':50},
     'p8_ee_Zbb_ecm91_EvtGen_Bd2DDs':{'chunks':50},
     'p8_ee_Zbb_ecm91_EvtGen_Bd2DTauNu':{'chunks':50},
@@ -49,7 +53,7 @@ processList_analysis = {
     'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstTauNu':{'chunks':50}
     }
 prodTag_analysis     = "FCCee/spring2021/IDEA/"
-outputDirEos_analysis   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/BuBc2TauNu/flatNtuples/spring2022/prod_04/Batch_Analysis_stage1/"
+outputDirEos_analysis   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/BuBc2TauNu/flatNtuples/spring2021/prod_04/analysis_stage1/"
 
 
 processList  = processList_analysis
@@ -57,7 +61,6 @@ outputDirEos = outputDirEos_analysis
 prodTag      = prodTag_analysis
 MVAFilter    = "EVT_MVA1>0.6"
 
-runTraining=False
 if runTraining:
     processList  = processList_training
     outputDirEos = outputDirEos_training
@@ -70,9 +73,7 @@ runBatch    = True
 batchQueue  = "workday"
 compGroup   = "group_u_FCC.local_gen"
 
-
 import ROOT
-
 ROOT.gInterpreter.ProcessLine('''
 TMVA::Experimental::RBDT<> bdt("BuBc_BDT", "/afs/cern.ch/work/x/xzuo/public/FCC_files/BuBc2TauNu/data/ROOT/xgb_bdt_BuBc_vtx.root");
 computeModel1 = TMVA::Experimental::Compute<18, float>(bdt);
@@ -80,7 +81,6 @@ computeModel1 = TMVA::Experimental::Compute<18, float>(bdt);
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
-
 
     #__________________________________________________________
     #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
