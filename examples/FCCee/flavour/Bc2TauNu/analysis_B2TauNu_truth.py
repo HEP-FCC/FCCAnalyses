@@ -97,8 +97,10 @@ class analysis():
                #     - the cases Bs -> Bsbar -> mu mu K K are included here
                #   first boolean: if true, look at the stable daughters, otherwise at the intermediate daughters
                #   second boolean: if true, include the charge conjugate decays
-               .Define("B2NuNuPiPiPi_indices",   "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( %s, { 16, -16, 211, -211, 211 }, true, false)( Particle, Particle1)"%(PDGID))
-               .Define("Bbar2NuNuPiPiPi_indices","FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( -%s, { -16, 16, -211, 211, -211 }, true, false)( Particle, Particle1)"%(PDGID))
+               #   third boolean: if true, include charge conjugates of daughters
+               #   fourth boolena: if true, do the inclusive decay
+               .Define("B2NuNuPiPiPi_indices",   "FCCAnalyses::MCParticle::get_indices( %s, { 16, -16, 211, -211, 211 }, true, false, false, false)( Particle, Particle1)"%(PDGID))
+               .Define("Bbar2NuNuPiPiPi_indices","FCCAnalyses::MCParticle::get_indices( -%s, { -16, 16, -211, 211, -211 }, true, false, false, false)( Particle, Particle1)"%(PDGID))
 
                .Define("Piminus", "selMC_leg(4) ( B2NuNuPiPiPi_indices , Particle)" )
                .Define("Piplus",  "selMC_leg(4) ( Bbar2NuNuPiPiPi_indices , Particle)" )
