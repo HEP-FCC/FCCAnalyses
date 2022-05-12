@@ -52,7 +52,6 @@ target_include_directories(FCCAnalyses  PUBLIC
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
-                           # ${CMAKE_SOURCE_DIR}/analyzers/dataframe
                            )
 
 target_link_libraries(FCCAnalyses
