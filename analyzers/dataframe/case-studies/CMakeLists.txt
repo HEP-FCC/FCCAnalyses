@@ -25,36 +25,24 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 
 
 file(GLOB sources src/*.cc)
-file(GLOB headers include/FCCAnalyses/*.h)
-
-message(STATUS "includes headers ${headers}")
-message(STATUS "includes sources ${sources}")
-
+file(GLOB headers include/case-studies/*.h)
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
-if(NOT ${WITH_DD4HEP})
-  list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
-  list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
-endif()
 
-ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
+ROOT_GENERATE_DICTIONARY(G__FCCAnalysesCS
                          ${headers}
-                         LINKDEF include/FCCAnalyses/LinkDef.h
+                         LINKDEF include/case-studies/LinkDef.h
                          )
 
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
-message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
-
-add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
-target_include_directories(FCCAnalyses  PUBLIC
-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+add_library(FCCAnalysesCS SHARED ${sources} ${headers} G__FCCAnalysesCS.cxx )
+target_include_directories(FCCAnalysesCS  PUBLIC
+                           ${CMAKE_SOURCE_DIR}/analyzers/dataframe/case-studies/include
                            ${FCCEDM_INCLUDE_DIRS}
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
                            )
 
-target_link_libraries(FCCAnalyses
+target_link_libraries(FCCAnalysesCS
                       ROOT::Physics
                       ROOT::MathCore
                       ROOT::ROOTVecOps
@@ -71,31 +59,25 @@ target_link_libraries(FCCAnalyses
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
                       ${LIBDL}
-                      gfortran # todo: why necessary?
                       )
 
-if(${WITH_DD4HEP})
-  find_package(DD4hep)
-  target_link_libraries(FCCAnalyses DD4hep::DDCore)
-endif()
 
-set_target_properties(FCCAnalyses PROPERTIES
+set_target_properties(FCCAnalysesCS PROPERTIES
   PUBLIC_HEADER "${headers}")
 
-install(TARGETS FCCAnalyses
-    EXPORT FCCAnalysesTargets
+install(TARGETS FCCAnalysesCS
     RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
     LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
-    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/FCCAnalyses"
+    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/FCCAnalysesCS"
     COMPONENT dev
     )
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/analyzers/dataframe/libFCCAnalyses.rootmap"
+  "${PROJECT_BINARY_DIR}/FCCANALYSES_CASESTUDIES/libFCCAnalysesCS.rootmap"
     DESTINATION "${INSTALL_LIB_DIR}" COMPONENT dev)
 
 if (${ROOT_VERSION} GREATER 6)
     install(FILES
-          "${PROJECT_BINARY_DIR}/analyzers/dataframe/libFCCAnalyses_rdict.pcm"
+          "${PROJECT_BINARY_DIR}/FCCANALYSES_CASESTUDIES/libFCCAnalysesCS_rdict.pcm"
                 DESTINATION "${INSTALL_LIB_DIR}" COMPONENT dev)
     endif()

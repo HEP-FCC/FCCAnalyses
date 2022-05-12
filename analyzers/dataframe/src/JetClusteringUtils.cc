@@ -1,5 +1,4 @@
-
-#include "JetClusteringUtils.h"
+#include "FCCAnalyses/JetClusteringUtils.h"
 using namespace JetClusteringUtils;
 
 
@@ -26,9 +25,9 @@ float JetClusteringUtils::get_exclusive_dmerge_max( FCCAnalysesJet in, int n ) {
 
 
 
-std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(ROOT::VecOps::RVec<float> px, 
-								   ROOT::VecOps::RVec<float> py, 
-								   ROOT::VecOps::RVec<float> pz, 
+std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(ROOT::VecOps::RVec<float> px,
+								   ROOT::VecOps::RVec<float> py,
+								   ROOT::VecOps::RVec<float> pz,
 								   ROOT::VecOps::RVec<float> e) {
   std::vector<fastjet::PseudoJet> result;
   unsigned index = 0;
@@ -40,9 +39,9 @@ std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets(ROOT::VecOps:
   return result;
 }
 
-std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets_xyzm(ROOT::VecOps::RVec<float> px, 
-								   ROOT::VecOps::RVec<float> py, 
-								   ROOT::VecOps::RVec<float> pz, 
+std::vector<fastjet::PseudoJet> JetClusteringUtils::set_pseudoJets_xyzm(ROOT::VecOps::RVec<float> px,
+								   ROOT::VecOps::RVec<float> py,
+								   ROOT::VecOps::RVec<float> pz,
 								   ROOT::VecOps::RVec<float> m) {
   std::vector<fastjet::PseudoJet> result;
   unsigned index = 0;
@@ -136,7 +135,7 @@ ROOT::VecOps::RVec<float> JetClusteringUtils::get_theta(ROOT::VecOps::RVec<fastj
 
 
 FCCAnalysesJet JetClusteringUtils::initialise_FCCAnalysesJet(){
-  
+
   JetClusteringUtils::FCCAnalysesJet result;
   ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
   std::vector<std::vector<int>> constituents;
@@ -159,11 +158,11 @@ FCCAnalysesJet JetClusteringUtils::build_FCCAnalysesJet(std::vector<fastjet::Pse
   JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::initialise_FCCAnalysesJet();
   for (const auto& pjet : in) {
     result.jets.push_back(pjet);
-    
+
     std::vector<fastjet::PseudoJet> consts = pjet.constituents();
     std::vector<int> tmpvec;
     for (const auto& constituent : consts){
-      tmpvec.push_back(constituent.user_index());  
+      tmpvec.push_back(constituent.user_index());
     }
     result.constituents.push_back(tmpvec);
   }

@@ -1,6 +1,6 @@
 #include "catch2/catch_test_macros.hpp"
 #include <catch2/catch_approx.hpp>
-#include "Algorithms.h"
+#include "FCCAnalyses/Algorithms.h"
 
 TEST_CASE("Mass", "[algorithms]") {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> pVec;

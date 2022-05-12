@@ -1,23 +1,23 @@
-﻿#include "VertexingUtils.h"
+﻿#include "FCCAnalyses/VertexingUtils.h"
 
 using namespace VertexingUtils;
 
 
 
-// 
+//
 // Selection of particles based on the d0 / z0 significances of the associated track
 //
 selTracks::selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_min, float arg_z0sig_max) : m_d0sig_min(arg_d0sig_min),
-													    m_d0sig_max( arg_d0sig_max ), 
-													    m_z0sig_min( arg_z0sig_min ), 
+													    m_d0sig_max( arg_d0sig_max ),
+													    m_z0sig_min( arg_z0sig_min ),
 													    m_z0sig_max (arg_z0sig_max) { };
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 VertexingUtils::selTracks::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 				       ROOT::VecOps::RVec<edm4hep::TrackState> tracks  ) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  result;
   result.reserve(recop.size());
-  
+
   for (size_t i = 0; i < recop.size(); ++i) {
     auto & p = recop[i];
     if (p.tracks_begin<tracks.size()) {
@@ -38,20 +38,20 @@ VertexingUtils::selTracks::operator() (ROOT::VecOps::RVec<edm4hep::Reconstructed
 // Selection of primary particles based on the matching of RecoParticles
 // to MC particles
 //
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> 
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 VertexingUtils::SelPrimaryTracks (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind,
-				  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,  
+				  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
 				  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 				  TVector3 MC_EventPrimaryVertex) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(reco.size());
-  
+
   // Event primary vertex:
   double xvtx0 = MC_EventPrimaryVertex[0];
   double yvtx0 = MC_EventPrimaryVertex[1];
   double zvtx0 = MC_EventPrimaryVertex[2];
-  
+
   for (unsigned int i=0; i<recind.size();i++) {
     double xvtx = mc.at(mcind.at(i)).vertex.x ;
     double yvtx = mc.at(mcind.at(i)).vertex.y ;
@@ -68,14 +68,14 @@ VertexingUtils::SelPrimaryTracks (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::
 }
 
 
-int 
+int
 VertexingUtils::get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   int nt = tracks.size();
   return nt;
 }
 
 
-TVectorD 
+TVectorD
 VertexingUtils::get_trackParam( edm4hep::TrackState & atrack) {
     double d0 =atrack.D0 ;
     double phi0 = atrack.phi ;
@@ -100,21 +100,21 @@ VertexingUtils::get_trackParam( edm4hep::TrackState & atrack) {
     return res;
 }
 
-TMatrixDSym 
+TMatrixDSym
 VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
   std::array<float, 15> covMatrix = atrack.covMatrix;
   TMatrixDSym covM(5);
-  
+
   double scale0 = 1e-3;
   double scale1 = 1.;
   double scale2 = 0.5*1e3;
   double scale3 = 1e-3 ;
   double scale4 = 1.;
-  
+
   scale2 = -scale2 ;   // sign of omega
 
   // covMatrix = lower-triang;e
-  
+
   covM[0][0] = covMatrix[0] *scale0 * scale0;
 
   covM[1][0] = covMatrix[1] *scale1 * scale0;
@@ -148,12 +148,12 @@ VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
   covM[1][4] = covM[4][1];
   covM[2][4] = covM[4][2];
   covM[3][4] = covM[4][3];
-  
+
   return covM;
 }
 
 
-FCCAnalysesVertex 
+FCCAnalysesVertex
 VertexingUtils::get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index ){
   FCCAnalysesVertex result;
   if (index<TheVertexColl.size())result=TheVertexColl.at(index);
@@ -161,7 +161,7 @@ VertexingUtils::get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheV
 }
 
 
-int 
+int
 VertexingUtils::get_Nvertex( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ){
   return TheVertexColl.size();
 }
@@ -213,7 +213,7 @@ TVectorD VertexingUtils::ParToACTS(TVectorD Par){
 
 // Covariance conversion to ACTS format
 TMatrixDSym VertexingUtils::CovToACTS(TMatrixDSym Cov, TVectorD Par){
-  
+
   double fB=2.;
   TMatrixDSym cACTS(6); cACTS.Zero();
   Double_t b = -0.29988*fB / 2.;

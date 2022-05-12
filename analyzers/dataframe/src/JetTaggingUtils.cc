@@ -1,4 +1,4 @@
-#include "JetTaggingUtils.h"
+#include "FCCAnalyses/JetTaggingUtils.h"
 using namespace JetTaggingUtils;
 
 ROOT::VecOps::RVec<int>
@@ -24,7 +24,7 @@ JetTaggingUtils::get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
       //float dPhi = lv.Phi() - p.phi();
       //float deltaR = sqrt(dEta*dEta+dPhi*dPhi);
       //if (deltaR <= 0.5 && gRandom->Uniform() <= efficiency) result[j] = true;
-      
+
       Float_t dot = p.px() * parton.momentum.x
                   + p.py() * parton.momentum.y
                   + p.pz() * parton.momentum.z;
@@ -51,7 +51,7 @@ JetTaggingUtils::get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
           // if matched to quark, and this is a gluon, keep
           // previous result (favour quark)
            ;
-        }       
+        }
        }
 
 

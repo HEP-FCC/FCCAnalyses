@@ -1,10 +1,11 @@
-﻿#include "VertexFitterSimple.h"
+﻿#include "FCCAnalyses/VertexFitterSimple.h"
+#include "FCCAnalyses/MCParticle.h"
+
 #include <iostream>
 
 #include "TFile.h"
 #include "TString.h"
 
-#include  "MCParticle.h"
 
 using namespace VertexFitterSimple;
 
@@ -13,7 +14,7 @@ using namespace VertexFitterSimple;
 
 TVector3 VertexFitterSimple::ParToP(TVectorD Par){
   double fB = 2;  // 2 Tesla
-  
+
   Double_t C    = Par(2);
   Double_t phi0 = Par(1);
   Double_t ct   = Par(4);
@@ -31,7 +32,7 @@ TVector3 VertexFitterSimple::ParToP(TVectorD Par){
 TVectorD VertexFitterSimple::XPtoPar(TVector3 x, TVector3 p, Double_t Q){
 
   double fB = 2;  // 2 Tesla
-  
+
   //
   TVectorD Par(5);
   // Transverse parameters
@@ -172,7 +173,7 @@ TMatrixDSym VertexFitterSimple::RegInv3(TMatrixDSym &Smat0){
 //
 TMatrixD VertexFitterSimple::Fill_A(TVectorD par, Double_t phi){
   //
-  // Derivative of track 3D position vector with respect to track parameters at constant phase 
+  // Derivative of track 3D position vector with respect to track parameters at constant phase
   //
   // par = vector of track parameters
   // phi = phase
@@ -284,25 +285,25 @@ TVectorD VertexFitterSimple::Fill_x(TVectorD par, Double_t phi){
 
 
 
-VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary, 
+VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary,
 								     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 								     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
 								     bool BeamSpotConstraint,
-								     double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz, 
+								     double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
                                                                      double bsc_x, double bsc_y, double bsc_z )  {
 
 
 
   // input = a collection of recoparticles (in case one want to make associations to RecoParticles ?)
   // and thetracks = the collection of all TrackState in the event
-  
+
   VertexingUtils::FCCAnalysesVertex thevertex;
-  
+
   // retrieve the tracks associated to the recoparticles
   ROOT::VecOps::RVec<edm4hep::TrackState> tracks = ReconstructedParticle2Track::getRP2TRK( recoparticles, thetracks );
-  
+
   // and run the vertex fitter
-  
+
   //FCCAnalysesVertex thevertex = VertexFitter_Tk( Primary, tracks, thetracks) ;
   thevertex = VertexFitter_Tk( Primary, tracks,
 			       BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z );
@@ -317,56 +318,56 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary
     }
   }
   if ( reco_ind.size() != Ntr ) std::cout << " ... problem in Vertex, size of reco_ind != Ntr " << std::endl;
-  
+
   thevertex.reco_ind = reco_ind;
-  
+
   return thevertex;
 }
 
 
 
-VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Primary, 
+VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Primary,
 									ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-                                                                        bool BeamSpotConstraint, 
+                                                                        bool BeamSpotConstraint,
                                                                         double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
 									double bsc_x, double bsc_y, double bsc_z )  {
-  
+
   // Units for the beam-spot : mum
   // See https://github.com/HEP-FCC/FCCeePhysicsPerformance/tree/master/General#generating-events-under-realistic-fcc-ee-environment-conditions
 
   // final results :
   VertexingUtils::FCCAnalysesVertex TheVertex;
-  
+
   edm4hep::VertexData result;
   ROOT::VecOps::RVec<float> reco_chi2;
   ROOT::VecOps::RVec< TVectorD >  updated_track_parameters;
   ROOT::VecOps::RVec<int> reco_ind;
   ROOT::VecOps::RVec<float> final_track_phases;
   ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
-  
+
   TheVertex.vertex = result;
   TheVertex.reco_chi2 = reco_chi2;
   TheVertex.updated_track_parameters = updated_track_parameters;
   TheVertex.reco_ind = reco_ind;
   TheVertex.final_track_phases = final_track_phases;
   TheVertex.updated_track_momentum_at_vertex = updated_track_momentum_at_vertex;
-  
-  
+
+
   int Ntr = tracks.size();
-  TheVertex.ntracks = Ntr; 
+  TheVertex.ntracks = Ntr;
   if ( Ntr <= 1) return TheVertex;   // can not reconstruct a vertex with only one track...
-  
+
 
   bool debug = false;
   if (debug) std::cout << " enter in VertexFitter_Tk for the Bs decay vertex " << std::endl;
-  
+
   // if a beam-spot constraint is required :
   TMatrixDSym BeamSpotCovI(3);
   TVectorD BeamSpotPos(3);
   if (BeamSpotConstraint) {   // fill in the inverse of the covariance matrix. Convert the units into meters
      BeamSpotCovI(0,0) = 1./pow( bsc_sigmax * 1e-6, 2) ;   // mum to m
-     BeamSpotCovI(1,1) = 1./pow( bsc_sigmay * 1e-6, 2) ;   
-     BeamSpotCovI(2,2) = 1./pow( bsc_sigmaz * 1e-6, 2) ; 
+     BeamSpotCovI(1,1) = 1./pow( bsc_sigmay * 1e-6, 2) ;
+     BeamSpotCovI(2,2) = 1./pow( bsc_sigmaz * 1e-6, 2) ;
      BeamSpotPos(0) = bsc_x * 1e-6;
      BeamSpotPos(1) = bsc_y * 1e-6 ;
      BeamSpotPos(2) = bsc_z * 1e-6 ;
@@ -379,8 +380,8 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   for (int i=0; i < Ntr; i++) {
     final_delta_alpha.push_back( dummy );
   }
-  
-  
+
+
   //
   // Vertex fit (units are meters)
   //
@@ -388,13 +389,13 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   TVectorD x0(3); for (Int_t v = 0; v < 3; v++)x0(v) = 100.; // set to large value
   Double_t Chi2 = 0;
   //
-  
+
   TVectorD x(3);
   TMatrixDSym covX(3);
-  
-  
+
+
   // Stored quantities
-  Double_t *fi = new Double_t[Ntr];				// Phases 
+  Double_t *fi = new Double_t[Ntr];				// Phases
   TVectorD **x0i = new TVectorD*[Ntr];			// Track expansion point
   TVectorD **ai = new TVectorD*[Ntr];				// dx/dphi
   Double_t *a2i = new Double_t[Ntr];				// a'Wa
@@ -403,7 +404,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   TMatrixDSym **Winvi = new TMatrixDSym*[Ntr];	// ACA'
   TMatrixD  **Ai = new TMatrixD*[Ntr];            // A
   TMatrixDSym **Covi = new TMatrixDSym*[Ntr];     // Cov matrix of the track parameters
-  
+
   //
   // vertex radius approximation
   // Maximum impact parameter
@@ -420,7 +421,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   //
   // Find track pair with largest phi difference
   Int_t isel; Int_t jsel; // selected track indices
-  Double_t dphiMax = -9999.;	// Max phi difference 
+  Double_t dphiMax = -9999.;	// Max phi difference
   for (Int_t i = 0; i < Ntr-1; i++)
     {
       //ObsTrk* ti = tracks[i];
@@ -428,7 +429,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
       edm4hep::TrackState ti = tracks[i] ;
       TVectorD pari = VertexingUtils::get_trackParam( ti );
       Double_t phi1 = pari(1);
-      
+
       for (Int_t j = i+1; j < Ntr; j++)
 	{
 	  //ObsTrk* tj = tracks[j];
@@ -446,7 +447,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 	}
     }
   //
-  // 
+  //
   //ObsTrk* t1 = tracks[isel];
   //TVectorD p1 = t1->GetObsPar();
   edm4hep::TrackState t1 = tracks[isel];
@@ -475,13 +476,13 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
       cterm.Zero();	// Reset constant term
       H.Zero();		// Reset H matrix
       DW1D.Zero();
-      // 
+      //
       for (Int_t i = 0; i < Ntr; i++)
 	{
-	  // Get track helix parameters and their covariance matrix 
+	  // Get track helix parameters and their covariance matrix
 	  //ObsTrk *t = tracks[i];
 	  //TVectorD par = t->GetObsPar();
-	  //TMatrixDSym Cov = t->GetCov(); 
+	  //TMatrixDSym Cov = t->GetCov();
 	  edm4hep::TrackState t = tracks[i] ;
 	  TVectorD par = VertexingUtils::get_trackParam( t ) ;
 	  TMatrixDSym Cov = VertexingUtils::get_trackCov( t );
@@ -513,14 +514,14 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 	  Double_t a2 = W.Similarity(a);
 	  a2i[i] = a2;							// Store a2
 	  // Build D matrix
-	  TMatrixDSym B(3); 
+	  TMatrixDSym B(3);
 	  B.Rank1Update(a, 1.0);
 	  B *= -1. / a2;
 	  B.Similarity(W);
 	  TMatrixDSym Ds = W+B;					// D matrix
 	  Di[i] = new TMatrixDSym(Ds);			// Store D matrix
 	  TMatrixDSym DsW1Ds = Winv.Similarity(Ds);	// Service matrix to calculate covX
-	  DW1D += DsW1Ds;								
+	  DW1D += DsW1Ds;
 	  // Update hessian
 	  H += Ds;
 	  // update constant term
@@ -539,7 +540,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
       // update vertex position
       TMatrixDSym H1 = RegInv3(H);
       x = H1*cterm;
-      
+
       // Update vertex covariance
       covX = DW1D.Similarity(H1);
 
@@ -557,7 +558,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 	  TVectorD b = (*Wi[i])*(x - *x0i[i]);
 	  for (Int_t j = 0; j < 3; j++)fi[i] += a(j)*b(j) / a2i[i];
 	  final_phases[i] = fi[i];
-	  
+
 	  TMatrixD ta(TMatrixD::kTransposed, *Ai[i]);
 	  TMatrixDSym kk(5);
 	  kk = *Covi[i];
@@ -575,7 +576,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
       //if ( Ntry >= TryMax) std::cout << " ... in VertexFitterSimple, Ntry >= TryMax " << std::endl;
 
       if (BeamSpotConstraint) {
-        
+
         // add the following term to the chi2 :
         TVectorD dx_beamspot = x - BeamSpotPos ;
         Double_t chi2_bsc = BeamSpotCovI.Similarity( dx_beamspot );
@@ -598,7 +599,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 	  Di[i]->Clear();
 	  Ai[i]->Clear();
 	  Covi[i]->Clear();
-	  
+
 	  delete x0i[i];
 	  delete Winvi[i];
 	  delete Wi[i];
@@ -609,7 +610,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 	}
     }
   //
-  delete[] fi;		// Phases 
+  delete[] fi;		// Phases
   delete[] x0i;		// Track expansion point
   delete[] ai;		// dx/dphi
   delete[] a2i;		// a'Wa
@@ -618,12 +619,12 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   delete[] Winvi;	// ACA'
   delete[] Ai ;           // A
   delete[] Covi;          // Cov
-  
+
   //
   //return Chi2;
-  
+
   // store the results in an edm4hep::VertexData object
-  // go back from meters to millimeters for the units 
+  // go back from meters to millimeters for the units
   float conv = 1e3;
   std::array<float,6> covMatrix;	// covMat in edm4hep is a LOWER-triangle matrix.
   covMatrix[0] = covX(0,0) * pow(conv,2);
@@ -632,46 +633,46 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
   covMatrix[3] = covX(2,0) * pow(conv,2);
   covMatrix[4] = covX(2,1) * pow(conv,2);
   covMatrix[5] = covX(2,2) * pow(conv,2);
-  
+
   float Ndof = 2.0 * Ntr - 3.0; ;
-  
+
   result.primary = Primary;
   result.chi2 = Chi2 /Ndof ;      // I store the normalised chi2 here
   result.position = edm4hep::Vector3f( x(0)*conv, x(1)*conv, x(2)*conv ) ;  // store the  vertex in mm
   result.covMatrix = covMatrix;
   result.algorithmType = 1;
-  
+
   // Need to fill the associations ...
-  
+
   double scale0 = 1e-3;   //convert mm to m
   double scale1 = 1;
   double scale2 = 0.5*1e3;  // C = rho/2, convert from mm-1 to m-1
   double scale3 = 1e-3 ;  //convert mm to m
   double scale4 = 1.;
-  
+
   scale2 = -scale2 ;   // sign of omega (sign convention)
-  
+
   for (Int_t i = 0; i < Ntr; i++) {
-    
+
     edm4hep::TrackState t = tracks[i] ;
     TVectorD par = VertexingUtils::get_trackParam( t ) ;
-    
+
     // initial momentum :
     //TVector3 ptrack_ini = ParToP( par );
     //std::cout << "----- Track # " << i << " initial track momentum : " << std::endl;
     //ptrack_ini.Print();
-    
+
     // uncomment below to get the post-fit track parameters :
     par -= final_delta_alpha[i] ;
-    
+
     //std::cout << " Track i = " << i << " --- delta_alpha : " << std::endl;
     //final_delta_alpha[i].Print();
-    
+
     // ( px, py, pz) of the track
     TVector3 ptrack = ParToP( par );
     //std::cout << "         updates track param :" << std::endl;
     //ptrack.Print();
-    
+
     // and (px, py) at the vertex instead of the dca :
     double phi0 = par(1);
     double phi = final_phases[i]  ;
@@ -681,9 +682,9 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
     //std::cout << "         momentum at the vertex : " << std::endl;
     //std::cout << " phi0 at dca = " << phi0 << " phi at vertex = " << phi0+phi << " C = " << par(2) << " phase " << phi << std::endl;
     //ptrack_at_vertex.Print();
-    
+
     updated_track_momentum_at_vertex.push_back( ptrack_at_vertex );
-    
+
     // back to EDM4HEP units...
     par[0] = par[0] / scale0 ;
     par[1] = par[1] / scale1 ;
@@ -691,19 +692,19 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
     par[3] = par[3] / scale3 ;
     par[4] = par[4] / scale4 ;
     updated_track_parameters.push_back( par );
-    
+
     reco_chi2.push_back( final_chi2[i] );
     final_track_phases.push_back( final_phases[i] );
-    
+
   }
-  
+
   TheVertex.vertex = result;
   TheVertex.reco_chi2 = reco_chi2;
   TheVertex.reco_ind = reco_ind;
   TheVertex.updated_track_parameters = updated_track_parameters ;
   TheVertex.updated_track_momentum_at_vertex = updated_track_momentum_at_vertex;
   TheVertex.final_track_phases = final_track_phases;
-  
+
   //std::cout << " end of VertexFitter " << std::endl;
   /*
     for ( Int_t i = 0; i < Ntr; i++) {
@@ -714,10 +715,10 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
     updated_track_parameters[i].Print();
     }
   */
-  
+
   delete final_chi2;
   delete final_phases;
- 
+
   return TheVertex;
 }
 
@@ -825,6 +826,3 @@ ROOT::VecOps::RVec<bool> VertexFitterSimple::IsPrimary_forTracks( ROOT::VecOps::
   }
  return result;
 }
-
-
-
