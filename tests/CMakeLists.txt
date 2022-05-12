@@ -10,7 +10,7 @@ function(set_test_env _testname)
 endfunction()
 
 add_test(NAME examples/FCCee/higgs/mH-recoil/mumu
-        COMMAND python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --test
+        COMMAND python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --nevents 10 --test
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         )
 set_test_env(examples/FCCee/higgs/mH-recoil/mumu)
