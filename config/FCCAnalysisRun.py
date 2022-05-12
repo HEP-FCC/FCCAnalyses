@@ -795,6 +795,7 @@ if __name__ == "__main__":
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument("--files-list", help="Specify input file to bypass the processList", default=[], nargs='+')
     publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
+    publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
     publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
