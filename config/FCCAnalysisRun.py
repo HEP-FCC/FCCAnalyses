@@ -453,7 +453,6 @@ def runLocal(rdfModule, fileList, output, batch):
     #run RDF
     runRDF(rdfModule, fileListRoot, outFile, nevents_local)
 
-    elapsed_time = time.time() - start_time
     outf = ROOT.TFile( outFile, "update" )
     outt = outf.Get("events")
     outn = outt.GetEntries()
@@ -475,6 +474,29 @@ def runLocal(rdfModule, fileList, output, batch):
     print  ("===================================================================")
     print  (" ")
     print  (" ")
+
+    if args.bench:
+        import json
+
+        benchmarks = []
+        bench_time = {}
+        bench_time['name'] = 'Total time of the benchmark'
+        bench_time['unit'] = 'Seconds'
+        bench_time['value'] = elapsed_time
+        benchmarks.append(bench_time)
+
+        with open('benchmarks_smaller_better.json', 'w') as benchout:
+            json.dump(benchmarks, benchout, indent=2)
+
+        benchmarks = []
+        bench_evt_per_sec = {}
+        bench_evt_per_sec['name'] = 'Events processed per second'
+        bench_evt_per_sec['unit'] = 'Evt/s'
+        bench_evt_per_sec['value'] = nevents_local / elapsed_time
+        benchmarks.append(bench_evt_per_sec)
+
+        with open('benchmarks_bigger_better.json', 'w') as benchout:
+            json.dump(benchmarks, benchout, indent=2)
 
 
 #__________________________________________________________
@@ -799,6 +821,7 @@ if __name__ == "__main__":
     publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
     publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
+    publicOptions.add_argument('--bench', action='store_true', help='Output benchmark results to a JSON file', default=False)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
     publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
     publicOptions.add_argument("--preprocess", action='store_true', help="Run preprocessing", default=False)

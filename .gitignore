@@ -90,3 +90,6 @@ venv.bak/
 *.exe
 *.out
 *.app
+
+# Benchmarking
+benchmark*json
