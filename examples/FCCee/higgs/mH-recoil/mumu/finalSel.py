@@ -6,7 +6,7 @@ import sys, os
 import ROOT
 
 ###Input directory where the files produced at the pre-selection level are
-baseDir  = "ZH_mumu_recoil/stage2/"
+baseDir  = "outputs/FCCee/higgs/mH-recoil/mumu/stage2/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
 procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCCee_procDict_spring2021_IDEA.json"
