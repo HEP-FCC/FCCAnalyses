@@ -578,7 +578,20 @@ ROOT::VecOps::RVec<int>  get_indices_MotherByIndex ( int imother,
 
 }
 
-
+ROOT::VecOps::RVec<int>  get_indices_ExclusiveDecay_MotherByIndex( int imother,
+								     std::vector<int> m_pdg_daughters,
+								     bool m_stableDaughters,
+                     ROOT::VecOps::RVec<edm4hep::MCParticleData> in ,
+								     ROOT::VecOps::RVec<int> ind) {
+  return get_indices_MotherByIndex(
+     imother,
+	   m_pdg_daughters,
+	   m_stableDaughters,
+     false /* m_chargeConjuigateDaughters */,
+	   false /* m_inclusiveDecay */,
+	   in,
+	   ind);
+}
 // ----------------------------------------------------------------------------------------------------------------------------------
 
 get_indices::get_indices( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugateMother, bool chargeConjugateDaughters, bool inclusiveDecay) {
@@ -617,6 +630,9 @@ ROOT::VecOps::RVec<int>  get_indices::operator() ( ROOT::VecOps::RVec<edm4hep::M
    }
    return result;
 }
+
+get_indices_ExclusiveDecay::get_indices_ExclusiveDecay( int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugate) : get_indices(pdg_mother, pdg_daughters, stableDaughters, chargeConjugate, chargeConjugate, false)  {
+};
 
 
 // --------------------------------------------------------------------------------------------------
