@@ -93,6 +93,11 @@ message(STATUS "Library---------------------- main: ${AWKWARD_LIBRARIES}")
 add_subdirectory(analyzers/dataframe)
 
 
+option(FCCANALYSES_CASESTUDIES "Build the case studies" OFF)
+if(FCCANALYSES_CASESTUDIES)
+  add_subdirectory(analyzers/dataframe/case-studies FCCANALYSES_CASESTUDIES)
+endif()
+
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
 if(FCCANALYSES_DOCUMENTATION)

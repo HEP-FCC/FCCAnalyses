@@ -1,48 +1,92 @@
-import sys
-import ROOT
-from array import array
+runTraining=False
 
-print ("Load cxx analyzers ... ",)
-ROOT.gSystem.Load("libedm4hep")
-ROOT.gSystem.Load("libpodio")
-ROOT.gSystem.Load("libawkward")
-ROOT.gSystem.Load("libawkward-cpu-kernels")
-ROOT.gSystem.Load("libFCCAnalyses")
+#TRAINING
+processList_training = {
+    'p8_ee_Zbb_ecm91':{'chunks':50},
+    'p8_ee_Zcc_ecm91':{'chunks':50},
+    'p8_ee_Zuds_ecm91':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU':{'chunks':50}
+}
+prodTag_training     = "FCCee/spring2021_training/IDEA/"
+outputDirEos_training   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/training_stage1/"
 
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
-_edm  = ROOT.edm4hep.ReconstructedParticleData()
-_pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyLoader
+#analysis_stage1
+processList_analysis = {
+    'p8_ee_Zbb_ecm91':{'chunks':50},
+    'p8_ee_Zcc_ecm91':{'chunks':50},
+    'p8_ee_Zuds_ecm91':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2D3Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2DDs':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2DTauNu':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2Dst3Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2DstDs':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2DstDsst':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bd2DstTauNu':{'chunks':50},
 
-print ('edm4hep  ',_edm)
-print ('podio    ',_pod)
-print ('fccana   ',_fcc)
+    'p8_ee_Zbb_ecm91_EvtGen_Bs2Ds3Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bs2DsDs':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bs2DsTauNu':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bs2Dsst3Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDs':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstDsst':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bs2DsstTauNu':{'chunks':50},
+
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2D03Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2D0Ds':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2D0TauNu':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst03Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Ds':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0Dsst':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Bu2Dst0TauNu':{'chunks':50},
+
+    'p8_ee_Zbb_ecm91_EvtGen_Lb2Lc3Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Lb2LcDs':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Lb2LcTauNu':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Lb2Lcst3Pi':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstDs':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstDsst':{'chunks':50},
+    'p8_ee_Zbb_ecm91_EvtGen_Lb2LcstTauNu':{'chunks':50}
+    }
+prodTag_analysis     = "FCCee/spring2021/IDEA/"
+outputDirEos_analysis   = "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/flatNtuples/spring2021/prod_04/analysis_stage1/"
+
+
+processList  = processList_analysis
+outputDirEos = outputDirEos_analysis
+prodTag      = prodTag_analysis
+MVAFilter    = "EVT_MVA1>0.6"
+
+if runTraining:
+    processList  = processList_training
+    outputDirEos = outputDirEos_training
+    prodTag      = prodTag_training
+    MVAFilter    = "EVT_MVA1>-1.0"
+
+outputDir   = ""
+nCPUS       = 8
+runBatch    = True
+batchQueue  = "workday"
+compGroup   = "group_u_FCC.local_gen"
 
 MVAFilter="EVT_MVA1>0.6"
 
-
+import ROOT
 ROOT.gInterpreter.ProcessLine('''
 TMVA::Experimental::RBDT<> bdt("Bc2TauNu_BDT", "/eos/experiment/fcc/ee/analyses/case-studies/flavour/Bc2TauNu/xgb_bdt_vtx.root");
 computeModel = TMVA::Experimental::Compute<18, float>(bdt);
 ''')
 
-
-class analysis():
+#Mandatory: RDFanalysis class where the use defines the operations on the TTree
+class RDFanalysis():
 
     #__________________________________________________________
-    def __init__(self, inputlist, outname, ncpu):
-        self.outname = outname
-        if ".root" not in outname:
-            self.outname+=".root"
-
-        ROOT.ROOT.EnableImplicitMT(ncpu)
-        ROOT.EnableThreadSafety()
-        self.df = ROOT.RDataFrame("events", inputlist)
-        print (" init done, about to run")
-    #__________________________________________________________
-    def run(self):
-        #df2 = (self.df.Range(100)
-        df2 = (self.df
+    #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
+    def analysers(df):
+        df2 = (
+            df
                #############################################
                ##          Aliases for # in python        ##
                #############################################
@@ -292,23 +336,13 @@ class analysis():
                .Define("TrueTau23PiBc_z0",            "myUtils::get_trackz0(TrueTau23PiBc_track)")
 
                .Define("TrueTau23PiBu_vertex",        "myUtils::get_trueVertex(MCVertexObject,Particle,Particle0, 15, 521)")
-
-
-
-
-               #.Define("TrueRho", "myUtils::build_truerho(TrueTau23Pi_vertex,MCVertexObject,Particle)")
-               #.Define("TrueRho1M", "TrueRho.at(0).mass")
-               #.Define("TrueRho2M", "TrueRho.at(1).mass")
-
-
-
-
-
            )
-        # select branches for output file
-        branchList = ROOT.vector('string')()
-        for branchName in [
+        return df2
 
+    #__________________________________________________________
+    #Mandatory: output function, please make sure you return the branchlist as a python list
+    def output():
+        branchList = [
                 "MC_PDG","MC_M1","MC_M2","MC_n","MC_D1","MC_D2",
 
                 "EVT_ThrustEmin_E",          "EVT_ThrustEmax_E",
@@ -358,105 +392,6 @@ class analysis():
                 "Tau23PiCandidates_pion2px", "Tau23PiCandidates_pion2py", "Tau23PiCandidates_pion2pz",
                 "Tau23PiCandidates_pion2p", "Tau23PiCandidates_pion2q", "Tau23PiCandidates_pion2d0", "Tau23PiCandidates_pion2z0",
                 "Tau23PiCandidates_pion3px", "Tau23PiCandidates_pion3py", "Tau23PiCandidates_pion3pz",
-                "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q", "Tau23PiCandidates_pion3d0", "Tau23PiCandidates_pion3z0",
-
-                #"TrueRho1M",
-                #"TrueRho2M",
-
-
-                ]:
-            branchList.push_back(branchName)
-
-        #opts = ROOT.RDF.RSnapshotOptions()
-        #opts.fCompressionAlgorithm = ROOT.ROOT.kLZ4
-        #opts.fCompressionLevel = 3
-        #opts.fAutoFlush = -1024*1024*branchList.size()
-        #df2.Snapshot("events", self.outname, branchList, opts)
-        df2.Snapshot("events", self.outname, branchList)
-
-# example call for standalone file
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_003907469.root
-
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bu2TauNu_stage1.root /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bu2TauNuTAUHADNU/events_026079857.root
-
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_Bc2TauNu_stage1.root "/eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_*"
-
-# python examples/FCCee/flavour/Bc2TauNu/analysis_stage1.py p8_ee_Zbb_stage1.root  /eos/experiment/fcc/ee/generation/DelphesEvents/fcc_tmp_v03/p8_ee_Zbb_ecm91/events_026734131.root
-
-
-
-if __name__ == "__main__":
-
-    if len(sys.argv)<3:
-        print ("usage:")
-        print ("python ",sys.argv[0]," output.root input.root")
-        print ("python ",sys.argv[0]," output.root \"inputdir/*.root\"")
-        print ("python ",sys.argv[0]," output.root file1.root file2.root file3.root <nevents>")
-        sys.exit(3)
-
-
-    print ("Create dataframe object from ", )
-    fileListRoot = ROOT.vector('string')()
-    nevents=0
-
-    print("===============================", sys.argv[2])
-    if "_training" in sys.argv[2]:
-        MVAFilter="EVT_MVA1>-1.0"
-
-    if len(sys.argv)==3 and "*" in sys.argv[2]:
-        import glob
-        filelist = glob.glob(sys.argv[2])
-        for fileName in filelist:
-            fileListRoot.push_back(fileName)
-            print (fileName, " ",)
-            print (" ...")
-
-
-    elif len(sys.argv)>2:
-        for i in range(2,len(sys.argv)):
-            try:
-                nevents=int(sys.argv[i])
-                print ("nevents found (will be in the processed events branch in root tree):",nevents)
-            except ValueError:
-                fileListRoot.push_back(sys.argv[i])
-                print (sys.argv[i], " ",)
-                print (" ...")
-
-
-    outfile=sys.argv[1]
-    print("output file:  ",outfile)
-    if len(outfile.split("/"))>1:
-        import os
-        os.system("mkdir -p {}".format(outfile.replace(outfile.split("/")[-1],"")))
-
-    if nevents==0:
-        for f in fileListRoot:
-            tf=ROOT.TFile.Open(str(f),"READ")
-            tt=tf.Get("events")
-            nevents+=tt.GetEntries()
-    print ("nevents ", nevents)
-
-    import time
-    start_time = time.time()
-    ncpus = 8
-    analysis = analysis(fileListRoot, outfile, ncpus)
-    analysis.run()
-
-    elapsed_time = time.time() - start_time
-    print  ("==============================SUMMARY==============================")
-    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-    print  ("Events Processed/Second  :  ",int(nevents/elapsed_time))
-    print  ("Total Events Processed   :  ",int(nevents))
-    print  ("===================================================================")
-
-
-    outf = ROOT.TFile( outfile, "update" )
-    meta = ROOT.TTree( "metadata", "metadata informations" )
-    n = array( "i", [ 0 ] )
-    meta.Branch( "eventsProcessed", n, "eventsProcessed/I" )
-    n[0]=nevents
-    meta.Fill()
-    p = ROOT.TParameter(int)( "eventsProcessed", n[0])
-    p.Write()
-    outf.Write()
-    outf.Close()
+                "Tau23PiCandidates_pion3p", "Tau23PiCandidates_pion3q", "Tau23PiCandidates_pion3d0", "Tau23PiCandidates_pion3z0"
+                ]
+        return branchList

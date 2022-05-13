@@ -24,8 +24,12 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 
 
 
-file(GLOB sources *.cc)
-file(GLOB headers *.h)
+file(GLOB sources src/*.cc)
+file(GLOB headers include/FCCAnalyses/*.h)
+
+message(STATUS "includes headers ${headers}")
+message(STATUS "includes sources ${sources}")
+
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
 if(NOT ${WITH_DD4HEP})
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
@@ -34,12 +38,15 @@ endif()
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
                          ${headers}
-                         LINKDEF LinkDef.h
+                         LINKDEF include/FCCAnalyses/LinkDef.h
                          )
+
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
 
 add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
 target_include_directories(FCCAnalyses  PUBLIC
-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                            ${FCCEDM_INCLUDE_DIRS}
                            ${FASTJET_INCLUDE_DIR}
