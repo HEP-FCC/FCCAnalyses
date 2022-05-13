@@ -25,7 +25,6 @@ outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
 #Optional test file
 testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
 
-import ROOT
 
 #choose to run Bc2TauNu or Bu2TauNu depending on the PDGIG
 PDGID=541 #Bc
@@ -40,15 +39,56 @@ elif PDGID==521:
     Filter="(FCCAnalyses::MCParticle::filter_pdgID(521, false)(Particle)==true && FCCAnalyses::MCParticle::filter_pdgID(-521, false)(Particle)==false) || (FCCAnalyses::MCParticle::filter_pdgID(521, false)(Particle)==false && FCCAnalyses::MCParticle::filter_pdgID(-521, false)(Particle)==true)"
 
 
+
+import ROOT
+ROOT.gInterpreter.Declare("""
+using namespace FCCAnalyses;
+using namespace FCCAnalyses::MCParticle;
+
+// return one MC leg corresponding to the Bs decay
+// note: the sizxe of the vector is always zero or one. I return a ROOT::VecOps::RVec for convenience
+struct selMC_leg{
+  selMC_leg( int idx );
+  int m_idx;
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (ROOT::VecOps::RVec<int> list_of_indices,
+							  ROOT::VecOps::RVec<edm4hep::MCParticleData> in) ;
+};
+
+
+// To retrieve a given MC leg corresponding to the Bs decay
+selMC_leg::selMC_leg( int idx ) {
+  m_idx = idx;
+};
+
+// I return a vector instead of a single particle :
+//   - such that the vector is empty when there is no such decay mode (instead
+//     of returning a dummy particle)
+//   - such that I can use the getMC_theta etc functions, which work with a
+//     ROOT::VecOps::RVec of particles, and not a single particle
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> selMC_leg::operator() ( ROOT::VecOps::RVec<int> list_of_indices,  ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::MCParticleData>  res;
+  if ( list_of_indices.size() == 0) return res;
+  if ( m_idx < list_of_indices.size() ) {
+	res.push_back( sel_byIndex( list_of_indices[m_idx], in ) );
+	return res;
+  }
+  else {
+	std::cout << "   !!!  in selMC_leg:  idx = " << m_idx << " but size of list_of_indices = " << list_of_indices.size() << std::endl;
+  }
+  return res;
+}
+
+
+""")
+
 ROOT.gInterpreter.Declare("""
 edm4hep::Vector3d MyMCDecayVertex(ROOT::VecOps::RVec<edm4hep::Vector3d> in1, ROOT::VecOps::RVec<edm4hep::Vector3d> in2) {
-
    edm4hep::Vector3d vertex(1e12, 1e12, 1e12);
    if ( in1.size() == 0 && in2.size()==0) {
       std::cout <<"no vtx " <<std::endl;
       return vertex;
    }
-
    if ( in1.size() == 1 && in2.size()==0) vertex=in1[0];
    else if ( in1.size() == 0 && in2.size()==1) vertex=in2[0];
    else{
@@ -56,29 +96,24 @@ std::cout << "in1.size() " << in1.size() << "  in2.size() " <<in1.size()<< std::
    }
    return vertex;
 }
+""")
 
+ROOT.gInterpreter.Declare("""
 float MyMinEnergy(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
-
    float min=999999.;
    for (auto & p: in) {
     if (p.energy<min && p.energy>0) min=p.energy;
   }
   return min;
 }
-
 """)
 
-
-#Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
 
     #__________________________________________________________
-    #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
         df2 = (
-
-               #.Filter(Filter)
-
+               df
                .Alias("Particle1", "Particle#1.index")
                .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
                .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
@@ -97,10 +132,8 @@ class RDFanalysis():
                #     - the cases Bs -> Bsbar -> mu mu K K are included here
                #   first boolean: if true, look at the stable daughters, otherwise at the intermediate daughters
                #   second boolean: if true, include the charge conjugate decays
-               #   third boolean: if true, include charge conjugates of daughters
-               #   fourth boolena: if true, do the inclusive decay
-               .Define("B2NuNuPiPiPi_indices",   "FCCAnalyses::MCParticle::get_indices( %s, { 16, -16, 211, -211, 211 }, true, false, false, false)( Particle, Particle1)"%(PDGID))
-               .Define("Bbar2NuNuPiPiPi_indices","FCCAnalyses::MCParticle::get_indices( -%s, { -16, 16, -211, 211, -211 }, true, false, false, false)( Particle, Particle1)"%(PDGID))
+               .Define("B2NuNuPiPiPi_indices",   "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( %s, { 16, -16, 211, -211, 211 }, true, false)( Particle, Particle1)"%(PDGID))
+               .Define("Bbar2NuNuPiPiPi_indices","FCCAnalyses::MCParticle::get_indices_ExclusiveDecay( -%s, { -16, 16, -211, 211, -211 }, true, false)( Particle, Particle1)"%(PDGID))
 
                .Define("Piminus", "selMC_leg(4) ( B2NuNuPiPiPi_indices , Particle)" )
                .Define("Piplus",  "selMC_leg(4) ( Bbar2NuNuPiPiPi_indices , Particle)" )
@@ -187,10 +220,8 @@ class RDFanalysis():
                .Define("deltaAlpha_max","ReconstructedParticle::angular_separationBuilder(0)( BRecoParticles )")
                .Define("deltaAlpha_min","ReconstructedParticle::angular_separationBuilder(1)( BRecoParticles )")
                .Define("deltaAlpha_ave","ReconstructedParticle::angular_separationBuilder(2)( BRecoParticles )")
-
-        )
+              )
         return df2
-
     #__________________________________________________________
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
@@ -212,6 +243,5 @@ class RDFanalysis():
                 "Pion2_theta","Pion2_phi","Pion2_e","Pion2_charge",
 
                 "Pion3_theta","Pion3_phi","Pion3_e","Pion3_charge",
-
-                ]
+        ]
         return branchList
