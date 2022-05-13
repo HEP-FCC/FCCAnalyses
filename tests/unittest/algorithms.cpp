@@ -38,7 +38,7 @@ TEST_CASE("ThrustPointing", "[algorithms]") {
   ROOT::VecOps::RVec<float> np {1., -1., 1., -1., 1.};
   ROOT::VecOps::RVec<float> e {1., 1., 1., 1., 1.};
   ROOT::VecOps::RVec<float> t {0., -1., 0., 1., 0., -3.};
-  auto res = Algorithms::getThrustPointing(np, e, t, 1.);
+  auto res = Algorithms::getThrustPointing(1)(np, e, t);
   REQUIRE(res[1] == Catch::Approx( 1. ));
   REQUIRE(res[3] == Catch::Approx( -1. ));
   REQUIRE(res[5] == Catch::Approx( 3. ));
