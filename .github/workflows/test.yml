@@ -65,9 +65,9 @@ jobs:
         export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
         export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
         python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --test --bench
-        jq \'.[].name |= "${{ matrix.NAME }}: " + .\' benchmarks_smaller_better.json > tmp.json
+        jq ".[].name |= \"${{ matrix.NAME }}: \" + ." benchmarks_smaller_better.json > tmp.json
         mv tmp.json benchmarks_smaller_better.json
-        jq \'.[].name |= "${{ matrix.NAME }}: " + .\' benchmarks_bigger_better.json > tmp.json
+        jq ".[].name |= \"${{ matrix.NAME }}: \" + ." benchmarks_bigger_better.json > tmp.json
         mv tmp.json benchmarks_bigger_better.json
         '
     - name: Store benchmark result --- smaller better
