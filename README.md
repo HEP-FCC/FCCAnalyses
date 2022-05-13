@@ -172,7 +172,7 @@ histogram creation. In the example analysis it can be run like this:
 ```shell
 python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \
        --final
-       ```
+```
 
 This will create 2 files per selection `SAMPLENAME_SELECTIONNAME.root` for the
 `TTree` and `SAMPLENAME_SELECTIONNAME_histo.root` for the histograms.
