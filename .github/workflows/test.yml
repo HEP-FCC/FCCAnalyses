@@ -57,6 +57,7 @@ jobs:
     - name: Run benchmark
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
+        yum install jq
         source ${{ matrix.SETUP }}
         export LOCAL_DIR=$PWD
         export PYTHONPATH=$PWD:$PYTHONPATH
