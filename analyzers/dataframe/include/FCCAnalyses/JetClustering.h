@@ -4,7 +4,6 @@
 #include <cmath>
 #include <vector>
 
-#include "TLorentzVector.h"
 #include "ROOT/RVec.hxx"
 
 #include "edm4hep/MCParticleData.h"
@@ -17,8 +16,11 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/JetDefinition.hh"
+#include "fastjet/EECambridgePlugin.hh"
+#include "fastjet/JadePlugin.hh"
 
-#include "JetClusteringUtils.h"
+#include "FCCAnalyses/JetClusteringUtils.h"
+#include "FCCAnalyses/ValenciaPlugin.h"
 
 /** Jet clustering interface.
 This represents a set functions and utilities to perfom jet clustering from a list of.
@@ -191,7 +193,8 @@ namespace JetClustering{
     int _recombination; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
     float _beta; /// beta parameter
     float _gamma; /// gamma parameter
-    fastjet::JetAlgorithm _jetAlgorithm {fastjet::JetAlgorithm::undefined_jet_algorithm};///<internal jet algorithm
+    //fastjet::JetAlgorithm _jetAlgorithm {fastjet::JetAlgorithm::undefined_jet_algorithm};///<internal jet algorithm
+    fastjet::contrib::ValenciaPlugin * jetAlgorithm;
     fastjet::RecombinationScheme _recombScheme;///<internal recombination scheme
     fastjet::ClusterSequence _cs;///<internal clustering sequence
     fastjet::JetDefinition _def;///<internal jetdefinition sequence
@@ -213,7 +216,8 @@ namespace JetClustering{
     float _cut; ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
     int _sorted; ///< pT ordering=0, E ordering=1
     int _recombination; ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
-    fastjet::JetAlgorithm _jetAlgorithm {fastjet::JetAlgorithm::undefined_jet_algorithm};///<internal jet algorithm
+    //fastjet::JetAlgorithm _jetAlgorithm {fastjet::JetAlgorithm::undefined_jet_algorithm};///<internal jet algorithm
+    fastjet::JadePlugin *_jetAlgorithm;
     fastjet::RecombinationScheme _recombScheme;///<internal recombination scheme
     fastjet::ClusterSequence _cs;///<internal clustering sequence
     fastjet::JetDefinition _def;///<internal jetdefinition sequence
