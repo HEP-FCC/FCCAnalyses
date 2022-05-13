@@ -480,9 +480,11 @@ def runLocal(rdfModule, fileList, output, batch):
 
         benchmarks = []
         bench_time = {}
-        bench_time['name'] = 'Total time of the benchmark'
+        bench_time['name'] = 'Time spent running the analysis'
         bench_time['unit'] = 'Seconds'
         bench_time['value'] = elapsed_time
+        bench_time['range'] = 15
+        bench_time['extra'] = 'Analysis: ' + sys.argv[1].removesuffix('/analysis_stage1.py')
         benchmarks.append(bench_time)
 
         with open('benchmarks_smaller_better.json', 'w') as benchout:
@@ -493,6 +495,8 @@ def runLocal(rdfModule, fileList, output, batch):
         bench_evt_per_sec['name'] = 'Events processed per second'
         bench_evt_per_sec['unit'] = 'Evt/s'
         bench_evt_per_sec['value'] = nevents_local / elapsed_time
+        bench_time['range'] = 1000
+        bench_time['extra'] = 'Analysis: ' + sys.argv[1].removesuffix('/analysis_stage1.py')
         benchmarks.append(bench_evt_per_sec)
 
         with open('benchmarks_bigger_better.json', 'w') as benchout:
