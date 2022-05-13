@@ -292,6 +292,8 @@ def runPreprocess(df):
     return df
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt):
+    # for convenience and compatibility with user code
+    ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 
     # cannot use MT with Range()
     if args.nevents < 0:
