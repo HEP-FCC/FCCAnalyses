@@ -40,6 +40,10 @@ def getElement(rdfModule, element, isFinal=False):
             if isFinal: print('The function <{}> is not part of final analysis'.format(element))
             sys.exit(3)
 
+        elif element=='analysisName':
+            print('The variable <analysisName> is optional in your analysis.py file, return default value ""')
+            return ""
+
         elif element=='nCPUS':
             print('The variable <{}> is optional in your analysis.py file, return default value 4'.format(element))
             return 4
@@ -478,13 +482,19 @@ def runLocal(rdfModule, fileList, output, batch):
     if args.bench:
         import json
 
+        analysis_path = sys.argv[1].removesuffix('/analysis_stage1.py')
+        analysis_name = getElement(rdfModule, 'analysisName')
+        if not analysis_name:
+            analysis_name = analysis_path
+
         benchmarks = []
         bench_time = {}
-        bench_time['name'] = 'Time spent running the analysis'
+        bench_time['name'] = 'Time spent running the analysis: '
+        bench_time['name'] += analysis_name
         bench_time['unit'] = 'Seconds'
         bench_time['value'] = elapsed_time
-        bench_time['range'] = 15
-        bench_time['extra'] = 'Analysis: ' + sys.argv[1].removesuffix('/analysis_stage1.py')
+        bench_time['range'] = 10
+        bench_time['extra'] = 'Analysis path: ' + analysis_path
         benchmarks.append(bench_time)
 
         with open('benchmarks_smaller_better.json', 'w') as benchout:
@@ -492,11 +502,12 @@ def runLocal(rdfModule, fileList, output, batch):
 
         benchmarks = []
         bench_evt_per_sec = {}
-        bench_evt_per_sec['name'] = 'Events processed per second'
+        bench_evt_per_sec['name'] = 'Events processed per second: '
+        bench_evt_per_sec['name'] += analysis_name
         bench_evt_per_sec['unit'] = 'Evt/s'
         bench_evt_per_sec['value'] = nevents_local / elapsed_time
         bench_time['range'] = 1000
-        bench_time['extra'] = 'Analysis: ' + sys.argv[1].removesuffix('/analysis_stage1.py')
+        bench_time['extra'] = 'Analysis path: ' + analysis_path
         benchmarks.append(bench_evt_per_sec)
 
         with open('benchmarks_bigger_better.json', 'w') as benchout:
