@@ -51,4 +51,27 @@ jobs:
         export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
         python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root
         '
-
+    - name: Run benchmark
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package
+        source ${{ matrix.SETUP }}
+        export LOCAL_DIR=$PWD
+        export PYTHONPATH=$PWD:$PYTHONPATH
+        export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH
+        export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
+        export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
+        python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --test --bench'
+    - name: Store benchmark result --- smaller better
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'customSmallerIsBetter'
+        output-file-path: benchmarks_smaller_better.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+    - name: Store benchmark result --- bigger better
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'customBiggerIsBetter'
+        output-file-path: benchmarks_bigger_better.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
