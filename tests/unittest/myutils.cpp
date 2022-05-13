@@ -1,6 +1,8 @@
-#include "catch2/catch_test_macros.hpp"
-#include <catch2/catch_approx.hpp>
 #include "FCCAnalyses/myUtils.h"
+
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
 
 TEST_CASE("d0", "[basics]") {
   TVector3 x(1., 0., 0.);
@@ -93,4 +95,111 @@ TEST_CASE("hasPV", "[basics]") {
 
   REQUIRE(myUtils::hasPV(vVec1) == 1);
   REQUIRE(myUtils::hasPV(vVec2) == 0);
+}
+
+
+TEST_CASE("distanceComp", "[basics]") {
+  edm4hep::Vector3f v1 = {1., -2., 3.};
+  TVector3 v2 = {0., 0., 0.};
+
+  REQUIRE(myUtils::get_distance(v1, v2, 0) == Catch::Approx(1.));
+  REQUIRE(myUtils::get_distance(v1, v2, 1) == Catch::Approx(-2.));
+  REQUIRE(myUtils::get_distance(v1, v2, 2) == Catch::Approx(3.));
+  REQUIRE(myUtils::get_distance(v1, v2, -1) == Catch::Approx(std::sqrt(14.)));
+  REQUIRE(myUtils::get_distance(v1, v2, 3) == Catch::Approx(std::sqrt(14.)));
+}
+
+
+TEST_CASE("distance", "[basic]") {
+  TVector3 v1 = {0., 0., 0.};
+  TVector3 v2 = {3., -2., 1.};
+
+  REQUIRE(myUtils::get_distance(v1, v2) == Catch::Approx(std::sqrt(14.)));
+}
+
+
+TEST_CASE("distanceVertex", "[basic]") {
+  edm4hep::VertexData v1;
+  v1.position = {1., -2., 3.};
+  edm4hep::VertexData v2;
+  v2.position = {0., 0., 0.};
+
+  REQUIRE(myUtils::get_distanceVertex(v1, v2, 0) == Catch::Approx(1.));
+  REQUIRE(myUtils::get_distanceVertex(v1, v2, 1) == Catch::Approx(-2.));
+  REQUIRE(myUtils::get_distanceVertex(v1, v2, 2) == Catch::Approx(3.));
+  float dist = myUtils::get_distanceVertex(v1, v2, -1);
+  REQUIRE(dist == Catch::Approx(std::sqrt(14.)));
+  dist = myUtils::get_distanceVertex(v1, v2, 3);
+  REQUIRE(dist == Catch::Approx(std::sqrt(14.)));
+}
+
+
+TEST_CASE("distanceErrorVertex", "[basic]") {
+  edm4hep::VertexData v1;
+  v1.covMatrix = {.1, .2, .3, .43, .67, .11};
+  v1.position = {1., 2., 3.};
+  edm4hep::VertexData v2;
+  v2.covMatrix = {.34, .2, .46, .43, .67, .003};
+  v2.position = {0., 0., 0.};
+
+  float err = myUtils::get_distanceErrorVertex(v1, v2, 0);
+  REQUIRE(err == Catch::Approx(std::sqrt(.44)));
+  err = myUtils::get_distanceErrorVertex(v1, v2, 1);
+  REQUIRE(err == Catch::Approx(std::sqrt(.76)));
+  err = myUtils::get_distanceErrorVertex(v1, v2, 2);
+  REQUIRE(err == Catch::Approx(std::sqrt(.113)));
+  err = myUtils::get_distanceErrorVertex(v1, v2, -1);
+  REQUIRE(err == Catch::Approx(std::sqrt(27.337/14.)));
+  err = myUtils::get_distanceErrorVertex(v1, v2, 3);
+  REQUIRE(err == Catch::Approx(std::sqrt(27.337/14.)));
+}
+
+
+TEST_CASE("MC_parent", "[basics]") {
+  edm4hep::MCParticleData p;
+  ROOT::VecOps::RVec<int> ind = {5, 3, 7,};
+
+  REQUIRE(myUtils::getMC_parent(0, p, ind) == -999);
+  REQUIRE(myUtils::getMC_parent(5, p, ind) == -999);
+
+  p.parents_begin = 0;
+  p.parents_end = 1;
+  REQUIRE(myUtils::getMC_parent(0, p, ind) == 5);
+}
+
+
+TEST_CASE("FCCAnalysesComposite_N", "[basics]") {
+  ROOT::VecOps::RVec<myUtils::FCCAnalysesComposite> cVec;
+  myUtils::FCCAnalysesComposite c1;
+  cVec.push_back(c1);
+  myUtils::FCCAnalysesComposite c2;
+  cVec.push_back(c2);
+
+  REQUIRE(myUtils::getFCCAnalysesComposite_N(cVec) == 2);
+}
+
+
+TEST_CASE("FCCAnalysesComposite2_N", "[basics]") {
+  ROOT::VecOps::RVec<myUtils::FCCAnalysesComposite2> cVec;
+  myUtils::FCCAnalysesComposite2 c1;
+  cVec.push_back(c1);
+  myUtils::FCCAnalysesComposite2 c2;
+  cVec.push_back(c2);
+
+  REQUIRE(myUtils::getFCCAnalysesComposite_N(cVec) == 2);
+}
+
+
+TEST_CASE("isPV", "[basics]") {
+  edm4hep::ReconstructedParticleData p;
+  p.tracks_begin = 0;
+  ROOT::VecOps::RVec<int> index1 = {3, 0, 7};
+  ROOT::VecOps::RVec<int> index2 = {3, 1, 7};
+
+  REQUIRE(myUtils::isPV(p, index1));
+  REQUIRE(!myUtils::isPV(p, index2));
+
+  BENCHMARK("isPV bench") {
+        return myUtils::isPV(p, index1);
+  };
 }
