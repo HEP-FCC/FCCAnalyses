@@ -9,6 +9,9 @@ jobs:
       fail-fast: false
       matrix:
         SETUP: ['/cvmfs/sw.hsf.org/key4hep/setup.sh', '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+        include:
+          - NAME: prod
+          - NAME: nightly
     steps:
     - uses: actions/checkout@v2
     - uses: cvmfs-contrib/github-action-cvmfs@v2
@@ -60,7 +63,12 @@ jobs:
         export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH
         export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
         export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
-        python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --test --bench'
+        python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --test --bench
+        jq \'.[].name |= "${{ matrix.NAME }}: " + .\' benchmarks_smaller_better.json > tmp.json
+        mv tmp.json benchmarks_smaller_better.json
+        jq \'.[].name |= "${{ matrix.NAME }}: " + .\' benchmarks_bigger_better.json > tmp.json
+        mv tmp.json benchmarks_bigger_better.json
+        '
     - name: Store benchmark result --- smaller better
       uses: benchmark-action/github-action-benchmark@v1
       with:
