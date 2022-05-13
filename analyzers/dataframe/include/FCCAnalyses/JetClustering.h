@@ -194,7 +194,7 @@ namespace JetClustering{
     float _beta; /// beta parameter
     float _gamma; /// gamma parameter
     //fastjet::JetAlgorithm _jetAlgorithm {fastjet::JetAlgorithm::undefined_jet_algorithm};///<internal jet algorithm
-    fastjet::contrib::ValenciaPlugin * jetAlgorithm;
+    fastjet::contrib::ValenciaPlugin * _jetAlgorithm;
     fastjet::RecombinationScheme _recombScheme;///<internal recombination scheme
     fastjet::ClusterSequence _cs;///<internal clustering sequence
     fastjet::JetDefinition _def;///<internal jetdefinition sequence

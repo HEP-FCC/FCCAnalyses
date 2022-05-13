@@ -152,7 +152,7 @@ clustering_ee_kt::clustering_ee_kt(int arg_exclusive,
 
   //define the clustering sequence and jet definition
   fastjet::ClusterSequence _cs;
-  _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _recombScheme);
+  _def = fastjet::JetDefinition(_jetAlgorithm, _recombScheme);
   if (_recombScheme == fastjet::RecombinationScheme::external_scheme) _def.set_recombiner(new ExternalRecombiner(_recombination));
 }
 JetClusteringUtils::FCCAnalysesJet clustering_ee_kt::operator() (const std::vector<fastjet::PseudoJet> &input) {
@@ -326,7 +326,7 @@ clustering_jade::clustering_jade(float arg_radius,
   fastjet::RecombinationScheme _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
 
   fastjet::ClusterSequence _cs;
-  _def(_jetAlgorithm);
+  _def = fastjet::JetDefinition(_jetAlgorithm);
   _def.set_recombination_scheme(_recombScheme);
   if (_recombScheme == fastjet::RecombinationScheme::external_scheme) _def.set_recombiner(new ExternalRecombiner(_recombination));
 }
