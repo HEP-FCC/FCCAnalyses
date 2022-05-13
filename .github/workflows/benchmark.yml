@@ -50,17 +50,21 @@ jobs:
         with:
           path: ./cache
           key: ${{ matrix.SETUP }}-benchmark
-      - name: Store benchmark result -- smaller better
+      - name: Store benchmark result --- smaller better
         uses: benchmark-action/github-action-benchmark@v1
         with:
           tool: 'customSmallerIsBetter'
           output-file-path: benchmarks_smaller_better.json
           external-data-json-path: ./cache/benchmark-data.json
           fail-on-alert: true
-      - name: Store benchmark result -- bigger better
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+      - name: Store benchmark result --- bigger better
         uses: benchmark-action/github-action-benchmark@v1
         with:
           tool: 'customBiggerIsBetter'
           output-file-path: benchmarks_bigger_better.json
           external-data-json-path: ./cache/benchmark-data.json
           fail-on-alert: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
