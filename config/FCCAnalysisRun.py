@@ -247,7 +247,7 @@ def saveBenchmark(outfile, benchmark):
     try:
         with open(outfile, 'r') as benchin:
             benchmarks = json.load(benchin)
-    except OSError.FileNotFoundError:
+    except OSError:
         pass
 
     benchmarks = [b for b in benchmarks if b['name'] != benchmark['name']]
