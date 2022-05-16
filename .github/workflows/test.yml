@@ -8,7 +8,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        SETUP: ['/cvmfs/sw.hsf.org/key4hep/setup.sh', '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+        include:
+        - SETUP: '/cvmfs/sw.hsf.org/key4hep/setup.sh'
+          NAME: prod
+        - SETUP: '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh'
+          NAME: nightly
     steps:
     - uses: actions/checkout@v2
     - uses: cvmfs-contrib/github-action-cvmfs@v2
@@ -44,11 +48,29 @@ jobs:
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
         source ${{ matrix.SETUP }}
-        export PYTHONPATH=$PWD:$PYTHONPATH
-        export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH
-        export ROOT_INCLUDE_PATH=$PWD/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH
-        export LOCAL_DIR=$PWD
-        export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
+        source ./setup.sh
         python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root
         '
-
+    - name: Prepare benchmark outputs
+      run: |
+        docker exec CI_container /bin/bash -c 'yum install -y jq
+        cd ./Package
+        jq ".[].name |= \"${{ matrix.NAME }} | \" + ." benchmarks_smaller_better.json > tmp.json
+        mv tmp.json benchmarks_smaller_better.json
+        jq ".[].name |= \"${{ matrix.NAME }} | \" + ." benchmarks_bigger_better.json > tmp.json
+        mv tmp.json benchmarks_bigger_better.json
+        '
+    - name: Store benchmark result --- smaller better
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'customSmallerIsBetter'
+        output-file-path: benchmarks_smaller_better.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+    - name: Store benchmark result --- bigger better
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'customBiggerIsBetter'
+        output-file-path: benchmarks_bigger_better.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true

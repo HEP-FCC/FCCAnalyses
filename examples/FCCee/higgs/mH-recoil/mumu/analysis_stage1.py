@@ -11,6 +11,9 @@ prodTag     = "FCCee/spring2021/IDEA/"
 #Optional: output directory, default is local running directory
 outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
 
+#Optional: analysisName, default is ""
+#analysisName = "My Analysis"
+
 #Optional: ncpus, default is 4
 #nCPUS       = 8
 
