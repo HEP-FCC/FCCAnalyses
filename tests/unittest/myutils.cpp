@@ -53,19 +53,19 @@ TEST_CASE("dPV2DV_ave", "[basics]") {
 
 
 TEST_CASE("PV_ntracks", "[basics]") {
-  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vVec;
+  ROOT::VecOps::RVec<FCCAnalyses::VertexingUtils::FCCAnalysesVertex> vVec;
 
-  VertexingUtils::FCCAnalysesVertex v1;
+  FCCAnalyses::VertexingUtils::FCCAnalysesVertex v1;
   v1.vertex.primary = 1;
   v1.ntracks = 7;
   vVec.push_back(v1);
 
-  VertexingUtils::FCCAnalysesVertex v2;
+  FCCAnalyses::VertexingUtils::FCCAnalysesVertex v2;
   v2.vertex.primary = 0;
   v2.ntracks = 14;
   vVec.push_back(v2);
 
-  VertexingUtils::FCCAnalysesVertex v3;
+  FCCAnalyses::VertexingUtils::FCCAnalysesVertex v3;
   v3.vertex.primary = -4;
   v3.ntracks = 21;
   vVec.push_back(v3);
@@ -77,19 +77,19 @@ TEST_CASE("PV_ntracks", "[basics]") {
 
 
 TEST_CASE("hasPV", "[basics]") {
-  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vVec1;
-  VertexingUtils::FCCAnalysesVertex v1;
+  ROOT::VecOps::RVec<FCCAnalyses::VertexingUtils::FCCAnalysesVertex> vVec1;
+  FCCAnalyses::VertexingUtils::FCCAnalysesVertex v1;
   v1.vertex.primary = 1;
   vVec1.push_back(v1);
-  VertexingUtils::FCCAnalysesVertex v2;
+  FCCAnalyses::VertexingUtils::FCCAnalysesVertex v2;
   v2.vertex.primary = 0;
   vVec1.push_back(v2);
 
-  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vVec2;
-  VertexingUtils::FCCAnalysesVertex v3;
+  ROOT::VecOps::RVec<FCCAnalyses::VertexingUtils::FCCAnalysesVertex> vVec2;
+  FCCAnalyses::VertexingUtils::FCCAnalysesVertex v3;
   v3.vertex.primary = 0;
   vVec2.push_back(v3);
-  VertexingUtils::FCCAnalysesVertex v4;
+  FCCAnalyses::VertexingUtils::FCCAnalysesVertex v4;
   v4.vertex.primary = -4;
   vVec2.push_back(v4);
 
