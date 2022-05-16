@@ -10,7 +10,7 @@ TEST_CASE("Mass", "[algorithms]") {
   p.momentum.z = 1.;
   p.energy = 2.;
   pVec.push_back(p);
-  REQUIRE(Algorithms::getMass(pVec) == Catch::Approx( 1. ));
+  REQUIRE(FCCAnalyses::Algorithms::getMass(pVec) == Catch::Approx( 1. ));
 }
 
 
@@ -19,7 +19,7 @@ TEST_CASE("AxisCosThetaInVec", "[algorithms]") {
   ROOT::VecOps::RVec<float> x {1., 0., -1};
   ROOT::VecOps::RVec<float> y {0., 1., 0.};
   ROOT::VecOps::RVec<float> z {0., 0., 0.};
-  ROOT::VecOps::RVec<float> res = Algorithms::getAxisCosTheta(ax, x, y, z);
+  ROOT::VecOps::RVec<float> res = FCCAnalyses::Algorithms::getAxisCosTheta(ax, x, y, z);
   REQUIRE(res[0] == Catch::Approx( 1. ));
   REQUIRE(res[1] == Catch::Approx( 0. ));
   REQUIRE(res[2] == Catch::Approx( -1. ));
@@ -28,9 +28,9 @@ TEST_CASE("AxisCosThetaInVec", "[algorithms]") {
 
 TEST_CASE("AxisCosTheta", "[algorithms]") {
   ROOT::VecOps::RVec<float> ax {0., 1., 0., 0., 0., 0.};
-  REQUIRE(Algorithms::getAxisCosTheta(ax, 1., 0., 0.) == Catch::Approx( 1. ));
-  REQUIRE(Algorithms::getAxisCosTheta(ax, 0., 1., 0.) == Catch::Approx( 0. ));
-  REQUIRE(Algorithms::getAxisCosTheta(ax, -1., 0., 0.) == Catch::Approx( -1. ));
+  REQUIRE(FCCAnalyses::Algorithms::getAxisCosTheta(ax, 1., 0., 0.) == Catch::Approx( 1. ));
+  REQUIRE(FCCAnalyses::Algorithms::getAxisCosTheta(ax, 0., 1., 0.) == Catch::Approx( 0. ));
+  REQUIRE(FCCAnalyses::Algorithms::getAxisCosTheta(ax, -1., 0., 0.) == Catch::Approx( -1. ));
 }
 
 
@@ -38,7 +38,7 @@ TEST_CASE("ThrustPointing", "[algorithms]") {
   ROOT::VecOps::RVec<float> np {1., -1., 1., -1., 1.};
   ROOT::VecOps::RVec<float> e {1., 1., 1., 1., 1.};
   ROOT::VecOps::RVec<float> t {0., -1., 0., 1., 0., -3.};
-  auto res = Algorithms::getThrustPointing(1)(np, e, t);
+  auto res = FCCAnalyses::Algorithms::getThrustPointing(1)(np, e, t);
   REQUIRE(res[1] == Catch::Approx( 1. ));
   REQUIRE(res[3] == Catch::Approx( -1. ));
   REQUIRE(res[5] == Catch::Approx( 3. ));
