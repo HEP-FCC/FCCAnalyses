@@ -242,6 +242,22 @@ def getchunkList(fileList, chunks):
 
 
 #__________________________________________________________
+def saveBenchmark(outfile, benchmark):
+    benchmarks = []
+    try:
+        with open(outfile, 'r') as benchin:
+            benchmarks = json.load(benchin)
+    except OSError.FileNotFoundError:
+        pass
+
+    benchmarks = [b for b in benchmarks if b['name'] != benchmark['name']]
+    benchmarks.append(benchmark)
+
+    with open(outfile, 'w') as benchout:
+        json.dump(benchmarks, benchout, indent=2)
+
+
+#__________________________________________________________
 def getCommandOutput(command):
     p = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE,universal_newlines=True)
     (stdout,stderr) = p.communicate()
@@ -482,12 +498,11 @@ def runLocal(rdfModule, fileList, output, batch):
     if args.bench:
         import json
 
-        analysis_path = sys.argv[1].removesuffix('/analysis_stage1.py')
+        analysis_path = sys.argv[1].rsplit('/', 1)[0]
         analysis_name = getElement(rdfModule, 'analysisName')
         if not analysis_name:
             analysis_name = analysis_path
 
-        benchmarks = []
         bench_time = {}
         bench_time['name'] = 'Time spent running the analysis: '
         bench_time['name'] += analysis_name
@@ -495,12 +510,8 @@ def runLocal(rdfModule, fileList, output, batch):
         bench_time['value'] = elapsed_time
         bench_time['range'] = 10
         bench_time['extra'] = 'Analysis path: ' + analysis_path
-        benchmarks.append(bench_time)
+        saveBenchmark('benchmarks_smaller_better.json', bench_time)
 
-        with open('benchmarks_smaller_better.json', 'w') as benchout:
-            json.dump(benchmarks, benchout, indent=2)
-
-        benchmarks = []
         bench_evt_per_sec = {}
         bench_evt_per_sec['name'] = 'Events processed per second: '
         bench_evt_per_sec['name'] += analysis_name
@@ -508,10 +519,7 @@ def runLocal(rdfModule, fileList, output, batch):
         bench_evt_per_sec['value'] = nevents_local / elapsed_time
         bench_time['range'] = 1000
         bench_time['extra'] = 'Analysis path: ' + analysis_path
-        benchmarks.append(bench_evt_per_sec)
-
-        with open('benchmarks_bigger_better.json', 'w') as benchout:
-            json.dump(benchmarks, benchout, indent=2)
+        saveBenchmark('benchmarks_bigger_better.json', bench_evt_per_sec)
 
 
 #__________________________________________________________
