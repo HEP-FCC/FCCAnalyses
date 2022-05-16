@@ -13,6 +13,8 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 
+namespace FCCAnalyses{
+
 namespace CaloNtupleizer{
 
 void loadGeometry(std::string xmlGeometryPath, std::string readoutName);
@@ -42,7 +44,7 @@ ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (ROOT::VecOps::RVec<
 ROOT::VecOps::RVec<int> getCaloCluster_firstCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
 ROOT::VecOps::RVec<int> getCaloCluster_lastCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in);
 
-// SimParticleSecondary 
+// SimParticleSecondary
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_x (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_y (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_z (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
@@ -54,6 +56,7 @@ ROOT::VecOps::RVec<float> getSimParticleSecondaries_energy (ROOT::VecOps::RVec<e
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_PDG (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
 
+}//end NS CaloNtupleizer
 
-}
+}//end NS FCCAnalyses
 #endif

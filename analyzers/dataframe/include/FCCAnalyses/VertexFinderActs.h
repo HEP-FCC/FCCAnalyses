@@ -9,8 +9,13 @@
 #include <TMatrixDSym.h>
 #include "VertexingUtils.h"
 
-namespace VertexFinderActs{
-  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-}
+namespace FCCAnalyses{
 
+namespace VertexFinderActs{
+
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
+}//end NS VertexFinderActs
+
+}//end NS FCCAnalyses
 #endif

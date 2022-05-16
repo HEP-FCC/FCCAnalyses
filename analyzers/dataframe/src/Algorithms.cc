@@ -12,7 +12,9 @@
 #include "Math/Functor.h"
 #include "Math/LorentzVector.h"
 
-using namespace Algorithms;
+namespace FCCAnalyses{
+
+namespace Algorithms{
 
 sphericityFit::sphericityFit(const ROOT::VecOps::RVec<float> & arg_px,
 	                           const ROOT::VecOps::RVec<float> & arg_py,
@@ -21,7 +23,7 @@ sphericityFit::sphericityFit(const ROOT::VecOps::RVec<float> & arg_px,
 	_py=arg_py;
 	_pz=arg_pz;
 }
-float Algorithms::sphericityFit::operator()(const double *pars){
+float sphericityFit::operator()(const double *pars){
 
   double num = 0.;
   double den = 0.;
@@ -55,7 +57,7 @@ minimize_sphericity::minimize_sphericity(std::string arg_minname,
   _min->SetTolerance(_tolerance);
   _min->SetPrintLevel(0);
 }
-ROOT::VecOps::RVec<float> Algorithms::minimize_sphericity::operator()(const ROOT::VecOps::RVec<float> & px,
+ROOT::VecOps::RVec<float> minimize_sphericity::operator()(const ROOT::VecOps::RVec<float> & px,
 	                                                                    const ROOT::VecOps::RVec<float> & py,
 																																			const ROOT::VecOps::RVec<float> & pz){
   _min->SetVariable(0,"x",_variable[0], _step[0]);
@@ -91,7 +93,7 @@ thrustFit::thrustFit(const ROOT::VecOps::RVec<float> & arg_px,
 	_py=arg_py;
 	_pz=arg_pz;
 }
-float Algorithms::thrustFit::operator()(const double *pars){
+float thrustFit::operator()(const double *pars){
 
   double num = 0.;
   double den = 0.;
@@ -124,7 +126,7 @@ minimize_thrust::minimize_thrust(std::string arg_minname,
   _min->SetTolerance(_tolerance);
   _min->SetPrintLevel(0);
 }
-ROOT::VecOps::RVec<float> Algorithms::minimize_thrust::operator()(const ROOT::VecOps::RVec<float> & px,
+ROOT::VecOps::RVec<float> minimize_thrust::operator()(const ROOT::VecOps::RVec<float> & px,
 	                                                                const ROOT::VecOps::RVec<float> & py,
 																																	const ROOT::VecOps::RVec<float> & pz){
   _min->SetVariable(0,"x",_variable[0], _step[0]);
@@ -166,7 +168,7 @@ getAxisCharge::getAxisCharge(bool arg_pos,
   _pos = arg_pos;
 	_power = arg_power;
 }
-float  Algorithms::getAxisCharge::operator() (const ROOT::VecOps::RVec<float> & angle,
+float  getAxisCharge::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                            const ROOT::VecOps::RVec<float> & charge,
 																							const ROOT::VecOps::RVec<float> & px,
 																							const ROOT::VecOps::RVec<float> & py,
@@ -187,7 +189,7 @@ float  Algorithms::getAxisCharge::operator() (const ROOT::VecOps::RVec<float> & 
 getAxisMass::getAxisMass(bool arg_pos){
   _pos=arg_pos;
 }
-float  Algorithms::getAxisMass::operator() (const ROOT::VecOps::RVec<float> & angle,
+float  getAxisMass::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                          const ROOT::VecOps::RVec<float> & energy,
 																						const ROOT::VecOps::RVec<float> & px,
 																						const ROOT::VecOps::RVec<float> & py,
@@ -206,7 +208,7 @@ float  Algorithms::getAxisMass::operator() (const ROOT::VecOps::RVec<float> & an
 getAxisEnergy::getAxisEnergy(bool arg_pos){
 	_pos=arg_pos;
 }
-ROOT::VecOps::RVec<float>  Algorithms::getAxisEnergy::operator() (const ROOT::VecOps::RVec<float> & angle,
+ROOT::VecOps::RVec<float>  getAxisEnergy::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                                                const ROOT::VecOps::RVec<float> & charge,
 																																	const ROOT::VecOps::RVec<float> & energy){
   ROOT::VecOps::RVec<float> result={0.,0.,0.};
@@ -229,7 +231,7 @@ ROOT::VecOps::RVec<float>  Algorithms::getAxisEnergy::operator() (const ROOT::Ve
 getAxisN::getAxisN(bool arg_pos){
 	_pos=arg_pos;
 }
-ROOT::VecOps::RVec<int>  Algorithms::getAxisN::operator() (const ROOT::VecOps::RVec<float> & angle,
+ROOT::VecOps::RVec<int>  getAxisN::operator() (const ROOT::VecOps::RVec<float> & angle,
 	                                                         const ROOT::VecOps::RVec<float> & charge){
   ROOT::VecOps::RVec<int> result={0,0,0};
   for (size_t i = 0; i < angle.size(); ++i) {
@@ -250,7 +252,7 @@ ROOT::VecOps::RVec<int>  Algorithms::getAxisN::operator() (const ROOT::VecOps::R
 getThrustPointing::getThrustPointing(float arg_dir){
   _dir=arg_dir;
 }
-ROOT::VecOps::RVec<float> Algorithms::getThrustPointing::operator()(const ROOT::VecOps::RVec<float> & in,
+ROOT::VecOps::RVec<float> getThrustPointing::operator()(const ROOT::VecOps::RVec<float> & in,
 	                                                                  const ROOT::VecOps::RVec<float> & rp_e,
 																																		const ROOT::VecOps::RVec<float> & thrust){
 
@@ -273,7 +275,7 @@ ROOT::VecOps::RVec<float> Algorithms::getThrustPointing::operator()(const ROOT::
 }
 
 
-float Algorithms::getMass(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> & in){
+float getMass(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> & in){
   ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double>> result;
   for (auto & p: in) {
     ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double>> tmp;
@@ -284,7 +286,7 @@ float Algorithms::getMass(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
 }
 
 
-ROOT::VecOps::RVec<float> Algorithms::getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
+ROOT::VecOps::RVec<float> getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
 	                                                    const ROOT::VecOps::RVec<float> & px,
 																											const ROOT::VecOps::RVec<float> & py,
 																											const ROOT::VecOps::RVec<float> & pz){
@@ -299,7 +301,7 @@ ROOT::VecOps::RVec<float> Algorithms::getAxisCosTheta(const ROOT::VecOps::RVec<f
 }
 
 
-float Algorithms::getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
+float getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
 	                                float px,
 																	float py,
 																	float pz){
@@ -309,3 +311,7 @@ float Algorithms::getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
 
   return result;
 }
+
+}//end NS Algorithms
+
+}//end NS FCCAnalyses

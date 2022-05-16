@@ -10,6 +10,8 @@
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/ParticleIDData.h"
 
+namespace FCCAnalyses{
+
 namespace ReconstructedParticle{
 
   /// build the resonance from 2 particles from an arbitrary list of input ReconstructedPartilces. Keep the closest to the mass given as input
@@ -18,14 +20,14 @@ namespace ReconstructedParticle{
     resonanceBuilder(float arg_resonance_mass);
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs);
   };
-  
+
   /// build the recoil from an arbitrary list of input ReconstructedPartilces and the center of mass energy
   struct recoilBuilder {
     recoilBuilder(float arg_sqrts);
     float m_sqrts = 240.0;
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) ;
   };
-  
+
   /// return the angular separations (min / max / average) between a collection of particles
   struct angular_separationBuilder {
     angular_separationBuilder( int arg_delta); //  0, 1, 2 = max, min, average
@@ -39,7 +41,7 @@ namespace ReconstructedParticle{
     float m_min_pt = 1.; //> transverse momentum threshold [GeV]
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
-  
+
   /// select ReconstructedParticles with momentum greater than a minimum value [GeV]
   struct sel_p {
     sel_p(float arg_min_p, float arg_max_p = 1e10);
@@ -70,21 +72,21 @@ namespace ReconstructedParticle{
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<bool> tags, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
-  
-  
-  
+
+
+
   /// return reconstructed particles
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// return the transverse momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-  
+
   /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// return the momenta of the input ReconstructedParticles
   float get_p(edm4hep::ReconstructedParticleData in);
-  
+
   /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
@@ -93,7 +95,7 @@ namespace ReconstructedParticle{
 
   /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-  
+
   /// return the pseudo-rapidity of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_eta(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
@@ -108,12 +110,12 @@ namespace ReconstructedParticle{
 
   /// return the energy of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_e(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-  
+
   /// return the masses of the input ReconstructedParticles
-  ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+  ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// return the charges of the input ReconstructedParticles
-  ROOT::VecOps::RVec<float> get_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in); 
+  ROOT::VecOps::RVec<float> get_charge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// return the type of the input ReconstructedParticles
   ROOT::VecOps::RVec<int> get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
@@ -129,7 +131,7 @@ namespace ReconstructedParticle{
 
   /// concatenate both input vectors and return the resulting vector
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
-  
+
   /// remove elements of vector y from vector x
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> remove( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
 
@@ -137,9 +139,12 @@ namespace ReconstructedParticle{
   int get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// returns the bjet flavour
-  ROOT::VecOps::RVec<bool> getJet_btag(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> values); 
+  ROOT::VecOps::RVec<bool> getJet_btag(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> values);
 
   /// get number of b-jets
   int getJet_ntags(ROOT::VecOps::RVec<bool> in);
-}
+
+}//end NS ReconstructedParticle
+
+}//end NS FCCAnalyses
 #endif

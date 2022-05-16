@@ -10,6 +10,8 @@
 #include "Math/Minimizer.h"
 #include "ROOT/RVec.hxx"
 
+namespace FCCAnalyses{
+
 namespace Algorithms{
 
   /** @name Algorithms
@@ -173,5 +175,7 @@ namespace Algorithms{
 
   ///@}
 
-}
+}//end NS Algorithms
+
+}//end NS FCCAnalyses
 #endif

@@ -5,9 +5,9 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Selector.hh"
 
+namespace FCCAnalyses{
 
 namespace JetClustering{
-
 
 clustering_kt::clustering_kt(float arg_radius,
                              int arg_exclusive,
@@ -350,4 +350,6 @@ JetClusteringUtils::FCCAnalysesJet clustering_jade::operator() (const std::vecto
   return result;
 }
 
-}//End NS JetClustering
+}//end NS JetClustering
+
+}//end NS FCCAnalyses

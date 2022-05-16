@@ -29,13 +29,14 @@
 
 #include "TMath.h"
 
-
-using namespace VertexFinderActs;
 using namespace Acts::UnitLiterals;
-//template <typename input_track_t>
+
+namespace FCCAnalyses{
+
+namespace VertexFinderActs{
 
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
-VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
+VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
 
   using Propagator = Acts::Propagator<Acts::EigenStepper<>>;
 
@@ -265,3 +266,7 @@ VertexFinderActs::VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> track
 
   return TheVertexColl;
 }
+
+}//end NS VertexFinderActs
+
+}//end NS FCCAnalyses

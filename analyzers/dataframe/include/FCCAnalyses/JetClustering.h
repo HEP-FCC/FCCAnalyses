@@ -25,6 +25,7 @@
 /** Jet clustering interface.
 This represents a set functions and utilities to perfom jet clustering from a list of.
 */
+namespace FCCAnalyses{
 
 namespace JetClustering{
 
@@ -223,7 +224,8 @@ namespace JetClustering{
     fastjet::JetDefinition _def;///<internal jetdefinition sequence
   };
   ///@}
-}//#end NS JetClustering
 
+}//end NS JetClustering
 
+}//end NS FCCAnalyses
 #endif

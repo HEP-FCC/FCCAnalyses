@@ -741,6 +741,6 @@ ROOT::VecOps::RVec<int> get_leptons_origin(const ROOT::VecOps::RVec<edm4hep::MCP
   return result;
 }
 
-}//#end NS MCParticle
+}//end NS MCParticle
 
 }//end NS FCCAnalyses

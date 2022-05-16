@@ -11,6 +11,7 @@
 /** Jet tagging utilities interface.
 This represents a set functions and utilities to perfom jet tagging from a list of jets.
 */
+namespace FCCAnalyses{
 
 namespace JetTaggingUtils{
 
@@ -18,7 +19,7 @@ namespace JetTaggingUtils{
    *  Jet tagging interface utilities.
   */
 
-  //Get flavour association of jet 
+  //Get flavour association of jet
   ROOT::VecOps::RVec<int> get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in, ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin);
   //Get b-tags with an efficiency applied
   ROOT::VecOps::RVec<int> get_btag(ROOT::VecOps::RVec<int> in, float efficiency, float mistag_c=0., float mistag_l=0., float mistag_g=0.);
@@ -37,6 +38,8 @@ namespace JetTaggingUtils{
   };
 
   ///@}
-}
+}//end NS JetTaggingUtils
+
+}//end NS FCCAnalyses
 
 #endif
