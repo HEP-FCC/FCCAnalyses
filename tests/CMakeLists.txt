@@ -4,7 +4,7 @@ add_subdirectory(unittest)
 function(add_integration_test _testname)
 
   add_test(NAME ${_testname} 
-          COMMAND python config/FCCAnalysisRun.py ${_testname} --test --nevents 10
+          COMMAND python config/FCCAnalysisRun.py ${_testname} --test --nevents 100 --bench
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
           )
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
