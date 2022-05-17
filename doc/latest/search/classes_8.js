@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['thrustfit_294',['thrustFit',['../struct_algorithms_1_1thrust_fit.html',1,'Algorithms']]]
+  ['recoilbuilder_0',['recoilBuilder',['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1recoil_builder.html',1,'FCCAnalyses::ReconstructedParticle']]],
+  ['resonancebuilder_1',['resonanceBuilder',['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1resonance_builder.html',1,'FCCAnalyses::ReconstructedParticle']]]
 ];

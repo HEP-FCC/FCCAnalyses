@@ -1,0 +1,5 @@
+<map id="FCCAnalyses::MCParticle::get_indices_ExclusiveDecay" name="FCCAnalyses::MCParticle::get_indices_ExclusiveDecay">
+<area shape="rect" id="node1" title="A shorthand for get_indices, with m_chargeConjugateDaughters=false, inclusiveDecay=false." alt="" coords="5,190,219,231"/>
+<area shape="rect" id="node2" href="$struct_f_c_c_analyses_1_1_m_c_particle_1_1get__indices.html" title="return a list of indices that correspond to a given MC decay. The list contains the index of the moth..." alt="" coords="21,97,203,138"/>
+<area shape="rect" id="node3" title=" " alt="" coords="43,5,181,32"/>
+</map>

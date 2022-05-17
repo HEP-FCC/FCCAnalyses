@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['clustering_5fantikt_259',['clustering_antikt',['../struct_jet_clustering_1_1clustering__antikt.html',1,'JetClustering']]],
-  ['clustering_5fcambridge_260',['clustering_cambridge',['../struct_jet_clustering_1_1clustering__cambridge.html',1,'JetClustering']]],
-  ['clustering_5fee_5fgenkt_261',['clustering_ee_genkt',['../struct_jet_clustering_1_1clustering__ee__genkt.html',1,'JetClustering']]],
-  ['clustering_5fee_5fkt_262',['clustering_ee_kt',['../struct_jet_clustering_1_1clustering__ee__kt.html',1,'JetClustering']]],
-  ['clustering_5fgenkt_263',['clustering_genkt',['../struct_jet_clustering_1_1clustering__genkt.html',1,'JetClustering']]],
-  ['clustering_5fjade_264',['clustering_jade',['../struct_jet_clustering_1_1clustering__jade.html',1,'JetClustering']]],
-  ['clustering_5fkt_265',['clustering_kt',['../struct_jet_clustering_1_1clustering__kt.html',1,'JetClustering']]],
-  ['clustering_5fvalencia_266',['clustering_valencia',['../struct_jet_clustering_1_1clustering__valencia.html',1,'JetClustering']]]
+  ['build_5fcomposite_5fvertex_0',['build_composite_vertex',['../struct_f_c_c_analyses_1_1my_utils_1_1build__composite__vertex.html',1,'FCCAnalyses::myUtils']]],
+  ['build_5fd0_1',['build_D0',['../struct_f_c_c_analyses_1_1my_utils_1_1build___d0.html',1,'FCCAnalyses::myUtils']]],
+  ['build_5ftau23pi_2',['build_tau23pi',['../struct_f_c_c_analyses_1_1my_utils_1_1build__tau23pi.html',1,'FCCAnalyses::myUtils']]],
+  ['build_5ftau23pi_5fvertexing_3',['build_tau23pi_vertexing',['../struct_f_c_c_analyses_1_1my_utils_1_1build__tau23pi__vertexing.html',1,'FCCAnalyses::myUtils']]]
 ];

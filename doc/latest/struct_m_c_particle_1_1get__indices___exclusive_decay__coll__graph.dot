@@ -1,9 +1,0 @@
-digraph "MCParticle::get_indices_ExclusiveDecay"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="MCParticle::get_indices\l_ExclusiveDecay",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="return a list of indices that correspond to a given MC decay. The list contains the index of the moth..."];
-  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" m_pdg_daughters" ,fontname="Helvetica"];
-  Node2 [label="std::vector\< int \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
-}

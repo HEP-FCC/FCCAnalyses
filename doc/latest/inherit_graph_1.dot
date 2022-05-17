@@ -1,8 +1,0 @@
-digraph "Graphical Class Hierarchy"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node0 [label="Algorithms::getAxisEnergy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$struct_algorithms_1_1get_axis_energy.html",tooltip="Get the energy in a given hemisphere (defined by it's angle wrt to axis). Returns 3 values: total,..."];
-}

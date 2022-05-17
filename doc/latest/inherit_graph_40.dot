@@ -1,8 +1,0 @@
-digraph "Graphical Class Hierarchy"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node0 [label="VertexingUtils::selTracks",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$struct_vertexing_utils_1_1sel_tracks.html",tooltip="Selection of particles based on the d0 / z0 significances of the associated track."];
-}

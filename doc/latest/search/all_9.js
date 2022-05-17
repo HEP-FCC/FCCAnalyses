@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['jetclustering_131',['JetClustering',['../namespace_jet_clustering.html',1,'']]],
-  ['jetclustering_2ecc_132',['JetClustering.cc',['../_jet_clustering_8cc.html',1,'']]],
-  ['jetclustering_2eh_133',['JetClustering.h',['../_jet_clustering_8h.html',1,'']]],
-  ['jetclusteringutils_134',['JetClusteringUtils',['../namespace_jet_clustering_utils.html',1,'']]],
-  ['jetclusteringutils_2ecc_135',['JetClusteringUtils.cc',['../_jet_clustering_utils_8cc.html',1,'']]],
-  ['jetclusteringutils_2eh_136',['JetClusteringUtils.h',['../_jet_clustering_utils_8h.html',1,'']]],
-  ['jets_137',['jets',['../struct_jet_clustering_utils_1_1_f_c_c_analyses_jet.html#af625cd4583adbbf059a77186fe8ed0b7',1,'JetClusteringUtils::FCCAnalysesJet']]]
+  ['index_0',['index',['../struct_f_c_c_analyses_1_1my_utils_1_1_f_c_c_analyses_composite.html#a456b23abb9e6a6233b5eb1da95ccaefb',1,'FCCAnalyses::myUtils::FCCAnalysesComposite']]],
+  ['init_1',['init',['../classcontrib_1_1_valencia_brief_jet.html#a634c8167dc6b0e89bcf19e54e30a4990',1,'contrib::ValenciaBriefJet']]],
+  ['initialise_5ffccanalysesjet_2',['initialise_FCCAnalysesJet',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a9c7faf747940a3011fa45c14c0a17c45',1,'FCCAnalyses::JetClusteringUtils']]],
+  ['isprimary_5ffortracks_3',['IsPrimary_forTracks',['../namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#a9f074d5475db3aab1ce870f281a4a8ba',1,'FCCAnalyses::VertexFitterSimple']]],
+  ['ispv_4',['isPV',['../namespace_f_c_c_analyses_1_1my_utils.html#aa6c482d29e073751795648727a554892',1,'FCCAnalyses::myUtils']]]
 ];
