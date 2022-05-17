@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1652812280489,
+  "lastUpdate": 1652812282163,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -686,6 +686,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "801b02c4d42a474b2a033118fbe5c1c31402e85e",
+          "message": "Re-enabling documentation generation (#171)\n\n* Add docs workflow\r\n\r\n* Removing matrix\r\n\r\n* Add graphviz\r\n\r\n* Removing old ci scripts",
+          "timestamp": "2022-05-17T18:16:23Z",
+          "tree_id": "f15cda1b60d6cf7f4396a42b9dcf3b651bc9c5e4",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/801b02c4d42a474b2a033118fbe5c1c31402e85e"
+        },
+        "date": 1652812281668,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 3.594095266064424,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.494112510561548,
+            "unit": "Evt/s"
           }
         ]
       }
