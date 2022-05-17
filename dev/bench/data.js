@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1652779926199,
+  "lastUpdate": 1652779928245,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -398,6 +398,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "39028c46d0a0bdf96fe9c9cac034e50e3f6ae1ea",
+          "message": "Benchmarking only at 'push' (#169)\n\n* Running benchmarking only at 'push'\r\n\r\n* Removing benchmarking from the testing action",
+          "timestamp": "2022-05-17T11:24:30+02:00",
+          "tree_id": "6bf50f8fc113134548a9d634547b66b801e33687",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/39028c46d0a0bdf96fe9c9cac034e50e3f6ae1ea"
+        },
+        "date": 1652779927449,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 5.655227902851413,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.428806230813444,
+            "unit": "Evt/s"
           }
         ]
       }
