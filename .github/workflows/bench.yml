@@ -1,6 +1,6 @@
-name: linux
+name: benchmark
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
@@ -26,7 +26,7 @@ jobs:
          source ${{ matrix.SETUP }};\
          cd build;\
          cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -G Ninja ..;'
-    - name: Compile 
+    - name: Compile
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source ${{ matrix.SETUP }};\
@@ -44,10 +44,26 @@ jobs:
         source ${{ matrix.SETUP }};\
         cd build;\
         ninja -k0 && ctest --output-on-failure;'
-    - name: Test using local Setup.sh
+    - name: Prepare benchmark outputs
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package
-        source ${{ matrix.SETUP }}
-        source ./setup.sh
-        python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root
+        docker exec CI_container /bin/bash -c 'yum install -y jq
+        cd ./Package
+        jq ".[].name |= \"${{ matrix.NAME }} | \" + ." benchmarks_smaller_better.json > tmp.json
+        mv tmp.json benchmarks_smaller_better.json
+        jq ".[].name |= \"${{ matrix.NAME }} | \" + ." benchmarks_bigger_better.json > tmp.json
+        mv tmp.json benchmarks_bigger_better.json
         '
+    - name: Store benchmark result --- smaller better
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'customSmallerIsBetter'
+        output-file-path: benchmarks_smaller_better.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+    - name: Store benchmark result --- bigger better
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'customBiggerIsBetter'
+        output-file-path: benchmarks_bigger_better.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
