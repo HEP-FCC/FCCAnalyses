@@ -16,6 +16,7 @@ jobs:
     - name: Compile Documentation
       run: |
         docker exec CI_container /bin/bash -c 'cd Package
+          yum install -y graphviz
           source ./setup.sh
           mkdir -p build
           cd build
