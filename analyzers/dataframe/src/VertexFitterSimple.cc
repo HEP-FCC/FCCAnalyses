@@ -6,13 +6,11 @@
 #include "TFile.h"
 #include "TString.h"
 
+namespace FCCAnalyses{
 
-using namespace VertexFitterSimple;
+namespace VertexFitterSimple{
 
-
-
-
-TVector3 VertexFitterSimple::ParToP(TVectorD Par){
+TVector3 ParToP(TVectorD Par){
   double fB = 2;  // 2 Tesla
 
   Double_t C    = Par(2);
@@ -29,7 +27,7 @@ TVector3 VertexFitterSimple::ParToP(TVectorD Par){
 }
 
 
-TVectorD VertexFitterSimple::XPtoPar(TVector3 x, TVector3 p, Double_t Q){
+TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q){
 
   double fB = 2;  // 2 Tesla
 
@@ -67,7 +65,7 @@ TVectorD VertexFitterSimple::XPtoPar(TVector3 x, TVector3 p, Double_t Q){
 //
 //TH1F* hTry;
 //
-Double_t VertexFitterSimple::FastRv(TVectorD p1, TVectorD p2){
+Double_t FastRv(TVectorD p1, TVectorD p2){
   //
   // Find radius of intersection between two tracks in the transverse plane
   //
@@ -113,7 +111,7 @@ Double_t VertexFitterSimple::FastRv(TVectorD p1, TVectorD p2){
   //
   return R;
 }
-TMatrixDSym VertexFitterSimple::RegInv3(TMatrixDSym &Smat0){
+TMatrixDSym RegInv3(TMatrixDSym &Smat0){
   //
   // Regularized inversion of symmetric 3x3 matrix with positive diagonal elements
   //
@@ -171,7 +169,7 @@ TMatrixDSym VertexFitterSimple::RegInv3(TMatrixDSym &Smat0){
 //
 //
 //
-TMatrixD VertexFitterSimple::Fill_A(TVectorD par, Double_t phi){
+TMatrixD Fill_A(TVectorD par, Double_t phi){
   //
   // Derivative of track 3D position vector with respect to track parameters at constant phase
   //
@@ -214,7 +212,7 @@ TMatrixD VertexFitterSimple::Fill_A(TVectorD par, Double_t phi){
 }
 
 //
-TVectorD VertexFitterSimple::Fill_a(TVectorD par, Double_t phi){
+TVectorD Fill_a(TVectorD par, Double_t phi){
   //
   // Derivative of track 3D position vector with respect to phase at constant track parameters
   //
@@ -239,7 +237,7 @@ TVectorD VertexFitterSimple::Fill_a(TVectorD par, Double_t phi){
 }
 //
 
-TVectorD VertexFitterSimple::Fill_x0(TVectorD par){
+TVectorD Fill_x0(TVectorD par){
   //
   // Calculate track 3D position at R = |D| (minimum approach to z-axis)
   //
@@ -261,7 +259,7 @@ TVectorD VertexFitterSimple::Fill_x0(TVectorD par){
 }
 
 //
-TVectorD VertexFitterSimple::Fill_x(TVectorD par, Double_t phi){
+TVectorD Fill_x(TVectorD par, Double_t phi){
   //
   // Calculate track 3D position for a given phase, phi
   //
@@ -285,7 +283,7 @@ TVectorD VertexFitterSimple::Fill_x(TVectorD par, Double_t phi){
 
 
 
-VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary,
+VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
 								     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 								     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
 								     bool BeamSpotConstraint,
@@ -326,7 +324,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter( int Primary
 
 
 
-VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Primary,
+VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
 									ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                                                                         bool BeamSpotConstraint,
                                                                         double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
@@ -727,7 +725,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitterSimple::VertexFitter_Tk( int Prim
 
 
 
-ROOT::VecOps::RVec<edm4hep::TrackState>   VertexFitterSimple::get_PrimaryTracks( VertexingUtils::FCCAnalysesVertex  initialVertex,
+ROOT::VecOps::RVec<edm4hep::TrackState>   get_PrimaryTracks( VertexingUtils::FCCAnalysesVertex  initialVertex,
                                                                         ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                                                                         bool BeamSpotConstraint,
                                                                         double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
@@ -746,7 +744,7 @@ float CHI2MAX = 25  ;
 
 if (debug) {
         if (ipass == 0) std::cout << " \n --------------------------------------------------------\n" << std::endl;
-        std::cout << " ... enter in VertexFitterSimple::get_PrimaryTracks   ipass = " << ipass <<  std::endl;
+        std::cout << " ... enter in get_PrimaryTracks   ipass = " << ipass <<  std::endl;
         if (ipass == 0) std::cout  << "    initial number of tracks =  " << tracks.size() <<  std::endl;
 }
 
@@ -777,13 +775,13 @@ if ( chi2max < CHI2MAX ) {
 seltracks.erase( seltracks.begin() + maxElementIndex );
 ipass ++;
 
- VertexingUtils::FCCAnalysesVertex vtx = VertexFitterSimple::VertexFitter_Tk(  isPrimaryVertex,
+ VertexingUtils::FCCAnalysesVertex vtx = VertexFitter_Tk(  isPrimaryVertex,
                                                                                 seltracks,
                                                                          BeamSpotConstraint,
                                                                          bsc_sigmax, bsc_sigmay, bsc_sigmaz,
                                                                          bsc_x, bsc_y, bsc_z )  ;
 
- return VertexFitterSimple::get_PrimaryTracks( vtx, seltracks, BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz,
+ return get_PrimaryTracks( vtx, seltracks, BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz,
                                                 bsc_x,  bsc_y, bsc_z, ipass ) ;
 
 
@@ -791,7 +789,7 @@ ipass ++;
 }
 
 
-ROOT::VecOps::RVec<edm4hep::TrackState>   VertexFitterSimple::get_NonPrimaryTracks( ROOT::VecOps::RVec<edm4hep::TrackState> allTracks,
+ROOT::VecOps::RVec<edm4hep::TrackState>   get_NonPrimaryTracks( ROOT::VecOps::RVec<edm4hep::TrackState> allTracks,
                                                                                     ROOT::VecOps::RVec<edm4hep::TrackState> primaryTracks ) {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> result;
@@ -810,7 +808,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState>   VertexFitterSimple::get_NonPrimaryTrac
 }
 
 
-ROOT::VecOps::RVec<bool> VertexFitterSimple::IsPrimary_forTracks( ROOT::VecOps::RVec<edm4hep::TrackState> allTracks,
+ROOT::VecOps::RVec<bool> IsPrimary_forTracks( ROOT::VecOps::RVec<edm4hep::TrackState> allTracks,
                                                                   ROOT::VecOps::RVec<edm4hep::TrackState> primaryTracks ) {
 
   ROOT::VecOps::RVec<bool> result;
@@ -826,3 +824,7 @@ ROOT::VecOps::RVec<bool> VertexFitterSimple::IsPrimary_forTracks( ROOT::VecOps::
   }
  return result;
 }
+
+}//end NS VertexFitterSimple
+
+}//end NS FCCAnalyses

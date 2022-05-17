@@ -23,14 +23,15 @@
 #include "edm4hep/Vertex.h"
 
 
-/** Vertex interface using Franco Bedeshi's code. 
-This represents a set functions and utilities to perfom vertexing from a list of tracks.  
+/** Vertex interface using Franco Bedeshi's code.
+This represents a set functions and utilities to perfom vertexing from a list of tracks.
 */
+namespace FCCAnalyses{
 
 namespace VertexFitterSimple{
 
   /// Vertex (code from Franco Bedeschi): passing the recoparticles. Units for the beamspot constraint: mum
-  VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary, 
+  VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
 						   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 						   ROOT::VecOps::RVec<edm4hep::TrackState> alltracks,
 						   bool BeamSpotConstraint = false,
@@ -40,8 +41,8 @@ namespace VertexFitterSimple{
 
   /// Vertex (code from Franco Bedeschi): passing the tracks. Units for the beamspot constraint: mum
   VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-						      bool BeamSpotConstraint = false,		
-						      double sigmax=0., double sigmay=0., double sigmaz=0., 
+						      bool BeamSpotConstraint = false,
+						      double sigmax=0., double sigmay=0., double sigmaz=0.,
                                                       double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
 
 /// Return the tracks that are flagged as coming from the primary vertex
@@ -62,7 +63,7 @@ namespace VertexFitterSimple{
                                                                  ROOT::VecOps::RVec<edm4hep::TrackState> primaryTracks ) ;
 
 
-  
+
   Double_t FastRv(TVectorD p1, TVectorD p2) ;
   TMatrixDSym RegInv3(TMatrixDSym &Smat0) ;
   TMatrixD Fill_A(TVectorD par, Double_t phi) ;
@@ -72,6 +73,8 @@ namespace VertexFitterSimple{
 
   TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q);
   TVector3 ParToP(TVectorD Par);
-}
-#endif
 
+}//end NS VertexFitterSimple
+
+}//end NS FCCAnalyses
+#endif

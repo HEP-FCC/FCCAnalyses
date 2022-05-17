@@ -7,11 +7,13 @@
 
 #include "DD4hep/Detector.h"
 
-using namespace CaloNtupleizer;
+namespace FCCAnalyses{
+
+namespace CaloNtupleizer{
 
 dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
 
-void CaloNtupleizer::loadGeometry(std::string xmlGeometryPath, std::string readoutName){
+void loadGeometry(std::string xmlGeometryPath, std::string readoutName){
   dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());
   dd4hepgeo->fromCompact(xmlGeometryPath);
   dd4hepgeo->volumeManager();
@@ -21,7 +23,7 @@ void CaloNtupleizer::loadGeometry(std::string xmlGeometryPath, std::string reado
 
 
 // calo hit
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_x (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<float> getCaloHit_x (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.position.x);
@@ -29,7 +31,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_x (ROOT::VecOps::RVec<edm4h
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_y (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<float> getCaloHit_y (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.position.y);
@@ -37,7 +39,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_y (ROOT::VecOps::RVec<edm4h
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_z (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<float> getCaloHit_z (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.position.z);
@@ -45,7 +47,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_z (ROOT::VecOps::RVec<edm4h
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_phi (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<float> getCaloHit_phi (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     TVector3 t3;
@@ -55,7 +57,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_phi (ROOT::VecOps::RVec<edm
   return result;
 }
 
-ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_phiBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<int> getCaloHit_phiBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in){
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
@@ -64,7 +66,7 @@ ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_phiBin (ROOT::VecOps::RVec<ed
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_theta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<float> getCaloHit_theta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     TVector3 t3;
@@ -74,7 +76,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_theta (ROOT::VecOps::RVec<e
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_eta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<float> getCaloHit_eta (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     TVector3 t3;
@@ -84,7 +86,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_eta (ROOT::VecOps::RVec<edm
   return result;
 }
 
-ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_etaBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<int> getCaloHit_etaBin (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in){
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
@@ -93,7 +95,7 @@ ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_etaBin (ROOT::VecOps::RVec<ed
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_energy (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<float> getCaloHit_energy (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.energy);
@@ -101,7 +103,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloHit_energy (ROOT::VecOps::RVec<
   return result;
 }
 
-ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_layer (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<int> getCaloHit_layer (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in){
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
@@ -110,7 +112,7 @@ ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloHit_layer (ROOT::VecOps::RVec<edm
   return result;
 }
 
-ROOT::VecOps::RVec<TVector3> CaloNtupleizer::getCaloHit_positionVector3 (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
+ROOT::VecOps::RVec<TVector3> getCaloHit_positionVector3 (ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> in){
   ROOT::VecOps::RVec<TVector3> result;
   for (auto & p: in){
     TVector3 t3;
@@ -121,7 +123,7 @@ ROOT::VecOps::RVec<TVector3> CaloNtupleizer::getCaloHit_positionVector3 (ROOT::V
 }
 
 // calo cluster
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_x (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_x (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.position.x);
@@ -129,7 +131,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_x (ROOT::VecOps::RVec<e
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_y (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_y (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.position.y);
@@ -137,7 +139,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_y (ROOT::VecOps::RVec<e
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_z (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_z (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.position.z);
@@ -145,7 +147,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_z (ROOT::VecOps::RVec<e
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_phi (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_phi (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     TVector3 t3;
@@ -155,7 +157,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_phi (ROOT::VecOps::RVec
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_theta (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_theta (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     TVector3 t3;
@@ -165,7 +167,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_theta (ROOT::VecOps::RV
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_eta (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_eta (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     TVector3 t3;
@@ -175,7 +177,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_eta (ROOT::VecOps::RVec
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_energy (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<float> getCaloCluster_energy (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.energy);
@@ -183,7 +185,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getCaloCluster_energy (ROOT::VecOps::R
   return result;
 }
 
-ROOT::VecOps::RVec<TVector3> CaloNtupleizer::getCaloCluster_positionVector3 (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<TVector3> result;
   for (auto & p: in){
     TVector3 t3;
@@ -193,7 +195,7 @@ ROOT::VecOps::RVec<TVector3> CaloNtupleizer::getCaloCluster_positionVector3 (ROO
   return result;
 }
 
-ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloCluster_firstCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<int> getCaloCluster_firstCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in){
     result.push_back(p.hits_begin);
@@ -201,7 +203,7 @@ ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloCluster_firstCell (ROOT::VecOps::
   return result;
 }
 
-ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloCluster_lastCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
+ROOT::VecOps::RVec<int> getCaloCluster_lastCell (ROOT::VecOps::RVec<edm4hep::ClusterData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in){
     result.push_back(p.hits_end);
@@ -209,7 +211,7 @@ ROOT::VecOps::RVec<int> CaloNtupleizer::getCaloCluster_lastCell (ROOT::VecOps::R
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_x (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<float> getSimParticleSecondaries_x (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
     result.push_back(p.vertex.x);
@@ -218,7 +220,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_x (ROOT::Vec
 }
 
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_y (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<float> getSimParticleSecondaries_y (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
 for (auto & p: in) {
   result.push_back(p.vertex.y);
@@ -227,7 +229,7 @@ return result;
 }
 
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_z (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<float> getSimParticleSecondaries_z (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
 for (auto & p: in) {
   result.push_back(p.vertex.z);
@@ -236,7 +238,7 @@ return result;
 }
 
 
-  ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_PDG (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> getSimParticleSecondaries_PDG (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
     ROOT::VecOps::RVec<float> result;
     for (auto & p: in) {
       result.push_back(p.PDG);
@@ -244,7 +246,7 @@ return result;
     return result;
   }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_phi (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<float> getSimParticleSecondaries_phi (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
@@ -255,7 +257,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_phi (ROOT::V
 }
 
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_theta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<float> getSimParticleSecondaries_theta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
@@ -265,7 +267,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_theta (ROOT:
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_eta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<float> getSimParticleSecondaries_eta (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
@@ -275,7 +277,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_eta (ROOT::V
   return result;
 }
 
-ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_energy (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+ROOT::VecOps::RVec<float> getSimParticleSecondaries_energy (ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
     TLorentzVector tlv;
@@ -284,3 +286,7 @@ ROOT::VecOps::RVec<float> CaloNtupleizer::getSimParticleSecondaries_energy (ROOT
   }
   return result;
 }
+
+}//end NS CaloNtupleizer
+
+}//end NS FCCAnalyses

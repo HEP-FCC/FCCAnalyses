@@ -4,12 +4,13 @@
 #include <cstdlib>
 #include <vector>
 
+namespace FCCAnalyses{
 
-using namespace myFinalSel;
+namespace myFinalSel{
 
-int myFinalSel::selTauCand( ROOT::VecOps::RVec<float> mass,
-			    ROOT::VecOps::RVec<int> vertex_ind,
-			    ROOT::VecOps::RVec<float> vertex_chi2){
+int selTauCand(ROOT::VecOps::RVec<float> mass,
+			         ROOT::VecOps::RVec<int> vertex_ind,
+			         ROOT::VecOps::RVec<float> vertex_chi2){
   float bestchi2=9999999.;
   int indbestchi2=-999;
   for (size_t i = 0; i < mass.size(); ++i){
@@ -25,7 +26,7 @@ int myFinalSel::selTauCand( ROOT::VecOps::RVec<float> mass,
 }
 
 
-int myFinalSel::selTauCandTM(ROOT::VecOps::RVec<int> mcvertex,
+int selTauCandTM(ROOT::VecOps::RVec<int> mcvertex,
 			     ROOT::VecOps::RVec<int> truevertex,
 			     int CandInd){
 
@@ -37,7 +38,7 @@ int myFinalSel::selTauCandTM(ROOT::VecOps::RVec<int> mcvertex,
 }
 
 
-float myFinalSel::get_min(ROOT::VecOps::RVec<float> in,
+float get_min(ROOT::VecOps::RVec<float> in,
 			  float val){
 
   float min=99999999.;
@@ -50,7 +51,7 @@ float myFinalSel::get_min(ROOT::VecOps::RVec<float> in,
   return min;
 }
 
-float myFinalSel::get_max(ROOT::VecOps::RVec<float> in,
+float get_max(ROOT::VecOps::RVec<float> in,
 			  float val){
 
   float max=-9999999.;
@@ -63,7 +64,7 @@ float myFinalSel::get_max(ROOT::VecOps::RVec<float> in,
   return max;
 }
 
-float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
+float get_ave(ROOT::VecOps::RVec<float> in,
 			  float val){
 
   float ave=0.;
@@ -82,7 +83,7 @@ float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
 }
 
 
-float myFinalSel::get_min(ROOT::VecOps::RVec<float> in,
+float get_min(ROOT::VecOps::RVec<float> in,
 			  ROOT::VecOps::RVec<int> ispv,
 			  int index){
   float min = 9999999.;
@@ -94,7 +95,7 @@ float myFinalSel::get_min(ROOT::VecOps::RVec<float> in,
   }
   return min;
 }
-float myFinalSel::get_max(ROOT::VecOps::RVec<float> in,
+float get_max(ROOT::VecOps::RVec<float> in,
 			  ROOT::VecOps::RVec<int> ispv,
 			  int index){
   float max = -9999999.;
@@ -108,7 +109,7 @@ float myFinalSel::get_max(ROOT::VecOps::RVec<float> in,
 }
 
 
-float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
+float get_ave(ROOT::VecOps::RVec<float> in,
 			  ROOT::VecOps::RVec<int> ispv,
 			  int index){
 
@@ -125,3 +126,7 @@ float myFinalSel::get_ave(ROOT::VecOps::RVec<float> in,
     return ave/aven;
   return -999999.;
 }
+
+}//end NS myFinalSel
+
+}//end NS FCCAnalyses

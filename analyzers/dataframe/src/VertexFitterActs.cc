@@ -19,11 +19,14 @@
 
 #include "TMath.h"
 
-using namespace VertexFitterActs;
 using namespace Acts::UnitLiterals;
 
+namespace FCCAnalyses{
 
-VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+namespace VertexFitterActs{
+
+
+VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 									    ROOT::VecOps::RVec<edm4hep::TrackState> thetracks ){
 
 
@@ -198,3 +201,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitterActs::VertexFitterFullBilloir(ROOT
 
   return TheVertex;
 }
+
+}//end NS VertexFitterActs
+
+}//end NS FCCAnalyses

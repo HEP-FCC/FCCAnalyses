@@ -10,9 +10,14 @@
 #include "VertexingUtils.h"
 #include "edm4hep/ReconstructedParticleData.h"
 
-namespace VertexFitterActs{
-  VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-							    ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-}
+namespace FCCAnalyses{
 
+namespace VertexFitterActs{
+
+  VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+                                                            ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
+}//end NS VertexFitterActs
+
+}//end NS FCCAnalyses
 #endif

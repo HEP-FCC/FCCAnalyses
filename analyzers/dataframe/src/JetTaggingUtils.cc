@@ -1,9 +1,11 @@
 #include "FCCAnalyses/JetTaggingUtils.h"
-using namespace JetTaggingUtils;
 
-ROOT::VecOps::RVec<int>
-JetTaggingUtils::get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
-                             ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin)
+namespace FCCAnalyses{
+
+namespace JetTaggingUtils{
+
+ROOT::VecOps::RVec<int> get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
+                                    ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin)
 {
   ROOT::VecOps::RVec<int> result(in.size(),0);
 
@@ -62,7 +64,7 @@ JetTaggingUtils::get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
 }
 
 ROOT::VecOps::RVec<int>
-JetTaggingUtils::get_btag(ROOT::VecOps::RVec<int> in,
+get_btag(ROOT::VecOps::RVec<int> in,
                           float efficiency, float mistag_c,
                           float mistag_l, float mistag_g) {
 
@@ -78,7 +80,7 @@ JetTaggingUtils::get_btag(ROOT::VecOps::RVec<int> in,
 }
 
 ROOT::VecOps::RVec<int>
-JetTaggingUtils::get_ctag(ROOT::VecOps::RVec<int> in,
+get_ctag(ROOT::VecOps::RVec<int> in,
                           float efficiency, float mistag_b,
                           float mistag_l, float mistag_g) {
 
@@ -94,7 +96,7 @@ JetTaggingUtils::get_ctag(ROOT::VecOps::RVec<int> in,
 }
 
 ROOT::VecOps::RVec<int>
-JetTaggingUtils::get_ltag(ROOT::VecOps::RVec<int> in,
+get_ltag(ROOT::VecOps::RVec<int> in,
                           float efficiency, float mistag_b,
                           float mistag_c, float mistag_g) {
 
@@ -110,7 +112,7 @@ JetTaggingUtils::get_ltag(ROOT::VecOps::RVec<int> in,
 }
 
 ROOT::VecOps::RVec<int>
-JetTaggingUtils::get_gtag(ROOT::VecOps::RVec<int> in,
+get_gtag(ROOT::VecOps::RVec<int> in,
                           float efficiency, float mistag_b,
                           float mistag_c, float mistag_l) {
 
@@ -125,9 +127,9 @@ JetTaggingUtils::get_gtag(ROOT::VecOps::RVec<int> in,
   return result;
 }
 
-JetTaggingUtils::sel_tag::sel_tag(bool arg_pass): m_pass(arg_pass) {};
+sel_tag::sel_tag(bool arg_pass): m_pass(arg_pass) {};
 ROOT::VecOps::RVec<fastjet::PseudoJet>
-JetTaggingUtils::sel_tag::operator()(ROOT::VecOps::RVec<bool> tags,
+sel_tag::operator()(ROOT::VecOps::RVec<bool> tags,
                                      ROOT::VecOps::RVec<fastjet::PseudoJet> in){
   ROOT::VecOps::RVec<fastjet::PseudoJet> result;
   for (size_t i = 0; i < in.size(); ++i) {
@@ -140,3 +142,7 @@ JetTaggingUtils::sel_tag::operator()(ROOT::VecOps::RVec<bool> tags,
   }
   return result;
 }
+
+}//end NS JetTaggingUtils
+
+}//end NS FCCAnalyses

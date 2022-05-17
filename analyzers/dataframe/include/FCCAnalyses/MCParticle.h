@@ -232,8 +232,7 @@ namespace MCParticle{
                                              const ROOT::VecOps::RVec<int> &ind);
 
 
-
-}//#end NS MCParticle
+}//end NS MCParticle
 
 }//end NS FCCAnalyses
 #endif

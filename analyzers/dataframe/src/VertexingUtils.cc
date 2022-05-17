@@ -1,8 +1,8 @@
 ﻿#include "FCCAnalyses/VertexingUtils.h"
 
-using namespace VertexingUtils;
+namespace FCCAnalyses{
 
-
+namespace VertexingUtils{
 
 //
 // Selection of particles based on the d0 / z0 significances of the associated track
@@ -12,7 +12,7 @@ selTracks::selTracks( float arg_d0sig_min, float arg_d0sig_max, float arg_z0sig_
 													    m_z0sig_min( arg_z0sig_min ),
 													    m_z0sig_max (arg_z0sig_max) { };
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
-VertexingUtils::selTracks::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+selTracks::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 				       ROOT::VecOps::RVec<edm4hep::TrackState> tracks  ) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  result;
@@ -39,7 +39,7 @@ VertexingUtils::selTracks::operator() (ROOT::VecOps::RVec<edm4hep::Reconstructed
 // to MC particles
 //
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
-VertexingUtils::SelPrimaryTracks (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind,
+SelPrimaryTracks (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::RVec<int> mcind,
 				  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
 				  ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 				  TVector3 MC_EventPrimaryVertex) {
@@ -69,14 +69,14 @@ VertexingUtils::SelPrimaryTracks (ROOT::VecOps::RVec<int> recind, ROOT::VecOps::
 
 
 int
-VertexingUtils::get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
+get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   int nt = tracks.size();
   return nt;
 }
 
 
 TVectorD
-VertexingUtils::get_trackParam( edm4hep::TrackState & atrack) {
+get_trackParam( edm4hep::TrackState & atrack) {
     double d0 =atrack.D0 ;
     double phi0 = atrack.phi ;
     double omega = atrack.omega ;
@@ -101,7 +101,7 @@ VertexingUtils::get_trackParam( edm4hep::TrackState & atrack) {
 }
 
 TMatrixDSym
-VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
+get_trackCov( edm4hep::TrackState &  atrack) {
   std::array<float, 15> covMatrix = atrack.covMatrix;
   TMatrixDSym covM(5);
 
@@ -154,7 +154,7 @@ VertexingUtils::get_trackCov( edm4hep::TrackState &  atrack) {
 
 
 FCCAnalysesVertex
-VertexingUtils::get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index ){
+get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index ){
   FCCAnalysesVertex result;
   if (index<TheVertexColl.size())result=TheVertexColl.at(index);
   return result;
@@ -162,16 +162,16 @@ VertexingUtils::get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheV
 
 
 int
-VertexingUtils::get_Nvertex( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ){
+get_Nvertex( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ){
   return TheVertexColl.size();
 }
 
 
-edm4hep::VertexData VertexingUtils::get_VertexData( FCCAnalysesVertex TheVertex ) {
+edm4hep::VertexData get_VertexData( FCCAnalysesVertex TheVertex ) {
   return TheVertex.vertex ;
 }
 
-ROOT::VecOps::RVec<edm4hep::VertexData> VertexingUtils::get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ) {
+ROOT::VecOps::RVec<edm4hep::VertexData> get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl ) {
   ROOT::VecOps::RVec<edm4hep::VertexData> result;
   for (unsigned int i=0; i<TheVertexColl.size();i++) {
     result.push_back(TheVertexColl.at(i).vertex);
@@ -179,22 +179,22 @@ ROOT::VecOps::RVec<edm4hep::VertexData> VertexingUtils::get_VertexData( ROOT::Ve
   return result;
 }
 
-edm4hep::VertexData VertexingUtils::get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index) {
+edm4hep::VertexData get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index) {
   edm4hep::VertexData result;
   if (index<TheVertexColl.size())result=TheVertexColl.at(index).vertex;
   return result;
 }
 
 
-int VertexingUtils::get_VertexNtrk( FCCAnalysesVertex TheVertex ) {
+int get_VertexNtrk( FCCAnalysesVertex TheVertex ) {
   return TheVertex.ntracks;
 }
 
-ROOT::VecOps::RVec<int> VertexingUtils::get_VertexRecoInd( FCCAnalysesVertex TheVertex ) {
+ROOT::VecOps::RVec<int> get_VertexRecoInd( FCCAnalysesVertex TheVertex ) {
   return TheVertex.reco_ind;
 }
 
-TVectorD VertexingUtils::ParToACTS(TVectorD Par){
+TVectorD ParToACTS(TVectorD Par){
 
   TVectorD pACTS(6);	// Return vector
   //
@@ -212,7 +212,7 @@ TVectorD VertexingUtils::ParToACTS(TVectorD Par){
 
 
 // Covariance conversion to ACTS format
-TMatrixDSym VertexingUtils::CovToACTS(TMatrixDSym Cov, TVectorD Par){
+TMatrixDSym CovToACTS(TMatrixDSym Cov, TVectorD Par){
 
   double fB=2.;
   TMatrixDSym cACTS(6); cACTS.Zero();
@@ -239,4 +239,6 @@ TMatrixDSym VertexingUtils::CovToACTS(TMatrixDSym Cov, TVectorD Par){
   return cACTS;
 }
 
-////////////////////////////////////////////////////
+}//end NS VertexingUtils
+
+}//end NS FCCAnalyses
