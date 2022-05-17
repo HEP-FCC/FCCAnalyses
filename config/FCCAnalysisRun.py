@@ -851,6 +851,7 @@ if __name__ == "__main__":
     publicOptions.add_argument("--validate", action='store_true', help="Validate a given production", default=False)
     publicOptions.add_argument("--rerunfailed", action='store_true', help="Rerun failed jobs", default=False)
     publicOptions.add_argument("--jobdir", help="Specify the batch job directory", type=str, default="output.root")
+    publicOptions.add_argument("--eloglevel", help="Specify the RDataFrame ELogLevel", type=str, default="kUnset", choices = ['kUnset','kFatal','kError','kWarning','kInfo','kDebug'])
 
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
     internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
@@ -863,6 +864,9 @@ if __name__ == "__main__":
         print("syntax should be: ")
         print("python config/FCCAnalysisRun.py analysis.py <options>")
         sys.exit(3)
+
+    #set the RDF ELogLevel
+    verbosity = ROOT.Experimental.RLogScopedVerbosity(ROOT.Detail.RDF.RDFLogChannel(), getattr(ROOT.Experimental.ELogLevel,args.eloglevel))
 
     #load the analysis
     analysisFile=os.path.abspath(analysisFile)
