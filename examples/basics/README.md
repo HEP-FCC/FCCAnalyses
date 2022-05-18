@@ -47,22 +47,23 @@ Structure of EDM4HEP files
 ==========================
 
 The content of an EDM4HEP file can be seen by opening it in ROOT, and by inspecting the content of the "events" tree with a TBrowser.
-Example:
+Example with  a file from the "spring2021" campaign :
 ```
-root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/wzp6_ee_mumuH_ecm240.root
+root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/wzp6_ee_mumuH_ecm240/events_012879310.root 
 root[0] TBrowser b
 ```
 <img src="figs/browser_events.png" alt="drawing" width="480"/>
 
 As shown in the screenshot above, there are two types of branches:
 
-  - Branches without a pound (#) in their name:  Electron (1), Muon (2), EFlowNeutralHadron (3), Particle (4), Photon (5), ReconstructedParticles (6), EFlowPhoton (7), MCRecoAssociations (8), MissingET (9), ParticleIDs (10), Jet (11), EFlowTrack (12), EFlowTrack\_1 (13). They refer to collections of objects.
+  - Branches without a pound (#) in their name:  Electron (1), Muon (2), AllMuon (3), EFlowNeutralHadron (4), Particle (5), Photon (6), ReconstructedParticles (7), EFlowPhoton (8), MCRecoAssociations (9), MissingET (10), ParticleIDs (11), Jet (12), EFlowTrack (13), EFlowTrack\_1 (14). They refer to collections of objects.
+    - NB: "Particle" denotes the collection of Monte-Carlo particles. "Muon" contains the isolated muons, while "AllMuon" contains all muons, isolated or not.
   - Branches with a pound in their name:  Each of the object collections listed above, e.g. "Collection", has up to six associated collections of references, 
     i.e. indices that point to another or to the same object collection. They are labeled Collection#i, with i = 0 ... 5. For example, the Muon collection has one single
     associated collection of references, Muon#0. 
 
 To figure out which collection is pointed to by Muon#0 (or by any other collection of references), one can look at the value of Muon#0.collectionID (see screenshot below). 
-The collectionID of Muon#0 is the collection number 6 (in the example file used here), which, in the list of "object collections" above, corresponds to the collection of ReconstructedParticles. 
+The collectionID of Muon#0 is the collection number 7 (in the example file used here), which, in the list of "object collections" above, corresponds to the collection of ReconstructedParticles. 
 Indeed, the Muon collection itself contains nothing (see screenshot below): all the information is contained in the ReconstructedParticles. The Muon collection,
 together with Muon#0, just provides a convenient way to access, among the ReconstructedParticles, those that were identified as muons.
 
@@ -75,7 +76,7 @@ by inspecting it in the browser:
 
 
 The "Particle" collection corresponds to the Monte-Carlo particles. It has two associated collections of references, Particle#0 and Particle#1. As can
-be seen by looking at their collectionID, they both point to collection number 4, i.e.  to the Particle collection itself. Particle#0 and
+be seen by looking at their collectionID, they both point to collection number 5, i.e.  to the Particle collection itself. Particle#0 and
 Particle#1 contain, respectively, links to the parents and to the daughters of the MC particles - as can be seen in the [edm4hep yaml description here](https://github.com/key4hep/EDM4hep/blob/master/edm4hep.yaml#L118-L119).
 Examples will be given below, showing how to navigate through the Monte-Carlo record using Particle, Particle#0 and Particle#1.
 
@@ -118,8 +119,8 @@ Association between RecoParticles and MonteCarloParticles
 ==========================================================
 
 By design, the association between the reconstructed particles and the Monte-Carlo particles proceeds via the MCRecoAssociations collection, and its two
-associated  collections of references, MCRecoAssociations#0 and MCRecoAssociations#1, all of the same size. The collectionID of MCRecoAssociations#0 is equal to 6 in the example file used here (see above, "Structure of EDM4Hep files"), which means
-that MCRecoAssociations#0 points to the ReconstructedParticles. While the collectionID of MCRecoAssociations#1 is equal to 4, i.e. 
+associated  collections of references, MCRecoAssociations#0 and MCRecoAssociations#1, all of the same size. The collectionID of MCRecoAssociations#0 is equal to 7 in the example file used here (see above, "Structure of EDM4Hep files"), which means
+that MCRecoAssociations#0 points to the ReconstructedParticles. While the collectionID of MCRecoAssociations#1 is equal to 5, i.e. 
 MCRecoAssociations#1 points to the Particle collection (i.e. the Monte-Carlo particles).    
 
 Their usage is best understood by looking into the code of [ReconstructedParticle2MC::getRP2MC_index](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/ReconstructedParticle2MC.cc#L123-L133) reported below:
@@ -149,7 +150,7 @@ which, in a FCCAnalyses configuration file, will be called via :
 The method getRP2MC_index creates a vector that maps the reconstructed particles and the MC particles:
 RP\_MC\_index[ ireco ] = imc ,  where ireco is the index of a reco'ed particle in the ReconstructedParticle collection, and imc is the index, in the Particle collection, of its associated MC particle.   
 
-Careful: as can be seen from the code, the method getRP2MC_index must be passed the full collection, ReconstructedParticles, and **not** a subset of reco'ed particles. 
+**Careful:** as can be seen from the code, the method getRP2MC_index must be passed **the full collection**, ReconstructedParticles, and **not** a subset of reco'ed particles. 
 To retrieve the associated MC particle of one reco'ed particle, or of a subset of reco'ed particles, one should have kept track of the indices of these
 particles in the ReconstructedParticles collection. It can be a good practise to design analyses that primarily use indices of RecoParticles, instead of
 the RecoParticles themselves.
