@@ -49,7 +49,7 @@ Structure of EDM4HEP files
 The content of an EDM4HEP file can be seen by opening it in ROOT, and by inspecting the content of the "events" tree with a TBrowser.
 Example with  a file from the "spring2021" campaign :
 ```
-root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/wzp6_ee_mumuH_ecm240/events_012879310.root spring2021_wzp6_ee_mumuH_ecm240.root
+root /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/wzp6_ee_mumuH_ecm240/events_012879310.root 
 root[0] TBrowser b
 ```
 <img src="figs/browser_events.png" alt="drawing" width="480"/>
