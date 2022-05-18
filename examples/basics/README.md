@@ -62,7 +62,7 @@ As shown in the screenshot above, there are two types of branches:
     associated collection of references, Muon#0. 
 
 To figure out which collection is pointed to by Muon#0 (or by any other collection of references), one can look at the value of Muon#0.collectionID (see screenshot below). 
-The collectionID of Muon#0 is the collection number 6, which, in the list of "object collections" above, corresponds to the collection of ReconstructedParticles. 
+The collectionID of Muon#0 is the collection number 6 (in the example file used here), which, in the list of "object collections" above, corresponds to the collection of ReconstructedParticles. 
 Indeed, the Muon collection itself contains nothing (see screenshot below): all the information is contained in the ReconstructedParticles. The Muon collection,
 together with Muon#0, just provides a convenient way to access, among the ReconstructedParticles, those that were identified as muons.
 
