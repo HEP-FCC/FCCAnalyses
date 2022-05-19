@@ -1,4 +1,5 @@
 #include "FCCAnalyses/Algorithms.h"
+#include "FCCAnalyses/Utils.h"
 #include "Math/Minimizer.h"
 #include "Math/IFunction.h"
 #include "Math/Factory.h"
@@ -210,10 +211,10 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
     const ROOT::VecOps::RVec<float>& pz) {
 
   if (px.size() != py.size()) {
-    throw std::domain_error("calculate_thrust: Input vector sizes not equal.");
+    throw std::domain_error("calculate_thrust: Input vector sizes are not equal.");
   }
   if (px.size() != pz.size()) {
-    throw std::domain_error("calculate_thrust: Input vector sizes not equal.");
+    throw std::domain_error("calculate_thrust: Input vector sizes are not equal.");
   }
 
   ROOT::VecOps::RVec<float> result;
@@ -237,16 +238,16 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
   float pVec[nParticles][4];   // 0 -- magnitude squared, 1 -- x, 2 -- y, 3 -- z
   float pSum = 0.;
   for (size_t i = 0; i < nParticles; ++i) {
-    pVec[i][1] = px.at(i);
-    pVec[i][2] = py.at(i);
-    pVec[i][3] = pz.at(i);
+    pVec[i][1] = px[i];
+    pVec[i][2] = py[i];
+    pVec[i][3] = pz[i];
     mag2(pVec[i]);
     pSum += std::sqrt(pVec[i][0]);
   }
 
   // Trying all combinations of reference vector orthogonal to two selected
   // particles.
-  // std::cout << "Tying all combinations..." << std::endl;
+  // std::cout << "Trying all combinations..." << std::endl;
   float pMax[4] = {0., 0., 0., 0.};
   for (size_t i = 0; i < nParticles - 1; ++i) {
     for (size_t j = i + 1; j < nParticles; ++j) {
