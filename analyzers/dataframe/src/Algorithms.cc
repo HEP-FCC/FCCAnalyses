@@ -1,4 +1,5 @@
 #include "FCCAnalyses/Algorithms.h"
+#include "FCCAnalyses/Utils.h"
 #include "Math/Minimizer.h"
 #include "Math/IFunction.h"
 #include "Math/Factory.h"
@@ -163,6 +164,150 @@ ROOT::VecOps::RVec<float> minimize_thrust::operator()(const ROOT::VecOps::RVec<f
 }
 
 
+ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
+    const ROOT::VecOps::RVec<float>& px,
+    const ROOT::VecOps::RVec<float>& py,
+    const ROOT::VecOps::RVec<float>& pz) {
+
+  if (px.size() != py.size()) {
+    throw std::domain_error("calculate_thrust: Input vector sizes are not equal.");
+  }
+  if (px.size() != pz.size()) {
+    throw std::domain_error("calculate_thrust: Input vector sizes are not equal.");
+  }
+
+  ROOT::VecOps::RVec<float> result;
+
+  size_t nParticles = px.size();
+  if (nParticles < 2) {
+    // std::cout << "calculate_thrust: Number of input particles too small."
+    //           << std::endl;
+
+    result.push_back(-1);
+    result.push_back(-1);
+    result.push_back(-1);
+    result.push_back(-1);
+
+    return result;
+  }
+
+  // std::cout << "calculate_thrust: Calculating sum of all particles in event"
+  //           << std::endl;
+
+  // Array to store x, y, z and magnitude squared of the particles.
+  // 0 -- magnitude squared, 1 -- x, 2 -- y, 3 -- z
+  float pArr[nParticles][4];
+  float pSum = 0.;
+  for (size_t i = 0; i < nParticles; ++i) {
+    pArr[i][1] = px[i];
+    pArr[i][2] = py[i];
+    pArr[i][3] = pz[i];
+    mag2(pArr[i]);
+    pSum += std::sqrt(pArr[i][0]);
+  }
+
+  // Trying all combinations of reference vector orthogonal to two selected
+  // particles.
+  // std::cout << "Trying all combinations..." << std::endl;
+  float pMax[4] = {0., 0., 0., 0.};
+  for (size_t i = 0; i < nParticles - 1; ++i) {
+    for (size_t j = i + 1; j < nParticles; ++j) {
+      float nRef[4];
+      cross(nRef, pArr[i], pArr[j]);
+      mag2(nRef);
+      unit(nRef);
+
+      float pPart[4] = {0., 0., 0., 0.};
+      for (size_t k = 0; k < nParticles; ++k) {
+        if (k == i || k == j) {
+          continue;
+        }
+
+        if (dot(nRef, pArr[k]) > 0.) {
+          plus(pPart, pPart, pArr[k]);
+        } else {
+          minus(pPart, pPart, pArr[k]);
+        }
+      }
+
+      float pFullArr[4][4];
+      // pPart + pArr[i] + pArr[j]
+      plus(pFullArr[0], pPart, pArr[i]);
+      plus(pFullArr[0], pFullArr[0], pArr[j]);
+
+      // pPart + pArr[i] - pArr[j]
+      plus(pFullArr[1], pPart, pArr[i]);
+      minus(pFullArr[1], pFullArr[1], pArr[j]);
+
+      // pPart - pArr[i] + pArr[j]
+      minus(pFullArr[2], pPart, pArr[i]);
+      plus(pFullArr[2], pFullArr[2], pArr[j]);
+
+      // pPart - pArr[i] - pArr[j]
+      minus(pFullArr[3], pPart, pArr[i]);
+      minus(pFullArr[3], pFullArr[3], pArr[j]);
+
+      for (size_t k = 0; k < 4; ++k) {
+        mag2(pFullArr[k]);
+        if (pFullArr[k][0] > pMax[0]) {
+          copy(pMax, pFullArr[k]);
+        }
+      }
+    }
+  }
+
+  float pMaxMag = std::sqrt(pMax[0]);
+  // std::cout << "Thrust value arr: " << pMaxMag / pSum << std::endl;
+  result.push_back(pMaxMag / pSum);
+  // Normalizing the thrust vector
+  result.push_back(pMax[1]/pMaxMag);
+  result.push_back(pMax[2]/pMaxMag);
+  result.push_back(pMax[3]/pMaxMag);
+
+  return result;
+}
+
+inline void Algorithms::calculate_thrust::mag2(float (&vec)[4]) {
+  vec[0] = vec[1]*vec[1] + vec[2]*vec[2] + vec[3]*vec[3];
+}
+
+inline float Algorithms::calculate_thrust::dot(float vec1[4], float vec2[4]) {
+  return vec1[1]*vec2[1] + vec1[2]*vec2[2] + vec1[3]*vec2[3];
+}
+
+inline void Algorithms::calculate_thrust::cross(float (&vec)[4], float vec1[4], float vec2[4]) {
+  vec[1] = vec1[2]*vec2[3] - vec1[3]*vec2[2];
+  vec[2] = vec1[3]*vec2[1] - vec1[1]*vec2[3];
+  vec[3] = vec1[1]*vec2[2] - vec1[2]*vec2[1];
+}
+
+inline void Algorithms::calculate_thrust::unit(float (&vec)[4]) {
+  float mag = std::sqrt(vec[0]);
+  vec[1] = vec[1]/mag;
+  vec[2] = vec[2]/mag;
+  vec[3] = vec[3]/mag;
+}
+
+inline void Algorithms::calculate_thrust::plus(float (&vec)[4], float vecIn1[4], float vecIn2[4]) {
+  vec[1] = vecIn1[1] + vecIn2[1];
+  vec[2] = vecIn1[2] + vecIn2[2];
+  vec[3] = vecIn1[3] + vecIn2[3];
+}
+
+inline void Algorithms::calculate_thrust::minus(float (&vecOut)[4], float vecIn1[4], float vecIn2[4]) {
+  vecOut[1] = vecIn1[1] - vecIn2[1];
+  vecOut[2] = vecIn1[2] - vecIn2[2];
+  vecOut[3] = vecIn1[3] - vecIn2[3];
+}
+
+inline void Algorithms::calculate_thrust::copy(float (&vecOut)[4], float vecIn[4]) {
+  vecOut[0] = vecIn[0];
+  vecOut[1] = vecIn[1];
+  vecOut[2] = vecIn[2];
+  vecOut[3] = vecIn[3];
+}
+
+
 getAxisCharge::getAxisCharge(bool arg_pos,
 	                           float arg_power){
   _pos = arg_pos;
@@ -183,7 +328,6 @@ float  getAxisCharge::operator() (const ROOT::VecOps::RVec<float> & angle,
   }
   return result/std::pow(norm,_power);
 }
-
 
 
 getAxisMass::getAxisMass(bool arg_pos){

@@ -3,7 +3,7 @@ name: benchmark
 on: [push]
 
 jobs:
-  test:
+  bench:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

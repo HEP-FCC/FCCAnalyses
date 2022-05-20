@@ -1,6 +1,8 @@
 
 add_subdirectory(unittest)
 
+add_subdirectory(benchmark)
+
 function(add_integration_test _testname)
 
   add_test(NAME ${_testname} 

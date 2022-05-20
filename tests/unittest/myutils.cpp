@@ -2,7 +2,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
-#include <catch2/benchmark/catch_benchmark.hpp>
 
 TEST_CASE("d0", "[basics]") {
   TVector3 x(1., 0., 0.);
@@ -198,8 +197,4 @@ TEST_CASE("isPV", "[basics]") {
 
   REQUIRE(FCCAnalyses::myUtils::isPV(p, index1));
   REQUIRE(!FCCAnalyses::myUtils::isPV(p, index2));
-
-  BENCHMARK("isPV bench") {
-        return FCCAnalyses::myUtils::isPV(p, index1);
-  };
 }
