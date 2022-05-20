@@ -36,15 +36,11 @@ if(NOT ${WITH_DD4HEP})
   list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
 endif()
 
-ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
-                         ${headers}
-                         LINKDEF include/FCCAnalyses/LinkDef.h
-                         )
 
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
 
-add_library(FCCAnalyses SHARED ${sources} ${headers} G__FCCAnalyses.cxx )
+add_library(FCCAnalyses SHARED ${sources} ${headers} )
 target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
@@ -81,6 +77,12 @@ endif()
 
 set_target_properties(FCCAnalyses PROPERTIES
   PUBLIC_HEADER "${headers}")
+
+ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
+                         ${headers}
+                         MODULE FCCAnalyses
+                         LINKDEF include/FCCAnalyses/LinkDef.h
+                         )
 
 install(TARGETS FCCAnalyses
     EXPORT FCCAnalysesTargets
