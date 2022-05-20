@@ -95,15 +95,6 @@ namespace Algorithms{
   /// Calculates the thrust axis by looping over all possible combinations
   struct calculate_thrust {
     calculate_thrust(){}
-
-    inline void mag2(float (&vec)[4]);
-    inline float dot(float vec1[4], float vec2[4]);
-    inline void cross(float (&vec)[4], float vec1[4], float vec2[4]);
-    inline void unit(float (&vec)[4]);
-    inline void plus(float (&vec)[4], float vecIn1[4], float vecIn2[4]);
-    inline void minus(float (&vecOut)[4], float vecIn1[4], float vecIn2[4]);
-    inline void copy(float (&vecOut)[4], float vecIn[4]);
-
     ROOT::VecOps::RVec<float> operator()(const ROOT::VecOps::RVec<float>& px,
                                          const ROOT::VecOps::RVec<float>& py,
                                          const ROOT::VecOps::RVec<float>& pz);

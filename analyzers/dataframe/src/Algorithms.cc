@@ -164,47 +164,6 @@ ROOT::VecOps::RVec<float> minimize_thrust::operator()(const ROOT::VecOps::RVec<f
 }
 
 
-inline void Algorithms::calculate_thrust::mag2(float (&vec)[4]) {
-  vec[0] = vec[1]*vec[1] + vec[2]*vec[2] + vec[3]*vec[3];
-}
-
-inline float Algorithms::calculate_thrust::dot(float vec1[4], float vec2[4]) {
-  return vec1[1]*vec2[1] + vec1[2]*vec2[2] + vec1[3]*vec2[3];
-}
-
-inline void Algorithms::calculate_thrust::cross(float (&vec)[4], float vec1[4], float vec2[4]) {
-
-  vec[1] = vec1[2]*vec2[3] - vec1[3]*vec2[2];
-  vec[2] = vec1[3]*vec2[1] - vec1[1]*vec2[3];
-  vec[3] = vec1[1]*vec2[2] - vec1[2]*vec2[1];
-}
-
-inline void Algorithms::calculate_thrust::unit(float (&vec)[4]) {
-  float mag = std::sqrt(vec[0]);
-  vec[1] = vec[1]/mag;
-  vec[2] = vec[2]/mag;
-  vec[3] = vec[3]/mag;
-}
-
-inline void Algorithms::calculate_thrust::plus(float (&vec)[4], float vecIn1[4], float vecIn2[4]) {
-  vec[1] = vecIn1[1] + vecIn2[1];
-  vec[2] = vecIn1[2] + vecIn2[2];
-  vec[3] = vecIn1[3] + vecIn2[3];
-}
-
-inline void Algorithms::calculate_thrust::minus(float (&vecOut)[4], float vecIn1[4], float vecIn2[4]) {
-  vecOut[1] = vecIn1[1] - vecIn2[1];
-  vecOut[2] = vecIn1[2] - vecIn2[2];
-  vecOut[3] = vecIn1[3] - vecIn2[3];
-}
-
-inline void Algorithms::calculate_thrust::copy(float (&vecOut)[4], float vecIn[4]) {
-  vecOut[0] = vecIn[0];
-  vecOut[1] = vecIn[1];
-  vecOut[2] = vecIn[2];
-  vecOut[3] = vecIn[3];
-}
-
 ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
     const ROOT::VecOps::RVec<float>& px,
     const ROOT::VecOps::RVec<float>& py,
@@ -241,7 +200,7 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
     pVec[i][1] = px[i];
     pVec[i][2] = py[i];
     pVec[i][3] = pz[i];
-    mag2(pVec[i]);
+    Utils::Vec3::Mag2(pVec[i]);
     pSum += std::sqrt(pVec[i][0]);
   }
 
@@ -252,9 +211,9 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
   for (size_t i = 0; i < nParticles - 1; ++i) {
     for (size_t j = i + 1; j < nParticles; ++j) {
       float nRef[4];
-      cross(nRef, pVec[i], pVec[j]);
-      mag2(nRef);
-      unit(nRef);
+      Utils::Vec3::Cross(nRef, pVec[i], pVec[j]);
+      Utils::Vec3::Mag2(nRef);
+      Utils::Vec3::Unit(nRef);
 
       float pPart[4] = {0., 0., 0., 0.};
       for (size_t k = 0; k < nParticles; ++k) {
@@ -262,34 +221,34 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
           continue;
         }
 
-        if (dot(nRef, pVec[k]) > 0.) {
-          plus(pPart, pPart, pVec[k]);
+        if (Utils::Vec3::Dot(nRef, pVec[k]) > 0.) {
+          Utils::Vec3::Plus(pPart, pPart, pVec[k]);
         } else {
-          minus(pPart, pPart, pVec[k]);
+          Utils::Vec3::Minus(pPart, pPart, pVec[k]);
         }
       }
 
       float pFullArr[4][4];
       // pPart + pVec[i] + pVec[j]
-      plus(pFullArr[0], pPart, pVec[i]);
-      plus(pFullArr[0], pFullArr[0], pVec[j]);
+      Utils::Vec3::Plus(pFullArr[0], pPart, pVec[i]);
+      Utils::Vec3::Plus(pFullArr[0], pFullArr[0], pVec[j]);
 
       // pPart + pVec[i] - pVec[j]
-      plus(pFullArr[1], pPart, pVec[i]);
-      minus(pFullArr[1], pFullArr[1], pVec[j]);
+      Utils::Vec3::Plus(pFullArr[1], pPart, pVec[i]);
+      Utils::Vec3::Minus(pFullArr[1], pFullArr[1], pVec[j]);
 
       // pPart - pVec[i] + pVec[j]
-      minus(pFullArr[2], pPart, pVec[i]);
-      plus(pFullArr[2], pFullArr[2], pVec[j]);
+      Utils::Vec3::Minus(pFullArr[2], pPart, pVec[i]);
+      Utils::Vec3::Plus(pFullArr[2], pFullArr[2], pVec[j]);
 
       // pPart - pVec[i] - pVec[j]
-      minus(pFullArr[3], pPart, pVec[i]);
-      minus(pFullArr[3], pFullArr[3], pVec[j]);
+      Utils::Vec3::Minus(pFullArr[3], pPart, pVec[i]);
+      Utils::Vec3::Minus(pFullArr[3], pFullArr[3], pVec[j]);
 
       for (size_t k = 0; k < 4; ++k) {
-        mag2(pFullArr[k]);
+        Utils::Vec3::Mag2(pFullArr[k]);
         if (pFullArr[k][0] > pMax[0]) {
-          copy(pMax, pFullArr[k]);
+          Utils::Vec3::Copy(pMax, pFullArr[k]);
         }
       }
     }
@@ -326,7 +285,6 @@ float  getAxisCharge::operator() (const ROOT::VecOps::RVec<float> & angle,
   }
   return result/std::pow(norm,_power);
 }
-
 
 
 getAxisMass::getAxisMass(bool arg_pos){

@@ -45,11 +45,15 @@ TEST_CASE("ThrustPointing", "[algorithms]") {
   REQUIRE(res[5] == Catch::Approx( 3. ));
 }
 
+
 TEST_CASE("calculate_thrust", "[algorithms]") {
   ROOT::VecOps::RVec<float> x {0., 1., 3., 7., 11., 3.};
   ROOT::VecOps::RVec<float> y {0., -1., 3., -7., -11., .3};
   ROOT::VecOps::RVec<float> z {5., -3., 1., 4., 2., -4};
 
   auto res = FCCAnalyses::Algorithms::calculate_thrust()(x, y, z);
+  REQUIRE(res[0] == Catch::Approx( 0.67978 ));
   REQUIRE(res[1] == Catch::Approx( -0.83496 ));
+  REQUIRE(res[2] == Catch::Approx( 0.52436 ));
+  REQUIRE(res[3] == Catch::Approx( 0.166992 ));
 }
