@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653035209221,
+  "lastUpdate": 1653035210533,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -1190,6 +1190,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b18ec3a5609b529c5b8981547705c4b73685284f",
+          "message": "Merge pull request #175 from vvolkl/cmake\n\ncmake: set CMAKE_PREFIX_PATH in setup.sh",
+          "timestamp": "2022-05-20T10:13:59+02:00",
+          "tree_id": "44033f610b0bc90cc5995ab4729f6c60a16c1dc1",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/b18ec3a5609b529c5b8981547705c4b73685284f"
+        },
+        "date": 1653035210121,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 4.773340134944859,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.0979860598054225,
+            "unit": "Evt/s"
           }
         ]
       }
