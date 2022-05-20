@@ -2,6 +2,7 @@
 
 #include "nlohmann/json.hpp"
 #include <fstream>
+#include <iostream>
 
 WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::string& json_filename)
     : onnx_(new ONNXRuntime(onnx_filename)) {
@@ -94,17 +95,21 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > WeaverInterface::run(
   if (first_var.empty())  // no jet in there... we do not run the inference
     return output;
 
+  std::cout << "number of jets: " << num_jets << ", features: " << num_features << std::endl;
+
   for (size_t i = 0; i < num_jets; ++i) {  // loop over candidates
     auto& result = output.emplace_back();
+    std::cout << ">> jet " << i << std::endl;
     for (size_t j = 0; j < input_names_.size(); ++j) {
       const auto& name = input_names_.at(j);
       const auto& params = prep_info_map_.at(name);
+      std::cout << ">>>> nm " << j << "=" << name << std::endl;
       auto& values = data_[j];
       values.resize(input_sizes_.at(j));
       std::fill(values.begin(), values.end(), 0);
       size_t k = 0;
       size_t it_pos = 0;
-      for (const auto& var_name : params.var_names) {
+      for (const auto& var_name : params.var_names) {  // transform and add the proper amount of padding
         const auto& var_info = params.info(var_name);
         auto val = center_norm_pad(features.at(k).at(i),
                                    var_info.center,
@@ -118,13 +123,14 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > WeaverInterface::run(
         std::copy(val.begin(), val.end(), values.begin() + it_pos);
         it_pos += val.size();
         if (k == 0 && !input_shapes_.empty())
-          input_shapes_[i][2] = val.size();
+          input_shapes_[j][2] = val.size();
         ++k;
       }
       values.resize(it_pos);
     }
-
-    result = onnx_->run<float>(data_)[0];
+    std::cout << "before running for jet " << i << std::endl;
+    result = onnx_->run<float>(data_, input_shapes_)[0];
+    std::cout << "after running for jet " << i << ", result: " << result << std::endl;
   }
 
   // convert into a {jet{vars{particles}} collection

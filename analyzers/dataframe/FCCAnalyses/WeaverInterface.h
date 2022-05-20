@@ -57,7 +57,7 @@ private:
 
   std::unique_ptr<ONNXRuntime> onnx_;
   std::vector<std::string> input_names_;
-  std::vector<std::vector<long long> > input_shapes_;
+  ONNXRuntime::Tensor<long> input_shapes_;
   std::vector<unsigned int> input_sizes_;
   std::unordered_map<std::string, PreprocessParams> prep_info_map_;
   ONNXRuntime::Tensor<float> data_;

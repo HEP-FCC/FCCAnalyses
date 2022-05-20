@@ -28,11 +28,42 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path)
 ONNXRuntime::~ONNXRuntime() {}
 
 template <typename T>
-ONNXRuntime::Tensor<T> ONNXRuntime::run(const Tensor<T>& input) const {
+ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input, const Tensor<long>& input_shapes) const {
   std::vector<Ort::Value> tensors_in;
-  for (const auto& val : input) {
-    auto tensor = Ort::Experimental::Value::CreateTensor<T>(
-        const_cast<T*>(val.data()), val.size(), session_->GetInputShapes()[0]);
+  std::cout << __PRETTY_FUNCTION__ << ">> " << input.size() << std::endl;
+  auto mem_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+
+  //auto& input_dims = session_->GetInputShapes()[0];
+  std::cout << "input shapes mult: " << input_shapes.size() << std::endl;
+  auto shapes = input_shapes;
+  if (shapes.empty()) {
+    for (size_t i = 0; i < input.size(); ++i) {
+      shapes.emplace_back();
+      auto type_info = session_->GetInputTypeInfo(i);
+      auto tensor_info = type_info.GetTensorTypeAndShapeInfo();
+      size_t num_dims = tensor_info.GetDimensionsCount();
+      shapes.back().resize(num_dims);
+      tensor_info.GetDimensions(shapes.back().data(), num_dims);
+    }
+  }
+  shapes = session_->GetInputShapes();
+  for (size_t i = 0; i < shapes.size(); ++i) {
+    std::cout << "shape --> " << i << std::endl;
+    for (size_t j = 0; j < shapes.at(i).size(); ++j)
+      std::cout << " >>>>>>> " << j << ": " << shapes.at(i).at(j) << std::endl;
+  }
+  auto input_dims = shapes[1];
+  for (size_t i = 0; i < input_dims.size(); ++i)
+    std::cout << "shape#" << i << ": " << input_dims.at(i) << std::endl;
+
+  for (auto& val : input) {
+    std::cout << "Tensor to be created: " << val.size() << std::endl;
+    for (size_t i = 0; i < val.size(); ++i)
+      std::cout << ":::: " << i << " = " << val.at(i) << std::endl;
+    auto tensor = Ort::Value::CreateTensor<T>(mem_info, val.data(), val.size(), input_dims.data(), input_dims.size());
+    //auto tensor = Ort::Value::CreateTensor<T>(val.data(), val.size(), session_->GetInputShapes()[0]);
+    //auto tensor = Ort::Experimental::Value::CreateTensor<T>(val.data(), val.size(), input_shapes[0]);
+    std::cout << "Tensor created: " << val.size() << std::endl;
     if (!tensor.IsTensor())
       throw std::runtime_error("Failed to create a tensor for input values");
     tensors_in.emplace_back(std::move(tensor));
@@ -40,7 +71,9 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(const Tensor<T>& input) const {
   std::cout << ">>> " << tensors_in.size() << std::endl;
 
   // run the inference
-  auto tensors_out = session_->Run(session_->GetInputNames(), tensors_in, session_->GetOutputNames());
+  /*auto tensors_out = session_->Run(session_->GetInputNames(), tensors_in, session_->GetOutputNames());
+
+  std::cout << "after inference" << std::endl;
 
   // convert output to floats
   Tensor<T> output_values;
@@ -51,8 +84,9 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(const Tensor<T>& input) const {
     const auto length = tensor.GetTensorTypeAndShapeInfo().GetElementCount();
     const auto data = tensor.GetTensorMutableData<T>();
     output_values.emplace_back(data, data + length);
-  }
+  }*/
+  Tensor<T> output_values(tensors_in.size());
   return output_values;
 }
 
-template ONNXRuntime::Tensor<float> ONNXRuntime::run(const Tensor<float>& input) const;
+template ONNXRuntime::Tensor<float> ONNXRuntime::run(Tensor<float>&, const Tensor<long>&) const;

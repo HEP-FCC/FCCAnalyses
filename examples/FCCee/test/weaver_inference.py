@@ -28,7 +28,7 @@ class analysis():
         if ".root" not in outname:
             self.outname+=".root"
 
-        ROOT.ROOT.EnableImplicitMT(ncpu)
+        #ROOT.ROOT.EnableImplicitMT(ncpu)
         ROOT.EnableThreadSafety()
         self.df = ROOT.RDataFrame("events", inputlist)
         print (" init done, about to run")
@@ -49,13 +49,15 @@ class analysis():
                .Define("MVAVec", "WeaverInterface::get()(JC_e, JC_theta, JC_phi, JC_pid, JC_charge)")
                #.Define("MVAVec", _wea, ("JC_e", "JC_theta", "JC_phi", "JC_pid", "JC_charge"))
 
-               .Define("MVAb", "MVAVec.at(0)")
+               #.Define("MVAb", "MVAVec.at(0)")
         )
         print('after')
         # select branches for output file
         branchList = ROOT.vector('string')()
         for branchName in [
-            'MVAb',
+            'JetsConstituents',
+            'MVAVec',
+            #'MVAb',
             ]:
             branchList.push_back(branchName)
         df2.Snapshot("events", self.outname, branchList)

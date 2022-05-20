@@ -24,7 +24,7 @@ public:
   ONNXRuntime& operator=(const ONNXRuntime&) = delete;
 
   template <typename T>
-  Tensor<T> run(const Tensor<T>& input) const;
+  Tensor<T> run(Tensor<T>& input, const Tensor<long>& input_shapes) const;
 
 private:
   std::unique_ptr<Ort::Env> env_;
