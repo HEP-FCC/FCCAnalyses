@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653120828708,
+  "lastUpdate": 1653120830400,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -1478,6 +1478,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2835abcb5fb1fcdc91f3a2404ec47cd28c4abfb2",
+          "message": "Merge pull request #121 from kjvbrt/ana_thrust\n\nAdding determination of event thrust not by minimization",
+          "timestamp": "2022-05-20T14:40:24+02:00",
+          "tree_id": "83026e625c2ef6a517062f48813a9cb16731d36b",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/2835abcb5fb1fcdc91f3a2404ec47cd28c4abfb2"
+        },
+        "date": 1653120829768,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.33799402038344,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.101263568254328,
+            "unit": "Evt/s"
           }
         ]
       }
