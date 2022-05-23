@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653317096251,
+  "lastUpdate": 1653317097697,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -1694,6 +1694,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "valentin.volkl@cern.ch",
+            "name": "Valentin Volkl",
+            "username": "vvolkl"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "82a87ff68f86d22b30a9ad0e0f7a8df47527e079",
+          "message": "cmake: avoid absolute paths to source headers being baked into dictionary (#178)",
+          "timestamp": "2022-05-23T16:31:54+02:00",
+          "tree_id": "7b3ff120f0118bfa6812bc28ebe1467fe21a6755",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/82a87ff68f86d22b30a9ad0e0f7a8df47527e079"
+        },
+        "date": 1653317097271,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 5.512138455092431,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.3180761340647384,
+            "unit": "Evt/s"
           }
         ]
       }
