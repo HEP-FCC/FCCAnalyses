@@ -1,5 +1,5 @@
 
-find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps TMVA)
+find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps)
 include(${ROOT_USE_FILE})
 #include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
@@ -25,7 +25,7 @@ message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_
 
 
 file(GLOB sources src/*.cc)
-file(GLOB headers include/FCCAnalyses/*.h)
+file(GLOB headers RELATIVE ${CMAKE_CURRENT_LIST_DIR} FCCAnalyses/*.h)
 
 message(STATUS "includes headers ${headers}")
 message(STATUS "includes sources ${sources}")
@@ -40,11 +40,10 @@ endif()
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
 
-add_library(FCCAnalyses SHARED ${sources} ${headers} )
+add_library(FCCAnalyses SHARED  ${sources} ${headers} )
 target_include_directories(FCCAnalyses  PUBLIC
-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-                           ${FCCEDM_INCLUDE_DIRS}
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+                           $<INSTALL_INTERFACE:include>
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
@@ -55,7 +54,6 @@ target_link_libraries(FCCAnalyses
                       ROOT::MathCore
                       ROOT::ROOTVecOps
                       ROOT::ROOTDataFrame
-                      ROOT::TMVA
                       EDM4HEP::edm4hep
                       EDM4HEP::edm4hepDict
                       podio::podio
@@ -81,7 +79,7 @@ set_target_properties(FCCAnalyses PROPERTIES
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
                          ${headers}
                          MODULE FCCAnalyses
-                         LINKDEF include/FCCAnalyses/LinkDef.h
+                         LINKDEF FCCAnalyses/LinkDef.h
                          )
 
 install(TARGETS FCCAnalyses
