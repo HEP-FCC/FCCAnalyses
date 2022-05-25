@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+
+from config.FCCAnalysisRun import *
+
+if __name__ == "__main__":
+  import argparse
+  parser = argparse.ArgumentParser()
+  subparsers = parser.add_subparsers() 
+  parser_run = subparsers.add_parser('run', help="run a RDataFrame based FCC analysis")
+  run(parser, parser_run)
