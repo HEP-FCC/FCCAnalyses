@@ -64,7 +64,7 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
 include(cmake/FCCAnalysesCreateConfig.cmake)
 
 
-install(FILES bin/fccanalysis DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+configure_file(bin/fccanalysis ${CMAKE_BINARY_DIR} COPYONLY)
 install(FILES bin/fccanalysis PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 
