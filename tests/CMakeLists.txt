@@ -19,7 +19,8 @@ endfunction()
 function(add_integration_test_2 _testname)
 
   add_test(NAME fccanalysisrun_${_testname} 
-          COMMAND fccanalysis run ${_testname} --test --nevents 100 --bench
+          # todo: figure out how to make ctest pick fccanalysis up from PATH
+          COMMAND ${CMAKE_SOURCE_DIR}/bin/fccanalysis run ${_testname} --test --nevents 100 --bench
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
           )
   set_property(TEST fccanalysisrun_${_testname} APPEND PROPERTY ENVIRONMENT
