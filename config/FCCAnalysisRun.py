@@ -548,7 +548,7 @@ def runStages(args, rdfModule, preprocess):
         print("----> Running with user defined list of files (either locally or from batch)")
         path, filename = os.path.split(args.output)
         if path!='': os.system("mkdir -p {}".format(path))
-        runLocal(rdfModule, args.files_list, args.output, True)
+        runLocal(rdfModule, args.files_list, args)
         sys.exit(0)
 
     #check if batch mode and set start and end file from original list
