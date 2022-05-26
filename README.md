@@ -125,7 +125,7 @@ file (please note that then the sample will not be matched in the database for
 To run the pre-selection stage of the example analysis run:
 
 ```shell
-python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py
+fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py
 ```
 
 This will create the output files in the `ZH_mumu_recoil/stage1` subdirectory
@@ -135,7 +135,7 @@ You also have the possibility to bypass the samples specified in the
 `processList` variable by using command line parameter `--output`, like so:
 
 ```shell
-python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py \
+fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py \
        --output <myoutput.root> \
        --files-list <file.root or file1.root file2.root or file*.root>
 ```
@@ -144,7 +144,7 @@ The example analysis consists of two pre-selection stages, to run the second one
 slightly alter the previous command:
 
 ```shell
-python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage2.py
+fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage2.py
 ```
 
 
@@ -170,7 +170,7 @@ variables needs extra fields like `title`, number of bins and range for the
 histogram creation. In the example analysis it can be run like this:
 
 ```shell
-python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \
+fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \
        --final
 ```
 
@@ -187,7 +187,7 @@ the rendering of the plots but also ways of combining samples for plotting.
 In the example analysis it can be run in the following manner:
 
 ```shell
-python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py \
+fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py \
        --plots
 ```
 
