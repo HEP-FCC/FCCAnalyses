@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653563976613,
+  "lastUpdate": 1653563978028,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -2126,6 +2126,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "valentin.volkl@cern.ch",
+            "name": "Valentin Volkl",
+            "username": "vvolkl"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff8ff034e8d3524ec0daeb224ccb46c49a293cd2",
+          "message": "add 'fccanalysis run' command using subparsers (#180)\n\n* add 'fccanalysis run' command using subparsers\r\n\r\n* make sure tests find fccanalysis\r\n\r\n* Update bin/fccanalysis\r\n\r\nCo-authored-by: Clement Helsens <clement.helsens@cern.ch>\r\n\r\n* update runLocal\r\n\r\n* try to make ctest find fccanalysis\r\n\r\n* update readme\r\n\r\n* try to make ctest find fccanalysis\r\n\r\nCo-authored-by: Clement Helsens <clement.helsens@cern.ch>",
+          "timestamp": "2022-05-26T12:48:35+02:00",
+          "tree_id": "4eed9f0783201ee43135c456af8e3ee76357c4ed",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/ff8ff034e8d3524ec0daeb224ccb46c49a293cd2"
+        },
+        "date": 1653563977645,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 7.972079293365358,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.3298092956427405,
+            "unit": "Evt/s"
           }
         ]
       }
