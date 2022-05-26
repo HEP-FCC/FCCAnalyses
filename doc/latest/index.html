@@ -131,27 +131,27 @@ Pre-selection</h2>
 <p >The pre-selection runs over already existing and properly registered FCCSW EDM4hep events. The dataset names with the corresponding statistics can be found <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_spring2021_IDEA.php">here</a> for the IDEA spring 2021 campaign. The <code>processList</code> is a dictionary of processes, each process having it's own dictionary of parameters. For example </p><div class="fragment"><div class="line"><span class="stringliteral">&#39;p8_ee_ZH_ecm240&#39;</span>:{<span class="stringliteral">&#39;fraction&#39;</span>:0.2, <span class="stringliteral">&#39;chunks&#39;</span>:2, <span class="stringliteral">&#39;output&#39;</span>:<span class="stringliteral">&#39;p8_ee_ZH_ecm240_out&#39;</span>}</div>
 </div><!-- fragment --><p> where <code>p8_ee_ZH_ecm240</code> should match an existing sample in the database, <code>fraction</code> is the fraction of the sample you want to run on (default is 1), <code>chunks</code> is the number of jobs to run (you will have the corresponding number of output files) and <code>output</code> in case you need to change the name of the output file (please note that then the sample will not be matched in the database for <code>finalSel.py</code> histograms normalisation). The other parameters are explained in <a href="https://github.com/HEP-FCC/FCCAnalyses/tree/master/example/FCCee/higgs/mH-recoil/analysis_stage1.py">the example file</a>.</p>
 <p >To run the pre-selection stage of the example analysis run:</p>
-<div class="fragment"><div class="line">python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py</div>
+<div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py</div>
 </div><!-- fragment --><p >This will create the output files in the <code>ZH_mumu_recoil/stage1</code> subdirectory of the output director specified with parameter <code>outDir</code> in the file.</p>
 <p >You also have the possibility to bypass the samples specified in the <code>processList</code> variable by using command line parameter <code>--output</code>, like so:</p>
-<div class="fragment"><div class="line">python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py \</div>
+<div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py \</div>
 <div class="line">       --output &lt;myoutput.root&gt; \</div>
 <div class="line">       --files-list &lt;file.root or file1.root file2.root or file*.root&gt;</div>
 </div><!-- fragment --><p >The example analysis consists of two pre-selection stages, to run the second one slightly alter the previous command:</p>
-<div class="fragment"><div class="line">python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage2.py</div>
+<div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage2.py</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md7"></a>
 Pre-selection on batch (HTCondor)</h3>
 <p >It is also possible to run the pre-selection step on the batch. For that the <code>runBatch</code> parameter needs to be set to true. Please make sure you select a long enough <code>batchQueue</code> and that your computing group is properly set <code>compGroup</code> (as you might not have the right to use the default one <code>group_u_FCC.local_gen</code> as it request to be part of the FCC computing e-group <code>fcc-experiments-comp</code>). When running on batch, you should use the <code>chunk</code> parameter for each sample in your <code>processList</code> such that you benefit from high parallelisation.</p>
 <h2><a class="anchor" id="autotoc_md8"></a>
 Final selection</h2>
 <p >The final selection runs on the pre-selection files that were produced in the Pre-selection step. In the configuration file <code>analysis_final.py</code> various cuts are defined to be run on and the final variables to be stored in both a <code>TTree</code> and histograms. This is why the variables needs extra fields like <code>title</code>, number of bins and range for the histogram creation. In the example analysis it can be run like this:</p>
-<div class="fragment"><div class="line">python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \</div>
+<div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \</div>
 <div class="line">       --final</div>
 </div><!-- fragment --><p >This will create 2 files per selection <code>SAMPLENAME_SELECTIONNAME.root</code> for the <code>TTree</code> and <code>SAMPLENAME_SELECTIONNAME_histo.root</code> for the histograms. <code>SAMPLENAME</code> and <code>SELECTIONNAME</code> correspond to the name of the sample and selection respectively in the configuration file.</p>
 <h2><a class="anchor" id="autotoc_md9"></a>
 Plotting</h2>
 <p >The plotting analysis file <code>analysis_plots.py</code> contains not only details for the rendering of the plots but also ways of combining samples for plotting. In the example analysis it can be run in the following manner:</p>
-<div class="fragment"><div class="line">python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py \</div>
+<div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py \</div>
 <div class="line">       --plots</div>
 </div><!-- fragment --><p >Resulting plots will be located the <code>outdir</code> defined in the analysis file. </p>
 </div></div><!-- PageDoc -->
@@ -159,7 +159,7 @@ Plotting</h2>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 23 2022 17:38:17 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 26 2022 12:52:30 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
