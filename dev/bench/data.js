@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653320572960,
+  "lastUpdate": 1653562729881,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -1872,6 +1872,44 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
             "value": 5.469479867213679,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "valentin.volkl@cern.ch",
+            "name": "Valentin Volkl",
+            "username": "vvolkl"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff8ff034e8d3524ec0daeb224ccb46c49a293cd2",
+          "message": "add 'fccanalysis run' command using subparsers (#180)\n\n* add 'fccanalysis run' command using subparsers\r\n\r\n* make sure tests find fccanalysis\r\n\r\n* Update bin/fccanalysis\r\n\r\nCo-authored-by: Clement Helsens <clement.helsens@cern.ch>\r\n\r\n* update runLocal\r\n\r\n* try to make ctest find fccanalysis\r\n\r\n* update readme\r\n\r\n* try to make ctest find fccanalysis\r\n\r\nCo-authored-by: Clement Helsens <clement.helsens@cern.ch>",
+          "timestamp": "2022-05-26T12:48:35+02:00",
+          "tree_id": "4eed9f0783201ee43135c456af8e3ee76357c4ed",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/ff8ff034e8d3524ec0daeb224ccb46c49a293cd2"
+        },
+        "date": 1653562728487,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 13.025207042694092,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 17.095001459121704,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           }
         ]
       }
