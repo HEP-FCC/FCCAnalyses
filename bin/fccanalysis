@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+
+if __name__ == "__main__":
+  import argparse
+  import sys
+  parser = argparse.ArgumentParser()
+  subparsers = parser.add_subparsers() 
+  parser_run = subparsers.add_parser('run', help="run a RDataFrame based FCC analysis")
+  if len(sys.argv)<2:
+     print("for usage run fccanalyses --help")
+     sys.exit(3)
+  from config.FCCAnalysisRun import * #such that the dictionary is loaded only if the configuration is ok
+  run(parser, parser_run)

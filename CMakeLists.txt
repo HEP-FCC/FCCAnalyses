@@ -64,6 +64,13 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
 include(cmake/FCCAnalysesCreateConfig.cmake)
 
 
+file(COPY bin/fccanalysis
+  DESTINATION ${CMAKE_BINARY_DIR}
+  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ
+  GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+install(PROGRAMS bin/fccanalysis DESTINATION bin)
+
+
 file(GLOB _run_python_files config/*.py)
 install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
 install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
