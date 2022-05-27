@@ -5,10 +5,27 @@ if __name__ == "__main__":
   import argparse
   import sys
   parser = argparse.ArgumentParser()
-  subparsers = parser.add_subparsers() 
-  parser_run = subparsers.add_parser('run', help="run a RDataFrame based FCC analysis")
+  subparsers = parser.add_subparsers(help='types of running modes')
+  parser_run       = subparsers.add_parser('run', help="run a RDataFrame based FCC analysis")
+  parser_run.set_defaults(which='run')
+
+  parser_run = subparsers.add_parser('run-batch', help="run a RDataFrame based FCC analysis on batch")
+  parser_run.set_defaults(which='run-batch')
+
+  parser_run  = subparsers.add_parser('run-test', help="run the test for a RDataFrame based FCC analysis")
+  parser_run.set_defaults(which='run-test')
+
+  parser_run = subparsers.add_parser('run-final', help="run a RDataFrame based FCC analysis final configuration")
+  parser_run.set_defaults(which='run-final')
+
+  parser_run = subparsers.add_parser('run-plots', help="run a RDataFrame based FCC analysis plot configuration")
+  parser_run.set_defaults(which='run-plots')
+
   if len(sys.argv)<2:
      print("for usage run fccanalyses --help")
      sys.exit(3)
+
+  #detect already here when bad options are tried
+  args = parser.parse_args()
   from config.FCCAnalysisRun import * #such that the dictionary is loaded only if the configuration is ok
   run(parser, parser_run)
