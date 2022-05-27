@@ -31,6 +31,6 @@ if __name__ == "__main__":
      sys.exit(3)
 
   #detect already here when bad options are tried
-  args = parser.parse_args()
+  #args = parser.parse_args()
   from config.FCCAnalysisRun import * #such that the dictionary is loaded only if the configuration is ok
   run(parser, parser_run)
