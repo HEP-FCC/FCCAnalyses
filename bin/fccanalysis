@@ -21,8 +21,13 @@ if __name__ == "__main__":
   parser_run = subparsers.add_parser('run-plots', help="run a RDataFrame based FCC analysis plot configuration")
   parser_run.set_defaults(which='run-plots')
 
-  if len(sys.argv)<2:
-     print("for usage run fccanalyses --help")
+  if len(sys.argv)<3:
+     print("minimal running requirements:")
+     print("fccanalyses <runoption> <analysisfile>")
+     print("running example:")
+     print("fccanalyses run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py")
+     print("for more running oprion, try: fccanalyses --help")
+
      sys.exit(3)
 
   #detect already here when bad options are tried
