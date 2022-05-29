@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653850682128,
+  "lastUpdate": 1653850684076,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -2270,6 +2270,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eb19ed7abd0f9a48376a6189351ca6095b2a57bc",
+          "message": "More parsers (#181)\n\n* start adding more subparsers\r\n\r\n* start adding more subparsers\r\n\r\n* remove early parsing\r\n\r\n* wip: add more parsers\r\n\r\n* add attribute error\r\n\r\n* check before bugfx\r\n\r\n* bugfix\r\n\r\n* add more parsing options to instructions\r\n\r\n* add attribute error for final plots\r\n\r\n* add attribute error for final plots\r\n\r\n* remove run-",
+          "timestamp": "2022-05-29T20:47:48+02:00",
+          "tree_id": "f3505cd41787180abe807ee777fa3afe595983ef",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/eb19ed7abd0f9a48376a6189351ca6095b2a57bc"
+        },
+        "date": 1653850683386,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 7.069587901720568,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.2519238785679425,
+            "unit": "Evt/s"
           }
         ]
       }
