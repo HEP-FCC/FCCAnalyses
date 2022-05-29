@@ -145,21 +145,19 @@ Pre-selection on batch (HTCondor)</h3>
 <h2><a class="anchor" id="autotoc_md8"></a>
 Final selection</h2>
 <p >The final selection runs on the pre-selection files that were produced in the Pre-selection step. In the configuration file <code>analysis_final.py</code> various cuts are defined to be run on and the final variables to be stored in both a <code>TTree</code> and histograms. This is why the variables needs extra fields like <code>title</code>, number of bins and range for the histogram creation. In the example analysis it can be run like this:</p>
-<div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \</div>
-<div class="line">       --final</div>
+<div class="fragment"><div class="line">fccanalysis final examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py</div>
 </div><!-- fragment --><p >This will create 2 files per selection <code>SAMPLENAME_SELECTIONNAME.root</code> for the <code>TTree</code> and <code>SAMPLENAME_SELECTIONNAME_histo.root</code> for the histograms. <code>SAMPLENAME</code> and <code>SELECTIONNAME</code> correspond to the name of the sample and selection respectively in the configuration file.</p>
 <h2><a class="anchor" id="autotoc_md9"></a>
 Plotting</h2>
 <p >The plotting analysis file <code>analysis_plots.py</code> contains not only details for the rendering of the plots but also ways of combining samples for plotting. In the example analysis it can be run in the following manner:</p>
-<div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py \</div>
-<div class="line">       --plots</div>
+<div class="fragment"><div class="line">fccanalysis plots examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py</div>
 </div><!-- fragment --><p >Resulting plots will be located the <code>outdir</code> defined in the analysis file. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2022 13:14:21 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 29 2022 20:56:03 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
