@@ -596,10 +596,8 @@ def runStages(args, rdfModule, preprocess):
             #run locally
             if runBatch == False:
                 print ('----> Running Locally')
-                print ('----> args output before, ',args.output)
                 args.output = outputchunk
-                print ('----> args output after, ',args.output)
-                runLocal(rdfModule, chunkList[ch], outputchunk, args)
+                runLocal(rdfModule, chunkList[ch], args)
 
             #run on batch
         if runBatch == True:
