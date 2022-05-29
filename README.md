@@ -170,8 +170,7 @@ variables needs extra fields like `title`, number of bins and range for the
 histogram creation. In the example analysis it can be run like this:
 
 ```shell
-fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py \
-       --final
+fccanalysis final examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py
 ```
 
 This will create 2 files per selection `SAMPLENAME_SELECTIONNAME.root` for the
@@ -187,8 +186,7 @@ the rendering of the plots but also ways of combining samples for plotting.
 In the example analysis it can be run in the following manner:
 
 ```shell
-fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py \
-       --plots
+fccanalysis plots examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py
 ```
 
 Resulting plots will be located the `outdir` defined in the analysis file.
