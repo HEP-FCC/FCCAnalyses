@@ -854,7 +854,7 @@ def setup_run_parser(parser):
 def run(mainparser, subparser=None):
     """
     Set things in motion.
-    The two parser arguments are a hack to allow running this 
+    The two parser arguments are a hack to allow running this
     both as `fccanalysis run` and `python config/FCCAnalysisRun.py`
     For the latter case, both are the same (see below).
     """
@@ -881,10 +881,14 @@ def run(mainparser, subparser=None):
     rdfModule = importlib.util.module_from_spec(rdfSpec)
     rdfSpec.loader.exec_module(rdfModule)
 
-
-    if args.command == "run":          runStages(args, rdfModule, args.preprocess)
-    elif args.command == "run-final":  runFinal(rdfModule)
-    elif args.command == "run-plots":  runPlots(analysisFile)
+    try:
+        args.command
+        if args.command == "run":          runStages(args, rdfModule, args.preprocess)
+        elif args.command == "run-final":  runFinal(rdfModule)
+        elif args.command == "run-plots":  runPlots(analysisFile)
+        return
+    except AttributeError:
+        print("============running the old way")
 
 
     #below is legacy using the old way of runnig with options in "python config/FCCAnalysisRun.py analysis.py --options
@@ -920,12 +924,12 @@ def run(mainparser, subparser=None):
                 sys.exit(3)
         runStages(args, rdfModule, args.preprocess)
 
-    
+
 #__________________________________________________________
 if __name__ == "__main__":
     print("Running this script directly is deprecated, use `fccanalysis run` instead.")
-    # legacy behavior: allow running this script directly 
-    # with python config/FCCAnalysis.py 
+    # legacy behavior: allow running this script directly
+    # with python config/FCCAnalysis.py
     # and the same behavior as `fccanalysis run`
     import argparse
     parser = argparse.ArgumentParser()
