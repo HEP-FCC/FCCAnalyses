@@ -851,16 +851,19 @@ def setup_run_parser(parser):
 
 
 #__________________________________________________________
-def run(mainparser, subparser):
+def run(mainparser, subparser=None):
     """
     Set things in motion.
     The two parser arguments are a hack to allow running this 
     both as `fccanalysis run` and `python config/FCCAnalysisRun.py`
     For the latter case, both are the same (see below).
     """
-    setup_run_parser(subparser)
-    args, _ = mainparser.parse_known_args()
 
+    if subparser:
+        print("===================setup subparser")
+        setup_run_parser(subparser)
+    args, _ = mainparser.parse_known_args()
+    print("args in mains code==============================",args)
     #check that the analysis file exists
     analysisFile = args.pathToAnalysisScript
     if not os.path.isfile(analysisFile):
@@ -873,10 +876,18 @@ def run(mainparser, subparser):
 
     #load the analysis
     analysisFile=os.path.abspath(analysisFile)
+    print ("--------------loading analysis file  ",analysisFile)
     rdfSpec   = importlib.util.spec_from_file_location("rdfanalysis", analysisFile)
     rdfModule = importlib.util.module_from_spec(rdfSpec)
     rdfSpec.loader.exec_module(rdfModule)
 
+
+    if args.command == "run":          runStages(args, rdfModule, args.preprocess)
+    elif args.command == "run-final":  runFinal(rdfModule)
+    elif args.command == "run-plots":  runPlots(analysisFile)
+
+
+    #below is legacy using the old way of runnig with options in "python config/FCCAnalysisRun.py analysis.py --options
     #check if this is final analysis
     if args.final:
         if args.plots:
