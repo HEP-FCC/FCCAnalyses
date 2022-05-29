@@ -873,8 +873,9 @@ def run(mainparser, subparser=None):
         sys.exit(3)
 
     #set the RDF ELogLevel
-    verbosity = ROOT.Experimental.RLogScopedVerbosity(ROOT.Detail.RDF.RDFLogChannel(), getattr(ROOT.Experimental.ELogLevel,args.eloglevel))
-
+    try:
+        verbosity = ROOT.Experimental.RLogScopedVerbosity(ROOT.Detail.RDF.RDFLogChannel(), getattr(ROOT.Experimental.ELogLevel,args.eloglevel))
+    #except AttributeError:
     #load the analysis
     analysisFile=os.path.abspath(analysisFile)
     print ("--------------loading analysis file  ",analysisFile)
