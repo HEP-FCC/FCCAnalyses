@@ -887,8 +887,8 @@ def run(mainparser, subparser=None):
     try:
         args.command
         if args.command == "run":          runStages(args, rdfModule, args.preprocess)
-        elif args.command == "run-final":  runFinal(rdfModule)
-        elif args.command == "run-plots":  runPlots(analysisFile)
+        elif args.command == "final":  runFinal(rdfModule)
+        elif args.command == "plots":  runPlots(analysisFile)
         return
     except AttributeError:
         print("============running the old way")

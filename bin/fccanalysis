@@ -7,9 +7,9 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser('FCCAnalyses parser')
   subparsers = parser.add_subparsers(help='types of running modes', dest='command')
   parser_run       = subparsers.add_parser('run', help="run a RDataFrame based FCC analysis")
-  parser_run_final = subparsers.add_parser('run-final', help="run a RDataFrame based FCC analysis final configuration")
-  parser_run_plots = subparsers.add_parser('run-plots', help="run a RDataFrame based FCC analysis plot configuration")
- 
+  parser_run_final = subparsers.add_parser('final', help="run a RDataFrame based FCC analysis final configuration")
+  parser_run_plots = subparsers.add_parser('plots', help="run a RDataFrame based FCC analysis plot configuration")
+
   from config.Parsers import *
   setup_run_parser(parser_run)
   setup_run_parser_final(parser_run_final)
@@ -26,4 +26,3 @@ if __name__ == "__main__":
 
   from config.FCCAnalysisRun import run
   run(parser)
-
