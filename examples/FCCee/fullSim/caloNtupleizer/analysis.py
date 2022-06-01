@@ -47,6 +47,7 @@ class analysis():
             self.outname+=".root"
 
         ROOT.ROOT.EnableImplicitMT(ncpu)
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 
         self.df = ROOT.RDataFrame("events", inputlist)
         if args.useGeometry:
