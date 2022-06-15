@@ -102,7 +102,7 @@ get_trackParam( edm4hep::TrackState & atrack) {
 
 TMatrixDSym
 get_trackCov( edm4hep::TrackState &  atrack) {
-  std::array<float, 15> covMatrix = atrack.covMatrix;
+  auto covMatrix = atrack.covMatrix;
   TMatrixDSym covM(5);
 
   double scale0 = 1e-3;
