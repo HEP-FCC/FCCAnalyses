@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655281371161,
+  "lastUpdate": 1655281373080,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -2702,6 +2702,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64d6b54e80bea62ffd2af0f55412ed05d27f5163",
+          "message": "Merge pull request #183 from vvolkl/covMatrix\n\nadapt to time-extended edm4hep::Track",
+          "timestamp": "2022-06-15T09:55:45+02:00",
+          "tree_id": "188b12bce11792c3ad299e13a3b501997f5e531b",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/64d6b54e80bea62ffd2af0f55412ed05d27f5163"
+        },
+        "date": 1655281372286,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 7.680859502429917,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.9909251917657,
+            "unit": "Evt/s"
           }
         ]
       }
