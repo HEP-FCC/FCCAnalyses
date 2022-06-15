@@ -7,6 +7,10 @@
 #include "edm4hep/MCParticleData.h"
 #include "fastjet/JetDefinition.hh"
 #include "TRandom3.h"
+#include "MCParticle.h"
+#include "JetClusteringUtils.h"
+#include "JetClustering.h"
+
 
 /** Jet tagging utilities interface.
 This represents a set functions and utilities to perfom jet tagging from a list of jets.
@@ -21,6 +25,24 @@ namespace JetTaggingUtils{
 
   //Get flavour association of jet
   ROOT::VecOps::RVec<int> get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in, ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin);
+
+  ROOT::VecOps::RVec<int> find_ghosts(const ROOT::VecOps::RVec<edm4hep::MCParticleData> & Particle,
+                 const ROOT::VecOps::RVec<int> & ind);
+
+  JetClusteringUtils::FCCAnalysesJet set_flavour(const ROOT::VecOps::RVec<edm4hep::MCParticleData> & Particle,
+                 const ROOT::VecOps::RVec<int> & MCindices,
+                 JetClusteringUtils::FCCAnalysesJet & jets,
+                 std::vector<fastjet::PseudoJet> & pseudoJets);
+
+  ROOT::VecOps::RVec<int> get_flavour(const JetClusteringUtils::FCCAnalysesJet & jets);
+
+  ROOT::VecOps::RVec<int> get_flavour(const ROOT::VecOps::RVec<edm4hep::MCParticleData> & Particle,
+                 const ROOT::VecOps::RVec<int> & ind,
+                 JetClusteringUtils::FCCAnalysesJet & jets,
+                 std::vector<fastjet::PseudoJet> & pseudoJets);
+
+  JetClusteringUtils::flav_details get_flavour_details(const JetClusteringUtils::FCCAnalysesJet & jets);
+
   //Get b-tags with an efficiency applied
   ROOT::VecOps::RVec<int> get_btag(ROOT::VecOps::RVec<int> in, float efficiency, float mistag_c=0., float mistag_l=0., float mistag_g=0.);
   //Get c-tags with an efficiency applied

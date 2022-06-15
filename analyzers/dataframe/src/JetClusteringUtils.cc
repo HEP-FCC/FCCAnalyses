@@ -137,7 +137,7 @@ ROOT::VecOps::RVec<float> get_theta(const ROOT::VecOps::RVec<fastjet::PseudoJet>
 
 
 
-FCCAnalysesJet initialise_FCCAnalysesJet(){
+FCCAnalysesJet initialise_FCCAnalysesJet(TString clustering_algo, ROOT::VecOps::RVec<float> clustering_params){
 
   FCCAnalysesJet result;
   ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
@@ -145,6 +145,8 @@ FCCAnalysesJet initialise_FCCAnalysesJet(){
 
   result.jets = jets;
   result.constituents = constituents;
+  result.clustering_algo = clustering_algo;
+  result.clustering_params = clustering_params;
 
   std::vector<float> exclusive_dmerge;
   std::vector<float> exclusive_dmerge_max;
@@ -159,9 +161,11 @@ FCCAnalysesJet initialise_FCCAnalysesJet(){
 
 FCCAnalysesJet build_FCCAnalysesJet(const std::vector<fastjet::PseudoJet> &in,
                                                         const std::vector<float> &dmerge,
-                                                        const std::vector<float> &dmerge_max){
+                                                        const std::vector<float> &dmerge_max,
+                                                        TString clustering_algo,
+                                                        ROOT::VecOps::RVec<float> clustering_params){
 
-  FCCAnalysesJet result = initialise_FCCAnalysesJet();
+  FCCAnalysesJet result = initialise_FCCAnalysesJet(clustering_algo, clustering_params);
   for (const auto& pjet : in) {
     result.jets.push_back(pjet);
 
