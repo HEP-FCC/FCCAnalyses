@@ -608,11 +608,11 @@ def runStages(args, rdfModule, preprocess):
 
 
 #__________________________________________________________
-def testfile(self,f):
+def testfile(f):
     tf=ROOT.TFile.Open(f)
     tt=None
     try :
-        tt=tf.Get(self.treename)
+        tt=tf.Get("events")
         if tt==None:
             print ('file does not contains events, selection was too tight, will skip: ',f)
             return False
@@ -765,7 +765,7 @@ def runFinal(rdfModule):
             if doTree:
                 opts = ROOT.RDF.RSnapshotOptions()
                 opts.fLazy = True
-                snapshot_tdf = df_cut.Snapshot(self.treename, fout, "", opts)
+                snapshot_tdf = df_cut.Snapshot("events", fout, "", opts)
                 # Needed to avoid python garbage collector messing around with the snapshot
                 tdf_list.append(snapshot_tdf)
 
