@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656489896468,
+  "lastUpdate": 1656489898325,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -2846,6 +2846,40 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23b6a8b467e977a541b90ecfd509b96418c4b022",
+          "message": "Merge pull request #184 from clementhelsens/fix-tree\n\nbugfix dotree",
+          "timestamp": "2022-06-29T09:54:19+02:00",
+          "tree_id": "da21c01792bf0367bbae507cf2eff0a86988a522",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/23b6a8b467e977a541b90ecfd509b96418c4b022"
+        },
+        "date": 1656489897665,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.469602821554247,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 4.865097176810336,
+            "unit": "Evt/s"
           }
         ]
       }
