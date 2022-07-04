@@ -39,12 +39,6 @@ endif()
 
 
 file(GLOB sources src/*.cc)
-if(NOT ONNXRuntime_FOUND)
-    file(GLOB onnx_src src/ONNXRuntime.cc)
-    list(REMOVE_ITEM sources ${onnx_src})
-    file(GLOB weaver_src WeaverInterface.cc)
-    list(REMOVE_ITEM sources ${weaver_src})
-endif()
 file(GLOB headers RELATIVE ${CMAKE_CURRENT_LIST_DIR} FCCAnalyses/*.h)
 
 message(STATUS "includes headers ${headers}")
@@ -54,6 +48,12 @@ list(FILTER headers EXCLUDE REGEX "LinkDef.h")
 if(NOT ${WITH_DD4HEP})
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
   list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
+endif()
+if(NOT ONNXRuntime_FOUND)
+  list(FILTER headers EXCLUDE REGEX "ONNXRuntime.h")
+  list(FILTER sources EXCLUDE REGEX "ONNXRuntime.cc")
+  list(FILTER headers EXCLUDE REGEX "WeaverInterface.h")
+  list(FILTER sources EXCLUDE REGEX "WeaverInterface.cc")
 endif()
 
 
