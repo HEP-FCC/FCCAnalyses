@@ -1,5 +1,5 @@
-#ifndef analyzers_dataframe_JetConstituentsUtils_h
-#define analyzers_dataframe_JetConstituentsUtils_h
+#ifndef FCCAnalyses_JetConstituentsUtils_h
+#define FCCAnalyses_JetConstituentsUtils_h
 
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticle.h"
