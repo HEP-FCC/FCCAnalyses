@@ -46,9 +46,8 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-                "MC_PDG","MC_M1","MC_M2","MC_n","MC_D1","MC_D2",
-                #'JetsConstituents',
-                #'JC_Jet0_pt',
+                'JetsConstituents',
+                'JC_Jet0_pt',
                 #'JC_Jet0c_pt'
                 ]
         return branchList
