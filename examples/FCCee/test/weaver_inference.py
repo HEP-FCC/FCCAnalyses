@@ -1,43 +1,39 @@
-import sys
-import ROOT
-from array import array
 
-print ("Load cxx analyzers ... ",)
-ROOT.gSystem.Load("libedm4hep")
-ROOT.gSystem.Load("libpodio")
-ROOT.gSystem.Load("libawkward")
-ROOT.gSystem.Load("libawkward-cpu-kernels")
-ROOT.gSystem.Load("libFCCAnalyses")
+#Mandatory: List of processes
+processList = {
+    'p8_ee_ZH_ecm240':{'fraction':0.2, 'chunks':2, 'output':'p8_ee_ZH_ecm240_out'}
+}
 
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
-_edm  = ROOT.edm4hep.ReconstructedParticleData()
-_pod  = ROOT.podio.ObjectID()
-_fcc  = ROOT.dummyLoader
-_wea  = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-                                 '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
+#Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
+prodTag     = "FCCee/spring2021/IDEA/"
 
-print ('edm4hep  ',_edm)
-print ('podio    ',_pod)
-print ('fccana   ',_fcc)
+#Optional: output directory, default is local running directory
+#outputDir   = "outputs/FCCee/flavour/B2Kstee/stage1"
 
-class analysis():
+#Optional
+nCPUS       = 8
+runBatch    = False
+#batchQueue = "longlunch"
+#compGroup = "group_u_FCC.local_gen"
 
-    #__________________________________________________________
-    def __init__(self, inputlist, outname, ncpu):
-        self.outname = outname
-        if ".root" not in outname:
-            self.outname+=".root"
-
-        #ROOT.ROOT.EnableImplicitMT(ncpu)
-        ROOT.EnableThreadSafety()
-        self.df = ROOT.RDataFrame("events", inputlist)
-        print (" init done, about to run")
+#Mandatory: RDFanalysis class where the use defines the operations on the TTree
+class RDFanalysis():
+    _wea  = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
+                                     '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
 
     #__________________________________________________________
-    def run(self):
-        #df2 = (self.df.Range(1000)
+    #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
+    def analysers(df):
         print('before')
-        df2 = (self.df
+        df2 = (df
+               #############################################
+               ##          Aliases for # in python        ##
+               #############################################
+               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
+               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
+               .Alias("Particle0", "Particle#0.index")
+               .Alias("Particle1", "Particle#1.index")
+
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
 
                .Define("JC_e",          "JetConstituentsUtils::get_e(JetsConstituents)")
@@ -50,36 +46,16 @@ class analysis():
                #.Define("MVAVec", _wea, ("JC_e", "JC_theta", "JC_phi", "JC_pid", "JC_charge"))
 
                #.Define("MVAb", "MVAVec.at(0)")
-        )
+              )
         print('after')
-        # select branches for output file
-        branchList = ROOT.vector('string')()
-        for branchName in [
-            'JetsConstituents',
-            'MVAVec',
-            #'MVAb',
-            ]:
-            branchList.push_back(branchName)
-        df2.Snapshot("events", self.outname, branchList)
+        return df2
 
-if __name__ == '__main__':
-    if len(sys.argv)==1:
-        print ("usage:")
-        print ("python ",sys.argv[0]," file.root")
-        sys.exit(3)
-    infile = sys.argv[1]
-    outDir = 'FCCee/'+sys.argv[0].split('/')[1]+'/'
-    import os
-    os.system("mkdir -p {}".format(outDir))
-    outfile = outDir+infile.split('/')[-1]
-    ncpus = 0
-    analysis = analysis(infile, outfile, ncpus)
-    analysis.run()
-
-    print(outfile)
-
-    tf = ROOT.TFile(infile)
-    entries = tf.events.GetEntries()
-    p = ROOT.TParameter(int)( "eventsProcessed", entries)
-    outf=ROOT.TFile(outfile,"UPDATE")
-    p.Write()
+    #__________________________________________________________
+    #Mandatory: output function, please make sure you return the branchlist as a python list
+    def output():
+        branchList = [
+                'JetsConstituents',
+                'MVAVec',
+                #'MVAb',
+                ]
+        return branchList
