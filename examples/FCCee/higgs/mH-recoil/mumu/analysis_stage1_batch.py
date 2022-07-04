@@ -23,7 +23,7 @@ batchQueue = "longlunch"
 #Optional computing account when running on HTCondor, default is group_u_FCC.local_gen
 compGroup = "group_u_FCC.local_gen"
 
-Optional output directory on eos, if specified files will be copied there once the batch job is done, default is empty
+#Optional output directory on eos, if specified files will be copied there once the batch job is done, default is empty
 outputDirEos = "/eos/experiment/fcc/ee/analyses/case-studies/higgs/mH-recoil/"
 
 #Optional type for eos, needed when <outputDirEos> is specified. The default is FCC eos which is eospublic
