@@ -1,5 +1,5 @@
-#ifndef analyzers_ONNXRuntime_h
-#define analyzers_ONNXRuntime_h
+#ifndef FCCAnalyses_ONNXRuntime_h
+#define FCCAnalyses_ONNXRuntime_h
 
 #include <string>
 #include <vector>

@@ -1,5 +1,5 @@
-#ifndef analyzers_dataframe_WeaverInterface_h
-#define analyzers_dataframe_WeaverInterface_h
+#ifndef FCCAnalyses_WeaverInterface_h
+#define FCCAnalyses_WeaverInterface_h
 
 #include "ONNXRuntime.h"
 #include "ROOT/RVec.hxx"

@@ -1,14 +1,15 @@
 
 #Mandatory: List of processes
 processList = {
-    'p8_ee_ZH_ecm240':{'fraction':0.2, 'chunks':2, 'output':'p8_ee_ZH_ecm240_out'}
+    #'p8_ee_ZH_ecm240':{'fraction':0.2, 'chunks':2, 'output':'p8_ee_ZH_ecm240_out'}
+    'p8_noBES_ee_H_Hbb_ecm125':{'fraction':0.01, 'chunks':1, 'output':'test_out'}
 }
 
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local running directory
-#outputDir   = "outputs/FCCee/flavour/B2Kstee/stage1"
+outputDir   = "."
 
 #Optional
 nCPUS       = 8
@@ -18,13 +19,13 @@ runBatch    = False
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
-    _wea  = ROOT.WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-                                     '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
-
     #__________________________________________________________
     #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
-        print('before')
+        from ROOT import WeaverInterface
+        weaver  = WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
+                                      '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
+
         df2 = (df
                #############################################
                ##          Aliases for # in python        ##
@@ -43,11 +44,10 @@ class RDFanalysis():
                .Define("JC_charge",     "JetConstituentsUtils::get_charge(JetsConstituents)")
 
                .Define("MVAVec", "WeaverInterface::get()(JC_e, JC_theta, JC_phi, JC_pid, JC_charge)")
-               #.Define("MVAVec", _wea, ("JC_e", "JC_theta", "JC_phi", "JC_pid", "JC_charge"))
+               #.Define("MVAVec", weaver, ("JC_e", "JC_theta", "JC_phi", "JC_pid", "JC_charge"))
 
                #.Define("MVAb", "MVAVec.at(0)")
               )
-        print('after')
         return df2
 
     #__________________________________________________________
