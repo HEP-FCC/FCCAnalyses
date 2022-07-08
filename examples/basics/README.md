@@ -20,7 +20,7 @@ Table of contents
     * [Structure of EDM4HEP files](#structure-of-edm4hep-files)
   * [Reading objects from EDM4HEP](#reading-objects-from-edm4hep)
   * [Association between RecoParticles and MonteCarloParticles](#association-between-RecoParticles-and-MonteCarloParticles)
-  * [Navigation through the history of the Monte-Carlo particles](#Navigation-through-the-history-of-the-Monte-Carlo-particles)
+  * [Navigation through the history of the Monte-Carlo particles](#Navigation-through-the-history-of-the-MonteCarloParticles)
   * [Writing your own function](#writing-your-own-function)
     * [Inline](#inline)
     * [Using ROOT GInterpreter](#using-root-ginterpreter)
@@ -162,7 +162,7 @@ However, for a charged reco'ed particle RecoPart, one can also use the following
 where "recind" refers to "MCRecoAssociations0", "mcind" to "MCRecoAssociations1", and "reco" to "ReconstructedParticles".
 
 
-Navigation through the history of the Monte-Carlo particles
+Navigation through the history of the MonteCarloParticles
 ============================================================
 
 To retrieve the **daughters** of a Monte-Carlo particle (in the "Particle" collection), one should use the
