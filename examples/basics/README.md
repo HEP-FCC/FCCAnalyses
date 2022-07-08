@@ -91,7 +91,7 @@ which creates a column in the RDataFrame named `<your_variable>` and filled with
 
 Here, accessor functions are the functions found in the C++ analyzers code that return a certain variable. Since the analyzers code defines a specific namespace for each module, such as ReconstructedParticle or MCParticle, the full accessor function call looks like `<namespace>::<function_name>(object)`. To access the pT of a reconstructed object you would therefore call `ReconstructedParticle::get_pt(object)` and for a MC-particle the call would be `MCParticle::get_pt(object)`. The namespace corresponds to the file name of the C++ code, making it clear where to look for the source code if you have a question about the internal workings of one such functions. 
 
-Below you can find an overview of the basic, most commonly required functions, to illustrate the naming conventions. This is not an exhaustive list, if you want to find out all functions that are available please take a look in the respective analyzers code itself - [here for reconstructed particles](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/ReconstructedParticle.h) and [here for MC particles](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/MCParticle.h).
+Below you can find an overview of the basic, most commonly required functions, to illustrate the naming conventions. This is not an exhaustive list, if you want to find out all functions that are available please take a look in the respective analyzers code itself - [here for reconstructed particles](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/FCCAnalyses/ReconstructedParticle.h) and [here for MC particles](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/FCCAnalyses/MCParticle.h).
 
 
 | Variable  | Function name | Available for | 
@@ -123,7 +123,7 @@ associated  collections of references, MCRecoAssociations#0 and MCRecoAssociatio
 that MCRecoAssociations#0 points to the ReconstructedParticles. While the collectionID of MCRecoAssociations#1 is equal to 5, i.e. 
 MCRecoAssociations#1 points to the Particle collection (i.e. the Monte-Carlo particles).    
 
-Their usage is best understood by looking into the code of [ReconstructedParticle2MC::getRP2MC_index](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/ReconstructedParticle2MC.cc#L123-L133) reported below:
+Their usage is best understood by looking into the code of [ReconstructedParticle2MC::getRP2MC_index](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/src/ReconstructedParticle2MC.cc#L123-L133) reported below:
 ```
 ROOT::VecOps::RVec<int>
 ReconstructedParticle2MC::getRP2MC_index(ROOT::VecOps::RVec<int> recind, 
@@ -170,7 +170,7 @@ collection of references to daughters ("Particle#1", which points to "Particles"
 
 Each particle in the "Particle" collection contains two integers, daughters\_begin and daughter\_end.
 The indices, in the "Particle" collection, of the daughters of the particle are stored in "Particle#1", between
-daughters\_begin and daughter\_end. This is illustrated in the code of [MCParticle::get\_list\_of\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/MCParticle.cc#L481) reported below:
+daughters\_begin and daughter\_end. This is illustrated in the code of [MCParticle::get\_list\_of\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/src/MCParticle.cc#L481) reported below:
 ```
 std::vector<int> MCParticle::get_list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
 
@@ -193,7 +193,7 @@ std::vector<int> MCParticle::get_list_of_particles_from_decay(int i, ROOT::VecOp
 ```
 
 This returns the "first branching" daughters. For example, if we have a Higgs that decays into ZZ\*, with both Z's decaying into muons, the method get\_list\_of\_daughters\_from\_decay, applied to i = the index of the Higgs, returns the indices of the two Z's in the Particle collection.
-In order to retrieve the indices of the four muons, use instead [MCParticle::get\_list\_of\_stable\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/9937fe77e5702b30d53b5e364b3fa6a4b134197c/analyzers/dataframe/MCParticle.cc#L447)
+In order to retrieve the indices of the four muons, use instead [MCParticle::get\_list\_of\_stable\_daughters\_from\_decay](https://github.com/HEP-FCC/FCCAnalyses/blob/9937fe77e5702b30d53b5e364b3fa6a4b134197c/analyzers/dataframe/src/MCParticle.cc#L447)
 
 These functions are not meant to be called directly from the python configuration file, but from some other function that will determine the value of the argument "i". See an example [here](https://github.com/HEP-FCC/FCCeePhysicsPerformance/blob/069b633ab06126546daa0b0ba4719342096a9a4a/case-studies/flavour/VertexExamples/analysis_Bs2DsK.py#L63) in FCCeePhysicsPerformance, the important lines being:
 ```
