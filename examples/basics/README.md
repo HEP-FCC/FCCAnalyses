@@ -123,7 +123,7 @@ associated  collections of references, MCRecoAssociations#0 and MCRecoAssociatio
 that MCRecoAssociations#0 points to the ReconstructedParticles. While the collectionID of MCRecoAssociations#1 is equal to 5, i.e. 
 MCRecoAssociations#1 points to the Particle collection (i.e. the Monte-Carlo particles).    
 
-Their usage is best understood by looking into the code of [ReconstructedParticle2MC::getRP2MC_index](https://github.com/HEP-FCC/FCCAnalyses/blob/master/analyzers/dataframe/src/ReconstructedParticle2MC.cc#L123-L133) reported below:
+Their usage is best understood by looking into the code of [ReconstructedParticle2MC::getRP2MC_index](https://github.com/HEP-FCC/FCCAnalyses/blob/96c132c452469d4f66c8752c0397ba542d61cf75/analyzers/dataframe/src/ReconstructedParticle2MC.cc#L126-L136) reported below:
 ```
 ROOT::VecOps::RVec<int>
 ReconstructedParticle2MC::getRP2MC_index(ROOT::VecOps::RVec<int> recind, 
