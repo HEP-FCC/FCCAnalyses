@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657271786717,
+  "lastUpdate": 1657272167456,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -3024,6 +3024,44 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
             "value": 5.689500220007906,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "Emmanuel.Perez@cern.ch",
+            "name": "EmanuelPerez",
+            "username": "EmanuelPerez"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a8fe23918c140ca9bdc65e268f1c40191f6ef0a5",
+          "message": "Update README.md",
+          "timestamp": "2022-07-08T10:48:14+02:00",
+          "tree_id": "81467fcea247b6071e5bfb6167112fe49268a338",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/a8fe23918c140ca9bdc65e268f1c40191f6ef0a5"
+        },
+        "date": 1657272164180,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 16.47584867477417,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 20.91497492790222,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           }
         ]
       }
