@@ -119,7 +119,7 @@ def getElement(rdfModule, element, isFinal=False):
 
         elif element=='procDictAdd':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return default value {}'.format(element))
+                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
                 return {}
             else: print('The option <{}> is not available in presel analysis'.format(element))
 
