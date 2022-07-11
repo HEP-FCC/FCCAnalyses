@@ -389,9 +389,9 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
         frun.write('cd job{}_chunk{}\n'.format(process,ch))
 
         if not os.path.isabs(outputDir):
-            frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
+            frun.write('$LOCAL_DIR/bin/fccanalysis run {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
         else:
-            frun.write('python $LOCAL_DIR/config/FCCAnalysisRun.py {} --batch --output {}{}/chunk{}.root --files-list '.format(analysisFile, outputDir, process,ch))
+            frun.write('$LOCAL_DIR/bin/fccanalysis run {} --batch --output {}{}/chunk{}.root --files-list '.format(analysisFile, outputDir, process,ch))
 
         for ff in range(len(chunkList[ch])):
             frun.write(' %s'%(chunkList[ch][ff]))
@@ -523,7 +523,7 @@ def runLocal(rdfModule, fileList, args):
 
 
 #__________________________________________________________
-def runStages(args, rdfModule, preprocess):
+def runStages(args, rdfModule, preprocess, analysisFile):
     #check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
@@ -886,7 +886,7 @@ def run(mainparser, subparser=None):
 
     try:
         args.command
-        if args.command == "run":          runStages(args, rdfModule, args.preprocess)
+        if args.command == "run":      runStages(args, rdfModule, args.preprocess, analysisFile)
         elif args.command == "final":  runFinal(rdfModule)
         elif args.command == "plots":  runPlots(analysisFile)
         return
