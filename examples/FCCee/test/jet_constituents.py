@@ -25,20 +25,18 @@ class RDFanalysis():
                #############################################
                ##          Aliases for # in python        ##
                #############################################
-               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
-               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Alias("Particle0", "Particle#0.index")
-               .Alias("Particle1", "Particle#1.index")
-
-               #.Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
-               .Alias("Jet0", "Jet#0.index")
+               #.Alias("Jet0", "Jet#0.index")
+               .Alias("Jet0", "Jet#3.index")
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
-               .Define("JC_pt", "JetConstituentsUtils::get_pt(JetsConstituents)")
-               .Define("JC_Jet0", "JetConstituentsUtils::get_constituents(JetsConstituents, Jet0)")
-               .Define("JC_Jet0_pt", "JetConstituentsUtils::get_pt(JC_Jet0)")
                 # constituents for one single jet
-               #.Define("JC_Jet0c", "JetConstituentsUtils::get_jet_constituents(JetsConstituents, 0)")
-               #.Define("JC_Jet0c_pt", "ReconstructedParticle::get_pt(JC_Jet0c)")
+               .Define("JC_Jet0", "JetConstituentsUtils::get_constituents(JetsConstituents, Jet0)")
+               #.Define("JC_Jet0", "JetConstituentsUtils::get_jet_constituents(JetsConstituents, Jet0)")
+               .Define("JC_Jet0_pt", "JetConstituentsUtils::get_pt(JC_Jet0)")
+               .Define("JC_Jet0_e", "JetConstituentsUtils::get_e(JC_Jet0)")
+               .Define("JC_Jet0_theta", "JetConstituentsUtils::get_theta(JC_Jet0)")
+               .Define("JC_Jet0_phi", "JetConstituentsUtils::get_phi(JC_Jet0)")
+               .Define("JC_Jet0_pid", "JetConstituentsUtils::get_type(JC_Jet0)")
+               .Define("JC_Jet0_charge", "JetConstituentsUtils::get_charge(JC_Jet0)")
               )
         return df2
 
@@ -47,7 +45,7 @@ class RDFanalysis():
     def output():
         branchList = [
                 'JetsConstituents',
-                'JC_Jet0_pt',
-                #'JC_Jet0c_pt'
+                'JC_Jet0',
+                'JC_Jet0_pt', 'JC_Jet0_e', 'JC_Jet0_theta', 'JC_Jet0_phi', 'JC_Jet0_pid', 'JC_Jet0_charge',
                 ]
         return branchList

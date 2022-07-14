@@ -6,29 +6,22 @@
 
 namespace FCCAnalyses {
   namespace JetConstituentsUtils {
-    using FCCAnalysesJetConstituents = ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>;
-    //using FCCAnalysesJetConstituentsData = ROOT::VecOps::RVec<float>;
-    using FCCAnalysesJetConstituentsData = std::vector<float>;
+    namespace rv = ROOT::VecOps;
+    using FCCAnalysesJetConstituents = rv::RVec<edm4hep::ReconstructedParticleData>;
+    using FCCAnalysesJetConstituentsData = rv::RVec<float>;
 
-    ROOT::VecOps::RVec<FCCAnalysesJetConstituents> build_constituents(
-        ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>);
+    rv::RVec<FCCAnalysesJetConstituents> build_constituents(rv::RVec<edm4hep::ReconstructedParticleData>,
+                                                            rv::RVec<edm4hep::ReconstructedParticleData>);
 
-    FCCAnalysesJetConstituents get_jet_constituents(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>, int);
-    ROOT::VecOps::RVec<FCCAnalysesJetConstituents> get_constituents(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>,
-                                                                    ROOT::VecOps::RVec<int>);
+    FCCAnalysesJetConstituents get_jet_constituents(rv::RVec<FCCAnalysesJetConstituents>, int);
+    rv::RVec<FCCAnalysesJetConstituents> get_constituents(rv::RVec<FCCAnalysesJetConstituents>, rv::RVec<int>);
 
-    /*ROOT::VecOps::RVec<FCCAnalysesJetConstituentsData> get_pt(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-  ROOT::VecOps::RVec<FCCAnalysesJetConstituentsData> get_e(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-  ROOT::VecOps::RVec<FCCAnalysesJetConstituentsData> get_theta(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-  ROOT::VecOps::RVec<FCCAnalysesJetConstituentsData> get_phi(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-  ROOT::VecOps::RVec<FCCAnalysesJetConstituentsData> get_type(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-  ROOT::VecOps::RVec<FCCAnalysesJetConstituentsData> get_charge(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);*/
-    std::vector<FCCAnalysesJetConstituentsData> get_pt(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-    std::vector<FCCAnalysesJetConstituentsData> get_e(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-    std::vector<FCCAnalysesJetConstituentsData> get_theta(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-    std::vector<FCCAnalysesJetConstituentsData> get_phi(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-    std::vector<FCCAnalysesJetConstituentsData> get_type(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
-    std::vector<FCCAnalysesJetConstituentsData> get_charge(ROOT::VecOps::RVec<FCCAnalysesJetConstituents>);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_pt(rv::RVec<FCCAnalysesJetConstituents>);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_e(rv::RVec<FCCAnalysesJetConstituents>);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_theta(rv::RVec<FCCAnalysesJetConstituents>);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi(rv::RVec<FCCAnalysesJetConstituents>);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_type(rv::RVec<FCCAnalysesJetConstituents>);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_charge(rv::RVec<FCCAnalysesJetConstituents>);
   }  // namespace JetConstituentsUtils
 }  // namespace FCCAnalyses
 
