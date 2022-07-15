@@ -30,7 +30,6 @@ class RDFanalysis():
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
                 # constituents for one single jet
                .Define("JC_Jet0", "JetConstituentsUtils::get_constituents(JetsConstituents, Jet0)")
-               #.Define("JC_Jet0", "JetConstituentsUtils::get_jet_constituents(JetsConstituents, Jet0)")
                .Define("JC_Jet0_pt", "JetConstituentsUtils::get_pt(JC_Jet0)")
                .Define("JC_Jet0_e", "JetConstituentsUtils::get_e(JC_Jet0)")
                .Define("JC_Jet0_theta", "JetConstituentsUtils::get_theta(JC_Jet0)")
