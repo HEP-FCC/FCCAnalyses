@@ -7,8 +7,10 @@
 namespace FCCAnalyses {
   WeaverInterface* gWeaverInterface = nullptr;
 
-  WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::string& json_filename)
-      : onnx_(new ONNXRuntime(onnx_filename)) {
+  WeaverInterface::WeaverInterface(const std::string& onnx_filename,
+                                   const std::string& json_filename,
+                                   const rv::RVec<std::string>& vars)
+      : onnx_(new ONNXRuntime(onnx_filename)), variables_names_(vars.begin(), vars.end()) {
     if (json_filename.empty())
       throw std::runtime_error("JSON preprocessed input file not specified!");
 
@@ -48,7 +50,7 @@ namespace FCCAnalyses {
     std::cout << __PRETTY_FUNCTION__ << std::endl;
   }
 
-  std::vector<float> WeaverInterface::center_norm_pad(const std::vector<float>& input,
+  std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input,
                                                       float center,
                                                       float scale,
                                                       size_t min_length,
@@ -77,18 +79,19 @@ namespace FCCAnalyses {
 
   rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituents) {
     rv::RVec<float> output;
-    for (size_t j = 0; j < input_names_.size(); ++j) {
-      const auto& name = input_names_.at(j);
+    for (size_t i = 0; i < input_names_.size(); ++i) {
+      const auto& name = input_names_.at(i);
       const auto& params = prep_info_map_.at(name);
-      std::cout << ">>>> nm " << j << "=" << name << std::endl;
-      auto& values = data_[j];
-      values.resize(input_sizes_.at(j));
+      std::cout << ">>>> nm " << i << "=" << name << std::endl;
+      auto& values = data_[i];
+      values.resize(input_sizes_.at(i));
       std::fill(values.begin(), values.end(), 0);
       size_t k = 0;
       size_t it_pos = 0;
+      params.dumpVars();
       for (const auto& var_name : params.var_names) {  // transform and add the proper amount of padding
         const auto& var_info = params.info(var_name);
-        auto val = center_norm_pad(features.at(k).at(i),
+        auto val = center_norm_pad(constituents.at(k),
                                    var_info.center,
                                    var_info.norm_factor,
                                    params.min_length,
@@ -100,7 +103,7 @@ namespace FCCAnalyses {
         std::copy(val.begin(), val.end(), values.begin() + it_pos);
         it_pos += val.size();
         if (k == 0 && !input_shapes_.empty())
-          input_shapes_[j][2] = val.size();
+          input_shapes_[i][2] = val.size();
         ++k;
       }
       values.resize(it_pos);
@@ -125,5 +128,12 @@ namespace FCCAnalyses {
     std::cout << std::endl;
   }*/
     return output;
+  }
+
+  void WeaverInterface::PreprocessParams::dumpVars() const {
+    std::cout << "List of variables for this preprocessing parameter: ";
+    for (size_t i = 0; i < var_names.size(); ++i)
+      std::cout << (i > 0 ? ", " : "") << var_names.at(i);
+    std::cout << std::endl;
   }
 }  // namespace FCCAnalyses

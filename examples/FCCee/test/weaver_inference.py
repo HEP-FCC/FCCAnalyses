@@ -24,7 +24,8 @@ class RDFanalysis():
     def analysers(df):
         from ROOT import JetFlavourUtils
         weaver = JetFlavourUtils.setup_weaver('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-                                              '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
+                                              '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json',
+                                              ('pfcand_e', 'pfcand_theta', 'pfcand_phi', 'pfcand_pid', 'pfcand_charge'))
 
         df2 = (df
                #############################################

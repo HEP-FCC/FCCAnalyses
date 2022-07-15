@@ -9,15 +9,13 @@ namespace FCCAnalyses {
 
   class WeaverInterface {
   public:
-    explicit WeaverInterface(const std::string& onnx_filename = "", const std::string& json_filename = "");
-
     using ConstituentVars = rv::RVec<float>;
 
+    explicit WeaverInterface(const std::string& onnx_filename = "",
+                             const std::string& json_filename = "",
+                             const rv::RVec<std::string>& vars = {});
+
     rv::RVec<float> run(const rv::RVec<ConstituentVars>&);
-    /*template <typename... Args>
-    rv::RVec<float> operator()(Args&&... args) {
-      return run(rv::RVec<ConstituentVars>{std::forward<Args>(args)...});
-    }*/
 
   private:
     struct PreprocessParams {
@@ -43,8 +41,9 @@ namespace FCCAnalyses {
       std::vector<std::string> var_names;
       std::unordered_map<std::string, VarInfo> var_info_map;
       VarInfo info(const std::string& name) const { return var_info_map.at(name); }
+      void dumpVars() const;
     };
-    std::vector<float> center_norm_pad(const std::vector<float>& input,
+    std::vector<float> center_norm_pad(const rv::RVec<float>& input,
                                        float center,
                                        float scale,
                                        size_t min_length,
@@ -55,6 +54,7 @@ namespace FCCAnalyses {
                                        float max = -1);
 
     std::unique_ptr<ONNXRuntime> onnx_;
+    std::vector<std::string> variables_names_;
     std::vector<std::string> input_names_;
     ONNXRuntime::Tensor<long> input_shapes_;
     std::vector<unsigned int> input_sizes_;

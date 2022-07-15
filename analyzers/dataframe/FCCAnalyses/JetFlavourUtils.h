@@ -9,13 +9,12 @@ namespace FCCAnalyses {
     using FCCAnalysesJetConstituentsData = rv::RVec<float>;
     using Variables = rv::RVec<FCCAnalysesJetConstituentsData>;
 
-    void setup_weaver(const std::string&, const std::string&);
+    void setup_weaver(const std::string&, const std::string&, const rv::RVec<std::string>&);
 
     rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>&);
 
     template <typename... Args>
     ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_weights(Args&&... args) {
-      printf("%s -> %zu\n", __PRETTY_FUNCTION__, std::vector<Variables>{std::forward<Args>(args)...}.size());
       return compute_weights(std::vector<Variables>{std::forward<Args>(args)...});
     }
   }  // namespace JetFlavourUtils

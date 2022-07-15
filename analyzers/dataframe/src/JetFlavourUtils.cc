@@ -8,8 +8,10 @@ namespace FCCAnalyses {
   std::unique_ptr<WeaverInterface> gWeaver;
 
   namespace JetFlavourUtils {
-    void setup_weaver(const std::string& onnx_filename, const std::string& json_filename) {
-      gWeaver = std::make_unique<WeaverInterface>(onnx_filename, json_filename);
+    void setup_weaver(const std::string& onnx_filename,
+                      const std::string& json_filename,
+                      const rv::RVec<std::string>& vars) {
+      gWeaver = std::make_unique<WeaverInterface>(onnx_filename, json_filename, vars);
     }
 
     rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>& vars) {
