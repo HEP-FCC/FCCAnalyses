@@ -5,16 +5,18 @@
 
 namespace FCCAnalyses {
   namespace JetFlavourUtils {
+    namespace rv = ROOT::VecOps;
+    using FCCAnalysesJetConstituentsData = rv::RVec<float>;
+    using Variables = rv::RVec<FCCAnalysesJetConstituentsData>;
+
     void setup_weaver(const std::string&, const std::string&);
 
-    using Variables = std::vector<std::vector<float> >;
-
-    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_weights(const std::vector<Variables>&);
+    rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>&);
 
     template <typename... Args>
     ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_weights(Args&&... args) {
       printf("%s -> %zu\n", __PRETTY_FUNCTION__, std::vector<Variables>{std::forward<Args>(args)...}.size());
-      return get_weights(std::vector<Variables>{std::forward<Args>(args)...});
+      return compute_weights(std::vector<Variables>{std::forward<Args>(args)...});
     }
   }  // namespace JetFlavourUtils
 }  // namespace FCCAnalyses

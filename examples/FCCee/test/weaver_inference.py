@@ -22,19 +22,14 @@ class RDFanalysis():
     #__________________________________________________________
     #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
-        from ROOT import WeaverInterface
-        weaver  = WeaverInterface.get('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-                                      '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
+        from ROOT import JetFlavourUtils
+        weaver = JetFlavourUtils.setup_weaver('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
+                                              '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json')
 
         df2 = (df
                #############################################
                ##          Aliases for # in python        ##
                #############################################
-               .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
-               .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
-               .Alias("Particle0", "Particle#0.index")
-               .Alias("Particle1", "Particle#1.index")
-
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
 
                .Define("JC_e",          "JetConstituentsUtils::get_e(JetsConstituents)")
@@ -43,7 +38,7 @@ class RDFanalysis():
                .Define("JC_pid",        "JetConstituentsUtils::get_type(JetsConstituents)")
                .Define("JC_charge",     "JetConstituentsUtils::get_charge(JetsConstituents)")
 
-               .Define("MVAVec", "WeaverInterface::get()(JC_e, JC_theta, JC_phi, JC_pid, JC_charge)")
+               .Define("MVAVec", "JetFlavourUtils::get_weights(JC_e, JC_theta, JC_phi, JC_pid, JC_charge)")
                #.Define("MVAVec", weaver, ("JC_e", "JC_theta", "JC_phi", "JC_pid", "JC_charge"))
 
                #.Define("MVAb", "MVAVec.at(0)")
