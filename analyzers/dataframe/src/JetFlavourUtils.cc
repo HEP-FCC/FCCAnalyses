@@ -24,13 +24,13 @@ namespace FCCAnalyses {
       if (num_jets == 0)  // no jets to categorise
         return out;
       // transform a collection of {var1 -> {jet1 -> {constit1, constit2, ...}, jet2 -> {...}, ...}, var2 -> {...}}
-      //      into a collection of {jet -> {constit1 -> {var1, var2, ...}, constit2 -> {...}, ...}}
+      //      into a collection of {jet -> {var1 -> {constit1, constit2, ...}, var2 -> {...}, ...}}
       for (size_t i = 0; i < num_jets; ++i) {
         Variables jet_sc_vars;
         size_t num_constits = vars.at(0).at(i).size();
-        for (size_t j = 0; j < num_constits; ++j) {
+        for (size_t k = 0; k < vars.size(); ++k) {
           FCCAnalysesJetConstituentsData constit_vars;
-          for (size_t k = 0; k < vars.size(); ++k)
+          for (size_t j = 0; j < num_constits; ++j)
             constit_vars.push_back((float)vars.at(k).at(i).at(j));
           jet_sc_vars.push_back(constit_vars);
         }

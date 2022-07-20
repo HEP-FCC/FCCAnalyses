@@ -21,14 +21,18 @@ namespace FCCAnalyses {
     struct PreprocessParams {
       struct VarInfo {
         VarInfo() {}
-        VarInfo(
-            float median, float norm_factor, float replace_inf_value, float lower_bound, float upper_bound, float pad)
-            : center(median),
-              norm_factor(norm_factor),
-              replace_inf_value(replace_inf_value),
-              lower_bound(lower_bound),
-              upper_bound(upper_bound),
-              pad(pad) {}
+        VarInfo(float imedian,
+                float inorm_factor,
+                float ireplace_inf_value,
+                float ilower_bound,
+                float iupper_bound,
+                float ipad)
+            : center(imedian),
+              norm_factor(inorm_factor),
+              replace_inf_value(ireplace_inf_value),
+              lower_bound(ilower_bound),
+              upper_bound(iupper_bound),
+              pad(ipad) {}
 
         float center{0.};
         float norm_factor{1.};
@@ -37,6 +41,7 @@ namespace FCCAnalyses {
         float upper_bound{5.};
         float pad{0.};
       };
+      std::string name;
       size_t min_length{0}, max_length{0};
       std::vector<std::string> var_names;
       std::unordered_map<std::string, VarInfo> var_info_map;
@@ -52,6 +57,7 @@ namespace FCCAnalyses {
                                        float replace_inf_value = 0,
                                        float min = 0,
                                        float max = -1);
+    size_t variablePos(const std::string&) const;
 
     std::unique_ptr<ONNXRuntime> onnx_;
     std::vector<std::string> variables_names_;

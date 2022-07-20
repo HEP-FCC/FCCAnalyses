@@ -21,12 +21,14 @@ namespace FCCAnalyses {
     for (const auto& input : input_names_) {
       const auto& group_params = json.at(input);
       auto& info = prep_info_map_[input];
+      info.name = input;
       // retrieve the variables names
       group_params.at("var_names").get_to(info.var_names);
       // retrieve the shapes for all variables
-      if (group_params.contains("var_length"))
+      if (group_params.contains("var_length")) {
         info.min_length = info.max_length = group_params.at("var_length");
-      else {
+        input_shapes_.push_back({1, (int64_t)info.var_names.size(), (int64_t)info.min_length});
+      } else {
         info.min_length = group_params.at("min_length");
         info.max_length = group_params.at("max_length");
         input_shapes_.push_back({1, (int64_t)info.var_names.size(), -1});
@@ -47,7 +49,6 @@ namespace FCCAnalyses {
       const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
       data_.emplace_back(len, 0);
     }
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
   }
 
   std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input,
@@ -77,21 +78,31 @@ namespace FCCAnalyses {
     return out;
   }
 
+  size_t WeaverInterface::variablePos(const std::string& var_name) const {
+    auto var_it = std::find(variables_names_.begin(), variables_names_.end(), var_name);
+    if (var_it == variables_names_.end())
+      throw std::runtime_error("Unable to find variable with name '" + var_name +
+                               "' in the list of registered variables");
+    return var_it - variables_names_.begin();
+  }
+
   rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituents) {
-    rv::RVec<float> output;
     for (size_t i = 0; i < input_names_.size(); ++i) {
       const auto& name = input_names_.at(i);
       const auto& params = prep_info_map_.at(name);
-      std::cout << ">>>> nm " << i << "=" << name << std::endl;
       auto& values = data_[i];
       values.resize(input_sizes_.at(i));
       std::fill(values.begin(), values.end(), 0);
-      size_t k = 0;
       size_t it_pos = 0;
-      params.dumpVars();
-      for (const auto& var_name : params.var_names) {  // transform and add the proper amount of padding
+      ConstituentVars jc;
+      for (size_t j = 0; j < params.var_names.size(); ++j) {  // transform and add the proper amount of padding
+        const auto& var_name = params.var_names.at(j);
+        if (std::find(variables_names_.begin(), variables_names_.end(), "pfcand_mask") == variables_names_.end())
+          jc = ConstituentVars(constituents.at(0).size(), 1.f);
+        else
+          jc = constituents.at(variablePos(var_name));
         const auto& var_info = params.info(var_name);
-        auto val = center_norm_pad(constituents.at(k),
+        auto val = center_norm_pad(jc,
                                    var_info.center,
                                    var_info.norm_factor,
                                    params.min_length,
@@ -102,38 +113,17 @@ namespace FCCAnalyses {
                                    var_info.upper_bound);
         std::copy(val.begin(), val.end(), values.begin() + it_pos);
         it_pos += val.size();
-        if (k == 0 && !input_shapes_.empty())
-          input_shapes_[i][2] = val.size();
-        ++k;
       }
       values.resize(it_pos);
     }
-    std::cout << "before running for jet " << i << std::endl;
-    result = onnx_->run<float>(data_, input_shapes_)[0];
-    std::cout << "after running for jet " << i << ", result: " << result << std::endl;
-  }
+    const rv::RVec<float> result(onnx_->run<float>(input_names_, data_, input_shapes_)[0]);
+    std::cout << "after running for jet, result: " << result << std::endl;
 
-  // convert into a {jet{vars{particles}} collection
-  /*for (size_t i = 0; i < num_jets; ++i) {  // loop over candidates
-    auto& result = output.emplace_back();
-    for (size_t j = 0; j < num_features; ++j) {
-      data_[j].resize(features.at(j).at(i).size());
-      for (size_t k = 0; k < features.at(j).at(i).size(); ++k)
-        data_[j][k] = features.at(j).at(i).at(k);
-    }
-    result = onnx_->run<float>(data_)[0];
-    std::cout << "(jet " << i << ") return values:";
-    for (const auto& val : result)
-      std::cout << " " << val;
-    std::cout << std::endl;
-  }*/
-    return output;
+    return result;
   }
 
   void WeaverInterface::PreprocessParams::dumpVars() const {
-    std::cout << "List of variables for this preprocessing parameter: ";
-    for (size_t i = 0; i < var_names.size(); ++i)
-      std::cout << (i > 0 ? ", " : "") << var_names.at(i);
-    std::cout << std::endl;
+    std::cout << "List of variables for preprocessing parameter '" << name
+              << "': " << rv::RVec<std::string>(var_names.begin(), var_names.end()) << "." << std::endl;
   }
 }  // namespace FCCAnalyses
