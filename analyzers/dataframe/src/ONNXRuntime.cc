@@ -3,15 +3,9 @@
 #include "core/session/experimental_onnxruntime_cxx_api.h"
 
 #include <fstream>
-#include <iostream>
 #include <cassert>
 #include <numeric>
 #include <algorithm>
-
-//FIXME
-#include "ROOT/RVec.hxx"
-namespace rv = ROOT::VecOps;
-//FIXME
 
 ONNXRuntime::ONNXRuntime(const std::string& model_path)
     : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")) {

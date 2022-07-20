@@ -1,7 +1,6 @@
 #include "FCCAnalyses/JetFlavourUtils.h"
 #include "FCCAnalyses/WeaverInterface.h"
 
-#include <iostream>  //FIXME
 #include <memory>
 
 namespace FCCAnalyses {

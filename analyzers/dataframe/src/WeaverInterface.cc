@@ -117,7 +117,6 @@ namespace FCCAnalyses {
       values.resize(it_pos);
     }
     const rv::RVec<float> result(onnx_->run<float>(input_names_, data_, input_shapes_)[0]);
-    std::cout << "after running for jet, result: " << result << std::endl;
 
     return result;
   }
