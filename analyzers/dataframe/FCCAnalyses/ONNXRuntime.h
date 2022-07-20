@@ -11,7 +11,6 @@ namespace Ort {
   namespace Experimental {
     class Session;
   }
-  class Session;
 }  // namespace Ort
 
 class ONNXRuntime {
@@ -34,15 +33,12 @@ public:
 
 private:
   std::unique_ptr<Ort::Env> env_;
-  //std::unique_ptr<Ort::Experimental::Session> session_;
-  std::unique_ptr<Ort::Session> session_;
+  std::unique_ptr<Ort::Experimental::Session> session_;
 
   std::vector<std::string> input_node_strings_;
-  std::vector<const char*> input_node_names_;
   std::map<std::string, std::vector<int64_t>> input_node_dims_;
 
   std::vector<std::string> output_node_strings_;
-  std::vector<const char*> output_node_names_;
   std::map<std::string, std::vector<int64_t>> output_node_dims_;
 };
 

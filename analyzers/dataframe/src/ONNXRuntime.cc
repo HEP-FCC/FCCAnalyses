@@ -7,23 +7,22 @@
 #include <numeric>
 #include <algorithm>
 
+#include <iostream>  //FIXME
+
 ONNXRuntime::ONNXRuntime(const std::string& model_path)
     : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")) {
   Ort::SessionOptions options;
   options.SetIntraOpNumThreads(1);
-  session_ = std::make_unique<Ort::Session>(*env_, model_path.data(), options);
-  Ort::AllocatorWithDefaultOptions allocator;
+  auto model = model_path;  // fixes a poor Ort experimental API
+  session_ = std::make_unique<Ort::Experimental::Session>(*env_, model, options);
 
   // get input names and shapes
   const auto num_input_nodes = session_->GetInputCount();
   input_node_strings_.resize(num_input_nodes);
-  input_node_names_.resize(num_input_nodes);
   input_node_dims_.clear();
   for (size_t i = 0; i < num_input_nodes; ++i) {
-    const std::string input_name(session_->GetInputName(i, allocator));
-    //const auto input_name = session_->GetInputNames()[i];
+    const auto input_name = session_->GetInputNames()[i];  // copy is required
     input_node_strings_[i] = input_name;
-    input_node_names_[i] = input_node_strings_[i].data();
     // get input shapes
     auto tensor_info = session_->GetInputTypeInfo(i).GetTensorTypeAndShapeInfo();
     const size_t num_dims = tensor_info.GetDimensionsCount();
@@ -34,14 +33,11 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path)
   // get output names and shapes
   const auto num_output_nodes = session_->GetOutputCount();
   output_node_strings_.resize(num_output_nodes);
-  output_node_names_.resize(num_output_nodes);
   output_node_dims_.clear();
   for (size_t i = 0; i < num_output_nodes; i++) {
     // get output node names
-    const std::string output_name(session_->GetOutputName(i, allocator));
-    //const auto& output_name = session_->GetOutputNames()[i];
+    const auto& output_name = session_->GetOutputNames()[i];
     output_node_strings_[i] = output_name;
-    output_node_names_[i] = output_node_strings_[i].data();
 
     // get output node types
     auto type_info = session_->GetOutputTypeInfo(i);
@@ -95,20 +91,11 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(const std::vector<std::string>& input_na
   }
 
   // set output node names; will get all outputs if `output_names` is not provided
-  std::vector<const char*> run_output_node_names;
-  if (output_names.empty())
-    run_output_node_names = output_node_names_;
-  else
-    for (const auto& name : output_names)
-      run_output_node_names.push_back(name.data());
+  const auto run_output_node_names = output_names.empty() ? session_->GetOutputNames() : output_names;
 
+  std::cout << "hahahaha" << std::endl;
   // run
-  auto output_tensors = session_->Run(Ort::RunOptions{nullptr},
-                                      input_node_names_.data(),
-                                      tensors_in.data(),
-                                      tensors_in.size(),
-                                      run_output_node_names.data(),
-                                      run_output_node_names.size());
+  auto output_tensors = session_->Run(session_->GetInputNames(), tensors_in, run_output_node_names);
 
   // convert output to floats
   Tensor<T> outputs;
