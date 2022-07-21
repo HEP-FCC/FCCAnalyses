@@ -2,15 +2,11 @@
 
 #include "core/session/experimental_onnxruntime_cxx_api.h"
 
-#include <fstream>
-#include <cassert>
 #include <numeric>
 #include <algorithm>
 
-#include <iostream>  //FIXME
-
-ONNXRuntime::ONNXRuntime(const std::string& model_path)
-    : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")) {
+ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::string>& input_names)
+    : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")), input_names_(input_names) {
   Ort::SessionOptions options;
   options.SetIntraOpNumThreads(1);
   auto model = model_path;  // fixes a poor Ort experimental API
@@ -24,10 +20,7 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path)
     const auto input_name = session_->GetInputNames()[i];  // copy is required
     input_node_strings_[i] = input_name;
     // get input shapes
-    auto tensor_info = session_->GetInputTypeInfo(i).GetTensorTypeAndShapeInfo();
-    const size_t num_dims = tensor_info.GetDimensionsCount();
-    input_node_dims_[input_name].resize(num_dims);
-    tensor_info.GetDimensions(input_node_dims_[input_name].data(), num_dims);
+    input_node_dims_[input_name] = session_->GetInputShapes()[i];
   }
 
   // get output names and shapes
@@ -38,14 +31,8 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path)
     // get output node names
     const auto& output_name = session_->GetOutputNames()[i];
     output_node_strings_[i] = output_name;
-
     // get output node types
-    auto type_info = session_->GetOutputTypeInfo(i);
-    auto tensor_info = type_info.GetTensorTypeAndShapeInfo();
-    size_t num_dims = tensor_info.GetDimensionsCount();
-    output_node_dims_[output_name].resize(num_dims);
-    tensor_info.GetDimensions(output_node_dims_[output_name].data(), num_dims);
-
+    output_node_dims_[output_name] = session_->GetOutputShapes()[i];
     // the 0th dim depends on the batch size
     output_node_dims_[output_name].at(0) = -1;
   }
@@ -54,20 +41,12 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path)
 ONNXRuntime::~ONNXRuntime() {}
 
 template <typename T>
-ONNXRuntime::Tensor<T> ONNXRuntime::run(const std::vector<std::string>& input_names,
-                                        Tensor<T>& input,
+ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
                                         const Tensor<long>& input_shapes,
-                                        const std::vector<std::string>& output_names,
                                         unsigned long long batch_size) const {
   std::vector<Ort::Value> tensors_in;
-  auto mem_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-
-  //auto& input_dims = session_->GetInputShapes()[0];
   for (const auto& name : input_node_strings_) {
-    auto iter = std::find(input_names.begin(), input_names.end(), name);
-    if (iter == input_names.end())
-      throw std::runtime_error("Input '" + name + " is not provided");
-    auto input_pos = iter - input_names.begin();
+    auto input_pos = variablePos(name);
     auto value = input.begin() + input_pos;
     std::vector<int64_t> input_dims;
     if (input_shapes.empty()) {
@@ -84,37 +63,41 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(const std::vector<std::string>& input_na
     if (expected_len != (int64_t)value->size())
       throw std::runtime_error("Input array '" + name + "' has a wrong size of " + std::to_string(value->size()) +
                                ", expected " + std::to_string(expected_len));
-    auto input_tensor =
-        Ort::Value::CreateTensor<float>(mem_info, value->data(), value->size(), input_dims.data(), input_dims.size());
-    assert(input_tensor.IsTensor());
+    auto input_tensor = Ort::Experimental::Value::CreateTensor<float>(value->data(), value->size(), input_dims);
+    if (!input_tensor.IsTensor())
+      throw std::runtime_error("Failed to create an input tensor for variable '" + name + "'.");
     tensors_in.emplace_back(std::move(input_tensor));
   }
 
-  // set output node names; will get all outputs if `output_names` is not provided
-  const auto run_output_node_names = output_names.empty() ? session_->GetOutputNames() : output_names;
+  // run the inference
+  auto output_tensors = session_->Run(session_->GetInputNames(), tensors_in, session_->GetOutputNames());
 
-  std::cout << "hahahaha" << std::endl;
-  // run
-  auto output_tensors = session_->Run(session_->GetInputNames(), tensors_in, run_output_node_names);
-
-  // convert output to floats
+  // convert output tensor to values
   Tensor<T> outputs;
+  size_t i = 0;
   for (auto& output_tensor : output_tensors) {
-    assert(output_tensor.IsTensor());
+    if (!output_tensor.IsTensor())
+      throw std::runtime_error("(at least) inference output " + std::to_string(i) + " is not a tensor.");
     // get output shape
     auto tensor_info = output_tensor.GetTensorTypeAndShapeInfo();
     auto length = tensor_info.GetElementCount();
 
     auto floatarr = output_tensor.GetTensorMutableData<float>();
     outputs.emplace_back(floatarr, floatarr + length);
+    ++i;
   }
-  assert(outputs.size() == run_output_node_names.size());
+  if (outputs.size() != session_->GetOutputCount())
+    throw std::runtime_error("Number of outputs differ from the expected one: got " + std::to_string(outputs.size()) +
+                             ", expected " + std::to_string(session_->GetOutputCount()));
 
   return outputs;
 }
 
-template ONNXRuntime::Tensor<float> ONNXRuntime::run(const std::vector<std::string>&,
-                                                     Tensor<float>&,
-                                                     const Tensor<long>&,
-                                                     const std::vector<std::string>&,
-                                                     unsigned long long) const;
+size_t ONNXRuntime::variablePos(const std::string& name) const {
+  auto iter = std::find(input_names_.begin(), input_names_.end(), name);
+  if (iter == input_names_.end())
+    throw std::runtime_error("Input variable '" + name + " is not provided");
+  return iter - input_names_.begin();
+}
+
+template ONNXRuntime::Tensor<float> ONNXRuntime::run(Tensor<float>&, const Tensor<long>&, unsigned long long) const;

@@ -5,20 +5,19 @@
 #include <iostream>
 
 namespace FCCAnalyses {
-  WeaverInterface* gWeaverInterface = nullptr;
-
   WeaverInterface::WeaverInterface(const std::string& onnx_filename,
                                    const std::string& json_filename,
                                    const rv::RVec<std::string>& vars)
-      : onnx_(new ONNXRuntime(onnx_filename)), variables_names_(vars.begin(), vars.end()) {
+      : variables_names_(vars.begin(), vars.end()) {
     if (json_filename.empty())
       throw std::runtime_error("JSON preprocessed input file not specified!");
 
     // the preprocessing JSON was found ; extract the variables listing and all useful information
     std::ifstream json_file(json_filename);
     const auto json = nlohmann::json::parse(json_file);
-    json.at("input_names").get_to(input_names_);
-    for (const auto& input : input_names_) {
+    std::vector<std::string> input_names;
+    json.at("input_names").get_to(input_names);
+    for (const auto& input : input_names) {
       const auto& group_params = json.at(input);
       auto& info = prep_info_map_[input];
       info.name = input;
@@ -49,6 +48,7 @@ namespace FCCAnalyses {
       const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
       data_.emplace_back(len, 0);
     }
+    onnx_ = std::make_unique<ONNXRuntime>(onnx_filename, input_names);
   }
 
   std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input,
@@ -87,8 +87,8 @@ namespace FCCAnalyses {
   }
 
   rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituents) {
-    for (size_t i = 0; i < input_names_.size(); ++i) {
-      const auto& name = input_names_.at(i);
+    size_t i = 0;
+    for (const auto& name : onnx_->inputNames()) {
       const auto& params = prep_info_map_.at(name);
       auto& values = data_[i];
       values.resize(input_sizes_.at(i));
@@ -115,10 +115,9 @@ namespace FCCAnalyses {
         it_pos += val.size();
       }
       values.resize(it_pos);
+      ++i;
     }
-    const rv::RVec<float> result(onnx_->run<float>(input_names_, data_, input_shapes_)[0]);
-
-    return result;
+    return onnx_->run<float>(data_, input_shapes_)[0];
   }
 
   void WeaverInterface::PreprocessParams::dumpVars() const {

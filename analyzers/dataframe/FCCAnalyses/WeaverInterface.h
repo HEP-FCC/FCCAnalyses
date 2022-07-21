@@ -61,7 +61,6 @@ namespace FCCAnalyses {
 
     std::unique_ptr<ONNXRuntime> onnx_;
     std::vector<std::string> variables_names_;
-    std::vector<std::string> input_names_;
     ONNXRuntime::Tensor<long> input_shapes_;
     std::vector<unsigned int> input_sizes_;
     std::unordered_map<std::string, PreprocessParams> prep_info_map_;
