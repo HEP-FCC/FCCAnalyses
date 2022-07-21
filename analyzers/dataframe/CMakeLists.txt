@@ -54,6 +54,8 @@ if(NOT ONNXRuntime_FOUND)
   list(FILTER sources EXCLUDE REGEX "ONNXRuntime.cc")
   list(FILTER headers EXCLUDE REGEX "WeaverInterface.h")
   list(FILTER sources EXCLUDE REGEX "WeaverInterface.cc")
+  list(FILTER headers EXCLUDE REGEX "JetFlavourUtils.h")
+  list(FILTER sources EXCLUDE REGEX "JetFlavourUtils.cc")
 endif()
 
 
