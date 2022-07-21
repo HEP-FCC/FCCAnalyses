@@ -37,5 +37,17 @@ namespace FCCAnalyses {
       }
       return out;
     }
+
+    rv::RVec<float> get_weight(const rv::RVec<rv::RVec<float> >& jets_weights, int weight) {
+      if (weight < 0)
+        throw std::runtime_error("Invalid index requested for jet flavour weight.");
+      rv::RVec<float> out;
+      for (const auto& jet_weights : jets_weights) {
+        if (weight >= jet_weights.size())
+          throw std::runtime_error("Flavour weight index exceeds the number of weights registered.");
+        out.emplace_back(jet_weights.at(weight));
+      }
+      return out;
+    }
   }  // namespace JetFlavourUtils
 }  // namespace FCCAnalyses

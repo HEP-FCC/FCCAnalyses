@@ -13,6 +13,8 @@ namespace FCCAnalyses {
 
     rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>&);
 
+    rv::RVec<float> get_weight(const rv::RVec<rv::RVec<float> >&, int);
+
     template <typename... Args>
     ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_weights(Args&&... args) {
       return compute_weights(std::vector<Variables>{std::forward<Args>(args)...});

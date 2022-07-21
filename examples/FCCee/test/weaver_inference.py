@@ -28,21 +28,23 @@ class RDFanalysis():
                                               ('pfcand_e', 'pfcand_theta', 'pfcand_phi', 'pfcand_pid', 'pfcand_charge'))
 
         df2 = (df
-               #############################################
-               ##          Aliases for # in python        ##
-               #############################################
+               # retrieve all information about jet constituents for each jet in collection
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
-
                .Define("JC_e",          "JetConstituentsUtils::get_e(JetsConstituents)")
                .Define("JC_theta",      "JetConstituentsUtils::get_theta(JetsConstituents)")
                .Define("JC_phi",        "JetConstituentsUtils::get_phi(JetsConstituents)")
                .Define("JC_pid",        "JetConstituentsUtils::get_type(JetsConstituents)")
                .Define("JC_charge",     "JetConstituentsUtils::get_charge(JetsConstituents)")
 
+               # run inference
                .Define("MVAVec", "JetFlavourUtils::get_weights(JC_e, JC_theta, JC_phi, JC_pid, JC_charge)")
-               #.Define("MVAVec", weaver, ("JC_e", "JC_theta", "JC_phi", "JC_pid", "JC_charge"))
 
-               #.Define("MVAb", "MVAVec.at(0)")
+               # recast output
+               .Define("Jet_isG", "JetFlavourUtils::get_weight(MVAVec, 0)")
+               .Define("Jet_isQ", "JetFlavourUtils::get_weight(MVAVec, 1)")
+               .Define("Jet_isS", "JetFlavourUtils::get_weight(MVAVec, 2)")
+               .Define("Jet_isC", "JetFlavourUtils::get_weight(MVAVec, 3)")
+               .Define("Jet_isB", "JetFlavourUtils::get_weight(MVAVec, 4)")
               )
         return df2
 
@@ -50,9 +52,6 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-                #'JetsConstituents',
-                'JC_e',
-                'MVAVec',
-                #'MVAb',
+                'Jet_isG', 'Jet_isQ', 'Jet_isS', 'Jet_isC', 'Jet_isB',
                 ]
         return branchList
