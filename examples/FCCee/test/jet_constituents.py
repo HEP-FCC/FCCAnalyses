@@ -25,7 +25,6 @@ class RDFanalysis():
                #############################################
                ##          Aliases for # in python        ##
                #############################################
-               #.Alias("Jet0", "Jet#0.index")
                .Alias("Jet0", "Jet#3.index")
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
                 # constituents for one single jet
@@ -43,8 +42,7 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-                'JetsConstituents',
-                'JC_Jet0',
+                # only store the constituents kinematic quantities for the first jet
                 'JC_Jet0_pt', 'JC_Jet0_e', 'JC_Jet0_theta', 'JC_Jet0_phi', 'JC_Jet0_pid', 'JC_Jet0_charge',
                 ]
         return branchList
