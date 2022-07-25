@@ -5,7 +5,7 @@ add_subdirectory(benchmark)
 
 function(add_integration_test _testname)
 
-  add_test(NAME ${_testname} 
+  add_test(NAME ${_testname}
           COMMAND python config/FCCAnalysisRun.py ${_testname} --test --nevents 100 --bench
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
           )
@@ -18,7 +18,7 @@ endfunction()
 
 function(add_integration_test_2 _testname)
 
-  add_test(NAME fccanalysisrun_${_testname} 
+  add_test(NAME fccanalysisrun_${_testname}
           # todo: figure out how to make ctest pick fccanalysis up from PATH
           COMMAND ${CMAKE_SOURCE_DIR}/bin/fccanalysis run ${_testname} --test --nevents 100 --bench
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -36,4 +36,4 @@ add_integration_test_2("examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py")
 
 add_integration_test("examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py")
 add_integration_test("examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py")
-
+add_integration_test("examples/FCCee/test/jet_constituents.py")
