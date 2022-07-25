@@ -11,10 +11,13 @@ namespace FCCAnalyses {
   public:
     using ConstituentVars = rv::RVec<float>;
 
+    /// Initialise an inference model from Weaver output ONNX/JSON files and
+    /// a list of variables to be provided for each event/jet
     explicit WeaverInterface(const std::string& onnx_filename = "",
                              const std::string& json_filename = "",
                              const rv::RVec<std::string>& vars = {});
 
+    /// Run inference given a list of jet constituents variables
     rv::RVec<float> run(const rv::RVec<ConstituentVars>&);
 
   private:
