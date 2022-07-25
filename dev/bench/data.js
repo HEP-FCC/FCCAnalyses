@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658782650326,
+  "lastUpdate": 1658783044439,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -3684,6 +3684,51 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: examples/FCCee/test",
             "value": 8.208113392288523,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lforthomme@protonmail.com",
+            "name": "Laurent Forthomme",
+            "username": "forthommel"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36a523f873f81b67e93736f0bd5a308fd64dfaee",
+          "message": "Jet constituents retrieval methods (#187)\n\n* Added an utility for the retrieval of jet constituents properties\r\n\r\n* Work on python API\r\n\r\n* Fixed memory leak on ROOT vectors creation\r\n\r\n* JC definitions simplification through aliases\r\n\r\n* Simplification of JC attributes retrieval implementation through lambda function\r\n\r\n* Slightly modified jet constituents utils interface\r\n\r\n* Adapted python tests to new scheme\r\n\r\n* Jet constituents moved to their proper location\r\n\r\n* Cleanup of includes\r\n\r\n* Updated jet constituents FW\r\n\r\n* Cleanup of jets constituents example\r\n\r\n* Simplification of JC test\r\n\r\n* Documenting jet constituents main functions\r\n\r\n* Added an integration test for jets constituents",
+          "timestamp": "2022-07-25T22:47:29+02:00",
+          "tree_id": "2c9bb9f87c52478e476d1e4f8fb71ac6d7c99892",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/36a523f873f81b67e93736f0bd5a308fd64dfaee"
+        },
+        "date": 1658783043041,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 12.743072032928467,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 16.00714111328125,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "value": 11.329459428787231,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test"
           }
         ]
       }
