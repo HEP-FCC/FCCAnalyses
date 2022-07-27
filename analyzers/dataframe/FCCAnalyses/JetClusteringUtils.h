@@ -23,12 +23,26 @@ namespace JetClusteringUtils{
 
   const int Nmax_dmerge = 10;  // maximum number of d_{n, n+1} that are kept in FCCAnalysesJet
 
+  struct flav_details{
+    ROOT::VecOps::RVec<int> parton_flavour;
+    ROOT::VecOps::RVec<int> hadron_flavour;
+    ROOT::VecOps::RVec<fastjet::PseudoJet> ghost_pseudojets;
+    std::vector<std::vector<int>> ghost_jetconstituents;
+    ROOT::VecOps::RVec<int> ghostStatus;
+    ROOT::VecOps::RVec<int> MCindex;
+  };
+
   /** Structure to keep useful informations for the jets*/
   struct FCCAnalysesJet{
+    TString clustering_algo;
+    ROOT::VecOps::RVec<float> clustering_params;
     ROOT::VecOps::RVec<fastjet::PseudoJet> jets;
     std::vector<std::vector<int>> constituents;
     std::vector<float> exclusive_dmerge;   // vector of Nmax_dmerge  values associated with merging from n + 1 to n jets, for n =1, 2, ... 10
     std::vector<float> exclusive_dmerge_max ;
+    ROOT::VecOps::RVec<int> flavour;
+    //flav_details *flavour_details;
+    flav_details flavour_details;
   };
 
   /** Set fastjet pseudoJet for later reconstruction*/
@@ -94,11 +108,13 @@ namespace JetClusteringUtils{
 
 
   ///Internal methods
-  FCCAnalysesJet initialise_FCCAnalysesJet();
+  FCCAnalysesJet initialise_FCCAnalysesJet(TString clustering_algo="default_string", ROOT::VecOps::RVec<float> clustering_params={});
 
   FCCAnalysesJet build_FCCAnalysesJet(const std::vector<fastjet::PseudoJet> &in,
                                       const std::vector<float> &dmerge,
-                                      const std::vector<float> &dmerge_max);
+                                      const std::vector<float> &dmerge_max,
+                                      TString clustering_algo="default_string",
+                                      ROOT::VecOps::RVec<float> clustering_params={});
 
   std::vector<fastjet::PseudoJet> build_jets(fastjet::ClusterSequence & cs,
                                              int exclusive, float cut,

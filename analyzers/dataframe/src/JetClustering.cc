@@ -161,15 +161,17 @@ JetClusteringUtils::FCCAnalysesJet clustering_ee_kt::operator() (const std::vect
   if (JetClusteringUtils::check(input.size(),_exclusive, _cut)==false) return JetClusteringUtils::initialise_FCCAnalysesJet();
 
   _cs = fastjet::ClusterSequence(input, _def);
-
+  
   //cluster jets
   std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
   //get dmerged elements
   std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
   std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
+  ROOT::VecOps::RVec<float> clustering_params{float(_exclusive), _cut, float(_sorted), float(_recombination)};
+
   //transform to FCCAnalysesJet
-  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max );
+  JetClusteringUtils::FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max, "ee-kt", clustering_params);
 
   return result;
 }
