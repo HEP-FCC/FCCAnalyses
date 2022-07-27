@@ -9,6 +9,10 @@ namespace FCCAnalyses {
     using FCCAnalysesJetConstituentsData = rv::RVec<float>;
     using Variables = rv::RVec<FCCAnalysesJetConstituentsData>;
 
+    /// Compute all weights given a collection of input variables
+    /// \note This helper should not be used directly in RDataFrame examples
+    rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>&);
+
     /// Setup the ONNXRuntime instance using Weaver-provided parameters
     void setup_weaver(const std::string&, const std::string&, const rv::RVec<std::string>&);
     /// Compute all weights given an unspecified collection of input variables
