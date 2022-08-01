@@ -14,39 +14,43 @@ namespace FCCAnalyses {
 
     // the preprocessing JSON was found ; extract the variables listing and all useful information
     std::ifstream json_file(json_filename);
-    const auto json = nlohmann::json::parse(json_file);
     std::vector<std::string> input_names;
-    json.at("input_names").get_to(input_names);
-    for (const auto& input : input_names) {
-      const auto& group_params = json.at(input);
-      auto& info = prep_info_map_[input];
-      info.name = input;
-      // retrieve the variables names
-      group_params.at("var_names").get_to(info.var_names);
-      // retrieve the shapes for all variables
-      if (group_params.contains("var_length")) {
-        info.min_length = info.max_length = group_params.at("var_length");
-        input_shapes_.push_back({1, (int64_t)info.var_names.size(), (int64_t)info.min_length});
-      } else {
-        info.min_length = group_params.at("min_length");
-        info.max_length = group_params.at("max_length");
-        input_shapes_.push_back({1, (int64_t)info.var_names.size(), -1});
+    try {
+      const auto json = nlohmann::json::parse(json_file);
+      json.at("input_names").get_to(input_names);
+      for (const auto& input : input_names) {
+        const auto& group_params = json.at(input);
+        auto& info = prep_info_map_[input];
+        info.name = input;
+        // retrieve the variables names
+        group_params.at("var_names").get_to(info.var_names);
+        // retrieve the shapes for all variables
+        if (group_params.contains("var_length")) {
+          info.min_length = info.max_length = group_params.at("var_length");
+          input_shapes_.push_back({1, (int64_t)info.var_names.size(), (int64_t)info.min_length});
+        } else {
+          info.min_length = group_params.at("min_length");
+          info.max_length = group_params.at("max_length");
+          input_shapes_.push_back({1, (int64_t)info.var_names.size(), -1});
+        }
+        // for all variables, retrieve the allowed range
+        const auto& var_info_params = group_params.at("var_infos");
+        for (const auto& name : info.var_names) {
+          const auto& var_params = var_info_params.at(name);
+          info.var_info_map[name] =
+              PreprocessParams::VarInfo(var_params.at("median"),
+                                        var_params.at("norm_factor"),
+                                        var_params.at("replace_inf_value"),
+                                        var_params.at("lower_bound"),
+                                        var_params.at("upper_bound"),
+                                        var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
+        }
+        // create data storage with a fixed size vector initialised with 0's
+        const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
+        data_.emplace_back(len, 0);
       }
-      // for all variables, retrieve the allowed range
-      const auto& var_info_params = group_params.at("var_infos");
-      for (const auto& name : info.var_names) {
-        const auto& var_params = var_info_params.at(name);
-        info.var_info_map[name] =
-            PreprocessParams::VarInfo(var_params.at("median"),
-                                      var_params.at("norm_factor"),
-                                      var_params.at("replace_inf_value"),
-                                      var_params.at("lower_bound"),
-                                      var_params.at("upper_bound"),
-                                      var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
-      }
-      // create data storage with a fixed size vector initialised with 0's
-      const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
-      data_.emplace_back(len, 0);
+    } catch (const nlohmann::json::exception& exc) {
+      throw std::runtime_error("Failed to parse input JSON file '" + json_filename + "'.\n" + exc.what());
     }
     onnx_ = std::make_unique<ONNXRuntime>(onnx_filename, input_names);
   }
