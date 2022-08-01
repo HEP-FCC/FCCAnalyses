@@ -16,6 +16,7 @@ option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, o
 
 
 option(WITH_DD4HEP "Build analyzers that need DD4hep" OFF)
+option(WITH_ONNX "Build analyzers that need ONNXRuntime" OFF)
 
 #--- Set a better default for installation directory---------------------------
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
