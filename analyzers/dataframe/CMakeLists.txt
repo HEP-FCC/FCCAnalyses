@@ -37,6 +37,7 @@ if(${WITH_ONNX})
   else()
     message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found.")
     set(WITH_ONNX OFF)
+    set(WITH_ONNX ${WITH_ONNX} PARENT_SCOPE)
   endif()
 endif()
 
