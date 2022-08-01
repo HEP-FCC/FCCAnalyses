@@ -26,8 +26,10 @@ class RDFanalysis():
     #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
         from ROOT import JetFlavourUtils
-        weaver = JetFlavourUtils.setup_weaver('/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/fccee_flavtagging_dummy.onnx',
-                                              '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX/preprocess.json',
+        from os import getenv
+        test_inputs_path = getenv('TEST_INPUT_DATA_DIR', '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX')
+        weaver = JetFlavourUtils.setup_weaver(test_inputs_path + '/fccee_flavtagging_dummy.onnx',
+                                              test_inputs_path + '/preprocess.json',
                                               ('pfcand_e', 'pfcand_theta', 'pfcand_phi', 'pfcand_pid', 'pfcand_charge'))
 
         df2 = (df
