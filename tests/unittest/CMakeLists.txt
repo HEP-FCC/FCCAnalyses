@@ -48,6 +48,7 @@ endif()
 add_executable(unittest unittest.cpp myutils.cpp algorithms.cpp ${EXTRA_TESTS})
 target_link_libraries(unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain ${EXTRA_LIBRARIES})
 target_include_directories(unittest PUBLIC ${VDT_INCLUDE_DIR} ${EXTRA_INCLUDE_DIRS})
+target_compile_definitions(unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")
 include(Catch)
 catch_discover_tests(unittest
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
