@@ -21,8 +21,8 @@ jobs:
          mkdir -p build install;\
          source ${{ matrix.SETUP }};\
          cd build;\
-         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -G Ninja ..;'
-    - name: Compile 
+         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -DWITH_ONNX=ON -G Ninja ..;'
+    - name: Compile
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source ${{ matrix.SETUP }};\

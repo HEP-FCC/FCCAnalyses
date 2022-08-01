@@ -24,16 +24,18 @@ message(STATUS "includes-------------------------- dataframe fastjet:     ${FAST
 
 set(EXTRA_INCLUDE_DIRS)
 set(EXTRA_LIBRARIES)
-set(EXTRA_ROOT_INCLUDES)
 
 if(${WITH_ONNX})
-  find_package(ONNXRuntime REQUIRED)
-  find_package(nlohmann_json QUIET REQUIRED)
+  find_package(ONNXRuntime)
+  find_package(nlohmann_json QUIET)
+  if(NOT ONNXRuntime_FOUND OR NOT nlohmann_json_FOUND)
+    message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found.")
+    set(WITH_ONNX OFF)
+  endif()
   message(STATUS "includes-------------------------- dataframe onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
   message(STATUS "includes-------------------------- dataframe nlohmann_json")
   list(APPEND EXTRA_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIRS})
   list(APPEND EXTRA_LIBRARIES ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
-  list(APPEND EXTRA_ROOT_INCLUDES FCCAnalyses/ONNXRuntime.h FCCAnalyses/WeaverInterface.h)
   include_directories(${ONNXRUNTIME_INCLUDE_DIRS})
 endif()
 
@@ -50,12 +52,12 @@ if(NOT ${WITH_DD4HEP})
   list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
 endif()
 if(NOT ${WITH_ONNX})
+  list(FILTER headers EXCLUDE REGEX "JetFlavourUtils.h")
+  list(FILTER sources EXCLUDE REGEX "JetFlavourUtils.cc")
   list(FILTER headers EXCLUDE REGEX "ONNXRuntime.h")
   list(FILTER sources EXCLUDE REGEX "ONNXRuntime.cc")
   list(FILTER headers EXCLUDE REGEX "WeaverInterface.h")
   list(FILTER sources EXCLUDE REGEX "WeaverInterface.cc")
-  list(FILTER headers EXCLUDE REGEX "JetFlavourUtils.h")
-  list(FILTER sources EXCLUDE REGEX "JetFlavourUtils.cc")
 endif()
 
 
@@ -102,7 +104,6 @@ set_target_properties(FCCAnalyses PROPERTIES
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses
                          ${headers}
-                         ${EXTRA_ROOT_INCLUDES}
                          MODULE FCCAnalyses
                          LINKDEF FCCAnalyses/LinkDef.h
                          )
