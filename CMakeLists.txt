@@ -16,6 +16,8 @@ option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, o
 
 
 option(WITH_DD4HEP "Build analyzers that need DD4hep" OFF)
+set(WITH_ONNX AUTO CACHE STRING "Build analyzers that need ONNXRuntime")
+set_property(CACHE WITH_ONNX PROPERTY STRINGS AUTO ON OFF)
 
 #--- Set a better default for installation directory---------------------------
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -58,7 +60,21 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
   "Installation directory for header files")
 
 
-
+# Grab the test files into a cached directory
+if(NOT DEFINED CACHE{TEST_INPUT_DATA_DIR})
+  message(STATUS "Getting test input files")
+  execute_process(COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/tests/get_test_inputs.sh
+                  OUTPUT_VARIABLE test_input_data_dir
+                  RESULT_VARIABLE test_inputs_available)
+  if(NOT "${test_inputs_available}" STREQUAL "0")
+    message(WARNING "Failed to retrieve input test files. Some tests will need to be skipped.")
+    unset(TEST_INPUT_DATA_DIR CACHE)
+  else()
+    message(STATUS "Test input files stored in ${test_input_data_dir}")
+    set(TEST_INPUT_DATA_DIR ${test_input_data_dir} CACHE INTERNAL "directory for input test files")
+    mark_as_advanced(TEST_INPUT_DATA_DIR)
+  endif()
+endif()
 
 #--- add CMake infrastructure --------------------------------------------------
 include(cmake/FCCAnalysesCreateConfig.cmake)

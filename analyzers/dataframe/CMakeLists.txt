@@ -17,11 +17,29 @@ include_directories(${EDM4HEP_INCLUDE_DIRS}
                     ${VDT_INCLUDE_DIR}
                     )
 
-message(STATUS "includes-------------------------- dataframe awkward: ${AWKWARD_INCLUDE}")
-message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
-message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
-message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_INCLUDE_DIRS}")
+message(STATUS "includes-------------------------- dataframe awkward:     ${AWKWARD_INCLUDE}")
+message(STATUS "includes-------------------------- dataframe edm4hep:     ${EDM4HEP_INCLUDE_DIRS}")
+message(STATUS "includes-------------------------- dataframe podio  :     ${podio_INCLUDE_DIR}")
+message(STATUS "includes-------------------------- dataframe fastjet:     ${FASTJET_INCLUDE_DIRS}")
 
+set(EXTRA_INCLUDE_DIRS)
+set(EXTRA_LIBRARIES)
+
+if(WITH_ONNX STREQUAL AUTO OR WITH_ONNX)
+  find_package(ONNXRuntime QUIET)
+  find_package(nlohmann_json QUIET)
+  if(ONNXRuntime_FOUND AND nlohmann_json_FOUND)
+    message(STATUS "includes-------------------------- dataframe onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
+    message(STATUS "includes-------------------------- dataframe nlohmann_json")
+    list(APPEND EXTRA_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIRS})
+    list(APPEND EXTRA_LIBRARIES ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
+    include_directories(${ONNXRUNTIME_INCLUDE_DIRS})
+  elseif(WITH_ONNX STREQUAL AUTO)
+    message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found.")
+  else()
+    message(FATAL_ERROR "Failed to locate ONNXRuntime and/or nlohmann's JSON library!")
+  endif()
+endif()
 
 
 file(GLOB sources src/*.cc)
@@ -35,6 +53,14 @@ if(NOT ${WITH_DD4HEP})
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
   list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
 endif()
+if(NOT ${WITH_ONNX})
+  list(FILTER headers EXCLUDE REGEX "JetFlavourUtils.h")
+  list(FILTER sources EXCLUDE REGEX "JetFlavourUtils.cc")
+  list(FILTER headers EXCLUDE REGEX "ONNXRuntime.h")
+  list(FILTER sources EXCLUDE REGEX "ONNXRuntime.cc")
+  list(FILTER headers EXCLUDE REGEX "WeaverInterface.h")
+  list(FILTER sources EXCLUDE REGEX "WeaverInterface.cc")
+endif()
 
 
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
@@ -47,6 +73,7 @@ target_include_directories(FCCAnalyses  PUBLIC
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
+                           ${EXTRA_INCLUDE_DIRS}
                            )
 
 target_link_libraries(FCCAnalyses
@@ -65,6 +92,7 @@ target_link_libraries(FCCAnalyses
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
                       ${LIBDL}
+                      ${EXTRA_LIBRARIES}
                       gfortran # todo: why necessary?
                       )
 

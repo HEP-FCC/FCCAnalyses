@@ -34,9 +34,19 @@ endif()
 # list of labels that we want to ignore
 set(filter_tests "")
 
-add_executable(unittest unittest.cpp myutils.cpp algorithms.cpp)
-target_link_libraries(unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain)
-target_include_directories(unittest PUBLIC ${VDT_INCLUDE_DIR})
+set(EXTRA_TESTS)
+set(EXTRA_INCLUDE_DIRS)
+set(EXTRA_LIBRARIES)
+if(${WITH_ONNX})
+  list(APPEND EXTRA_TESTS onnxtest.cpp)
+  list(APPEND EXTRA_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIRS})
+  list(APPEND EXTRA_LIBRARIES ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
+endif()
+
+add_executable(unittest unittest.cpp myutils.cpp algorithms.cpp ${EXTRA_TESTS})
+target_link_libraries(unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain ${EXTRA_LIBRARIES})
+target_include_directories(unittest PUBLIC ${VDT_INCLUDE_DIR} ${EXTRA_INCLUDE_DIRS})
+target_compile_definitions(unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")
 include(Catch)
 catch_discover_tests(unittest
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}

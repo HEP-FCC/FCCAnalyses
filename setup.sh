@@ -12,6 +12,8 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   export ROOT_INCLUDE_PATH=$PWD/install/include:$ROOT_INCLUDE_PATH
   export LOCAL_DIR=$PWD
   export LD_LIBRARY_PATH=`python -m awkward.config --libdir`:$LD_LIBRARY_PATH
+  export ONNXRUNTIME_ROOT_DIR=`python -c "import onnxruntime; print(onnxruntime.__path__[0]+'/../../../..')"`
+  export LD_LIBRARY_PATH=$ONNXRUNTIME_ROOT_DIR/lib:$LD_LIBRARY_PATH
 else
   echo "ERROR: This script is meant to be sourced!"
 fi
