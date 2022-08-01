@@ -9,7 +9,7 @@ var searchData=
   ['sel_5fpid_6',['sel_PID',['../struct_f_c_c_analyses_1_1my_utils_1_1sel___p_i_d.html#af32edf3a9366873ecca489bdaf437949',1,'FCCAnalyses::myUtils::sel_PID']]],
   ['sel_5fpt_7',['sel_pt',['../struct_f_c_c_analyses_1_1_m_c_particle_1_1sel__pt.html#ad46ccb6ac552fc9f2f1e554111beb8c3',1,'FCCAnalyses::MCParticle::sel_pt::sel_pt()'],['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1sel__pt.html#aaf75d1137285d3f487838ccb7558a7e9',1,'FCCAnalyses::ReconstructedParticle::sel_pt::sel_pt()']]],
   ['sel_5fpv_8',['sel_PV',['../struct_f_c_c_analyses_1_1my_utils_1_1sel___p_v.html#a98fed992d22c66e670998fd2b7f99759',1,'FCCAnalyses::myUtils::sel_PV']]],
-  ['sel_5ftag_9',['sel_tag',['../struct_f_c_c_analyses_1_1_jet_tagging_utils_1_1sel__tag.html#ac34671a6bc1f35cb9b4551de7c28382b',1,'FCCAnalyses::JetTaggingUtils::sel_tag::sel_tag()'],['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1sel__tag.html#a387d0cd2c2893057347232b732c30ec2',1,'FCCAnalyses::ReconstructedParticle::sel_tag::sel_tag()']]],
+  ['sel_5ftag_9',['sel_tag',['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1sel__tag.html#a387d0cd2c2893057347232b732c30ec2',1,'FCCAnalyses::ReconstructedParticle::sel_tag::sel_tag()'],['../struct_f_c_c_analyses_1_1_jet_tagging_utils_1_1sel__tag.html#ac34671a6bc1f35cb9b4551de7c28382b',1,'FCCAnalyses::JetTaggingUtils::sel_tag::sel_tag()']]],
   ['selprimarytracks_10',['SelPrimaryTracks',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html#a8a96b39bedab3e7054366aeccd50f86e',1,'FCCAnalyses::VertexingUtils']]],
   ['selrp_5fchargedhadrons_11',['selRP_ChargedHadrons',['../namespace_f_c_c_analyses_1_1_reconstructed_particle2_m_c.html#a66e2d4094b8d0de4c5f732a93a66a8bc',1,'FCCAnalyses::ReconstructedParticle2MC']]],
   ['selrp_5fmatched_5fto_5flist_12',['selRP_matched_to_list',['../namespace_f_c_c_analyses_1_1_reconstructed_particle2_m_c.html#adc2f35cda45d09807cfd54b2ee7f9f96',1,'FCCAnalyses::ReconstructedParticle2MC']]],
@@ -20,5 +20,6 @@ var searchData=
   ['seltracks_17',['selTracks',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1sel_tracks.html#ab60698d4d992cf63012c6bbfb56a9da0',1,'FCCAnalyses::VertexingUtils::selTracks']]],
   ['set_5fpseudojets_18',['set_pseudoJets',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#ae9e847f3943c1e33bd8f6e51cafa3621',1,'FCCAnalyses::JetClusteringUtils']]],
   ['set_5fpseudojets_5fxyzm_19',['set_pseudoJets_xyzm',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a2968c138f4aa7e9cf9c22d45bfdda475',1,'FCCAnalyses::JetClusteringUtils']]],
-  ['sphericityfit_20',['sphericityFit',['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html#a024b324a41bea3f3c760fceb01f6f419',1,'FCCAnalyses::Algorithms::sphericityFit']]]
+  ['setup_5fweaver_20',['setup_weaver',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#a966bf174f599b03ebb6ae9e71a29ef35',1,'FCCAnalyses::JetFlavourUtils']]],
+  ['sphericityfit_21',['sphericityFit',['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html#a024b324a41bea3f3c760fceb01f6f419',1,'FCCAnalyses::Algorithms::sphericityFit']]]
 ];
