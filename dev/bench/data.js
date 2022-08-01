@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659365117936,
+  "lastUpdate": 1659365120896,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -3897,6 +3897,45 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lforthomme@protonmail.com",
+            "name": "Laurent Forthomme",
+            "username": "forthommel"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e5c916e1760d964c8c491d4d868e27c2b119d130",
+          "message": "Weaver jet flavour inference (#188)\n\n* First skeletton of the ONNXRuntime wrapper object\r\n\r\n* Added a few operators to ONNXRuntime, derivation from TObject\r\n\r\n* Replaced the operator() by a run() method\r\n\r\n* Registered run method\r\n\r\n* Added ONNX to runtime libraries search path\r\n\r\n* Removed TObject hierarchy\r\n\r\n* API slightly adapted ; using a singleton (!)\r\n\r\n* Working version\r\n\r\n* Added test\r\n\r\n* Added an intermediate weaver interface object\r\n\r\n* Work on python API\r\n\r\n* Cleanup\r\n\r\n* Handling the parsing of Weaver's preprocess json file\r\n\r\n* Clang-format\r\n\r\n* Using new jet constituents tool to feed the NN inference\r\n\r\n* Renamed onnx test\r\n\r\n* Improved printout for weaver module output\r\n\r\n* JC definitions simplification through aliases\r\n\r\n* Updated ONNX interface to JC\r\n\r\n* Updated ONNX version\r\n\r\n* Picking up missing rebase merges\r\n\r\n* More fiddling around\r\n\r\n* Adapted python tests to new scheme\r\n\r\n* Inference FW skipping simplified through CMake regexes\r\n\r\n* Added unit test skeletton for weaver interface\r\n\r\n* Cleanup of includes\r\n\r\n* Updated jet constituents FW\r\n\r\n* Intermediate jet flavour utilities\r\n\r\n* Fixed input format for constituents\r\n\r\n* Registration of variables names\r\n\r\n* Non-crashing version\r\n\r\n* Fixed test\r\n\r\n* Cleanup\r\n\r\n* First use of experimental API\r\n\r\n* Further simplification through the use of 'experimental' Ort API\r\n\r\n* Added a method to retrieve a specific weight for all jets in collection\r\n\r\n* Skip JetFlavourUtils compilation if ONNXRuntime is not found\r\n\r\n* Added some tests in flavtagging unit tests\r\n\r\n* Added Weaver inference test into CTest collection\r\n\r\n* Improved documentation of jet flavour utils\r\n\r\n* Improved documentation of Weaver interface\r\n\r\n* Only run Weaver inference test if library was linked against ONNXRuntime\r\n\r\n* Fixed global functions order for jet flavour utils\r\n\r\n* Import ONNXRuntime from py-onnx-runtime spack repo\r\n\r\n* Retrieve Weaver input test files\r\n\r\n* Making JSON parsing more informative when input file is not found\r\n\r\n* Added utility to find input test files in unit test\r\n\r\n* Specify input data dir as environment variable for python tests\r\n\r\n* Made ONNX linking a configuration parameter\r\n\r\n* Added WITH_ONNX=ON CMake option, cleaned analysers/dataframe CMake directive\r\n\r\n* Fixed CMake logic\r\n\r\n* Propagate WITH_ONNX state to the parent scope\r\n\r\n* Implemented tristate (on/auto/off) for the WITH_ONNX variable to account for systems where ONNXRuntime is not installed\r\n\r\n* Reverted back WITH_ONNX=ON behaviour for CI",
+          "timestamp": "2022-08-01T16:34:57+02:00",
+          "tree_id": "4800fea541e3e6055c48124a96a877329f3e5b3d",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/e5c916e1760d964c8c491d4d868e27c2b119d130"
+        },
+        "date": 1659365119523,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 5.712207538194657,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 4.760933607031986,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 6.259996201290528,
+            "unit": "Evt/s"
           }
         ]
       }
