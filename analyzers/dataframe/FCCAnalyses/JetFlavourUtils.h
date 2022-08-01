@@ -22,10 +22,6 @@ namespace FCCAnalyses {
     }
     /// Get one specific weight previously computed
     rv::RVec<float> get_weight(const rv::RVec<rv::RVec<float> >&, int);
-
-    /// Compute all weights given a collection of input variables
-    /// \note This helper should not be used directly in RDataFrame examples
-    rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>&);
   }  // namespace JetFlavourUtils
 }  // namespace FCCAnalyses
 
