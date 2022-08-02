@@ -12,7 +12,6 @@
 #include "awkward/builder/ArrayBuilderOptions.h"
 
 #include "FCCAnalyses/myUtils.h"
-#include "FCCAnalyses/VertexFitterActs.h"
 #include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/ReconstructedParticle.h"
 #include "FCCAnalyses/MCParticle.h"
@@ -1824,7 +1823,6 @@ ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedP
       thetracks.push_back(tracks.at(tmpvec_tk.at(k)));
     }
 
-    //VertexingUtils::FCCAnalysesVertex TheVertexActs = VertexFitterActs::VertexFitterFullBilloir(recoparticles, tracks );
     VertexingUtils::FCCAnalysesVertex TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks);
     float chi2 = TheVertex.vertex.chi2;
 
