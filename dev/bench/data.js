@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659448830798,
+  "lastUpdate": 1659448877433,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -4020,6 +4020,51 @@ window.BENCHMARK_DATA = {
             "name": "prod | Events processed per second: examples/FCCee/test",
             "value": 8.188094502815366,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "valentin.volkl@cern.ch",
+            "name": "Valentin Volkl",
+            "username": "vvolkl"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fc3b859a203ce96d2020222905297bc3b0702982",
+          "message": "cmake: fix minimum required version, cleanup (#189)\n\n* cmake: fix minimum required version\r\n\r\nUse 3.16, as imposed by ROOT. Older cmake versions have trouble with generator expression they have to parse when finding ROOT and will error out with:\r\n\r\n```\r\nCMake Error at /cvmfs/sw.hsf.org/spackages5/root/6.26.02/x86_64-ubuntu20.04-gcc9.4.0-opt/4uthe/cmake/RootMacros.cmake:639 (add_custom_command):\r\n  Error evaluating generator expression:\r\n\r\n    $<REMOVE_DUPLICATES:$<TARGET_PROPERTY:FCCAnalyses,INTERFACE_SYSTEM_INCLUDE_DIRECTORIES>>\r\n\r\n  Expression did not evaluate to a known generator expression\r\n```\r\n\r\nEven older CMake versions won't even reach this point, because of issues with the FindPython module.\r\n\r\n* silence compiler warning\r\n\r\n* clean up include\r\n\r\n* silence compiler warnings\r\n\r\n* cmake cleanup\r\n\r\n* cmake cleanup\r\n\r\n* explicitly build all optional parts in ci",
+          "timestamp": "2022-08-02T15:50:00+02:00",
+          "tree_id": "da95609704c09fdb6e95d0d8bd607abc303c713d",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/fc3b859a203ce96d2020222905297bc3b0702982"
+        },
+        "date": 1659448875506,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 12.026071548461914,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 16.27160143852234,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "value": 11.448940992355347,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test"
           }
         ]
       }
