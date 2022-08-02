@@ -714,8 +714,8 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
     }
   */
 
-  delete final_chi2;
-  delete final_phases;
+  delete[] final_chi2;
+  delete[] final_phases;
 
   return TheVertex;
 }

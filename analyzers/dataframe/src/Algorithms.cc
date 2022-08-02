@@ -101,7 +101,7 @@ float thrustFit::operator()(const double *pars){
   double mag = sqrt(pars[0]*pars[0] + pars[1]*pars[1] + pars[2]*pars[2]);
 
   for (unsigned int i =0; i<_px.size(); i++){
-    num += abs(_px[i]*(pars[0]/mag) + _py[i]*(pars[1]/mag) + _pz[i]*(pars[2]/mag));
+    num += std::abs(_px[i]*(pars[0]/mag) + _py[i]*(pars[1]/mag) + _pz[i]*(pars[2]/mag));
     den += sqrt(_px[i]*_px[i] + _py[i]*_py[i] + _pz[i]*_pz[i]);
   }
   if (den>0.){
@@ -359,12 +359,12 @@ ROOT::VecOps::RVec<float>  getAxisEnergy::operator() (const ROOT::VecOps::RVec<f
   for (size_t i = 0; i < angle.size(); ++i) {
     if (_pos==1 && angle[i]>0.){
       result[0]+=energy[i];
-      if (abs(charge[i])>0) result[1]+=energy[i];
+      if (std::abs(charge[i])>0) result[1]+=energy[i];
       else result[2]+=energy[i];
     }
     if (_pos==0 && angle[i]<0.){
       result[0]+=energy[i];
-      if (abs(charge[i])>0) result[1]+=energy[i];
+      if (std::abs(charge[i])>0) result[1]+=energy[i];
       else result[2]+=energy[i];
     }
   }
@@ -381,12 +381,12 @@ ROOT::VecOps::RVec<int>  getAxisN::operator() (const ROOT::VecOps::RVec<float> &
   for (size_t i = 0; i < angle.size(); ++i) {
     if (_pos==1 && angle[i]>0.){
       result[0]+=1;
-      if (abs(charge[i])>0) result[1]+=1;
+      if (std::abs(charge[i])>0) result[1]+=1;
       else result[2]+=1;
     }
     if (_pos==0 && angle[i]<0.){
       result[0]+=1;
-      if (abs(charge[i])>0) result[1]+=1;
+      if (std::abs(charge[i])>0) result[1]+=1;
       else result[2]+=1;
     }
   }

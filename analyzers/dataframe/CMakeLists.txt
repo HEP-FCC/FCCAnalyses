@@ -1,21 +1,8 @@
 
-find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps)
-include(${ROOT_USE_FILE})
-#include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
+# workaround for ROOT not properly exporting the VDT includes
 find_package(Vdt)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-
-get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
-
-include_directories(${EDM4HEP_INCLUDE_DIRS}
-                    ${podio_INCLUDE_DIR}
-                    ${FASTJET_INCLUDE_DIR}
-                    ${acts_INCLUDE_DIR}
-                    ${AWKWARD_INCLUDE}
-                    ${VDT_INCLUDE_DIR}
-                    )
 
 message(STATUS "includes-------------------------- dataframe awkward:     ${AWKWARD_INCLUDE}")
 message(STATUS "includes-------------------------- dataframe edm4hep:     ${EDM4HEP_INCLUDE_DIRS}")
@@ -25,20 +12,10 @@ message(STATUS "includes-------------------------- dataframe fastjet:     ${FAST
 set(EXTRA_INCLUDE_DIRS)
 set(EXTRA_LIBRARIES)
 
-if(WITH_ONNX STREQUAL AUTO OR WITH_ONNX)
-  find_package(ONNXRuntime QUIET)
-  find_package(nlohmann_json QUIET)
-  if(ONNXRuntime_FOUND AND nlohmann_json_FOUND)
-    message(STATUS "includes-------------------------- dataframe onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
-    message(STATUS "includes-------------------------- dataframe nlohmann_json")
+if(WITH_ONNX)
     list(APPEND EXTRA_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIRS})
     list(APPEND EXTRA_LIBRARIES ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
     include_directories(${ONNXRUNTIME_INCLUDE_DIRS})
-  elseif(WITH_ONNX STREQUAL AUTO)
-    message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found.")
-  else()
-    message(FATAL_ERROR "Failed to locate ONNXRuntime and/or nlohmann's JSON library!")
-  endif()
 endif()
 
 
@@ -49,17 +26,24 @@ message(STATUS "includes headers ${headers}")
 message(STATUS "includes sources ${sources}")
 
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
-if(NOT ${WITH_DD4HEP})
+if(NOT WITH_DD4HEP)
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
   list(FILTER sources EXCLUDE REGEX "CaloNtupleizer.cc")
 endif()
-if(NOT ${WITH_ONNX})
+if(NOT WITH_ONNX)
   list(FILTER headers EXCLUDE REGEX "JetFlavourUtils.h")
   list(FILTER sources EXCLUDE REGEX "JetFlavourUtils.cc")
   list(FILTER headers EXCLUDE REGEX "ONNXRuntime.h")
   list(FILTER sources EXCLUDE REGEX "ONNXRuntime.cc")
   list(FILTER headers EXCLUDE REGEX "WeaverInterface.h")
   list(FILTER sources EXCLUDE REGEX "WeaverInterface.cc")
+endif()
+
+if(NOT WITH_ACTS)
+  list(FILTER headers EXCLUDE REGEX "VertexFitterActs.h")
+  list(FILTER sources EXCLUDE REGEX "VertexFitterActs.cc")
+  list(FILTER headers EXCLUDE REGEX "VertexFinderActs.h")
+  list(FILTER sources EXCLUDE REGEX "VertexFinderActs.cc")
 endif()
 
 
@@ -71,10 +55,12 @@ target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                            $<INSTALL_INTERFACE:include>
                            ${FASTJET_INCLUDE_DIR}
-                           ${acts_INCLUDE_DIR}
+                           ${VDT_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
                            ${EXTRA_INCLUDE_DIRS}
                            )
+
+
 
 target_link_libraries(FCCAnalyses
                       ROOT::Physics
@@ -86,8 +72,6 @@ target_link_libraries(FCCAnalyses
                       podio::podio
                       ${FASTJET_LIBRARY}
                       ${FASTJET_LIBRARY_DIRS}/libfastjetplugins.so
-                      ${acts_LIBRARY}
-                      ActsCore
                       #${AWKWARD_LIBRARIES}
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
@@ -96,9 +80,12 @@ target_link_libraries(FCCAnalyses
                       gfortran # todo: why necessary?
                       )
 
-if(${WITH_DD4HEP})
-  find_package(DD4hep)
+if(WITH_DD4HEP)
   target_link_libraries(FCCAnalyses DD4hep::DDCore)
+endif()
+
+if(WITH_ACTS)
+  target_link_libraries(FCCAnalyses ActsCore)
 endif()
 
 set_target_properties(FCCAnalyses PROPERTIES
