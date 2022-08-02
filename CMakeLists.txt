@@ -1,11 +1,8 @@
-cmake_minimum_required(VERSION 3.1...3.16)
-#cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16.9)
 
 
 project(FCCAnalyses CXX)
 
-#needed for ACTS
-cmake_policy(SET CMP0057 NEW)
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE BOOL "RPATH USE LINK PATH")
 
