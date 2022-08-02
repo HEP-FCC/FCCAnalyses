@@ -60,11 +60,6 @@ target_include_directories(FCCAnalyses  PUBLIC
                            ${EXTRA_INCLUDE_DIRS}
                            )
 
-if(WITH_ACTS)
-#  target_include_directories(FCCAnalyses  PUBLIC
-#                             ${acts_INCLUDE_DIR}
-#                             )
-endif()
 
 
 target_link_libraries(FCCAnalyses
@@ -90,7 +85,7 @@ if(WITH_DD4HEP)
 endif()
 
 if(WITH_ACTS)
-  target_link_libraries(FCCAnalyses ActsCore )# ${acts_LIBRARY} )
+  target_link_libraries(FCCAnalyses ActsCore)
 endif()
 
 set_target_properties(FCCAnalyses PROPERTIES
