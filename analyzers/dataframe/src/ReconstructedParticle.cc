@@ -281,12 +281,6 @@ ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticl
   return result;
 }
 
-float get_p(edm4hep::ReconstructedParticleData in) {
-  TLorentzVector tlv;
-  tlv.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
-  return tlv.P();
-}
-
 ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
