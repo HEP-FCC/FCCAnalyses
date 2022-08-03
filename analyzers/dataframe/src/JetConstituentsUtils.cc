@@ -3,8 +3,8 @@
 
 namespace FCCAnalyses {
   namespace JetConstituentsUtils {
-    rv::RVec<FCCAnalysesJetConstituents> build_constituents(rv::RVec<edm4hep::ReconstructedParticleData> jets,
-                                                            rv::RVec<edm4hep::ReconstructedParticleData> rps) {
+    rv::RVec<FCCAnalysesJetConstituents> build_constituents(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
+                                                            const rv::RVec<edm4hep::ReconstructedParticleData>& rps) {
       rv::RVec<FCCAnalysesJetConstituents> jcs;
       for (const auto& jet : jets) {
         auto& jc = jcs.emplace_back();
@@ -14,14 +14,14 @@ namespace FCCAnalyses {
       return jcs;
     }
 
-    FCCAnalysesJetConstituents get_jet_constituents(rv::RVec<FCCAnalysesJetConstituents> csts, int jet) {
+    FCCAnalysesJetConstituents get_jet_constituents(const rv::RVec<FCCAnalysesJetConstituents>& csts, int jet) {
       if (jet < 0)
         return FCCAnalysesJetConstituents();
       return csts.at(jet);
     }
 
-    rv::RVec<FCCAnalysesJetConstituents> get_constituents(rv::RVec<FCCAnalysesJetConstituents> csts,
-                                                          rv::RVec<int> jets) {
+    rv::RVec<FCCAnalysesJetConstituents> get_constituents(const rv::RVec<FCCAnalysesJetConstituents>& csts,
+                                                          const rv::RVec<int>& jets) {
       rv::RVec<FCCAnalysesJetConstituents> jcs;
       for (size_t i = 0; i < jets.size(); ++i)
         if (jets.at(i) >= 0)
@@ -39,27 +39,27 @@ namespace FCCAnalyses {
       return out;
     };
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_pt(rv::RVec<FCCAnalysesJetConstituents> jcs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_pt(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_pt);
     }
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_e(rv::RVec<FCCAnalysesJetConstituents> jcs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_e(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_e);
     }
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_theta(rv::RVec<FCCAnalysesJetConstituents> jcs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_theta(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_theta);
     }
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_phi(rv::RVec<FCCAnalysesJetConstituents> jcs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_phi);
     }
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_type(rv::RVec<FCCAnalysesJetConstituents> jcs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_type(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_type);
     }
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_charge(rv::RVec<FCCAnalysesJetConstituents> jcs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_charge(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_charge);
     }
   }  // namespace JetConstituentsUtils
