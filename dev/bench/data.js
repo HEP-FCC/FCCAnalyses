@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659626669782,
+  "lastUpdate": 1659626671731,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -4653,6 +4653,45 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "760f7c1ce7e384d14d14a00176c0a688bedba9a4",
+          "message": "Moving get_p helper function to myUtils (#191)",
+          "timestamp": "2022-08-04T17:08:27+02:00",
+          "tree_id": "d2f8abb5d5edbccd9333513472e8bc1e019edcd3",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/760f7c1ce7e384d14d14a00176c0a688bedba9a4"
+        },
+        "date": 1659626671040,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.188210716643484,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.2580333893263695,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 6.239118406552426,
+            "unit": "Evt/s"
           }
         ]
       }
