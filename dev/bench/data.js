@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659627862066,
+  "lastUpdate": 1659627864931,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -4905,6 +4905,45 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lforthomme@protonmail.com",
+            "name": "Laurent Forthomme",
+            "username": "forthommel"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9aa03066e8b8dea673e697f6e18e611ad6630be5",
+          "message": "Jet constituents: passing collections by references (#192)",
+          "timestamp": "2022-08-04T17:08:01+02:00",
+          "tree_id": "ef14e9d3328f829318f511551f9b474eaac3a458",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/9aa03066e8b8dea673e697f6e18e611ad6630be5"
+        },
+        "date": 1659627863636,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.227737341333757,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 4.8866108830288395,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 6.338489302013048,
+            "unit": "Evt/s"
           }
         ]
       }
