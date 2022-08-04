@@ -821,7 +821,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> add_truthmatched(ROOT::VecOps::RVec<FCC
       mother.push_back(mother1);
       motherPDG.push_back(mc.at(mother1).PDG);
       //std::cout << "mother 1 "<<mother1<<"  mother2  " << mother2<< std::endl;
-      //std::cout << " mc assoc j " << j << "  rp index  "<< index.at(j) << " mc index " << mcassoc <<  "  PDG ID  " << mc.at(mcassoc).PDG << "  charge "<< mc.at(mcassoc).charge<< " mc p="<<sqrt(pow(mc.at(mcassoc).momentum.z,2)+pow(mc.at(mcassoc).momentum.y,2)+pow(mc.at(mcassoc).momentum.x,2)) << "  rp p " << ReconstructedParticle::get_p(recop.at(index.at(j)))<<std::endl;
+      //std::cout << " mc assoc j " << j << "  rp index  "<< index.at(j) << " mc index " << mcassoc <<  "  PDG ID  " << mc.at(mcassoc).PDG << "  charge "<< mc.at(mcassoc).charge<< " mc p="<<sqrt(pow(mc.at(mcassoc).momentum.z,2)+pow(mc.at(mcassoc).momentum.y,2)+pow(mc.at(mcassoc).momentum.x,2)) << "  rp p " << get_p(recop.at(index.at(j)))<<std::endl;
 
       //std::cout << " mc assoc j " << j << "   " << mcassoc.at(0) <<  "  PDG ID  " << mc.at(mcassoc.at(0)).PDG << "  charge "<< mc.at(mcassoc.at(0)).charge<< "  px="<< mc.at(mcassoc.at(0)).momentum.x << "  py="<< mc.at(mcassoc.at(0)).momentum.y << "  pz="<< mc.at(mcassoc.at(0)).momentum.z << "  p="<<sqrt(pow(mc.at(mcassoc.at(0)).momentum.z,2)+pow(mc.at(mcassoc.at(0)).momentum.y,2)+pow(mc.at(mcassoc.at(0)).momentum.x,2))<<std::endl;
       //}
@@ -980,7 +980,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> build_Bu2D0Pi(ROOT::VecOps::RVec<edm4he
     else if (recop.at(d0index.at(1)).type==321)kaoncharge=recop.at(d0index.at(1)).charge;
     else std::cout <<"huston there iis a problem no kaon found build_Bu2D0Pi" <<std::endl;
     for (size_t j = 0; j < pions.size(); ++j) {
-      if (ReconstructedParticle::get_p(recop.at(pions.at(j)))<1.)continue;
+      if (get_p(recop.at(pions.at(j)))<1.)continue;
       if (kaoncharge!=recop.at(pions.at(j)).charge)continue;
 
       //Mass cut
@@ -1443,7 +1443,7 @@ build_composite_vertex::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedPar
 
   awkward::ArrayBuilder builder(awkward::ArrayBuilderOptions(1024, 2.0));
   for (size_t i = 0; i < in.size(); ++i) {
-    if (ReconstructedParticle::get_p(recop.at(in.at(i)))<m_p) continue;
+    if (get_p(recop.at(in.at(i)))<m_p) continue;
     if (m_filterPV && isPV(recop.at(in.at(i)), pvindex) ) continue;
     builder.integer(in.at(i));
   }
@@ -1484,7 +1484,7 @@ build_composite_vertex::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedPar
     int charge=0;
     for (size_t k=0;k<tmpvec.size();k++){
       charge+=recop[tmpvec.at(k)].charge;
-      //std::cout << "charge in builing " <<recop[tmpvec.at(k)].charge << "  px="<<recop[tmpvec.at(k)].momentum.x<< "  py="<<recop[tmpvec.at(k)].momentum.y<< "   pz="<<recop[tmpvec.at(k)].momentum.z<< "  p=" << ReconstructedParticle::get_p(recop[tmpvec.at(k)])<<std::endl;
+      //std::cout << "charge in builing " <<recop[tmpvec.at(k)].charge << "  px="<<recop[tmpvec.at(k)].momentum.x<< "  py="<<recop[tmpvec.at(k)].momentum.y<< "   pz="<<recop[tmpvec.at(k)].momentum.z<< "  p=" << get_p(recop[tmpvec.at(k)])<<std::endl;
     }
     if (m_cc==true && fabs(charge)!=fabs(m_charge))continue;
     if (m_cc==false && charge!=m_charge)continue;
@@ -1556,11 +1556,11 @@ build_D0::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> rec
 
   for (size_t i = 0; i < pions.size(); ++i){
     //pion p cut
-    if (ReconstructedParticle::get_p(recop.at(pions.at(i)))<m_p)continue;
+    if (get_p(recop.at(pions.at(i)))<m_p)continue;
     if (m_filterPV && isPV(recop.at(pions.at(i)), pvindex) ) continue;
     for (size_t j = 0; j < kaons.size(); ++j){
       //kaon p cut
-      if (ReconstructedParticle::get_p(recop.at(kaons.at(j)))<m_p)continue;
+      if (get_p(recop.at(kaons.at(j)))<m_p)continue;
       if (m_filterPV && isPV(recop.at(kaons.at(j)), pvindex) ) continue;
       //std::cout << "i " << i << "  j " << j << "  pion a i " << pions.at(i) << "  kaons at j "<< kaons.at(j) << " nrecop  " << recop.size()<< std::endl;
       //charge cut
@@ -1780,7 +1780,7 @@ ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedP
     bool pcut=false;
     for (size_t k=0;k<tmpvec_rp.size();k++){
       charge+=recop[tmpvec_rp.at(k)].charge;
-      if (ReconstructedParticle::get_p(recop[tmpvec_rp.at(k)])<2.)pcut=true;
+      if (get_p(recop[tmpvec_rp.at(k)])<2.)pcut=true;
     }
     if (charge!=0)continue;
     if (pcut==true)continue;
@@ -2158,7 +2158,7 @@ build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
     float angle = -9999999.;
     for (auto &r:p.reco_ind){
       if (recop.at(r).type!=211)is3pi=false;
-      if (ReconstructedParticle::get_p(recop.at(r))<m_p) pcut=false;
+      if (get_p(recop.at(r))<m_p) pcut=false;
       charge+=recop.at(r).charge;
       TVector3 p1( recop.at(r).momentum.x, recop.at(r).momentum.y, recop.at(r).momentum.z );
 
@@ -2217,7 +2217,7 @@ build_tau23pi_vertexing::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedPa
 
   awkward::ArrayBuilder builder(awkward::ArrayBuilderOptions(1024, 2.0));
   for (size_t i = 0; i < in.size(); ++i) {
-    if (ReconstructedParticle::get_p(recop.at(in.at(i)))<m_p) continue;
+    if (get_p(recop.at(in.at(i)))<m_p) continue;
     if (m_filterPV && isPV(recop.at(in.at(i)), pvindex) ) continue;
     builder.integer(in.at(i));
   }
@@ -2560,6 +2560,14 @@ ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::
     result.push_back(p.at(index).momentum.z);
   return result;
 }
+
+
+float get_p(edm4hep::ReconstructedParticleData in) {
+  TLorentzVector tlv;
+  tlv.SetXYZM(in.momentum.x, in.momentum.y, in.momentum.z, in.mass);
+  return tlv.P();
+}
+
 
 ROOT::VecOps::RVec<float> getFCCAnalysesComposite_anglethrust(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 								       ROOT::VecOps::RVec<float> thrust){

@@ -198,3 +198,14 @@ TEST_CASE("isPV", "[basics]") {
   REQUIRE(FCCAnalyses::myUtils::isPV(p, index1));
   REQUIRE(!FCCAnalyses::myUtils::isPV(p, index2));
 }
+
+
+TEST_CASE("get_p", "[basics]") {
+  edm4hep::ReconstructedParticleData p;
+  p.momentum.x = 1.;
+  p.momentum.y = 2.;
+  p.momentum.z = 2.;
+  p.mass = -1e3;
+
+  REQUIRE(FCCAnalyses::myUtils::get_p(p) == Catch::Approx(3.));
+}

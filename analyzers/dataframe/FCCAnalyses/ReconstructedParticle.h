@@ -85,9 +85,6 @@ namespace ReconstructedParticle{
   ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// return the momenta of the input ReconstructedParticles
-  float get_p(edm4hep::ReconstructedParticleData in);
-
-  /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_px(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// return the momenta of the input ReconstructedParticles

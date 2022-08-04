@@ -415,6 +415,9 @@ namespace myUtils{
   ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>> in,
 				   int index);
 
+  /// return the momenta of the input ReconstructedParticles
+  float get_p(edm4hep::ReconstructedParticleData in);
+
   ROOT::VecOps::RVec<edm4hep::TrackState> get_truetrack(ROOT::VecOps::RVec<int> in,
 							ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,
 							ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
