@@ -1,5 +1,5 @@
 #include "FCCAnalyses/JetFlavourUtils.h"
-#include "FCCAnalyses/WeaverInterface.h"
+#include "ONNXRuntime/WeaverInterface.h"
 
 #include <memory>
 
