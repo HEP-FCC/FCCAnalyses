@@ -109,7 +109,7 @@ endif()
 
 #--- add CMake infrastructure --------------------------------------------------
 include(cmake/FCCAnalysesCreateConfig.cmake)
-
+include(cmake/FCCAnalysesFunctions.cmake)
 
 file(COPY bin/fccanalysis
   DESTINATION ${CMAKE_BINARY_DIR}
