@@ -4,9 +4,9 @@ if(WITH_ONNX STREQUAL OFF)
 endif()
 find_package(ONNXRuntime)
 find_package(nlohmann_json)
+find_package(ROOT COMPONENTS ROOTVecOps)
 if(ONNXRuntime_FOUND AND nlohmann_json_FOUND)
-  message(STATUS "includes-------------------------- dataframe onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
-  message(STATUS "includes-------------------------- dataframe nlohmann_json")
+  message(STATUS "includes-------------------------- onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
 elseif(WITH_ONNX STREQUAL AUTO)
   message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found. Skipping ONNX-dependent analyzers.")
   set(WITH_ONNX OFF)
@@ -15,10 +15,19 @@ else()
 endif()
 
 file(GLOB sources src/*.cc)
+file(GLOB headers *.h)
 
-list(APPEND addons_sources ${sources})
-list(APPEND addons_headers ONNXRuntime.h WeaverInterface.h ${ONNXRUNTIME_INCLUDE_DIRS})
-list(APPEND addons_libs ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
+add_library(ONNXRuntime SHARED ${sources} ${headers})
+target_link_libraries(ONNXRuntime PUBLIC ROOT::ROOTVecOps ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
+target_include_directories(ONNXRuntime PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons> ${ONNXRUNTIME_INCLUDE_DIRS})
+list(APPEND ADDONS_LIBRARIES ONNXRuntime)
+set(ADDONS_LIBRARIES ${ADDONS_LIBRARIES} PARENT_SCOPE)
+install(TARGETS ONNXRuntime
+  EXPORT FCCAnalysesTargets
+  RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
+  LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
+  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ONNXRuntime"
+  COMPONENT onnxruntime)
 
 # add all unit tests
 if(FALSE)
