@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659995359542,
+  "lastUpdate": 1659995361392,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -4989,6 +4989,45 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99d3004f65c05714fd5b431d3a80c28beae9ac5d",
+          "message": "Update .zenodo.json",
+          "timestamp": "2022-08-08T23:40:02+02:00",
+          "tree_id": "0eae250e0a9417d7ce01d88f9d1d2fadd61ba46e",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/99d3004f65c05714fd5b431d3a80c28beae9ac5d"
+        },
+        "date": 1659995360729,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.96060148647027,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.394764121646277,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 7.1887101896609025,
+            "unit": "Evt/s"
           }
         ]
       }
