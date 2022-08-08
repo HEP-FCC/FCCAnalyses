@@ -29,7 +29,7 @@ install(TARGETS ONNXRuntime
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
   PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ONNXRuntime"
   COMPONENT onnxruntime)
-
+if(BUILD_TESTING)
 find_catch_instance()
 if(Catch2_FOUND)
   # add all unit tests
@@ -47,3 +47,4 @@ endif()
 
 # add all integration tests
 add_integration_test("examples/FCCee/test/weaver_inference.py")
+endif()
