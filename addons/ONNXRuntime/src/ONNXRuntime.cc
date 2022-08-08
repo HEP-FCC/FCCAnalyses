@@ -7,6 +7,8 @@
 
 ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::string>& input_names)
     : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")), input_names_(input_names) {
+  if (model_path.empty())
+    throw std::runtime_error("Path to ONNX model cannot be empty!");
   Ort::SessionOptions options;
   options.SetIntraOpNumThreads(1);
   auto model = model_path;  // fixes a poor Ort experimental API
