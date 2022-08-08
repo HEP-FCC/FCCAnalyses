@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['r_0',['R',['../classcontrib_1_1_valencia_brief_jet.html#af5f006f4c085d06ec28407b8f8dd841e',1,'contrib::ValenciaBriefJet']]],
-  ['r_5f_1',['R_',['../classcontrib_1_1_valencia_info.html#a79d6105f376cedbb2e53183a9c26c61c',1,'contrib::ValenciaInfo']]],
-  ['reco_5fchi2_2',['reco_chi2',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a7808a3d5dd0616b5a2bda7bb2398bd2f',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]],
-  ['reco_5find_3',['reco_ind',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a1907c2f10ca2653d57187401e2cf97aa',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]],
-  ['replace_5finf_5fvalue_4',['replace_inf_value',['../struct_f_c_c_analyses_1_1_weaver_interface_1_1_preprocess_params_1_1_var_info.html#a193f81c12dc888cbcc0d93574221b092',1,'FCCAnalyses::WeaverInterface::PreprocessParams::VarInfo']]]
+  ['vertex_0',['vertex',['../struct_f_c_c_analyses_1_1my_utils_1_1_f_c_c_analyses_composite.html#a71cf10d8ab6fd7c4f622e9247127f6cc',1,'FCCAnalyses::myUtils::FCCAnalysesComposite::vertex()'],['../struct_f_c_c_analyses_1_1my_utils_1_1_f_c_c_analyses_composite2.html#a662c429d8cf5332aa9267c2bef9a41d7',1,'FCCAnalyses::myUtils::FCCAnalysesComposite2::vertex()'],['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#af6ba4d82554b370457f55a3d26129cd7',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex::vertex()'],['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex_m_c.html#ada7977da53ca1a360e7c7a76a66d9c32',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertexMC::vertex()']]]
 ];

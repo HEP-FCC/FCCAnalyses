@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['onnx_5f_0',['onnx_',['../class_f_c_c_analyses_1_1_weaver_interface.html#a6742eef172e9019ff6fa6c7be77dced4',1,'FCCAnalyses::WeaverInterface']]],
-  ['output_5fnode_5fdims_5f_1',['output_node_dims_',['../class_o_n_n_x_runtime.html#af39f5339415ad28552f5745ff8db6160',1,'ONNXRuntime']]],
-  ['output_5fnode_5fstrings_5f_2',['output_node_strings_',['../class_o_n_n_x_runtime.html#a27b04191237164cc11bde35518b39229',1,'ONNXRuntime']]]
+  ['r_0',['R',['../classcontrib_1_1_valencia_brief_jet.html#af5f006f4c085d06ec28407b8f8dd841e',1,'contrib::ValenciaBriefJet']]],
+  ['r_5f_1',['R_',['../classcontrib_1_1_valencia_info.html#a79d6105f376cedbb2e53183a9c26c61c',1,'contrib::ValenciaInfo']]],
+  ['reco_5fchi2_2',['reco_chi2',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a7808a3d5dd0616b5a2bda7bb2398bd2f',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]],
+  ['reco_5find_3',['reco_ind',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a1907c2f10ca2653d57187401e2cf97aa',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]]
 ];

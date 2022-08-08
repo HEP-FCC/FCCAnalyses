@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['weaverinterface_0',['WeaverInterface',['../class_f_c_c_analyses_1_1_weaver_interface.html',1,'FCCAnalyses::WeaverInterface'],['../class_f_c_c_analyses_1_1_weaver_interface.html#ad4bc566929949bb71d1e3ef2e8cb4a61',1,'FCCAnalyses::WeaverInterface::WeaverInterface()']]],
-  ['weaverinterface_2ecc_1',['WeaverInterface.cc',['../_weaver_interface_8cc.html',1,'']]],
-  ['weaverinterface_2eh_2',['WeaverInterface.h',['../_weaver_interface_8h.html',1,'']]]
+  ['xptopar_0',['XPtoPar',['../namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#abb28e674ab8a7c1662b03ae7e6c67d5b',1,'FCCAnalyses::VertexFitterSimple']]]
 ];

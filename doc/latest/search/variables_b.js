@@ -1,10 +1,4 @@
 var searchData=
 [
-  ['name_0',['name',['../struct_f_c_c_analyses_1_1_weaver_interface_1_1_preprocess_params.html#a4d3ac7b301177926df90ea737260eba7',1,'FCCAnalyses::WeaverInterface::PreprocessParams']]],
-  ['nmax_5fdmerge_1',['Nmax_dmerge',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a8cb30991db6727e0c230bbe84b7dacfe',1,'FCCAnalyses::JetClusteringUtils']]],
-  ['norm_5ffactor_2',['norm_factor',['../struct_f_c_c_analyses_1_1_weaver_interface_1_1_preprocess_params_1_1_var_info.html#af7c87b25829b524f8b664e679c16e474',1,'FCCAnalyses::WeaverInterface::PreprocessParams::VarInfo']]],
-  ['ntracks_3',['ntracks',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#ab2ce764eaa643d7222ed81101b3891a2',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]],
-  ['nx_4',['nx',['../classcontrib_1_1_valencia_brief_jet.html#a80492c2e275cfb3cd9d8fb8345837101',1,'contrib::ValenciaBriefJet']]],
-  ['ny_5',['ny',['../classcontrib_1_1_valencia_brief_jet.html#a5c634eeb78b93fae40473b0afe24ff77',1,'contrib::ValenciaBriefJet']]],
-  ['nz_6',['nz',['../classcontrib_1_1_valencia_brief_jet.html#a1f96ef1f3b4623a31940911b17f25b7d',1,'contrib::ValenciaBriefJet']]]
+  ['particle_0',['particle',['../struct_f_c_c_analyses_1_1my_utils_1_1_f_c_c_analyses_composite.html#a6990407739c9fe0c066573c80b806f86',1,'FCCAnalyses::myUtils::FCCAnalysesComposite::particle()'],['../struct_f_c_c_analyses_1_1my_utils_1_1_f_c_c_analyses_composite2.html#a85254f1a3c9b18ebc2313589173df619',1,'FCCAnalyses::myUtils::FCCAnalysesComposite2::particle()']]]
 ];
