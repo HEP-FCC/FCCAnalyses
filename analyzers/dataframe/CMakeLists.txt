@@ -4,19 +4,10 @@
 find_package(Vdt)
 
 
-message(STATUS "includes-------------------------- dataframe awkward:     ${AWKWARD_INCLUDE}")
-message(STATUS "includes-------------------------- dataframe edm4hep:     ${EDM4HEP_INCLUDE_DIRS}")
-message(STATUS "includes-------------------------- dataframe podio  :     ${podio_INCLUDE_DIR}")
-message(STATUS "includes-------------------------- dataframe fastjet:     ${FASTJET_INCLUDE_DIRS}")
-
-set(EXTRA_INCLUDE_DIRS)
-set(EXTRA_LIBRARIES)
-
-if(WITH_ONNX)
-    list(APPEND EXTRA_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIRS})
-    list(APPEND EXTRA_LIBRARIES ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
-    include_directories(${ONNXRUNTIME_INCLUDE_DIRS})
-endif()
+message(STATUS "includes-------------------------- dataframe awkward: ${AWKWARD_INCLUDE}")
+message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
+message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
+message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_INCLUDE_DIRS}")
 
 
 file(GLOB sources src/*.cc)
@@ -33,10 +24,6 @@ endif()
 if(NOT WITH_ONNX)
   list(FILTER headers EXCLUDE REGEX "JetFlavourUtils.h")
   list(FILTER sources EXCLUDE REGEX "JetFlavourUtils.cc")
-  list(FILTER headers EXCLUDE REGEX "ONNXRuntime.h")
-  list(FILTER sources EXCLUDE REGEX "ONNXRuntime.cc")
-  list(FILTER headers EXCLUDE REGEX "WeaverInterface.h")
-  list(FILTER sources EXCLUDE REGEX "WeaverInterface.cc")
 endif()
 
 if(NOT WITH_ACTS)
@@ -53,11 +40,11 @@ message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
 add_library(FCCAnalyses SHARED  ${sources} ${headers} )
 target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+                           $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                            $<INSTALL_INTERFACE:include>
                            ${FASTJET_INCLUDE_DIR}
                            ${VDT_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
-                           ${EXTRA_INCLUDE_DIRS}
                            )
 
 
@@ -76,7 +63,7 @@ target_link_libraries(FCCAnalyses
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
                       ${LIBDL}
-                      ${EXTRA_LIBRARIES}
+                      ${ADDONS_LIBRARIES}
                       gfortran # todo: why necessary?
                       )
 

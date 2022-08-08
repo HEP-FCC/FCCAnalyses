@@ -76,21 +76,6 @@ if(WITH_ACTS)
 endif()
 
 
-if(WITH_ONNX)
-  find_package(ONNXRuntime)
-  find_package(nlohmann_json)
-  if(ONNXRuntime_FOUND AND nlohmann_json_FOUND)
-    message(STATUS "includes-------------------------- dataframe onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
-    message(STATUS "includes-------------------------- dataframe nlohmann_json")
-  elseif(WITH_ONNX STREQUAL AUTO)
-    message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found. Skipping ONNX-dependent analyzers.")
-    set(WITH_ONNX OFF)
-  else()
-    message(FATAL_ERROR "Failed to locate ONNXRuntime and/or nlohmann's JSON library!")
-  endif()
-endif()
-
-
 if(WITH_DD4HEP)
   find_package(DD4hep)
   if(DD4hep_FOUND)
@@ -124,7 +109,7 @@ endif()
 
 #--- add CMake infrastructure --------------------------------------------------
 include(cmake/FCCAnalysesCreateConfig.cmake)
-
+include(cmake/FCCAnalysesFunctions.cmake)
 
 file(COPY bin/fccanalysis
   DESTINATION ${CMAKE_BINARY_DIR}
@@ -156,8 +141,9 @@ message(STATUS "Library---------------------- main: ${AWKWARD_LIBRARIES}")
 
 #--- Descend into subdirectories ----------------------------------------------
 
+set(ADDONS_LIBRARIES CACHE STRING "List of external libraries the RDF utilities will be linked against")
+add_subdirectory(addons)
 add_subdirectory(analyzers/dataframe)
-
 
 if(FCCANALYSES_CASESTUDIES)
   add_subdirectory(analyzers/dataframe/case-studies FCCANALYSES_CASESTUDIES)

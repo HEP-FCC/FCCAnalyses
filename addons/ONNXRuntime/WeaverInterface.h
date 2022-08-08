@@ -1,7 +1,7 @@
-#ifndef FCCAnalyses_WeaverInterface_h
-#define FCCAnalyses_WeaverInterface_h
+#ifndef ONNXRuntime_WeaverInterface_h
+#define ONNXRuntime_WeaverInterface_h
 
-#include "FCCAnalyses/ONNXRuntime.h"
+#include "ONNXRuntime/ONNXRuntime.h"
 #include "ROOT/RVec.hxx"
 
 namespace FCCAnalyses {
