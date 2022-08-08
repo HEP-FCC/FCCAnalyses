@@ -58,3 +58,37 @@ function(add_integration_test_2 _testname)
     TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
     )
 endfunction()
+
+macro(fccanalyses_addon_build _name)
+  set(options)
+  set(one_val)
+  set(multi_vals SOURCES EXT_LIBS EXT_HEADERS INSTALL_COMPONENT)
+  cmake_parse_arguments(ARG "${options}" "${one_val}" "${multi_vals}" ${ARGN})
+  if(ARG_SOURCES)
+    set(sources)
+    foreach(_s ${ARG_SOURCES})
+      file(GLOB s "${_s}")
+      list(APPEND sources ${s})
+    endforeach()
+    add_library(${_name} SHARED ${sources})
+    if(ARG_EXT_LIBS)
+      target_link_libraries(${_name} ${ARG_EXT_LIBS})
+    endif()
+    if(ARG_EXT_HEADERS)
+      target_include_directories(${_name} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons> ${ARG_EXT_HEADERS})
+    endif()
+  else() # interfacing library (only includes)
+    add_library(${_name} INTERFACE)
+  endif()
+  if(ARG_INSTALL_COMPONENT)
+    list(APPEND ADDONS_LIBRARIES ${_name})
+    set(ADDONS_LIBRARIES ${ADDONS_LIBRARIES} PARENT_SCOPE)
+    #----- installation rules
+    install(TARGETS ${_name}
+            EXPORT FCCAnalysesTargets
+            RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
+            LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
+            PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/${_name}"
+            COMPONENT ${ARG_INSTALL_COMPONENT})
+  endif()
+endmacro()

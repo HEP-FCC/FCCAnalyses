@@ -2,9 +2,9 @@ if(WITH_ONNX STREQUAL OFF)
   return()
 endif()
 
-find_package(ONNXRuntime)
-find_package(nlohmann_json)
-find_package(ROOT COMPONENTS ROOTVecOps)
+find_package(ONNXRuntime QUIET)
+find_package(nlohmann_json QUIET)
+find_package(ROOT COMPONENTS ROOTVecOps QUIET)
 if(ONNXRuntime_FOUND AND nlohmann_json_FOUND)
   message(STATUS "includes-------------------------- onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
 elseif(WITH_ONNX STREQUAL AUTO)
@@ -18,17 +18,11 @@ endif()
 file(GLOB sources src/*.cc)
 file(GLOB headers *.h)
 
-add_library(ONNXRuntime SHARED ${sources} ${headers})
-target_link_libraries(ONNXRuntime PUBLIC ROOT::ROOTVecOps ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json)
-target_include_directories(ONNXRuntime PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons> ${ONNXRUNTIME_INCLUDE_DIRS})
-list(APPEND ADDONS_LIBRARIES ONNXRuntime)
-set(ADDONS_LIBRARIES ${ADDONS_LIBRARIES} PARENT_SCOPE)
-install(TARGETS ONNXRuntime
-  EXPORT FCCAnalysesTargets
-  RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
-  LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ONNXRuntime"
-  COMPONENT onnxruntime)
+fccanalyses_addon_build(ONNXRuntime
+                        SOURCES ${sources} ${headers}
+                        EXT_HEADERS ${ONNXRUNTIME_INCLUDE_DIRS}
+                        EXT_LIBS ROOT::ROOTVecOps ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json
+                        INSTALL_COMPONENT onnxruntime)
 
 if(BUILD_TESTING)
   find_catch_instance()
