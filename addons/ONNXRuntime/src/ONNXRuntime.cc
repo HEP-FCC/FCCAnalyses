@@ -15,24 +15,20 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
   session_ = std::make_unique<Ort::Experimental::Session>(*env_, model, options);
 
   // get input names and shapes
-  const auto num_input_nodes = session_->GetInputCount();
-  input_node_strings_.resize(num_input_nodes);
+  input_node_strings_ = session_->GetInputNames();
   input_node_dims_.clear();
-  for (size_t i = 0; i < num_input_nodes; ++i) {
-    const auto input_name = session_->GetInputNames()[i];  // copy is required
-    input_node_strings_[i] = input_name;
+  for (size_t i = 0; i < session_->GetInputCount(); ++i) {
+    const auto input_name = input_node_strings_.at(i);
     // get input shapes
     input_node_dims_[input_name] = session_->GetInputShapes()[i];
   }
 
   // get output names and shapes
-  const auto num_output_nodes = session_->GetOutputCount();
-  output_node_strings_.resize(num_output_nodes);
+  output_node_strings_ = session_->GetOutputNames();
   output_node_dims_.clear();
-  for (size_t i = 0; i < num_output_nodes; i++) {
+  for (size_t i = 0; i < session_->GetOutputCount(); ++i) {
     // get output node names
-    const auto& output_name = session_->GetOutputNames()[i];
-    output_node_strings_[i] = output_name;
+    const auto output_name = output_node_strings_.at(i);
     // get output node types
     output_node_dims_[output_name] = session_->GetOutputShapes()[i];
     // the 0th dim depends on the batch size
