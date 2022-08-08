@@ -29,22 +29,22 @@ install(TARGETS ONNXRuntime
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
   PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ONNXRuntime"
   COMPONENT onnxruntime)
+
 if(BUILD_TESTING)
-find_catch_instance()
-if(Catch2_FOUND)
-  # add all unit tests
-  add_executable(onnxruntime-unittest test/onnxtest.cpp)
-  target_link_libraries(onnxruntime-unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain ONNXRuntime)
-  target_include_directories(onnxruntime-unittest PUBLIC ${VDT_INCLUDE_DIR} ${ONNXRUNTIME_INCLUDE_DIRS})
-  target_compile_definitions(onnxruntime-unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")
-  include(Catch)
-  catch_discover_tests(onnxruntime-unittest
+  find_catch_instance()
+  if(Catch2_FOUND)
+    # add all unit tests
+    add_executable(onnxruntime-unittest test/onnxtest.cpp)
+    target_link_libraries(onnxruntime-unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain ONNXRuntime)
+    target_include_directories(onnxruntime-unittest PUBLIC ${VDT_INCLUDE_DIR} ${ONNXRUNTIME_INCLUDE_DIRS})
+    target_compile_definitions(onnxruntime-unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")
+    include(Catch)
+    catch_discover_tests(onnxruntime-unittest
       WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
       TEST_PREFIX "UT_" # make it possible to filter easily with -R ^UT
       TEST_SPEC ${filter_tests} # discover only tests that are known to not fail
-  )
-endif()
-
-# add all integration tests
-add_integration_test("examples/FCCee/test/weaver_inference.py")
+    )
+  endif()
+  # add all integration tests
+  add_integration_test("examples/FCCee/test/weaver_inference.py")
 endif()
