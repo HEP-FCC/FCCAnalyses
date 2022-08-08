@@ -11,7 +11,7 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
     throw std::runtime_error("Path to ONNX model cannot be empty!");
   Ort::SessionOptions options;
   options.SetIntraOpNumThreads(1);
-  auto model = model_path;  // fixes a poor Ort experimental API
+  std::string model{model_path};  // fixes a poor Ort experimental API
   session_ = std::make_unique<Ort::Experimental::Session>(*env_, model, options);
 
   // get input names and shapes
