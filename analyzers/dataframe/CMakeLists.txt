@@ -7,7 +7,6 @@ find_package(Vdt)
 message(STATUS "includes-------------------------- dataframe awkward: ${AWKWARD_INCLUDE}")
 message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
 message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
-message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_INCLUDE_DIRS}")
 
 
 file(GLOB sources src/*.cc)
@@ -42,7 +41,6 @@ target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                            $<INSTALL_INTERFACE:include>
-                           ${FASTJET_INCLUDE_DIR}
                            ${VDT_INCLUDE_DIR}
                            ${AWKWARD_INCLUDE}
                            )
@@ -57,8 +55,6 @@ target_link_libraries(FCCAnalyses
                       EDM4HEP::edm4hep
                       EDM4HEP::edm4hepDict
                       podio::podio
-                      ${FASTJET_LIBRARY}
-                      ${FASTJET_LIBRARY_DIRS}/libfastjetplugins.so
                       #${AWKWARD_LIBRARIES}
                       ${LIBAWKWARD}
                       ${CPU-KERNELS}
