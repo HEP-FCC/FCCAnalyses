@@ -1,5 +1,6 @@
 #include "FCCAnalyses/JetClustering.h"
-#include "FCCAnalyses/ExternalRecombiner.h"
+
+#include "FastJet/ExternalRecombiner.h"
 
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/PseudoJet.hh"
