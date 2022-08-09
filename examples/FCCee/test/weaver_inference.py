@@ -12,7 +12,7 @@ prodTag     = "FCCee/spring2021/IDEA/"
 outputDir   = "."
 
 #Optional
-nCPUS       = 1
+nCPUS       = 8
 runBatch    = False
 #batchQueue = "longlunch"
 #compGroup = "group_u_FCC.local_gen"
