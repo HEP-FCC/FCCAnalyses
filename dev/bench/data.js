@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1660036068385,
+  "lastUpdate": 1660036069874,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -5241,6 +5241,45 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "41b57acae99287b0736f1311821102f9422c7313",
+          "message": "Merge pull request #195 from forthommel/addons-fastjet\n\nMoved ValenciaPlugin/ExternalRecombiner to a FastJet add-on",
+          "timestamp": "2022-08-09T11:00:25+02:00",
+          "tree_id": "c37f2fa9dce21d1ad02146da7944db84d05c0f3f",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/41b57acae99287b0736f1311821102f9422c7313"
+        },
+        "date": 1660036069435,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.734004332785009,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.663975636720236,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 8.953794425874957,
+            "unit": "Evt/s"
           }
         ]
       }
