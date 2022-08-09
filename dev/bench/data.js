@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1660029207359,
+  "lastUpdate": 1660029208690,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -5073,6 +5073,45 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lforthomme@protonmail.com",
+            "name": "Laurent Forthomme",
+            "username": "forthommel"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3845bab0eb7e6b7266c2b7b5ed6c14088d56ed82",
+          "message": "Fix CI crashes in ONNXRuntime/Weaver integration test (#196)\n\n* Exception thrown if ONNX model path is left empty\r\n\r\n* Explicitely setting model path as string instead of auto\r\n\r\n* Using string copies wherever possibly necessary\r\n\r\n* Dropped FCCAnalyses namespace from WeaverInterface object",
+          "timestamp": "2022-08-09T08:59:38+02:00",
+          "tree_id": "4731b6c1afea7fe218edaba87f24c029204936bd",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/3845bab0eb7e6b7266c2b7b5ed6c14088d56ed82"
+        },
+        "date": 1660029208288,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.906180717473573,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.674850749760254,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 9.12999241769252,
+            "unit": "Evt/s"
           }
         ]
       }
