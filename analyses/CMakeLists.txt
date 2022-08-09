@@ -1,17 +1,20 @@
 macro(browse_directory directory)
+  #--- recursively browse the directory structure to find a package compatible with an analysis
   get_subdirectories(SUBDIRS ${directory})
   foreach(_dir ${SUBDIRS})
     get_subdirectories(ANALYSIS_DIR_STRUCT ${directory}/${_dir})
     if(("src" IN_LIST ANALYSIS_DIR_STRUCT) AND ("include" IN_LIST ANALYSIS_DIR_STRUCT))
+      file(GLOB headers "${_dir}/include/*.h")
       file(GLOB sources "${_dir}/src/*.cc")
-      file(GLOB headers RELATIVE ${CMAKE_CURRENT_LIST_DIR} "${_dir}/include/*.h")
-      file(GLOB classes RELATIVE ${CMAKE_CURRENT_LIST_DIR} "${_dir}/src/classes.h")
-      file(GLOB xml "${_dir}/src/*.xml")
+      file(GLOB classes "${_dir}/src/classes.h")
+      file(GLOB reflex_sel "${_dir}/src/classes.xml")
       set(lib_name "FCCAnalysis_${_dir}")
+      #--- generate the ROOT dictionary using a REFLEX selection
       set(CMAKE_ROOTTEST_NOROOTMAP OFF)
       REFLEX_GENERATE_DICTIONARY(lib${lib_name} ${headers} ${classes}
-                                 SELECTION ${xml})
-      add_library(${lib_name} SHARED ${sources} ${headers} ${classes} lib${lib_name}.cxx)
+                                 SELECTION ${reflex_sel})
+      #--- build the analysis library (linked against FCCAnalyses)
+      add_library(${lib_name} SHARED ${sources} ${headers} lib${lib_name}.cxx)
       target_include_directories(${lib_name} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                                                     $<INSTALL_INTERFACE:include>)
@@ -33,9 +36,11 @@ macro(browse_directory directory)
       endif()
       message(STATUS "analysis-------------------------- ${_dir}")
     else()
+      #--- structure was not found; go one level deeper
       browse_directory(${_dir})
     endif()
   endforeach()
 endmacro()
 
+#--- start browsing for packages from this directory
 browse_directory(${CMAKE_CURRENT_SOURCE_DIR})
