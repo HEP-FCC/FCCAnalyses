@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['minimize_5fsphericity_0',['minimize_sphericity',['../struct_f_c_c_analyses_1_1_algorithms_1_1minimize__sphericity.html',1,'FCCAnalyses::Algorithms']]],
-  ['minimize_5fthrust_1',['minimize_thrust',['../struct_f_c_c_analyses_1_1_algorithms_1_1minimize__thrust.html',1,'FCCAnalyses::Algorithms']]]
+  ['recoilbuilder_0',['recoilBuilder',['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1recoil_builder.html',1,'FCCAnalyses::ReconstructedParticle']]],
+  ['resonancebuilder_1',['resonanceBuilder',['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1resonance_builder.html',1,'FCCAnalyses::ReconstructedParticle']]]
 ];
