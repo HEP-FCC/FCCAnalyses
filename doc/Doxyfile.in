@@ -744,6 +744,7 @@ WARN_LOGFILE           = @CMAKE_BINARY_DIR@/doxygen-warnings.log
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = @CMAKE_SOURCE_DIR@/analyzers/dataframe
+INPUT                 += @CMAKE_SOURCE_DIR@/addons
 INPUT                 += @CMAKE_SOURCE_DIR@/README.md
 USE_MDFILE_AS_MAINPAGE = @CMAKE_SOURCE_DIR@/README.md
 
