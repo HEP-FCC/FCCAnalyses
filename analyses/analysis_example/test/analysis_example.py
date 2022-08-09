@@ -21,8 +21,9 @@ testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEve
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
     import ROOT
-    ROOT.gSystem.Load("libanalysis_example")
-    ROOT.analysis_example.dummy_analysis()
+    print ("----> Load cxx analyzers from libanalysis_example... ",)
+    ROOT.gSystem.Load("libFCCAnalysis_analysis_example")
+    _dum = ROOT.analysis_example.dictionary
 
     #__________________________________________________________
     #Mandatory: analysers function to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
