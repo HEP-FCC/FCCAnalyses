@@ -1,3 +1,9 @@
+def setup_setup_parser(parser):
+    publicOptions = parser.add_argument_group('User options')
+    publicOptions.add_argument('name', help='name of the analysis to be built')
+    publicOptions.add_argument('--script', help='name of the main analysis utilitary script', default='DummyAnalysis')
+    publicOptions.add_argument('--author', help="author's \"name <email@address>\" (will use git-config if not specified")
+
 def setup_run_parser(parser):
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument("pathToAnalysisScript", help="path to analysis script")
