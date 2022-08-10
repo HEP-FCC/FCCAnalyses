@@ -14,7 +14,7 @@ def header_tmpl(filename: str):
 """
 
 source_tmpl = header_tmpl('@@@SCRIPT_NAME@@@.cc') + """
-#include "@@@ANALYSIS_NAME@@@/include/@@@SCRIPT_NAME@@@.h"
+#include "@@@SCRIPT_NAME@@@.h"
 #include <iostream>
 
 using namespace std;
@@ -56,6 +56,22 @@ xml_tmpl = """<lcgdict>
 
 cmake_tmpl = """cmake_minimum_required(VERSION 3.16.9)
 project(@@@ANALYSIS_NAME@@@ CXX)
+find_package(ROOT COMPONENTS ROOTVecOps ROOTDataFrame REQUIRED)
+find_package(EDM4HEP REQUIRED)
+#--- Set a better default for installation directory---------------------------
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}/install" CACHE PATH "default install path" FORCE)
+endif()
+#--- Use GNU-style hierarchy for installing build products
+include(GNUInstallDirs)
+#--- Offer the user the choice of overriding the installation directories
+set(FCCANALYSES_DIR "@@@FCCANALYSES_PATH@@@" CACHE PATH
+    "Installation directory for FCCAnalyses framework")
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
+set(INSTALL_INCLUDE_DIR include CACHE PATH
+    "Installation directory for header files")
+#--- Find all paths to '@@@ANALYSIS_NAME@@@' library pieces
 file(GLOB headers "include/*.h")
 file(GLOB sources "src/*.cc")
 file(GLOB classes "src/classes.h")
@@ -66,11 +82,16 @@ REFLEX_GENERATE_DICTIONARY(lib@@@ANALYSIS_NAME@@@ ${headers} ${classes}
                            SELECTION ${reflex_sel})
 #--- build the analysis library (linked against FCCAnalyses)
 add_library(@@@ANALYSIS_NAME@@@ SHARED ${sources} ${headers} lib@@@ANALYSIS_NAME@@@.cxx)
-target_include_directories(@@@ANALYSIS_NAME@@@
-                           PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-                                  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
-                                  $<INSTALL_INTERFACE:include>)
-target_link_libraries(@@@ANALYSIS_NAME@@@ PUBLIC FCCAnalyses)
+target_include_directories(@@@ANALYSIS_NAME@@@ PUBLIC
+                           ${FCCANALYSES_DIR} ${FCCANALYSES_DIR}/addons
+                           include $<INSTALL_INTERFACE:include>)
+target_link_directories(@@@ANALYSIS_NAME@@@ PUBLIC
+                        ${FCCANALYSES_DIR} ${FCCANALYSES_DIR}/install/lib)
+target_link_libraries(@@@ANALYSIS_NAME@@@ PUBLIC
+                      FCCAnalyses
+                      EDM4HEP::edm4hep
+                      EDM4HEP::edm4hepDict
+                      ROOT::ROOTVecOps)
 set_target_properties(@@@ANALYSIS_NAME@@@ PROPERTIES PUBLIC_HEADER "${headers}")
 install(TARGETS @@@ANALYSIS_NAME@@@
         EXPORT @@@ANALYSIS_NAME@@@Targets
@@ -100,7 +121,7 @@ def replace_all(input: str, repl) -> str:
         output = output.replace(a, b)
     return output
 
-def setup_analysis(name: str, author: str='', script: str='', standalone: bool=False):
+def setup_analysis(name: str, author: str='', script: str='', standalone: bool=False, output_dir: str=''):
     if not author:
         author_name, author_email = find_author()
     else:
@@ -110,16 +131,21 @@ def setup_analysis(name: str, author: str='', script: str='', standalone: bool=F
         else:
             author_name, author_email = author_list
             author_email = author_email.replace('<', '').replace('>', '')
+    from subprocess import getoutput
+    fccanalyses_dir = getoutput('git rev-parse --show-toplevel')
     replacement_dict = {
         '@@@ANALYSIS_NAME@@@': name,
         '@@@SCRIPT_NAME@@@': script,
         '@@@AUTHOR_NAME@@@': author_name,
-        '@@@AUTHOR_EMAIL@@@': author_email
+        '@@@AUTHOR_EMAIL@@@': author_email,
+        '@@@FCCANALYSES_PATH@@@': fccanalyses_dir
     }
 
     from os import mkdir
-    from subprocess import getoutput
-    path = getoutput('git rev-parse --show-toplevel') + '/analyses/' + name
+    if not output_dir:
+        path = fccanalyses_dir + '/analyses/' + name
+    else:
+        path = output_dir
     for p in [path, path + '/src', path + '/include']:
         try:
             mkdir(p)
