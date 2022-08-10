@@ -120,12 +120,12 @@ def setup_analysis(name: str, author: str='', script: str='', standalone: bool=F
     from os import mkdir
     from subprocess import getoutput
     path = getoutput('git rev-parse --show-toplevel') + '/analyses/' + name
-    try:
-        mkdir(path)
-        mkdir(path + '/src')
-        mkdir(path + '/include')
-    except FileExistsError:
-        pass
+    for p in [path, path + '/src', path + '/include']:
+        try:
+            mkdir(p)
+        except FileExistsError:
+            print('Warning: FCCAnalysis space "' + name + ' already exists.')
+            pass
     try:
         with open(path + '/src/' + script + '.cc', 'w') as f:
             f.write(replace_all(source_tmpl, replacement_dict))
