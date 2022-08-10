@@ -54,6 +54,41 @@ xml_tmpl = """<lcgdict>
   <class name="@@@ANALYSIS_NAME@@@::dictionary"/>
 </lcgdict>"""
 
+cmake_tmpl = """cmake_minimum_required(VERSION 3.16.9)
+project(@@@ANALYSIS_NAME@@@ CXX)
+file(GLOB headers "include/*.h")
+file(GLOB sources "src/*.cc")
+file(GLOB classes "src/classes.h")
+file(GLOB reflex_sel "src/classes.xml")
+#--- generate the ROOT dictionary using a REFLEX selection
+set(CMAKE_ROOTTEST_NOROOTMAP OFF)
+REFLEX_GENERATE_DICTIONARY(lib@@@ANALYSIS_NAME@@@ ${headers} ${classes}
+                           SELECTION ${reflex_sel})
+#--- build the analysis library (linked against FCCAnalyses)
+add_library(@@@ANALYSIS_NAME@@@ SHARED ${sources} ${headers} lib@@@ANALYSIS_NAME@@@.cxx)
+target_include_directories(@@@ANALYSIS_NAME@@@
+                           PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+                                  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
+                                  $<INSTALL_INTERFACE:include>)
+target_link_libraries(@@@ANALYSIS_NAME@@@ PUBLIC FCCAnalyses)
+set_target_properties(@@@ANALYSIS_NAME@@@ PROPERTIES PUBLIC_HEADER "${headers}")
+install(TARGETS @@@ANALYSIS_NAME@@@
+        EXPORT @@@ANALYSIS_NAME@@@Targets
+        RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
+        LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
+        PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/@@@ANALYSIS_NAME@@@"
+        COMPONENT analyses)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib@@@ANALYSIS_NAME@@@.rootmap"
+        DESTINATION "${INSTALL_LIB_DIR}"
+        COMPONENT analyses)
+if(${ROOT_VERSION} GREATER 6)
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib@@@ANALYSIS_NAME@@@_rdict.pcm"
+          DESTINATION "${INSTALL_LIB_DIR}"
+          COMPONENT analyses)
+endif()
+message(STATUS "Built standalone analyser package: @@@ANALYSIS_NAME@@@")
+"""
+
 def find_author():
     from subprocess import getoutput
     return (getoutput('git config --global --get user.name'),
@@ -65,7 +100,7 @@ def replace_all(input: str, repl) -> str:
         output = output.replace(a, b)
     return output
 
-def setup_analysis(name: str, author: str='', script: str=''):
+def setup_analysis(name: str, author: str='', script: str='', standalone: bool=False):
     if not author:
         author_name, author_email = find_author()
     else:
@@ -100,6 +135,9 @@ def setup_analysis(name: str, author: str='', script: str=''):
             f.write(replace_all(xml_tmpl, replacement_dict))
         with open(path + '/include/' + script + '.h', 'w') as f:
             f.write(replace_all(header_tmpl, replacement_dict))
+        if standalone:
+            with open(path + '/CMakeLists.txt', 'w') as f:
+                f.write(replace_all(cmake_tmpl, replacement_dict))
     except OSError as error:
         print('FCCAnalysis space "' + name + '" creation error:')
         print(error)
