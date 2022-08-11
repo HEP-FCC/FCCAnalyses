@@ -2,7 +2,7 @@ macro(build_analysis dir)
   file(GLOB headers "${dir}/include/*.h")
   file(GLOB sources "${dir}/src/*.cc")
   file(GLOB classes "${dir}/src/classes.h")
-  file(GLOB reflex_sel "${dir}/src/classes.xml")
+  file(GLOB reflex_sel "${dir}/src/classes_def.xml")
   file(GLOB ci_tests "${dir}/test/*.sh")
   set(lib_name "FCCAnalysis_${dir}")
   #--- generate the ROOT dictionary using a REFLEX selection

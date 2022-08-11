@@ -75,7 +75,7 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
 file(GLOB headers "include/*.h")
 file(GLOB sources "src/*.cc")
 file(GLOB classes "src/classes.h")
-file(GLOB reflex_sel "src/classes.xml")
+file(GLOB reflex_sel "src/classes_def.xml")
 #--- generate the ROOT dictionary using a REFLEX selection
 set(CMAKE_ROOTTEST_NOROOTMAP OFF)
 REFLEX_GENERATE_DICTIONARY(lib@@@ANALYSIS_NAME@@@ ${headers} ${classes}
@@ -157,7 +157,7 @@ def setup_analysis(name: str, author: str='', script: str='', standalone: bool=F
             f.write(replace_all(source_tmpl, replacement_dict))
         with open(path + '/src/classes.h', 'w') as f:
             f.write(replace_all(class_tmpl, replacement_dict))
-        with open(path + '/src/classes.xml', 'w') as f:
+        with open(path + '/src/classes_def.xml', 'w') as f:
             f.write(replace_all(xml_tmpl, replacement_dict))
         with open(path + '/include/' + script + '.h', 'w') as f:
             f.write(replace_all(header_tmpl, replacement_dict))

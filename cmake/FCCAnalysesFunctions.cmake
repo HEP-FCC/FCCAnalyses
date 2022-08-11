@@ -62,7 +62,7 @@ endfunction()
 macro(add_generic_test _testname _testcmd)
   add_test(NAME ${_testname}
            COMMAND "${_testcmd}"
-           WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   set_property(TEST ${_testname}
                APPEND PROPERTY ENVIRONMENT
                LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
