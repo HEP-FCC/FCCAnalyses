@@ -1,3 +1,6 @@
+#Optional: List of analysis packages to load in runtime
+analysesList = ['analysis_example']
+
 #Mandatory: List of processes
 processList = {
     'p8_noBES_ee_H_Hbb_ecm125':{'fraction':0.01, 'chunks':1, 'output':'test_out'}
@@ -20,12 +23,6 @@ testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEve
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
-    import ROOT
-    print("----> Load cxx analyzers from analysis_example... ",)
-    ROOT.gSystem.Load("libFCCAnalysis_analysis_example")
-    _dum = ROOT.analysis_example.dictionary
-    ROOT.analysis_example.dummy_analysis()
-
     #__________________________________________________________
     #Mandatory: analysers function to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):

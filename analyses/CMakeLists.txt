@@ -7,17 +7,18 @@ macro(build_analysis dir)
   set(lib_name "FCCAnalysis_${dir}")
   #--- generate the ROOT dictionary using a REFLEX selection
   set(CMAKE_ROOTTEST_NOROOTMAP OFF)
-  REFLEX_GENERATE_DICTIONARY(lib${lib_name} ${headers} ${classes}
+  reflex_generate_dictionary(lib${lib_name} ${headers} ${classes}
                              SELECTION ${reflex_sel})
   #--- build the analysis library (linked against FCCAnalyses)
   add_library(${lib_name} SHARED ${sources} ${headers} lib${lib_name}.cxx)
-  target_include_directories(${lib_name} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  target_include_directories(${lib_name} PUBLIC ${dir}/include
+                                                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                 $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                                                 $<INSTALL_INTERFACE:include>)
   target_link_libraries(${lib_name} PUBLIC FCCAnalyses)
   set_target_properties(${lib_name} PROPERTIES PUBLIC_HEADER "${headers}")
+  message(STATUS "analysis-------------------------- ${dir}: ${lib_name}")
   install(TARGETS ${lib_name}
-          EXPORT ${lib_name}Targets
           RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
           LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
           PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/${dir}"
@@ -30,11 +31,10 @@ macro(build_analysis dir)
             DESTINATION "${INSTALL_LIB_DIR}"
             COMPONENT analyses)
   endif()
-  foreach(_t ${ci_tests})
-    get_filename_component(test_name ${_t} NAME_WE)
-    add_generic_test("${lib_name}_${test_name}" "${_t}")
+  foreach(_test ${ci_tests})
+    get_filename_component(test_name ${_test} NAME_WE)
+    add_generic_test("${lib_name}_${test_name}" ${_test})
   endforeach()
-  message(STATUS "analysis-------------------------- ${dir}: ${lib_name}")
 endmacro()
 
 macro(browse_directory directory)

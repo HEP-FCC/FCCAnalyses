@@ -12,7 +12,7 @@ import datetime
 
 print ("----> Load cxx analyzers from libFCCAnalyses... ",)
 ROOT.gSystem.Load("libFCCAnalyses")
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
+#ROOT.gErrorIgnoreLevel = ROOT.kFatal
 #Is this still needed?? 01/04/2022 still to be the case
 _fcc  = ROOT.dummyLoader
 
@@ -524,6 +524,21 @@ def runLocal(rdfModule, fileList, args):
 
 #__________________________________________________________
 def runStages(args, rdfModule, preprocess, analysisFile):
+    # check if analyses plugins need to be loaded before anything
+    analysesList = getElement(rdfModule, "analysesList")
+    if analysesList and len(analysesList) > 0:
+        _ana = []
+        for analysis in analysesList:
+            print(f'----> Load cxx analyzers from {analysis}...')
+            if analysis.startswith('libFCCAnalysis_'):
+                ROOT.gSystem.Load(analysis)
+            else:
+                ROOT.gSystem.Load(f'libFCCAnalysis_{analysis}')
+            if not hasattr(ROOT, analysis):
+                print(f'----> ERROR: analysis "{analysis}" not properly loaded. Exit')
+                sys.exit(4)
+            _ana.append(getattr(ROOT, analysis).dictionary)
+
     #check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':

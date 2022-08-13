@@ -1,3 +1,4 @@
 <lcgdict>
   <class name="analysis_example::dictionary"/>
+  <function name="analysis_example::dummy_function"/>
 </lcgdict>

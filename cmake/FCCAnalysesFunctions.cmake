@@ -53,24 +53,24 @@ function(add_integration_test_2 _testname)
   set_property(TEST fccanalysisrun_${_testname} APPEND PROPERTY ENVIRONMENT
     LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
     PYTHONPATH=${CMAKE_SOURCE_DIR}:$ENV{PYTHONPATH}
-    PATH=${CMAKE_SOURCE_DIR}/bin:$CMAKE_BINARY_DIR:$ENV{PATH}
+    PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
     ROOT_INCLUDE_PATH=${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
     TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
     )
 endfunction()
 
-macro(add_generic_test _testname _testcmd)
+function(add_generic_test _testname _testcmd)
   add_test(NAME ${_testname}
-           COMMAND "${_testcmd}"
+           COMMAND ${_testcmd}
            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   set_property(TEST ${_testname}
                APPEND PROPERTY ENVIRONMENT
-               LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
+               LD_LIBRARY_PATH=${INSTALL_LIB_DIR}:${CMAKE_BINARY_DIR}/analyzers/dataframe:${CMAKE_BINARY_DIR}/analyses:$ENV{LD_LIBRARY_PATH}
                PYTHONPATH=${CMAKE_SOURCE_DIR}:$ENV{PYTHONPATH}
-               PATH=${CMAKE_SOURCE_DIR}/bin:$CMAKE_BINARY_DIR:$ENV{PATH}
-               ROOT_INCLUDE_PATH=${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
+               PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
+               ROOT_INCLUDE_PATH=${INSTALL_LIB_DIR}:${CMAKE_SOURCE_DIR}/analyzers/dataframe:${CMAKE_BINARY_DIR}/analyses:$ENV{ROOT_INCLUDE_PATH}
                TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR})
-endmacro()
+endfunction()
 
 macro(fccanalyses_addon_build _name)
   set(options)
