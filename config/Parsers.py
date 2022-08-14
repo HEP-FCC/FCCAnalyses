@@ -1,8 +1,8 @@
-def setup_setup_parser(parser):
+def setup_init_parser(parser):
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument('name', help='name of the analysis to be built')
     publicOptions.add_argument('--script', help='name of the main analysis utilitary script', default='DummyAnalysis')
-    publicOptions.add_argument('--author', help="author's \"name <email@address>\" (will use git-config if not specified")
+    publicOptions.add_argument('--author', help="author's \"name <email@address>\" (will use git-config if not specified)")
     publicOptions.add_argument('--standalone', action='store_true', help="also add CMake directive to build standalone package", default=False)
     publicOptions.add_argument('--output-dir', help='output directory where the analysis package will be written')
 
