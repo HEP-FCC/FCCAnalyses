@@ -3,18 +3,22 @@
 namespace FCCAnalyses {
   namespace JetClusteringUtils {
 
-    ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(const FCCAnalysesJet& jets) { return jets.jets; }
+    ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(const JetClustering::FCCAnalysesJet& jets) {
+      return jets.jets;
+    }
 
-    std::vector<std::vector<int>> get_constituents(const FCCAnalysesJet& jets) { return jets.constituents; }
+    std::vector<std::vector<int>> get_constituents(const JetClustering::FCCAnalysesJet& jets) {
+      return jets.constituents;
+    }
 
-    float get_exclusive_dmerge(const FCCAnalysesJet& in, int n) {
+    float get_exclusive_dmerge(const JetClustering::FCCAnalysesJet& in, int n) {
       float d = -1;
       if (n >= 1 && n <= Nmax_dmerge)
         d = in.exclusive_dmerge[n - 1];
       return d;
     }
 
-    float get_exclusive_dmerge_max(const FCCAnalysesJet& in, int n) {
+    float get_exclusive_dmerge_max(const JetClustering::FCCAnalysesJet& in, int n) {
       float d = -1;
       if (n >= 1 && n <= Nmax_dmerge)
         d = in.exclusive_dmerge_max[n - 1];
@@ -126,8 +130,8 @@ namespace FCCAnalyses {
       return result;
     }
 
-    FCCAnalysesJet initialise_FCCAnalysesJet() {
-      FCCAnalysesJet result;
+    JetClustering::FCCAnalysesJet initialise_FCCAnalysesJet() {
+      JetClustering::FCCAnalysesJet result;
       std::vector<fastjet::PseudoJet> jets;
       std::vector<std::vector<int>> constituents;
 
@@ -145,10 +149,10 @@ namespace FCCAnalyses {
       return result;
     };
 
-    FCCAnalysesJet build_FCCAnalysesJet(const std::vector<fastjet::PseudoJet>& in,
-                                        const std::vector<float>& dmerge,
-                                        const std::vector<float>& dmerge_max) {
-      FCCAnalysesJet result = initialise_FCCAnalysesJet();
+    JetClustering::FCCAnalysesJet build_FCCAnalysesJet(const std::vector<fastjet::PseudoJet>& in,
+                                                       const std::vector<float>& dmerge,
+                                                       const std::vector<float>& dmerge_max) {
+      JetClustering::FCCAnalysesJet result = initialise_FCCAnalysesJet();
       for (const auto& pjet : in) {
         result.jets.push_back(pjet);
 

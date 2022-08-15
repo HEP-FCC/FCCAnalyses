@@ -8,13 +8,6 @@
 #include "FastJet/JetClustering.h"
 #include "fastjet/JetDefinition.hh"
 
-#include "edm4hep/MCParticleData.h"
-#include "edm4hep/MCParticleData.h"
-#include "edm4hep/ParticleIDData.h"
-#include "edm4hep/Vector3f.h"
-#include "edm4hep/Vector3d.h"
-#include "edm4hep/Vector2i.h"
-
 #include "TRandom3.h"
 
 /** Jet clustering utilities interface.

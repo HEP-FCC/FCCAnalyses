@@ -21,7 +21,7 @@ namespace JetClustering {
     _jetAlgorithm = fastjet::JetAlgorithm::kt_algorithm;
 
     // initialize recombination scheme
-    _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
     fastjet::ClusterSequence _cs;
@@ -32,19 +32,19 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
     //transform to FCCAnalysesJet
-    FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    FCCAnalysesJet result = FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
 
     return result;
   }
@@ -62,7 +62,7 @@ namespace JetClustering {
     _jetAlgorithm = fastjet::JetAlgorithm::antikt_algorithm;
 
     // initialize recombination scheme
-    _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
     fastjet::ClusterSequence _cs;
@@ -73,19 +73,19 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_antikt::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
     //transform to FCCAnalysesJet
-    FCCAnalysesJet result = JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    FCCAnalysesJet result = FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
 
     return result;
   }
@@ -102,7 +102,7 @@ namespace JetClustering {
     _jetAlgorithm = fastjet::JetAlgorithm::cambridge_algorithm;
 
     // initialize recombination scheme
-    _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
     fastjet::ClusterSequence _cs;
@@ -113,19 +113,19 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_cambridge::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
     //transform to FCCAnalysesJet
-    return JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
   }
 
   clustering_ee_kt::clustering_ee_kt(int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination) {
@@ -138,7 +138,7 @@ namespace JetClustering {
     _jetAlgorithm = fastjet::JetAlgorithm::ee_kt_algorithm;
 
     // initialize recombination scheme
-    _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
     fastjet::ClusterSequence _cs;
@@ -149,19 +149,19 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_ee_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
     //transform to FCCAnalysesJet
-    return JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
   }
 
   clustering_ee_genkt::clustering_ee_genkt(
@@ -177,7 +177,7 @@ namespace JetClustering {
     _jetAlgorithm = fastjet::JetAlgorithm::ee_genkt_algorithm;
 
     // initialize recombination scheme
-    _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
     fastjet::ClusterSequence _cs;
@@ -188,19 +188,19 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_ee_genkt::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
     //transform to FCCAnalysesJet
-    return JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
   }
 
   clustering_genkt::clustering_genkt(
@@ -216,7 +216,7 @@ namespace JetClustering {
     _jetAlgorithm = fastjet::JetAlgorithm::genkt_algorithm;
 
     // initialize recombination scheme
-    _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
     fastjet::ClusterSequence _cs;
@@ -227,19 +227,19 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_genkt::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
 
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
-    return JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
   }
 
   clustering_valencia::clustering_valencia(float arg_radius,
@@ -261,7 +261,7 @@ namespace JetClustering {
     _jetAlgorithm = new fastjet::contrib::ValenciaPlugin(_radius, _beta, _gamma);
 
     // initialize recombination scheme
-    _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
     fastjet::ClusterSequence _cs;
@@ -273,19 +273,19 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_valencia::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
     //transform to FCCAnalysesJet
-    return JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
   }
 
   clustering_jade::clustering_jade(
@@ -300,7 +300,7 @@ namespace JetClustering {
     _jetAlgorithm = new fastjet::JadePlugin();
 
     // initialize recombination scheme
-    fastjet::RecombinationScheme _recombScheme = JetClusteringUtils::recomb_scheme(_recombination);
+    fastjet::RecombinationScheme _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm);
@@ -311,20 +311,20 @@ namespace JetClustering {
 
   FCCAnalysesJet clustering_jade::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
-    if (JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
-      return JetClusteringUtils::initialise_FCCAnalysesJet();
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
 
     _cs = fastjet::ClusterSequence(input, _def);
 
     //cluster jets
-    std::vector<fastjet::PseudoJet> pjets = JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
 
     //get dmerged elements
-    std::vector<float> dmerge = JetClusteringUtils::exclusive_dmerge(_cs, 0);
-    std::vector<float> dmerge_max = JetClusteringUtils::exclusive_dmerge(_cs, 1);
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
 
     //transform to FCCAnalysesJet
-    return JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
   }
 
 }  // namespace JetClustering

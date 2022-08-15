@@ -6,6 +6,8 @@ file(GLOB headers *.h)
 
 fccanalyses_addon_build(FastJet
                         SOURCES ${sources} ${headers}
-                        EXT_HEADERS ${FASTJET_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}
-                        EXT_LIBS ${FASTJET_LIBRARY} ${FASTJET_LIBRARY_DIRS}/libfastjetplugins.so
+                        EXT_HEADERS ${FASTJET_INCLUDE_DIRS}
+                        EXT_LIBS ${FASTJET_LIBRARY}
+                                 ${FASTJET_LIBRARY_DIRS}/libfastjetplugins.so
+                                 ROOT::MathCore
                         INSTALL_COMPONENT fastjet)
