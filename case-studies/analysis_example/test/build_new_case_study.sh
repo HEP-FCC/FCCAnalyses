@@ -1,8 +1,12 @@
 #!/bin/env bash
 
-source setup.sh
+# This test builds a new standalone case study analysers, builds it, and
+# links it against the FCCAnalyses framework before steering the analysis
+# of an example input file using the helper function defined in the generated
+# namespace.
 
 # prepare the environment
+source setup.sh
 OUTPUT_DIR=${LOCAL_DIR}/dummy_analysis
 LD_LIBRARY_PATH=${LOCAL_DIR}/install:${LD_LIBRARY_PATH}
 PYTHONPATH=${LOCAL_DIR}:${PYTHONPATH}
@@ -19,12 +23,12 @@ fccanalysis init my_dummy_analysis \
   --standalone
 
 # next, build the standalone analyser
-PWD=${PWD}
+OLDPWD=${PWD}
 mkdir -p ${OUTPUT_DIR}/build && cd ${OUTPUT_DIR}/build
 cmake .. && make && make install
 
 # finally, run a simple analysis test
-cd ${PWD}
+cd ${OLDPWD}
 fccanalysis run ${OUTPUT_DIR}/scripts/analysis_cfg.py \
   --test \
   --nevents 100 \
