@@ -1,5 +1,7 @@
 #!/bin/env bash
 
+source setup.sh
+
 # prepare the environment
 OUTPUT_DIR=${LOCAL_DIR}/dummy_analysis
 LD_LIBRARY_PATH=${LOCAL_DIR}/install:${LD_LIBRARY_PATH}
@@ -19,7 +21,7 @@ fccanalysis init my_dummy_analysis \
 # next, build the standalone analyser
 PWD=${PWD}
 mkdir -p ${OUTPUT_DIR}/build && cd ${OUTPUT_DIR}/build
-cmake .. && make install
+cmake .. && make && make install
 
 # finally, run a simple analysis test
 cd ${PWD}
