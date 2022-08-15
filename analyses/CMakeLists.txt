@@ -14,7 +14,6 @@ macro(build_analysis dir)
   target_include_directories(${lib_name} PUBLIC ${dir}/include
                                                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                 $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
-                                                ${dir}/include
                                                 $<INSTALL_INTERFACE:include>)
   target_link_libraries(${lib_name} PUBLIC FCCAnalyses)
   set_target_properties(${lib_name} PROPERTIES PUBLIC_HEADER "${headers}")

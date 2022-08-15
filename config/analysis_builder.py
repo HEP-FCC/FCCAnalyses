@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-def header_tmpl(filename: str):
+def header_boilerplate(filename: str):
     return """// -*- C++ -*-
 //
 /** FCCAnalysis module: @@@ANALYSIS_NAME@@@
@@ -13,7 +13,7 @@ def header_tmpl(filename: str):
  */
 """
 
-source_tmpl = header_tmpl('@@@SCRIPT_NAME@@@.cc') + """
+source_tmpl = header_boilerplate('@@@SCRIPT_NAME@@@.cc') + """
 #include "@@@SCRIPT_NAME@@@.h"
 #include <iostream>
 
@@ -30,7 +30,7 @@ namespace @@@ANALYSIS_NAME@@@ {
   }
 }  // namespace @@@ANALYSIS_NAME@@@"""
 
-header_tmpl = header_tmpl('@@@SCRIPT_NAME@@@.h') + """
+header_tmpl = header_boilerplate('@@@SCRIPT_NAME@@@.h') + """
 #ifndef @@@ANALYSIS_NAME@@@_@@@SCRIPT_NAME@@@_h
 #define @@@ANALYSIS_NAME@@@_@@@SCRIPT_NAME@@@_h
 
@@ -56,21 +56,16 @@ xml_tmpl = """<lcgdict>
 
 cmake_tmpl = """cmake_minimum_required(VERSION 3.16.9)
 project(@@@ANALYSIS_NAME@@@ CXX)
+set(lib_name "FCCAnalysis_@@@ANALYSIS_NAME@@@")
 find_package(ROOT COMPONENTS ROOTVecOps ROOTDataFrame REQUIRED)
 find_package(EDM4HEP REQUIRED)
 #--- Set a better default for installation directory---------------------------
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}/install" CACHE PATH "default install path" FORCE)
+  set(CMAKE_INSTALL_PREFIX "@@@FCCANALYSES_PATH@@@/install" CACHE PATH "default install path" FORCE)
 endif()
-#--- Use GNU-style hierarchy for installing build products
-include(GNUInstallDirs)
 #--- Offer the user the choice of overriding the installation directories
 set(FCCANALYSES_DIR "@@@FCCANALYSES_PATH@@@" CACHE PATH
     "Installation directory for FCCAnalyses framework")
-set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
-set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
-set(INSTALL_INCLUDE_DIR include CACHE PATH
-    "Installation directory for header files")
 #--- Find all paths to '@@@ANALYSIS_NAME@@@' library pieces
 file(GLOB headers "include/*.h")
 file(GLOB sources "src/*.cc")
@@ -78,37 +73,74 @@ file(GLOB classes "src/classes.h")
 file(GLOB reflex_sel "src/classes_def.xml")
 #--- generate the ROOT dictionary using a REFLEX selection
 set(CMAKE_ROOTTEST_NOROOTMAP OFF)
-REFLEX_GENERATE_DICTIONARY(lib@@@ANALYSIS_NAME@@@ ${headers} ${classes}
+reflex_generate_dictionary(lib${lib_name} ${headers} ${classes}
                            SELECTION ${reflex_sel})
 #--- build the analysis library (linked against FCCAnalyses)
-add_library(@@@ANALYSIS_NAME@@@ SHARED ${sources} ${headers} lib@@@ANALYSIS_NAME@@@.cxx)
-target_include_directories(@@@ANALYSIS_NAME@@@ PUBLIC
-                           ${FCCANALYSES_DIR} ${FCCANALYSES_DIR}/addons
-                           include $<INSTALL_INTERFACE:include>)
-target_link_directories(@@@ANALYSIS_NAME@@@ PUBLIC
-                        ${FCCANALYSES_DIR} ${FCCANALYSES_DIR}/install/lib)
-target_link_libraries(@@@ANALYSIS_NAME@@@ PUBLIC
-                      FCCAnalyses
-                      EDM4HEP::edm4hep
-                      EDM4HEP::edm4hepDict
-                      ROOT::ROOTVecOps)
-set_target_properties(@@@ANALYSIS_NAME@@@ PROPERTIES PUBLIC_HEADER "${headers}")
-install(TARGETS @@@ANALYSIS_NAME@@@
-        EXPORT @@@ANALYSIS_NAME@@@Targets
-        RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
-        LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
-        PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/@@@ANALYSIS_NAME@@@"
+add_library(${lib_name} SHARED ${sources} ${headers} lib${lib_name}.cxx)
+target_include_directories(${lib_name} PUBLIC include
+                                              ${FCCANALYSES_DIR}
+                                              ${FCCANALYSES_DIR}/addons
+                                              $<INSTALL_INTERFACE:include>)
+target_link_directories(${lib_name} PUBLIC ${FCCANALYSES_DIR}
+                                           ${FCCANALYSES_DIR}/install/lib)
+target_link_libraries(${lib_name} PUBLIC FCCAnalyses
+                                         EDM4HEP::edm4hep EDM4HEP::edm4hepDict
+                                         ROOT::ROOTVecOps)
+set_target_properties(${lib_name} PROPERTIES PUBLIC_HEADER "${headers}")
+install(TARGETS ${lib_name}
+        RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" COMPONENT bin
+        LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
+        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include/@@@ANALYSIS_NAME@@@"
         COMPONENT analyses)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib@@@ANALYSIS_NAME@@@.rootmap"
-        DESTINATION "${INSTALL_LIB_DIR}"
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib${lib_name}.rootmap"
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
         COMPONENT analyses)
 if(${ROOT_VERSION} GREATER 6)
-  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib@@@ANALYSIS_NAME@@@_rdict.pcm"
-          DESTINATION "${INSTALL_LIB_DIR}"
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib${lib_name}_rdict.pcm"
+          DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
           COMPONENT analyses)
 endif()
 message(STATUS "Built standalone analyser package: @@@ANALYSIS_NAME@@@")
 """
+
+config_tmpl = """#Optional: List of analysis packages to load in runtime
+analysesList = ['@@@ANALYSIS_NAME@@@']
+
+#Mandatory: List of processes
+processList = {
+    'p8_noBES_ee_H_Hbb_ecm125':{'fraction':0.01, 'chunks':1, 'output':'test_out'}
+}
+
+#Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
+prodTag     = "FCCee/spring2021/IDEA/"
+
+#Optional: output directory, default is local running directory
+outputDir   = "."
+
+#Optional
+nCPUS       = 8
+runBatch    = False
+#batchQueue = "longlunch"
+#compGroup = "group_u_FCC.local_gen"
+
+#Optional test file
+testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+
+#Mandatory: RDFanalysis class where the use defines the operations on the TTree
+class RDFanalysis():
+    #__________________________________________________________
+    #Mandatory: analysers function to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
+    def analysers(df):
+        df2 = (df
+               .Define("dummy_collection", "@@@ANALYSIS_NAME@@@::dummy_collection(ReconstructedParticles)")
+              )
+        return df2
+
+    #__________________________________________________________
+    #Mandatory: output function, please make sure you return the branchlist as a python list
+    def output():
+        branchList = ['dummy_collection']
+        return branchList"""
 
 def find_author():
     from subprocess import getoutput
@@ -143,28 +175,30 @@ def setup_analysis(name: str, author: str='', script: str='', standalone: bool=F
 
     from os import mkdir
     if not output_dir:
-        path = fccanalyses_dir + '/analyses/' + name
+        path = f'{fccanalyses_dir}/analyses/{name}'
     else:
         path = output_dir
-    for p in [path, path + '/src', path + '/include']:
+    for p in [path, f'{path}/src', f'{path}/include', f'{path}/scripts']:
         try:
             mkdir(p)
         except FileExistsError:
-            print('Warning: FCCAnalysis space "' + name + ' already exists.')
+            print(f'Warning: FCCAnalysis space "{name}" already exists.')
             pass
     try:
-        with open(path + '/src/' + script + '.cc', 'w') as f:
+        with open(f'{path}/src/{script}.cc', 'w') as f:
             f.write(replace_all(source_tmpl, replacement_dict))
-        with open(path + '/src/classes.h', 'w') as f:
+        with open(f'{path}/src/classes.h', 'w') as f:
             f.write(replace_all(class_tmpl, replacement_dict))
-        with open(path + '/src/classes_def.xml', 'w') as f:
+        with open(f'{path}/src/classes_def.xml', 'w') as f:
             f.write(replace_all(xml_tmpl, replacement_dict))
-        with open(path + '/include/' + script + '.h', 'w') as f:
+        with open(f'{path}/include/{script}.h', 'w') as f:
             f.write(replace_all(header_tmpl, replacement_dict))
+        with open(f'{path}/scripts/analysis_cfg.py', 'w') as f:
+            f.write(replace_all(config_tmpl, replacement_dict))
         if standalone:
-            with open(path + '/CMakeLists.txt', 'w') as f:
+            with open(f'{path}/CMakeLists.txt', 'w') as f:
                 f.write(replace_all(cmake_tmpl, replacement_dict))
     except OSError as error:
-        print('FCCAnalysis space "' + name + '" creation error:')
+        print(f'FCCAnalysis space "{name}" creation error:')
         print(error)
 
