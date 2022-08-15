@@ -46,7 +46,8 @@ namespace @@@ANALYSIS_NAME@@@ {
 
 #endif"""
 
-class_tmpl = """namespace @@@ANALYSIS_NAME@@@ {
+class_tmpl = """
+namespace @@@ANALYSIS_NAME@@@ {
   struct dictionary {};
 } // namespace @@@ANALYSIS_NAME@@@"""
 
