@@ -190,3 +190,8 @@ fccanalysis plots examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py
 ```
 
 Resulting plots will be located the `outdir` defined in the analysis file.
+
+### Experimental
+
+In an attempt to ease the development of new physics case studies, such as for the [FCCee physics performance](https://github.com/HEP-FCC/FCCeePhysicsPerformance) cases, a new experimental analysis package creation tool is introduced.
+[See here](case-studies/README.md) for more details.
