@@ -7,5 +7,6 @@ def setup(mainparser):
         setup_analysis(name=args.name,
                        script=args.script,
                        author=args.author,
+                       description=args.description,
                        standalone=args.standalone,
                        output_dir=args.output_dir)

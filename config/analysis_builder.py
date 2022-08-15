@@ -9,7 +9,7 @@ def header_boilerplate(filename: str):
  * \\author @@@AUTHOR_NAME@@@ <@@@AUTHOR_EMAIL@@@>
  *
  * Description:
- *   [...]
+ *   @@@ANALYSIS_DESCRIPTION@@@
  */
 """
 
@@ -154,7 +154,7 @@ def replace_all(input: str, repl) -> str:
         output = output.replace(a, b)
     return output
 
-def setup_analysis(name: str, author: str='', script: str='', standalone: bool=False, output_dir: str=''):
+def setup_analysis(name: str, author: str='', description: str='', script: str='', standalone: bool=False, output_dir: str=''):
     if not author:
         author_name, author_email = find_author()
     else:
@@ -164,10 +164,14 @@ def setup_analysis(name: str, author: str='', script: str='', standalone: bool=F
         else:
             author_name, author_email = author_list
             author_email = author_email.replace('<', '').replace('>', '')
+    if not description:
+        description = '[...]'
+    #FIXME handle multiline descriptions
     from subprocess import getoutput
     fccanalyses_dir = getoutput('git rev-parse --show-toplevel')
     replacement_dict = {
         '@@@ANALYSIS_NAME@@@': name,
+        '@@@ANALYSIS_DESCRIPTION@@@': description,
         '@@@SCRIPT_NAME@@@': script,
         '@@@AUTHOR_NAME@@@': author_name,
         '@@@AUTHOR_EMAIL@@@': author_email,
