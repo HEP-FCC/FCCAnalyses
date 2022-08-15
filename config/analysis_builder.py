@@ -176,7 +176,7 @@ def setup_analysis(name: str, author: str='', script: str='', standalone: bool=F
 
     from os import mkdir
     if not output_dir:
-        path = f'{fccanalyses_dir}/analyses/{name}'
+        path = f'{fccanalyses_dir}/case-studies/{name}'
     else:
         path = output_dir
     for p in [path, f'{path}/src', f'{path}/include', f'{path}/scripts']:
