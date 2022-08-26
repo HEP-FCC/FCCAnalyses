@@ -315,9 +315,16 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
     # for convenience and compatibility with user code
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 
+    ncpus = 1
     # cannot use MT with Range()
     if args.nevents < 0:
-      ROOT.ROOT.EnableImplicitMT(getElement(rdfModule, "nCPUS"))
+        if isinstance(args.ncpus, int) and args.ncpus >= 1:
+            ncpus = args.ncpus
+        else:
+            ncpus = getElement(rdfModule, "nCPUS")
+
+        ROOT.ROOT.EnableImplicitMT(ncpus)
+
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
 
@@ -329,7 +336,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
     if preprocess:
         df2 = runPreprocess(df)
 
-    print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(rdfModule, "nCPUS")))
+    print("----> Init done, about to run {} events on {} CPUs".format(nevt, ncpus))
 
     df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
 
