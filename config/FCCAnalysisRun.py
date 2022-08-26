@@ -447,7 +447,8 @@ def addeosType(fileName):
         fileName='root://eosuser.cern.ch/'+fileName
     else:
         print('unknown eos type, please check with developers as it might not run with best performances')
-        
+    return fileName
+    
 #__________________________________________________________
 def runLocal(rdfModule, fileList, args):
     #Create list of files to be Processed
