@@ -846,6 +846,7 @@ def setup_run_parser(parser):
     publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
     publicOptions.add_argument('--bench', action='store_true', help='Output benchmark results to a JSON file', default=False)
+    publicOptions.add_argument("--ncpus", help="Set number of threads", type=int)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
     publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
     publicOptions.add_argument("--preprocess", action='store_true', help="Run preprocessing", default=False)
