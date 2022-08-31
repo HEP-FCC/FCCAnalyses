@@ -315,9 +315,16 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
     # for convenience and compatibility with user code
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 
+    ncpus = 1
     # cannot use MT with Range()
     if args.nevents < 0:
-      ROOT.ROOT.EnableImplicitMT(getElement(rdfModule, "nCPUS"))
+        if isinstance(args.ncpus, int) and args.ncpus >= 1:
+            ncpus = args.ncpus
+        else:
+            ncpus = getElement(rdfModule, "nCPUS")
+
+        ROOT.ROOT.EnableImplicitMT(ncpus)
+
     ROOT.EnableThreadSafety()
     df = ROOT.RDataFrame("events", inputlist)
 
@@ -329,7 +336,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
     if preprocess:
         df2 = runPreprocess(df)
 
-    print ("----> Init done, about to run {} events on {} CPUs".format(nevt, getElement(rdfModule, "nCPUS")))
+    print("----> Init done, about to run {} events on {} CPUs".format(nevt, ncpus))
 
     df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
 
@@ -853,6 +860,7 @@ def setup_run_parser(parser):
     publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
     publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
     publicOptions.add_argument('--bench', action='store_true', help='Output benchmark results to a JSON file', default=False)
+    publicOptions.add_argument("--ncpus", help="Set number of threads", type=int)
     publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
     publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
     publicOptions.add_argument("--preprocess", action='store_true', help="Run preprocessing", default=False)
