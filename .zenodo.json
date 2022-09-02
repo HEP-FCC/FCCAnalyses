@@ -1,0 +1,43 @@
+{
+    "creators": [
+	{
+	    "affiliation": "CERN",
+	    "name": "Helsens, Clement",
+	    "orcid": "0000-0002-9243-7554"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Perez, Emmanuel",
+	    "orcid": "0000-0002-7359-9689"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Selvaggi, Michele",
+	    "orcid": "0000-0002-5144-9655"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Volkl, Valentin",
+	    "orcid": "0000-0002-9172-6629"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Forthomme, Laurent",
+	    "orcid": "0000-0002-3302-336X"
+	},
+	{
+	    "affiliation": "University of Copenhagen",
+	    "name": "Munch Torndal, Julie"
+	}
+    ],
+    "keywords": [
+	"data analyses",
+	"edm4hep",
+	"root",
+	"dataframe",
+	"fcc"
+    ],
+    "license": "Apache-2.0",
+    "upload_type": "software"
+}
+

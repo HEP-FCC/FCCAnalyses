@@ -3,14 +3,15 @@
 gROOT->Reset();
 
 // processed :
-//    /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zuds_IDEAtrkCov.root
+//    /eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zuds_ecm91/events_125841058.root
 
 
-TFile* f = new TFile("p8_ecm91GeV_Zuds_IDEAtrkCov.root") ;
+TFile* f = new TFile("events_125841058.root");
 TTree* events = (TTree*)f->Get("events");
 
-//TString vtx = "Vertex";  // tracks selected based on d0 & z0 significance
-TString vtx = "Vertex_primaryTracks";   // primary tracks selected based on MC-matching
+//TString vtx = "Vertex_primaryTracks";   // primary tracks selected based on MC-matching
+TString vtx = "Vertex_primaryTracks_BSC";   // primary tracks selected based on MC-matching, fit with beam-spot constraint
+
 
 // plot the normalised chi2 / ndf :
 TH1F* hchi2 = new TH1F("hchi2",";chi2; Events",100,0,10);
@@ -49,7 +50,7 @@ hz -> Fit("gaus");
 // ---------------------------------------------------------------
 
 // covMatrix[0] = cov(0,0) = variance of the x position
-// covMatrix[3] = cov(1,1) = variance of the y position
+// covMatrix[2] = cov(1,1) = variance of the y position
 // covMatrix[5] = cov(2,2) = variance of the z position
 
 TH1F*  px = new TH1F("px","; Pull x_{vtx}; Events",100,-5,5);
