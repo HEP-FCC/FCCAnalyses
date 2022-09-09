@@ -445,7 +445,17 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
     print ('----> batch command  : ',cmdBatch)
     job=SubmitToCondor(cmdBatch,10)
 
-
+#__________________________________________________________
+def addeosType(fileName):
+    sfileName=fileName.split('/')
+    if sfileName[1]=='experiment':
+        fileName='root://eospublic.cern.ch/'+fileName
+    elif sfileName[1]=='user' or sfileName[1].contains('home-'):
+        fileName='root://eosuser.cern.ch/'+fileName
+    else:
+        print('unknown eos type, please check with developers as it might not run with best performances')
+    return fileName
+    
 #__________________________________________________________
 def runLocal(rdfModule, fileList, args):
     #Create list of files to be Processed
@@ -454,6 +464,10 @@ def runLocal(rdfModule, fileList, args):
     nevents_meta = 0
     nevents_local = 0
     for fileName in fileList:
+
+        if fileName.split('/')[0]=='eos':
+            fileName=addeosType(fileName)
+
         fileListRoot.push_back(fileName)
         print ("   ",fileName)
         tf=ROOT.TFile.Open(str(fileName),"READ")
