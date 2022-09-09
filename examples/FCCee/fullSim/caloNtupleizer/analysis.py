@@ -81,6 +81,7 @@ class analysis():
                 dict_outputBranchName_function["%s_z"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_z(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_phi"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_phi(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_theta"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_theta(%s)"%clusterBranchName
+                dict_outputBranchName_function["%s_eta"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_eta(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_energy"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_energy(%s)"%clusterBranchName
                 #dict_outputBranchName_function["%s_position"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_positionVector3(%s)"%clusterBranchName
                 dict_outputBranchName_function["%s_firstCell"%clusterBranchName] = "CaloNtupleizer::getCaloCluster_firstCell(%s)"%clusterBranchName
@@ -94,6 +95,7 @@ class analysis():
                 dict_outputBranchName_function["%s_z"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_z(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_phi"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_phi(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_theta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_theta(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_eta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_eta(%s)"%clusterCellsBranchName
                 #dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_positionVector3(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%clusterCellsBranchName
                 if args.useGeometry:
