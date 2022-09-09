@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662708578218,
+  "lastUpdate": 1662708579584,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -6081,6 +6081,45 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "568e712d02fd1ce6923cc851bcb5220b9988191a",
+          "message": "Merge pull request #201 from BrieucF/passByRef\n\n[CaloNtupleizer] Function agruments as const ref",
+          "timestamp": "2022-09-09T09:20:43+02:00",
+          "tree_id": "ea024c7a285f9ed9c844431dc9fb6127cbcc1df5",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/568e712d02fd1ce6923cc851bcb5220b9988191a"
+        },
+        "date": 1662708579133,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.76984619339944,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.397328849691117,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 8.425022971287417,
+            "unit": "Evt/s"
           }
         ]
       }
