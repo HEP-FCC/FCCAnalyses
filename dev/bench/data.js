@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663235132966,
+  "lastUpdate": 1663235135571,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -6246,6 +6246,51 @@ window.BENCHMARK_DATA = {
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test",
             "value": 16.081299781799316,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d508ed3858f877dc0d6e2445086a51b7c24d1ace",
+          "message": "Merge pull request #204 from clementhelsens/fccswaccount\n\nmove to fccsw account",
+          "timestamp": "2022-09-15T11:28:41+02:00",
+          "tree_id": "a4279212f21411563211bc203b60c3dce925f30c",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/d508ed3858f877dc0d6e2445086a51b7c24d1ace"
+        },
+        "date": 1663235129418,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 15.654988288879395,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 21.4419584274292,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "value": 15.157129526138306,
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
