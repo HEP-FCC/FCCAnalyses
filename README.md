@@ -49,7 +49,7 @@ ROOT dataframe documentation is available
 In order to use the FCC analysers within ROOT dataframe, a dictionary needs to
 be built and put into `LD_LIBRARY_PATH` (this happens in `setup.sh`). The
 following needs to be done when running local code and for developers. 
-Personal note : Remember to log onto lxplus using the command before "bash" below:
+Personal note : Remember to log onto lxplus to access the workspace using the first line below:
 
 ```shell
 ssh -Y dimoulin@lxplus.cern.ch
@@ -61,6 +61,9 @@ cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make install
 cd ..
 ```
+## Madgraph installation
+
+Following the recomendations from https://twiki.cern.ch/twiki/bin/view/Main/MadgraphOnLxPlus, Madgraph was installed in the FCCAnalyses directory (only advice was to install it into the workspace). Moreover, we are moving away from Tanishq instructions, since the FCCeePhysicsPerformance git is no longer necessary according to Juliette, hence only FCCAnalyses has been installed properly.
 
 >
 > Each time changes are made in the C++ code, for example in
