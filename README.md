@@ -75,7 +75,7 @@ Following the recomendations from https://twiki.cern.ch/twiki/bin/view/Main/Madg
 In order to launch Madgraph : 
 - Within workspace directory :
 ```shell
-source ~./bash_madgraph
+source ~/.bash_madgraph
 cd Madgraph/MG5_aMC_v2_6_4/
 ./bin/mg5_aMC
 
