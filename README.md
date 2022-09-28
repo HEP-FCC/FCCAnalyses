@@ -66,7 +66,13 @@ cd ..
 > Each time changes are made in the C++ code, for example in
 > `analyzers/dataframe/` please do not forget to re-compile :)
 
-
+## Logging in
+Need to run these commands everytime you log in :
+```shell
+bash
+cd FCCAnalyses
+source ./setup.sh
+```
 ## Madgraph installation
 
 Following the recomendations from https://twiki.cern.ch/twiki/bin/view/Main/MadgraphOnLxPlus, Madgraph was installed in the FCCAnalyses directory (only advice was to install it into the workspace). Moreover, we are moving away from Tanishq instructions, since the FCCeePhysicsPerformance git is no longer necessary according to Juliette, hence only FCCAnalyses has been installed properly. Therefore, will need to be careful about copying paths etc.. since Madgraph is installed in FCCAnalyses/
