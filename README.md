@@ -61,14 +61,34 @@ cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make install
 cd ..
 ```
-## Madgraph installation
-
-Following the recomendations from https://twiki.cern.ch/twiki/bin/view/Main/MadgraphOnLxPlus, Madgraph was installed in the FCCAnalyses directory (only advice was to install it into the workspace). Moreover, we are moving away from Tanishq instructions, since the FCCeePhysicsPerformance git is no longer necessary according to Juliette, hence only FCCAnalyses has been installed properly. Therefore, will need to be careful about copying paths etc.. since Madgraph is installed in FCCAnalyses/
 
 >
 > Each time changes are made in the C++ code, for example in
 > `analyzers/dataframe/` please do not forget to re-compile :)
->
+
+
+## Madgraph installation
+
+Following the recomendations from https://twiki.cern.ch/twiki/bin/view/Main/MadgraphOnLxPlus, Madgraph was installed in the FCCAnalyses directory (only advice was to install it into the workspace). Moreover, we are moving away from Tanishq instructions, since the FCCeePhysicsPerformance git is no longer necessary according to Juliette, hence only FCCAnalyses has been installed properly. Therefore, will need to be careful about copying paths etc.. since Madgraph is installed in FCCAnalyses/
+
+### Launching Madgraph
+In order to launch Madgraph : 
+- Within workspace directory :
+```shell
+source ~./bash_madgraph
+cd Madgraph/MG5_aMC_v2_6_4/
+./bin/mg5_aMC
+
+```
+
+### Importing models to Madgraph
+Useful madgraph models for HNL are available at https://feynrules.irmp.ucl.ac.be/wiki/HeavyN.
+In order to import them, go to :  Madgraph/MG5_aMC_v2_6_7/models and run (e.g for SM_HeavyN_CKM_AllMasses_LO) :
+```
+wget http://feynrules.irmp.ucl.ac.be/raw-attachment/wiki/HeavyN/SM_HeavyN_CKM_AllMasses_LO.tgz
+tar -zxvf SM_HeavyN_CKM_AllMasses_LO.tgz
+```
+
 
 
 ## Generalities
