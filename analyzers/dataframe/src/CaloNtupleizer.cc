@@ -211,6 +211,28 @@ ROOT::VecOps::RVec<int> getCaloCluster_lastCell (const ROOT::VecOps::RVec<edm4he
   return result;
 }
 
+ROOT::VecOps::RVec<std::vector<float>>
+getCaloCluster_energyInLayers (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in,
+                               const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells) {
+  static const int layer_idx = m_decoder->index("layer");
+  static const int cryo_idx = m_decoder->index("cryo");
+  ROOT::VecOps::RVec<std::vector<float>> result;
+  result.reserve(in.size());
+
+  for (const auto & c: in) {
+    std::vector<float> energies(12, 0); // WARNING Hardcode 12 layers for now. Flemme-%
+    for (auto i = c.hits_begin; i < c.hits_end; i++) {
+      int layer = m_decoder->get(cells[i].cellID, layer_idx);
+      int cryoID = m_decoder->get(cells[i].cellID, cryo_idx);
+      if(cryoID == 0) {
+        energies[layer] += cells[i].energy;
+      }
+    }
+    result.push_back(energies);
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_x (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
@@ -283,6 +305,15 @@ ROOT::VecOps::RVec<float> getSimParticleSecondaries_energy (const ROOT::VecOps::
     TLorentzVector tlv;
     tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
     result.push_back(tlv.E());
+  }
+  return result;
+}
+
+getFloatAt::getFloatAt(size_t pos) {m_pos = pos;}
+ROOT::RVecF getFloatAt::operator()(const ROOT::VecOps::RVec<std::vector<float>>& in) {
+  ROOT::RVecF result;
+  for (auto & v : in) {
+    result.push_back(v[m_pos]);
   }
   return result;
 }
