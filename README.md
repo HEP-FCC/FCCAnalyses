@@ -96,6 +96,23 @@ tar -zxvf SM_HeavyN_CKM_AllMasses_LO.tgz
 ```
 
 
+## Using a proc card
+Proc cards are like configuration files for generating Madgraph events. Baseline proc cards are located at :
+https://github.com/HEP-FCC/FCCeePhysicsPerformance/tree/master/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation
+Proc cards can be modified using vim/vi:
+```shell
+i to insert
+:wq to save changes)
+```
+In order to generate an event with a given proc card do:
+```shell
+cd Madgraph/MG5_aMC_v2_6_4/
+./bin/mg5_aMC path_to_card/proc_cart.dat
+```
+This then generates .lhe.gz file which needs to be unzipped :
+```shell
+gunzip file_name.lhe.gz
+```
 
 ## Generalities
 
