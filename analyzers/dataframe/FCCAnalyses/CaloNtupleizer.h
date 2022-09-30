@@ -43,6 +43,7 @@ ROOT::VecOps::RVec<float> getCaloCluster_energy (const ROOT::VecOps::RVec<edm4he
 ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in);
 ROOT::VecOps::RVec<int> getCaloCluster_firstCell (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in);
 ROOT::VecOps::RVec<int> getCaloCluster_lastCell (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in);
+ROOT::VecOps::RVec<std::vector<float>> getCaloCluster_energyInLayers (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int nLayers=12);
 
 // SimParticleSecondary
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_x (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in);
@@ -54,6 +55,12 @@ ROOT::VecOps::RVec<float> getSimParticleSecondaries_theta (const ROOT::VecOps::R
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_eta (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in);
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_energy (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in);
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_PDG (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in);
+
+struct getFloatAt {
+  size_t m_pos;
+  getFloatAt(size_t pos);
+  ROOT::RVecF operator()(const ROOT::VecOps::RVec<std::vector<float>>& in);
+};
 
 
 }//end NS CaloNtupleizer
