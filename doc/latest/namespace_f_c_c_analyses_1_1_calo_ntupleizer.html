@@ -76,12 +76,18 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">FCCAnalyses::CaloNtupleizer Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_calo_ntupleizer_1_1get_float_at.html">getFloatAt</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:afdbf3f12b6bdb18edcefa5e71ed26c46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_calo_ntupleizer.html#afdbf3f12b6bdb18edcefa5e71ed26c46">loadGeometry</a> (std::string xmlGeometryPath, std::string readoutName)</td></tr>
@@ -128,6 +134,8 @@ Functions</h2></td></tr>
 <tr class="separator:a02a267e9e4655550cca3509572d67565"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad91caea6a9f7c363fb51100526dafbf1"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_calo_ntupleizer.html#ad91caea6a9f7c363fb51100526dafbf1">getCaloCluster_lastCell</a> (const ROOT::VecOps::RVec&lt; edm4hep::ClusterData &gt; &amp;in)</td></tr>
 <tr class="separator:ad91caea6a9f7c363fb51100526dafbf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc45980f3c8d6648afc3b8cffbe69e0b"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; std::vector&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_calo_ntupleizer.html#acc45980f3c8d6648afc3b8cffbe69e0b">getCaloCluster_energyInLayers</a> (const ROOT::VecOps::RVec&lt; edm4hep::ClusterData &gt; &amp;in, const ROOT::VecOps::RVec&lt; edm4hep::CalorimeterHitData &gt; &amp;cells, const int nLayers=12)</td></tr>
+<tr class="separator:acc45980f3c8d6648afc3b8cffbe69e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff20d51162024aa6295963c69822690e"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_calo_ntupleizer.html#aff20d51162024aa6295963c69822690e">getSimParticleSecondaries_x</a> (const ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; &amp;in)</td></tr>
 <tr class="separator:aff20d51162024aa6295963c69822690e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a416a29da8e4bad661949d7575483434f"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_calo_ntupleizer.html#a416a29da8e4bad661949d7575483434f">getSimParticleSecondaries_y</a> (const ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; &amp;in)</td></tr>
@@ -163,6 +171,40 @@ Variables</h2></td></tr>
           <td class="paramtype">const ROOT::VecOps::RVec&lt; edm4hep::ClusterData &gt; &amp;&#160;</td>
           <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc45980f3c8d6648afc3b8cffbe69e0b" name="acc45980f3c8d6648afc3b8cffbe69e0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc45980f3c8d6648afc3b8cffbe69e0b">&#9670;&nbsp;</a></span>getCaloCluster_energyInLayers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::VecOps::RVec&lt; std::vector&lt; float &gt; &gt; FCCAnalyses::CaloNtupleizer::getCaloCluster_energyInLayers </td>
+          <td>(</td>
+          <td class="paramtype">const ROOT::VecOps::RVec&lt; edm4hep::ClusterData &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ROOT::VecOps::RVec&lt; edm4hep::CalorimeterHitData &gt; &amp;&#160;</td>
+          <td class="paramname"><em>cells</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>nLayers</em> = <code>12</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -720,7 +762,7 @@ Variables</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Sep 15 2022 11:36:35 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 30 2022 17:18:17 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
