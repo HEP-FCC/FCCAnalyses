@@ -213,14 +213,15 @@ ROOT::VecOps::RVec<int> getCaloCluster_lastCell (const ROOT::VecOps::RVec<edm4he
 
 ROOT::VecOps::RVec<std::vector<float>>
 getCaloCluster_energyInLayers (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in,
-                               const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells) {
+                               const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells,
+                               const int nLayers) {
   static const int layer_idx = m_decoder->index("layer");
   static const int cryo_idx = m_decoder->index("cryo");
   ROOT::VecOps::RVec<std::vector<float>> result;
   result.reserve(in.size());
 
   for (const auto & c: in) {
-    std::vector<float> energies(12, 0); // WARNING Hardcode 12 layers for now. Flemme-%
+    std::vector<float> energies(nLayers, 0);
     for (auto i = c.hits_begin; i < c.hits_end; i++) {
       int layer = m_decoder->get(cells[i].cellID, layer_idx);
       int cryoID = m_decoder->get(cells[i].cellID, cryo_idx);
