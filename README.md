@@ -113,7 +113,18 @@ This then generates .lhe.gz file which needs to be unzipped :
 ```shell
 gunzip file_name.lhe.gz
 ```
-
+## From .lhe to .root : final steps to EDM sample.
+Once the .lhe file has been unzipped, we must use Delphes in order to create a .root file to analyze.
+```shell
+cd FCCeePhysicsPerformance/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation/
+```
+Must then edit ``` HNL_eenu_pythia.cmnd``` by including the .lhe file (line 14)
+Then run :
+```shell
+source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
+DelphesPythia8_EDM4HEP ../../../../../../FCC-config/FCCee/Delphes/card_IDEA.tcl ../../../../../../FCC-config/FCCee/Delphes/edm4hep_IDEA.tcl HNL_eenu_pythia.cmnd HNL_ejj.root
+```
+Where HNL_ejj.root is the output file
 ## Generalities
 
 Analyses in the FCCAnalyses framework usually follow standardized workflow,
