@@ -96,7 +96,7 @@ tar -zxvf SM_HeavyN_CKM_AllMasses_LO.tgz
 ```
 
 
-## Using a proc card to generate and EDM file
+## Using a proc card to generate an EDM file
 Proc cards are like configuration files for generating Madgraph events. Baseline proc cards are located at :
 https://github.com/HEP-FCC/FCCeePhysicsPerformance/tree/master/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation
 Proc cards can be modified using vim/vi:
