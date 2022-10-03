@@ -131,12 +131,18 @@ DelphesPythia8_EDM4HEP ../../../../../../FCC-config/FCCee/Delphes/card_IDEA.tcl 
 Where HNL_ejj.root is the output file
 
 ## Analysis
+### Stage 1
 In order to run the analysis, we use the new version of the analysis code, located at ```/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL```. In order to run the stage 1 analysis code over our EDM sample, we must specify it using :
 ```shell
 cd FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL
 fccanalysis run analysis_stage1.py --output <myoutput.root> --files-list <file.root or file1.root file2.root or file*.root>
 ```
 Note : you can (must) specify the output directory by directly modifying ```analysis_stage1.py``` (l18)
+### Stage 2
+The next step is to use ```final_analysis.py```. It must be modified in order to contain the correct inputDir and outputDir. Once this is done, run :
+```shell
+fccanalysis final analysis_final.py
+```
 ## Generalities
 
 Analyses in the FCCAnalyses framework usually follow standardized workflow,
