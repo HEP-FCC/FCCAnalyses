@@ -104,6 +104,8 @@ Proc cards can be modified using vim/vi:
 i to insert
 :wq to save changes)
 ```
+Note : The provided proc_card seem to contain a command that is either unknown, or has to be added by hand (since it kills the job). Therefore, in order to be able to continue, we have removed the line ```set auto_convert_model T``` (l33).
+
 In order to generate an event with a given proc card do:
 ```shell
 cd Madgraph/MG5_aMC_v2_6_4/
