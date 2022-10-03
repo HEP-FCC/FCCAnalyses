@@ -121,7 +121,8 @@ Once the .lhe file has been unzipped, copy it to the directory containing the Py
 cp file_name.lhe path_to_workspace/FCCeePhysicsPerformance/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation/
 cd FCCeePhysicsPerformance/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation/
 ```
-Must then edit ``` HNL_eenu_pythia.cmnd``` by including the .lhe file (line 14)
+Must then edit ``` HNL_eenu_pythia.cmnd``` by including the .lhe file (line 14). 
+Note: It is possible that the n° of event of the pythia card must match the number of events set in the proc_card.dat file for the events to be generated.
 Then run :
 ```shell
 source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
