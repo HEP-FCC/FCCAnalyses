@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+
+if __name__ == "__main__":
+  import argparse
+  import sys
+  parser = argparse.ArgumentParser('FCCAnalyses parser')
+  subparsers = parser.add_subparsers(help='types of running modes', dest='command')
+  parser_run       = subparsers.add_parser('run', help="run a RDataFrame based FCC analysis")
+  parser_run_final = subparsers.add_parser('final', help="run a RDataFrame based FCC analysis final configuration")
+  parser_run_plots = subparsers.add_parser('plots', help="run a RDataFrame based FCC analysis plot configuration")
+
+  from config.Parsers import *
+  setup_run_parser(parser_run)
+  setup_run_parser_final(parser_run_final)
+  setup_run_parser_plots(parser_run_plots)
+
+  args = parser.parse_args()
+  print('===============args bin ',args)
+
+  if len(sys.argv)<3:
+     print("minimal running requirements :   fccanalysis <runoption> <analysisfile>")
+     print("running example              :   fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py")
+     print("for running options, try     :   fccanalysis --help  and   fccanalysis <runoption> --help")
+     sys.exit(3)
+
+  from config.FCCAnalysisRun import run
+  run(parser)

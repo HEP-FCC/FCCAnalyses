@@ -9,7 +9,10 @@ __pycache__/
 
 # ROOT files
 *.root
+
+# Editors
 *~
+.vimlocal
 
 # Distribution / packaging
 .Python
@@ -32,6 +35,9 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Output
+outputs/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -87,3 +93,6 @@ venv.bak/
 *.exe
 *.out
 *.app
+
+# Benchmarking
+benchmark*json

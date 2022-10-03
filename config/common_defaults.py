@@ -1,1 +1,1 @@
-deffccdicts     = "/afs/cern.ch/work/h/helsens/public/FCCDicts/"
+deffccdicts     = "/afs/cern.ch/work/f/fccsw/public/FCCDicts/"

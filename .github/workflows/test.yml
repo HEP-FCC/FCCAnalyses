@@ -21,8 +21,8 @@ jobs:
          mkdir -p build install;\
          source ${{ matrix.SETUP }};\
          cd build;\
-         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -G Ninja ..;'
-    - name: Compile 
+         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -DWITH_DD4HEP=ON -DWITH_ACTS=ON -DWITH_ONNX=ON -G Ninja ..;'
+    - name: Compile
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source ${{ matrix.SETUP }};\
@@ -40,4 +40,10 @@ jobs:
         source ${{ matrix.SETUP }};\
         cd build;\
         ninja -k0 && ctest --output-on-failure;'
-
+    - name: Test using local Setup.sh
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package
+        source ${{ matrix.SETUP }}
+        source ./setup.sh
+        python config/FCCAnalysisRun.py examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root
+        '

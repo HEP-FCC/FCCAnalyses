@@ -1,0 +1,30 @@
+name: documentation
+
+on: [push]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cvmfs-contrib/github-action-cvmfs@v2
+    - name: Start container
+      run: |
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest /bin/bash
+    - name: Compile Documentation
+      run: |
+        docker exec CI_container /bin/bash -c 'cd Package
+          yum install -y graphviz
+          source ./setup.sh
+          mkdir -p build
+          cd build
+          cmake ..
+          make doc'
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/doxygen/html
+        destination_dir: doc/latest
