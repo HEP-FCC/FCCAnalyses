@@ -1,4 +1,5 @@
 ﻿#include "FCCAnalyses/VertexingUtils.h"
+#include "FCCAnalyses/VertexFitterSimple.h"
 
 namespace FCCAnalyses{
 
@@ -100,6 +101,19 @@ get_trackParam( edm4hep::TrackState & atrack) {
     return res;
 }
 
+float get_trackMom( edm4hep::TrackState & atrack ) {
+  double fB = 2;  // 2 Tesla
+  
+  float C    = -0.5*1e3 * atrack.omega;
+  float phi0 = atrack.phi;
+  float ct   = atrack.tanLambda;
+  //
+  float pt = fB*0.2998 / TMath::Abs(2 * C);
+  TVector3 p(pt*TMath::Cos(phi0), pt*TMath::Sin(phi0), pt*ct);
+  float result = p.Mag();
+  return result;
+}
+
 TMatrixDSym
 get_trackCov( edm4hep::TrackState &  atrack) {
   auto covMatrix = atrack.covMatrix;
@@ -185,9 +199,16 @@ edm4hep::VertexData get_VertexData( ROOT::VecOps::RVec<FCCAnalysesVertex> TheVer
   return result;
 }
 
-
 int get_VertexNtrk( FCCAnalysesVertex TheVertex ) {
   return TheVertex.ntracks;
+}
+
+ROOT::VecOps::RVec<int> get_VertexNtrk( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<int> result;
+  for(auto & TheVertex: vertices){
+    result.push_back(TheVertex.ntracks);
+  }
+  return result;
 }
 
 ROOT::VecOps::RVec<int> get_VertexRecoInd( FCCAnalysesVertex TheVertex ) {
@@ -237,6 +258,958 @@ TMatrixDSym CovToACTS(TMatrixDSym Cov, TVectorD Par){
   cACTS(5, 5) = 0.1;	// Currently undefined: set to arbitrary value to avoid crashes
   //
   return cACTS;
+}
+
+////////////////////////////////////////////////////
+
+// get all reconstructed vertices in a single vector
+ROOT::VecOps::RVec<FCCAnalysesVertex> get_all_vertices( FCCAnalysesVertex PV,
+							ROOT::VecOps::RVec<FCCAnalysesVertex> SV ) {
+  // Returns a vector of all vertices (PV and SVs)
+  ROOT::VecOps::RVec<FCCAnalysesVertex> result;
+  result.push_back(PV);
+  for (auto &p:SV){
+    result.push_back(p);
+  }
+  return result;  
+}
+//
+ROOT::VecOps::RVec<FCCAnalysesVertex> get_all_vertices( FCCAnalysesVertex PV,
+							ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> SV ) {
+  // Returns a vector of all vertices (PV and SVs)
+  ROOT::VecOps::RVec<FCCAnalysesVertex> result;
+  result.push_back(PV);
+  for (auto i_SV:SV){
+    for (auto &p:i_SV){
+      result.push_back(p);
+    }
+  }
+  return result;  
+}
+//
+// get all SVs in a single vector
+ROOT::VecOps::RVec<FCCAnalysesVertex> get_all_SVs( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  // Returns a vector of all SVs
+  ROOT::VecOps::RVec<FCCAnalysesVertex> result;
+  for (auto i_SV:vertices){
+    for (auto &p:i_SV){
+      result.push_back(p);
+    }
+  }
+  return result;  
+}
+  
+// internal fns for SV finder
+
+// invariant mass of a two track vertex
+double get_invM_pairs( FCCAnalysesVertex vertex,
+		       double m1,
+		       double m2 ) {
+  // CAUTION: m1 -> first track; m2 -> second track
+  
+  double result;
+  
+  ROOT::VecOps::RVec<TVector3> p_tracks = vertex.updated_track_momentum_at_vertex;
+
+  TLorentzVector p4_vtx;
+  double m[2] = {m1, m2};
+  int nTr = p_tracks.size();
+
+  for(unsigned int i=0; i<nTr; i++) {
+    TLorentzVector p4_tr;
+    p4_tr.SetXYZM(p_tracks[i].X(), p_tracks[i].Y(), p_tracks[i].Z(), m[i]);
+    p4_vtx += p4_tr;
+  }
+
+  result = p4_vtx.M();
+  return result;
+}
+
+ROOT::VecOps::RVec<double> get_invM_pairs( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+					   double m1,
+					   double m2 ) {
+  // CAUTION: m1 -> first track; m2 -> second track
+
+  ROOT::VecOps::RVec<double> result;
+  for (auto & vertex: vertices) {
+
+    double result_i;  
+    ROOT::VecOps::RVec<TVector3> p_tracks = vertex.updated_track_momentum_at_vertex;
+  
+    TLorentzVector p4_vtx;
+    double m[2] = {m1, m2};
+    int nTr = p_tracks.size();
+  
+    for(unsigned int i=0; i<nTr; i++) {
+      TLorentzVector p4_tr;
+      p4_tr.SetXYZM(p_tracks[i].X(), p_tracks[i].Y(), p_tracks[i].Z(), m[i]);
+      p4_vtx += p4_tr;
+    }
+  
+    result_i = p4_vtx.M();
+    result.push_back(result_i);
+  }
+  return result;
+}
+
+// invariant mass of a vertex (assuming all tracks to be pions)
+double get_invM( FCCAnalysesVertex vertex ) {
+
+  double result;
+  
+  ROOT::VecOps::RVec<TVector3> p_tracks = vertex.updated_track_momentum_at_vertex;
+
+  TLorentzVector p4_vtx;
+  const double m = 0.13957039; // pion mass
+
+  for(TVector3 p_tr : p_tracks) {
+    TLorentzVector p4_tr;
+    p4_tr.SetXYZM(p_tr.X(), p_tr.Y(), p_tr.Z(), m);
+    p4_vtx += p4_tr;
+  }
+
+  result = p4_vtx.M();
+  return result;
+}
+
+ROOT::VecOps::RVec<double> get_invM( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ){
+
+  ROOT::VecOps::RVec<double> result;
+  for (auto & vertex: vertices) {
+
+    double result_i;
+    ROOT::VecOps::RVec<TVector3> p_tracks = vertex.updated_track_momentum_at_vertex;
+
+    TLorentzVector p4_vtx;
+    const double m = 0.13957039; // pion mass
+  
+    for(TVector3 p_tr : p_tracks) {
+      TLorentzVector p4_tr;
+      p4_tr.SetXYZM(p_tr.X(), p_tr.Y(), p_tr.Z(), m);
+      p4_vtx += p4_tr;
+    }
+
+    result_i = p4_vtx.M();
+    result.push_back(result_i);
+  }
+  return result;
+}
+
+// cos(angle) b/n V0 candidate's (or any vtx) momentum & PV to V0 displacement vector
+double get_PV2V0angle( FCCAnalysesVertex V0,
+		       FCCAnalysesVertex PV ) {
+  double result;
+
+  ROOT::VecOps::RVec<TVector3> p_tracks = V0.updated_track_momentum_at_vertex;
+
+  TVector3 p_sum;
+  for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+
+  edm4hep::Vector3f r_V0 = V0.vertex.position; // in mm
+  edm4hep::Vector3f r_PV = PV.vertex.position; // in mm
+
+  TVector3 r_V0_PV(r_V0[0] - r_PV[0], r_V0[1] - r_PV[1], r_V0[2] - r_PV[2]);
+  
+  double pDOTr = p_sum.Dot(r_V0_PV);
+  double p_mag = p_sum.Mag();
+  double r_mag = r_V0_PV.Mag();
+
+  result = pDOTr / (p_mag * r_mag);
+  return result;
+}
+
+// cos(angle) b/n track momentum sum & PV to vtx displacement vector
+double get_PV2vtx_angle( ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+			 FCCAnalysesVertex vtx,
+			 FCCAnalysesVertex PV ) {
+  double result;
+
+  TVector3 p_sum;
+  for(edm4hep::TrackState tr : tracks) {
+    TVectorD ipar = get_trackParam(tr);
+    TVector3 ip   = VertexFitterSimple::ParToP(ipar);
+    p_sum += ip;
+  }
+  
+  edm4hep::Vector3f r_vtx = vtx.vertex.position; // in mm
+  edm4hep::Vector3f r_PV  = PV.vertex.position;  // in mm
+
+  TVector3 r_vtx_PV(r_vtx[0] - r_PV[0], r_vtx[1] - r_PV[1], r_vtx[2] - r_PV[2]);
+  
+  double pDOTr = p_sum.Dot(r_vtx_PV);
+  double p_mag = p_sum.Mag();
+  double r_mag = r_vtx_PV.Mag();
+
+  result = pDOTr / (p_mag * r_mag);
+  return result;
+}
+
+// get track's energy assuming it to be a pion
+double get_trackE( edm4hep::TrackState track ) {
+
+  double result;
+
+  const double m_pi = 0.13957039;
+  
+  TVectorD par = get_trackParam(track);
+  TVector3 p   = VertexFitterSimple::ParToP(par);
+  TLorentzVector p4;
+  p4.SetXYZM(p[0], p[1], p[2], m_pi);
+
+  result = p4.E();
+  return result;
+}
+
+////////////////////////////////////////////////
+
+// no of reconstructed V0s
+int get_n_SV( FCCAnalysesV0 SV ) {
+  int result = SV.vtx.size();
+  return result;
+}
+
+// vector of position of all reconstructed V0 (in mm)
+ROOT::VecOps::RVec<TVector3> get_position_SV( FCCAnalysesV0 SV ) {
+  ROOT::VecOps::RVec<TVector3> result;
+  for(FCCAnalysesVertex ivtx : SV.vtx) {
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    result.push_back(xyz);
+  }
+  return result;
+}
+
+// vector of PDG IDs of all reconstructed V0
+ROOT::VecOps::RVec<int> get_pdg_V0( FCCAnalysesV0 V0 ) {
+  ROOT::VecOps::RVec<int> result = V0.pdgAbs;
+  return result;
+}
+
+// vector of invariant masses of all reconstructed V0
+ROOT::VecOps::RVec<double> get_invM_V0( FCCAnalysesV0 V0 ) {
+  ROOT::VecOps::RVec<double> result = V0.invM;
+  return result;
+}
+
+//
+// vector of momenta of all reconstructed V0
+ROOT::VecOps::RVec<TVector3> get_p_SV( FCCAnalysesV0 SV ) {
+  ROOT::VecOps::RVec<TVector3> result;
+  
+  for(FCCAnalysesVertex ivtx : SV.vtx) {
+    ROOT::VecOps::RVec<TVector3> p_tracks = ivtx.updated_track_momentum_at_vertex;
+    
+    TVector3 p_sum;
+    for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+
+    result.push_back(p_sum);
+  }
+  return result;
+}
+
+// vector of chi2 of all reconstructed V0s
+ROOT::VecOps::RVec<double> get_chi2_SV( FCCAnalysesV0 SV ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(FCCAnalysesVertex ivtx : SV.vtx) {
+    int nDOF = 2*ivtx.ntracks - 3;
+    result.push_back(nDOF*ivtx.vertex.chi2);
+  }
+  return result;
+}
+
+// passing a vector of FCCAnalysesVertex instead of new structs
+
+// no of reconstructed SVs
+int get_n_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  int result = vertices.size();
+  return result;
+}
+
+// vector of momenta of all reconstructed vertices (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<TVector3> get_p_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<TVector3> result;
+  
+  for(auto & ivtx : vertices) {
+    ROOT::VecOps::RVec<TVector3> p_tracks = ivtx.updated_track_momentum_at_vertex;
+    
+    TVector3 p_sum;
+    for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+
+    result.push_back(p_sum);
+  }
+  return result;
+}
+
+// vector of position of all reconstructed SV (in mm)
+ROOT::VecOps::RVec<TVector3> get_position_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<TVector3> result;
+  for(FCCAnalysesVertex ivtx : vertices) {
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    result.push_back(xyz);
+  }
+  return result;
+}
+
+// vector of momentum magnitude of all reconstructed vertices (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<double> get_pMag_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<double> result;
+  
+  for(auto & ivtx : vertices) {
+    ROOT::VecOps::RVec<TVector3> p_tracks = ivtx.updated_track_momentum_at_vertex;
+    
+    TVector3 p_sum;
+    for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+
+    result.push_back(p_sum.Mag());
+  }
+  return result;
+}
+
+// vector of chi2 of all reconstructed vertices (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<double> get_chi2_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(auto & ivtx : vertices) {
+    int nDOF = 2*ivtx.ntracks - 3;
+    result.push_back(nDOF*ivtx.vertex.chi2);
+  }
+  return result;
+}
+
+// vector of chi2 (normalised) of all reconstructed vertices (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<double> get_norm_chi2_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(auto & ivtx : vertices) result.push_back(ivtx.vertex.chi2);
+  return result;
+}
+
+// vector of nDOF of all reconstructed vertices (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<int> get_nDOF_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<int> result;
+
+  for(auto & ivtx : vertices) result.push_back(2*ivtx.ntracks - 3);
+  return result;
+}
+
+// vector of polar angle (theta) of all reconstructed vertices (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<double> get_theta_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(auto & ivtx : vertices) {
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    result.push_back(xyz.Theta());
+  }
+  return result;
+}
+
+// vector of azimuth angle (phi) of all reconstructed vertices (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<double> get_phi_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(auto & ivtx : vertices) {
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    result.push_back(xyz.Phi());
+  }
+  return result;
+}
+
+// vector of (cos of) angles b/n vtx momenta & PV to vtx displacement vectors
+ROOT::VecOps::RVec<double> get_pointingangle_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+						 FCCAnalysesVertex PV ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(auto & ivtx : vertices) {
+    double iresult = 0.;
+    
+    ROOT::VecOps::RVec<TVector3> p_tracks = ivtx.updated_track_momentum_at_vertex;
+    TVector3 p_sum;
+    for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+    
+    edm4hep::Vector3f r_vtx = ivtx.vertex.position; // in mm
+    edm4hep::Vector3f r_PV  = PV.vertex.position;   // in mm
+    
+    TVector3 r_vtx_PV(r_vtx[0] - r_vtx[0], r_vtx[1] - r_PV[1], r_vtx[2] - r_PV[2]);
+    
+    double pDOTr = p_sum.Dot(r_vtx_PV);
+    double p_mag = p_sum.Mag();
+    double r_mag = r_vtx_PV.Mag();
+
+    iresult = pDOTr / (p_mag * r_mag);    
+    result.push_back(iresult);
+  }
+  return result;
+}
+
+// vector of distances of all reconstructed SV from PV (in mm in xy plane)
+ROOT::VecOps::RVec<double> get_dxy_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+				       FCCAnalysesVertex PV) {
+  ROOT::VecOps::RVec<double> result;
+  TVector3 x_PV(PV.vertex.position[0], PV.vertex.position[1], PV.vertex.position[2]);
+  for(auto & ivtx : vertices) {
+    TVector3 x_vtx(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    TVector3 x_vtx_PV = x_vtx - x_PV;
+
+    result.push_back(x_vtx_PV.Perp());
+  }
+  return result;
+}
+
+// vector of distances of all reconstructed SV from PV (in mm in 3D)
+ROOT::VecOps::RVec<double> get_d3d_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+				       FCCAnalysesVertex PV) {
+  ROOT::VecOps::RVec<double> result;
+  TVector3 x_PV(PV.vertex.position[0], PV.vertex.position[1], PV.vertex.position[2]);
+  for(auto & ivtx : vertices) {
+    TVector3 x_vtx(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    TVector3 x_vtx_PV = x_vtx - x_PV;
+
+    result.push_back(x_vtx_PV.Mag());
+  }
+  return result;
+}
+
+// vector of distances of all reconstructed SV from given TVector3d (in mm in 3D)
+ROOT::VecOps::RVec<double> get_d3d_SV_obj( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+					   TVector3 object) {
+  ROOT::VecOps::RVec<double> result;
+  for(auto & ivtx : vertices) {
+    TVector3 x_vtx(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    x_vtx = x_vtx - object;
+
+    result.push_back(x_vtx.Mag());
+  }
+  return result;
+}
+
+// vector of distances of all reconstructed SV from given edm4hep::Vector3d (in mm in 3D)
+ROOT::VecOps::RVec<double> get_d3d_SV_obj( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+					   edm4hep::Vector3d object) {
+  ROOT::VecOps::RVec<double> result;
+  for(auto & ivtx : vertices) {
+    double dx = ivtx.vertex.position[0] - object.x;
+    double dy = ivtx.vertex.position[1] - object.y;
+    double dz = ivtx.vertex.position[2] - object.z;
+ 
+    TVector3 d3d(dx, dy, dz);
+
+    result.push_back(d3d.Mag());
+  }
+  return result;
+}
+
+// vector of decay position distances of all reconstructed SV from given TVector3d (in mm in 3D)
+ROOT::VecOps::RVec<double> get_dR_SV_obj( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+					  TVector3 object) {
+  ROOT::VecOps::RVec<double> result;
+  for(auto & ivtx : vertices) {
+    TVector3 x_vtx(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    result.push_back(1e3*TMath::Sqrt( pow(ivtx.vertex.position[0],2) + pow(ivtx.vertex.position[1],2) + pow(ivtx.vertex.position[2],2) ) - 1e3*TMath::Sqrt( pow(object.x(),2) + pow(object.y(),2) + pow(object.z(),2) ));
+  }
+  return result;
+}
+
+// vector of decay position distances of all reconstructed SV from given edm4hep::Vector3d (in mm in 3D)
+ROOT::VecOps::RVec<double> get_dR_SV_obj( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+					  edm4hep::Vector3d object) {
+  ROOT::VecOps::RVec<double> result;
+  for(auto & ivtx : vertices) {
+    result.push_back(1e3*TMath::Sqrt( pow(ivtx.vertex.position[0],2) + pow(ivtx.vertex.position[1],2) + pow(ivtx.vertex.position[2],2) ) - 1e3*TMath::Sqrt( pow(object.x,2) + pow(object.y,2) + pow(object.z,2) ));
+  }
+  return result;
+}
+
+// vector of polar angle (theta) of all reconstructed vertices wrt jet axis (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<double> get_relTheta_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+					    ROOT::VecOps::RVec<int> nSV_jet,
+					    ROOT::VecOps::RVec<fastjet::PseudoJet> jets ) {
+  ROOT::VecOps::RVec<double> result;
+
+  unsigned int j = 0;
+  int nSV = nSV_jet[0];
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    auto & ivtx = vertices[i];
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+
+    if(i >= nSV) {
+      j++;
+      nSV += nSV_jet[j];
+    }
+    auto & ijet = jets[j];
+    double jetTheta = ijet.theta();
+      
+    result.push_back(xyz.Theta() - jetTheta);
+  }
+  return result;
+}
+
+// vector of azimuthal angle (phi) of all reconstructed vertices wrt jet axis (SV.vtx or V0.vtx)
+ROOT::VecOps::RVec<double> get_relPhi_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+					  ROOT::VecOps::RVec<int> nSV_jet,
+					  ROOT::VecOps::RVec<fastjet::PseudoJet> jets ) {
+  ROOT::VecOps::RVec<double> result;
+
+  unsigned int j = 0;
+  int nSV = nSV_jet[0];
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    auto & ivtx = vertices[i];
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+
+    if(i >= nSV) {
+      j++;
+      nSV += nSV_jet[j];
+    }
+    auto & ijet = jets[j];
+    TVector3 jetP(ijet.px(), ijet.py(), ijet.pz());
+      
+    result.push_back(xyz.DeltaPhi(jetP));
+  }
+  return result;
+}
+
+// For get_SV_jets outputs
+
+// no of reconstructed SVs
+int get_n_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  int result = 0;
+  if(vertices.size() != 0) {
+    for(auto SV_jets : vertices) result += SV_jets.size();
+  }
+  return result;
+}
+
+// Return the number of reconstructed SVs
+ROOT::VecOps::RVec<int> get_n_SV_jets( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<int> result;
+  if(vertices.size() != 0) {
+    for(auto SV_jets : vertices) result.push_back(SV_jets.size());
+  }
+  return result;
+}
+
+//
+// separate V0s by jets
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> get_svInJets( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+									ROOT::VecOps::RVec<int> nSV_jet ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> result;
+  ROOT::VecOps::RVec<FCCAnalysesVertex> i_result;
+
+  int index=0;
+  for(unsigned int i : nSV_jet) {
+    for(unsigned int j=0; j<i; j++) {
+      i_result.push_back(vertices[j+index]);
+    }
+
+    result.push_back(i_result);
+    i_result.clear();
+    index += i;
+  }
+  return result;
+}
+
+// separate tracks by jet
+std::vector<std::vector<edm4hep::TrackState>> get_tracksInJets( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+								ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
+								ROOT::VecOps::RVec<fastjet::PseudoJet> jets,
+								std::vector<std::vector<int>> jet_consti ) {
+  std::vector<std::vector<edm4hep::TrackState>> result;
+  std::vector<edm4hep::TrackState> iJet_tracks;
+
+  int nJet = jets.size();
+  //
+  for (unsigned int j=0; j<nJet; j++) {
+
+    std::vector<int> i_jetconsti = jet_consti[j];
+
+    for(unsigned int ip : i_jetconsti) {
+      auto & p = recoparticles[ip];
+      if(p.tracks_begin >= 0 && p.tracks_begin<thetracks.size()) iJet_tracks.push_back(thetracks.at(p.tracks_begin));
+    }
+
+    result.push_back(iJet_tracks);
+    iJet_tracks.clear();
+  }
+  return result;
+}
+
+// vector of polar angle (theta) of reconstructed vertices of a jet wrt that jet axis [only for vertices from 1 jet]
+ROOT::VecOps::RVec<double> get_relTheta_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices, fastjet::PseudoJet jet ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(auto & ivtx : vertices) {
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    //
+    result.push_back(xyz.Theta() - jet.theta());
+  }
+  //
+  return result;
+}
+
+// vector of azimuthal angle (phi) of all reconstructed vertices wrt jet axis [only for vertices from 1 jet]
+ROOT::VecOps::RVec<double> get_relPhi_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices, fastjet::PseudoJet jet ) {
+  ROOT::VecOps::RVec<double> result;
+
+  for(auto & ivtx : vertices) {
+    TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+    TVector3 jetP(jet.px(), jet.py(), jet.pz());
+    //
+    result.push_back(xyz.DeltaPhi(jetP));
+  }
+  //
+  return result;
+}
+
+
+/////// vec of vec functions (for get_SV_jets) /////////
+
+// SV invariant mass
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_invM( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ){
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+
+    for (auto & vertex: i_vertices) {
+      ROOT::VecOps::RVec<TVector3> p_tracks = vertex.updated_track_momentum_at_vertex;
+      //
+      TLorentzVector p4_vtx;
+      const double m = 0.13957039; // pion mass
+      //
+      for(TVector3 p_tr : p_tracks) {
+	TLorentzVector p4_tr;
+	p4_tr.SetXYZM(p_tr.X(), p_tr.Y(), p_tr.Z(), m);
+	p4_vtx += p4_tr;
+      }
+      i_result.push_back(p4_vtx.M());
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV momentum
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<TVector3>> get_p_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<TVector3>> result;
+  ROOT::VecOps::RVec<TVector3> i_result;
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) {
+      ROOT::VecOps::RVec<TVector3> p_tracks = ivtx.updated_track_momentum_at_vertex;
+      
+      TVector3 p_sum;
+      for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+      
+      i_result.push_back(p_sum);
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV momentum magnitude
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_pMag_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) {
+      ROOT::VecOps::RVec<TVector3> p_tracks = ivtx.updated_track_momentum_at_vertex;
+      
+      TVector3 p_sum;
+      for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+      
+      i_result.push_back(p_sum.Mag());
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV daughters multiplicity
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> get_VertexNtrk( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
+  ROOT::VecOps::RVec<int> i_result;
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & TheVertex: i_vertices){
+      i_result.push_back(TheVertex.ntracks);
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV chi2
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_chi2_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) {
+      int nDOF = 2*ivtx.ntracks - 3;
+      i_result.push_back(nDOF*ivtx.vertex.chi2);
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV normalised chi2
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_norm_chi2_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) i_result.push_back(ivtx.vertex.chi2);
+    result.push_back(i_result);
+    i_result.clear();
+  }    
+return result;
+}
+
+// SV no of DOF
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> get_nDOF_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
+  ROOT::VecOps::RVec<int> i_result;
+    
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) i_result.push_back(2*ivtx.ntracks - 3);
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV theta
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_theta_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    
+    for(auto & ivtx : i_vertices) {
+      TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+      i_result.push_back(xyz.Theta());
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV phi
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_phi_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    
+    for(auto & ivtx : i_vertices) {
+      TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+      i_result.push_back(xyz.Phi());
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV relative theta
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_relTheta_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices,
+								ROOT::VecOps::RVec<fastjet::PseudoJet> jets ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<jets.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    fastjet::PseudoJet i_jet = jets.at(i);
+    for(auto & ivtx : i_vertices) {
+      TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+      //
+      i_result.push_back(xyz.Theta() - i_jet.theta());
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  //
+  return result;
+}
+
+// SV relative phi
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_relPhi_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices,
+							      ROOT::VecOps::RVec<fastjet::PseudoJet> jets ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  for(unsigned int i=0; i<jets.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    fastjet::PseudoJet i_jet = jets.at(i);
+    for(auto & ivtx : i_vertices) {
+      TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+      TVector3 jetP(i_jet.px(), i_jet.py(), i_jet.pz());
+      //
+      i_result.push_back(xyz.DeltaPhi(jetP));
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  //
+  return result;
+}
+
+// SV pointing angle wrt PV
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_pointingangle_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices,
+								     FCCAnalysesVertex PV ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  edm4hep::Vector3f r_PV  = PV.vertex.position;   // in mm
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    for(auto & ivtx : i_vertices) {
+      double pointangle = 0.;
+      
+      ROOT::VecOps::RVec<TVector3> p_tracks = ivtx.updated_track_momentum_at_vertex;
+      TVector3 p_sum;
+      for(TVector3 p_tr : p_tracks) p_sum += p_tr;
+      
+      edm4hep::Vector3f r_vtx = ivtx.vertex.position; // in mm
+      
+      TVector3 r_vtx_PV(r_vtx[0] - r_vtx[0], r_vtx[1] - r_PV[1], r_vtx[2] - r_PV[2]);
+      
+      double pDOTr = p_sum.Dot(r_vtx_PV);
+      double p_mag = p_sum.Mag();
+      double r_mag = r_vtx_PV.Mag();
+      
+      pointangle = pDOTr / (p_mag * r_mag);    
+      i_result.push_back(pointangle);
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV distance from PV in xy
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_dxy_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices,
+							   FCCAnalysesVertex PV) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+  TVector3 x_PV(PV.vertex.position[0], PV.vertex.position[1], PV.vertex.position[2]);
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) {
+      TVector3 x_vtx(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+      TVector3 x_vtx_PV = x_vtx - x_PV;
+      
+      i_result.push_back(x_vtx_PV.Perp());
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV distance from PV in 3D
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_d3d_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices,
+							   FCCAnalysesVertex PV) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+  TVector3 x_PV(PV.vertex.position[0], PV.vertex.position[1], PV.vertex.position[2]);
+
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) {
+      TVector3 x_vtx(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+      TVector3 x_vtx_PV = x_vtx - x_PV;
+      
+      i_result.push_back(x_vtx_PV.Mag());
+    }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// SV position in 3D
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<TVector3>> get_position_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<TVector3>> result;
+  ROOT::VecOps::RVec<TVector3> i_result;
+  
+  for(unsigned int i=0; i<vertices.size(); i++) {
+    ROOT::VecOps::RVec<TVector3> i_result;
+    ROOT::VecOps::RVec<FCCAnalysesVertex> i_vertices = vertices.at(i);
+    //
+    for(auto & ivtx : i_vertices) {
+      TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1], ivtx.vertex.position[2]);
+      i_result.push_back(xyz);
+      }
+    result.push_back(i_result);
+    i_result.clear();
+  }
+  return result;
+}
+
+// V0 pdg
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> get_pdg_V0( ROOT::VecOps::RVec<int> pdg,
+							ROOT::VecOps::RVec<int> nSV_jet ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result;
+  ROOT::VecOps::RVec<int> i_result;
+
+  int index=0;
+  for(unsigned int i : nSV_jet) {
+    for(unsigned int j=0; j<i; j++) {
+      i_result.push_back(pdg[j+index]);
+    }
+
+    result.push_back(i_result);
+    i_result.clear();
+    index += i;
+  }
+  return result;
+}
+
+// V0 invariant mass
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_invM_V0( ROOT::VecOps::RVec<double> invM,
+							    ROOT::VecOps::RVec<int> nSV_jet ) {
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> result;
+  ROOT::VecOps::RVec<double> i_result;
+
+  int index=0;
+  for(unsigned int i : nSV_jet) {
+    for(unsigned int j=0; j<i; j++) {
+      i_result.push_back(invM[j+index]);
+    }
+
+    result.push_back(i_result);
+    i_result.clear();
+    index += i;
+  }
+  return result;
 }
 
 }//end NS VertexingUtils
