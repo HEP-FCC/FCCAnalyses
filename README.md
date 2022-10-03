@@ -136,6 +136,7 @@ In order to run the analysis, we use the new version of the analysis code, locat
 cd FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL
 fccanalysis run analysis_stage1.py --output <myoutput.root> --files-list <file.root or file1.root file2.root or file*.root>
 ```
+Note : you can (must) specify the output directory by directly modifying ```analysis_stage1.py``` (l18)
 ## Generalities
 
 Analyses in the FCCAnalyses framework usually follow standardized workflow,
