@@ -116,8 +116,9 @@ This then generates .lhe.gz file located at ```HNL_ljj/Events/run_01/unweighted_
 gunzip file_name.lhe.gz
 ```
 ## From .lhe to .root : final steps to EDM sample.
-Once the .lhe file has been unzipped, we must use Delphes in order to create a .root file to analyze.
+Once the .lhe file has been unzipped, copy it to the directory containing the Pythia card. We will then need to use Delphes in order to create a .root file to analyze.
 ```shell
+cp file_name.lhe path_to_workspace/FCCeePhysicsPerformance/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation/
 cd FCCeePhysicsPerformance/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation/
 ```
 Must then edit ``` HNL_eenu_pythia.cmnd``` by including the .lhe file (line 14)
