@@ -646,7 +646,7 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vtx; // FCCAnalyses vertex object
   ROOT::VecOps::RVec<int> pdgAbs;                            // absolute PDG ID
   ROOT::VecOps::RVec<double> invM;                           // invariant mass
-  ROOT::VecOps::RVec<int> nSV_jet;
+  ROOT::VecOps::RVec<int> nSV_jet(jets.size(),0);
   result.vtx = vtx;
   result.pdgAbs = pdgAbs;
   result.invM = invM;
@@ -760,7 +760,7 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
       }
     }
 
-    nSV_jet.push_back(i_nSV);
+    nSV_jet[j] = i_nSV;
     // clean-up
     np_tracks.clear();
   } // jet loop ends
