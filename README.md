@@ -139,10 +139,18 @@ fccanalysis run analysis_stage1.py --output <myoutput.root> --files-list <file.r
 ```
 Note : you can (must) specify the output directory by directly modifying ```analysis_stage1.py``` (l18)
 ### Stage 2
-The next step is to use ```final_analysis.py```. It must be modified in order to contain the correct inputDir and outputDir. Once this is done, run :
+The next step is to use ```final_analysis.py```. It must be modified in order to contain the correct inputDir and outputDir. Last test was to remove all processes from process_list and leave only the .root file created during stage1, so it looked like : 
+```shell
+processList = {
+    #run over the full statistics from stage1
+    'HNL_ejj_output_test':{},
+}
+```
+Once this is done, run :
 ```shell
 fccanalysis final analysis_final.py
 ```
+The resulting .root files are stored in the output directory which was specified within ```analysis_final.py```
 ## Generalities
 
 Analyses in the FCCAnalyses framework usually follow standardized workflow,
