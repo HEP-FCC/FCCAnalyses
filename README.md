@@ -111,7 +111,7 @@ In order to generate an event with a given proc card do:
 cd Madgraph/MG5_aMC_v2_6_4/
 ./bin/mg5_aMC path_to_card/proc_cart.dat
 ```
-This then generates .lhe.gz file which needs to be unzipped :
+This then generates .lhe.gz file located at ```HNL_ljj/Events/run_01/unweighted_events.lhe.gz``` which needs to be unzipped :
 ```shell
 gunzip file_name.lhe.gz
 ```
