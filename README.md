@@ -138,7 +138,7 @@ cd FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL
 fccanalysis run analysis_stage1.py --output <myoutput.root> --files-list <file.root or file1.root file2.root or file*.root>
 ```
 Note : you can (must) specify the output directory by directly modifying ```analysis_stage1.py``` (l18)
-### Stage 2
+### Final analysis
 The next step is to use ```final_analysis.py```. It must be modified in order to contain the correct inputDir and outputDir. Last test was to remove all processes from process_list and leave only the .root file created during stage1, so it looked like : 
 ```shell
 processList = {
@@ -151,6 +151,12 @@ Once this is done, run :
 fccanalysis final analysis_final.py
 ```
 The resulting .root files are stored in the output directory which was specified within ```analysis_final.py```
+
+### Plots analysis
+The final step is to use the plotting script. Make sure to modify the inputDir to match with the outputDir defined in the previous step. Note: it might be that the selections/plots dictionnaries have to be modified to match with the samplename or selectionname (to be figured out). Once this is done, run :
+```shell
+fccanalysis plots analysis_plots.py
+```
 ## Generalities
 
 Analyses in the FCCAnalyses framework usually follow standardized workflow,
