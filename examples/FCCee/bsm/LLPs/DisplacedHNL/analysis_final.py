@@ -1,5 +1,5 @@
 #Input directory where the files produced at the stage1 level are
-inputDir  = "/eos/experiment/fcc/ee/analyses/case-studies/bsm/LLPs/HNLs/"
+inputDir  = "/afs/cern.ch/user/d/dimoulin/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL/output_stage1/"
 #inputDir = "/eos/user/j/jalimena/FCCeeLLP/"
 #inputDir = "output_stage1/"
 
@@ -8,11 +8,7 @@ outputDir  = "output_finalSel/"
 
 processList = {
     #run over the full statistics from stage1
-    'p8_ee_Zee_ecm91':{},
-    'p8_ee_Ztautau_ecm91':{},
-    'p8_ee_Zbb_ecm91':{},
-    'p8_ee_Zcc_ecm91':{},
-    'p8_ee_Zuds_ecm91':{},
+    'HNL_ejj_output_test':{},
 }
 
 #Link to the dictonary that contains all the cross section information etc...
