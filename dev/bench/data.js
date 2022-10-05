@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664962479379,
+  "lastUpdate": 1664962480857,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -6707,6 +6707,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf38f36549c69432f56f88cb39b5360cf2ff1bdf",
+          "message": "Merge pull request #199 from forthommel/case-studies\n\nSkeletton for case studies analyses packages",
+          "timestamp": "2022-10-05T11:24:31+02:00",
+          "tree_id": "b8e521bf4ab550db9a6749c898cc5024344b3d81",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/cf38f36549c69432f56f88cb39b5360cf2ff1bdf"
+        },
+        "date": 1664962480458,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
+            "value": 10.252255650529113,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 9.995272726414827,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.4040287203796,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.342091831974751,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 8.988251851935349,
+            "unit": "Evt/s"
           }
         ]
       }
