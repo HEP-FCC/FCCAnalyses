@@ -145,6 +145,7 @@ set(ADDONS_LIBRARIES CACHE STRING "List of external libraries the RDF utilities 
 add_subdirectory(addons)
 add_subdirectory(analyzers/dataframe)
 
+add_subdirectory(case-studies)
 if(FCCANALYSES_CASESTUDIES)
   add_subdirectory(analyzers/dataframe/case-studies FCCANALYSES_CASESTUDIES)
 endif()
