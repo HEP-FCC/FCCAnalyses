@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.16.9)
-project(__ANALYSIS_NAME__ CXX)
-set(lib_name "FCCAnalysis___ANALYSIS_NAME__")
+project(__pkgname__ CXX)
+set(lib_name "FCCAnalysis___pkgname__")
 find_package(ROOT COMPONENTS ROOTVecOps ROOTDataFrame REQUIRED)
 find_package(EDM4HEP REQUIRED)
 #--- Set a better default for installation directory---------------------------
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "__FCCANALYSES_PATH__/install" CACHE PATH "default install path" FORCE)
+  set(CMAKE_INSTALL_PREFIX "__fccpath__/install" CACHE PATH "default install path" FORCE)
 endif()
 #--- Offer the user the choice of overriding the installation directories
-set(FCCANALYSES_DIR "__FCCANALYSES_PATH__" CACHE PATH
+set(FCCANALYSES_DIR "__fccpath__" CACHE PATH
     "Installation directory for FCCAnalyses framework")
-#--- Find all paths to '__ANALYSIS_NAME__' library pieces
+#--- Find all paths to '__pkgname__' library pieces
 file(GLOB headers "include/*.h")
 file(GLOB sources "src/*.cc")
 file(GLOB classes "src/classes.h")
@@ -34,7 +34,7 @@ set_target_properties(${lib_name} PROPERTIES PUBLIC_HEADER "${headers}")
 install(TARGETS ${lib_name}
         RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" COMPONENT bin
         LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include/__ANALYSIS_NAME__"
+        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include/__pkgname__"
         COMPONENT analyses)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib${lib_name}.rootmap"
         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
@@ -44,4 +44,4 @@ if(${ROOT_VERSION} GREATER 6)
           DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
           COMPONENT analyses)
 endif()
-message(STATUS "Built standalone analyser package: __ANALYSIS_NAME__")
+message(STATUS "Built standalone analyser package: __pkgname__")

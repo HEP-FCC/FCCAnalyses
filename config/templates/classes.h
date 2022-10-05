@@ -1,3 +1,3 @@
-namespace __ANALYSIS_NAME__ {
+namespace __pkgname__ {
   struct dictionary {};
-}  // namespace __ANALYSIS_NAME__
+}  // namespace __pkgname__
