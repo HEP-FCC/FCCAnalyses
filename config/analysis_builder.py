@@ -10,24 +10,30 @@ def replace_all(input: str, repl) -> str:
         output = output.replace(a, b)
     return output
 
-def setup_analysis(package: str, author: str='', description: str='', name: str='', standalone: bool=False, output_dir: str=''):
+def setup_analysis(package: str,
+                   author: str='',
+                   description: str='',
+                   name: str='',
+                   standalone: bool=False,
+                   output_dir: str=''):
     if not author:
         author = find_author()
     if not description:
         description = '[...]'
-    #FIXME handle multiline descriptions
+    elif '\n' in description:
+        raise RuntimeError('Multiline description is not supported. Please edit the output analysis header file directly.')
     from subprocess import getoutput
-    fccanalyses_dir = getoutput('git rev-parse --show-toplevel')
+    fccanalyses_path = getoutput('git rev-parse --show-toplevel')
     replacement_dict = {
         '__pkgname__': package,
         '__pkgdesc__': description,
         '__name__': name,
         '__author__': author,
-        '__fccpath__': fccanalyses_dir
+        '__fccpath__': fccanalyses_path
     }
 
     if not output_dir:
-        path = f'{fccanalyses_dir}/case-studies/{package}'
+        path = f'{fccanalyses_path}/case-studies/{package}'
     else:
         path = output_dir
 
@@ -39,15 +45,15 @@ def setup_analysis(package: str, author: str='', description: str='', name: str=
             print(f'Warning: FCCAnalysis package "{package}" already exists.')
             pass
     try:
-        tmpl_dir = os.path.join(fccanalyses_dir, 'config/templates')
+        tmpl_dir = os.path.join(fccanalyses_path, 'config/templates')
         with open(f'{path}/src/classes.h', 'w') as f:
             f.write(replace_all(open(f'{tmpl_dir}/classes.h', 'r').read(), replacement_dict))
         with open(f'{path}/src/classes_def.xml', 'w') as f:
             f.write(replace_all(open(f'{tmpl_dir}/classes_def.xml', 'r').read(), replacement_dict))
         with open(f'{path}/src/{name}.cc', 'w') as f:
-            f.write(replace_all(open(f'{tmpl_dir}/Analysis.cc', 'r').read(), replacement_dict))
+            f.write(replace_all(open(f'{tmpl_dir}/Package.cc', 'r').read(), replacement_dict))
         with open(f'{path}/include/{name}.h', 'w') as f:
-            f.write(replace_all(open(f'{tmpl_dir}/Analysis.h', 'r').read(), replacement_dict))
+            f.write(replace_all(open(f'{tmpl_dir}/Package.h', 'r').read(), replacement_dict))
         with open(f'{path}/scripts/analysis_cfg.py', 'w') as f:
             f.write(replace_all(open(f'{tmpl_dir}/analysis_cfg.py', 'r').read(), replacement_dict))
         if standalone:

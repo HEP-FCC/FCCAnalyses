@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 #Optional: List of analysis packages to load in runtime
 analysesList = ['__pkgname__']
 
