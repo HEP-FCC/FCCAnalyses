@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665036667007,
+  "lastUpdate": 1665036668747,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -6923,6 +6923,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: /Package/dummy_analysis/scripts"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "laurent.forthomme@cern.ch",
+            "name": "Laurent Forthomme",
+            "username": "forthommel"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "683711f945126bcb3b9fd9eec10658ae4b4f384a",
+          "message": "Cleanup of case study toolset (#207)\n\n* Stripped build_new_case_study test out of analysis_example case study package\r\n\r\n* Stripped templates from main analysis builder script\r\n\r\n* Renamed a few templated variables names\r\n\r\n* Cleanup before review",
+          "timestamp": "2022-10-06T07:57:25+02:00",
+          "tree_id": "47d334ef8827af028c045cbeaa4e8e302016f472",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/683711f945126bcb3b9fd9eec10658ae4b4f384a"
+        },
+        "date": 1665036668077,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 8.818893452486156,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.032797484602813,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.862441914455924,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 7.679042791193088,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: /Package/dummy_analysis/scripts",
+            "value": 9.316489139402492,
+            "unit": "Evt/s"
           }
         ]
       }
