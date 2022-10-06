@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664962480857,
+  "lastUpdate": 1665036452290,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -6756,6 +6756,65 @@ window.BENCHMARK_DATA = {
             "name": "prod | Events processed per second: examples/FCCee/test",
             "value": 8.988251851935349,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "laurent.forthomme@cern.ch",
+            "name": "Laurent Forthomme",
+            "username": "forthommel"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "683711f945126bcb3b9fd9eec10658ae4b4f384a",
+          "message": "Cleanup of case study toolset (#207)\n\n* Stripped build_new_case_study test out of analysis_example case study package\r\n\r\n* Stripped templates from main analysis builder script\r\n\r\n* Renamed a few templated variables names\r\n\r\n* Cleanup before review",
+          "timestamp": "2022-10-06T07:57:25+02:00",
+          "tree_id": "47d334ef8827af028c045cbeaa4e8e302016f472",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/683711f945126bcb3b9fd9eec10658ae4b4f384a"
+        },
+        "date": 1665036450359,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "value": 9.057350635528564,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: case-studies/analysis_example/scripts"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 11.107546091079712,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 15.142598628997803,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "value": 10.332261800765991,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test"
+          },
+          {
+            "name": "prod | Time spent running the analysis: /Package/dummy_analysis/scripts",
+            "value": 8.946643114089966,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       }
