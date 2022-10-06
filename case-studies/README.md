@@ -16,12 +16,12 @@ Two modes are currently supported for the linking of these extensions to the ana
 The generation of such a package can be done using the following recipe:
 
 ```bash
-fccanalysis init [-h] [--script SCRIPT] [--author AUTHOR] [--description DESCRIPTION] [--standalone] [--output-dir OUTPUT_DIR] name
+fccanalysis init [-h] [--name NAME] [--author AUTHOR] [--description DESCRIPTION] [--standalone] [--output-dir OUTPUT_DIR] package
 ```
-where the mandatory parameter, `name`, refers to the analysis package name (along with the namespace it will define ; should be unique at runtime).
+where the mandatory parameter, `package`, refers to the analysis package name (along with the namespace it will define ; should be unique at runtime).
 Additionally, several optional parameters are handled:
-- `SCRIPT` specifies the analyser helpers filename (where all static functions exposed to the RDF framework through the ROOD dictionary will be stored) ;
-- `AUTHOR`, following the "`name <email@address>`" convention, and `DESCRIPTION`, will be added into the C++ files boilerplates to keep track of the author(s) and purpose(s) of this package ;
+- `NAME` specifies the analyser helpers filename (where all static functions exposed to the RDF framework through the ROOT dictionary will be stored) ;
+- `AUTHOR`, preferably following the "`name <email@address>`" convention, and `DESCRIPTION`, will be added into the C++ files boilerplates to keep track of the author(s) and purpose(s) of this package ;
 - `--standalone` to switch to the standalone package described above. In combination with the `OUTPUT_DIR` parameter, it allows to store the minimal working example in a completely arbitrary path (instead of the standard `case-studies` subdirectory) with its own CMake directive.
 
 In the _standalone_ mode, the analysis package can be built using the standard CMake recipe, given the FCCAnalyses environment in `setup.sh` is properly sourced:
