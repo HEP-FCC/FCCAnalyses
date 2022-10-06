@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>FCCAnalyses: analyzers/dataframe/FCCAnalyses/JetClustering.h File Reference</title>
+<title>FCCAnalyses: addons/FastJet/JetClustering.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_3d03528d2400acc3fc02bc2b11bada0c.html">analyzers</a></li><li class="navelem"><a class="el" href="dir_80d0d0eb77b8b32422d353741e959c30.html">dataframe</a></li><li class="navelem"><a class="el" href="dir_cb7b6eb9215e3f84f34d01fe0347dc1b.html">FCCAnalyses</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_1233bc0a3e869c10318208e4553a4fcb.html">addons</a></li><li class="navelem"><a class="el" href="dir_582ea236d635d8d6ee0286241c4903aa.html">FastJet</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -83,54 +83,40 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &quot;ROOT/RVec.hxx&quot;</code><br />
-<code>#include &quot;edm4hep/MCParticleData.h&quot;</code><br />
-<code>#include &quot;edm4hep/ParticleIDData.h&quot;</code><br />
-<code>#include &quot;edm4hep/Vector3f.h&quot;</code><br />
-<code>#include &quot;edm4hep/Vector3d.h&quot;</code><br />
-<code>#include &quot;edm4hep/Vector2i.h&quot;</code><br />
 <code>#include &quot;fastjet/AreaDefinition.hh&quot;</code><br />
 <code>#include &quot;fastjet/ClusterSequence.hh&quot;</code><br />
 <code>#include &quot;fastjet/ClusterSequenceArea.hh&quot;</code><br />
 <code>#include &quot;fastjet/JetDefinition.hh&quot;</code><br />
 <code>#include &quot;fastjet/EECambridgePlugin.hh&quot;</code><br />
 <code>#include &quot;fastjet/JadePlugin.hh&quot;</code><br />
-<code>#include &quot;<a class="el" href="_jet_clustering_utils_8h_source.html">FCCAnalyses/JetClusteringUtils.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_valencia_plugin_8h_source.html">FastJet/ValenciaPlugin.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for JetClustering.h:</div>
 <div class="dyncontent">
-<div class="center"><img src="_jet_clustering_8h__incl.png" border="0" usemap="#aanalyzers_2dataframe_2_f_c_c_analyses_2_jet_clustering_8h" alt=""/></div>
-<map name="aanalyzers_2dataframe_2_f_c_c_analyses_2_jet_clustering_8h" id="aanalyzers_2dataframe_2_f_c_c_analyses_2_jet_clustering_8h">
-<area shape="rect" title=" " alt="" coords="909,6,1117,47"/>
-<area shape="rect" title=" " alt="" coords="179,104,241,131"/>
-<area shape="rect" title=" " alt="" coords="5,187,67,213"/>
-<area shape="rect" title=" " alt="" coords="92,187,215,213"/>
-<area shape="rect" title=" " alt="" coords="522,187,720,213"/>
-<area shape="rect" title=" " alt="" coords="984,104,1176,131"/>
-<area shape="rect" title=" " alt="" coords="1200,104,1352,131"/>
-<area shape="rect" title=" " alt="" coords="1377,104,1532,131"/>
-<area shape="rect" title=" " alt="" coords="1557,104,1709,131"/>
-<area shape="rect" title=" " alt="" coords="1733,104,1915,131"/>
-<area shape="rect" title=" " alt="" coords="1135,187,1332,213"/>
-<area shape="rect" title=" " alt="" coords="1939,104,2165,131"/>
-<area shape="rect" title=" " alt="" coords="745,187,913,213"/>
-<area shape="rect" title=" " alt="" coords="2190,104,2404,131"/>
-<area shape="rect" title=" " alt="" coords="2429,104,2584,131"/>
-<area shape="rect" href="_jet_clustering_utils_8h.html" title=" " alt="" coords="369,97,561,138"/>
-<area shape="rect" href="_valencia_plugin_8h.html" title=" " alt="" coords="733,104,909,131"/>
-<area shape="rect" title=" " alt="" coords="239,187,368,213"/>
-<area shape="rect" title=" " alt="" coords="393,187,497,213"/>
-<area shape="rect" title=" " alt="" coords="937,187,1111,213"/>
+<div class="center"><img src="_jet_clustering_8h__incl.png" border="0" usemap="#aaddons_2_fast_jet_2_jet_clustering_8h" alt=""/></div>
+<map name="aaddons_2_fast_jet_2_jet_clustering_8h" id="aaddons_2_fast_jet_2_jet_clustering_8h">
+<area shape="rect" title=" " alt="" coords="441,5,655,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,67,107"/>
+<area shape="rect" title=" " alt="" coords="91,80,153,107"/>
+<area shape="rect" title=" " alt="" coords="179,80,360,107"/>
+<area shape="rect" title=" " alt="" coords="381,155,579,181"/>
+<area shape="rect" title=" " alt="" coords="435,80,661,107"/>
+<area shape="rect" title=" " alt="" coords="1059,155,1227,181"/>
+<area shape="rect" title=" " alt="" coords="886,80,1100,107"/>
+<area shape="rect" title=" " alt="" coords="1125,80,1280,107"/>
+<area shape="rect" href="_valencia_plugin_8h.html" title=" " alt="" coords="685,80,861,107"/>
+<area shape="rect" title=" " alt="" coords="687,155,860,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="_jet_clustering_8h__dep__incl.png" border="0" usemap="#aanalyzers_2dataframe_2_f_c_c_analyses_2_jet_clustering_8hdep" alt=""/></div>
-<map name="aanalyzers_2dataframe_2_f_c_c_analyses_2_jet_clustering_8hdep" id="aanalyzers_2dataframe_2_f_c_c_analyses_2_jet_clustering_8hdep">
-<area shape="rect" title=" " alt="" coords="5,6,213,47"/>
-<area shape="rect" href="_jet_clustering_8cc.html" title=" " alt="" coords="31,97,188,138"/>
+<div class="center"><img src="_jet_clustering_8h__dep__incl.png" border="0" usemap="#aaddons_2_fast_jet_2_jet_clustering_8hdep" alt=""/></div>
+<map name="aaddons_2_fast_jet_2_jet_clustering_8hdep" id="aaddons_2_fast_jet_2_jet_clustering_8hdep">
+<area shape="rect" title=" " alt="" coords="35,5,249,32"/>
+<area shape="rect" href="_jet_clustering_8cc.html" title=" " alt="" coords="5,185,144,226"/>
+<area shape="rect" href="_jet_clustering_utils_8h.html" title=" " alt="" coords="112,80,309,136"/>
+<area shape="rect" href="_jet_clustering_utils_8cc.html" title=" " alt="" coords="169,185,348,226"/>
 </map>
 </div>
 </div>
@@ -138,44 +124,45 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__kt.html">FCCAnalyses::JetClustering::clustering_kt</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for kt.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__kt.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1_f_c_c_analyses_jet.html">JetClustering::FCCAnalysesJet</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure to keep useful informations for the jets.  <a href="struct_jet_clustering_1_1_f_c_c_analyses_jet.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__antikt.html">FCCAnalyses::JetClustering::clustering_antikt</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for antikt.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__antikt.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__kt.html">JetClustering::clustering_kt</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for kt.  <a href="struct_jet_clustering_1_1clustering__kt.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__cambridge.html">FCCAnalyses::JetClustering::clustering_cambridge</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for Cambridge.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__cambridge.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__antikt.html">JetClustering::clustering_antikt</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for antikt.  <a href="struct_jet_clustering_1_1clustering__antikt.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__ee__kt.html">FCCAnalyses::JetClustering::clustering_ee_kt</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for ee_kt.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__ee__kt.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__cambridge.html">JetClustering::clustering_cambridge</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for Cambridge.  <a href="struct_jet_clustering_1_1clustering__cambridge.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__ee__genkt.html">FCCAnalyses::JetClustering::clustering_ee_genkt</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for ee_genkt.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__ee__genkt.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__ee__kt.html">JetClustering::clustering_ee_kt</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for ee_kt.  <a href="struct_jet_clustering_1_1clustering__ee__kt.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__genkt.html">FCCAnalyses::JetClustering::clustering_genkt</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for genkt.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__genkt.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__ee__genkt.html">JetClustering::clustering_ee_genkt</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for ee_genkt.  <a href="struct_jet_clustering_1_1clustering__ee__genkt.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__valencia.html">FCCAnalyses::JetClustering::clustering_valencia</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for valencia.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__valencia.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__genkt.html">JetClustering::clustering_genkt</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for genkt.  <a href="struct_jet_clustering_1_1clustering__genkt.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__jade.html">FCCAnalyses::JetClustering::clustering_jade</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for jade.  <a href="struct_f_c_c_analyses_1_1_jet_clustering_1_1clustering__jade.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__valencia.html">JetClustering::clustering_valencia</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for valencia.  <a href="struct_jet_clustering_1_1clustering__valencia.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_jet_clustering_1_1clustering__jade.html">JetClustering::clustering_jade</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet Clustering interface for jade.  <a href="struct_jet_clustering_1_1clustering__jade.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespace_f_c_c_analyses"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses.html">FCCAnalyses</a></td></tr>
-<tr class="memdesc:namespace_f_c_c_analyses"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet clustering interface. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespace_f_c_c_analyses_1_1_jet_clustering"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_jet_clustering.html">FCCAnalyses::JetClustering</a></td></tr>
+<tr class="memitem:namespace_jet_clustering"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_jet_clustering.html">JetClustering</a></td></tr>
+<tr class="memdesc:namespace_jet_clustering"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet clustering interface. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 6 2022 08:04:36 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 6 2022 12:15:50 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>

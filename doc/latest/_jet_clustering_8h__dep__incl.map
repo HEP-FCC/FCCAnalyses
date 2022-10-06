@@ -1,4 +1,6 @@
-<map id="analyzers/dataframe/FCCAnalyses/JetClustering.h" name="analyzers/dataframe/FCCAnalyses/JetClustering.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,6,213,47"/>
-<area shape="rect" id="node2" href="$_jet_clustering_8cc.html" title=" " alt="" coords="31,97,188,138"/>
+<map id="addons/FastJet/JetClustering.h" name="addons/FastJet/JetClustering.h">
+<area shape="rect" id="node1" title=" " alt="" coords="35,5,249,32"/>
+<area shape="rect" id="node2" href="$_jet_clustering_8cc.html" title=" " alt="" coords="5,185,144,226"/>
+<area shape="rect" id="node3" href="$_jet_clustering_utils_8h.html" title=" " alt="" coords="112,80,309,136"/>
+<area shape="rect" id="node4" href="$_jet_clustering_utils_8cc.html" title=" " alt="" coords="169,185,348,226"/>
 </map>
