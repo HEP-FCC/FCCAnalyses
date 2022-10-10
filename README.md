@@ -49,14 +49,8 @@ ROOT dataframe documentation is available
 In order to use the FCC analysers within ROOT dataframe, a dictionary needs to
 be built and put into `LD_LIBRARY_PATH` (this happens in `setup.sh`). The
 following needs to be done when running local code and for developers. 
-Personal note : In order to work from personal windows computer :
-- Launch Xming
-- Launch Putty
-- Select CERN session and log into lxplus.
 
 ```shell
-ssh -Y dimoulin@lxplus.cern.ch
-
 source ./setup.sh
 mkdir build install
 cd build
@@ -70,6 +64,12 @@ cd ..
 > `analyzers/dataframe/` please do not forget to re-compile :)
 
 ## Logging in
+
+Personal note : In order to work from personal windows computer :
+- Launch Xming
+- Launch Putty
+- Select CERN session and log into lxplus.
+
 Need to run these commands everytime you log in :
 ```shell
 bash
