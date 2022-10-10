@@ -153,9 +153,13 @@ fccanalysis final analysis_final.py
 The resulting .root files are stored in the output directory which was specified within ```analysis_final.py```
 
 ### Plots analysis
-The final step is to use the plotting script. Make sure to modify the inputDir to match with the outputDir defined in the previous step. Note: it might be that the selections/plots dictionnaries have to be modified to match with the samplename or selectionname (to be figured out). Once this is done, run :
+The final step is to use the plotting script. Make sure to modify the inputDir to match with the outputDir defined in the previous step. The selections/plots/legend/colors 'keys' have to match the ones contained in the inputDir. Once this is done, run :
 ```shell
 fccanalysis plots analysis_plots.py
+```
+This will generate plots for each selection. These can then be copied to your local device (from a local terminal) using :
+```shell
+scp -r /afs/cern.ch/user/d/dimoulin/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL/plot_directory/ .
 ```
 ## Generalities
 
