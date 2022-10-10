@@ -159,7 +159,7 @@ fccanalysis plots analysis_plots.py
 ```
 This will generate plots for each selection. These can then be copied to your local device (from a local terminal) using :
 ```shell
-scp -r /afs/cern.ch/user/d/dimoulin/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL/plot_directory/ .
+scp -r dimoulin@lxplus.cern.ch:/afs/cern.ch/user/d/dimoulin/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL/plots/ .
 ```
 ## Generalities
 
