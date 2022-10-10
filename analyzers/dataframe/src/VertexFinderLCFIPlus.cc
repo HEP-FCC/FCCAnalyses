@@ -1,3 +1,6 @@
+// reference: https://arxiv.org/pdf/1506.08371.pdf
+// contact: kunal.gautam@cern.ch
+
 #include "FCCAnalyses/VertexFinderLCFIPlus.h"
 #include <iostream>
 
