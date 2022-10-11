@@ -138,7 +138,7 @@ Where HNL_ejj.root is the output file
 In order to run the analysis, we use the new version of the analysis code, located at ```/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL```. In order to run the stage 1 analysis code over our EDM sample, we must specify it using :
 ```shell
 cd FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL
-fccanalysis run analysis_stage1.py --output <myoutput.root> --files-list <file.root or file1.root file2.root or file*.root>
+fccanalysis run analysis_stage1.py --output <name_of_desired_output.root> --files-list <name_of_delphes/pythia_root_file.root>
 ```
 Note : you can (must) specify the output directory by directly modifying ```analysis_stage1.py``` (l18)
 ### Final analysis
