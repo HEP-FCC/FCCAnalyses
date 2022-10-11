@@ -77,7 +77,7 @@ $(function() {
 <div class="textblock"><p ><a class="anchor" id="md_README"></a> Common framework for FCC related analyses. This framework allows one to write full analysis, taking <a href="https://github.com/key4hep/EDM4hep">EDM4hep</a> input ROOT files and producing the plots.</p>
 <blockquote class="doxtable">
 <p >&zwj; As usual, if you aim at contributing to the repository, please fork it, develop your feature/analysis and submit a pull requests.</p>
-<p >To have access to the FCC samples, you need to be subscribed to one of the following e-groups (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx=ee,hh,eh</code>. For the time being, the configuration files are accessible on <code>helsens</code> public AFS. This is not optimal and will be changed in the future, thus you are also kindly asked to contact <code>clement.helsens@cern.ch</code> and request access to <code>/afs/cern.ch/work/h/helsens/public/FCCDicts/</code>.</p>
+<p >To have access to the FCC samples, you need to be subscribed to one of the following e-groups (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx=ee,hh,eh</code>. For the time being, the configuration files are accessible on <code>fccsw</code> public AFS. This is not optimal and will be changed in the future with migration to DIRAC, thus you are also kindly asked to contact <code>emmanuel.perez@cern.ch</code>, <code>gerardo.ganis@cern.ch</code>, <code>clement.helsens@cern.ch</code> and request access to <code>/afs/cern.ch/work/f/fccsw/public/FCCDicts/</code>.</p>
 <p ></p>
 </blockquote>
 <p>Detailed code documentation can be found <a href="http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html">here</a>.</p>
@@ -128,7 +128,7 @@ Example analysis</h1>
 <p >To better explain the <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> workflow let's run our example analysis. The analysis should be located at <code>examples/FCCee/higgs/mH-recoil/mumu/</code>.</p>
 <h2><a class="anchor" id="autotoc_md6"></a>
 Pre-selection</h2>
-<p >The pre-selection runs over already existing and properly registered FCCSW EDM4hep events. The dataset names with the corresponding statistics can be found <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_spring2021_IDEA.php">here</a> for the IDEA spring 2021 campaign. The <code>processList</code> is a dictionary of processes, each process having it's own dictionary of parameters. For example </p><div class="fragment"><div class="line"><span class="stringliteral">&#39;p8_ee_ZH_ecm240&#39;</span>:{<span class="stringliteral">&#39;fraction&#39;</span>:0.2, <span class="stringliteral">&#39;chunks&#39;</span>:2, <span class="stringliteral">&#39;output&#39;</span>:<span class="stringliteral">&#39;p8_ee_ZH_ecm240_out&#39;</span>}</div>
+<p >The pre-selection runs over already existing and properly registered FCCSW EDM4hep events. The dataset names with the corresponding statistics can be found <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/FCCee/spring2021/Delphesevents_IDEA.php">here</a> for the IDEA spring 2021 campaign. The <code>processList</code> is a dictionary of processes, each process having it's own dictionary of parameters. For example </p><div class="fragment"><div class="line"><span class="stringliteral">&#39;p8_ee_ZH_ecm240&#39;</span>:{<span class="stringliteral">&#39;fraction&#39;</span>:0.2, <span class="stringliteral">&#39;chunks&#39;</span>:2, <span class="stringliteral">&#39;output&#39;</span>:<span class="stringliteral">&#39;p8_ee_ZH_ecm240_out&#39;</span>}</div>
 </div><!-- fragment --><p> where <code>p8_ee_ZH_ecm240</code> should match an existing sample in the database, <code>fraction</code> is the fraction of the sample you want to run on (default is 1), <code>chunks</code> is the number of jobs to run (you will have the corresponding number of output files) and <code>output</code> in case you need to change the name of the output file (please note that then the sample will not be matched in the database for <code>finalSel.py</code> histograms normalisation). The other parameters are explained in <a href="https://github.com/HEP-FCC/FCCAnalyses/tree/master/example/FCCee/higgs/mH-recoil/analysis_stage1.py">the example file</a>.</p>
 <p >To run the pre-selection stage of the example analysis run:</p>
 <div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py</div>
@@ -160,7 +160,7 @@ Experimental</h2>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 6 2022 12:15:50 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Oct 11 2022 08:56:18 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
