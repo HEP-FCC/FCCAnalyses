@@ -123,6 +123,16 @@ def getElement(rdfModule, element, isFinal=False):
                 return {}
             else: print('The option <{}> is not available in presel analysis'.format(element))
 
+        elif element=='geometryFile':
+            print('The variable <{}> is optional in your analysys.py file, return default value empty string'.format(element))
+            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
+            return ""
+
+        elif element=='readoutName':
+            print('The variable <{}> is optional in your analysys.py file, return default value empty string'.format(element))
+            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
+            return ""
+
         return None
 
 #__________________________________________________________
@@ -310,11 +320,15 @@ def runPreprocess(df):
     d1.Print()
     sys.exit(3)
     return df
+
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt, args):
     # for convenience and compatibility with user code
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
-
+    geometryFile = getElement(rdfModule, "geometryFile")
+    readoutName  = getElement(rdfModule, "readoutName")
+    if "geometryFile"!="" and "readoutName"!="":
+        ROOT.CaloNtupleizer.loadGeometry(geometryFile, readoutName)
     ncpus = 1
     # cannot use MT with Range()
     if args.nevents < 0:
@@ -455,7 +469,7 @@ def addeosType(fileName):
     else:
         print('unknown eos type, please check with developers as it might not run with best performances')
     return fileName
-    
+
 #__________________________________________________________
 def runLocal(rdfModule, fileList, args):
     #Create list of files to be Processed
