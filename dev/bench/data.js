@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665471697924,
+  "lastUpdate": 1665481387862,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -7404,6 +7404,65 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: /Package/dummy_analysis/scripts",
             "value": 7.349346469849056,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "55280d3cebea4476e8c912e9449ba44310922e8b",
+          "message": "Merge pull request #209 from clementhelsens/master\n\nadd geometry files",
+          "timestamp": "2022-10-11T11:34:04+02:00",
+          "tree_id": "129a088475aa7a5a27b195e5a0a4ae7ef6fed4bd",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/55280d3cebea4476e8c912e9449ba44310922e8b"
+        },
+        "date": 1665481385735,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "value": 9.892454624176025,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: case-studies/analysis_example/scripts"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 12.329636335372925,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 16.712114334106445,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "value": 12.200974702835083,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: /Package/dummy_analysis/scripts",
+            "value": 10.547279596328735,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       }
