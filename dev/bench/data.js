@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665471373684,
+  "lastUpdate": 1665471375148,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -7247,6 +7247,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: /Package/dummy_analysis/scripts"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4ab5dd6dd7b382fb3d69d9e09130b94334c0d388",
+          "message": "Update README.md",
+          "timestamp": "2022-10-11T08:47:42+02:00",
+          "tree_id": "0aa7a837ac7c309a1c1eb5b54857a42173f16266",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/4ab5dd6dd7b382fb3d69d9e09130b94334c0d388"
+        },
+        "date": 1665471374754,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 8.98758352688058,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 7.889798526381243,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.864962168002739,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 7.8435476386555125,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
+            "value": 9.238382100775647,
+            "unit": "Evt/s"
           }
         ]
       }
