@@ -327,7 +327,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
     geometryFile = getElement(rdfModule, "geometryFile")
     readoutName  = getElement(rdfModule, "readoutName")
-    if "geometryFile"!="" and "readoutName"!="":
+    if geometryFile!="" and readoutName!="":
         ROOT.CaloNtupleizer.loadGeometry(geometryFile, readoutName)
     ncpus = 1
     # cannot use MT with Range()
