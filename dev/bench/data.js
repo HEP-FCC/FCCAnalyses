@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665481633474,
+  "lastUpdate": 1665481636658,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -7571,6 +7571,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: /Package/dummy_analysis/scripts"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "55280d3cebea4476e8c912e9449ba44310922e8b",
+          "message": "Merge pull request #209 from clementhelsens/master\n\nadd geometry files",
+          "timestamp": "2022-10-11T11:34:04+02:00",
+          "tree_id": "129a088475aa7a5a27b195e5a0a4ae7ef6fed4bd",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/55280d3cebea4476e8c912e9449ba44310922e8b"
+        },
+        "date": 1665481635266,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 6.333873953869061,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 5.754996807607812,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 4.256912670813367,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 5.958106692978926,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
+            "value": 6.430113192604189,
+            "unit": "Evt/s"
           }
         ]
       }
