@@ -27,8 +27,7 @@ parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"],
 parser.add_argument("-storeClusterBranches", default = True, help="Whether or not to store cluster information", type = str2bool)
 #parser.add_argument("-clusterBranchNames", default = ["CaloClusters", "CorrectedCaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
 parser.add_argument("-clusterBranchNames", default = ["CaloClusters", "CaloTopoClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
-parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = str2bool)
-#parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells", "PositionedCaloTopoClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
+parser.add_argument("-storeClusterCellsBranches", default = True, help="Whether or not to store cluster cells information", type = str2bool)
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells", "PositionedCaloTopoClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeClusterHighLevelVariables", default = True, help="Whether or not to store cluster high level variables. 'useGeometry' must be set to true to use this.", type = str2bool)
 parser.add_argument("-clusterCellsBranchNamesForVariables", default = ["PositionedCaloClusterCells", "PositionedCaloTopoClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile used to compute the high level variables. Order and number of entries must follow -clusterBranchNames, the cells must have positions attached!", type = str, nargs = '+')
@@ -68,6 +67,7 @@ class analysis():
                 dict_outputBranchName_function["%s_x"%cellBranchName] = "CaloNtupleizer::getCaloHit_x(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_y"%cellBranchName] = "CaloNtupleizer::getCaloHit_y(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_z"%cellBranchName] = "CaloNtupleizer::getCaloHit_z(%s)"%cellBranchName
+                dict_outputBranchName_function["%s_r"%cellBranchName] = "CaloNtupleizer::getCaloHit_r(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_phi"%cellBranchName] = "CaloNtupleizer::getCaloHit_phi(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_theta"%cellBranchName] = "CaloNtupleizer::getCaloHit_theta(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_eta"%cellBranchName] = "CaloNtupleizer::getCaloHit_eta(%s)"%cellBranchName
@@ -97,6 +97,7 @@ class analysis():
                 dict_outputBranchName_function["%s_x"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_x(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_y"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_y(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_z"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_z(%s)"%clusterCellsBranchName
+                dict_outputBranchName_function["%s_r"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_r(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_phi"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_phi(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_theta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_theta(%s)"%clusterCellsBranchName
                 #dict_outputBranchName_function["%s_position"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_positionVector3(%s)"%clusterCellsBranchName

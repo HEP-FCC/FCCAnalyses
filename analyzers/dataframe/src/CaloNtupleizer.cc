@@ -47,6 +47,14 @@ ROOT::VecOps::RVec<float> getCaloHit_z (const ROOT::VecOps::RVec<edm4hep::Calori
   return result;
 }
 
+ROOT::VecOps::RVec<float> getCaloHit_r (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(sqrt(p.position.x * p.position.x + p.position.y * p.position.y));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> getCaloHit_phi (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
