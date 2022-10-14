@@ -912,10 +912,8 @@ def run(mainparser, subparser=None):
     """
 
     if subparser:
-        print("===================setup subparser")
         setup_run_parser(subparser)
     args, _ = mainparser.parse_known_args()
-    print("args in mains code==============================",args)
     #check that the analysis file exists
     analysisFile = args.pathToAnalysisScript
     if not os.path.isfile(analysisFile):
