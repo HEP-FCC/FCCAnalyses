@@ -6,8 +6,8 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
     return 1
   fi
   export OUTPUT_DIR=${LOCAL_DIR}/${1}
-  mkdir -p ${OUTPUT_DIR}/build
   fccanalysis init ${1} --output-dir ${OUTPUT_DIR} --name ${1} --standalone
+  mkdir -p ${OUTPUT_DIR}/build
 else
   echo "ERROR: This script is meant to be sourced!"
 fi
