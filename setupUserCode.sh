@@ -7,8 +7,8 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   fi
 
   if [ -d "${1}" ]; then
-    echo -e "\033[0;31mUser analysis ${1} already exists, please use an other one or remove it before running this script"
-    echo -e "\033[0;31mThis is to prevent you from deleting code you have already writen. Exit."
+    echo -e "\033[0;31mERROR: User analysis ${1} already exists, please use an other one or remove it before running this script"
+    echo -e "\033[0;31mERROR: This is to prevent you from deleting code you have already writen. Exit.\033[0m"
     return 1
   fi
 
