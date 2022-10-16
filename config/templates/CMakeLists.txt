@@ -24,6 +24,7 @@ add_library(${lib_name} SHARED ${sources} ${headers} lib${lib_name}.cxx)
 target_include_directories(${lib_name} PUBLIC include
                                               ${FCCANALYSES_DIR}
                                               ${FCCANALYSES_DIR}/addons
+                                              ${FCCANALYSES_DIR}/analyzers/dataframe
                                               $<INSTALL_INTERFACE:include>)
 target_link_directories(${lib_name} PUBLIC ${FCCANALYSES_DIR}
                                            ${FCCANALYSES_DIR}/install/lib)
