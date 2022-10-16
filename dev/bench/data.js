@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665906509522,
+  "lastUpdate": 1665906512512,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -9304,6 +9304,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "14b5ff47304daeea37eec8c32fa821fc31adbc5b",
+          "message": "Merge pull request #212 from clementhelsens/master\n\nfix cmake",
+          "timestamp": "2022-10-16T09:34:58+02:00",
+          "tree_id": "a89c7e5ce1dad87e0cd38e2ac4db3cd55bc54581",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/14b5ff47304daeea37eec8c32fa821fc31adbc5b"
+        },
+        "date": 1665906511246,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 7.27994414184705,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.470683449030971,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 4.9326067066358394,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 6.7415653763896435,
+            "unit": "Evt/s"
           }
         ]
       }
