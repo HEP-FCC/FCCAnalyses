@@ -1,43 +1,5 @@
-
-#
-#
-# To run:
-#
-# fccanalysis run analysis_Bs2JpsiPhi.py  --test --nevents 1000 --output Bs2JpsiPhi_MCseeded.root
-
-
-#Mandatory: List of processes
-processList = {
-    'p8_noBES_ee_Ztautau_ecm91_EvtGen_TauMinus2MuMuMu':{},#Run the full statistics in one output file named <outputDir>/xxx.root
-    'p8_noBES_ee_Ztautau_ecm91_EvtGen_TauMinus2PiPiPinu':{}
-    #'p8_ee_WW_ecm240':{'fraction':0.5, 'chunks':2}, #Run 50% of the statistics in two files named <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
-    #'p8_ee_ZH_ecm240':{'fraction':0.2, 'output':'p8_ee_ZH_ecm240_out'} #Run 20% of the statistics in one file named <outputDir>/p8_ee_ZH_ecm240_out.root (example on how to change the output name)
-}
-
-#Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
-prodTag     = "FCCee/spring2021/IDEA/"
-
-#Optional: output directory, default is local running directory
-#outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
-
-#Optional: analysisName, default is ""
-#analysisName = "My Analysis"
-
-#Optional: ncpus, default is 4
-#nCPUS       = 8
-
-#Optional running on HTCondor, default is False
-#runBatch    = False
-
-#Optional batch queue name when running on HTCondor, default is workday
-#batchQueue = "longlunch"
-
-#Optional computing account when running on HTCondor, default is group_u_FCC.local_gen
-#compGroup = "group_u_FCC.local_gen"
-
 #Optional test file
 testFile=" /eos/experiment/fcc/ee/examples/lowerTriangle/p8_ecm91GeV_Zbb_EvtGen_Bs2JpsiPhi_IDEAtrkCov.root"
-
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
@@ -62,11 +24,11 @@ class RDFanalysis():
                #             explored recursively if needed.
                #        2nd: chargeConjugateMother
                #        3rd: chargeConjugateDaughters
-               #        4th: inclusiveDecay: when set to false, if a mother is found, that decays 
+               #        4th: inclusiveDecay: when set to false, if a mother is found, that decays
                #             into the particles specified in the list plus other particle(s), this decay is not selected.
                # If the event contains more than one such decays,only the first one is kept.
                .Define("Bs2MuMuKK_indices",  "MCParticle::get_indices( 531, {-13,13,321,-321}, true, true, true, false) ( Particle, Particle1)" )
-               
+
                # select events for which the requested decay chain has been found:
                .Filter("Bs2MuMuKK_indices.size() > 0")
 
@@ -79,7 +41,7 @@ class RDFanalysis():
                # The size of this collection is always 4 provided that Bs2MuMuKK_indices is not empty,
                # possibly including "dummy" particles in case one of the legs did not make a RecoParticle
                # (e.g. because it is outsice the tracker acceptance).
-               # This is done on purpose, in order to maintain the mapping with the indices - i.e. the 1st particle in 
+               # This is done on purpose, in order to maintain the mapping with the indices - i.e. the 1st particle in
                # the list BsRecoParticles is the mu+, then the mu-, etc.
                # (selRP_matched_to_list ignores the unstable MC particles that are in the input list of indices
  	       # hence the mother particle, which is the [0] element of the Bs2MuMuKK_indices vector).
@@ -102,7 +64,6 @@ class RDFanalysis():
                # 	from which we extract the edm4hep::VertexData object, which contains the vertex positiob in mm
                .Define("BsVertex",  "VertexingUtils::get_VertexData( BsVertexObject )")
 
-
         )
         return df2
 
@@ -111,12 +72,9 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-		"MC_Muplus",	
-                "n_BsTracks",
-                "BsMCDecayVertex",
-                "BsVertex",
-
+        "MC_Muplus",
+        "n_BsTracks",
+        "BsMCDecayVertex",
+        "BsVertex",
         ]
         return branchList
-
-
