@@ -21,7 +21,7 @@
 
 namespace FCCAnalyses{
 
-namespace MyAnalysis {
+namespace myAnalysis {
 
  double sum_momentum_tracks( const VertexingUtils::FCCAnalysesVertex&  vertex );
 
@@ -29,10 +29,10 @@ namespace MyAnalysis {
  double tau3mu_raw_mass(  const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>&  legs ) ;
 
 
-  ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> > build_triplets( 
+  ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> > build_triplets(
 			const 	ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>&  in , float total_charge) ;
 
-  ROOT::VecOps::RVec< VertexingUtils::FCCAnalysesVertex > build_AllTauVertexObject( 
+  ROOT::VecOps::RVec< VertexingUtils::FCCAnalysesVertex > build_AllTauVertexObject(
                         const ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> >&  triplets,
                         const ROOT::VecOps::RVec<edm4hep::TrackState>& allTracks ) ;
 
@@ -55,9 +55,8 @@ float get_p(const edm4hep::MCParticleData& p) ;
 float get_e(const edm4hep::MCParticleData& p) ;
 float get_theta(const edm4hep::MCParticleData& in) ;
 
-}//end NS MyAnalysis
+}//end NS myAnalysis
 
 }//end NS FCCAnalyses
 
 #endif
-

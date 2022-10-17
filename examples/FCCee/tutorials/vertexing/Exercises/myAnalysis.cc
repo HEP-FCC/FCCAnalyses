@@ -1,9 +1,9 @@
-#include "FCCAnalyses/MyAnalysis.h"
+#include "FCCAnalyses/myAnalysis.h"
 #include <iostream>
 
 namespace FCCAnalyses{
 
-namespace MyAnalysis {
+namespace myAnalysis {
 
 
  double sum_momentum_tracks( const VertexingUtils::FCCAnalysesVertex&  vertex) {
@@ -29,7 +29,7 @@ namespace MyAnalysis {
    ROOT::VecOps::RVec< TVector3 > momenta = vertex.updated_track_momentum_at_vertex ;
    int n = momenta.size();
    for (int ileg=0; ileg < n; ileg++) {
-     TVector3 track_momentum = momenta[ ileg ]; 
+     TVector3 track_momentum = momenta[ ileg ];
      TLorentzVector leg;
      leg.SetXYZM( track_momentum[0], track_momentum[1], track_momentum[2], muon_mass ) ;
      tau += leg;
@@ -89,14 +89,14 @@ ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> > bui
 }
 
 
-ROOT::VecOps::RVec< VertexingUtils::FCCAnalysesVertex > build_AllTauVertexObject( 
-			const ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> >&  triplets, 
+ROOT::VecOps::RVec< VertexingUtils::FCCAnalysesVertex > build_AllTauVertexObject(
+			const ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> >&  triplets,
 			const ROOT::VecOps::RVec<edm4hep::TrackState>& allTracks )  {
       ROOT::VecOps::RVec< VertexingUtils::FCCAnalysesVertex >  results;
       int ntriplets = triplets.size();
       for (int i=0; i < ntriplets; i++) {
           ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs = triplets[i];
-     
+
           ROOT::VecOps::RVec<edm4hep::TrackState> the_tracks = ReconstructedParticle2Track::getRP2TRK( legs, allTracks );
           VertexingUtils::FCCAnalysesVertex vertex = VertexFitterSimple::VertexFitter_Tk( 2, the_tracks );
           results.push_back( vertex );
@@ -171,4 +171,3 @@ float get_theta(const edm4hep::MCParticleData& p) {
 
 } //end NS
 } // end NS
-

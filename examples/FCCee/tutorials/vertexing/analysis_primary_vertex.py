@@ -50,6 +50,7 @@ class RDFanalysis():
                # The method below simply "subtracts" the primary tracks from the full collection :
                .Define("SecondaryTracks",   "VertexFitterSimple::get_NonPrimaryTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
 
+               #Needed to display the vertex in the event display tutorial
                .Define("tracks", "EFlowTrack_1")
                .Define("PV_vec", "ROOT::VecOps::RVec<edm4hep::VertexData> v; v.push_back(Vertex_allTracks); return v;")
         )
