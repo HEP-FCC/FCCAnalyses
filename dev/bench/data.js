@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666032137453,
+  "lastUpdate": 1666032140617,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -9496,6 +9496,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a11527606f7fe418398f24aeb8b94134a9ef7520",
+          "message": "Merge pull request #213 from clementhelsens/fccswtuto2022\n\nFccswtuto2022",
+          "timestamp": "2022-10-17T20:28:26+02:00",
+          "tree_id": "950ddb1695c772ae142ec1112908303d1ce1b76b",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/a11527606f7fe418398f24aeb8b94134a9ef7520"
+        },
+        "date": 1666032139168,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 7.006065971511732,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.064333987392449,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 4.747999727456948,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 6.115903782896428,
+            "unit": "Evt/s"
           }
         ]
       }
