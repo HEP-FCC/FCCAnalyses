@@ -1,11 +1,3 @@
-
-#
-#
-# To run:
-#
-# fccanalysis run analysis_Tau3Mu_MCseeded.py  --test --nevents 1000 --output tau3mu_MCseeded.root
-
-
 #Mandatory: List of processes
 processList = {
     'p8_noBES_ee_Ztautau_ecm91_EvtGen_TauMinus2MuMuMu':{},#Run the full statistics in one output file named <outputDir>/xxx.root
@@ -17,23 +9,6 @@ processList = {
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
 prodTag     = "FCCee/spring2021/IDEA/"
 
-#Optional: output directory, default is local running directory
-#outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
-
-#Optional: analysisName, default is ""
-#analysisName = "My Analysis"
-
-#Optional: ncpus, default is 4
-#nCPUS       = 8
-
-#Optional running on HTCondor, default is False
-#runBatch    = False
-
-#Optional batch queue name when running on HTCondor, default is workday
-#batchQueue = "longlunch"
-
-#Optional computing account when running on HTCondor, default is group_u_FCC.local_gen
-#compGroup = "group_u_FCC.local_gen"
 
 #Optional test file
 testFile= "/eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_noBES_ee_Ztautau_ecm91_EvtGen_TauMinus2MuMuMu/events_189205650.root"
@@ -62,7 +37,7 @@ class RDFanalysis():
                #             explored recursively if needed.
                #        2nd: chargeConjugateMother
                #        3rd: chargeConjugateDaughters
-               #        4th: inclusiveDecay: when set to false, if a mother is found, that decays 
+               #        4th: inclusiveDecay: when set to false, if a mother is found, that decays
                #             into the particles specified in the list plus other particle(s), this decay is not selected.
                # If the event contains more than one such decays,only the first one is kept.
                .Define("indices",  "MCParticle::get_indices( 15, {-13,13,13}, true, true, true, false) ( Particle, Particle1)" )
@@ -81,7 +56,7 @@ class RDFanalysis():
                # The size of this collection is always 4 provided that indices is not empty,
                # possibly including "dummy" particles in case one of the legs did not make a RecoParticle
                # (e.g. because it is outsice the tracker acceptance).
-               # This is done on purpose, in order to maintain the mapping with the indices - i.e. the 1st particle in 
+               # This is done on purpose, in order to maintain the mapping with the indices - i.e. the 1st particle in
                # the list TauRecoParticles is the mu+, then the mu-, etc.
                # (selRP_matched_to_list ignores the unstable MC particles that are in the input list of indices
  	       # hence the mother particle, which is the [0] element of the indices vector).
@@ -142,7 +117,7 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-		"MC_Muplus",	
+		"MC_Muplus",
                 "n_TauTracks",
                 "TauMCDecayVertex",
                 "TauVertex",
@@ -154,5 +129,3 @@ class RDFanalysis():
 		"MC_Muminus2_p", "MC_Muminus2_e", "MC_Muminus2_theta",
         ]
         return branchList
-
-

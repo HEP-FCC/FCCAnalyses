@@ -50,6 +50,7 @@ class RDFanalysis():
                # The method below simply "subtracts" the primary tracks from the full collection :
                .Define("SecondaryTracks",   "VertexFitterSimple::get_NonPrimaryTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
 
+               .Define("tracks", "EFlowTrack_1")
         )
         return df2
 
