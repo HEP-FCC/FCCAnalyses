@@ -51,7 +51,7 @@ class RDFanalysis():
                .Define("SecondaryTracks",   "VertexFitterSimple::get_NonPrimaryTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
 
                .Define("tracks", "EFlowTrack_1")
-               .Define("PV_vec", "ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> v; v.push_back(Vertex_allTracks); return v;")
+               .Define("PV_vec", "ROOT::VecOps::RVec<edm4hep::VertexData> v; v.push_back(Vertex_allTracks); return v;")
         )
         return df2
 
