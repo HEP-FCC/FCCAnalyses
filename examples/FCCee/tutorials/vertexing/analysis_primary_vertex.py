@@ -51,6 +51,7 @@ class RDFanalysis():
                .Define("SecondaryTracks",   "VertexFitterSimple::get_NonPrimaryTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
 
                .Define("tracks", "EFlowTrack_1")
+               .Define("PV_vec", "ROOT::VecOps::RVec v; v.push_back(Vertex_allTracks); return v;")
         )
         return df2
 
@@ -63,5 +64,7 @@ class RDFanalysis():
         "ntracks",
         "Vertex_allTracks",
         "PrimaryVertex",
+        "tracks",
+        "PV_vec"
         ]
         return branchList
