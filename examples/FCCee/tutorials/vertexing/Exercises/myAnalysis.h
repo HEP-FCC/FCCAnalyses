@@ -3,7 +3,7 @@
 
 namespace FCCAnalyses{
 
-namespace MyAnalysis {
+namespace myAnalysis {
 
 
  double sum_momentum_tracks( const VertexingUtils::FCCAnalysesVertex&  vertex) {
@@ -143,6 +143,14 @@ std::vector<edm4hep::ReconstructedParticleData> selRP_Fakes::operator() (ROOT::V
   }
   return result;
 }
+=======
+  ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> > build_triplets(
+			const 	ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>&  in , float total_charge) ;
+
+  ROOT::VecOps::RVec< VertexingUtils::FCCAnalysesVertex > build_AllTauVertexObject(
+                        const ROOT::VecOps::RVec< ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> >&  triplets,
+                        const ROOT::VecOps::RVec<edm4hep::TrackState>& allTracks ) ;
+>>>>>>> db5648e024089bc44ee0a5afde95b32a45f26a74:examples/FCCee/tutorials/vertexing/Exercises/myAnalysis.h
 
 
 
@@ -167,8 +175,16 @@ float get_theta(const edm4hep::MCParticleData& p) {
 }
 
 
+<<<<<<< HEAD:examples/FCCee/tutorials/vertexing/Exercises/MyAnalysis.h
+=======
+}//end NS myAnalysis
+>>>>>>> db5648e024089bc44ee0a5afde95b32a45f26a74:examples/FCCee/tutorials/vertexing/Exercises/myAnalysis.h
 
 
+<<<<<<< HEAD:examples/FCCee/tutorials/vertexing/Exercises/MyAnalysis.h
 } //end NS
 } // end NS
 
+=======
+#endif
+>>>>>>> db5648e024089bc44ee0a5afde95b32a45f26a74:examples/FCCee/tutorials/vertexing/Exercises/myAnalysis.h
