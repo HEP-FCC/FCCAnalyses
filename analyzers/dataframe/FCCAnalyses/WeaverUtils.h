@@ -9,7 +9,7 @@ namespace FCCAnalyses {
 
     /// Compute all weights given a collection of input variables
     /// \note This helper should not be used directly in RDataFrame examples
-    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > compute_weights(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>&);
+    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > compute_weights(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>>&);
 
     /// Setup the ONNXRuntime instance using Weaver-provided parameters
     void setup_weaver(const std::string&, const std::string&, const ROOT::VecOps::RVec<std::string>&);

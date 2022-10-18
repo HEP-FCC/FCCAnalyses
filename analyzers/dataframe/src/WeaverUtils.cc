@@ -13,7 +13,7 @@ namespace FCCAnalyses {
       gWeaver = std::make_unique<WeaverInterface>(onnx_filename, json_filename, vars);
     }
 
-    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > compute_weights(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>& vars) {
+    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > compute_weights(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>>& vars) {
       if (!gWeaver)
         throw std::runtime_error("Weaver interface is not initialised!");
       ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > out;
