@@ -16,9 +16,10 @@ variables = ['mTau', 'mTau_zoom', 'Evis' ]
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}
-selections['Tau3Mu']   = ["sel0","sel1"]
+selections['Tau3Mu']   = ["nocut", "sel0","sel1"]
 
 extralabel = {}
+extralabel['nocut'] = "no cut"
 extralabel['sel0'] = "Selection: N_{candidate} > 0"
 extralabel['sel1'] = "Selection: a candidate with M < 3 GeV"
 
