@@ -17,7 +17,7 @@ namespace FCCAnalyses {
     /// Compute all weights given an unspecified collection of input variables
     template <typename... Args>
     ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_weights(Args&&... args) {
-      return compute_weights(std::vector<ROOT::VecOps::RVec<float>>{std::forward<Args>(args)...});
+      return compute_weights(std::vector<ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>>{std::forward<Args>(args)...});
     }
     /// Get one specific weight previously computed
     ROOT::VecOps::RVec<float> get_weight(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >&, int);
