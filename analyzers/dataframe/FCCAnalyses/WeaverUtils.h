@@ -12,7 +12,7 @@ namespace FCCAnalyses {
     ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > compute_weights(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>&);
 
     /// Setup the ONNXRuntime instance using Weaver-provided parameters
-    void setup_weaver(const std::string&, const std::string&, const rv::RVec<std::string>&);
+    void setup_weaver(const std::string&, const std::string&, const ROOT::VecOps::RVec<std::string>&);
 
     /// Compute all weights given an unspecified collection of input variables
     template <typename... Args>
@@ -20,7 +20,7 @@ namespace FCCAnalyses {
       return compute_weights(std::vector<ROOT::VecOps::RVec<float>>{std::forward<Args>(args)...});
     }
     /// Get one specific weight previously computed
-    rv::RVec<float> get_weight(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >&, int);
+    ROOT::VecOps::RVec<float> get_weight(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> >&, int);
   }  // namespace JetFlavourUtils
 }  // namespace FCCAnalyses
 
