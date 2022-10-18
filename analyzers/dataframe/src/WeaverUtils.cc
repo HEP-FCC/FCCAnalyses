@@ -4,17 +4,17 @@
 #include <memory>
 
 namespace FCCAnalyses {
-  std::unique_ptr<WeaverInterface> gWeaver;
+  std::unique_ptr<WeaverInterface> gWeaver2;
 
   namespace WeaverUtils {
     void setup_weaver(const std::string& onnx_filename,
                       const std::string& json_filename,
                       const rv::RVec<std::string>& vars) {
-      gWeaver = std::make_unique<WeaverInterface>(onnx_filename, json_filename, vars);
+      gWeaver2 = std::make_unique<WeaverInterface>(onnx_filename, json_filename, vars);
     }
 
     ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > compute_weights(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>>& vars) {
-      if (!gWeaver)
+      if (!gWeaver2)
         throw std::runtime_error("Weaver interface is not initialised!");
       ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > out;
       if (vars.empty())  // no variables registered
@@ -35,7 +35,7 @@ namespace FCCAnalyses {
             constit_vars.push_back((float)vars.at(k).at(i).at(j));
           obj_sc_vars.push_back(constit_vars);
         }
-        out.emplace_back(gWeaver->run(obj_sc_vars));
+        out.emplace_back(gWeaver2->run(obj_sc_vars));
       }
       return out;
     }
