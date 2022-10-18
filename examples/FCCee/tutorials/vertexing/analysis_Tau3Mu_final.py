@@ -34,5 +34,5 @@ cutList = {"nocut":"true",
 histoList = {
     "mTau":{"name":"TauMass_allCandidates","title":"m_{tau} [GeV]","bin":100,"xmin":0,"xmax":5},
     "mTau_zoom":{"name":"TauMass_allCandidates","title":"m_{tau} [GeV]","bin":100,"xmin":1.7,"xmax":1.9},
-    "Evis":{"name":"visible_energy","title":"E_{vis} [GeV]","bin":1,"xmin":0,"xmax":100},
+    "Evis":{"name":"visible_energy","title":"E_{vis} [GeV]","bin":100,"xmin":0,"xmax":100},
 }
