@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666118203680,
+  "lastUpdate": 1666118205307,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -9688,6 +9688,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3ec6b2fe5557514057099b4a5f1aa0f56e568200",
+          "message": "Merge pull request #214 from EmanuelPerez/master\n\nUpdates of FCCAnalyses tutorial files for vertexing and tau to 3 mu",
+          "timestamp": "2022-10-18T20:28:17+02:00",
+          "tree_id": "e91f7eaf0106a1a88db8658e75029887556641fb",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/3ec6b2fe5557514057099b4a5f1aa0f56e568200"
+        },
+        "date": 1666118204898,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 10.125849097977534,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 9.741933878989192,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 7.257877687357167,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 9.639852573806925,
+            "unit": "Evt/s"
           }
         ]
       }
