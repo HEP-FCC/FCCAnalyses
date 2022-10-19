@@ -32,27 +32,23 @@ class RDFanalysis():
 
         gInterpreter.Declare("""
         template <typename T>
-        ROOT::VecOps::RVec<ROOT::VecOps::RVec<T> > get_vector(const ROOT::VecOps::RVec<T>& qty) { return ROOT::VecOps::RVec<ROOT::VecOps::RVec<T> >(1, qty); }
-        """)
+        ROOT::VecOps::RVec<ROOT::VecOps::RVec<T> > as_vector(const ROOT::VecOps::RVec<T>& qty) {
+          return ROOT::VecOps::RVec<ROOT::VecOps::RVec<T> >(1, qty);
+        }""")
         weaver = WeaverUtils.setup_weaver(test_inputs_path + '/fccee_pi_vs_gamma_v1.onnx',
                                           test_inputs_path + '/preprocess_fccee_pi_vs_gamma_v1.json',
                                           ('recocells_e', 'recocells_theta', 'recocells_phi', 'recocells_radius', 'recocells_layer'))
 
         df2 = (df
-               #.Define("cells_e",      "ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>> v; v.push_back(maxEnergyCluster_cells_energy); return v;")
-               #.Define("cells_theta",  "ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>> v; v.push_back(maxEnergyCluster_cells_theta); return v;")
-               #.Define("cells_phi",    "ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>> v; v.push_back(maxEnergyCluster_cells_phi); return v;")
-               #.Define("cells_radius", "ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>> v; v.push_back(maxEnergyCluster_cells_radius); return v;")
-               #.Define("cells_layer",  "ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>> v; v.push_back(maxEnergyCluster_cells_layer); return v;")
-               .Define("cells_e",      "get_vector(maxEnergyCluster_cells_energy)")
-               .Define("cells_theta",  "get_vector(maxEnergyCluster_cells_theta)")
-               .Define("cells_phi",    "get_vector(maxEnergyCluster_cells_phi)")
-               .Define("cells_radius", "get_vector(maxEnergyCluster_cells_radius)")
-               .Define("cells_layer",  "get_vector(maxEnergyCluster_cells_layer)")
+               # define input variables
+               .Define("cells_e",      "as_vector(maxEnergyCluster_cells_energy)")
+               .Define("cells_theta",  "as_vector(maxEnergyCluster_cells_theta)")
+               .Define("cells_phi",    "as_vector(maxEnergyCluster_cells_phi)")
+               .Define("cells_radius", "as_vector(maxEnergyCluster_cells_radius)")
+               .Define("cells_layer",  "as_vector(maxEnergyCluster_cells_layer)")
 
                # run inference
                .Define("MVAVec", "WeaverUtils::get_weights(cells_e, cells_theta, cells_phi, cells_radius, cells_layer)")
-               #.Define("MVAVec", "WeaverUtils::get_weights(maxEnergyCluster_cells_energy, maxEnergyCluster_cells_theta, maxEnergyCluster_cells_phi, maxEnergyCluster_cells_radius, maxEnergyCluster_cells_layer)")
 
                # recast output
                .Define("Cluster_isPhoton", "WeaverUtils::get_weight(MVAVec, 0)")
