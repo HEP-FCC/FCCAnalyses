@@ -6,12 +6,12 @@ class RDFanalysis():
     # Mandatory: analysers function to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
         df2 = (df
- #.Alias("GenParticles0", "GenParticles#0.index")
- .Define("MC_p",    "FCCAnalyses::MCParticle::get_p(GenParticles)")
- .Define("MC_theta","FCCAnalyses::MCParticle::get_theta(GenParticles)")
- .Define("MC_charge","FCCAnalyses::MCParticle::get_charge(GenParticles)")
- .Define("MC_phi","FCCAnalyses::MCParticle::get_phi(GenParticles)")
-              )
+        #namespace FCCAnalyses loaded, could be removed in case
+        .Define("MC_p",      "FCCAnalyses::MCParticle::get_p(GenParticles)")
+        .Define("MC_theta",  "FCCAnalyses::MCParticle::get_theta(GenParticles)")
+        .Define("MC_charge", "FCCAnalyses::MCParticle::get_charge(GenParticles)")
+        .Define("MC_phi",    "FCCAnalyses::MCParticle::get_phi(GenParticles)")
+        )
         return df2
 
     #__________________________________________________________
