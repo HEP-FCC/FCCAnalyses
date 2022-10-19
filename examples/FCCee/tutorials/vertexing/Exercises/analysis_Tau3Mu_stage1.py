@@ -1,3 +1,8 @@
+import ROOT
+
+analysesList = ['myAnalysis']
+
+
 #Mandatory: List of processes
 processList = {
     'p8_noBES_ee_Ztautau_ecm91_EvtGen_TauMinus2MuMuMu':{},#Run the full statistics in one output file named <outputDir>/xxx.root
@@ -40,7 +45,7 @@ class RDFanalysis():
             # Only the ones with  p > 2 GeV could be selected as muons :
             .Define("ChargedHadrons_pgt2",  "ReconstructedParticle::sel_p(2.) ( ChargedHadrons )")
             # Build fake muons based on a flat fake rate (random selection) :
-            .Define("fakeMuons_5em2", "MyAnalysis::selRP_Fakes( 5e-2, 0.106)(ChargedHadrons_pgt2)" )
+            .Define("fakeMuons_5em2", "myAnalysis::selRP_Fakes( 5e-2, 0.106)(ChargedHadrons_pgt2)" )
 
             # Now we marge the collection of fake muons with the genuine muons :
             .Define("muons_with_fakes",  "ReconstructedParticle::merge( muons, fakeMuons_5em2 )")
@@ -55,28 +60,27 @@ class RDFanalysis():
             # We are interested in tau- -> mu- mu- mu+ (the MC files produced for this tutorial
             # only forced the decay of the tau- , not the tau+ ).
             # Hence we look for triples of total charge = -1 :
-            .Define("triplets_m",  "MyAnalysis::build_triplets( theMuons, -1. )")   # returns a vector of triplets, i.e. of vectors of 3 RecoParticles
+            .Define("triplets_m",  "myAnalysis::build_triplets( theMuons, -1. )")   # returns a vector of triplets, i.e. of vectors of 3 RecoParticles
             .Define("n_triplets_m",  "return triplets_m.size() ; " )
-            #.Filter( "n_triplets_m > 0" )
 
              # ----------------------------------------------------
              # Simple: consider only the 1st triplet :
 
-             #.Define("the_muons_candidate_0",  "return triplets_m[0] ; ")  # the_muons_candidates = a vector of 3 RecoParticles
+             #  .Define("the_muons_candidate_0",  "return triplets_m[0] ; ")  # the_muons_candidates = a vector of 3 RecoParticles
 
              # get the corresponding tracks:
-             #.Define("the_muontracks_candidate_0",  "ReconstructedParticle2Track::getRP2TRK( the_muons_candidate_0, EFlowTrack_1)")
+             #   .Define("the_muontracks_candidate_0",  "ReconstructedParticle2Track::getRP2TRK( the_muons_candidate_0, EFlowTrack_1)")
              # and fit them to a common vertex :
-             #.Define("TauVertexObject_candidate_0",   "VertexFitterSimple::VertexFitter_Tk( 2, the_muontracks_candidate_0)" )
+             #   .Define("TauVertexObject_candidate_0",   "VertexFitterSimple::VertexFitter_Tk( 2, the_muontracks_candidate_0)" )
              # Now we can get the mass of this candidate, as before :
-             #.Define("TauMass_candidate_0",   "MyAnalysis::tau3mu_vertex_mass( TauVertexObject_candidate_0 )" )
+             #   .Define("TauMass_candidate_0",   "myAnalysis::tau3mu_vertex_mass( TauVertexObject_candidate_0 )" )
 
 
              # ----------------------------------------------------
              # Now consider all triplets :
 
-              .Define("TauVertexObject_allCandidates",  "MyAnalysis::build_AllTauVertexObject( triplets_m , EFlowTrack_1 ) ")
-              .Define("TauMass_allCandidates",   "MyAnalysis::build_AllTauMasses( TauVertexObject_allCandidates )" )
+              .Define("TauVertexObject_allCandidates",  "myAnalysis::build_AllTauVertexObject( triplets_m , EFlowTrack_1 ) ")
+              .Define("TauMass_allCandidates",   "myAnalysis::build_AllTauMasses( TauVertexObject_allCandidates )" )
 
 
              # Total visible energy in the event :

@@ -1,3 +1,5 @@
+analysesList = ['myAnalysis']
+
 #Mandatory: List of processes
 processList = {
     'p8_noBES_ee_Ztautau_ecm91_EvtGen_TauMinus2MuMuMu':{},#Run the full statistics in one output file named <outputDir>/xxx.root
@@ -43,8 +45,7 @@ class RDFanalysis():
                .Define("indices",  "MCParticle::get_indices( 15, {-13,13,13}, true, true, true, false) ( Particle, Particle1)" )
 
                # select events for which the requested decay chain has been found:
-               #.Filter("indices.size() > 0")
-               .Filter("indices.size() ==4")
+               .Filter("indices.size() > 0")
 
 
                # the mu+ (MCParticle) that comes from the tau decay :
@@ -80,30 +81,30 @@ class RDFanalysis():
                .Define("TauVertex",  "VertexingUtils::get_VertexData( TauVertexObject )")
 
                # The reco'ed tau mass - from the post-VertxFit momenta, at the tau decay vertex :
-               .Define("TauMass",   "MyAnalysis::tau3mu_vertex_mass( TauVertexObject ) ")
+               .Define("TauMass",   "myAnalysis::tau3mu_vertex_mass( TauVertexObject ) ")
 
                # The "raw" mass - using the track  momenta at their dca :
-               .Define("RawMass",  "MyAnalysis::tau3mu_raw_mass( TauRecoParticles ) ")
+               .Define("RawMass",  "myAnalysis::tau3mu_raw_mass( TauRecoParticles ) ")
 
 
                # test MC kinem:
 	       # note : for 95% of the events, the three muons have | cos theta | < 0.98
                #        but demanding in addition that they all have E or p > 2 GeV,
                #        the efficiency falls down to 75%
-               .Define("MC_Muminus1",  "return Particle.at(  indices[2] ) ;")
-               .Define("MC_Muminus2",  "return Particle.at(  indices[3] ) ;")
-
-               .Define("MC_Muplus_p", "MyAnalysis::get_p( MC_Muplus )")
-               .Define("MC_Muplus_e", "MyAnalysis::get_e( MC_Muplus )")
-               .Define("MC_Muplus_theta",  "MyAnalysis::get_theta( MC_Muplus ) ")
-
-               .Define("MC_Muminus1_p", "MyAnalysis::get_p( MC_Muminus1 )")
-               .Define("MC_Muminus1_e", "MyAnalysis::get_e( MC_Muminus1 )")
-               .Define("MC_Muminus1_theta",  "MyAnalysis::get_theta( MC_Muminus1 ) ")
-
-               .Define("MC_Muminus2_p", "MyAnalysis::get_p( MC_Muminus2 )")
-               .Define("MC_Muminus2_e", "MyAnalysis::get_e( MC_Muminus2 )")
-               .Define("MC_Muminus2_theta",  "MyAnalysis::get_theta( MC_Muminus2 ) ")
+               #.Define("MC_Muminus1",  "return Particle.at(  indices[2] ) ;")
+               #.Define("MC_Muminus2",  "return Particle.at(  indices[3] ) ;")
+#
+#               .Define("MC_Muplus_p", "myAnalysis::get_p( MC_Muplus )")
+#               .Define("MC_Muplus_e", "myAnalysis::get_e( MC_Muplus )")
+#               .Define("MC_Muplus_theta",  "myAnalysis::get_theta( MC_Muplus ) ")
+#
+#               .Define("MC_Muminus1_p", "myAnalysis::get_p( MC_Muminus1 )")
+#               .Define("MC_Muminus1_e", "myAnalysis::get_e( MC_Muminus1 )")
+#               .Define("MC_Muminus1_theta",  "myAnalysis::get_theta( MC_Muminus1 ) ")
+#
+#               .Define("MC_Muminus2_p", "myAnalysis::get_p( MC_Muminus2 )")
+#               .Define("MC_Muminus2_e", "myAnalysis::get_e( MC_Muminus2 )")
+#               .Define("MC_Muminus2_theta",  "myAnalysis::get_theta( MC_Muminus2 ) ")
 
 
 
@@ -124,8 +125,8 @@ class RDFanalysis():
                 "TauMass",
 		"RawMass",
 
-		"MC_Muplus_p", "MC_Muplus_e", "MC_Muplus_theta",
-		"MC_Muminus1_p", "MC_Muminus1_e", "MC_Muminus1_theta",
-		"MC_Muminus2_p", "MC_Muminus2_e", "MC_Muminus2_theta",
+		#"MC_Muplus_p", "MC_Muplus_e", "MC_Muplus_theta",
+		#"MC_Muminus1_p", "MC_Muminus1_e", "MC_Muminus1_theta",
+		#"MC_Muminus2_p", "MC_Muminus2_e", "MC_Muminus2_theta",
         ]
         return branchList
