@@ -18,7 +18,6 @@ if __name__ == "__main__":
   setup_run_parser_plots(parser_run_plots)
 
   args = parser.parse_args()
-  print('===============args bin ',args)
 
   if len(sys.argv)<3:
      print("minimal running requirements :   fccanalysis <runoption> <analysisfile>")
