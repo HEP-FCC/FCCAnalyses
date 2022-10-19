@@ -16,7 +16,7 @@ var searchData=
   ['clustering_5fjade_13',['clustering_jade',['../struct_jet_clustering_1_1clustering__jade.html#a0a961c9e0f25be7e57ebb6c54b8bc983',1,'JetClustering::clustering_jade::clustering_jade()'],['../struct_jet_clustering_1_1clustering__jade.html',1,'JetClustering::clustering_jade']]],
   ['clustering_5fkt_14',['clustering_kt',['../struct_jet_clustering_1_1clustering__kt.html#a8feb6d5f4b12d244ec426d31d3b34018',1,'JetClustering::clustering_kt::clustering_kt()'],['../struct_jet_clustering_1_1clustering__kt.html',1,'JetClustering::clustering_kt']]],
   ['clustering_5fvalencia_15',['clustering_valencia',['../struct_jet_clustering_1_1clustering__valencia.html#ac6ab3509cefdb5607c0117e35d5e6bbd',1,'JetClustering::clustering_valencia::clustering_valencia()'],['../struct_jet_clustering_1_1clustering__valencia.html',1,'JetClustering::clustering_valencia']]],
-  ['compute_5fweights_16',['compute_weights',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#ae1425b3522216a55365708b85f62a605',1,'FCCAnalyses::JetFlavourUtils']]],
+  ['compute_5fweights_16',['compute_weights',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#ae1425b3522216a55365708b85f62a605',1,'FCCAnalyses::JetFlavourUtils::compute_weights()'],['../namespace_f_c_c_analyses_1_1_weaver_utils.html#a13a7686a074b7e076bc00412c15a82b8',1,'FCCAnalyses::WeaverUtils::compute_weights()']]],
   ['constituents_17',['constituents',['../struct_jet_clustering_1_1_f_c_c_analyses_jet.html#a786d7786dd0669b32339cf4e5610a479',1,'JetClustering::FCCAnalysesJet']]],
   ['constituentvars_18',['ConstituentVars',['../class_weaver_interface.html#ac8edf1601780d21c0b5ccb79827b9a32',1,'WeaverInterface']]],
   ['contrib_19',['contrib',['../namespacecontrib.html',1,'']]],

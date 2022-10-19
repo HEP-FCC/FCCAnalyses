@@ -11,7 +11,7 @@ var searchData=
   ['clustering_5fjade_8',['clustering_jade',['../struct_jet_clustering_1_1clustering__jade.html#a0a961c9e0f25be7e57ebb6c54b8bc983',1,'JetClustering::clustering_jade']]],
   ['clustering_5fkt_9',['clustering_kt',['../struct_jet_clustering_1_1clustering__kt.html#a8feb6d5f4b12d244ec426d31d3b34018',1,'JetClustering::clustering_kt']]],
   ['clustering_5fvalencia_10',['clustering_valencia',['../struct_jet_clustering_1_1clustering__valencia.html#ac6ab3509cefdb5607c0117e35d5e6bbd',1,'JetClustering::clustering_valencia']]],
-  ['compute_5fweights_11',['compute_weights',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#ae1425b3522216a55365708b85f62a605',1,'FCCAnalyses::JetFlavourUtils']]],
+  ['compute_5fweights_11',['compute_weights',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#ae1425b3522216a55365708b85f62a605',1,'FCCAnalyses::JetFlavourUtils::compute_weights()'],['../namespace_f_c_c_analyses_1_1_weaver_utils.html#a13a7686a074b7e076bc00412c15a82b8',1,'FCCAnalyses::WeaverUtils::compute_weights()']]],
   ['copy_12',['copy',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a1b760531c8b6c4c7d90114cdf9839c13',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
   ['covtoacts_13',['CovToACTS',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
   ['cross_14',['cross',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a228c5c14c629b915dd83201596e84dcb',1,'FCCAnalyses::Algorithms::calculate_thrust']]]

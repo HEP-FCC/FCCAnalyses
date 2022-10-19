@@ -17,5 +17,6 @@ var searchData=
   ['vertexfinderacts_14',['VertexFinderActs',['../namespace_f_c_c_analyses_1_1_vertex_finder_acts.html',1,'FCCAnalyses']]],
   ['vertexfitteracts_15',['VertexFitterActs',['../namespace_f_c_c_analyses_1_1_vertex_fitter_acts.html',1,'FCCAnalyses']]],
   ['vertexfittersimple_16',['VertexFitterSimple',['../namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html',1,'FCCAnalyses']]],
-  ['vertexingutils_17',['VertexingUtils',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html',1,'FCCAnalyses']]]
+  ['vertexingutils_17',['VertexingUtils',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html',1,'FCCAnalyses']]],
+  ['weaverutils_18',['WeaverUtils',['../namespace_f_c_c_analyses_1_1_weaver_utils.html',1,'FCCAnalyses']]]
 ];
