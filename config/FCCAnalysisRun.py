@@ -516,6 +516,19 @@ def runLocal(rdfModule, fileList, args):
     if nevents_meta>nevents_local:n[0]=nevents_meta
     p = ROOT.TParameter(int)( "eventsProcessed", n[0])
     p.Write()
+
+    if args.test:
+        outf2 = ROOT.TFile(fileListRoot[0])
+        outt2_1 = outf2.Get("metadata")
+        outt2_2 = outf2.Get("run_metadata")
+        outt2_3 = outf2.Get("evt_metadata")
+        outt2_4 = outf2.Get("col_metadata")
+        outf.cd()
+        outt2_1.Write()
+        outt2_2.Write()
+        outt2_3.Write()
+        outt2_4.Write()
+
     outf.Write()
     outf.Close()
 
