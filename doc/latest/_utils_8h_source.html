@@ -87,18 +87,19 @@ $(function() {
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="namespace_f_c_c_analyses_1_1_utils.html">    7</a></span>  <span class="keyword">namespace </span>Utils {</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespace_f_c_c_analyses_1_1_utils.html#a0e7ffefde1cf7b9533f0a198771ad954">    9</a></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">inline</span> <span class="keyword">auto</span> <a class="code hl_function" href="namespace_f_c_c_analyses_1_1_utils.html#a0e7ffefde1cf7b9533f0a198771ad954">getsize</a>( T&amp; vec){ <span class="keywordflow">return</span> vec.size();};</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="namespace_f_c_c_analyses_1_1_utils.html#a483978f1147b2349c48cab9b42670746">   10</a></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">inline</span> ROOT::VecOps::RVec&lt;ROOT::VecOps::RVec&lt;T&gt; &gt;  <a class="code hl_function" href="namespace_f_c_c_analyses_1_1_utils.html#a483978f1147b2349c48cab9b42670746">as_vector</a>(<span class="keyword">const</span> ROOT::VecOps::RVec&lt;T&gt;&amp; in){<span class="keywordflow">return</span> ROOT::VecOps::RVec&lt;ROOT::VecOps::RVec&lt;T&gt; &gt;(1, in);};                                                                                                                                                                              </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>  }</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>}</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespace_f_c_c_analyses_1_1_utils_html_a0e7ffefde1cf7b9533f0a198771ad954"><div class="ttname"><a href="namespace_f_c_c_analyses_1_1_utils.html#a0e7ffefde1cf7b9533f0a198771ad954">FCCAnalyses::Utils::getsize</a></div><div class="ttdeci">auto getsize(T &amp;vec)</div><div class="ttdef"><b>Definition:</b> Utils.h:9</div></div>
+<div class="ttc" id="anamespace_f_c_c_analyses_1_1_utils_html_a483978f1147b2349c48cab9b42670746"><div class="ttname"><a href="namespace_f_c_c_analyses_1_1_utils.html#a483978f1147b2349c48cab9b42670746">FCCAnalyses::Utils::as_vector</a></div><div class="ttdeci">ROOT::VecOps::RVec&lt; ROOT::VecOps::RVec&lt; T &gt; &gt; as_vector(const ROOT::VecOps::RVec&lt; T &gt; &amp;in)</div><div class="ttdef"><b>Definition:</b> Utils.h:10</div></div>
 <div class="ttc" id="anamespace_f_c_c_analyses_html"><div class="ttname"><a href="namespace_f_c_c_analyses.html">FCCAnalyses</a></div><div class="ttdoc">Jet clustering utilities interface.</div><div class="ttdef"><b>Definition:</b> Algorithms.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 19 2022 12:12:05 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 19 2022 15:39:17 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
