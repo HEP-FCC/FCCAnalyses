@@ -22,6 +22,18 @@ void loadGeometry(std::string xmlGeometryPath, std::string readoutName){
 }
 
 
+sel_layers::sel_layers(int arg_min, int arg_max) : _min(arg_min), _max(arg_max) {};
+ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>  sel_layers::operator() (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in) {
+
+  ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> res;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    int layer = m_decoder->get(cellId, "layer");
+    if (layer>_min && layer<_max)res.emplace_back(p);
+  }
+  return res;
+}
+
 // calo hit
 ROOT::VecOps::RVec<float> getCaloHit_x (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
   ROOT::VecOps::RVec<float> result;
