@@ -1,3 +1,8 @@
+#test files of single photons and pi0 at 10GeV
+#testFile='/eos/experiment/fcc/ee/tutorial/pi0GammaLAr2022/edm4hepFormat_smallSampleNotUsedForTraining/output_caloFullSim_10GeV_pdgId_22_noiseFalse.root'
+#testFile='/eos/experiment/fcc/ee/tutorial/pi0GammaLAr2022/edm4hepFormat_smallSampleNotUsedForTraining/output_caloFullSim_10GeV_pdgId_111_noiseFalse.root'
+
+#Get the detector geometry
 from os import getenv
 FCCDETECTORS=getenv('FCCDETECTORS')
 geometryFile = FCCDETECTORS+"/Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml"
