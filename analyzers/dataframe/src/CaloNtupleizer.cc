@@ -29,7 +29,7 @@ ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>  sel_layers::operator() (const R
   for (auto & p: in){
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
     int layer = m_decoder->get(cellId, "layer");
-    if (layer>_min || layer<_max)res.emplace_back(p);
+    if (layer>_min && layer<_max)res.emplace_back(p);
   }
   return res;
 }
