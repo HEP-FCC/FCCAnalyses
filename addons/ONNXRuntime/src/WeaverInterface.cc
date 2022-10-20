@@ -102,8 +102,13 @@ rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituen
     ConstituentVars jc;
     for (size_t j = 0; j < params.var_names.size(); ++j) {  // transform and add the proper amount of padding
       const auto& var_name = params.var_names.at(j);
-      if (std::find(variables_names_.begin(), variables_names_.end(), "pfcand_mask") == variables_names_.end())
-        jc = ConstituentVars(constituents.at(0).size(), 1.f);
+      //if (std::find(variables_names_.begin(), variables_names_.end(), "pfcand_mask") == variables_names_.end())
+      //  jc = ConstituentVars(constituents.at(0).size(), 1.f);
+
+        if (var_name.find("_mask") != std::string::npos) {
+          jc = ConstituentVars(constituents.at(0).size(), 1.f);
+        }
+
       else
         jc = constituents.at(variablePos(var_name));
       const auto& var_info = params.info(var_name);
