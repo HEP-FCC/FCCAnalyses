@@ -15,6 +15,7 @@ class RDFanalysis():
     def analysers(df):
 
         #util function to get a sub-set of a vector
+        import ROOT
         ROOT.gInterpreter.Declare("""
         template<typename T>
         ROOT::VecOps::RVec<T> myRange(ROOT::VecOps::RVec<T>& vec, std::size_t begin, std::size_t end){
