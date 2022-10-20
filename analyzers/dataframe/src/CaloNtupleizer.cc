@@ -11,7 +11,7 @@ namespace FCCAnalyses{
 
 namespace CaloNtupleizer{
 
-dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
+std::unique_ptr<dd4hep::DDSegmentation::BitFieldCoder> m_decoder;
 
 void loadGeometry(std::string xmlGeometryPath, std::string readoutName){
   dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());
@@ -21,6 +21,18 @@ void loadGeometry(std::string xmlGeometryPath, std::string readoutName){
   m_decoder = dd4hepgeo->readout(readoutName).idSpec().decoder();
 }
 
+
+sel_layers::sel_layers(int arg_min, int arg_max) : _min(arg_min), _max(arg_max) {};
+ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>  sel_layers::operator() (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in) {
+
+  ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> res;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    int layer = m_decoder->get(cellId, "layer");
+    if (layer>_min || layer<_max)res.emplace_back(p);
+  }
+  return res;
+}
 
 // calo hit
 ROOT::VecOps::RVec<float> getCaloHit_x (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){

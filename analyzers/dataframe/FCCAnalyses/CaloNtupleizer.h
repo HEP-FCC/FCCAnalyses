@@ -19,6 +19,18 @@ namespace CaloNtupleizer{
 
 void loadGeometry(std::string xmlGeometryPath, std::string readoutName);
 
+/// select layers
+struct sel_layers {
+public:
+  sel_layers(int arg_min=0, int arg_max=10);
+  ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> operator()(const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
+
+private:
+  int _min;//> min layer
+  int _max;//> max layer
+};
+
+
 // calo hits (single cells)
 ROOT::VecOps::RVec<float> getCaloHit_x (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getCaloHit_y (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);

@@ -1,34 +1,76 @@
-#Optional test file
-testFile = "/eos/experiment/fcc/ee/tmp/4Lolo/photons_MVA1.root"
+from os import getenv
+FCCDETECTORS=getenv('FCCDETECTORS')
+geometryFile = FCCDETECTORS+"/Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml"
+readoutName  = "ECalBarrelPhiEta"
+
+import ROOT
+ROOT.gInterpreter.Declare("""
+template<typename T>
+ROOT::VecOps::RVec<T> myRange(ROOT::VecOps::RVec<T>& vec, std::size_t begin, std::size_t end)
+{
+   ROOT::VecOps::RVec<T> ret;
+   ret.reserve(end - begin);
+   for (auto i = begin; i < end; ++i)
+      ret.push_back(vec[i]);
+   return ret;
+}
+""")
+
+
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
     #__________________________________________________________
     #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
+
         from ROOT import WeaverUtils
-        from ROOT import gInterpreter
         from os import getenv
         test_inputs_path = getenv('TEST_INPUT_DATA_DIR', '/eos/experiment/fcc/ee/tutorial/PNet_pi0Gamma/v1')
-
         weaver = WeaverUtils.setup_weaver(test_inputs_path + '/fccee_pi_vs_gamma_v1.onnx',
                                           test_inputs_path + '/preprocess_fccee_pi_vs_gamma_v1.json',
                                           ('recocells_e', 'recocells_theta', 'recocells_phi', 'recocells_radius', 'recocells_layer'))
 
-        df2 = (df
-               # define input variables
-               .Define("cells_e",      "Utils::as_vector(maxEnergyCluster_cells_energy)")
-               .Define("cells_theta",  "Utils::as_vector(maxEnergyCluster_cells_theta)")
-               .Define("cells_phi",    "Utils::as_vector(maxEnergyCluster_cells_phi)")
-               .Define("cells_radius", "Utils::as_vector(maxEnergyCluster_cells_radius)")
-               .Define("cells_layer",  "Utils::as_vector(maxEnergyCluster_cells_layer)")
 
-               # run inference
+        df2 = (df
+
+               .Define("maxEnergyCluster_index","std::distance(CaloClusters.energy.begin(),std::max_element(CaloClusters.energy.begin(), CaloClusters.energy.end()))")
+               .Define("minEnergyCluster_index","std::distance(CaloClusters.energy.begin(),std::min_element(CaloClusters.energy.begin(), CaloClusters.energy.end()))")
+               .Define("clusters_n","CaloClusters.energy.size()")
+               .Define("clusters_energy","CaloClusters.energy")
+
+               .Define("maxEnergyCluster_firstCell_index","CaloClusters[maxEnergyCluster_index].hits_begin")
+               .Define("maxEnergyCluster_lastCell_index" ,"CaloClusters[maxEnergyCluster_index].hits_end")
+               .Define("maxEnergyCluster_cells", "myRange(PositionedCaloClusterCells, maxEnergyCluster_firstCell_index, maxEnergyCluster_lastCell_index)")
+
+               .Define("maxEnergyCluster_cells_energy", "CaloNtupleizer::getCaloHit_energy(maxEnergyCluster_cells)" )
+               .Define("maxEnergyCluster_cells_phi",    "CaloNtupleizer::getCaloHit_phi(maxEnergyCluster_cells)" )
+               .Define("maxEnergyCluster_cells_theta",  "CaloNtupleizer::getCaloHit_theta(maxEnergyCluster_cells)" )
+               .Define("maxEnergyCluster_cells_layer" , "CaloNtupleizer::getCaloHit_layer(maxEnergyCluster_cells)" )
+               .Define("maxEnergyCluster_cells_n" ,     "maxEnergyCluster_cells.size()" )
+
+               .Define("maxEnergyCluster_cells_x", "myRange(PositionedCaloClusterCells.position.x, maxEnergyCluster_firstCell_index, maxEnergyCluster_lastCell_index)")
+               .Define("maxEnergyCluster_cells_y", "myRange(PositionedCaloClusterCells.position.y, maxEnergyCluster_firstCell_index, maxEnergyCluster_lastCell_index)")
+               .Define("maxEnergyCluster_cells_radius", "sqrt(pow(maxEnergyCluster_cells_x,2)+pow(maxEnergyCluster_cells_y,2))")
+
+               .Define("maxEnergyCluster_energy", "CaloClusters.energy[maxEnergyCluster_index]")
+               .Define("maxEnergyCluster_x", "CaloClusters.position.x[maxEnergyCluster_index]")
+               .Define("maxEnergyCluster_y", "CaloClusters.position.y[maxEnergyCluster_index]")
+               .Define("maxEnergyCluster_z", "CaloClusters.position.z[maxEnergyCluster_index]")
+               .Define("maxEnergyCluster_phi", "CaloNtupleizer::getCaloCluster_phi(CaloClusters)[maxEnergyCluster_index]")
+               .Define("maxEnergyCluster_theta", "CaloNtupleizer::getCaloCluster_theta(CaloClusters)[maxEnergyCluster_index]")
+
+               .Define("cells_e",         "Utils::as_vector(maxEnergyCluster_cells_energy)")
+               .Define("cells_theta",     "Utils::as_vector(maxEnergyCluster_cells_theta)")
+               .Define("cells_phi",       "Utils::as_vector(maxEnergyCluster_cells_phi)")
+               .Define("cells_radius",    "Utils::as_vector(maxEnergyCluster_cells_radius)")
+               .Define("cells_layer",     "Utils::as_vector(maxEnergyCluster_cells_layer)")
+
                .Define("MVAVec", "WeaverUtils::get_weights(cells_e, cells_theta, cells_phi, cells_radius, cells_layer)")
 
-               # recast output
                .Define("Cluster_isPhoton", "WeaverUtils::get_weight(MVAVec, 0)")
-               .Define("Cluster_isPi0", "WeaverUtils::get_weight(MVAVec, 1)")
+               .Define("Cluster_isPi0",    "WeaverUtils::get_weight(MVAVec, 1)")
+
               )
         return df2
 
@@ -36,6 +78,9 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-                'Cluster_isPhoton', 'Cluster_isPi0',
+            "maxEnergyCluster_index","minEnergyCluster_index","clusters_n","clusters_energy",
+            "maxEnergyCluster_cells_energy","maxEnergyCluster_cells_phi","maxEnergyCluster_cells_theta","maxEnergyCluster_cells_layer","maxEnergyCluster_cells_n","maxEnergyCluster_cells_radius",
+            "maxEnergyCluster_energy", "maxEnergyCluster_x", "maxEnergyCluster_y", "maxEnergyCluster_z", "maxEnergyCluster_phi", "maxEnergyCluster_theta",
+            "Cluster_isPhoton","Cluster_isPi0","cells_e"
                 ]
         return branchList
