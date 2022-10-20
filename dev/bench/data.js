@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666273964275,
+  "lastUpdate": 1666273967239,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -10936,6 +10936,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1af64f09d8006a1c2f0bf67b7da94efbe7854393",
+          "message": "Merge pull request #220 from clementhelsens/fccswtuto2022\n\nadd mva tuto",
+          "timestamp": "2022-10-20T15:41:37+02:00",
+          "tree_id": "16150d1a2b6c883fcb22fe2007ae01194b2cd54b",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/1af64f09d8006a1c2f0bf67b7da94efbe7854393"
+        },
+        "date": 1666273965470,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 9.396745762383786,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.654562354986233,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.292988562969683,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 8.80985361747876,
+            "unit": "Evt/s"
           }
         ]
       }
