@@ -48,7 +48,7 @@ ROOT dataframe documentation is available
 
 In order to use the FCC analysers within ROOT dataframe, a dictionary needs to
 be built and put into `LD_LIBRARY_PATH` (this happens in `setup.sh`). The
-following needs to be done when running local code and for developers.
+following needs to be done when running local code and for developers. 
 
 ```shell
 source ./setup.sh
@@ -62,9 +62,108 @@ cd ..
 >
 > Each time changes are made in the C++ code, for example in
 > `analyzers/dataframe/` please do not forget to re-compile :)
->
+
+## Logging in
+
+Personal note : In order to work from personal windows computer :
+- Launch Xming
+- Launch Putty
+- Select CERN session and log into lxplus.
+
+Need to run these commands everytime you log in :
+```shell
+bash
+cd FCCAnalyses
+source ./setup.sh
+```
+## Madgraph installation
+
+Following the recomendations from https://twiki.cern.ch/twiki/bin/view/Main/MadgraphOnLxPlus, Madgraph was installed in the FCCAnalyses directory (only advice was to install it into the workspace). Moreover, we are moving away from Tanishq instructions, since the FCCeePhysicsPerformance git is no longer necessary according to Juliette, hence only FCCAnalyses has been installed properly. Therefore, will need to be careful about copying paths etc.. since Madgraph is installed in FCCAnalyses/
+
+### Launching Madgraph
+In order to launch Madgraph : 
+- Within workspace directory :
+```shell
+source ~/.bash_madgraph
+cd Madgraph/MG5_aMC_v2_6_4/
+./bin/mg5_aMC
+
+```
+
+### Importing models to Madgraph
+Useful madgraph models for HNL are available at https://feynrules.irmp.ucl.ac.be/wiki/HeavyN.
+In order to import them, go to :  Madgraph/MG5_aMC_v2_6_7/models and run (e.g for SM_HeavyN_CKM_AllMasses_LO) :
+```
+wget http://feynrules.irmp.ucl.ac.be/raw-attachment/wiki/HeavyN/SM_HeavyN_CKM_AllMasses_LO.tgz
+tar -zxvf SM_HeavyN_CKM_AllMasses_LO.tgz
+```
 
 
+## Using a proc card to generate an EDM file
+Proc cards are like configuration files for generating Madgraph events. Baseline proc cards are located at :
+https://github.com/HEP-FCC/FCCeePhysicsPerformance/tree/master/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation
+Proc cards can be modified using vim/vi:
+```shell
+i to insert
+:wq to save changes)
+```
+Note : The provided proc_card seem to contain a command that is either unknown, or has to be added by hand (since it kills the job). Therefore, in order to be able to continue, we have removed the line ```set auto_convert_model T``` (l33).
+
+In order to generate an event with a given proc card do:
+```shell
+cd Madgraph/MG5_aMC_v2_6_4/
+./bin/mg5_aMC path_to_card/proc_cart.dat
+```
+This then generates .lhe.gz file located at ```HNL_ljj/Events/run_01/unweighted_events.lhe.gz``` which needs to be unzipped :
+```shell
+gunzip file_name.lhe.gz
+```
+## From .lhe to .root : final steps to EDM sample.
+Once the .lhe file has been unzipped, copy it to the directory containing the Pythia card. We will then need to use Delphes in order to create a .root file to analyze.
+```shell
+cp file_name.lhe path_to_workspace/FCCeePhysicsPerformance/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation/
+cd FCCeePhysicsPerformance/case-studies/BSM/LLP/DisplacedHNL/HNL_sample_creation/
+```
+Must then edit ``` HNL_eenu_pythia.cmnd``` by including the .lhe file (line 14). 
+Note: It is possible that the n° of event of the pythia card must match the number of events set in the proc_card.dat file for the events to be generated.
+Then run :
+```shell
+source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
+DelphesPythia8_EDM4HEP ../../../../../../FCC-config/FCCee/Delphes/card_IDEA.tcl ../../../../../../FCC-config/FCCee/Delphes/edm4hep_IDEA.tcl HNL_eenu_pythia.cmnd HNL_ejj.root
+```
+Where HNL_ejj.root is the output file
+
+## Analysis
+### Stage 1
+In order to run the analysis, we use the new version of the analysis code, located at ```/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL```. In order to run the stage 1 analysis code over our EDM sample, we must specify it using :
+```shell
+cd FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL
+fccanalysis run analysis_stage1.py --output <name_of_desired_output.root> --files-list <name_of_delphes/pythia_root_file.root>
+```
+Note : you can (must) specify the output directory by directly modifying ```analysis_stage1.py``` (l18)
+### Final analysis
+The next step is to use ```final_analysis.py```. It must be modified in order to contain the correct inputDir and outputDir. Last test was to remove all processes from process_list and leave only the .root file created during stage1, so it looked like : 
+```shell
+processList = {
+    #run over the full statistics from stage1
+    'HNL_ejj_output_test':{},
+}
+```
+Once this is done, run :
+```shell
+fccanalysis final analysis_final.py
+```
+The resulting .root files are stored in the output directory which was specified within ```analysis_final.py```
+
+### Plots analysis
+The final step is to use the plotting script. Make sure to modify the inputDir to match with the outputDir defined in the previous step. The selections/plots/legend/colors 'keys' have to match the ones contained in the inputDir. Once this is done, run :
+```shell
+fccanalysis plots analysis_plots.py
+```
+This will generate plots for each selection. These can then be copied to your local device (from a local terminal) using :
+```shell
+scp -r dimoulin@lxplus.cern.ch:/afs/cern.ch/user/d/dimoulin/FCCAnalyses/examples/FCCee/bsm/LLPs/DisplacedHNL/plots/ .
+```
 ## Generalities
 
 Analyses in the FCCAnalyses framework usually follow standardized workflow,
