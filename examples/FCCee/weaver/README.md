@@ -1,9 +1,33 @@
+# Quick tour
+
+## stage 1: produce event based tree
+```
+fccanalysis run stage1.py --output stage1_cc.root --files-list /eos/experiment/fcc/ee/generation/DelphesEvents/pre_fall2022_training/IDEA/p8_ee_ZH_Znunu_Hcc_ecm240/events_663529174.root
+```
+
+## stage 2: produce jet based tree
+```
+g++ -o stage2 stage2.cpp `root-config --cflags --libs` -Wall
+./stage2 stage1_cc.root stage2_cc.root 0 10000
+```
+## run all stages in one go:
+```
+python all_stages.py --fsplit 0.9
+```
+
+## run inference
+```
+fccanalysis run analysis_inference.py --output inference.root --files-list /eos/experiment/fcc/ee/generation/DelphesEvents/pre_fall2022_training/IDEA/p8_ee_ZH_Znunu_Hcc_ecm240/events_663529174.root
+```
+
+
+
 # Preparation of dataset
 ## Generated samples
 The samples used are stored in the directory `/eos/experiment/fcc/ee/generation/DelphesEvents/pre_fall2022_training/IDEA/` .
 The events were simulated using Delphes. 
-The processes considered are $e^+ e^- \to Z(\to \nu \nu) H(\to aa)$ with $a = u,d,b,c,s,g$.
-For the processes $a =  u,d,b,c,s$ samples of $\sim 10^6$ events were produced (i.e. $2 \times 10^6$ jets per sample), for $a = g$ $\sim 2 \times 10^6$ (i.e. $2 \times 10^6$ jets per sample).
+The processes considered are $e^+ e^- \to Z(\to \nu \nu) H(\to aa)$ with $j = u,d,b,c,s,g$.
+For the processes $j =  u,d,b,c,s$ samples of $\sim 10^6$ events were produced (i.e. $2 \times 10^6$ jets per sample), for $j = g$ $\sim 2 \times 10^6$ (i.e. $2 \times 10^6$ jets per sample).
 Beamspot of 20 um size on Y-axis and 600 um on Z-axis was set.
 Tre tree containing the events in the input .root file is called _events_ .
 
@@ -22,9 +46,9 @@ So, before performing the training three actions are required:
 3. produce the ntuples (one per class) containing the interesting features.
 
 In our case, the first two actions are executed by `stage1.py` and the third by `stage2.cpp` .
-Since we are interested in the final ntuple, these two codes are executed jointly by `produceTrainingTrees_mp.py`, optimizing the times through the usage of multiprocessing.
-So the production of the training dataset from the generated samples is performed in two steps, which in the folloing will be referred to as _Stage1_ and _Stage_ntuple_.
-Even though the joint action of the two steps, an intermediate file is produced by _Stage1_, which will be saved in the ouptut directory (_OUTDIR_), together with the final ntuples but with a recognizable name.
+Since we are interested in the final ntuple, these two codes are executed jointly by `all_stages.py`, optimizing the times through the usage of multiprocessing.
+So the production of the training dataset from the generated samples is performed in two steps, which in the folloing will be referred to as _stage1_ and _stage2_.
+Even though the joint action of the two steps, an intermediate file is produced by _stage1_, which will be saved in the ouptut directory, together with the final ntuples but with a recognizable name.
 
 For what concerns time: 
 * _stage1_ takes $\sim 3-4$ minutes per $10^6$ events (run on 8 cpus);
@@ -39,7 +63,7 @@ We notice that the intermediate files could be deleted after the production of t
 
 ### Stage1 : `stage1.py`
 All the namespaces used are defined and developed inside the folder `analyzers`.
-In particular, in JetConstituentsUtils we developed functions to compute the constituents features and modified ReconstructedParticle2Track in order to return the value $-9$ for particles (neutral) not having a track (the value was chosen arbitrarily, could be changed).
+In particular, in JetConstituentsUtils we developed functions to compute the constituents features and modified ReconstructedParticle2Track in order to return the value $-9$ for particles (neutral) nothaving a track (the value was chosen arbitrarily, could be changed).
 
 As said, in this stage basically the initial edm4hep files are read and the interesting features are computed. Furthermore, in our version, the clustering is done explicitly. 
 
@@ -146,18 +170,18 @@ At the end of this stage we have a tree in which each entry is an event; the fea
 	...
 
 ### Stage_ntuple : `stage2.cpp`
-The main goal of this stage is to rearrange the tree obtained in _Stage1_ to a per-jet format, but other tasks are accomplished:
+The main goal of this stage is to rearrange the tree obtained in _stage1_ to a per-jet format, but other tasks are accomplished:
 * setting the flags of the class which the jets belong to;
 * checking the number of events actually considered is the wanted one;
 * there is a $\sim 30\%$ cases in which the clustering returns more than 2 jets, and $\sim$ few per million cases in which less than 2 jets are returned; so in the first case just the two higher energy jets are considered, while in the second case no jet is considered; a count of this events is printed to stdout.
 	
-`MakeNtuple_constituents2.cpp` takes 4 arguments: `USAGE: ./MakeNtuple_constituents2 [root_inFileName] [root_outFileName] N_i N_f`
+`stage2.cpp` takes 4 arguments: `USAGE: ./stage [root_inFileName] [root_outFileName] N_i N_f`
 1. [root_inFileName] : path to input file in the form `path_to_stage1file/stage1_infilename` , 
 2. [root_outFileName] : path to output file in the form `path_to_outputdir/outfilename` ,
 3. N_i : index of the event from where start reading the tree ,
 4. N_f : index of the event ehrtr to stop reading the tree .
 
-Our choices are implemented in the app `produceTrainingTrees_mp.py`, so will be explained in the next section.
+Our choices are implemented in the app `all_stages.py`, so will be explained in the next section.
 Now, let's go through the code.
 
 ###### Loop structure
@@ -297,72 +321,3 @@ loop : events {
 }	
 ```
 
-###### Countings of anomalies and other useful information
-Along the code there are counters of anomalies; these and other information are printed to stdoout.
-
-### Joint run of Stage1 and Stage_ntuple : `produceTrainingTrees_mp.py`
-This app is aimed to run the two stages jointly in an automatized and optimized way using multiprocessing. 
-The command to run `analysis_constituents_stage1_cluster.py` is of the form
-```
-fccanalysis run analysis_constituents_stage1_cluster.py --output PATH_to_OUTFILE/filename.root --files-list PATH_to_INFILE/filename1.root PATH_to_INFILE/filename2.root ... 
-```
-IMPORTANT: This commands accepts wildcard `*` in input.
-
-The command to run `MakeNtuple_constituents2.cpp` is of the form:
-```
-g++ -o MakeNtuple_constituents MakeNtuple_constituents.cpp `root-config --cflags --libs` -Wall
-./MakeNtuple_constituents2 [root_inFileName] [root_outFileName] N_i N_f
-```
-
-The _Stage1_ is sent in parallel by fccanalyses (the number of cores to use has to be set in `analysis_constituents_stage1_cluster.py` as the parameter `ncpus = `), while _Stage_ntuple_ needs to be parallelized.
-
-Few parameters are set:
-* path to initial samples,
-* path the output directory (will store the output files of the two stages),
-* train/test splitting fraction (the _Stage_ntuple_ is run twice, once to create the training dataset and once for the test dataset).
-The code creates a subdirectory inside the indicated output directory, named as `user_date`. 
-Inside this subdirectory the output files of _Stage1_ and _Stage_ntuple_ are created. 
-Furthermore, for each class two `.txt` files are created and `stdout` and `stderr` of the programs are redirected there. 
-
-In our study five classes are considered: $\{ q = (u,d), b, c, s, g\}$; for each class $10^6$ events were considered, and a $train/test$ split fraction of $9/1$ was used. The output directory of both stages is the same: we have one input directory which contains the initial samples and one output directory containing outputs of `Stage1`, `Stage_ntuple` ; the input directory of `Stage_ntuple` is the same as its output directory. 
-
-> Still work in progress ...
-
-## How to run this example
-### Way 1
-###### Set-up
-1. Clone this repository
-2. Set up the environment
-```
-cd FCCAnalyses/
-source ./setup.sh
-mkdir build install
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=../install
-make install
-cd ..
-```
-###### Run
-3. `cd ParticleNet_FCCSW/FCCAnalyses/` 
-4. Set your `outDir` inside `produceTrainingTrees_mp.py`:
-```
-outDIR = "/eos/home-a/adelvecc/try_script_mp/"
-```
-4. `source setup.sh`
-5. `python produceTrainingTrees_mp.py`
-
-### Way 2
-1. Copy the files `analysis_constituents_stage1_cluster.py`, `MakeNtuple_constituents2.cpp` and `produceTrainingTrees_mp.py` inside your FCCAnalyses directory.
-2. Update the file `JetConstituentsUtils` in both `analyzers/dataframe/src/` and `analyzers/dataframe/FCCAnalyses/`
-3. Set your `outDir` inside `produceTrainingTrees_mp.py`
-4. Run `python produceTrainingTrees_mp.py`
-
-
-## What could be improved
-* the stage 1 doesn't reduce the statistics if needed, only in stage_ntuple this is done; this implies heavier intermediate files and longer times even when I want to consider small fractions of the initial samples. Stage_ntuple runs only on the required statistics.
-* beamspot treatment
-* "independently of the process which generated it"
-* ```...```
-
-# Evaluation
-```...```
