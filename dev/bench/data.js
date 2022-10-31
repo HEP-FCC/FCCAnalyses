@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667217388234,
+  "lastUpdate": 1667217390246,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -11608,6 +11608,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "michele.selvaggi@cern.ch",
+            "name": "Michele Selvaggi",
+            "username": "selvaggi"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "91025ade92f54408e749635b6e93d26858613b2e",
+          "message": "Jet Flavour data pre-processing and inference (#224)\n\n* added methods for computing tagging observables\r\n\r\n* add stage1/2 macros for producing jet ntuples\r\n\r\n* first commit README\r\n\r\n* added all stage script\r\n\r\n* commit inference example\r\n\r\n* polished readme\r\n\r\n* Remove commented code\r\n\r\n* Apply suggestions from code review\r\n\r\nCo-authored-by: Valentin Volkl <valentin.volkl@cern.ch>",
+          "timestamp": "2022-10-31T11:43:12Z",
+          "tree_id": "ffc34c09e718057dffd0ae5a855752df354757fa",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/91025ade92f54408e749635b6e93d26858613b2e"
+        },
+        "date": 1667217389526,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 4.209522898611495,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 4.183647914071028,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 2.425223825603265,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 3.2819564920950683,
+            "unit": "Evt/s"
           }
         ]
       }
