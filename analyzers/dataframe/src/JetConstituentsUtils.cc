@@ -85,7 +85,6 @@ namespace FCCAnalyses {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for (const auto& jc : jcs) {
         out.emplace_back(meth(jc, coll));
-        //out.emplace_back(meth(jc));
       }
       return out;
     };
@@ -93,7 +92,6 @@ namespace FCCAnalyses {
     auto cast_constituent_4 = [](const auto& jcs, const auto& coll1, const auto& coll2, const auto& coll3,auto&& meth) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for (const auto& jc : jcs) {
-        //std::cout<<"new jet:  " <<jc.size()<<std::endl;
         out.emplace_back(meth(jc, coll1, coll2, coll3));
       }
       return out;
