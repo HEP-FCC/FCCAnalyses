@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666279382578,
+  "lastUpdate": 1667217267732,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -11460,6 +11460,58 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: examples/FCCee/test",
             "value": 8.364695343539703,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "michele.selvaggi@cern.ch",
+            "name": "Michele Selvaggi",
+            "username": "selvaggi"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "91025ade92f54408e749635b6e93d26858613b2e",
+          "message": "Jet Flavour data pre-processing and inference (#224)\n\n* added methods for computing tagging observables\r\n\r\n* add stage1/2 macros for producing jet ntuples\r\n\r\n* first commit README\r\n\r\n* added all stage script\r\n\r\n* commit inference example\r\n\r\n* polished readme\r\n\r\n* Remove commented code\r\n\r\n* Apply suggestions from code review\r\n\r\nCo-authored-by: Valentin Volkl <valentin.volkl@cern.ch>",
+          "timestamp": "2022-10-31T11:43:12Z",
+          "tree_id": "ffc34c09e718057dffd0ae5a855752df354757fa",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/91025ade92f54408e749635b6e93d26858613b2e"
+        },
+        "date": 1667217262884,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "value": 14.24961256980896,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: case-studies/analysis_example/scripts"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 14.760960817337036,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 19.349910020828247,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "value": 16.03060746192932,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test"
           }
         ]
       }
