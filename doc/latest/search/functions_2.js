@@ -11,8 +11,19 @@ var searchData=
   ['clustering_5fjade_8',['clustering_jade',['../struct_jet_clustering_1_1clustering__jade.html#a0a961c9e0f25be7e57ebb6c54b8bc983',1,'JetClustering::clustering_jade']]],
   ['clustering_5fkt_9',['clustering_kt',['../struct_jet_clustering_1_1clustering__kt.html#a8feb6d5f4b12d244ec426d31d3b34018',1,'JetClustering::clustering_kt']]],
   ['clustering_5fvalencia_10',['clustering_valencia',['../struct_jet_clustering_1_1clustering__valencia.html#ac6ab3509cefdb5607c0117e35d5e6bbd',1,'JetClustering::clustering_valencia']]],
-  ['compute_5fweights_11',['compute_weights',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#ae1425b3522216a55365708b85f62a605',1,'FCCAnalyses::JetFlavourUtils::compute_weights()'],['../namespace_f_c_c_analyses_1_1_weaver_utils.html#a13a7686a074b7e076bc00412c15a82b8',1,'FCCAnalyses::WeaverUtils::compute_weights()']]],
-  ['copy_12',['copy',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a1b760531c8b6c4c7d90114cdf9839c13',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
-  ['covtoacts_13',['CovToACTS',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
-  ['cross_14',['cross',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a228c5c14c629b915dd83201596e84dcb',1,'FCCAnalyses::Algorithms::calculate_thrust']]]
+  ['compute_5fresidue_5fenergy_11',['compute_residue_energy',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a9fddae51aa2714fd16a14eeb7924d97a',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5fresidue_5fphi_12',['compute_residue_phi',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a649d5974d73c409dd414e3bfec4a4d9b',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5fresidue_5fpt_13',['compute_residue_pt',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#aeea8b12f813ebca9d862e71626d89b10',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5fresidue_5fpx_14',['compute_residue_px',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#aa9f93c788f4bdf116e4419a3fa5fadd7',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5fresidue_5fpy_15',['compute_residue_py',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a58e2ae9ab04c26ff4c30c6db8c2d7abc',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5fresidue_5fpz_16',['compute_residue_pz',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a92d13ccd7cf2ec103c586fe9ec9fb427',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5fresidue_5ftheta_17',['compute_residue_theta',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a9ffd88681a6078eb76c7baf898b1922e',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5ftlv_5fjets_18',['compute_tlv_jets',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a2be5a6dca37fe4a6649842f7a213d355',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['compute_5fweights_19',['compute_weights',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#ae1425b3522216a55365708b85f62a605',1,'FCCAnalyses::JetFlavourUtils::compute_weights()'],['../namespace_f_c_c_analyses_1_1_weaver_utils.html#a13a7686a074b7e076bc00412c15a82b8',1,'FCCAnalyses::WeaverUtils::compute_weights()']]],
+  ['copy_20',['copy',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a1b760531c8b6c4c7d90114cdf9839c13',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
+  ['count_5fconsts_21',['count_consts',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a75defe49908de7f485a22a47bec43d6e',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['count_5fjets_22',['count_jets',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#aa8b139592f4c01d72c65ddf9281c6b4b',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['count_5ftype_23',['count_type',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a63032e3957445718fee0924113f0c661',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['covtoacts_24',['CovToACTS',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
+  ['cross_25',['cross',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a228c5c14c629b915dd83201596e84dcb',1,'FCCAnalyses::Algorithms::calculate_thrust']]]
 ];
