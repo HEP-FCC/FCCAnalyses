@@ -62,12 +62,6 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanLambda(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							   const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
 
-    /*    
-    rv::RVec< rv::RVec< rv::RVec<float> > > XPtoPar(const rv::RVec<FCCAnalysesJetConstituents>&,
-						    const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-						    const TVector3&, 
-						    const float&);
-    */
     
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dxy(const rv::RVec<FCCAnalysesJetConstituents>&,
 							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
@@ -89,11 +83,6 @@ namespace FCCAnalyses {
 							const ROOT::VecOps::RVec<edm4hep::TrackState>&,
 							const TVector3&,
 							const float&);
-    //rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dxy(const rv::RVec<rv::RVec<TVectorD> >& par);
-    //rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dz(const rv::RVec<rv::RVec<TVectorD> >& par);
-    //rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_phi0(const rv::RVec<rv::RVec<TVectorD> >& par);
-    //rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_C(const rv::RVec<rv::RVec<TVectorD> >& par);
-    //rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_ct(const rv::RVec<rv::RVec<TVectorD> >& par);
 
     //covariance matrix
     //diagonal
@@ -148,7 +137,6 @@ namespace FCCAnalyses {
 						      const rv::RVec<edm4hep::TrackData>& trackdata,
 						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
 
-    //-------------
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                           const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
@@ -214,17 +202,6 @@ namespace FCCAnalyses {
                                                       const rv::RVec<edm4hep::TrackerHitData>& trackerhits,
 						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
 
-    //Identification
-    /*rv::RVec<FCCAnalysesJetConstituentsData> get_MC_PIDs(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                         const rv::RVec<edm4hep::MCParticleData> Particle);
-    */
-
-    /*FCCAnalysesJetConstituentsData get_PIDs(const ROOT::VecOps::RVec< int > recin,
-					    const ROOT::VecOps::RVec< int > mcin,
-					    //const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-					    const rv::RVec<edm4hep::ReconstructedParticleData>& jcs,
-					    const rv::RVec<edm4hep::MCParticleData> Particle);
-    */
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_PIDs(const ROOT::VecOps::RVec< int > recin,
 						      const ROOT::VecOps::RVec< int > mcin,                                                                                 
@@ -234,7 +211,6 @@ namespace FCCAnalyses {
     
     rv::RVec<FCCAnalysesJetConstituentsData> get_PIDs_cluster(const ROOT::VecOps::RVec< int > recin,
                                                               const ROOT::VecOps::RVec< int > mcin,
-                                                              //const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                               const rv::RVec<edm4hep::ReconstructedParticleData>& RecPart,
                                                               const rv::RVec<edm4hep::MCParticleData>& Particle,
                                                               const std::vector<std::vector<int>>& indices);
@@ -252,35 +228,6 @@ namespace FCCAnalyses {
     rv::RVec<int> count_consts(rv::RVec<FCCAnalysesJetConstituents> jets);
     rv::RVec<int> count_type(const rv::RVec<FCCAnalysesJetConstituentsData>& isType);
 
-    /*
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isMu(const ROOT::VecOps::RVec< int > recin,
-                                                      const ROOT::VecOps::RVec< int > mcin,
-						      const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                      const rv::RVec<edm4hep::MCParticleData>& Particle);
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isEl(const ROOT::VecOps::RVec< int > recin,
-                                                      const ROOT::VecOps::RVec< int > mcin,
-						      const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                      //const vector<edm4hep::ParticleIDData> PIDs,                                     
-                                                      const rv::RVec<edm4hep::MCParticleData>& Particle);
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const ROOT::VecOps::RVec< int > recin,
-							      const ROOT::VecOps::RVec< int > mcin,
-							      const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                              const rv::RVec<edm4hep::MCParticleData>& Particle);
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isGamma(const ROOT::VecOps::RVec< int > recin,
-							 const ROOT::VecOps::RVec< int > mcin,
-							 const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                         const rv::RVec<edm4hep::MCParticleData>& Particle);
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isNeutralHad(const ROOT::VecOps::RVec< int > recin,
-								 const ROOT::VecOps::RVec< int > mcin,
-								 const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                                 const rv::RVec<edm4hep::MCParticleData>& Particle);
-
-    //rv::RVec<FCCAnalysesJetConstituentsData> get_dptdpt(const rv::RVec<FCCAnalysesJetConstituents>&);
-    */
 
     
     rv::RVec<FCCAnalysesJetConstituentsData> get_erel(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
