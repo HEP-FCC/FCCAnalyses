@@ -1,0 +1,6 @@
+LHAPDF6
+=======
+
+For installation, usage instructions and examples, please see the doc/LHAPDF.dox
+file -- or ideally make the documentation Web pages by running "make doxy" and
+pointing a Web browser at doc/doxygen/index.html

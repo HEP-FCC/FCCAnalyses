@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+
+Name: lhapdf
+Description: LHAPDF parton density library
+URL: https://lhapdf.hepforge.org
+Version: @VERSION@
+Libs: -L@libdir@ -lLHAPDF
+Cflags: -I@includedir@
+#-I@BOOST_CPPFLAGS@

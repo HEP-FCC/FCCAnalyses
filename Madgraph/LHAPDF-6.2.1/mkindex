@@ -1,0 +1,16 @@
+#! /usr/bin/env python
+# -*- python -*-
+
+import lhapdf
+lhapdf.setVerbosity(0)
+
+sets = []
+for s in lhapdf.availablePDFSets():
+    i = lhapdf.getPDFSet(s)
+    sets.append([i.lhapdfID, i.name, i.dataversion])
+for id, name, version in sorted(sets):
+    if id > 0:
+        print("%d %s %d" % (id,name,version))
+    else:
+        import sys
+        sys.stderr.write("Invalid set ID: %d %s %d\n" % (id,name,version))

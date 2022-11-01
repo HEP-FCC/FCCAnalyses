@@ -1,0 +1,58 @@
+#! /usr/bin/env bash
+## -*- sh -*-
+## bin/lhapdf-config.  Generated from lhapdf-config.in by configure.
+
+## These variables need to exist
+## Note no use of $DESTDIR... we ignore it so that destdir can be used
+## for temp installs later copied to /
+prefix=/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/LHAPDF-6.2.1/../lhapdf_build
+exec_prefix=${prefix}
+datarootdir=${prefix}/share
+
+if [[ $# -eq 0 || -n $( echo $* | egrep -- "--help|-h" ) ]]; then
+    echo "lhapdf-config: configuration tool for the LHAPDF"
+    echo "               parton density function evolution library"
+    echo "               http://projects.hepforge.org/lhapdf/"
+    echo
+    echo "Usage: lhapdf-config [options]"
+    echo "Options:"
+    echo "  --help | -h   : show this help message"
+    echo "  --prefix      : show the installation prefix (cf. autoconf)"
+    echo "  --incdir      : show the path to the LHAPDF C++ header directory"
+    echo "  --libdir      : show the path to the LHAPDF library directory"
+    echo "  --datadir     : show the path to the LHAPDF data directory"
+    echo
+    echo "  --cxx         : get compiler (including -std=c++11 flag or equiv)"
+    echo "  --cflags      : get compiler flags (aka --cppflags|--cxxflags)"
+    echo "  --libs        : get linker flags (aka --ldflags)"
+    echo
+    echo "  --version     : return LHAPDF release version number"
+fi
+
+OUT=""
+
+tmp=$( echo "$*" | egrep -- '--\<prefix\>')
+test -n "$tmp" && OUT="$OUT /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/LHAPDF-6.2.1/../lhapdf_build"
+
+tmp=$( echo "$*" | egrep -- '--\<incdir\>')
+test -n "$tmp" && OUT="$OUT ${prefix}/include"
+
+tmp=$( echo "$*" | egrep -- '--\<cxx\>')
+test -n "$tmp" && OUT="$OUT /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/g++"
+
+tmp=$( echo "$*" | egrep -- '--\<cflags|cppflags|cxxflags\>')
+test -n "$tmp" && OUT="$OUT -O3 -I${prefix}/include"
+
+tmp=$( echo "$*" | egrep -- '--\<libdir\>')
+test -n "$tmp" && OUT="$OUT ${exec_prefix}/lib"
+
+tmp=$( echo "$*" | egrep -- '--\<libs|ldflags\>')
+test -n "$tmp" && OUT="$OUT -L${exec_prefix}/lib -lLHAPDF"
+
+tmp=$( echo "$*" | egrep -- '--\<datadir\>|--\<datarootdir\>')
+test -n "$tmp" && OUT="$OUT ${datarootdir}/LHAPDF"
+
+tmp=$( echo "$*" | egrep -- '--\<version\>')
+test -n "$tmp" && OUT="$OUT 6.2.1"
+
+echo $OUT

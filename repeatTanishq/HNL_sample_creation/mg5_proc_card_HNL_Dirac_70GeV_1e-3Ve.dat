@@ -1,0 +1,69 @@
+#************************************************************
+#*                     MadGraph5_aMC@NLO                    *
+#*                                                          *
+#*                *                       *                 *
+#*                  *        * *        *                   *
+#*                    * * * * 5 * * * *                     *
+#*                  *        * *        *                   *
+#*                *                       *                 *
+#*                                                          *
+#*                                                          *
+#*         VERSION 2.7.3                 2020-06-21         *
+#*                                                          *
+#*    The MadGraph5_aMC@NLO Development Team - Find us at   *
+#*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+#*                                                          *
+#************************************************************
+#*                                                          *
+#*               Command File for MadGraph5_aMC@NLO         *
+#*                                                          *
+#*     run as ./bin/mg5_aMC  filename                       *
+#*                                                          *
+#************************************************************
+# card is made by suchita Kulkarni
+#contact suchita.kulkarni@cern.ch
+set default_unset_couplings 99
+set group_subprocesses Auto
+set ignore_six_quark_processes False
+set loop_optimized_output True
+set loop_color_flows False
+set gauge unitary
+set complex_mass_scheme False
+set max_npoint_for_channel 0
+import model sm
+define p = g u c d s u~ c~ d~ s~
+define j = g u c d s u~ c~ d~ s~
+define l+ = e+ mu+
+define l- = e- mu-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+import model SM_HeavyN_Dirac_CKM_Masses_LO
+define e = e+ e-
+define nue = ve ve~
+generate e+ e- > n1 ve~ , (n1 > z ve, z > e+ e-)
+add process e+ e- > n1~ ve , (n1~ > z ve~, z > e+ e-)
+add process e+ e- > n1 ve~ , (n1 > e+ e- ve)
+add process e+ e- > n1~ ve , (n1~ > e+ e- ve~)
+output HNL_Dirac_70GeV_1e-3Ve
+launch HNL_Dirac_70GeV_1e-3Ve
+done
+# set to electron beams (0 for ele, 1 for proton)
+set lpp1 0
+set lpp2 0
+set ebeam1 45.594
+set ebeam2 45.594
+set no_parton_cut
+# Here I set mass of the electron HNL
+set mn1 70
+# set mass of muon HNL, made heavy here
+set mn2 10000
+# set mass of tau HNL, made heavy here
+set mn3 10000
+# set electron mixing angle
+set ven1 1e-3
+# this is important, set the decay width of HNL flavour of interest to auto
+# if this is not done, lifetime calculations won'e be right
+set WN1 auto
+set time_of_flight 0
+set nevents 1000
+done

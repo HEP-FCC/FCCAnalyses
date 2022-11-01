@@ -1,0 +1,358 @@
+------------------------------------------------------------------------
+RecursiveTools FastJet contrib
+------------------------------------------------------------------------
+
+The RecursiveTools FastJet contrib aims to provide a common contrib
+for a number of tools that involve recursive reclustering/declustering
+of a jet for tagging or grooming purposes.
+
+Currently it contains:
+
+- ModifiedMassDropTagger
+  This corresponds to arXiv:1307.0007 by Mrinal Dasgupta, Alessandro
+  Fregoso, Simone Marzani and Gavin P. Salam
+
+- SoftDrop
+  This corresponds to arXiv:1402.2657 by Andrew J. Larkoski, Simone
+  Marzani, Gregory Soyez, Jesse Thaler
+
+- RecursiveSoftDrop
+- BottomUpSoftDrop
+  This corresponds to arXiv:1804.03657 by Frederic Dreyer, Lina
+  Necib, Gregory Soyez and Jesse Thaler
+
+- IteratedSoftDrop
+  This corresponds to arXiv:1704.06266 by Christopher Frye, Andrew J.
+  Larkoski, Jesse Thaler, Kevin Zhou
+
+- Recluster
+  A generic tool to recluster a given jet into subjets
+  Note: a Recluster class is available natively in FastJet since v3.1.
+        Users are therefore encouraged to use the FastJet version
+        rather than this one which is mostly provided for
+        compatibility of this contrib with older versions of FastJet.
+
+The interface for these tools is described in more detail below, with
+all of the available options documented in the header files.
+
+One note about nomenclature.  A groomer is a procedure that takes a
+PseudoJet and always returns another (non-zero) PseudoJet.  A tagger is
+a procedure that takes a PseudoJet, and either returns another PseudoJet
+(i.e. tags it) or returns an empty PseudoJet (i.e. doesn't tag it).
+
+------------------------------------------------------------------------
+ModifiedMassDropTagger
+------------------------------------------------------------------------
+
+The Modified Mass Drop Tagger (mMDT) recursively declusters a jet,
+following the largest pT subjet until a pair of subjets is found that
+satisfy the symmetry condition on the energy sharing
+
+   z > z_cut
+
+where z_cut is a predetermined value.  By default, z is calculated as
+the scalar pT fraction of the softest subjet.  Note that larger values
+of z_cut correspond to a more restrictive tagging criteria.
+
+By default, mMDT will first recluster the jet using the CA clustering
+algorithm, which means that mMDT can be called on any jet, regardless
+of the original jet finding measure.
+
+A default mMDT can be created via
+
+   double z_cut = 0.10;
+   ModifiedMassDropTagger mMDT(z_cut);
+
+More options are available in the full constructor.  To apply mMDT,
+one simply calls it on the jet of interest.
+
+   PseudoJet tagged_jet = mMDT(original_jet);
+
+Note that mMDT is a tagger, such that tagged_jet will only be non-zero
+if the symmetry cut z > z_cut is satisfied by some branching of the
+clustering tree.  
+
+To gain additional information about the mMDT procedure, one can use
+
+   tagged_jet.structure_of<ModifiedMassDropTagger>()
+
+which gives access to information about the delta_R between the tagged
+subjets, their z value, etc.
+
+------------------------------------------------------------------------
+SoftDrop
+------------------------------------------------------------------------
+
+The SoftDrop procedure is very similar to mMDT, albeit with a 
+generalised symmetry condition:
+ 
+   z > z_cut * (R / R0)^beta
+
+Note that larger z_cut and smaller beta correspond to more aggressive
+grooming of the jet.
+
+SoftDrop is intended to be used as a groomer (instead of as a tagger),
+such that if the symmetry condition fails throughout the whole
+clustering tree, SoftDrop will still return a single particle in the
+end.  Apart from the tagger/groomer distinction, SoftDrop with beta=0 is
+the same as mMDT.
+
+A default SoftDrop groomer can be created via:
+
+   double beta  = 2.0;
+   double z_cut = 0.10;
+   double R0    = 1.0; // this is the default value
+   SoftDrop sd(beta,z_cut,R0);
+
+and acts on a desired jet as
+
+   PseudoJet groomed_jet = sd(original_jet);
+
+and additional information can be obtained via
+
+   groomed_jet.structure_of<SoftDrop>()
+
+SoftDrop is typically called with beta > 0, though beta < 0 is still a
+viable option.  Because beta < 0 is infrared-collinear unsafe in
+grooming mode, one probably wants to switch to tagging mode for negative
+beta, via set_tagging_mode().
+
+------------------------------------------------------------------------
+RecursiveSoftDrop
+------------------------------------------------------------------------
+
+The RecursiveSoftDrop procedure applies the Soft Drop procedure N times 
+in a jet in order to find up to N+1 prongs.  N=0 makes no modification
+to the jet, and N=1 is equivalent to the original SoftDrop.
+
+Once one has more than one prong, one has to decide which will be
+declustered next.  At each step of the declustering procedure, one
+undoes the clustering which has the largest declustering angle
+(amongst all the branches that are searched for substructure). [see
+"set_fixed_depth" below for an alternative]
+
+Compared to SoftDrop, RecursiveSoftDrop takes an extra argument N
+specifying the number of times the SoftDrop procedure is recursively
+applied. Negative N means that the procedure is applied until no
+further substructure is found (i.e. corresponds to taking N=infinity).
+
+   double beta  = 2.0;
+   double z_cut = 0.10;
+   double R0    = 1.0; // this is the default value
+   int N        = -1;  
+   RecursiveSoftDrop rsd(beta, z_cut, N, R0);
+
+One then acts on a jet as
+
+   PseudoJet groomed_jet = rsd(jet)
+
+and get additional information via
+
+   groomed_jet.structure_of<RecursiveSoftDrop>()
+
+------------------------------------------------------------------------
+IteratedSoftDrop
+------------------------------------------------------------------------
+
+Iterated Soft Drop (ISD) is a repeated variant of SoftDrop.  After
+performing the Soft Drop procedure once, it logs the groomed symmetry
+factor, then recursively performs Soft Drop again on the harder
+branch.  This procedure is repeated down to an (optional) angular cut
+theta_cut, yielding a set of symmetry factors from which observables
+can be built.
+
+An IteratedSoftDrop tool can be created as follows:
+
+  double beta = -1.0;
+  double z_cut = 0.005;
+  double theta_cut = 0.0;
+  double R0 = 0.5;        // characteristic radius of jet algorithm
+  IteratedSoftDrop isd(beta, z_cut, double theta_cut, R0);
+
+By default, ISD applied on a jet gives a result of type
+IteratedSoftDropInfo that can then be probed to obtain physical
+observables
+
+  IteratedSoftDropInfo isd_info = isd(jet);
+
+  unsigned int multiplicity = isd_info.multiplicity();
+  double kappa = 1.0;     // changes angular scale of ISD angularity
+  double isd_width = isd_info.angularity(kappa);
+  vector<pair<double,double> > zg_thetags = isd_info.all_zg_thetag();
+  vector<pair<double,double> > zg_thetags = isd_info();
+  for (unsigned int i=0; i< isd_info.size(); ++i){
+    cout << "(zg, theta_g)_" << i << " = "
+         << isd_info[i].first << " " <<  isd_info[i].second << endl;
+  }
+
+Alternatively, one can directly get the multiplicity, angularity, and
+(zg,thetag) pairs from the IteratedSoftDrop class, at the expense of
+re-running the declustering procedure:
+
+  unsigned int multiplicity = isd.multiplicity(jet);
+  double isd_width = isd.angularity(jet, 1.0);
+  vector<pair<double,double> > zg_thetags = isd.all_zg_thetag(jet);
+
+
+Note: the iterative declustering procedure is the same as what one
+  would obtain with RecursiveSoftDrop with an (optional) angular cut
+  and recursing only in the hardest branch [see the "Changing
+  behaviour" section below for details], except that it returns some
+  information about the jet instead of a modified jet as RSD does.
+
+
+------------------------------------------------------------------------
+BottomUpSoftDrop
+------------------------------------------------------------------------
+
+This is a bottom-up version of the RecursiveSoftDrop procedure, in a
+similar way as Pruning can be seen as a bottom-up version of Trimming.
+
+In practice, the jet is reclustered and at each step of the clustering
+one checks the SoftDrop condition
+
+   z > z_cut * (R / R0)^beta
+
+If the condition is met, the pair is recombined. If the condition is
+not met, only the hardest of the two objects is kept for further
+clustering and the softest is rejected.
+
+BottomUpSoftDrop takes the same arguments as SoftDrop, and a groomer
+can be created with:
+
+   double beta  = 2.0;
+   double z_cut = 0.10;
+   double R0    = 1.0; // this is the default value
+   BottomUpSoftDrop busd(beta,z_cut,R0);
+
+One then acts on a jet as
+
+   PseudoJet groomed_jet = busd(jet)
+
+------------------------------------------------------------------------
+Recluster
+------------------------------------------------------------------------
+
+  *** NOTE: this is provided only for backwards compatibility ***
+  *** with FastJet <3.1. For FastJet >=3.1, the native        ***
+  *** fastjet::Recluster is used instead                      ***
+
+The Recluster class allows the constituents of a jet to be reclustered
+with a different recursive clustering algorithm.  This is used
+internally in the mMDT/SoftDrop/RecursiveSoftDrop/IteratedSoftDrop
+code in order to recluster the jet using the CA algorithm.  This is
+achieved via
+
+  Recluster ca_reclusterer(cambridge_algorithm,
+                        JetDefinition::max_allowable_R);
+  PseudoJet reclustered_jet = ca_reclusterer(original_jet);
+
+Note that reclustered_jet creates a new ClusterSequence that knows to
+delete_self_when_unused.
+
+------------------------------------------------------------------------
+Changing behaviour
+------------------------------------------------------------------------
+
+The behaviour of the all the tools provided here
+(ModifiedMassDropTagger, SoftDrop, RecursiveSoftDrop and
+IteratedSoftDrop) can be tweaked using the following options:
+
+SymmetryMeasure = {scalar_z, vector_z, y, theta_E, cos_theta_E}
+  [constructor argument]
+  : The definition of the energy sharing between subjets, with 0
+    corresponding to the most asymmetric.
+    . scalar_z = min(pt1,pt2)/(pt1+pt2)   [default]
+    . vector_z = min(pt1,pt2)/pt_{1+2}
+    . y = min(pt1^2,pt2^2)/m_{12}^2  (original y from MDT)
+    . theta_E     = min(E1,E2)/(E1+E2),
+           with angular measure theta_{12}^2
+    . cos_theta_E = min(E1,E2)/(E1+E2),
+           with angular measure 2[1-cos(theta_{12})]
+    The last two variants are meant for use in e+e- collisions,
+    together with the "larger_E" recursion choice (see below)
+
+RecursionChoice = {larger_pt, larger_mt, larger_m, larger_E}
+  [constructor argument]
+  : The path to recurse through the tree after the symmetry condition
+    fails. Options refer to transverse momentum (pt), transverse mass
+    (mt=sqrt(pt^2+m^2), mass (m) or energy (E). the latter is meant
+    for use in e+e- collisions
+
+mu_cut   [constructor argument]
+  : An optional mass drop condition
+
+set_subtractor(subtractor*) [or subtractor as a constructor argument]
+  : provide a subtractor. When a subtractor is supplied, the
+    kinematic constraints are applied on subtracted 4-vectors. In
+    this case, the result of the ModifiedMassDropTagger/SoftDrop is a
+    subtracted PseudoJet, and it is assumed that
+    ModifiedMassDropTagger/SoftDrop is applied to an unsubtracted jet.
+    The latter default can be changed by calling
+    set_input_jet_is_subtracted().
+
+set_reclustering(bool, Recluster*)
+  : An optional setting to recluster a jet with a different jet
+    recursive jet algorithm.  The code is only designed to give sensible
+    results with the CA algorithm, but other reclustering algorithm
+    (especially kT) may be appropriate in certain contexts. 
+    Use at your own risk.
+
+set_grooming_mode()/set_tagging_mode()
+  : In grooming mode, the algorithm will return a single particle if the
+    symmetry condition fails for the whole tree.  In tagging mode, the
+    algorithm will return an zero PseudoJet if no symmetry conditions
+    passes.  Note that ModifiedMassDropTagger defaults to tagging mode
+    and SoftDrop defaults to grooming mode.
+
+set_verbose_structure(bool)
+  : when set to true, additional information will be stored in the jet
+    structure. This includes in particular values of symmetry,
+    delta_R, and mu of dropped branches
+
+For the specific case of RecursiveSoftDrop, additional tweaking is
+possible via the following methods
+
+set_fixed_depth_mode(bool)
+  : when this is true, RSD will recurse (N times) into all the
+    branches found during the previous iteration [instead of recursing
+    through the largest declustering angle until N prongs have been
+    found]. This yields at most 2^N prong. For infinite N, the two
+    options are equivalent.
+
+set_dynamical_R0(bool)
+  : By default the angles in the SD condition are normalised to the
+    parameter R0. With "dynamical R0", RSD will dynamically adjust R0
+    to be the angle between the two prongs found during the previous
+    iteration.
+
+set_hardest_branch_only(bool)
+  : When substructure is found, only recurse into the hardest of the
+    two branches for further substructure search. This uses the class
+    RecursionChoice.
+
+set_min_deltaR_squared(double):
+  : set a minimal angle (squared) at which we stop the declustering
+    procedure.  This cut is ineffective for negative values of the
+    argument.
+
+------------------------------------------------------------------------
+Technical Details
+------------------------------------------------------------------------
+
+Both ModifiedMassDropTagger and SoftDrop inherit from
+RecursiveSymmetryCutBase, which provides a common codebase for recursive
+declustering of a jet with a symmetry cut condition.  A generic 
+RecursiveSymmetryCutBase depends on the following (virtual) functions
+(see header file for exact full specs, including constness):
+
+double symmetry_cut_fn(PseudoJet &, PseudoJet &)
+  : The function that defines the symmetry cut. This is what actually 
+    defines different recursive declustering schemes, and all classes
+    that inherit from RecursiveSymmetryCutBase must define this
+    function.
+
+string symmetry_cut_description() 
+  : the string description of the symmetry cut.
+
+------------------------------------------------------------------------

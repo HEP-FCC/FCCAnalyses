@@ -1,0 +1,9 @@
+      DATA NQCD(1)/0/
+      DATA NQCD(2)/0/
+      DATA NQCD(3)/0/
+      DATA NQCD(4)/0/
+      DATA NQCD(5)/0/
+      DATA NQCD(6)/0/
+      DATA NQCD(7)/0/
+      DATA NQCD(8)/0/
+      DATA NQCD(9)/0/

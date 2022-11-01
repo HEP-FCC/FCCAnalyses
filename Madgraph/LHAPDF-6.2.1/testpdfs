@@ -1,0 +1,49 @@
+#! /usr/bin/env python
+
+"""\
+Usage: %prog <PDF1> [<PDF2> [...]]
+
+Test PDF xf, alpha_s, and metadata values for the named LHAPDF6 sets.
+"""
+
+import optparse, sys
+op = optparse.OptionParser(usage=__doc__)
+op.add_option("--xmin", dest="XMIN", metavar="NUM", help="minimum x value [default: %default]", type=float, default=1e-10)
+op.add_option("--qmax", dest="QMAX", metavar="NUM", help="maximum Q value in GeV [default: %default]", type=float, default=1e4)
+opts, args = op.parse_args()
+if not args:
+    print __doc__
+    sys.exit(1)
+
+
+## Get sampling points in x,Q
+from math import log10
+import numpy as np
+xs = np.logspace(log10(opts.XMIN), 0, 10)
+qs = np.logspace(0, log10(opts.QMAX), 10)
+xs_few = [1e-5, 1e-3, 1e-2, 1e-1]
+qs_few = [10, 100, 1000, 10000]
+
+
+## Test each PDF's metadata, alpha_s, and xf values
+for pname in args:
+    import lhapdf, pprint
+
+    p = lhapdf.mkPDF(pname)
+    pset = p.set()
+    ps = pset.mkPDFs()
+    del ps
+
+    ## Metadata
+    print "\n", "%s (version %d) [%d] - %d members" % (pset.name, pset.dataversion, pset.lhapdfID, pset.size)
+    print "Set type = %s, %g%% CL" % (pset.errorType, pset.errorConfLevel)
+
+    ## alpha_s
+    alphas = {q:p.alphasQ(q) for q in qs}
+    print "\n", "alpha_s =\n", pprint.pformat(alphas)
+
+    ## xf
+    for pid in xrange(-6, 7):
+        xfs = np.array([[p.xfxQ(pid, x,q) for x in xs] for q in qs])
+        print "\n", ("xf_%d =\n" % pid), xfs
+    print

@@ -1,0 +1,514 @@
+#! /usr/bin/env python
+## @configure_input@
+
+import os, sys
+import optparse, textwrap, logging
+
+
+## Load settings from Python module, otherwise use install-time configururation
+# TODO: Just always require the Python module at some point?
+try:
+    import lhapdf
+    __version__ = lhapdf.__version__
+    configured_datadir = lhapdf.paths()[0]
+except ImportError:
+    __version__ = '@PACKAGE_VERSION@'
+    configured_datadir = '@datadir@/@PACKAGE_TARNAME@'\
+                         .replace('${datarootdir}', '@datarootdir@')\
+                         .replace('${prefix}', '@prefix@')
+major_version = '.'.join(__version__.split('.')[:2])
+#print major_version, configured_datadir
+
+
+## Base paths etc. for set and index file downloading
+urlbase = 'http://www.hepforge.org/archive/lhapdf/pdfsets/%s/' % major_version
+afsbase = '/afs/cern.ch/sw/lcg/external/lhapdfsets/current/'
+cvmfsbase='/cvmfs/sft.cern.ch/lcg/external/lhapdfsets/current/'
+index_filename = 'pdfsets.index'
+
+
+class Subcommand(object):
+    """A subcommand of a root command-line application that may be
+    invoked by a SubcommandOptionParser.
+    """
+    def __init__(self, name, help='', aliases=(), **kwargs):
+        """Creates a new subcommand. name is the primary way to invoke
+        the subcommand; aliases are alternate names. parser is an
+        OptionParser responsible for parsing the subcommand's options.
+        help is a short description of the command. If no parser is
+        given, it defaults to a new, empty OptionParser.
+        """
+        self.name = name
+        kwargs['add_help_option'] = kwargs.get('add_help_option', False)
+        self.parser = optparse.OptionParser(**kwargs)
+        if not kwargs['add_help_option']:
+            self.parser.add_option('-h', '--help', action='help', help=optparse.SUPPRESS_HELP)
+        self.aliases = aliases
+        self.help = help
+
+
+class SubcommandsOptionParser(optparse.OptionParser):
+    """A variant of OptionParser that parses subcommands and their arguments."""
+
+    # A singleton command used to give help on other subcommands.
+    _HelpSubcommand = Subcommand('help',
+        help='give detailed help on a specific sub-command',
+        aliases=('?',))
+
+    def __init__(self, *args, **kwargs):
+        """Create a new subcommand-aware option parser. All of the
+        options to OptionParser.__init__ are supported in addition
+        to subcommands, a sequence of Subcommand objects.
+        """
+        # The subcommand array, with the help command included.
+        self.subcommands = list(kwargs.pop('subcommands', []))
+        self.subcommands.append(self._HelpSubcommand)
+
+        # A more helpful default usage.
+        if 'usage' not in kwargs:
+            kwargs['usage'] = """
+  %prog COMMAND [ARGS...]
+  %prog help COMMAND"""
+
+        # Super constructor.
+        optparse.OptionParser.__init__(self, *args, **kwargs)
+
+        # Adjust the help-visible name of each subcommand.
+        for subcommand in self.subcommands:
+            subcommand.parser.prog = '%s %s' % \
+                    (self.get_prog_name(), subcommand.name)
+
+        # Our root parser needs to stop on the first unrecognized argument.
+        self.disable_interspersed_args()
+
+    def add_subcommand(self, cmd):
+        """Adds a Subcommand object to the parser's list of commands."""
+        self.subcommands.append(cmd)
+
+    def format_help(self, formatter=None):
+        """Add the list of subcommands to the help message."""
+        # Get the original help message, to which we will append.
+        out = optparse.OptionParser.format_help(self, formatter)
+        if formatter is None:
+            formatter = self.formatter
+
+        # Subcommands header.
+        result = ["\n"]
+        result.append(formatter.format_heading('Commands'))
+        formatter.indent()
+
+        # Generate the display names (including aliases).
+        # Also determine the help position.
+        disp_names = []
+        help_position = 0
+        for subcommand in self.subcommands:
+            name = subcommand.name
+            if subcommand.aliases:
+                name += ' (%s)' % ', '.join(subcommand.aliases)
+            disp_names.append(name)
+
+            # Set the help position based on the max width.
+            proposed_help_position = len(name) + formatter.current_indent + 2
+            if proposed_help_position <= formatter.max_help_position:
+                help_position = max(help_position, proposed_help_position)
+
+        # Add each subcommand to the output.
+        for subcommand, name in zip(self.subcommands, disp_names):
+            # Lifted directly from optparse.py.
+            name_width = help_position - formatter.current_indent - 2
+            if len(name) > name_width:
+                name = "%*s%s\n" % (formatter.current_indent, "", name)
+                indent_first = help_position
+            else:
+                name = "%*s%-*s  " % (formatter.current_indent, "",
+                                      name_width, name)
+                indent_first = 0
+            result.append(name)
+            help_width = formatter.width - help_position
+            help_lines = textwrap.wrap(subcommand.help, help_width)
+            result.append("%*s%s\n" % (indent_first, "", help_lines[0]))
+            result.extend(["%*s%s\n" % (help_position, "", line)
+                           for line in help_lines[1:]])
+        formatter.dedent()
+
+        # Concatenate the original help message with the subcommand list.
+        return out + "".join(result)
+
+    def _subcommand_for_name(self, name):
+        """Return the subcommand in self.subcommands matching the
+        given name. The name may either be the name of a subcommand or
+        an alias. If no subcommand matches, returns None.
+        """
+        for subcommand in self.subcommands:
+            if name == subcommand.name or \
+               name in subcommand.aliases:
+                return subcommand
+        return None
+
+    def parse_args(self, a=None, v=None):
+        """Like OptionParser.parse_args, but returns these four items:
+        - options: the options passed to the root parser
+        - subcommand: the Subcommand object that was invoked
+        - suboptions: the options passed to the subcommand parser
+        - subargs: the positional arguments passed to the subcommand
+        """
+        options, args = optparse.OptionParser.parse_args(self, a, v)
+
+        if not args:
+            # No command given.
+            self.print_help()
+            self.exit()
+        else:
+            cmdname = args.pop(0)
+            subcommand = self._subcommand_for_name(cmdname)
+            if not subcommand:
+                self.error('unknown command ' + cmdname)
+
+        suboptions, subargs = subcommand.parser.parse_args(args)
+
+        if subcommand is self._HelpSubcommand:
+            if subargs:
+                # particular
+                cmdname = subargs[0]
+                helpcommand = self._subcommand_for_name(cmdname)
+                helpcommand.parser.print_help()
+                self.exit()
+            else:
+                # general
+                self.print_help()
+                self.exit()
+
+        return options, subcommand, suboptions, subargs
+
+
+class SetInfo(object):
+    """Stores PDF metadata: name, version, ID code."""
+    def __init__(self, name, id_code, version):
+        self.name    = name
+        self.id_code = id_code
+        self.version = version
+    def __eq__(self, other):
+        if isinstance(other, SetInfo):
+            return self.name == other.name
+        else:
+            return self.name == other
+    def __ne__(self, other):
+        return not self == other
+    def __repr__(self):
+        return self.name
+
+
+def get_reference_list(filepath):
+    """Reads reference file and returns list of SetInfo objects.
+
+    The reference file is space-delimited, with columns:
+    id_code version name
+    """
+    database = []
+    try:
+        import csv
+        csv_file = open(filepath, 'r')
+        logging.debug('Reading %s' % filepath)
+        reader = csv.reader(csv_file, delimiter=' ', skipinitialspace=True, strict=True)
+        for row in reader:
+            # <= 6.0.5
+            if len(row) == 2:
+                id_code, name, version = int(row[0]), str(row[1]), None
+            # >= 6.1.0
+            elif len(row) == 3:
+                id_code, name, version = int(row[0]), str(row[1]), int(row[2])
+            else:
+                raise ValueError
+            database.append(SetInfo(name, id_code, version))
+    except IOError:
+        logging.error('Could not open %s' % filepath)
+    except (ValueError, csv.Error):
+        logging.error('Corrupted file on line %d: %s' % (reader.line_num, filepath))
+        csv_file.close()
+        database = []
+    else:
+        csv_file.close()
+    return database
+
+
+def get_installed_list(_=None):
+    """Returns a list of SetInfo objects representing installed PDF sets.
+    """
+    import lhapdf
+    database = []
+    setnames = lhapdf.availablePDFSets()
+    for sn in setnames:
+        pdfset = lhapdf.getPDFSet(sn)
+        database.append(SetInfo(sn, pdfset.lhapdfID, pdfset.dataversion))
+    return database
+
+
+# TODO: Move this into the Python module to allow Python-scripted downloading?
+def download_url(source, dest_dir, dryrun=False):
+    """Download a file from a URL or POSIX path source to the destination directory."""
+
+    if not os.path.isdir(os.path.abspath(dest_dir)):
+        logging.info('Creating directory %s' % dest_dir)
+        os.makedirs(dest_dir)
+    dest_filepath = os.path.join(dest_dir, os.path.basename(source))
+
+    # Decide whether to copy or download
+    if source.startswith('/') or source.startswith('file://'): # POSIX
+        if source.startswith('file://'):
+            source = source[len('file://'):]
+        logging.debug('Downloading from %s' % source)
+        logging.debug('Downloading to %s' % dest_filepath)
+        try:
+            file_size = os.stat(source).st_size
+            if dryrun:
+                logging.info('%s [%s]' % (os.path.basename(source), convertBytes(file_size)))
+                return False
+            import shutil
+            shutil.copy(source, dest_filepath)
+        except:
+            logging.error('Unable to download %s' % source)
+            return False
+
+    else: # URL
+        url = source
+        try:
+            import urllib.request as urllib
+        except ImportError:
+            import urllib2 as urllib
+        try:
+            u = urllib.urlopen(url)
+            file_size = int(u.info().get('Content-Length')[0])
+        except urllib.URLError:
+            e = sys.exc_info()[1]
+            logging.error('Unable to download %s' % url)
+            return False
+
+        logging.debug('Downloading from %s' % url)
+        logging.debug('Downloading to %s' % dest_filepath)
+        if dryrun:
+            logging.info('%s [%s]' % (os.path.basename(url), convertBytes(file_size)))
+            return False
+
+        try:
+            dest_file = open(dest_filepath, 'wb')
+        except IOError:
+            logging.error('Could not write to %s' % dest_filepath)
+            return False
+        try:
+            try:
+                file_size_dl = 0
+                buffer_size  = 8192
+                while True:
+                    buffer = u.read(buffer_size)
+                    if not buffer: break
+
+                    file_size_dl += len(buffer)
+                    dest_file.write(buffer)
+
+                    status  = chr(13) + '%s: ' % os.path.basename(url)
+                    status += r'%s [%3.1f%%]' % (convertBytes(file_size_dl).rjust(10), file_size_dl * 100. / file_size)
+                    sys.stdout.write(status+' ')
+            except urllib.URLError:
+                e = sys.exc_info()[1]
+                logging.error('Error during download: ', e.reason)
+                return False
+            except KeyboardInterrupt:
+                logging.error('Download halted by user')
+                return False
+        finally:
+            dest_file.close()
+            print('')
+
+    return True
+
+
+def extract_tarball(tar_filename, dest_dir, keep_tarball):
+    """Extracts a tarball to the destination directory."""
+
+    tarpath = os.path.join(dest_dir, tar_filename)
+    try:
+        import tarfile
+        tar_file = tarfile.open(tarpath, 'r:gz')
+        tar_file.extractall(dest_dir)
+        tar_file.close()
+    except:
+        logging.error('Unable to extract %s' % tar_filename)
+    if not keep_tarball:
+        try:
+            os.remove(tarpath)
+        except:
+            logging.error('Unable to remove %s after expansion' % tar_filename)
+
+
+def convertBytes(size, nDecimalPoints=1):
+    units = ('B', 'KB', 'MB', 'GB')
+    import math
+    i = int(math.floor(math.log(size, 1024)))
+    p = math.pow(1024, i)
+    s = round(size/p, nDecimalPoints)
+    if s > 0:
+        return '%s %s' % (s, units[i])
+    else:
+        return '0 B'
+
+
+if __name__ == '__main__':
+
+    ########################
+    #  Set up subcommands  #
+    ########################
+    pattern_match_desc = ' Supports Unix-style pattern matching of PDF names.'
+
+    update_cmd = Subcommand('update',
+        description='Update the list of available PDF sets.',
+        help='update list of available PDF sets')
+
+    list_cmd = Subcommand('list', aliases=('ls',), usage='%prog [options] pattern...',
+        description='List all standard PDF sets, or search using a pattern.' + pattern_match_desc,
+        help='list PDF sets (by default lists all sets available for download; ' +
+             'use --installed or --outdated to explore those installed on the current system)')
+    list_cmd.parser.add_option('--installed', dest="INSTALLED", action='store_true',
+        help='list installed PDF sets')
+    list_cmd.parser.add_option('--outdated', dest="OUTDATED", action='store_true',
+        help='list installed, but outdated, PDF sets')
+    list_cmd.parser.add_option('--codes', dest="CODES", action='store_true',
+        help='additionally show ID codes')
+
+    install_cmd = Subcommand('install', aliases=('get',), usage='%prog [options] pattern...',
+        description='Download and unpack a list of PDFs, or those matching a pattern.' + pattern_match_desc,
+        help='install PDF sets')
+    install_cmd.parser.add_option('--dryrun', dest="DRYRUN", action='store_true',
+        help='Do not download sets')
+    install_cmd.parser.add_option('--upgrade', dest="UPGRADE", action='store_true',
+        help='Force reinstall (used to upgrade)')
+    install_cmd.parser.add_option('--keep', dest="KEEP_TARBALLS", action='store_true',
+        help='Keep the downloaded tarballs')
+
+    upgrade_cmd = Subcommand('upgrade',
+        description='Reinstall all PDF sets considered outdated by the local reference list',
+        help='reinstall outdated PDF sets')
+    upgrade_cmd.parser.add_option('--keep', dest="KEEP_TARBALLS", action='store_true',
+        help='Keep the downloaded tarballs')
+
+    ######################################
+    #  Set up global parser and options  #
+    ######################################
+    parser = SubcommandsOptionParser(
+        description = 'LHAPDF is an interface to parton distribution functions. This program is intended for browsing and installing the PDFs.',
+        version     = __version__,
+        subcommands = (update_cmd, list_cmd, install_cmd, upgrade_cmd)
+    )
+    parser.add_option('-q', '--quiet', help='Suppress normal messages',
+        dest='LOGLEVEL', action='store_const', const=logging.WARNING, default=logging.INFO)
+    parser.add_option('-v', '--verbose', help='Output debug messages',
+        dest='LOGLEVEL', action='store_const', const=logging.DEBUG, default=logging.INFO)
+    parser.add_option('--listdir', default=configured_datadir,
+        dest='LISTDIR', help='PDF list directory [default: %default]')
+    parser.add_option('--pdfdir', default=configured_datadir,
+        dest='PDFDIR', help='PDF sets directory [default: %default]')
+    parser.add_option('--source', default=[cvmfsbase, afsbase, urlbase], action="append", #< prepend action doesn't exist :-( See below for workaround
+        dest='SOURCES', help='Prepend a path or URL to be used as a source of data files [default: %default]')
+
+
+    ##############################
+    #  Parse command-line input  #
+    ##############################
+    options, subcommand, suboptions, subargs = parser.parse_args()
+    logging.basicConfig(level=options.LOGLEVEL, format='%(levelname)s: %(message)s')
+    if subcommand is list_cmd:
+        if suboptions.INSTALLED and suboptions.OUTDATED:
+            subcommand.parser.error("Options '--installed' and '--outdated' are mutually exclusive")
+
+    # Re-order the sources list since optparse doesn't have a "prepend" action
+    options.SOURCES = options.SOURCES[3:] + options.SOURCES[:3]
+
+    def download_file(filename, dest_dir, dryrun=False): #, unvalidated=False):
+        for source in options.SOURCES: #< NOTE: use of global "options" for convenience
+            if download_url(source + filename, dest_dir, dryrun):
+                return True
+        return False
+
+
+    # Update command doesn't depend on PDF sets
+    if subcommand is update_cmd:
+        download_file(index_filename, options.LISTDIR)
+        sys.exit(0)
+
+
+    # List and install commands require us to build lists of reference and installed PDFs
+    master_list, installed = {}, {}
+    for pdf in get_reference_list(os.path.join(options.LISTDIR, index_filename)):
+        master_list[pdf.name] = pdf
+    for pdf in get_installed_list(options.PDFDIR):
+        installed[pdf.name] = pdf
+
+    # Check installation status of all PDFs
+    for pdf in master_list.keys():
+        master_list[pdf].installed = pdf in installed
+        if pdf not in installed or installed[pdf].version is None or master_list[pdf].version is None:
+            master_list[pdf].outdated = False
+        else:
+            master_list[pdf].outdated = installed[pdf].version < master_list[pdf].version
+
+    # Unix-style pattern matching of arguments
+    search_pdfs = []
+    for pattern in subargs:
+        import fnmatch
+        matched_pdfs = fnmatch.filter(master_list.keys(), pattern)
+        if len(matched_pdfs) == 0:
+            logging.warning('No matching PDFs for pattern: %s' % pattern)
+        else:
+            search_pdfs += matched_pdfs
+
+
+    if subcommand is list_cmd:
+        # No patterns given => use all PDFs
+        if len(subargs) == 0:
+            search_pdfs = master_list.keys()
+
+        if suboptions.INSTALLED:
+            displayed_pdfs = [pdf for pdf in search_pdfs if master_list[pdf].installed]
+        elif suboptions.OUTDATED:
+            displayed_pdfs = [pdf for pdf in search_pdfs if master_list[pdf].outdated]
+        else:
+            displayed_pdfs = search_pdfs
+
+        for pdf in sorted(displayed_pdfs):
+            if suboptions.CODES:
+                print('%d  %s' % (master_list[pdf].id_code, pdf))
+            else:
+                print(pdf)
+        sys.exit(0)
+
+
+    if subcommand is install_cmd:
+        for pdf in sorted(search_pdfs):
+            if pdf not in master_list:
+                logging.warn('PDF not recognised: %s' % pdf)
+                continue
+            if pdf in installed and not suboptions.UPGRADE:
+                logging.warn('PDF already installed: %s (use --upgrade to force install)' % pdf)
+                continue
+
+            # TODO: reinstate auto-downloading of unvalidated PDFs? I ~like that users need to manually download them
+            # unvalidated = ''
+            # if master_list[pdf].version == -1:
+            #     unvalidated = 'unvalidated/'
+            #     logging.warn('PDF unvalidated: %s' % pdf)
+
+            if master_list[pdf].version == -1:
+                logging.warn('PDF %s is unvalidated. You need to download this manually' % pdf)
+
+            tar_filename = pdf + '.tar.gz'
+            # if download_file(urlbase + unvalidated + tar_filename, options.PDFDIR, dryrun=suboptions.dryrun):
+            if download_file(tar_filename, options.PDFDIR, dryrun=suboptions.DRYRUN):
+                extract_tarball(tar_filename, options.PDFDIR, suboptions.KEEP_TARBALLS)
+
+
+    if subcommand is upgrade_cmd:
+        outdated_pdfs = [pdf for pdf in master_list.keys() if master_list[pdf].outdated]  # dict comprehension requires >=2.7
+
+        for pdf in outdated_pdfs:
+            tar_filename = pdf + '.tar.gz'
+            if download_file(tar_filename, options.PDFDIR):
+                extract_tarball(tar_filename, options.PDFDIR, suboptions.KEEP_TARBALLS)

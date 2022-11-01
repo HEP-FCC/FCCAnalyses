@@ -1,0 +1,87 @@
+/**
+@page todolist Project to-do list
+
+
+LHAPDF6 TODO list
+=================
+
+
+VERSION 6.2.2
+-------------
+
+- **CPU-optimize the grid PDF interpolator code**
+
+   Cache log(x), log(Q) between samplings -> log() still accounts for 15% of
+   CPU. Caching grid index lookup, caching interpolation weights, encorage
+   vectorization.
+
+- **New Fortran API completeness**
+
+   Extrapolation, interpolation, and alpha_s control, and metadata & uncertainty functions in Fortran.
+
+
+- **Add an 'lhapdf show' command**
+
+   To print pdfsets.index + cat .info for already installed PDFs.
+
+
+- **Consider extrapolated cubic splines at subgrid edges (cf. Valerio Bertone et al)**
+
+
+
+AS AND WHEN
+-----------
+
+- **Handle zipped data files (AB)**
+
+   Prefer zipped single member data files rather than virtual filesystem access
+   to the tarball? Can transparently read zipped files with LD_PRELOAD and
+   zlibc: is that enough? Or embed a zip-stream and link against zlib?
+
+
+- **Make it possible to find all metadata keys -- both locally and cascaded (AB)**
+
+
+- **.LHgrid etc. old-name-tolerance control -- TranslateLHA5Names flag?**
+
+
+- **Speed up interpolation with GPUs**
+
+   Interpolation of PDFs seems like an potential use case for GPUs, since it's
+   normal to query for all partons in the set at once: if we can load the
+   relevant ipol anchors for all flavours onto the GPU then we can maybe get a
+   substantial speedup. OpenMP did not particuarly help, from quick tests.
+
+
+- **PDF flavor aliasing mechanism**
+
+   e.g. allow anti-flavours to be identical without duplicating their grids in
+   the data files or memory. How could we implement this?
+
+
+- **Allow use of valence/sea etc. decompositions?**
+
+   GridPDF may be inherited from to allow the returned values to be built from
+   separate interpolations of component PDFs such as interpolated valence, sea,
+   or difference PDFs that are combined to make the physical ones. The PDG ID
+   code range for "generator specific" applications may be used, but we'll need
+   to bear in mind that this will mean that the flavor ID list has different
+   meanings and contents for internal and external purposes: maybe the
+   "internal" PDG ID list needs to become part of the grid data header, or can
+   the metadata be used?
+
+
+- **Using std::function to generically modify the interpolation measures in x, Q (AB)**
+
+
+- **Separate the x and Q2 inter/extrapolation?**
+
+   Allow mix & match combinations. Would this simplify the code since the
+   1D interpolation methods are very simple and the 2D is built from them?
+
+
+- **Make GridPDFs not read their info or data blocks until an xf value is requested?!**
+
+   Super-laziness! But is there a real gain other than < 1 sec initialization speed?
+
+*/

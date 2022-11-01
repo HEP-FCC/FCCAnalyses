@@ -1,0 +1,74 @@
+Delphes 4 LHCb
+==============
+
+The card "delphes_card_LHCb.tcl" contains a preliminary parametrization of the LHCb detector. 
+
+- ParticlePropagator
+
+particles are propagated in a constant B field.
+
+- ChargedHadronMomentumSmearing/ElectronEnergySmearing/MuonMomentumSmearing
+
+charged particles momenta are smeared according to detector resolution
+
+- TrackMerger
+
+charged particles are merged into single collection for simpler future processing
+
+- ImpactParameterSmearing
+
+charged particles transverse IP are smeared according to known LHCb tracking
+performance.
+
+
+- IdentificationMap
+
+This module is a recent addition in order to map particle misidentification rates
+and reconstruction efficiencies. 
+
+An example is given in the card but can be expanded if needed. 
+
+- ECAL/HCAL
+
+Calorimeter modules are used to parametrize the energy response and angular
+resolution of neutral objects such as photons/neutral hadrons. 
+
+- TreeWriter 
+
+user specifies here which collections are stored in the output. 
+By default tracks, neutral hadrons and photons are stored in this card.
+Tracks contain muons, electrons, and charged hadrons. 
+
+
+Quick start with Delphes
+========================
+
+1) Compile:
+
+  make
+
+2) Simulate p p -> b b~ events 
+
+  wget http://cp3.irmp.ucl.ac.be/downloads/pp_bb.hep.gz
+  gunzip pp_bb.hep.gz
+  ./DelphesSTDHEP cards/delphes_card_LHCb.tcl delphes_output.root pp_bb.hep
+
+
+For more details, please visit:
+
+  https://cp3.irmp.ucl.ac.be/projects/delphes
+
+
+Configure Delphes on lxplus.cern.ch
+====================================
+
+git clone git://github.com/delphes/delphes.git Delphes
+
+cd Delphes
+
+source  /afs/cern.ch/sw/lcg/external/gcc/4.9.3/x86_64-slc6/setup.sh
+
+source /afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.00/x86_64-slc6-gcc49-opt/root/bin/thisroot.sh
+
+make
+

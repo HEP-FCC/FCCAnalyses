@@ -1,0 +1,1340 @@
+2017-09-05  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Version 6.2.1!
+
+2017-09-04  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fix signed/unsigned comparison in Fortran interface.
+
+2017-08-31  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fix ccstr_to_fstr function, and hence several problems in the LHAGlue Fortran interface.
+
+2017-08-28  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Use lhapdf Python module in lhapdf script, to avoid YAML-parsing problems.
+
+2017-08-27  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Extend Python xfxQ and xfxQ2 functions to allow multiple PID
+	values and 2-arg versions which return all PIDs.
+
+2017-08-25  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Make alphaS, interpolator, and extrapolator setting eager rather than lazy.
+
+	* Remove unique_ptr from the public PDF.h header for now, for C++98 API compatibility.
+
+2017-08-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Eliminate C++11 features from headers, and moving some oversized inlines into .cc files.
+
+2017-07-13  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Version 6.2.0 release.
+
+2017-07-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add warning printouts and some verbosity control to the LHAGlue Fortran setlhaparm function.
+
+2017-07-09  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Provide lookupPDF and lookupLHAPDFID functions accepting a single setname/mem string.
+
+	* Finally removed Boost multi_array... and it was sooooo easy. Sorry for the delay! Validated.
+
+2016-08-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* All Boost usage removed except multi_array.
+
+	* Propagate C++11 compiler definition to Cython build and lhapdf-config; add --cxx flag to lhapdf-config.
+
+2016-08-16  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add normal and chi-squared quantile functions, and incomplete
+	gamma functions, extracted and converted by Graeme Watt based on
+	ROOT and Cephes code.
+
+	* Require C++11, and starting to remove Boost.
+
+2016-02-16  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add x-grouped xf vs Q plots to plotpdfs, and allow the user to
+	control which plot groups to make.
+
+2016-02-09  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Improvements to plotpdfs script.
+
+	* Move scripts for installation into a bin directory.
+
+2016-02-08  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Corrections in the lhapdf manager script for Python3 compatibility. Thanks to Frank Siegert.
+
+2015-12-22  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Version 6.1.6 release!
+
+2015-12-21  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add canonical PDF.orderQCD property to Python PDF, to replace PDF.qcdOrder.
+
+	* Add PDF::quarkMass and PDF::quarkThreshold methods to C++ and Python.
+
+	* Fix quark integer ID mapping to Down/Up metadata keys in AlphaS
+	factory routine.
+
+2015-12-18  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add a cstr_to_fstr function to LHAGlue.cc, for improved C++ to
+	Fortran string conversion (handling length limits, padding rather
+	than zero-termination, etc.)
+
+2015-12-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add PDF::print() protection against being unable to read the PDF
+	set index file, so there isn't a crash for the trivial reason of
+	on-screen printout formatting when the data path is restricted
+	with trailing ::.
+
+2015-12-16  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fixes to the lhapdf script. Thanks again to Dmitry Kalinkin for
+	a patch.
+
+	* Add missing getlam4 and getlam5 functions to Fortran
+	interface. Thanks to Dmitry Kalinkin for the patch.
+
+	* Update Cython and Python interfaces to support Python3
+	syntax. Thanks to Vitaly Yermolchyk for the patches!
+
+	* Update to even newer boost.m4
+
+2015-12-03  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Don't append the install prefix to path searches if
+	$LHAPDF_DATA_PATH ends with a double-colon, ::.
+
+	* De-inline the availablePDFSets() function, and veto duplicate
+	set names.
+
+2015-09-23  Graeme Watt  <graeme.watt@durham.ac.uk>
+
+	* Determine number of parameter variation members by counting
+	number of "+" signs in ErrorType, e.g. "replicas+as+mc+mb+mt".
+
+	* Added a new checkPdfType() member function to PDFSet class.
+
+2015-07-17  Graeme Watt  <graeme.watt@durham.ac.uk>
+
+	* Added support for combined PDF+alphaS sets via new ErrorType
+	values, i.e. "replicas+as", "hessian+as" and "symmhessian+as".
+
+2015-04-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Updating AUTHORS notice to final EPJC paper reference, and
+	adding a final citation reminder message via the Config
+	destructor.
+
+2015-03-20  Andy Buckley  <andy.buckley@cern.ch>
+
+	* src/Factories.cc: Adding a set of expandPDFsStr(), decodePDFStr
+	and decodePDFsStr functions to be used for handling more general
+	PDF strings of the sort that will be used in the CompositePDF
+	factory system.
+
+	* Adding a default constructor and knotarrays() accessor to
+	GridPDF, as requested by Nathan Hartland.
+
+2015-01-09  Graeme Watt  <graeme.watt@durham.ac.uk>
+
+	* Remove abs(...) twice in function PDFSet::randomValueFromHessian
+	to correct a mistake in Eq. (6.5) of arXiv:1205.4024v2.  The
+	correction is necessary to ensure that correlations are preserved
+	when converting a Hessian PDF set to a Monte Carlo PDF set.
+
+2014-12-23  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.1.5 release.
+
+2014-12-22  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Better error handling in PDF index lookup, including clearer
+	reporting of set-unmatched PDF IDs and member numbers which are
+	out of range for a valid set.
+
+	* Restoring original active set member in LHAGlue metadata get*
+	functions which were previously switching focus as a result of
+	calling loadMember() to get numerical grid data.
+
+	* Making LHAGlue Fortran interface switch the current set slot
+	more coherently (has_photon is the exception).
+
+	* Attempt to use Threshold* metadata keys for Fortran
+	getthresholdm_ and old C++ wrapper getThreshold. Not yet fully
+	supported in the rest of the system but we may as well pre-empt it
+	while editing LHAGlue.cc.
+
+	* Add missing getdescm_ and getdesc_ Fortran functions.
+
+	* Add missing Fortran getdatapath function, cf. LHAPDF5 but with
+	colon separators between multiple paths if appropriate.
+
+	* Add Fortran lhapdf_getpdfsetlist function, returning the list of
+	available PDF sets as a space-separated string. Note the lhapdf_
+	prefix -- this is the intended 'namespace' form for a new Fortran
+	interface at some point.
+
+2014-12-18  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Remove obsolete config flags from lhapdf.conf
+
+	* examples/compatibility.cc: Simplify compatibility macro checking.
+
+2014-10-29  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add parsing and use of the internal PID data line in GridPDF.cc,
+	in preference to the PDF::flavors() method. This fixes a bug,
+	since flavors() was sorting the list, meaning that data files
+	without monotonically sorted PID columns would wrongly assign PDFs
+	to PIDs.
+
+2014-10-08  Graeme Watt  <graeme.watt@durham.ac.uk>
+
+	* Added new ContinuationExtrapolator to provide same extrapolation
+	as in the MSTW standalone code (and LHAPDF5 when using MSTW sets).
+
+2014-10-03  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Better code organisation and protection against out-of-bounds
+	array accesses in log-bicubic interpolator.
+
+2014-08-28  Graeme Watt  <graeme.watt@durham.ac.uk>
+
+	* Fallback to bilinear interpolator if using bicubic
+	interpolator with only 2 or 3 Q2 knots in a subgrid.
+
+2014-08-26  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Improve LHAGlue info messages to not specify that particular
+	generators are being used.
+
+2014-08-19  Andy Buckley  <andy.buckley@cern.ch>
+
+	* LHAPDF 6.1.4 release
+
+2014-08-15  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding multiset variants of the 5 getmin/max LHAGlue functions.
+
+	* Adding the 'unofficial' getminmax Fortran function to LHAGlue.cc
+	(thanks to Andrey Sapronov for the report and patch).
+
+2014-07-18  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Treat PID 0 as an alias for 21 in PDF::hasFlavor as well as the
+	PDF::xf* functions. Thanks to Nathan Hartland for the report.
+
+2014-07-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Clarify in lhapdf script help that 'list' by default shows all
+	available sets, not those installed on the user's system.
+
+2014-07-09  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Update CONFIGFLAGS docs to fix some errors w.r.t. actual flag usage.
+
+	* Treat a DataVersion of 0 as unvalidated: valid numbers now start at 1.
+
+	* Remove the LHAPDF ID from the warning printout about unvalidated
+	PDFs, since in that case there will usually be no standard ID
+	number and it just gets unhelpfully reported as -1.
+
+	* Detect and report improperly terminated grid files (ones missing a --- final line).
+
+	* Replace asserts with exceptions and improve subgrid error reporting in GridPDF.
+
+	* Report the value of Q2 that causes a subgrid-finding failure.
+
+	* Improve testgrid to use PDFNAME/MEMNUM arg syntax.
+
+2014-07-7 David Grellscheid <david.grellscheid@ippp.dur.ac.uk>
+
+	* Forbid compilation if the demon combination of Boost < 1.47 and
+	GCC >= 4.6, with a serious bug in BOOST_FOREACH, is found:
+	http://code-muse.com/2013/08/06/boostforeach-and-compiler-bugs
+
+2014-06-18 Karl Nordstrom <karl.nordstrom@cern.ch>
+
+	* Improved AlphaS ODE solver performance.
+
+2014-06-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.1.3 release!
+
+	* tests/Makefile.am: Add appropriate programs to "make installcheck".
+
+2014-06-17  David Grellscheid  <David.Grellscheid@durham.ac.uk>
+
+	* wrappers/python/Makefile.am: 'make distcheck' and out-of-source
+        builds should work now.
+
+2014-06-16  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add CVMFS and AFS downloading (by preference) to the lhapdf
+	script, as well as user-configurable download sources and tarball
+	removal.
+
+	* Fix bug in PDF::qcdOrder method, and deprecate that method in
+	favour of orderQCD (to match AlphaS and the flag name).
+
+	* Further improvements to error messages when trying to load an invalid PDF.
+
+	* Tweak output of testalphas.cc
+
+	* Adding first make check targets (requires CT10nlo to be installed).
+
+2014-06-15  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Flavour thresholds in alpha_s solvers, and threshold subgrids
+	from ODE solver (by Karl Nordstrom)
+
+	* Add accessors to a PDF's AlphaS object and to an AlphaS' QCD order.
+
+2014-06-12  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Bump version number for next release.
+
+	* Add mapping of reweighting functions into Python.
+
+2014-06-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fix compiler warnings re. unused variables in LHAGlue.h and AlphaS.h headers.
+
+2014-06-09  David Grellscheid  <david.grellscheid@durham.ac.uk>
+
+	* Fix attempted use of non-existent std::vector::find method.
+
+2014-05-29  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Change source name of analyticpdf example.
+
+	* Adding a mini-constructor to PDF to make sure that _forcePos is
+	set to a sane default value.
+
+2014-05-28  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.1.2 release!
+
+2014-05-28  James Ferrando <james.ferrando@glasgow.ac.uk>
+
+	* Fix HWLHAPDF behaviour in pdfset
+
+2014-05-27  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.1.1 release!
+
+2014-05-26  James Ferrando <james.ferrando@glasgow.ac.uk>
+
+	* Modify printout in PDFLIB backwards compatibility routine to
+	avoid confusion for some HERWIG use cases
+
+2014-05-22  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding warnings about mismatching alpha_s in reweighting, with a default tolerance of 5%.
+
+2014-05-20  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add LHAPDF/Reweighting.h with a few handy functions for doing 'naive' PDF reweighting.
+
+2014-05-19  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Replace all internal uses of "foreach" with explicit BOOST_FOREACH until C++11.
+
+2014-05-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Remigrate all NNPDF sets to remove duplicate Qmax points.
+
+2014-05-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding initLHAPDF() and a few other do-nothing compatibility functions.
+
+2014-04-25  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.1.0 release!
+
+2014-04-24  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Return -1 for errorConfLevel on replica PDF sets.
+
+	* Mapping uncertainty functions into Python.
+
+2014-04-21  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Derive LHAPDF_VERSION_CODE integer using a Mac-safe sed regex.
+
+2014-04-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fix pdfsets.index parsing (column order) in lhapdf script.
+
+	* Supporting the pkg-config type --cflags and --libs switches on
+	lhapdf-config.
+
+2014-04-16  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding an LHAPDF5 compatibility mode flag,
+	Pythia6LambdaV5Compat, which sets all LambdaQCD common block
+	values to 0.192 as was historically the case for PYTHIA6's use of
+	LHAPDF. This behaviour is definitely physically incorrect, as well
+	as against the spirit of the PYTHIA6 steering flags, but it is the
+	long-term behaviour of PYTHIA6+LHAPDF and many PYTHIA6 MC tunes
+	have been built around this behaviour. This flag is set 'true' by
+	default to minimise user surprise -- if you want LHAPDF to report
+	correct (i.e. varying by PDF) values to PYTHIA6, then explicitly
+	set this flag to be false in lhapdf.conf or similar.
+
+2014-04-15  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a single-string "dir style" SETNAME/NMEM syntax for
+	accessing a PDF set+member.
+
+2014-04-14  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding the namespace protection workaround for Boost described
+	at http://www.boost.org/doc/libs/1_55_0/doc/html/foreach.html
+
+	* Adding AlphaS_FlavorScheme and AlphaS_NumFlavors metadata flags
+	as optional specific versions for use by the AlphaS system,
+	particularly if the alpha_s QCD evolution doesn't match that of
+	the PDF itself.
+
+2014-04-13  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a lhapdf.pc file for use by pkg-config
+
+	* Check for sizes of subgrids required by each interpolator
+	algorithm (linear ipol requires >= 2 knots, cubic requires >= 4).
+
+	* Renumberings of several MRST and MSTW sets's global IDs:
+	    MRST2004qed_proton 20461->20463
+	    MRST2004qed_neutron 20462->20465
+	    MSTW2008lo90cl 21041->21050
+	    MSTW2008nlo90cl 21141->21150
+	    MSTW2008nnlo90cl 21241->21250
+	    MSTW2008lo90cl_nf3 23041->23050
+	    MSTW2008lo90cl_nf4 23141->23150
+	    MSTW2008nlo90cl_nf3 23241->23250
+	    MSTW2008nlo90cl_nf4 23341->23350
+	    MSTW2008nnlo90cl_nf3 23541->23550
+	    MSTW2008nnlo90cl_nf4 23641->23650
+
+	* Updates to the CONFIGFLAGS documention, removing some unused
+	flags and adding the new Note flag.
+
+	* Printing out a Note metadata entry on set initialization, if one is found.
+
+	* Removing the metadata() functions from Info, since they were
+	unused and did not respect the cascading design.
+
+2014-03-25  Andy Buckley  <andy.buckley@cern.ch>
+
+	* More tweaking of the uncertainty function behaviour.
+
+	* Adding in_range, in_open_range, in_closed_range functions.
+
+2014-03-24  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Removing compatibility auto-cast of PDFUncertainty to
+	vector<double>, converting remaining functions to use the struct,
+	rationalising the previously split uncertainty() implementation,
+	and code tidying.
+
+	* Converting the uncertainty functions to add a no-copy version
+	and to return a new struct rather than a vector<double>.
+
+2014-03-23  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Moving new uncertainty functions into a new PDFSet.cc file to keep header clean.
+
+	* Removing now unnecessary cmake check from configure and the docs.
+
+2014-03-19  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Convert lhapdf-yaml-cpp building to use libtool, avoiding
+	linking portability issues. Re-enable static library building
+	since the necessary symbols now seem to be present (and the
+	libtool warning has also disappeared).
+
+2014-03-16  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Disable static library build for now, until we can figure out
+	how to portably pull symbols from yaml-cpp into both shared and
+	static libs via libtool.
+
+2014-03-15  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding more compatibility functions: getDescription, getLam4,5,
+	and getOrderPDF functions in old C++ wrapper.
+
+2014-03-15  Graeme Watt  <graeme.watt@durham.ac.uk>
+
+	* Adding new example programs testpdfunc and hessian2replicas,
+	functions for PDF uncertainties in PDFSet.h, and backwards
+	compatibility functions (+ getnset_, getnmem_) in LHAGlue.cc.
+
+2014-03-13  Andy Buckley  <andy.buckley@cern.ch>
+
+	*  Adding implementations of getnf_, setpdfpath_ and placeholder
+	getnset_, getnmem_ LHAGLUE functions.
+
+2014-03-07  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Doc updates, and added script and current output to generate a
+	PDF sets list Doxygen/HTML input from sets found on the developer
+	system.
+
+	* Add a third column to the pdfsets.index file for version
+	comparison by the manager script.
+
+2014-03-05  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Protect LHAGlue initialisation from unset Lambda values.
+
+2014-02-12  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding mkindex script, to generate pdfsets.index automatically
+	from metadata.
+
+	* Adding lhapdfID (using SetIndex) to PDFSet and mapping it and
+	dataversion into Python.
+
+2014-01-29  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding the SetIndex and Parent metadata fields, and updating the
+	creategrids script, pdfsets.index and tomigrate files accordingly.
+
+	* Removing the external yaml-cpp build option, and
+	improving/clarifying the internal yaml-cpp build and linking.
+
+2014-01-27  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Tweaks for better variable-passing to cmake in the bundled
+	yaml-cpp build.
+
+2014-01-22  Andy Buckley  <andy.buckley@cern.ch>
+
+	* configure.ac: Remove opportunistic C++11 build, until this
+	becomes mandatory (with removalof Boost). Anyone who wants C++11
+	can explicitly set the CXXFLAGS (and DYLDFLAGS for pre-Mavericks
+	Macs)
+
+2013-12-20  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Version 6.0.5 release.
+
+	* Internally rename libyaml-cpp.a to liblhapdf-yaml-cpp.a to
+	definitely avoid picking up one from the system.
+
+	* Adding comment and empty line support to PDF index parsing, and
+	updating pdfsets.index with missing PDFs and assigning LHAPDF IDs
+	to ABM12, new MRST QED and MSTW sets, new NNPDF23 QED sets, and
+	the first ATLAS PDF sets.
+
+2013-12-19  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Changing the YAML functions to operate in a mangled namespace if
+	using the LHAPDF bundled version (a bit of sed and preprocessor:
+	not too evil!)
+
+	* Merging in the first version of the lhapdf manager script by David Hall. Thanks!
+
+	* Further tweaking of the grid numerics parsing, using a variation
+	on Gavin Salam's FastIStringStream class.
+
+2013-12-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Replacing use of the tokenizing istringstream in GridPDF.cc with
+	basic ifstream seetg and tellg calls for initialisation speed
+	improvement: thanks to David Grellscheid for the suggestion and
+	implementation help!
+
+2013-12-14  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a --disable-lhaglue-cxx configure switch and machinery to
+	use it (disables building of LHAPDF5 C++ compatibility routines.)
+
+	* Adding requested xfxphoton and getqmass_ functions and various Fortran wrapper fixes.
+
+2013-12-13  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a typedef of auto_ptr as unique_ptr if not in C++0x or later.
+
+	* Adding -DNDEBUG to the CXXFLAGS if not in debug mode.
+
+	* Use C++11 compilation if available.
+
+2013-12-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Removing checking for and linking against Boost filesystem and
+	system libs!
+
+	* Replacing use of boost::filesystem::path and functions with
+	home-made versions.
+
+	* Adding use of a built-in yaml-cpp (0.3.0) if --with-yaml-cpp (or
+	similar configure flags) are not specified.
+
+	* Using intermediate static libs to build the source files that
+	depend on YAML and Boost path stuff separately from the others.
+
+2013-11-07  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding -Qunused-arguments to CPPFLAGS (to keep clang++ quiet).
+
+2013-11-04  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Removing OpenMP directives: the One Definition Rule makes this
+	usage dangerous/illegal, and I think we've agreed among developers
+	to leave decisions about how to multithread up to the user for
+	their specific case.
+
+2013-10-28  Andy Buckley  <andy.buckley@cern.ch>
+
+	* tests/: adding testing of all available PDF sets' central info systems.
+
+	* Factories.*: mkPDFInfo now returns PDFInfo* rather than Info*.
+
+2013-10-18  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding OpenMP directives to all-flavour functions in PDF.h. I
+	don't see a big speed difference in profiling, though: -Ofast
+	gives a much bigger speed-up.
+
+2013-10-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Small improvements to the banner messages when loading a whole PDF set.
+
+2013-10-09  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Version 6.0.4 release.
+
+	* Being a wee bit smart and dropping the verbosity level
+	temporarily when loading a whole set, to avoid flooding the
+	terminal.
+
+	* Tweaking banner and PDF printouts.
+
+	* Adding verbosity() and setVerbosity() functions.
+
+2013-10-07 James Ferrando <james.ferrando@cern.ch>
+
+	* Fixed handling of Fortran string-in-common-block objects in the initPDFSet routine
+
+	* Added missing initPDFSet variants w.r.t. lhapdf5.
+
+2013-10-07  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding banner printout if Verbosity > 0, and extra arg on
+	print() methods.
+
+	* More Cython mapping improvements -- PDFs can now return their
+	parent set or info objects.
+
+	* Improving error messages when PDF data files are not found.
+
+	* Fixing various aspects of Info, PDFSet, PDFInfo mapping to Python.
+
+	* src/LHAGlue.cc: Removing erroneous if "protection" blocks which
+	broke PDF set re-initialisation.
+
+
+2013-09-30  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Version 6.0.3 release.
+
+2013-09-26  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fixing and extending Cython wrappers for Info and subclasses.
+
+	* Adding print() and dataversion() functions on PDF and PDFSet.
+
+2013-09-25  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding machinery for migration of the MRST2004qed set to creategrids.
+
+	* Many improvements to creategrids correctness, efficiency, etc.
+
+2013-09-23  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Add mkPDFs<SMART_PTR> templated vector-filling functions and
+	update the testpdfset example program.
+
+	* Add the -avoid-version flag to libtool.
+
+2013-09-22  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Change implementation of forced positivity to use an int value
+	to allow for better caching and distinguishing between
+	forced-positive and forced-positive-definite. The flag has been
+	renamed to ForcePositive, to indicate that it triggers an action
+	rather than just being some manually provided information about
+	the PDF in question.
+
+2013-09-06  James Ferrando <james.ferrando@cern.ch>
+
+	* Modified PDFLIB comaptibility function to handle format of input arrays from POWHEG.
+
+2013-09-03  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fixed misnaming in the automatic rewriting of cteq6ll -> cteq6l1.
+
+2013-08-30 Steve Lloyd <slloyd1990@gmail.com>
+
+	* Added functionality for forcing a loaded GridPDF to return positive
+	definite values through the flag "PositiveDefinite" in the set metadata.
+	This is to prevent overshooting in to negative
+	values when interpolating/extrapolating.  Updated creategrids script with a
+	--force-pos-def flag to reflect this change.
+
+2013-08-30  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding do-nothing overloadings of the 2-arg fallback version of
+	get_entry() to PDFSet and PDFInfo: it turns out that inheritance
+	and multiple dispatch of class methods don't automatically play as
+	nicely as you might think!
+
+2013-08-29  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.0.2 patch release.
+
+	* Updating the version for the latest patch, and being more
+	pessimistic about Boost compatibility: assuming that Boost 1.49 is
+	the oldest compatible release until we hear otherwise.
+
+	* Reworking the validation system to use 0 rather than 21 for the
+	gluon ID (a simplification due to v5/v6 compatibility) and to
+	allow building of top PDF validation plots.
+
+	* Removing builds of examples and tests directories from the
+	top-level default make target.
+
+2013-08-29  James Ferrando  <james.ferrando@cern.ch>
+
+	* Fix some reference-type arguments in 'Fortran' functions to be const.
+
+	* LHAGlue.h, LHAGlue.cpp: Fortran backwards compatibility routines
+	for FEWZ 3.1, and a fix to the C++ backwards compatibility
+	routines for getting min and max x and Q2.
+
+2013-08-28  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Removing necessity of Cython for tarball builds.
+
+2013-08-16  Karl Nordstrom
+
+	* Adding log-Q gradient extrapolation in AlphaS_Ipol.
+
+2013-08-16  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.0.1 patch release.
+
+	* Disabling installation of the not-to-be-used 'sets' directory.
+
+2013-08-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fixing an off-by-one error in alpha_s subgrid array creation.
+
+2013-08-08 James Ferrando  <james.ferrando@cern.ch>
+
+	* Added several backwards-compatibility updates for fortran and
+	C++ interfaces based on 6.0.0 feedback from David Hall and Marek
+	Schoenherr.
+
+2013-08-07  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.0.0 release!
+
+2013-08-06  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Various remaining build system tweaks and updating the version
+	code to 6.0.0rc in anticipation of release!
+
+	* Added the lhaglue_get_current_pdf(nset=1) function for C++
+	access to the currently-used PDF via LHAGlue (intended as a
+	workaround for cases where the old LHAPDF banner was grepped to
+	work out the PDF identities).
+
+2013-08-05  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding subgridded alpha_s interpolation.
+
+	* Enhancing plotting and comparison scripts for alpha_s comparison.
+
+2013-07-31  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Changing the Q2Min,Max flags to QMin,Max for better readability, etc. PDF and creategrids updated.
+
+2013-07-30  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a migration/cmpplotv5v6 batch script and improving the accuracy measure definition.
+
+2013-07-29  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Changing the data format to list PDF Q knot values rather than Q2, for readability.
+
+	* Fixing creategrids to respect flavour thresholds and subgrids with a --subgrids flag.
+
+2013-07-12  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Version number bump and tag as 6.0.0b3. Nearly ready for stable release!
+
+	* Renaming LambdaX config flags to AlphaS_LambdaX, since their use is alpha_s-specific.
+
+2013-07-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding --top flag to creategrids, for dumping the 13-flavour NNPDF grids.
+
+	* Adding dumping of alpha_s values to dumpv5v6. Some apparent alpha_s ipol problems for CTEQ6L1.
+
+2013-07-08  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding factory methods for making AlphaS objects direct from set names / member numbers.
+
+	* Adding/updating NumFlavors + FlavorScheme metadata flags and add TODOs to respect them.
+
+	* Updated ipol alpha_s solver to operate in log space: smoother behaviour now.
+
+	* Karl made ODE and interpolation alpha_s solvers work nicely.
+
+	* Adding fallback/default-return variants of the Info get_entry and get_entry_as methods.
+
+2013-07-05  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Many improvements to the creategrids migration script.
+
+	* Populating many of the for-migration PDF entries in pdfsets.index.
+
+	* Changing .lha data file extension to .dat to avoid clashing with LHA archive format.
+
+2013-07-04  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Write out AlphaS_Ipol info from creategrids if possible.
+
+	* Use a more accurate MZ in lhapdf.conf and creategrids.
+
+	* Add handling of MinLHAPDFVersion and DataVersion flags if present.
+
+	* Fix LHAPDF_VERSION_CODE to be an int rather than string.
+
+	* Renaming Info::metadata() to Info::get_entry(), plus Info::get_entry_as(), etc.
+
+2013-07-03  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding two PDF-level Info factory functions.
+
+	* Using the cached/precomputed log(x) and log(Q2) values in the
+	log-bicubic interpolator. Looks like an immediate factor of 5
+	speed-up :-D
+
+	* Adding log(x) and log(Q2) knot position accessors to KnotArray1F and KnotArrayNF.
+
+	* Adding log(x) and log(Q2) knot position arrays to KnotArray1F.
+
+	* Converting the KnotArrayNF typedef to be a fully-fledged class.
+
+2013-06-19  Andy Buckley  <andy.buckley@cern.ch>
+
+	* 6.0.0b2 release.
+
+	* TODO list updated.
+
+	* Adding PDFSet.mkPDF(mem) to the Python wrapper.
+
+	* Various build tweaks for lxplus6 compatibility.
+
+	* Reworking the connection of AlphaS to the Factory and PDF system
+	a bit, and tweaking the tests.
+
+2013-06-15  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding Config.h, the Config class, and improved singleton
+	mechanism for getting the global configuration object. Plus some
+	testing of the globalness and persistency of config settings in
+	tests/testinfo.cc
+
+2013-06-12  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Mapping addition of PDFSet, more factory functions, and related changes into Python.
+
+2013-06-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding default values to PDF::xMin/Max and PDF::q2Min/Max.
+
+2013-06-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Bump version number for 6.0.0 beta2 (hopefully to be released soon).
+
+	* Adding an availablePDFSets() function.
+
+2013-06-09  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding an LHAPDF_VERSION_CODE macro for version detection.
+
+	* Moving contents of Config.h -> Version.h (leaving Config.h name free for potential Info subclass).
+
+	* Adding PDFSet::mkPDF(int).
+
+	* Renaming return-type specialisations of Info::metadata() to
+	metadata_to(), to avoid nasty template/untemplated method
+	resolution errors once inheritance got involved.
+
+	* Removing various deprecated path constructors and general
+	related API rehashing.
+
+	* Adding Info::metadata_local(key)
+
+	* Renaming config() to getConfig() and moving to Factories, to
+	match getPDFSet(name).
+
+	* Using a new info cascading system including PDFSet.
+
+	* Adding singleton system for PDFSet, and a dedicated PDFInfo type
+	for member info.
+
+2013-06-07  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Rename ImplicitFlavorAction config flag to UndefFlavorAction
+
+	* More build system tweaks, including removal of yaml-cpp flags
+	from build of example programs that link against libLHAPDF.
+
+	* Moving broken -I/-L and -D flag settings from configure.ac to
+	selected Makefile.am's
+
+	* Adding PDFSet, and migrating examples/testpdfset.cc to use it.
+
+2013-05-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Treat a request for PID = 0 as if PID 21 (gluon) had been
+	requested. Useful for backward compatibility, but also just for
+	convenience since it's much easier to just loop from -6 to 6 than
+	to have to skip 0 and add 21 as a special case.
+
+2013-05-12  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding x/Q2/Q min/max (virtual) functions to the PDF
+	interface. Default implementations use metadata keys only.
+
+	* Adding in-place filling functions for map and vector PDF value
+	containers, on the PDF interface.
+
+2013-05-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* configure.ac, src/Info.cc: Re-adding yaml-cpp 0.3.x support via
+	version detection in the configure script.
+
+2013-05-07  Andy Buckley  <andy.buckley@cern.ch>
+
+	* src/Info.cc: Converting the YAML reading to use the yaml-cpp v0.5.x API.
+
+	* Tweaking and fixing tests and build config.
+
+2013-04-17  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a PDF set usage example (uses C++11 for now, for fun!)
+
+2013-04-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Rename of wrapper dir from cython -> python (reflect the target,
+	not the way of achieving it).
+
+	* Python extension build env fix
+
+2013-04-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Improving creategrids to use xmin and qmin/max when dumping
+	LHpdf files and to allow a manual override for LHgrid
+	dumps. CTEQ6L1 looking *almost* publicly acceptable now.
+
+	* examples/: Resurrecting old testpdf.cc as an example (used by Doxygen)
+
+	* migration/: Using compatibility stuff to improve dumpv5v6.cc
+
+	* Adding LHAPDF_MAJOR_VERSION macro and examples/compatibility.cc
+
+	* AUTHORS list tweak since James added substantial code for Fortran compatibility.
+
+	* Adding copyright etc. notices to each file header.
+
+	* Adding LHAPDF.h convenience header.
+
+2013-04-09  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fix ctypes handling in creategrids
+
+	* Adding ignoring (and writing) of a 3rd grid block line, to
+	specify "internal flavor" ID codes. Not actually parsed or
+	used... yet.
+
+	* Cleaning up LHAGlue compilation warnings
+
+	* Config flag updates and clarifications, and adding API
+	mechanisms for numMembers and LHAPDF ID lookup.
+
+2013-04-08  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Further improved creategrid, comparison, and plotting
+	scripts. Better high-xipol knots -> much better agreement. Nearly
+	done.
+
+2013-04-08  James Ferrando  <james.ferrando@cern.ch>
+
+	* Fortran PDFLIB function mapping works now: good agreement with
+	LHA5 via PYTHIA6.
+
+2013-04-05  Andy Buckley  <andy.buckley@cern.ch>
+
+	* migration/plotv5v6 improvements with line styles and labels.
+
+	* Improved/fixed migration/creategrid which excludes grid points
+	at x=0 (which screwed up handing over to extrapolation) and fixes
+	numpy array manipulation. Low-x behaviour is now good, high-x
+	needs some inspection: getting close to acceptable at last!
+
+	* Fixes to dumpv5v6.cc flavour ID and output filenames.
+
+2013-04-04  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Re-enabling the -Wno-long-long flag if possible, to avoid build
+	warnings stemming from yaml-cpp.
+
+2013-04-03  Andy Buckley  <andy.buckley@cern.ch>
+
+	* migration/: Many updates to comparison scripts, and adding a
+	plotv5v6 script and new README instructions.
+
+	* migration/: Combined dumpv5.cc and dumpv6.cc into a single
+	dumpv5v6.cc, with the version selected by a preprocessor macro.
+
+2013-04-02  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Build system fixes... *finally* working on lxplus! :-)
+
+2013-03-25  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Re-wrangling dump, comparison, and migration scripts.
+
+	* Fixing accidental shift of LHAGlue default member from 0 ->
+	1. The default index = 1 should only apply to the multiset index
+	used by non-multiset functions.
+
+2013-03-24  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Removing uses of Boost range algorithms -- nice, but apparently
+	introduces a bit too much sensitivity on Boost version for some
+	Mac and SL systems.
+
+	* Adding a NotImplementedError!
+
+	* Adding main PDFLIB functions as implemented in PYTHIA6's pdfdummies.f.
+
+2013-03-23  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding non-multiset versions of LHAGlue.cc functions.
+
+	* Use 1 rather than 0 as the lowest (and default) multi-set index
+	in LHAGlue.cc.
+
+2013-03-15  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Using much cleverer Boost discovery macros (with a slight fix)
+	from https://github.com/tsuna/boost.m4. Need to feed back the
+	fix...
+
+	* Adding --with-boost-lib, --with-boost-inc, and
+	--with-yaml-cpp-lib, --with-yaml-cpp-inc configure flags,
+	particularly for use on systems where Boost's install is a bit
+	borked and there is no common prefix dir for which $prefix/lib and
+	$prefix/include are valid dirs.
+
+2013-03-05  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Convert LHAGlue.cc to load the 0th member on set initialisation,
+	plus some other tweaks (this matches the v5 behaviour _and_ makes
+	it much harder to get into an inconsistent state).
+
+2013-03-03  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Remove -ansi from the compiler setup (the long long in some
+	yaml-cpp versions is causing trouble, at least on Macs with gcc
+	4.2)
+
+2013-03-02  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding an example script for using the Python wrapper, and
+	improving/fixing the mkPDF mapping.
+
+2013-03-01  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Some LHAGlue fixes and improvements.
+
+	* Fixing environment variable updating for path handling.
+
+	* Adding Cython docstrings and path/version functions.
+
+	* Integrating the Cython extension build into the autotools build/install.
+
+	* Path handling and PDF data file search error reporting fixes/improvements.
+
+	* Add a fallback to use LHAPATH if LHAPDF_DATA_PATH is undefined. (pre-deprecated?)
+
+	* Re-enabling Cython mapping (only the basic functionality subset).
+
+	* Adding LHAPDF::version() function.
+
+	* Adding configure testing for -mt versions of Boost (file)system libs.
+
+2013-02-28  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding name+member and LHAPDF ID constructors for Info.
+
+	* Moving config() out of Info.
+
+2013-02-27  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Implemented PDF::setname() and PDF::memberid().
+
+2013-02-26  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a lhapdf-config build assistant script.
+
+	* Adding hacky first implementations of log-space interpolators. Separation of x and Q2 ipol seems ever more likely.
+
+	* Started work on new LaTeX manual/paper, based on previous contribution from Ben and Marek.
+
+	* Cleaning up defunct wrappers directories.
+
+	* Fixing a bug in handling of nearest knot lookup for underflow x/Q2 requests.
+
+2013-02-15  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding installation and usage instructions to the Doxy manual.
+
+2013-02-13  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Fixing install path data lookup to include the 'LHAPDF' part.
+
+	* Fixed use of interpolation up to the last knot (in Q2, at least)
+	by making KnotArray1F::x/q2below never return the last index.
+
+2013-02-12  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Now installing pdfsets.index into the share dir.
+
+	* Now installing lhapdf.conf into the share dir.
+
+	* Header dependence reduction and include statement clean-up.
+
+	* Reworking Interpolator and GridPDF interfaces to centralise
+	index finding. KnotArray1F and NF are now defined as non-inner
+	classes in a separate KnotArray.h header.
+
+2013-02-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding a new implementation of NearestPointExtrapolator.
+
+2013-02-04  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding migration/testpdf.cc and corresponding README instructions.
+
+	* Removed debug printout from GridPDF.cc and re-added xKnots() and q2Knots() methods.
+
+	* Updated creategrids script to new format.
+
+	* Creating the migration directory.
+
+2013-01-29  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Updates to TODOs, CONFIGFLAGS, DESIGN, etc. after first dev meeting.
+
+	* More Doxygen: making the namespace and free functions documented, with grouping.
+
+2013-01-28  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding backward compatibility special case treatment for the "cteq6ll" misspelling from prehistory.
+
+	* Adding setting of available AlphaS params in the PDF interface.
+
+	* Adding search path set/append/prepend functions, using the LHAPDF_DATA_PATH env variable.
+
+	* More methods, and public access to most data members on AlphaS.
+
+2013-01-25  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding sorting of the flavor array when reading from metadata
+	(and use of Boost range sort)
+
+	* Fixed clearing of temp double* array variable so subgrid loading
+	now works. Interpolation across subgrid boundaries not tested!
+
+	* Added two more ways to assign the grid data arrays, but the
+	original way seems fine. Now defining the grid data x/Q2 loop
+	order.
+
+	* Fixed the AnalyticPDF example: now simpler _and_ it works :)
+
+	* A bit of virtual function rethinking on PDF.
+
+2013-01-23  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding code to allow comments in the grid data blocks.
+
+	* Some DESIGN doc cleanup.
+
+	* Moving tests and their output data files into the tests/ dir.
+
+	* Build system tweaks: adding --with args to configure for Boost and yaml-cpp, and a 'doxy' target.
+
+2013-01-22  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Removing defunct data and knot members from GridPDF.
+
+	* Including general doc files in Doxygen output and finessing Doxygen comments.
+
+	* Adding Doxyfile.in with basic Doxy config.
+
+	* Adding initial CONFIGFLAGS and CODINGSTYLE doc files.
+
+	* AlphaS_ODE reworking -- lots needed.
+
+2013-01-21  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding an empty AlphaS_Ipol and making AlphaS_Analytic work with a smooth Lambda4/5 transition.
+
+	* First PDF interpolation test added to testgrid.cc. Looks like it works!
+
+	* Refactoring of the bicubic interpolator.
+
+	* Fixed multi_array reshaping in PDFGrid loading.
+
+	* Removing PDFSet files.
+
+	* Disabling PWD searching due to infinite loop in calls to paths().
+
+2013-01-20  Andy Buckley  <andy.buckley@cern.ch>
+
+	* More alpha_s calculator evolution, mainly file splitting and adding more data members.
+
+2013-01-19  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Making inter/extrapolator loading lazy (and neater as a consequence!)
+
+	* Renaming PDFGrid -> GridPDF.
+
+2013-01-13  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Using std::auto_ptr to handle Interpolator/Extrapolator
+	assignment to PDFGrid, and cleaning up the interface and
+	implementation a bit.
+
+	* Using boost::shared_ptr to implement the memory handling in
+	LHAGLUE. NB. not std::auto_ptr, or boost::scoped_ptr, and although
+	std::unique_ptr would be ideal it requires C++11.
+
+	* Adding alpha_s(Q2) calculation mechanism to the PDF
+	interface. AlphaS calculation is not yet properly implemented and
+	tested, though, cf. grid interpolation!
+
+	* Adding src/Factories.cc to hide the implementation details /
+	dependencies for factory users.
+
+	* Added Info::metadata<bool> template specialisation to handle
+	true/false/on/off/yes/no as well as 0/1 strings.
+
+	* Add src/Paths.cc to avoid circular header dependencies.
+
+	* Add LHAPDF_{INSTALL,DATA}_PREFIX variables and PwdInSearchPath
+	config flag, and use them in search path determination.
+
+2013-01-11  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Start of the AlphaS refactoring.
+
+	* Metadata methods and flavour list caching added to PDF.
+
+	* Renaming PDFInfo.h/.cc to just Info.h/.cc
+
+	* Renaming LHAPDFConfig.h -> Config.h
+
+	* DESIGN doc updates.
+
+	* Factory renaming and adding factory functions for PDF construction.
+
+	* PDF and PDFInfo extra constructors from LHAPDF ID code.
+
+	* Moving PDFInfo YAML reading into a new PDFInfo.cc to avoid an API header dependency.
+
+	* Refactoring PDF filename construction etc. to minimise code duplication.
+
+	* Adding the PDFIndex.h header and index lookup functions.
+
+	* Adding the start of the LHA Fortran wrapper, based on the Py8
+	wrapper by Steve and Martin.
+
+2013-01-10  Andy Buckley  <andy.buckley@cern.ch>
+
+	* More PDFGrid data loading development: improvements to the API
+	and the data parser now works.
+
+	* Adding the error extrapolator to the extrapolator factory function.
+
+2013-01-09  Andy Buckley  <andy.buckley@cern.ch>
+
+	* A few tweaks to the info/data loader system: PDF loading from
+	set name + member ID with cascading info/set/config levels WORKS!
+
+	* Adding more constructors for PDFGrid, calling the new ones on
+	PDF to populate the Info class.
+
+	* Adding the EXAMPLEPDF directory for testing.
+
+2013-01-08  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding example lhapdf.conf.
+
+	* Inlining, clean-up and other tweaks.
+
+	* Adding PDF base constructors with loading apparatus for info
+	from member files + discovery and loading of set-level info.
+
+2013-01-07  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding to_str variants for both single objects and for vectors
+	of objects which are convertible to string via lexical_cast.
+
+	* Adding the YAML parser operation to the Info class (and its subclasses).
+
+	* Removing Types.h in favour of split Utils.h and Exceptions.h
+
+	* include/LHAPDF/Paths.h: Adding path searching machinery (using Boost.Filesystem).
+
+2013-01-02  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Adding some of the necessary infrastructure for subgrids, and
+	rewriting the grid format parser to handle separated subgrid
+	blocks. Boost.MultiArray being used for the internal storage in
+	place of the dynamically allocated C arrays. Metadata methods are
+	currently disabled for porting to the cascading Info system.
+
+2013-01-01  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Major restructuring of the API: lots of subtle problems with the
+	first attempt, and room for improvement. Painful, but worth the
+	reworking to get it right. Lots left to do... see the TODO and
+	DESIGN files for the ideas and tasks.
+
+2012-10-22  Andy Buckley  <andy.buckley@cern.ch>
+
+	* Start of autotools build system on top of initial summer student
+	work by Martin and Steve.

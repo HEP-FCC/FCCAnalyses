@@ -1,0 +1,95 @@
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c      written by the UFO converter
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+ckmblock 1 mdl_cabi
+
+ckmblock 2 mdl_th13
+
+ckmblock 3 mdl_th23
+
+ckmblock 4 mdl_del13
+
+numixing 1 mdl_VeN1
+
+numixing 2 mdl_VeN2
+
+numixing 3 mdl_VeN3
+
+numixing 4 mdl_VmuN1
+
+numixing 5 mdl_VmuN2
+
+numixing 6 mdl_VmuN3
+
+numixing 7 mdl_VtaN1
+
+numixing 8 mdl_VtaN2
+
+numixing 9 mdl_VtaN3
+
+sminputs 1 aEWM1
+
+sminputs 2 mdl_Gf
+
+sminputs 3 aS
+
+yukawa 1 mdl_ymdo
+
+yukawa 2 mdl_ymup
+
+yukawa 3 mdl_yms
+
+yukawa 4 mdl_ymc
+
+yukawa 5 mdl_ymb
+
+yukawa 6 mdl_ymt
+
+yukawa 11 mdl_yme
+
+yukawa 13 mdl_ymm
+
+yukawa 15 mdl_ymtau
+
+mass 23 mdl_MZ
+
+mass 11 mdl_Me
+
+mass 13 mdl_MMU
+
+mass 15 mdl_MTA
+
+mass 2 mdl_MU
+
+mass 4 mdl_MC
+
+mass 6 mdl_MT
+
+mass 1 mdl_MD
+
+mass 3 mdl_MS
+
+mass 5 mdl_MB
+
+mass 25 mdl_MH
+
+mass 9900012 mdl_mN1
+
+mass 9900014 mdl_mN2
+
+mass 9900016 mdl_mN3
+
+decay 23 mdl_WZ
+
+decay 24 mdl_WW
+
+decay 6 mdl_WT
+
+decay 25 mdl_WH
+
+decay 9900012 mdl_WN1
+
+decay 9900014 mdl_WN2
+
+decay 9900016 mdl_WN3

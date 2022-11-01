@@ -1,0 +1,16 @@
+      DATA NQCD(1)/0/
+      DATA NQCD(2)/0/
+      DATA NQCD(3)/0/
+      DATA NQCD(4)/0/
+      DATA NQCD(5)/0/
+      DATA NQCD(6)/0/
+      DATA NQCD(7)/0/
+      DATA NQCD(8)/0/
+      DATA NQCD(9)/0/
+      DATA NQCD(10)/0/
+      DATA NQCD(11)/0/
+      DATA NQCD(12)/0/
+      DATA NQCD(13)/0/
+      DATA NQCD(14)/0/
+      DATA NQCD(15)/0/
+      DATA NQCD(16)/0/

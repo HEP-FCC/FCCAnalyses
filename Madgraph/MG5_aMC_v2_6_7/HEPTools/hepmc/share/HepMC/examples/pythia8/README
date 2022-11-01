@@ -1,0 +1,18 @@
+These examples are from pythia8
+
+To build and run the examples:
+define PYTHIA8_HOME
+check config.csh, config.sh, and GNUmakefile
+   edit variables if necessary
+source the config file
+make
+./main31.exe
+./main32.exe main32.cmnd hepmcout32.dat
+
+bash: 
+export PYTHIA8_HOME=/some/path/to/pythia8xxx
+source config.sh 
+
+csh:  
+setenv PYTHIA8_HOME /some/path/to/pythia8xxx
+source config.csh

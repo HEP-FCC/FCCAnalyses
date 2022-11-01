@@ -1,0 +1,137 @@
+mv: cannot stat 'COLLIER-*': No such file or directory
+Decompressing COLLIER
+COLLIER-1.2.7/
+COLLIER-1.2.7/config/
+COLLIER-1.2.7/config/CMakeCheckCompilerFlagCommonPatterns.cmake
+COLLIER-1.2.7/config/CheckFortranCompilerFlag.cmake
+COLLIER-1.2.7/config/PackageConfigVersion.cmake.in
+COLLIER-1.2.7/config/PackageConfigInstall.cmake
+COLLIER-1.2.7/config/CMakeUninstall.cmake.in
+COLLIER-1.2.7/config/CheckFortranSourceCompiles.cmake
+COLLIER-1.2.7/config/PackageConfig.cmake.in
+COLLIER-1.2.7/makefile_basic
+COLLIER-1.2.7/manual/
+COLLIER-1.2.7/manual/collier.tex
+COLLIER-1.2.7/manual/collier.pdf
+COLLIER-1.2.7/manual/collier.bib
+COLLIER-1.2.7/COPYING
+COLLIER-1.2.7/CMakeLists.txt
+COLLIER-1.2.7/demos/
+COLLIER-1.2.7/demos/democache.f90
+COLLIER-1.2.7/demos/demo.f90
+COLLIER-1.2.7/modules/
+COLLIER-1.2.7/src/
+COLLIER-1.2.7/src/COLLIER.F90~
+COLLIER-1.2.7/src/tensors/
+COLLIER-1.2.7/src/tensors/TensorReduction.F90
+COLLIER-1.2.7/src/tensors/BuildTensors.F90
+COLLIER-1.2.7/src/tensors/InitTensors.F90
+COLLIER-1.2.7/src/collier_aux.F90
+COLLIER-1.2.7/src/collier_init.F90
+COLLIER-1.2.7/src/collier_coefs.F90
+COLLIER-1.2.7/src/collier_tensors.F90
+COLLIER-1.2.7/src/collier_global.F90
+COLLIER-1.2.7/src/COLLIER.F90
+COLLIER-1.2.7/src/DDlib/
+COLLIER-1.2.7/src/DDlib/DD_global.F90
+COLLIER-1.2.7/src/DDlib/DD_aux.F
+COLLIER-1.2.7/src/DDlib/DD_6pt.F
+COLLIER-1.2.7/src/DDlib/DD_5pt.F
+COLLIER-1.2.7/src/DDlib/DD_2pt.F
+COLLIER-1.2.7/src/DDlib/DD_to_COLLIER.F
+COLLIER-1.2.7/src/DDlib/makefile
+COLLIER-1.2.7/src/DDlib/DD_3pt.F
+COLLIER-1.2.7/src/DDlib/DD_4pt.F
+COLLIER-1.2.7/src/Aux/
+COLLIER-1.2.7/src/Aux/Combinatorics.F90
+COLLIER-1.2.7/src/Aux/cache.F90
+COLLIER-1.2.7/src/Aux/master.F90
+COLLIER-1.2.7/src/COLI/
+COLLIER-1.2.7/src/COLI/coli_stat.F90
+COLLIER-1.2.7/src/COLI/global_coli.h
+COLLIER-1.2.7/src/COLI/common_coli.h
+COLLIER-1.2.7/src/COLI/interfaceAD.F90
+COLLIER-1.2.7/src/COLI/coli_d0reg.F
+COLLIER-1.2.7/src/COLI/checkparams_coli.h
+COLLIER-1.2.7/src/COLI/reductionD.F90
+COLLIER-1.2.7/src/COLI/reductionC.F90
+COLLIER-1.2.7/src/COLI/reductionAB.F90
+COLLIER-1.2.7/src/COLI/params_coli.h
+COLLIER-1.2.7/src/COLI/coli_d0.F
+COLLIER-1.2.7/src/COLI/coli_c0.F
+COLLIER-1.2.7/src/COLI/reductionEFG.F90
+COLLIER-1.2.7/src/COLI/coli_aux2.F90
+COLLIER-1.2.7/src/COLI/coli_b0.F
+COLLIER-1.2.7/src/COLI/coli_aux.F
+COLLIER-1.2.7/src/COLI/reductionTN.F90
+COLLIER-1.2.7/build/
+Enter COLLIER directory and installing COLLIER
+-- The C compiler identification is GNU 7.3.0
+-- The CXX compiler identification is GNU 7.3.0
+-- Check for working C compiler: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc
+-- Check for working C compiler: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++
+-- Check for working CXX compiler: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- The Fortran compiler identification is GNU 7.3.0
+-- Check for working Fortran compiler: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gfortran
+-- Check for working Fortran compiler: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gfortran  -- works
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Checking whether /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gfortran supports Fortran 90
+-- Checking whether /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gfortran supports Fortran 90 -- yes
+Using Fortran compiler: gfortran
+Build type: Release
+Collier:  Fortran compiler  = gfortran
+          Fortran flags    = -ffixed-line-length-132  -fno-default-integer-8 -O2 -funroll-loops -ffast-math -Wtabs
+
+Building COLLIER as static library
+Collier install include prefix: /usr/local/include
+Collier install library prefix: /usr/local/lib
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/collier/COLLIER-1.2.7/build
+Scanning dependencies of target collier
+[  3%] Building Fortran object CMakeFiles/collier.dir/src/collier_global.F90.o
+[  6%] Building Fortran object CMakeFiles/collier.dir/src/Aux/Combinatorics.F90.o
+[  9%] Building Fortran object CMakeFiles/collier.dir/src/Aux/cache.F90.o
+[ 12%] Building Fortran object CMakeFiles/collier.dir/src/Aux/master.F90.o
+[ 15%] Building Fortran object CMakeFiles/collier.dir/src/COLI/coli_aux2.F90.o
+[ 18%] Building Fortran object CMakeFiles/collier.dir/src/COLI/coli_stat.F90.o
+[ 21%] Building Fortran object CMakeFiles/collier.dir/src/COLI/reductionAB.F90.o
+[ 24%] Building Fortran object CMakeFiles/collier.dir/src/COLI/reductionC.F90.o
+[ 27%] Building Fortran object CMakeFiles/collier.dir/src/COLI/reductionD.F90.o
+[ 30%] Building Fortran object CMakeFiles/collier.dir/src/COLI/reductionEFG.F90.o
+[ 33%] Building Fortran object CMakeFiles/collier.dir/src/COLI/reductionTN.F90.o
+[ 36%] Building Fortran object CMakeFiles/collier.dir/src/collier_aux.F90.o
+[ 39%] Building Fortran object CMakeFiles/collier.dir/src/tensors/InitTensors.F90.o
+[ 42%] Building Fortran object CMakeFiles/collier.dir/src/collier_init.F90.o
+[ 45%] Building Fortran object CMakeFiles/collier.dir/src/collier_coefs.F90.o
+[ 48%] Building Fortran object CMakeFiles/collier.dir/src/tensors/BuildTensors.F90.o
+[ 51%] Building Fortran object CMakeFiles/collier.dir/src/tensors/TensorReduction.F90.o
+[ 54%] Building Fortran object CMakeFiles/collier.dir/src/collier_tensors.F90.o
+[ 57%] Building Fortran object CMakeFiles/collier.dir/src/COLLIER.F90.o
+[ 60%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_global.F90.o
+[ 63%] Building Fortran object CMakeFiles/collier.dir/src/COLI/coli_b0.F.o
+[ 66%] Building Fortran object CMakeFiles/collier.dir/src/COLI/coli_d0.F.o
+[ 69%] Building Fortran object CMakeFiles/collier.dir/src/COLI/coli_d0reg.F.o
+[ 72%] Building Fortran object CMakeFiles/collier.dir/src/COLI/coli_aux.F.o
+[ 75%] Building Fortran object CMakeFiles/collier.dir/src/COLI/coli_c0.F.o
+[ 78%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_aux.F.o
+[ 81%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_5pt.F.o
+[ 84%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_6pt.F.o
+[ 87%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_3pt.F.o
+[ 90%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_to_COLLIER.F.o
+[ 93%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_2pt.F.o
+[ 96%] Building Fortran object CMakeFiles/collier.dir/src/DDlib/DD_4pt.F.o
+[100%] Linking Fortran static library ../libcollier.a
+[100%] Built target collier
+Copying the static library and modules generated to target directory
+Finished installing COLLIER

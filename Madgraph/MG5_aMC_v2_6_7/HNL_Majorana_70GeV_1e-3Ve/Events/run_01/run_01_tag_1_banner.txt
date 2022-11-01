@@ -1,0 +1,619 @@
+<LesHouchesEvents version="3.0">
+<header>
+<!--
+#*********************************************************************
+#                                                                    *
+#                        MadGraph5_aMC@NLO                           *
+#                                                                    *
+#                           Going Beyond                             *
+#                                                                    *
+#                   http://madgraph.hep.uiuc.edu                     *
+#                   http://madgraph.phys.ucl.ac.be                   *
+#                   http://amcatnlo.cern.ch                          *
+#                                                                    *
+#                     The MadGraph5_aMC@NLO team                     *
+#                                                                    *
+#....................................................................*
+#                                                                    *
+# This file contains all the information necessary to reproduce      *
+# the events generated:                                              *
+#                                                                    *
+# 1. software version                                                *
+# 2. proc_card          : code generation info including model       *
+# 3. param_card         : model primary parameters in the LH format  *
+# 4. run_card           : running parameters (collider and cuts)     *
+# 5. pythia_card        : present only if pythia has been run        *
+# 6. pgs_card           : present only if pgs has been run           *
+# 7. delphes_cards      : present only if delphes has been run       *
+#                                                                    *
+#                                                                    *
+#*********************************************************************
+-->
+<MGVersion>
+2.6.7
+</MGVersion>
+<MG5ProcCard>
+<![CDATA[
+#************************************************************
+#*                     MadGraph5_aMC@NLO                    *
+#*                                                          *
+#*                *                       *                 *
+#*                  *        * *        *                   *
+#*                    * * * * 5 * * * *                     *
+#*                  *        * *        *                   *
+#*                *                       *                 *
+#*                                                          *
+#*                                                          *
+#*         VERSION 2.6.7                 2019-10-16         *
+#*                                                          *
+#*    The MadGraph5_aMC@NLO Development Team - Find us at   *
+#*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+#*                                                          *
+#************************************************************
+#*                                                          *
+#*               Command File for MadGraph5_aMC@NLO         *
+#*                                                          *
+#*     run as ./bin/mg5_aMC  filename                       *
+#*                                                          *
+#************************************************************
+set low_mem_multicore_nlo_generation False
+set default_unset_couplings 99
+set group_subprocesses Auto
+set ignore_six_quark_processes False
+set loop_optimized_output True
+set loop_color_flows False
+set gauge unitary
+set complex_mass_scheme False
+set max_npoint_for_channel 0
+import model sm
+define p = g u c d s u~ c~ d~ s~
+define j = g u c d s u~ c~ d~ s~
+define l+ = e+ mu+
+define l- = e- mu-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+import model SM_HeavyN_CKM_AllMasses_LO
+define e = e+ e-
+define nue = ve ve~
+generate e+ e- > z, z > n1 ve , (n1 > z ve, z > e+ e-)
+add process e+ e- > z, z > n1 ve~ , (n1 > z ve~, z > e+ e-)
+add process e+ e- > z, z > n1 ve , (n1 > w+ e-, w+ > ve e+)
+add process e+ e- > z, z > n1 ve~ , (n1 > w- e+, w- > ve~ e-)
+add process e+ e- > z, z > n1 ve , (n1 > z ve~ , z > e+ e-)
+add process e+ e- > z, z > n1 ve~ , (n1 > z ve, z > e+ e-)
+add process e+ e- > z, z > n1 ve , (n1 > w- e+ , w- > e- ve~)
+add process e+ e- > z, z > n1 ve~ , (n1 > w+ e- , w+ > e+ ve)
+output HNL_Majorana_70GeV_1e-3Ve
+]]>
+</MG5ProcCard>
+<MGProcCard>
+#*********************************************************************
+#                        MadGraph/MadEvent                           *
+#                   http://madgraph.hep.uiuc.edu                     *
+#                                                                    *
+#                          proc_card.dat                             *
+#*********************************************************************
+#                                                                    *
+#            This Files is generated by MADGRAPH 5                   *
+#                                                                    *
+# WARNING: This Files is generated for MADEVENT (compatibility issue)*
+#          This files is NOT a valid MG4 proc_card.dat               *
+#          Running this in MG4 will NEVER reproduce the result of MG5*
+#                                                                    *
+#*********************************************************************
+#*********************************************************************
+# Process(es) requested : mg2 input                                  *
+#*********************************************************************
+# Begin PROCESS # This is TAG. Do not modify this line
+e+ e- > z , z > n1 ve , (n1 > z ve , z > e+ e-)           #Process
+# Be carefull the coupling are here in MG5 convention
+          
+end_coup           # End the couplings input
+
+done               # this tells MG there are no more procs
+# End PROCESS  # This is TAG. Do not modify this line
+#*********************************************************************
+# Model information                                                  *
+#*********************************************************************
+# Begin MODEL  # This is TAG. Do not modify this line
+SM_HeavyN_CKM_AllMasses_LO
+# End   MODEL  # This is TAG. Do not modify this line
+#*********************************************************************
+# Start multiparticle definitions                                    *
+#*********************************************************************
+# Begin MULTIPARTICLES # This is TAG. Do not modify this line
+
+# End  MULTIPARTICLES # This is TAG. Do not modify this line
+</MGProcCard>
+<MGRunCard>
+<![CDATA[
+#*********************************************************************
+#                       MadGraph5_aMC@NLO                            *
+#                                                                    *
+#                     run_card.dat MadEvent                          *
+#                                                                    *
+#  This file is used to set the parameters of the run.               *
+#                                                                    *
+#  Some notation/conventions:                                        *
+#                                                                    *
+#   Lines starting with a '# ' are info or comments                  *
+#                                                                    *
+#   mind the format:   value    = variable     ! comment             *
+#                                                                    *
+#   To display more options, you can type the command:               *
+#      update full_run_card                                          *
+#*********************************************************************
+#
+#*******************                                                 
+# Running parameters
+#*******************                                                 
+#                                                                    
+#*********************************************************************
+# Tag name for the run (one word)                                    *
+#*********************************************************************
+  tag_1	= run_tag ! name of the run 
+#*********************************************************************
+# Number of events and rnd seed                                      *
+# Warning: Do not generate more than 1M events in a single run       *
+#*********************************************************************
+  1000	= nevents ! Number of unweighted events requested 
+ 21 = iseed ! rnd seed (0=assigned automatically=default))
+#*********************************************************************
+# Collider type and energy                                           *
+# lpp: 0=No PDF, 1=proton, -1=antiproton, 2=photon from proton,      *
+#                                         3=photon from electron     *
+#*********************************************************************
+  0	= lpp1 ! beam 1 type 
+  0	= lpp2 ! beam 2 type
+  45.594	= ebeam1 ! beam 1 total energy in GeV
+  45.594	= ebeam2 ! beam 2 total energy in GeV
+#*********************************************************************
+# Beam polarization from -100 (left-handed) to 100 (right-handed)    *
+#*********************************************************************
+  0.0	= polbeam1 ! beam polarization for beam 1
+  0.0	= polbeam2 ! beam polarization for beam 2
+
+#*********************************************************************
+# PDF CHOICE: this automatically fixes also alpha_s and its evol.    *
+#*********************************************************************
+  nn23lo1	= pdlabel ! PDF set                                     
+  230000	= lhaid ! if pdlabel=lhapdf, this is the lhapdf number
+# To see heavy ion options: type "update ion_pdf"
+#*********************************************************************
+# Renormalization and factorization scales                           *
+#*********************************************************************
+  False	= fixed_ren_scale ! if .true. use fixed ren scale
+  False	= fixed_fac_scale ! if .true. use fixed fac scale
+  91.188	= scale ! fixed ren scale
+  91.188	= dsqrt_q2fact1 ! fixed fact scale for pdf1
+  91.188	= dsqrt_q2fact2 ! fixed fact scale for pdf2
+  -1	= dynamical_scale_choice ! Choose one of the preselected dynamical choices
+  1.0	= scalefact ! scale factor for event-by-event scales
+#*********************************************************************
+# Type and output format
+#*********************************************************************
+  False	= gridpack !True = setting up the grid pack
+  0.0	= time_of_flight ! threshold (in mm) below which the invariant livetime is not written (-1 means not written)
+  3.0	= lhe_version ! Change the way clustering information pass to shower.        
+  True	= clusinfo ! include clustering tag in output
+  average	= event_norm ! average/sum. Normalization of the weight in the LHEF
+
+#*********************************************************************
+# Matching parameter (MLM only)
+#*********************************************************************
+  0	= ickkw ! 0 no matching, 1 MLM
+  1.0	= alpsfact ! scale factor for QCD emission vx
+  False	= chcluster ! cluster only according to channel diag
+  5	= asrwgtflavor ! highest quark flavor for a_s reweight
+  True	= auto_ptj_mjj ! Automatic setting of ptj and mjj if xqcut >0
+                                   ! (turn off for VBF and single top processes) 
+  0.0	= xqcut ! minimum kt jet measure between partons
+#*********************************************************************
+#
+#*********************************************************************
+# handling of the helicities:
+#  0: sum over all helicities
+#  1: importance sampling over helicities
+#*********************************************************************
+  0	= nhel ! using helicities importance sampling or not.
+#*********************************************************************
+# Generation bias, check the wiki page below for more information:   *
+#  'cp3.irmp.ucl.ac.be/projects/madgraph/wiki/LOEventGenerationBias' *
+#*********************************************************************
+  None	= bias_module ! Bias type of bias, [None, ptj_bias, -custom_folder-]
+  {}	= bias_parameters ! Specifies the parameters of the module.
+#
+#*******************************                                                 
+# Parton level cuts definition *
+#*******************************                                     
+#                                                                    
+#
+#*********************************************************************
+# BW cutoff (M+/-bwcutoff*Gamma) ! Define on/off-shell for "$" and decay  
+#*********************************************************************
+  15.0	= bwcutoff ! (M+/-bwcutoff*Gamma)
+#*********************************************************************
+# Apply pt/E/eta/dr/mij/kt_durham cuts on decay products or not
+# (note that etmiss/ptll/ptheavy/ht/sorted cuts always apply)
+#*********************************************************************
+  False	= cut_decays ! Cut decay products 
+#*********************************************************************
+# Standard Cuts                                                      *
+#*********************************************************************
+# Minimum and maximum pt's (for max, -1 means no cut)                *
+#*********************************************************************
+  0.0	= ptj ! minimum pt for the jets 
+  0.0	= ptb ! minimum pt for the b 
+  0.0	= pta ! minimum pt for the photons 
+  0.0	= ptl ! minimum pt for the charged leptons 
+  0.0	= misset ! minimum missing Et (sum of neutrino's momenta)
+  -1.0	= ptjmax ! maximum pt for the jets
+  -1.0	= ptbmax ! maximum pt for the b
+  -1.0	= ptamax ! maximum pt for the photons
+  -1.0	= ptlmax ! maximum pt for the charged leptons
+  -1.0	= missetmax ! maximum missing Et (sum of neutrino's momenta)
+  {}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
+  {}	= pt_max_pdg ! pt cut for other particles (syntax e.g. {6: 100, 25: 50}) 
+#*********************************************************************
+# Minimum and maximum E's (in the center of mass frame)              *
+#*********************************************************************
+  0.0	= ej ! minimum E for the jets
+  0.0	= eb ! minimum E for the b
+  0.0	= ea ! minimum E for the photons
+  0.0	= el ! minimum E for the charged leptons
+  -1.0	= ejmax ! maximum E for the jets
+  -1.0	= ebmax ! maximum E for the b
+  -1.0	= eamax ! maximum E for the photons
+  -1.0	= elmax ! maximum E for the charged leptons
+  {}	= e_min_pdg ! E cut for other particles (use pdg code). Applied on particle and anti-particle
+  {}	= e_max_pdg ! E cut for other particles (syntax e.g. {6: 100, 25: 50})
+
+#*********************************************************************
+# Maximum and minimum absolute rapidity (for max, -1 means no cut)   *
+#*********************************************************************
+  -1.0	= etaj ! max rap for the jets 
+  -1.0	= etab ! max rap for the b
+  -1.0	= etaa ! max rap for the photons 
+  -1.0	= etal ! max rap for the charged leptons 
+  0.0	= etajmin ! min rap for the jets
+  0.0	= etabmin ! min rap for the b
+  0.0	= etaamin ! min rap for the photons
+  0.0	= etalmin ! main rap for the charged leptons
+  {}	= eta_min_pdg ! rap cut for other particles (use pdg code). Applied on particle and anti-particle
+  {}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
+#*********************************************************************
+# Minimum and maximum DeltaR distance                                *
+#*********************************************************************
+  0.0	= drjj ! min distance between jets 
+  0.0	= drbb ! min distance between b's 
+  0.0	= drll ! min distance between leptons 
+  0.0	= draa ! min distance between gammas 
+  0.0	= drbj ! min distance between b and jet 
+  0.0	= draj ! min distance between gamma and jet 
+  0.0	= drjl ! min distance between jet and lepton 
+  0.0	= drab ! min distance between gamma and b 
+  0.0	= drbl ! min distance between b and lepton 
+  0.0	= dral ! min distance between gamma and lepton 
+  -1.0	= drjjmax ! max distance between jets
+  -1.0	= drbbmax ! max distance between b's
+  -1.0	= drllmax ! max distance between leptons
+  -1.0	= draamax ! max distance between gammas
+  -1.0	= drbjmax ! max distance between b and jet
+  -1.0	= drajmax ! max distance between gamma and jet
+  -1.0	= drjlmax ! max distance between jet and lepton
+  -1.0	= drabmax ! max distance between gamma and b
+  -1.0	= drblmax ! max distance between b and lepton
+  -1.0	= dralmax ! maxdistance between gamma and lepton
+#*********************************************************************
+# Minimum and maximum invariant mass for pairs                       *
+# WARNING: for four lepton final state mmll cut require to have      *
+#          different lepton masses for each flavor!                  *           
+#*********************************************************************
+  0.0	= mmjj ! min invariant mass of a jet pair 
+  0.0	= mmbb ! min invariant mass of a b pair 
+  0.0	= mmaa ! min invariant mass of gamma gamma pair
+  0.0	= mmll ! min invariant mass of l+l- (same flavour) lepton pair
+  -1.0	= mmjjmax ! max invariant mass of a jet pair
+  -1.0	= mmbbmax ! max invariant mass of a b pair
+  -1.0	= mmaamax ! max invariant mass of gamma gamma pair
+  -1.0	= mmllmax ! max invariant mass of l+l- (same flavour) lepton pair
+  {}	= mxx_min_pdg ! min invariant mass of a pair of particles X/X~ (e.g. {6:250})
+  {'default': False}	= mxx_only_part_antipart ! if True the invariant mass is applied only 
+                       ! to pairs of particle/antiparticle and not to pairs of the same pdg codes.  
+#*********************************************************************
+# Minimum and maximum invariant mass for all letpons                 *
+#*********************************************************************
+  0.0	= mmnl ! min invariant mass for all letpons (l+- and vl) 
+  -1.0	= mmnlmax ! max invariant mass for all letpons (l+- and vl) 
+#*********************************************************************
+# Minimum and maximum pt for 4-momenta sum of leptons                *
+#*********************************************************************
+  0.0	= ptllmin ! Minimum pt for 4-momenta sum of leptons(l and vl)
+  -1.0	= ptllmax ! Maximum pt for 4-momenta sum of leptons(l and vl)
+#*********************************************************************
+# Inclusive cuts                                                     *
+#*********************************************************************
+  0.0	= ptheavy ! minimum pt for at least one heavy final state
+  0.0	= xptj ! minimum pt for at least one jet  
+  0.0	= xptb ! minimum pt for at least one b 
+  0.0	= xpta ! minimum pt for at least one photon 
+  0.0	= xptl ! minimum pt for at least one charged lepton 
+#*********************************************************************
+# Control the pt's of the jets sorted by pt                          *
+#*********************************************************************
+  0.0	= ptj1min ! minimum pt for the leading jet in pt
+  0.0	= ptj2min ! minimum pt for the second jet in pt
+  0.0	= ptj3min ! minimum pt for the third jet in pt
+  0.0	= ptj4min ! minimum pt for the fourth jet in pt
+  -1.0	= ptj1max ! maximum pt for the leading jet in pt 
+  -1.0	= ptj2max ! maximum pt for the second jet in pt
+  -1.0	= ptj3max ! maximum pt for the third jet in pt
+  -1.0	= ptj4max ! maximum pt for the fourth jet in pt
+  0	= cutuse ! reject event if fails any (0) / all (1) jet pt cuts
+#*********************************************************************
+# Control the pt's of leptons sorted by pt                           *
+#*********************************************************************
+  0.0	= ptl1min ! minimum pt for the leading lepton in pt
+  0.0	= ptl2min ! minimum pt for the second lepton in pt
+  0.0	= ptl3min ! minimum pt for the third lepton in pt
+  0.0	= ptl4min ! minimum pt for the fourth lepton in pt
+  -1.0	= ptl1max ! maximum pt for the leading lepton in pt 
+  -1.0	= ptl2max ! maximum pt for the second lepton in pt
+  -1.0	= ptl3max ! maximum pt for the third lepton in pt
+  -1.0	= ptl4max ! maximum pt for the fourth lepton in pt
+#*********************************************************************
+# Control the Ht(k)=Sum of k leading jets                            *
+#*********************************************************************
+  0.0	= htjmin ! minimum jet HT=Sum(jet pt)
+  -1.0	= htjmax ! maximum jet HT=Sum(jet pt)
+  0.0	= ihtmin !inclusive Ht for all partons (including b)
+  -1.0	= ihtmax !inclusive Ht for all partons (including b)
+  0.0	= ht2min ! minimum Ht for the two leading jets
+  0.0	= ht3min ! minimum Ht for the three leading jets
+  0.0	= ht4min ! minimum Ht for the four leading jets
+  -1.0	= ht2max ! maximum Ht for the two leading jets
+  -1.0	= ht3max ! maximum Ht for the three leading jets
+  -1.0	= ht4max ! maximum Ht for the four leading jets
+#***********************************************************************
+# Photon-isolation cuts, according to hep-ph/9801442                   *
+# When ptgmin=0, all the other parameters are ignored                  *
+# When ptgmin>0, pta and draj are not going to be used                 *
+#***********************************************************************
+  0.0	= ptgmin ! Min photon transverse momentum
+  0.4	= r0gamma ! Radius of isolation code
+  1.0	= xn ! n parameter of eq.(3.4) in hep-ph/9801442
+  1.0	= epsgamma ! epsilon_gamma parameter of eq.(3.4) in hep-ph/9801442
+  True	= isoem ! isolate photons from EM energy (photons and leptons)
+#*********************************************************************
+# WBF cuts                                                           *
+#*********************************************************************
+  0.0	= xetamin ! minimum rapidity for two jets in the WBF case  
+  -1.0	= deltaeta ! minimum rapidity for two jets in the WBF case 
+#***********************************************************************
+# Turn on either the ktdurham or ptlund cut to activate                *
+# CKKW(L) merging with Pythia8 [arXiv:1410.3012, arXiv:1109.4829]      *
+#***********************************************************************
+  0.0	= ktdurham 
+  0.0	= dparameter 
+  0.0	= ptlund 
+  1, 2, 3, 4, 5, 6, 21	= pdgs_for_merging_cut ! PDGs for two cuts above   
+#*********************************************************************
+# maximal pdg code for quark to be considered as a light jet         *
+# (otherwise b cuts are applied)                                     *
+#*********************************************************************
+  4	= maxjetflavor ! Maximum jet pdg code
+#*********************************************************************
+#
+#*********************************************************************
+# Store info for systematics studies                                 *
+# WARNING: Do not use for interference type of computation           *
+#*********************************************************************
+  False	= use_syst ! Enable systematics studies
+#
+  systematics	= systematics_program ! none, systematics [python], SysCalc [depreceted, C++]
+['--mur=0.5,1,2', '--muf=0.5,1,2', '--pdf=errorset'] = systematics_arguments ! see: https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/Systematics#Systematicspythonmodule
+# Syscalc is deprecated but to see the associate options type'update syscalc'#********************************************************************* 
+#  Additional hidden parameters
+#*********************************************************************
+  ['--mur=0.5,1,2', '--muf=0.5,1,2', '--pdf=errorset']	= systematics_arguments # Choose the argment to pass to the systematics command. like --mur=0.25,1,4. Look at the help of the systematics function for more details.
+]]>
+</MGRunCard>
+<slha>
+######################################################################
+## PARAM_CARD AUTOMATICALY GENERATED BY MG5                       ####
+######################################################################
+###################################
+## INFORMATION FOR CKMBLOCK
+###################################
+BLOCK CKMBLOCK # 
+      1 2.275910e-01 # cabi
+      2 3.508000e-03 # th13
+      3 4.153900e-02 # th23
+      4 1.200000e+00 # del13
+###################################
+## INFORMATION FOR MASS
+###################################
+BLOCK MASS # 
+      1 5.040000e-03 # md
+      2 2.550000e-03 # mu
+      3 1.010000e-01 # ms
+      4 1.270000e+00 # mc
+      5 4.700000e+00 # mb
+      6 1.733000e+02 # mt
+      11 5.110000e-04 # me
+      13 1.056600e-01 # mmu
+      15 1.777000e+00 # mta
+      23 9.118760e+01 # mz
+      25 1.257000e+02 # mh
+      9900012 7.000000e+01 # mn1
+      9900014 1.000000e+04 # mn2
+      9900016 1.000000e+04 # mn3
+      12 0.000000e+00 # ve : 0.0
+      14 0.000000e+00 # vm : 0.0
+      16 0.000000e+00 # vt : 0.0
+      21 0.000000e+00 # g : 0.0
+      22 0.000000e+00 # a : 0.0
+      24 7.995123e+01 # w+ : cmath.sqrt(mz__exp__2/2. + cmath.sqrt(mz__exp__4/4. - (aew*cmath.pi*mz__exp__2)/(gf*sqrt__2)))
+###################################
+## INFORMATION FOR NUMIXING
+###################################
+BLOCK NUMIXING # 
+      1 1.000000e-03 # ven1
+      2 0.000000e+00 # ven2
+      3 0.000000e+00 # ven3
+      4 0.000000e+00 # vmun1
+      5 1.000000e+00 # vmun2
+      6 0.000000e+00 # vmun3
+      7 0.000000e+00 # vtan1
+      8 0.000000e+00 # vtan2
+      9 1.000000e+00 # vtan3
+###################################
+## INFORMATION FOR SMINPUTS
+###################################
+BLOCK SMINPUTS # 
+      1 1.279400e+02 # aewm1
+      2 1.174560e-05 # gf
+      3 1.184000e-01 # as
+###################################
+## INFORMATION FOR YUKAWA
+###################################
+BLOCK YUKAWA # 
+      1 5.040000e-03 # ymdo
+      2 2.550000e-03 # ymup
+      3 1.010000e-01 # yms
+      4 1.270000e+00 # ymc
+      5 4.700000e+00 # ymb
+      6 1.733000e+02 # ymt
+      11 5.110000e-04 # yme
+      13 1.056600e-01 # ymm
+      15 1.777000e+00 # ymtau
+###################################
+## INFORMATION FOR DECAY
+###################################
+BLOCK QNUMBERS 9900012 #   n1
+      1 0 # 3 times electric charge
+      2 2 # number of spin states (2s+1)
+      3 1 # colour rep (1: singlet, 3: triplet, 8: octet)
+      4 0 # particle/antiparticle distinction (0=own anti)
+###################################
+## INFORMATION FOR QNUMBERS 9900014
+###################################
+BLOCK QNUMBERS 9900014 #   n2
+      1 0 # 3 times electric charge
+      2 2 # number of spin states (2s+1)
+      3 1 # colour rep (1: singlet, 3: triplet, 8: octet)
+      4 0 # particle/antiparticle distinction (0=own anti)
+###################################
+## INFORMATION FOR QNUMBERS 9900016
+###################################
+BLOCK QNUMBERS 9900016 #   n3
+      1 0 # 3 times electric charge
+      2 2 # number of spin states (2s+1)
+      3 1 # colour rep (1: singlet, 3: triplet, 8: octet)
+      4 0 # particle/antiparticle distinction (0=own anti)
+#
+#*************************
+#      Decay widths      *
+#*************************
+#
+#      PDG        Width
+DECAY  1   0.000000e+00
+#
+#      PDG        Width
+DECAY  2   0.000000e+00
+#
+#      PDG        Width
+DECAY  3   0.000000e+00
+#
+#      PDG        Width
+DECAY  4   0.000000e+00
+#
+#      PDG        Width
+DECAY  5   0.000000e+00
+#
+#      PDG        Width
+DECAY  6   1.350000e+00
+#
+#      PDG        Width
+DECAY  11   0.000000e+00
+#
+#      PDG        Width
+DECAY  12   0.000000e+00
+#
+#      PDG        Width
+DECAY  13   0.000000e+00
+#
+#      PDG        Width
+DECAY  14   0.000000e+00
+#
+#      PDG        Width
+DECAY  15   0.000000e+00
+#
+#      PDG        Width
+DECAY  16   0.000000e+00
+#
+#      PDG        Width
+DECAY  21   0.000000e+00
+#
+#      PDG        Width
+DECAY  22   0.000000e+00
+#
+#      PDG        Width
+DECAY  23   2.495200e+00
+#
+#      PDG        Width
+DECAY  24   2.085000e+00
+#
+#      PDG        Width
+DECAY  25   4.170000e-03
+#
+#      PDG        Width
+DECAY  9900012   1.773221e-09
+#  BR             NDA  ID1    ID2   ...
+   1.262561e-01   3    -11  -4  3 # 2.23879967898e-10
+   1.261264e-01   3    -11  -2  1 # 2.23649981134e-10
+   1.252241e-01   3    -1  2  11 # 2.22050003826e-10
+   1.251790e-01   3    -3  4  11 # 2.21970031559e-10
+   4.444793e-02   3    -13  11  14 # 7.88160028825e-11
+   4.416822e-02   3    -15  11  16 # 7.83200152366e-11
+   4.402667e-02   3    -16  -11  15 # 7.80690158041e-11
+   4.400467e-02   3    -14  -11  13 # 7.80300049421e-11
+   2.903305e-02   3    -11  11  12 # 5.1482013954e-11
+   2.878209e-02   3    -12  -11  11 # 5.10370064119e-11
+   1.970426e-02   3    -3  3  12 # 3.49400076215e-11
+   1.951139e-02   3    -1  1  12 # 3.45980064872e-11
+   1.944823e-02   3    -12  -1  1 # 3.44860098488e-11
+   1.938563e-02   3    -12  -3  3 # 3.43750062142e-11
+   1.807727e-02   3    -5  5  12 # 3.20549947867e-11
+   1.806825e-02   3    -12  -5  5 # 3.20390003332e-11
+   1.529308e-02   3    -12  -2  2 # 2.71180106107e-11
+   1.521863e-02   3    -4  4  12 # 2.69859943072e-11
+   1.513292e-02   3    -2  2  12 # 2.68340115353e-11
+   1.504550e-02   3    -12  -4  4 # 2.66789965555e-11
+   8.697451e-03   3    -14  -12  14 # 1.54225009864e-11
+   8.697451e-03   3    -16  -12  16 # 1.54225009864e-11
+   8.696887e-03   3    -14  12  14 # 1.54215008898e-11
+   8.696887e-03   3    -16  12  16 # 1.54215008898e-11
+   6.776934e-03   3    -3  2  11 # 1.20170016844e-11
+   6.707005e-03   3    -11  -4  1 # 1.18930021131e-11
+   6.692342e-03   3    -1  4  11 # 1.18670013736e-11
+   6.633128e-03   3    -11  -2  3 # 1.17620018653e-11
+   4.435093e-03   3    -13  12  13 # 7.86440004455e-12
+   4.404697e-03   3    -13  -12  13 # 7.81050121904e-12
+   4.376669e-03   3    -12  12  12 # 7.76080138085e-12
+   4.353096e-03   3    -15  12  15 # 7.71900124222e-12
+   4.351009e-03   3    -12  -12  12 # 7.71530052999e-12
+   4.347907e-03   3    -15  -12  15 # 7.70979999845e-12
+#
+#      PDG        Width
+DECAY  9900014   1.500000e+00
+#
+#      PDG        Width
+DECAY  9900016   1.230000e+01
+</slha>
+<MGGenerationInfo>
+#  Number of Events        :       1000
+#  Integrated weight (pb)  :       0.00694805
+</MGGenerationInfo>
+</header>
+</LesHouchesEvents>

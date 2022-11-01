@@ -1,0 +1,624 @@
+ Set environment variables
+ Unpack HEPMC
+hepmc2.06.09/
+hepmc2.06.09/.cvsignore
+hepmc2.06.09/AUTHORS
+hepmc2.06.09/CMakeLists.txt
+hepmc2.06.09/COPYING
+hepmc2.06.09/ChangeLog
+hepmc2.06.09/HepMC/
+hepmc2.06.09/HepMC/.cvsignore
+hepmc2.06.09/HepMC/CMakeLists.txt
+hepmc2.06.09/HepMC/CompareGenEvent.h
+hepmc2.06.09/HepMC/Flow.h
+hepmc2.06.09/HepMC/GenCrossSection.h
+hepmc2.06.09/HepMC/GenEvent.h
+hepmc2.06.09/HepMC/GenParticle.h
+hepmc2.06.09/HepMC/GenRanges.h
+hepmc2.06.09/HepMC/GenVertex.h
+hepmc2.06.09/HepMC/HEPEVT_Wrapper.h
+hepmc2.06.09/HepMC/HeavyIon.h
+hepmc2.06.09/HepMC/HepMCDefs.h
+hepmc2.06.09/HepMC/HerwigWrapper.h
+hepmc2.06.09/HepMC/IO_AsciiParticles.h
+hepmc2.06.09/HepMC/IO_BaseClass.h
+hepmc2.06.09/HepMC/IO_Exception.h
+hepmc2.06.09/HepMC/IO_GenEvent.h
+hepmc2.06.09/HepMC/IO_HEPEVT.h
+hepmc2.06.09/HepMC/IO_HERWIG.h
+hepmc2.06.09/HepMC/IteratorRange.h
+hepmc2.06.09/HepMC/Makefile.am
+hepmc2.06.09/HepMC/PdfInfo.h
+hepmc2.06.09/HepMC/Polarization.h
+hepmc2.06.09/HepMC/PythiaWrapper.h
+hepmc2.06.09/HepMC/PythiaWrapper6_4.h
+hepmc2.06.09/HepMC/PythiaWrapper6_4_WIN32.h
+hepmc2.06.09/HepMC/SearchVector.h
+hepmc2.06.09/HepMC/SimpleVector.h
+hepmc2.06.09/HepMC/SimpleVector.icc
+hepmc2.06.09/HepMC/StreamHelpers.h
+hepmc2.06.09/HepMC/StreamInfo.h
+hepmc2.06.09/HepMC/TempParticleMap.h
+hepmc2.06.09/HepMC/Units.h
+hepmc2.06.09/HepMC/Version.h
+hepmc2.06.09/HepMC/WeightContainer.h
+hepmc2.06.09/HepMC/enable_if.h
+hepmc2.06.09/HepMC/is_arithmetic.h
+hepmc2.06.09/HepMC/defs.h.in
+hepmc2.06.09/HepMC/Makefile.in
+hepmc2.06.09/INSTALL
+hepmc2.06.09/INSTALL.autoconf
+hepmc2.06.09/INSTALL.cmake
+hepmc2.06.09/Makefile.am
+hepmc2.06.09/NEWS
+hepmc2.06.09/README
+hepmc2.06.09/ReadMe.cygwin
+hepmc2.06.09/bootstrap
+hepmc2.06.09/cmake/
+hepmc2.06.09/cmake/Modules/
+hepmc2.06.09/cmake/Modules/HepMCUseCpack.cmake
+hepmc2.06.09/cmake/Modules/HepMCVariables.cmake
+hepmc2.06.09/configure.ac
+hepmc2.06.09/doc/
+hepmc2.06.09/doc/.cvsignore
+hepmc2.06.09/doc/CMakeLists.txt
+hepmc2.06.09/doc/HepMC2_user_manual.tex
+hepmc2.06.09/doc/HepMC_basic_properties.eps
+hepmc2.06.09/doc/Makefile.am
+hepmc2.06.09/doc/buildDoc.sh
+hepmc2.06.09/doc/buildDoxygen.sh
+hepmc2.06.09/doc/doxygen-template
+hepmc2.06.09/doc/doxygen.conf
+hepmc2.06.09/doc/graph_interpretation.eps
+hepmc2.06.09/doc/html.sty
+hepmc2.06.09/doc/physicist_visualization.eps
+hepmc2.06.09/doc/Makefile.in
+hepmc2.06.09/examples/
+hepmc2.06.09/examples/.cvsignore
+hepmc2.06.09/examples/CMakeLists.txt
+hepmc2.06.09/examples/GNUmakefile.example.in
+hepmc2.06.09/examples/Makefile.am
+hepmc2.06.09/examples/VectorConversion.h
+hepmc2.06.09/examples/example_BuildEventFromScratch.cc
+hepmc2.06.09/examples/example_EventSelection.cc
+hepmc2.06.09/examples/example_UsingIterators.cc
+hepmc2.06.09/examples/example_UsingIterators.txt
+hepmc2.06.09/examples/example_VectorConversion.cc
+hepmc2.06.09/examples/fio/
+hepmc2.06.09/examples/fio/CMakeLists.txt
+hepmc2.06.09/examples/fio/GNUmakefile.example.in
+hepmc2.06.09/examples/fio/Makefile.am
+hepmc2.06.09/examples/fio/PythiaHelper.h
+hepmc2.06.09/examples/fio/example_MyHerwig.cc
+hepmc2.06.09/examples/fio/example_MyPythia.cc
+hepmc2.06.09/examples/fio/example_MyPythiaOnlyToHepMC.cc
+hepmc2.06.09/examples/fio/example_PythiaStreamIO.cc
+hepmc2.06.09/examples/fio/initPythia.cc
+hepmc2.06.09/examples/fio/initpydata.f
+hepmc2.06.09/examples/fio/testHerwigCopies.cc
+hepmc2.06.09/examples/fio/testPythiaCopies.cc
+hepmc2.06.09/examples/fio/Makefile.in
+hepmc2.06.09/examples/list_of_examples.cc
+hepmc2.06.09/examples/pythia8/
+hepmc2.06.09/examples/pythia8/CMakeLists.txt
+hepmc2.06.09/examples/pythia8/GNUmakefile.example.in
+hepmc2.06.09/examples/pythia8/Makefile.am
+hepmc2.06.09/examples/pythia8/README
+hepmc2.06.09/examples/pythia8/config.csh.in
+hepmc2.06.09/examples/pythia8/config.sh.in
+hepmc2.06.09/examples/pythia8/main31.cc
+hepmc2.06.09/examples/pythia8/main32.cc
+hepmc2.06.09/examples/pythia8/main32.cmnd
+hepmc2.06.09/examples/pythia8/Makefile.in
+hepmc2.06.09/examples/Makefile.in
+hepmc2.06.09/fio/
+hepmc2.06.09/fio/.cvsignore
+hepmc2.06.09/fio/CMakeLists.txt
+hepmc2.06.09/fio/HEPEVT_Wrapper.cc
+hepmc2.06.09/fio/HerwigWrapper.cc
+hepmc2.06.09/fio/IO_HEPEVT.cc
+hepmc2.06.09/fio/IO_HERWIG.cc
+hepmc2.06.09/fio/Makefile.am
+hepmc2.06.09/fio/Makefile.in
+hepmc2.06.09/src/
+hepmc2.06.09/src/.cvsignore
+hepmc2.06.09/src/CMakeLists.txt
+hepmc2.06.09/src/CompareGenEvent.cc
+hepmc2.06.09/src/Flow.cc
+hepmc2.06.09/src/GenCrossSection.cc
+hepmc2.06.09/src/GenEvent.cc
+hepmc2.06.09/src/GenEventStreamIO.cc
+hepmc2.06.09/src/GenParticle.cc
+hepmc2.06.09/src/GenRanges.cc
+hepmc2.06.09/src/GenVertex.cc
+hepmc2.06.09/src/HeavyIon.cc
+hepmc2.06.09/src/IO_AsciiParticles.cc
+hepmc2.06.09/src/IO_GenEvent.cc
+hepmc2.06.09/src/Makefile.am
+hepmc2.06.09/src/PdfInfo.cc
+hepmc2.06.09/src/Polarization.cc
+hepmc2.06.09/src/SearchVector.cc
+hepmc2.06.09/src/StreamHelpers.cc
+hepmc2.06.09/src/StreamInfo.cc
+hepmc2.06.09/src/Units.cc.in
+hepmc2.06.09/src/WeightContainer.cc
+hepmc2.06.09/src/filterEvent.cc
+hepmc2.06.09/src/Makefile.in
+hepmc2.06.09/test/
+hepmc2.06.09/test/.cvsignore
+hepmc2.06.09/test/CMakeLists.txt
+hepmc2.06.09/test/IsGoodEvent.h
+hepmc2.06.09/test/Makefile.am
+hepmc2.06.09/test/list_of_examples.cc
+hepmc2.06.09/test/testCrossSection.dat
+hepmc2.06.09/test/testCrossSection.output
+hepmc2.06.09/test/testFlow.cc
+hepmc2.06.09/test/testFlow.output
+hepmc2.06.09/test/testFlow.sh.in
+hepmc2.06.09/test/testHepMC.cc.in
+hepmc2.06.09/test/testHepMC.dat
+hepmc2.06.09/test/testHepMC.output
+hepmc2.06.09/test/testHepMC.sh.in
+hepmc2.06.09/test/testHepMCIteration.cc.in
+hepmc2.06.09/test/testHepMCIteration.dat
+hepmc2.06.09/test/testHepMCIteration.h
+hepmc2.06.09/test/testHepMCIteration.sh.in
+hepmc2.06.09/test/testHepMCMethods.cc
+hepmc2.06.09/test/testHepMCMethods.h
+hepmc2.06.09/test/testHepMCParticle.output
+hepmc2.06.09/test/testHepMCVarious.input
+hepmc2.06.09/test/testHepMCVarious.output
+hepmc2.06.09/test/testIOGenEvent.input
+hepmc2.06.09/test/testMass.cc.in
+hepmc2.06.09/test/testMass.sh.in
+hepmc2.06.09/test/testMass1.dat
+hepmc2.06.09/test/testMultipleCopies.cc.in
+hepmc2.06.09/test/testPolarization.cc
+hepmc2.06.09/test/testPolarization.sh.in
+hepmc2.06.09/test/testPrintBug.cc
+hepmc2.06.09/test/testUnits.cc
+hepmc2.06.09/test/testPrintBug.output
+hepmc2.06.09/test/testPrintBug.sh.in
+hepmc2.06.09/test/testSimpleVector.cc
+hepmc2.06.09/test/testStreamIO.cc.in
+hepmc2.06.09/test/testStreamIO.output
+hepmc2.06.09/test/testStreamIO.sh.in
+hepmc2.06.09/test/testStreamIOVarious.dat
+hepmc2.06.09/test/testStreamIOVarious.output
+hepmc2.06.09/test/testWeights.cc
+hepmc2.06.09/test/testWithWeight.dat
+hepmc2.06.09/test/testWithWeight.output
+hepmc2.06.09/test/Makefile.in
+hepmc2.06.09/autom4te.cache/
+hepmc2.06.09/autom4te.cache/requests
+hepmc2.06.09/autom4te.cache/output.0
+hepmc2.06.09/autom4te.cache/traces.0
+hepmc2.06.09/autom4te.cache/output.1
+hepmc2.06.09/autom4te.cache/traces.1
+hepmc2.06.09/autom4te.cache/output.2
+hepmc2.06.09/autom4te.cache/traces.2
+hepmc2.06.09/aclocal.m4
+hepmc2.06.09/ltmain.sh
+hepmc2.06.09/configure
+hepmc2.06.09/config.guess
+hepmc2.06.09/config.sub
+hepmc2.06.09/install-sh
+hepmc2.06.09/missing
+hepmc2.06.09/depcomp
+hepmc2.06.09/Makefile.in
+ Enter HEPMC directory
+ Copying the hacked files 'WeightContainer.cc' and 'WeightContainer.h' to be capable of writing named weights in HepMC.
+ The autotools configure script already present; there is no need to run autoreconf manually.
+ Configure HEPMC
+./configure --prefix=/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc --with-momentum=GEV --with-length=MM
+checking build system type... x86_64-unknown-linux-gnu
+checking host system type... x86_64-unknown-linux-gnu
+checking target system type... x86_64-unknown-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking for C++ compiler default output file name... a.out
+checking whether the C++ compiler works... yes
+checking whether we are cross compiling... no
+checking for suffix of executables... 
+checking for suffix of object files... o
+checking whether we are using the GNU C++ compiler... yes
+checking whether /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ accepts -g... yes
+checking for style of include used by make... GNU
+checking dependency style of /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++... gcc3
+checking for gcc... /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc
+checking whether we are using the GNU C compiler... yes
+checking whether /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc accepts -g... yes
+checking for /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc option to accept ISO C89... none needed
+checking dependency style of /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc... gcc3
+checking whether make sets $(MAKE)... (cached) yes
+checking for gfortran... gfortran
+checking whether we are using the GNU Fortran 77 compiler... yes
+checking whether gfortran accepts -g... yes
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc... /cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld
+checking if the linker (/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/nm -B
+checking the name lister (/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking whether the shell understands some XSI constructs... yes
+checking whether the shell understands "+="... yes
+checking for /cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for ar... ar
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/nm -B output from /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc object... ok
+checking how to run the C preprocessor... /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking whether we are using the GNU C++ compiler... (cached) yes
+checking whether /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ accepts -g... (cached) yes
+checking dependency style of /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++... (cached) gcc3
+checking how to run the C++ preprocessor... /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -E
+checking whether we are using the GNU Fortran 77 compiler... (cached) yes
+checking whether gfortran accepts -g... (cached) yes
+checking for objdir... .libs
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc supports -fno-rtti -fno-exceptions... no
+checking for /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc option to produce PIC... -fPIC -DPIC
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc PIC flag -fPIC -DPIC works... yes
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc static flag -static works... yes
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc supports -c -o file.o... yes
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc supports -c -o file.o... (cached) yes
+checking whether the /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc linker (/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking for ld used by /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++... /cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld -m elf_x86_64
+checking if the linker (/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld -m elf_x86_64) is GNU ld... yes
+checking whether the /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ linker (/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking for /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ option to produce PIC... -fPIC -DPIC
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ PIC flag -fPIC -DPIC works... yes
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ static flag -static works... yes
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ supports -c -o file.o... yes
+checking if /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ supports -c -o file.o... (cached) yes
+checking whether the /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ linker (/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking for gfortran option to produce PIC... -fPIC
+checking if gfortran PIC flag -fPIC works... yes
+checking if gfortran static flag -static works... yes
+checking if gfortran supports -c -o file.o... yes
+checking if gfortran supports -c -o file.o... (cached) yes
+checking whether the gfortran linker (/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking for stdint.h... (cached) yes
+checking for stdbool.h that conforms to C99... yes
+checking for _Bool... yes
+checking for an ANSI C-conforming const... yes
+checking for inline... inline
+checking for ptrdiff_t... yes
+checking for ANSI C header files... (cached) yes
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating HepMC/Makefile
+config.status: creating doc/Makefile
+config.status: creating examples/Makefile
+config.status: creating examples/fio/Makefile
+config.status: creating examples/pythia8/Makefile
+config.status: creating fio/Makefile
+config.status: creating src/Makefile
+config.status: creating src/Units.cc
+config.status: creating test/Makefile
+config.status: creating test/testHepMC.cc
+config.status: creating test/testMass.cc
+config.status: creating test/testHepMCIteration.cc
+config.status: creating test/testMultipleCopies.cc
+config.status: creating test/testStreamIO.cc
+config.status: creating examples/GNUmakefile.example
+config.status: creating examples/fio/GNUmakefile.example
+config.status: creating examples/pythia8/config.csh
+config.status: creating examples/pythia8/config.sh
+config.status: creating examples/pythia8/GNUmakefile.example
+config.status: creating test/testHepMC.sh
+config.status: creating test/testFlow.sh
+config.status: creating test/testMass.sh
+config.status: creating test/testHepMCIteration.sh
+config.status: creating test/testPolarization.sh
+config.status: creating test/testPrintBug.sh
+config.status: creating test/testStreamIO.sh
+config.status: creating HepMC/defs.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+ Compile HEPMC
+Making all in HepMC
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+make  all-am
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+Making all in src
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/src'
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT CompareGenEvent.lo -MD -MP -MF .deps/CompareGenEvent.Tpo -c -o CompareGenEvent.lo CompareGenEvent.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT CompareGenEvent.lo -MD -MP -MF .deps/CompareGenEvent.Tpo -c CompareGenEvent.cc  -fPIC -DPIC -o .libs/CompareGenEvent.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT CompareGenEvent.lo -MD -MP -MF .deps/CompareGenEvent.Tpo -c CompareGenEvent.cc -o CompareGenEvent.o >/dev/null 2>&1
+mv -f .deps/CompareGenEvent.Tpo .deps/CompareGenEvent.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT Flow.lo -MD -MP -MF .deps/Flow.Tpo -c -o Flow.lo Flow.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT Flow.lo -MD -MP -MF .deps/Flow.Tpo -c Flow.cc  -fPIC -DPIC -o .libs/Flow.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT Flow.lo -MD -MP -MF .deps/Flow.Tpo -c Flow.cc -o Flow.o >/dev/null 2>&1
+mv -f .deps/Flow.Tpo .deps/Flow.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT GenEvent.lo -MD -MP -MF .deps/GenEvent.Tpo -c -o GenEvent.lo GenEvent.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenEvent.lo -MD -MP -MF .deps/GenEvent.Tpo -c GenEvent.cc  -fPIC -DPIC -o .libs/GenEvent.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenEvent.lo -MD -MP -MF .deps/GenEvent.Tpo -c GenEvent.cc -o GenEvent.o >/dev/null 2>&1
+mv -f .deps/GenEvent.Tpo .deps/GenEvent.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT GenEventStreamIO.lo -MD -MP -MF .deps/GenEventStreamIO.Tpo -c -o GenEventStreamIO.lo GenEventStreamIO.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenEventStreamIO.lo -MD -MP -MF .deps/GenEventStreamIO.Tpo -c GenEventStreamIO.cc  -fPIC -DPIC -o .libs/GenEventStreamIO.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenEventStreamIO.lo -MD -MP -MF .deps/GenEventStreamIO.Tpo -c GenEventStreamIO.cc -o GenEventStreamIO.o >/dev/null 2>&1
+mv -f .deps/GenEventStreamIO.Tpo .deps/GenEventStreamIO.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT GenParticle.lo -MD -MP -MF .deps/GenParticle.Tpo -c -o GenParticle.lo GenParticle.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenParticle.lo -MD -MP -MF .deps/GenParticle.Tpo -c GenParticle.cc  -fPIC -DPIC -o .libs/GenParticle.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenParticle.lo -MD -MP -MF .deps/GenParticle.Tpo -c GenParticle.cc -o GenParticle.o >/dev/null 2>&1
+mv -f .deps/GenParticle.Tpo .deps/GenParticle.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT GenCrossSection.lo -MD -MP -MF .deps/GenCrossSection.Tpo -c -o GenCrossSection.lo GenCrossSection.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenCrossSection.lo -MD -MP -MF .deps/GenCrossSection.Tpo -c GenCrossSection.cc  -fPIC -DPIC -o .libs/GenCrossSection.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenCrossSection.lo -MD -MP -MF .deps/GenCrossSection.Tpo -c GenCrossSection.cc -o GenCrossSection.o >/dev/null 2>&1
+mv -f .deps/GenCrossSection.Tpo .deps/GenCrossSection.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT GenVertex.lo -MD -MP -MF .deps/GenVertex.Tpo -c -o GenVertex.lo GenVertex.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenVertex.lo -MD -MP -MF .deps/GenVertex.Tpo -c GenVertex.cc  -fPIC -DPIC -o .libs/GenVertex.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenVertex.lo -MD -MP -MF .deps/GenVertex.Tpo -c GenVertex.cc -o GenVertex.o >/dev/null 2>&1
+mv -f .deps/GenVertex.Tpo .deps/GenVertex.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT GenRanges.lo -MD -MP -MF .deps/GenRanges.Tpo -c -o GenRanges.lo GenRanges.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenRanges.lo -MD -MP -MF .deps/GenRanges.Tpo -c GenRanges.cc  -fPIC -DPIC -o .libs/GenRanges.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT GenRanges.lo -MD -MP -MF .deps/GenRanges.Tpo -c GenRanges.cc -o GenRanges.o >/dev/null 2>&1
+mv -f .deps/GenRanges.Tpo .deps/GenRanges.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT HeavyIon.lo -MD -MP -MF .deps/HeavyIon.Tpo -c -o HeavyIon.lo HeavyIon.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT HeavyIon.lo -MD -MP -MF .deps/HeavyIon.Tpo -c HeavyIon.cc  -fPIC -DPIC -o .libs/HeavyIon.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT HeavyIon.lo -MD -MP -MF .deps/HeavyIon.Tpo -c HeavyIon.cc -o HeavyIon.o >/dev/null 2>&1
+mv -f .deps/HeavyIon.Tpo .deps/HeavyIon.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT IO_AsciiParticles.lo -MD -MP -MF .deps/IO_AsciiParticles.Tpo -c -o IO_AsciiParticles.lo IO_AsciiParticles.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_AsciiParticles.lo -MD -MP -MF .deps/IO_AsciiParticles.Tpo -c IO_AsciiParticles.cc  -fPIC -DPIC -o .libs/IO_AsciiParticles.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_AsciiParticles.lo -MD -MP -MF .deps/IO_AsciiParticles.Tpo -c IO_AsciiParticles.cc -o IO_AsciiParticles.o >/dev/null 2>&1
+mv -f .deps/IO_AsciiParticles.Tpo .deps/IO_AsciiParticles.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT IO_GenEvent.lo -MD -MP -MF .deps/IO_GenEvent.Tpo -c -o IO_GenEvent.lo IO_GenEvent.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_GenEvent.lo -MD -MP -MF .deps/IO_GenEvent.Tpo -c IO_GenEvent.cc  -fPIC -DPIC -o .libs/IO_GenEvent.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_GenEvent.lo -MD -MP -MF .deps/IO_GenEvent.Tpo -c IO_GenEvent.cc -o IO_GenEvent.o >/dev/null 2>&1
+mv -f .deps/IO_GenEvent.Tpo .deps/IO_GenEvent.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT PdfInfo.lo -MD -MP -MF .deps/PdfInfo.Tpo -c -o PdfInfo.lo PdfInfo.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT PdfInfo.lo -MD -MP -MF .deps/PdfInfo.Tpo -c PdfInfo.cc  -fPIC -DPIC -o .libs/PdfInfo.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT PdfInfo.lo -MD -MP -MF .deps/PdfInfo.Tpo -c PdfInfo.cc -o PdfInfo.o >/dev/null 2>&1
+mv -f .deps/PdfInfo.Tpo .deps/PdfInfo.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT Polarization.lo -MD -MP -MF .deps/Polarization.Tpo -c -o Polarization.lo Polarization.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT Polarization.lo -MD -MP -MF .deps/Polarization.Tpo -c Polarization.cc  -fPIC -DPIC -o .libs/Polarization.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT Polarization.lo -MD -MP -MF .deps/Polarization.Tpo -c Polarization.cc -o Polarization.o >/dev/null 2>&1
+mv -f .deps/Polarization.Tpo .deps/Polarization.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT SearchVector.lo -MD -MP -MF .deps/SearchVector.Tpo -c -o SearchVector.lo SearchVector.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT SearchVector.lo -MD -MP -MF .deps/SearchVector.Tpo -c SearchVector.cc  -fPIC -DPIC -o .libs/SearchVector.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT SearchVector.lo -MD -MP -MF .deps/SearchVector.Tpo -c SearchVector.cc -o SearchVector.o >/dev/null 2>&1
+mv -f .deps/SearchVector.Tpo .deps/SearchVector.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT StreamHelpers.lo -MD -MP -MF .deps/StreamHelpers.Tpo -c -o StreamHelpers.lo StreamHelpers.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT StreamHelpers.lo -MD -MP -MF .deps/StreamHelpers.Tpo -c StreamHelpers.cc  -fPIC -DPIC -o .libs/StreamHelpers.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT StreamHelpers.lo -MD -MP -MF .deps/StreamHelpers.Tpo -c StreamHelpers.cc -o StreamHelpers.o >/dev/null 2>&1
+mv -f .deps/StreamHelpers.Tpo .deps/StreamHelpers.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT StreamInfo.lo -MD -MP -MF .deps/StreamInfo.Tpo -c -o StreamInfo.lo StreamInfo.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT StreamInfo.lo -MD -MP -MF .deps/StreamInfo.Tpo -c StreamInfo.cc  -fPIC -DPIC -o .libs/StreamInfo.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT StreamInfo.lo -MD -MP -MF .deps/StreamInfo.Tpo -c StreamInfo.cc -o StreamInfo.o >/dev/null 2>&1
+mv -f .deps/StreamInfo.Tpo .deps/StreamInfo.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT Units.lo -MD -MP -MF .deps/Units.Tpo -c -o Units.lo Units.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT Units.lo -MD -MP -MF .deps/Units.Tpo -c Units.cc  -fPIC -DPIC -o .libs/Units.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT Units.lo -MD -MP -MF .deps/Units.Tpo -c Units.cc -o Units.o >/dev/null 2>&1
+mv -f .deps/Units.Tpo .deps/Units.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..   -ansi -pedantic -Wall -g -O2 -MT WeightContainer.lo -MD -MP -MF .deps/WeightContainer.Tpo -c -o WeightContainer.lo WeightContainer.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT WeightContainer.lo -MD -MP -MF .deps/WeightContainer.Tpo -c WeightContainer.cc  -fPIC -DPIC -o .libs/WeightContainer.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT WeightContainer.lo -MD -MP -MF .deps/WeightContainer.Tpo -c WeightContainer.cc -o WeightContainer.o >/dev/null 2>&1
+mv -f .deps/WeightContainer.Tpo .deps/WeightContainer.Plo
+/bin/sh ../libtool --tag=CXX   --mode=link /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -ansi -pedantic -Wall -g -O2 -version-info 4:0:0  -o libHepMC.la -rpath /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib CompareGenEvent.lo Flow.lo GenEvent.lo GenEventStreamIO.lo GenParticle.lo GenCrossSection.lo GenVertex.lo GenRanges.lo HeavyIon.lo IO_AsciiParticles.lo IO_GenEvent.lo PdfInfo.lo Polarization.lo SearchVector.lo StreamHelpers.lo StreamInfo.lo Units.lo WeightContainer.lo  
+libtool: link: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -shared -nostdlib /lib/../lib64/crti.o /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/crtbeginS.o  .libs/CompareGenEvent.o .libs/Flow.o .libs/GenEvent.o .libs/GenEventStreamIO.o .libs/GenParticle.o .libs/GenCrossSection.o .libs/GenVertex.o .libs/GenRanges.o .libs/HeavyIon.o .libs/IO_AsciiParticles.o .libs/IO_GenEvent.o .libs/PdfInfo.o .libs/Polarization.o .libs/SearchVector.o .libs/StreamHelpers.o .libs/StreamInfo.o .libs/Units.o .libs/WeightContainer.o   -Wl,-rpath -Wl,/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/lib/../lib64 -Wl,-rpath -Wl,/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/lib/../lib64 -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0 -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/../../.. /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/lib/../lib64/libstdc++.so -lm -lc -lgcc_s /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/crtendS.o /lib/../lib64/crtn.o    -Wl,-soname -Wl,libHepMC.so.4 -o .libs/libHepMC.so.4.0.0
+libtool: link: (cd ".libs" && rm -f "libHepMC.so.4" && ln -s "libHepMC.so.4.0.0" "libHepMC.so.4")
+libtool: link: (cd ".libs" && rm -f "libHepMC.so" && ln -s "libHepMC.so.4.0.0" "libHepMC.so")
+libtool: link: ar cru .libs/libHepMC.a  CompareGenEvent.o Flow.o GenEvent.o GenEventStreamIO.o GenParticle.o GenCrossSection.o GenVertex.o GenRanges.o HeavyIon.o IO_AsciiParticles.o IO_GenEvent.o PdfInfo.o Polarization.o SearchVector.o StreamHelpers.o StreamInfo.o Units.o WeightContainer.o
+libtool: link: ranlib .libs/libHepMC.a
+libtool: link: ( cd ".libs" && rm -f "libHepMC.la" && ln -s "../libHepMC.la" "libHepMC.la" )
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/src'
+Making all in fio
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/fio'
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..    -ansi -pedantic -Wall -g -O2 -MT HEPEVT_Wrapper.lo -MD -MP -MF .deps/HEPEVT_Wrapper.Tpo -c -o HEPEVT_Wrapper.lo HEPEVT_Wrapper.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT HEPEVT_Wrapper.lo -MD -MP -MF .deps/HEPEVT_Wrapper.Tpo -c HEPEVT_Wrapper.cc  -fPIC -DPIC -o .libs/HEPEVT_Wrapper.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT HEPEVT_Wrapper.lo -MD -MP -MF .deps/HEPEVT_Wrapper.Tpo -c HEPEVT_Wrapper.cc -o HEPEVT_Wrapper.o >/dev/null 2>&1
+mv -f .deps/HEPEVT_Wrapper.Tpo .deps/HEPEVT_Wrapper.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..    -ansi -pedantic -Wall -g -O2 -MT IO_HEPEVT.lo -MD -MP -MF .deps/IO_HEPEVT.Tpo -c -o IO_HEPEVT.lo IO_HEPEVT.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_HEPEVT.lo -MD -MP -MF .deps/IO_HEPEVT.Tpo -c IO_HEPEVT.cc  -fPIC -DPIC -o .libs/IO_HEPEVT.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_HEPEVT.lo -MD -MP -MF .deps/IO_HEPEVT.Tpo -c IO_HEPEVT.cc -o IO_HEPEVT.o >/dev/null 2>&1
+mv -f .deps/IO_HEPEVT.Tpo .deps/IO_HEPEVT.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..    -ansi -pedantic -Wall -g -O2 -MT IO_HERWIG.lo -MD -MP -MF .deps/IO_HERWIG.Tpo -c -o IO_HERWIG.lo IO_HERWIG.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_HERWIG.lo -MD -MP -MF .deps/IO_HERWIG.Tpo -c IO_HERWIG.cc  -fPIC -DPIC -o .libs/IO_HERWIG.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT IO_HERWIG.lo -MD -MP -MF .deps/IO_HERWIG.Tpo -c IO_HERWIG.cc -o IO_HERWIG.o >/dev/null 2>&1
+mv -f .deps/IO_HERWIG.Tpo .deps/IO_HERWIG.Plo
+/bin/sh ../libtool --tag=CXX   --mode=compile /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I..    -ansi -pedantic -Wall -g -O2 -MT HerwigWrapper.lo -MD -MP -MF .deps/HerwigWrapper.Tpo -c -o HerwigWrapper.lo HerwigWrapper.cc
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT HerwigWrapper.lo -MD -MP -MF .deps/HerwigWrapper.Tpo -c HerwigWrapper.cc  -fPIC -DPIC -o .libs/HerwigWrapper.o
+libtool: compile:  /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -DHAVE_CONFIG_H -I. -I../HepMC -I.. -I.. -ansi -pedantic -Wall -g -O2 -MT HerwigWrapper.lo -MD -MP -MF .deps/HerwigWrapper.Tpo -c HerwigWrapper.cc -o HerwigWrapper.o >/dev/null 2>&1
+mv -f .deps/HerwigWrapper.Tpo .deps/HerwigWrapper.Plo
+/bin/sh ../libtool --tag=CXX   --mode=link /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -ansi -pedantic -Wall -g -O2 -version-info 4:0:0  -o libHepMCfio.la -rpath /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib HEPEVT_Wrapper.lo IO_HEPEVT.lo IO_HERWIG.lo HerwigWrapper.lo  
+libtool: link: /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ -shared -nostdlib /lib/../lib64/crti.o /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/crtbeginS.o  .libs/HEPEVT_Wrapper.o .libs/IO_HEPEVT.o .libs/IO_HERWIG.o .libs/HerwigWrapper.o   -Wl,-rpath -Wl,/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/lib/../lib64 -Wl,-rpath -Wl,/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/lib/../lib64 -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0 -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/../../.. /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/lib/../lib64/libstdc++.so -lm -lc -lgcc_s /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0/crtendS.o /lib/../lib64/crtn.o    -Wl,-soname -Wl,libHepMCfio.so.4 -o .libs/libHepMCfio.so.4.0.0
+libtool: link: (cd ".libs" && rm -f "libHepMCfio.so.4" && ln -s "libHepMCfio.so.4.0.0" "libHepMCfio.so.4")
+libtool: link: (cd ".libs" && rm -f "libHepMCfio.so" && ln -s "libHepMCfio.so.4.0.0" "libHepMCfio.so")
+libtool: link: ar cru .libs/libHepMCfio.a  HEPEVT_Wrapper.o IO_HEPEVT.o IO_HERWIG.o HerwigWrapper.o
+libtool: link: ranlib .libs/libHepMCfio.a
+libtool: link: ( cd ".libs" && rm -f "libHepMCfio.la" && ln -s "../libHepMCfio.la" "libHepMCfio.la" )
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/fio'
+Making all in test
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/test'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/test'
+Making all in examples
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples'
+Making all in examples/fio
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/fio'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/fio'
+Making all in examples/pythia8
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/pythia8'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/pythia8'
+Making all in doc
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/doc'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/doc'
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09'
+make[1]: Nothing to be done for `all-am'.
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09'
+ Install HEPMC
+Making install in HepMC
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+make[2]: Nothing to be done for `install-exec-am'.
+test -z "/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/include/HepMC" || /usr/bin/mkdir -p "/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/include/HepMC"
+ /usr/bin/install -c -m 644 CompareGenEvent.h Flow.h GenEvent.h GenParticle.h GenVertex.h GenCrossSection.h GenRanges.h HeavyIon.h HEPEVT_Wrapper.h HerwigWrapper.h IO_AsciiParticles.h IO_BaseClass.h IO_Exception.h IO_GenEvent.h IO_HEPEVT.h IO_HERWIG.h IteratorRange.h PdfInfo.h Polarization.h PythiaWrapper6_4.h PythiaWrapper6_4_WIN32.h PythiaWrapper.h WeightContainer.h SearchVector.h SimpleVector.h SimpleVector.icc StreamHelpers.h StreamInfo.h enable_if.h is_arithmetic.h TempParticleMap.h Units.h Version.h HepMCDefs.h '/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/include/HepMC'
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/HepMC'
+Making install in src
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/src'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/src'
+test -z "/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib" || /usr/bin/mkdir -p "/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib"
+ /bin/sh ../libtool   --mode=install /usr/bin/install -c   libHepMC.la '/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib'
+libtool: install: /usr/bin/install -c .libs/libHepMC.so.4.0.0 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMC.so.4.0.0
+libtool: install: (cd /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib && { ln -s -f libHepMC.so.4.0.0 libHepMC.so.4 || { rm -f libHepMC.so.4 && ln -s libHepMC.so.4.0.0 libHepMC.so.4; }; })
+libtool: install: (cd /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib && { ln -s -f libHepMC.so.4.0.0 libHepMC.so || { rm -f libHepMC.so && ln -s libHepMC.so.4.0.0 libHepMC.so; }; })
+libtool: install: /usr/bin/install -c .libs/libHepMC.lai /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMC.la
+libtool: install: /usr/bin/install -c .libs/libHepMC.a /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMC.a
+libtool: install: chmod 644 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMC.a
+libtool: install: ranlib /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMC.a
+libtool: finish: PATH="/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/bin:/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/lhapdf_build/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_94/x86_64-slc6-gcc7-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin:/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/lhapdf_build/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_94/x86_64-slc6-gcc7-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_94/x86_64-slc6-gcc7-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin:/afs/cern.ch/atlas/scripts:/usr/sue/bin:/usr/lib64/qt-3.3/bin:/usr/condabin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/puppetlabs/bin:/afs/cern.ch/user/d/dimoulin/.local/bin:/afs/cern.ch/user/d/dimoulin/bin:/sbin" ldconfig -n /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the `-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the `LD_RUN_PATH' environment variable
+     during linking
+   - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+make[2]: Nothing to be done for `install-data-am'.
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/src'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/src'
+Making install in fio
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/fio'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/fio'
+test -z "/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib" || /usr/bin/mkdir -p "/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib"
+ /bin/sh ../libtool   --mode=install /usr/bin/install -c   libHepMCfio.la '/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib'
+libtool: install: /usr/bin/install -c .libs/libHepMCfio.so.4.0.0 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMCfio.so.4.0.0
+libtool: install: (cd /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib && { ln -s -f libHepMCfio.so.4.0.0 libHepMCfio.so.4 || { rm -f libHepMCfio.so.4 && ln -s libHepMCfio.so.4.0.0 libHepMCfio.so.4; }; })
+libtool: install: (cd /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib && { ln -s -f libHepMCfio.so.4.0.0 libHepMCfio.so || { rm -f libHepMCfio.so && ln -s libHepMCfio.so.4.0.0 libHepMCfio.so; }; })
+libtool: install: /usr/bin/install -c .libs/libHepMCfio.lai /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMCfio.la
+libtool: install: /usr/bin/install -c .libs/libHepMCfio.a /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMCfio.a
+libtool: install: chmod 644 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMCfio.a
+libtool: install: ranlib /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib/libHepMCfio.a
+libtool: finish: PATH="/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/bin:/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/lhapdf_build/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_94/x86_64-slc6-gcc7-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin:/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/lhapdf_build/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_94/x86_64-slc6-gcc7-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/views/LCG_94/x86_64-slc6-gcc7-opt/bin:/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin:/cvmfs/sft.cern.ch/lcg/releases/binutils/2.28-a983d/x86_64-slc6/bin:/afs/cern.ch/atlas/scripts:/usr/sue/bin:/usr/lib64/qt-3.3/bin:/usr/condabin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/puppetlabs/bin:/afs/cern.ch/user/d/dimoulin/.local/bin:/afs/cern.ch/user/d/dimoulin/bin:/sbin" ldconfig -n /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the `-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the `LD_RUN_PATH' environment variable
+     during linking
+   - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+make[2]: Nothing to be done for `install-data-am'.
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/fio'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/fio'
+Making install in test
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/test'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/test'
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/test'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/test'
+Making install in examples
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples'
+make[2]: Nothing to be done for `install-exec-am'.
+/bin/sh /tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/install-sh -d /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples
+/usr/bin/install -c -m 644 GNUmakefile.example /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/GNUmakefile
+for file in example_BuildEventFromScratch.cc example_EventSelection.cc example_UsingIterators.cc example_VectorConversion.cc VectorConversion.h example_UsingIterators.txt; do \
+  /usr/bin/install -c -m 644 ./$file /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/$file; done
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples'
+Making install in examples/fio
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/fio'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/fio'
+make[2]: Nothing to be done for `install-exec-am'.
+/bin/sh /tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/install-sh -d /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/fio
+/usr/bin/install -c -m 644 GNUmakefile.example /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/fio/GNUmakefile
+for file in example_MyHerwig.cc example_MyPythia.cc example_MyPythiaOnlyToHepMC.cc example_PythiaStreamIO.cc testHerwigCopies.cc testPythiaCopies.cc initPythia.cc initpydata.f PythiaHelper.h; do \
+  /usr/bin/install -c -m 644 ./$file /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/fio/$file; done
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/fio'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/fio'
+Making install in examples/pythia8
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/pythia8'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/pythia8'
+make[2]: Nothing to be done for `install-exec-am'.
+/bin/sh /tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/install-sh -d /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/pythia8
+/usr/bin/install -c -m 644 GNUmakefile.example /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/pythia8/GNUmakefile
+/usr/bin/install -c -m 644 config.csh /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/pythia8/config.csh
+/usr/bin/install -c -m 644 config.sh /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/pythia8/config.sh
+for file in main31.cc main32.cc main32.cmnd README; do \
+  /usr/bin/install -c -m 644 ./$file /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/examples/pythia8/$file; done
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/pythia8'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/examples/pythia8'
+Making install in doc
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/doc'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/doc'
+make[2]: Nothing to be done for `install-exec-am'.
+/bin/sh /tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/install-sh -d /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/doc
+list='HepMC2_user_manual.pdf HepMC2_reference_manual.pdf'; for file in $list; do \
+if test -f ../doc/$file; then  \
+(/usr/bin/install -c -m 644 ../doc/$file /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/share/HepMC/doc/$file); \
+fi; done
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/doc'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09/doc'
+make[1]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09'
+make[2]: Entering directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09'
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+make[2]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09'
+make[1]: Leaving directory `/tmp/dimoulin/tmpD8eWOV/hepmc2.06.09'
+ Finished HEPMC installation
+test passed

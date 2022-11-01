@@ -1,0 +1,56 @@
+#! /usr/bin/env python
+# -*- python -*-
+
+import sys
+import lhapdf
+lhapdf.setVerbosity(0)
+lhamajversion = ".".join( lhapdf.version().split(".")[:2] ) #< TODO: convert to full version?
+
+sets = {}
+nvalid = 0
+for psname in lhapdf.availablePDFSets():
+    ps = lhapdf.getPDFSet(psname)
+    if ps.lhapdfID > 0:
+        if ps.lhapdfID in sets:
+            msg = "Duplicate LHAPDF ID = {lhaid:d}, {name2} replacing {name1}\n"\
+                  .format(lhaid=ps.lhapdfID, name1=sets[ps.lhapdfID].name, name2=psname)
+            sys.stderr.write(msg)
+        sets[ps.lhapdfID] = ps
+        if ps.dataversion > 0:
+            nvalid += 1
+
+s = "/**\n"
+s += "@page pdfsets PDF sets\n\n"
+
+s += """<b>Official LHAPDF&nbsp;{lhaversion} PDF sets: currently {nsets} available, of which {nvalid} are validated.</b>
+
+See http://www.hepforge.org/archive/lhapdf/pdfsets/{lhaversion} for data downloads.\n\n"""\
+     .format(nsets=len(sets), nvalid=nvalid, lhaversion=lhamajversion)
+
+s += """All sets migrated from LHAPDF v5 behave very closely to the originals, usually within
+1 part in 1000 across x,Q space. Sometimes larger, but very localised, deviations are found at the
+edges of the x,Q grid or on flavour thresholds: these should not be physically
+important. See http://lhapdf.hepforge.org/validationpdfs/ for a full set of validation
+plots for each set's central member.\n\n"""
+
+s += """In the table, green rows indicate sets which have been officially approved
+for LHAPDF6 by their authors. Red rows indicate those which have not yet been so
+approved. Unvalidated sets may still be used, but please take care.\n\n"""
+
+s += "  <table>\n"
+s += "    <tr><th>%LHAPDF ID</th><th>Set name</th><th>Number of set members</th><th>Latest data version</th><th>Notes</th></tr>\n"
+
+for lhaid, ps in sorted(sets.items()):
+    color = "#fee" if ps.dataversion < 0 else "#efe"
+    baseurl = "http://www.hepforge.org/archive/lhapdf/pdfsets/" + str(lhamajversion)
+    if ps.dataversion < 0:
+        baseurl += "/unvalidated"
+    url = baseurl + ("/%s.tar.gz" % ps.name)
+    s += '    <tr style="background-color: {col};"><td>{id}</td><td><a href="{url}">{name}</a></td><td>{size}</td><td>{version}</td><td>{note}</td></tr>\n'.\
+         format(col=color, id=lhaid, url=url, name=ps.name, size=ps.size, version=ps.dataversion, note=ps.get_entry("Note", ""))
+
+s += "  </table>\n"
+
+s += "\n*/\n"
+
+print(s)

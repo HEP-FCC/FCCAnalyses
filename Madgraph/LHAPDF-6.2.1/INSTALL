@@ -1,0 +1,208 @@
+/**
+@page install Installation instructions
+
+@tableofcontents
+
+
+@section downloads Source file downloads
+
+The source files can be downloaded from https://www.hepforge.org/downloads/lhapdf
+
+
+@section quickstart Quick start instructions
+
+If you have a C++11 compiler, building LHAPDF >= 6.2 should be straightforward:
+
+    wget http://www.hepforge.org/archive/lhapdf/LHAPDF-6.X.Y.tar.gz
+    tar xf LHAPDF-6.X.Y.tar.gz
+    cd LHAPDF-6.X.Y
+    ./configure --prefix=/path/for/installation
+    make
+    make install
+
+You will then need to install PDF data files, most easily using the "lhapdf"
+manager script but also possible by manual download. See the LHAPDF website for
+details.
+
+On systems where you want to use non-system compilers and libraries, the
+configure command will need to be a bit more complicated: see the following for
+more information.
+
+Version 6.2.0 of LHAPDF, and later, have no external library
+dependencies. Earlier versions rely on the Boost C++ header library. We
+recommend upgrading to the current series to avoid that complication (and
+benefit from other improvements, too).
+
+
+@section compilers Build tools
+
+LHAPDF6 just needs your system to have a copy of Make and a C++11 compiler:
+there is no Fortran code and hence no need for gfortran. We have tested with
+both the g++ and clang++ compilers.
+
+Note that fairly recent compiler versions are needed, to get C++11 support: g++
+>= 4.8.5 and clang++ >= 3.3. The `-std=c++11` flag, if needed, will be added
+automatically by the LHAPDF configure script.
+
+Building LHAPDF is typically straightforward on Linux systems, including CC7
+and Ubuntu. Mac OS X, however, can cause problems due to inconsistent compiler
+and Python versions, and other such fun. If you want to build LHAPDF on a Mac,
+please see @ref osx.
+
+
+@subsection pyext Python
+
+If you want to build the Python interface to LHAPDF (which is very nice!), you
+will need the Python development headers to be installed (e.g. via the
+`python-dev` Ubuntu package). If the `Python.h` header is not found by
+`configure`, no Python extension module will be built.
+
+
+@section lhapdf Building LHAPDF
+
+If you have downloaded a release tarball for LHAPDF 6.X.Y, unpack it with `tar
+xf LHAPDF-6.X.Y.tar.gz`, then `cd` to the newly-created directory.
+
+@note If checking out from version control rather than unpacking a tarball,
+again `cd` to the new directory, but you must then also run `autoreconf -i`
+before proceeding to the instructions below. There will also be more
+requirements for external packages if you build this way, since this is the
+"developer" route to building LHAPDF and requires a bit more expertise.
+
+Now you should run the `configure` script to analyse your machine, compiler,
+etc. and set up the Makefiles. You will probably need to provide the `--prefix`
+argument to `configure` to tell it where you want to install LHAPDF (probably
+you don't want to install to `/usr/local`, which is the default). For example,
+
+    ./configure --prefix=$HOME/local
+
+An example build script for LHAPDF6 on the CERN lxplus6 system is shown at the
+end of these instructions.
+
+
+@subsection altcomp Alternative compilers
+
+If you want to use an alternative C++ compiler, then you can specify the CXX
+variable on the command line. This is essential on OS X Mavericks and later,
+where the consistent compiler suite is clang rather than gcc -- in that
+situation, use:
+
+    ./configure --prefix=... CXX=clang++
+
+The configure script will run and produce quite a bit of output from its various
+tests. Hopefully everything will be successful: if it gets to the end without
+stopping due to an error then all is well.
+
+Then just call `make` to build the library (or e.g. `make -j4` to compile 4
+files in parallel -- if your machine has enough processor cores to do so, even
+`-j2` will speed up the build quite a bit). To install LHAPDF to the `--prefix`
+location that you specified, call `make install`. You will (or at least
+*should(!) find installed files in `$prefix/lib`, `$prefix/include/LHAPDF`, and
+`$prefix/share/LHAPDF`.
+
+
+@section lxplus Building on lxplus / LCG
+
+CERN's lxplus6 shared system is always an awkward environment to build packages,
+since the system compiler etc. are not part of the LCG supported list of
+architectures.
+
+The SLC6 system compiler is too old to support C++11, and hence
+setting up a non-system compiler (and consistent Python) is mandatory even if not
+wishing to interact with LCG/experiment tools; on CC7 the system compiler is (just)
+new enough for C++11, and so you can use the system environment and make a completely
+standard build if you don't need to be LCG-compatible.
+
+Here is an example of how to build LHAPDF using LCG tools on lxplus6 and lxplus7 --
+although you can of course use other compilers, Python versions, build flags, etc. as you wish.
+
+    ## Set up LCG compiler & Python (required on SLC6/lxplus6, optional on CC7/lxplus7)
+    source /cvmfs/sft.cern.ch/lcg/releases/LCG_87/gcc/4.9.3/x86_64-slc6/setup.sh
+    source /cvmfs/sft.cern.ch/lcg/releases/LCG_87/Python/2.7.10/x86_64-slc6-gcc49-opt/Python-env.sh
+
+    ## Make an install directory
+    mkdir local
+
+    ## Build LHAPDF
+    wget http://www.hepforge.org/archive/lhapdf/LHAPDF-6.X.Y.tar.gz -O- | tar xz
+    cd LHAPDF-6.X.Y
+    ./configure --prefix=$PWD/../local
+    make -j2 && make install
+    cd ..
+
+    ## Set environment variables
+    export PATH=$PWD/local/bin:$PATH
+    export LD_LIBRARY_PATH=$PWD/local/lib:$LD_LIBRARY_PATH
+    export PYTHONPATH=$PWD/local/lib64/python2.6/site-packages:$PYTHONPATH
+
+    ## Test the scripts
+    lhapdf-config --help
+    lhapdf list
+
+
+@section osx Building on Mac OS X
+
+Builds are typically straightforward on Linux, but Mac OS X unfortunately has a
+long history of incoherent system compiler setups, which have been worked around
+manually by users' private installations of Fink, MacPorts, HomeBrew and manual
+tarball installations of required tools. These work-arounds can themselves be
+the source of problems when the native compilers or Python libraries get
+updated, and due to the ad hoc nature of such installations we are restricted in
+how much we can help to get LHAPDF to compile on a broken system: it is the
+user's responsibility to make sure that their machine has a consistent set of
+build tools!
+
+From experience, the simplest reliable route seems to be to
+run a fresh copy of OS X 10.9 Mavericks (or later) without any additional manual
+compiler installations: if you use the clang++ compiler on such a system,
+LHAPDF6 building should "just work".
+
+@note At the time of writing there is a bug in the Mac Python version which
+requires that you call `export CPPFLAGS=-Qunused-arguments` and `export
+CFLAGS=-Qunused-arguments` before building. Alternatively you can run the
+configure script with `--disable-python`, which avoids the bug at the cost of
+not building the very useful Python interface to LHAPDF.
+
+The Mac OS X "Homebrew" system (http://brew.sh/) comes recommended by several
+LHAPDF developers. Many HEP packages are already available for Homebrew via the
+homebrew-hep project: http://davidchall.github.io/homebrew-hep/ . Success has
+also been reported with the MacPorts system (http://www.macports.org/): please
+see HepForge's information about MacPorts at https://www.hepforge.org/docs/macosx .
+With both these approaches, you should set your environment to *only* use
+compilers and Python from the Brew/Ports area and to ignore the system packages:
+a hybrid approach will only cause unnecessary pain.
+
+
+@section boost Boost (for LHAPDF < 6.2)
+
+Until LHAPDF 6.2.0, we made use of header files from the Boost C++ utility
+library (http://www.boost.org). This made building LHAPDF a bit more complex,
+and for reference we include some troubleshooting information here... for
+now. The much better solution, however, is to use the current version which has
+no such dependency.
+
+If Boost is installed in the system `/usr` directory tree, via your machine's
+packaging system, it should be discovered automatically. If not, you will need to use
+something like
+
+    ./configure --prefix=$HOME/local --with-boost=$HOME/pkgs/boost-1_58
+
+for your LHAPDF configuration step.
+
+On Linux machines, Boost this should typically be available via
+your system's packaging mechanism, e.g. the `libboost-all-dev` package on Ubuntu
+and other Debian derivatives. On Scientific Linux 6 the system installation of
+Boost is sufficient.
+
+Building Boost by hand is not particularly simple and should not be needed in
+most cases: we recommend avoiding this! If you have access to the CERN AFS
+filesystem, you can find builds of Boost for various platforms in the
+`/afs/cern.ch/sw/lcg/external/Boost/` directory. If you really want or need to
+do it manually, version 6.0.5 and later of LHAPDF only use Boost headers
+(previous ones used compiled libraries) and rather than fully building Boost,
+you can just use the header files direct from its source tarball: this is not
+wonderfully neat, but is a lot easier than doing a full manual build and
+installation of the Boost libraries.
+
+
+*/

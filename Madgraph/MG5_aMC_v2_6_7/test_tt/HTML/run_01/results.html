@@ -1,0 +1,122 @@
+
+<head>
+    <title>Process results</title>
+    <script type="text/javascript" src="../sortable.js"></script>
+    <link rel=stylesheet href="../mgstyle.css" type="text/css">
+</head>
+<body>
+<script type="text/javascript">
+function UrlExists(url) {
+  var http = new XMLHttpRequest();
+  http.open('HEAD', url, false);
+  try{
+     http.send()
+     }
+  catch(err){
+   return 1==2;
+  }
+  return http.status!=404;
+}
+function check_link(url,alt, id){
+    var obj = document.getElementById(id);
+    if ( ! UrlExists(url)){
+        if ( ! UrlExists(alt)){
+         obj.href = alt;
+         return true;
+        }
+       obj.href = alt;
+       return false;
+    }
+    obj.href = url;
+    return 1==1;
+}
+</script>
+  
+
+ <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>s= 505.75 &#177 0.791 (pb)</b><br><br>
+<table class="sortable" id='tablesort'>
+<tr><th>Graph</th>
+    <th> Cross-Section</th>
+    <th>Error</th>
+    <th>Events (K)</th>
+    <th>Unwgt</th>
+    <th>Luminosity</th>
+</tr>
+
+<tr><td align=right>/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx</td>
+    <td align=right><a id="#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx" href=#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx onClick="check_link('#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx','#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx','#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx')"> 441.7 </a> </td>
+    <td align=right>  0.624</td>
+    <td align=right>  205.012</td>
+    <td align=right>  11644.0</td>
+    <td align=right>  0</td>
+</tr>
+
+<tr><td align=right>/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx</td>
+    <td align=right><a id="#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx" href=#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx onClick="check_link('#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx','#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx','#/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx')"> 64.04 </a> </td>
+    <td align=right>  0.485</td>
+    <td align=right>  30.076</td>
+    <td align=right>  1753.0</td>
+    <td align=right>  0</td>
+</tr>
+
+</table>
+</center>
+<br><br><br>
+ <dl>  
+
+ <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>s= 441.7 &#177 0.624 (pb)</b><br><br>
+<table class="sortable" id='tablesort'>
+<tr><th>Graph</th>
+    <th> Cross-Section</th>
+    <th>Error</th>
+    <th>Events (K)</th>
+    <th>Unwgt</th>
+    <th>Luminosity</th>
+</tr>
+
+<tr><td align=right>G1</td>
+    <td align=right><a id="/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G1/run1_app.log" href=/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G1/run1_app.log onClick="check_link('/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G1/run1_app.log','../../SubProcesses/P1_gg_ttx/G1/log.txt','/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G1/run1_app.log')"> 47.24 </a> </td>
+    <td align=right>  0.275</td>
+    <td align=right>  32.922</td>
+    <td align=right>  1789.0</td>
+    <td align=right>  37.9</td>
+</tr>
+
+<tr><td align=right>G2</td>
+    <td align=right><a id="/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G2/run1_app.log" href=/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G2/run1_app.log onClick="check_link('/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G2/run1_app.log','../../SubProcesses/P1_gg_ttx/G2/log.txt','/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_gg_ttx/../../SubProcesses/P1_gg_ttx/G2/run1_app.log')"> 394.5 </a> </td>
+    <td align=right>  0.56</td>
+    <td align=right>  172.09</td>
+    <td align=right>  9855.0</td>
+    <td align=right>  25</td>
+</tr>
+
+</table>
+</center>
+<br><br><br>
+  
+
+ <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>s= 64.044 &#177 0.485 (pb)</b><br><br>
+<table class="sortable" id='tablesort'>
+<tr><th>Graph</th>
+    <th> Cross-Section</th>
+    <th>Error</th>
+    <th>Events (K)</th>
+    <th>Unwgt</th>
+    <th>Luminosity</th>
+</tr>
+
+<tr><td align=right>G1</td>
+    <td align=right><a id="/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx/../../SubProcesses/P1_qq_ttx/G1/run1_app.log" href=/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx/../../SubProcesses/P1_qq_ttx/G1/run1_app.log onClick="check_link('/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx/../../SubProcesses/P1_qq_ttx/G1/run1_app.log','../../SubProcesses/P1_qq_ttx/G1/log.txt','/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/test_tt/SubProcesses/P1_qq_ttx/../../SubProcesses/P1_qq_ttx/G1/run1_app.log')"> 64.04 </a> </td>
+    <td align=right>  0.485</td>
+    <td align=right>  30.076</td>
+    <td align=right>  1753.0</td>
+    <td align=right>  27.4</td>
+</tr>
+
+</table>
+</center>
+<br><br><br>
+ </dl></body>

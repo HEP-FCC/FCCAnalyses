@@ -1,0 +1,177 @@
+# This file was automatically created by FeynRules 2.3.36
+# Mathematica version: 12.0.0 for Mac OS X x86 (64-bit) (April 7, 2019)
+# Date: Thu 13 Aug 2020 18:59:11
+
+
+# 
+# This is the logfile for the model SM_HeavyN
+
+# Authors: R. Ruiz
+# Model version: 2.2
+# Checking the Quantum numbers
+   * Electric charge defined.
+# Checking the Lagrangians
+   * All Lagrangians are ok.
+#
+# Particle definitions
+#
+
+   * No particles removed. All particles correspond to GenInt setup.
+
+# Automatically assigned PDG numbers
+   * Assigned PDG number 9000001 to particle ghA
+   * Assigned PDG number 9000002 to particle ghZ
+   * Assigned PDG number 9000003 to particle ghWp
+   * Assigned PDG number 9000004 to particle ghWm
+
+
+# Compulsory PDG codes:
+   * Class SM leptons complete.
+   * Class SM neutrinos complete.
+   * Class SM quarks complete.
+   * Class SM gauge bosons complete.
+#
+# Parameter definitions
+#
+
+   * All parameters are ok.
+
+
+# Vertices
+   * Calling FeynmanRules for 1 Lagrangians.
+   * Number of classes vertices: 253
+   * Number of flavored vertices: 253
+   * Saved vertices in InterfaceRun[ 2 ].
+   * Checked QNumber conservation.
+      - Quantum number GhostNumber conserved in all vertices.
+      - Quantum number LeptonNumber NOT conserved in the following vertices
+          {GP, N1, e}
+          {GP, N1, mu}
+          {GP, N1, ta}
+          {G0, N1, ve}
+          {H, N1, ve}
+          {G0, N1, vm}
+          {H, N1, vm}
+          {G0, N1, vt}
+          {H, N1, vt}
+          {GP, N2, e}
+          {GP, N2, mu}
+          {GP, N2, ta}
+          {G0, N2, ve}
+          {H, N2, ve}
+          {G0, N2, vm}
+          {H, N2, vm}
+          {G0, N2, vt}
+          {H, N2, vt}
+          {GP, N3, e}
+          {GP, N3, mu}
+          {GP, N3, ta}
+          {G0, N3, ve}
+          {H, N3, ve}
+          {G0, N3, vm}
+          {H, N3, vm}
+          {G0, N3, vt}
+          {H, N3, vt}
+          {GPbar, ebar, N1}
+          {GPbar, ebar, N2}
+          {GPbar, ebar, N3}
+          {GPbar, mubar, N1}
+          {GPbar, mubar, N2}
+          {GPbar, mubar, N3}
+          {GPbar, tabar, N1}
+          {GPbar, tabar, N2}
+          {GPbar, tabar, N3}
+          {G0, vebar, N1}
+          {H, vebar, N1}
+          {G0, vebar, N2}
+          {H, vebar, N2}
+          {G0, vebar, N3}
+          {H, vebar, N3}
+          {G0, vmbar, N1}
+          {H, vmbar, N1}
+          {G0, vmbar, N2}
+          {H, vmbar, N2}
+          {G0, vmbar, N3}
+          {H, vmbar, N3}
+          {G0, vtbar, N1}
+          {H, vtbar, N1}
+          {G0, vtbar, N2}
+          {H, vtbar, N2}
+          {G0, vtbar, N3}
+          {H, vtbar, N3}
+          {Wbar, ebar, N1}
+          {Wbar, ebar, N2}
+          {Wbar, ebar, N3}
+          {Wbar, mubar, N1}
+          {Wbar, mubar, N2}
+          {Wbar, mubar, N3}
+          {W, N1, e}
+          {W, N1, mu}
+          {W, N1, ta}
+          {Z, N1, ve}
+          {Z, N1, vm}
+          {Z, N1, vt}
+          {W, N2, e}
+          {W, N2, mu}
+          {W, N2, ta}
+          {Z, N2, ve}
+          {Z, N2, vm}
+          {Z, N2, vt}
+          {W, N3, e}
+          {W, N3, mu}
+          {W, N3, ta}
+          {Z, N3, ve}
+          {Z, N3, vm}
+          {Z, N3, vt}
+          {Wbar, tabar, N1}
+          {Wbar, tabar, N2}
+          {Wbar, tabar, N3}
+          {Z, vebar, N1}
+          {Z, vebar, N2}
+          {Z, vebar, N3}
+          {Z, vmbar, N1}
+          {Z, vmbar, N2}
+          {Z, vmbar, N3}
+          {Z, vtbar, N1}
+          {Z, vtbar, N2}
+          {Z, vtbar, N3}
+      - Quantum number Q conserved in all vertices.
+      - Quantum number Y conserved in all vertices.
+   * particles.py written.
+   * parameters.py written.
+#
+# Vertex definitions
+#
+
+   * 253 vertices written.
+   * vertices.py written.
+#
+# Lorentz structure definitions
+#
+
+   * 18 lorentz structures written.
+   * lorentz.py written.
+#
+# Coupling definitions
+#
+
+   * 205 couplings written.
+   * couplings.py written.
+#
+# Coupling order definitions
+#
+
+   * 0 couplings orders written.
+   * coupling_orders.py written.
+#
+# Decay definitions
+#
+
+   * 15 decays written.
+   * decay.py not written
+#
+# CTCoupling definitions
+#
+
+   * 0 CTcouplings written.
+   * CT_couplings.py written.

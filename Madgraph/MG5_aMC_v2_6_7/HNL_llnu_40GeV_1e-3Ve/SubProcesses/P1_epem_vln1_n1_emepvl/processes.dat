@@ -1,0 +1,8 @@
+1       e+ e- > ve e- e+ ve
+mirror  none
+2       e+ e- > ve e- e+ ve~
+mirror  none
+3       e+ e- > ve~ e- e+ ve
+mirror  none
+4       e+ e- > ve~ e- e+ ve~
+mirror  none

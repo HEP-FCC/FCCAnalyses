@@ -1,0 +1,332 @@
+2018-07-06 <jthaler>
+   Updated comments in AxesDefinition.hh about role of JetDefinitionWrapper
+   Updated AUTHORS with JHEP publication information for XCone
+   Prepared VERSION and NEWS for 2.2.5 release
+2018-07-05 <jthaler>
+   Fixed bug in AxesDefinition.hh where _recomb was used before it was declared.
+2016-06-08 <jthaler>
+   Fixed bug in MeasureDefinition.cc where axes were not completely defined,
+      leading to problems with multi-pass axes 
+2016-04-04 <jthaler>
+   Fixed Njettiness.cc to give value of _current_tau_components even if less
+      than N constituents
+   Delete extraneous code in example_advanced_usage.cc
+2016-03-29 <jthaler>
+   Update for FJ 3.2.0 to deal with SharedPtr () deprecation
+2015-09-28 <jthaler>
+   Updated NEWS for 2.2.1 release.
+2015-09-18 <jthaler>
+   Fixed duplicate XConePlugin entry in Makefile.
+2015-08-20 <jthaler>
+   Trying to fix "abs" bug in ExtraRecombiners.cc
+2015-08-19 <jthaler>
+   Adding arXiv numbers to XCone papers
+   Used this_jet in example_basic_usage.
+   Fixed typo in example_advanced_usage header.
+   Added copy/paste code in README file.
+2015-08-13 <jthaler>
+   Ready for 2.2.0 release
+2015-07-23 <jthaler>
+   Fixed typo in GenET_GenKT_Axes error message
+   Added _too_few_axes_warning to ExclusiveJetAxes and ExclusiveCombinatorialJetAxes
+   Switched to ../data/single_event_ee.dat for make check
+2015-07-20 <jthaler>
+   Renamed WinnerTakeAllRecombiner.hh/cc to ExtraRecombiners.hh/cc
+   Added _too_few_axes_warning to HardestJetAxes
+   Added GenKT_Axes and OnePass_GenKT_Axes and Comb_GenKT_Axes (using E-scheme recombination).
+   Added warning about p < 0 or delta <=0 in GenKT axes finders.
+   Added warning about beta <= 0 in all measures.
+2015-07-10 <jthaler>
+   Putting in small tweaks in documentation to get ready for 2.2 release candidate 1.
+2015-06-15 <jthaler>
+   Starting doxygen file for eventual improved documentation.
+   Starting long process of improving documentation throughout.
+   Made the basic usage file a bit easier to read.
+   Adding in LimitedWarnings for old style constructors
+2015-06-12 <jthaler>
+   Synchronized definition of new measures with XCone paper.
+   In MeasureDefinition, added default values of jet_distance_squared and beam_distance_squared for cases where we don't want to optimize specifically.
+   Fixed bug in OriginalGeometricMeasure and ModifiedGeometric Measure
+   Commented out DeprecatedGeometricMeasure and DeprecatedGeometricCutoffMeasure since they were only causing confusion
+2015-05-26 <TJW>
+   Removed axis_scale_factor(), added bool to calculate this value if needed to save computation time
+   Defined small offset in denominator of axis scaling according to accuracy of refinement
+   Updated advanced examples to include tau values and number of jet constituents
+2015-05-25 <jthaler>
+   Clean up of AxesDefinition
+   Splitting get_axes into get_starting_axes and get_refined axes
+   Putting in proper noise ranges (hopefully) for MultiPass
+   Clean up of MeasureDefinition, rename jet_gamma to beam_gamma
+   Put in zero checking for jet_distance in ConicalGeometricMeasure
+   Added in ConicalMeasure for consistency
+   Changing OnePass Minimization to allow for temporary uphill
+2015-05-24 <TJW>
+   Added Combinatorial GenET_GenKT_Axes and MultiPass_Manual_Axes
+   Moved Axes refining information into MeasureDefinition, associated each measure with corresponding axes refiner
+   Moved get_one_pass_axes into MeasureDefinition, removed any mention of Npass
+   Moved all information on number of passes to AxesDefinition
+   Made AxesRefiner.hh/.cc into defunct files
+2015-05-22 <jthaler>
+   Cleaning out commented text.  Renaming classes to be consistent with recommended usage.
+2015-05-22 <TJW>
+   Added XConePlugin as a specific implementation of NjettinessPlugin
+   Added usage of XCone beta = 1.0 and beta = 2.0 to both basic and advanced example files
+   Added OriginalGeometric, ModifiedGeometric, ConicalGeometric, and XCone measures to list of test measures
+   Added OnePass_GenRecomb_GenKT_Axes to list of test axes
+   Added description to XCone measure in MeasureDefinition
+2015-05-21 <TJW>
+   Updated minimization scheme to avoid divide-by-zero errors
+   Fixed various factors of 2 in the definition of the measures
+2015-04-19 <TJW>
+   Fixed bug in minimization scheme for GeneralAxesRefiner
+   Moved measure_type to DefaultMeasure, removed geometric measure from e+e- example file
+2015-03-22 <TJW>
+   Added OriginalGeometricMeasure and ModifiedGeometricMeasure definitions
+   Changed all instances of GeometricMeasure to DeprecatedGeometricMeasure, and added error statements
+   Made GeneralAxesRefiner the default axes refiner for Measure Definition, overwritten by DefaultMeasure and GeometricMeasure
+   Created DefaultMeasure class for all the conical measure subclasses
+   Separated out e+e- and pp measures into separate example files
+2015-03-09 <TJW>
+   Added ConicalGeometric measures with jet_beta and jet_gamma definitions
+   Added XCone measures derived from ConicalGeometric with jet_gamma = 1.0
+   Added GeneralAxesRefiner for use with any measure (currently defined with XCone measure)
+   Added axes_numerator in MeasureDefinition to define the momentum scaling for minimization (currently only defined for Conical Geometric measure)
+2014-11-28 <TJW>
+   Minor change to default parameters in axes definition
+2014-10-08 <TJW>
+   Updated example file with new e+e- measure definitions
+   Added measure type to measure definition descriptions
+   Changed order of parameters in new axes definitions
+   Added standard C++ epsilon definition to GeneralERecombiner
+2014-10-07 <TJW>
+   Updated example_advanced_usage with new axes choices
+   Reversed inheritance of NormalizedMeasure and NormalizedCutoffMeasure (and Geometric) back to original
+   Storing _RcutoffSq as separate variable, and recalculating it in NormalizedMeasure 
+   Cleaning up ExclusiveCombinatorialJetAxes and added comments to explain the process
+   Fixed memory leaks using delete_recombiner_when_unused()
+   Fixed manual axes bug in Njettiness
+   Cleaned up enum definitions
+2014-10-01 <TJW>
+   Added new parameterized recombination scheme to Winner-Take-All recombiner
+   Created Winner-Take-All GenKT and general Recomb GenKT axes finders and onepass versions
+   Created new N choose M minimization axis finder, created N choose M WTA GenKT axis finder as example
+   Removed NPass as constructor argument in AxesDefinition, made it set through protected method
+   Removed TauMode as constructor argument in MeasureDefinition, made it set through protected method
+   Flipped inheritance of NormalizedMeasure and NormalizedCutoffMeasure (same for Geometric) to remove error of squaring the integer maximum
+   Created new MeasureType enum to allow user to choose between pp and ee variables (ee variables need testing)
+   Updated MeasureDefinition constructors to take in extra MeasureType parameter (but defaulted to pp variables)
+   Added new Default TauMode argument 
+   Fixed unsigned integers in various places
+   Added setAxes method to NjettinessPlugin
+2014-08-26 <JDT>
+   Enhanced TauComponents to include more infomation
+   NjettinessExtras now inherits from TauComponents
+   Removed getPartition from Njettiness, to avoid code duplication
+   Fixed double calculating issue in NjettinessPlugin::run_clustering()
+   Now AxesDefinition can use measure information without running AxesRefiner
+   Added TauStructure so the jets returned by TauComponents can know their tau value.
+2014-08-25 <JDT>
+   Merged MeasureDefinition and MeasureFunction into new MeasureDefinition.
+   Merged StartingAxesFinder and AxesDefinition into new AxesDefinition.
+   Renamed AxesFinder.cc/hh to AxesRefiner.cc/hh
+   Renamed NjettinessDefinition.cc/hh to AxesDefinition.cc/hh
+   Renamed MeasureFunction.cc/hh to MeasureDefinition.cc/hh
+   Renaming result() function in MeasureDefinition to be consistent with Nsubjettiness interface.
+   Split off TauComponents into separate header
+   Added TauPartition class for readability of partitioning
+   Moved NjettinessExtras into TauComponents, as this will eventually be the logical location
+   Added cross check of new MeasureDefinition and AxesDefinition in example_advanced_usage.
+   Lots of comments updated.
+   Changed version number to 2.2.0-alpha-dev, since this is going to be a bigger update than I had originally thought
+2014-08-20 <JDT>
+   Incorporated code in NjettinessPlugin to handle FJ3.1 treatment of auto_ptr (thanks Gregory)
+   Changed version number to 2.1.1-alpha-dev
+   Split AxesFinder into StartingAxesFinder and RefiningAxesFinder for clarity.
+   Manual axes mode now corresponds to a NULL StartingAxesFinder in Njettiness (so removed AxesFinderFromUserInput)
+   Added AxesRefiningMode to make selection of minimization routine more transparent in Njettiness
+   Moved sq() to more appropriate place in AxesFinder.hh
+   Rearranged Nsubjettiness.hh to make the old code less visible.
+   Renamed AxesFinderFromOnePassMinimization -> AxesFinderFromConicalMinimization
+   Renamed DefaultUnnormalizedMeasureFunction -> ConicalUnnormalizedMeasureFunction
+   Removed supportsMultiPassMinimization() from MeasureDefinition since any One Pass algorithm can be multipass.
+2014-07-09 <JDT>
+   Changed version for 2.1.0 release.
+   Updated NEWS to reflect 2.1.0 release
+2014-07-07 <JDT>
+   Added forward declaration of options in NjettinessDefinition for readability.
+   Updated README with some clarifications
+   Added usage information in the example file
+   Reran svn propset svn:keywords Id *.cc *.hh
+2014-06-25 <JDT>
+   Declaring release candidate of 2.1
+2014-06-11 <JDT>
+   Fixed virtual destructor issue in AxesFinder
+   Changing copy() to create() in NjettinessDefinition for "new" clarity
+   Converted some SharedPtr to regular pointers in NjettinessDefinition to be consistent on meaning of "create" commands.
+2014-06-10 <JDT>
+   Slight modification of example_advanced_usage
+   Fixed bug in GeometricCutoffMeasure (incorrect denominator setting)
+2014-06-05 <JDT>
+   Moved public before private in the .hh files for readability
+   Starting process of switching to SharedPtr internally
+   Clean up of AxesFinderFromGeometricMinimization
+   Simplified AxesFinder interface such that it doesn't know about starting axes finders (this is now handled in Njettiness).
+   Added const qualifiers in Njettiness
+2014-06-04 <JDT>
+   Implemented AxesDefinition class
+   Added descriptions to AxesDefinition and MeasureDefinition
+   Simplified example_advanced_usage with new Definitions
+   Made copy constructor private for Njettiness, to avoid copying 
+2014-06-03 <JDT>
+   Implemented remaining suggestions from FJ authors (Thanks!)
+   Fixed bug in example_advanced_usage where wrong beta value was used for NjettinessPlugin tests.
+   Removed NANs as signals for number of parameters in Nsubjettiness and NjettinessPlugin
+   Reduced the number of allowed parameters from 4 to 3.
+   Wrapped NEWS to 80 characters
+   Added MeasureDefinition as way to safely store information about the measures used
+   Converted a few NANs to std::numeric_limits<double>::quiet_NaN() when a parameter shouldn't be used.
+   Added AxesStruct and MeasureStruct to simplify the form of example_advanced_usage
+   Added example_v1p0p3 to check for backwards compatibility with v1.0.3
+   Changed the names of the MeasureFunctions in order to avoid conflicts with the new MeasureDefinitions
+   Fixed bug in correlation between subjets and tau values in NjettinessPlugin
+   Added currentTauComponents to Nsubjettiness
+   Added subTau information to example_basic_usage
+   Added file NjettinessDefinition to hold MeasureDefinition
+   Changed Njettiness constructors to treat MeasureSpecification as primary object
+   Fixed segmentation fault with ClusterSequenceAreas
+2014-06-02 <JDT>
+   Implemented many suggestions from FJ authors (Thanks!)
+   Removed FastJet 2 specific code
+   Made sq() function into internal namespace (as "inline static" to avoid conflicts with other packages)
+   Made setAxes() take const reference argument
+   Rewrapped README to 80 characters and updated/improved some of the descriptions
+   Clarified NEWS about what parts of the Nsubjettiness code is backwards compatible with v1.0.3
+   Clarified the para choices in Nsubjettiness constructor
+2014-04-30 <JDT>
+   Added (void)(n_jets) in AxesFinder.hh to fix unused-parameter warning
+2014-04-29 <JDT>
+   Added manual definition of NAN for compilers that don't have it.
+   Removed a few more unused parameters for compilation
+2014-04-22 <JDT>
+   Turned on -Wunused-parameter compiler flag to fix ATLAS compile issues.
+2014-04-18 <JDT>
+   Tweaks to NEWS and README.  Preparing for 2.0.0-rc1 release.
+2014-04-16 <JDT>
+   Decided that enough has changed that this should be v2.0
+   Added Id tags
+2014-04-14 <JDT>
+   Added get_partition_list to MeasureFunction
+   Removed do_cluster from MeasureFunction (no longer needed)
+   Fixed bug with NjettinessPlugin where jets were listed in backwards order from axes.
+   Removed various commented out pieces of code.
+2014-03-16 <JDT>
+   Added partitioning information to Nsubjettiness
+   Partitioning is now calculated in MeasureFunction and stored by Njettiness.
+   Rewrote MeasureFunction result() to call result_from_partition()
+   Added subjet (and constituent counting) information to example_basic_usage
+   Commented out redundant "getJets" function
+2014-02-25 <JDT>
+   Added access to seedAxes used for one-pass minimization routines.
+   Added axes print out to example_basic_usage, and fixed too many PrintJets declarations
+2014-02-24 <JDT>
+   Fixed embarrassing bug with min_axes (error introduced after v1.0 to make it the same as onepass_kt)
+   Simplified GeometricMeasure and added possibility of beta dependence
+   Commented out WTA2 options, since those have not been fully tested (nor do they seem particularly useful at the moment).  They can be reinstated if the physics case can be made to use them.
+   Split example into example_basic_usage and example_advanced_usage
+2014-01-28 <TJ>
+   Added new options in WinnerTakeAllRecombiner to use either pT or pT^2/E to recombine particles
+2014-01-24 <JDT>
+   Added access to currentAxes from Nsubjettiness.
+2014-01-18 <JDT>
+   Added beam regions to MeasureFunction, correspondingly renamed functions to have jet and beam regions
+   Renamed functions in TauComponents for consistency with MeasureFunction
+   Adding debugging code to AxesFinderFromOnePassMinimization::getAxes
+   Worked extensively on example.cc to make sure that it tests all available options.
+   Rewrote PrintJets command in example.cc for later improvements
+   Converted some magic numbers to std::numeric_limits<double>::max()
+2014-01-17 <JDT>
+   Rewrote KMeansMinimization to call OnePassMinimization, adding noise explicitly.
+   Removed any nothing of noise from OnePassMinimization
+   Removed Double32_t for root usage is Nsubjettiness
+   Clean up of many comments throughout the code, updating of README file
+   Removed unnecessary establishAxes in Njettiness
+   Removed bare constructor for Njettiness to avoid incompatibility with enum choices, may reinstate later.  Also removed setMeasureFunction, setAxesFinder for same reason
+   NjettinessExtras now calls TauComponents
+2014-01-16 <TJ>
+   Moved minimization functions to OnePassMinimization, changed KMeansMinimization class to simply call OnePassMinimization a specified number of times
+   Added extra tau function in TauComponents for users to get tau directly
+   Changed radius parameter in AxesFinderFromExclusiveJet subclasses to use max_allowable_R
+   Updated example.ref to account for changes due to change in radius parameter
+2014-01-15 <TJ>
+   Changed NjettinessComponents to TauComponents
+   Updated MeasureFunction with "result" function that returns TauComponents object
+   TauComponents changed to calculate all tau components given subtaus_numerator and tau_denominator
+   Njettiness updated to return TauComponents object rather than individual components
+   Nsubjettiness and NjettinessPlugin updated to have option for 4th parameter
+2014-01-14 <TJ>
+   Added NjettinessComponents class so Njettiness does not recalculate tau values
+   Removed old Njettiness constructors, updated Nsubjettiness and NjettinessPlugin constructors to use new constructor
+   Added geometric minimization to OnePassAxesFinders
+   Created new Njettiness function to set OnePassAxesFinders to reduce code
+   Updated LightLikeAxis with ConvertToPseudoJet function
+   Updated README with new functionality of code
+2014-01-12 <TJ>
+   Removed NsubGeometricParameters in all functions/constructors, replaced with Rcutoff double
+   Added three new measure mode options where Rcutoff is declared explicitly in parameters
+   Added checks so minimization axes finders are not used for geometric measures
+   AxesFinderFromOnePassMinimization class created as child of AxesFinderFromKmeansMinimization
+   Added new NsubjettinessRatio constructor to include MeasureMode option
+   Moved AxesFinder and MeasureFunction declarations from AxesMode and MeasureMode into separate Njettiness function
+   Removed R0 from AxesFinderFromKmeansMinimization
+   Changed example.cc to get rid of use of NsubGeometricParameters
+2014-01-9 <TJ>
+   Removed NsubParameters in all functions/constructors, replaced with three separate parameters
+   Added checks for correct number of parameters in Njettiness constructor
+2014-01-8 <TJ>
+   Removed normalization information from Nsubjettiness
+   Added flag to MeasureFunction to give option of using the denominator
+   Split DefaultMeasure into separate normalized and unnormalized classes
+2014-01-7 <TJ>
+   Added capability of choosing a specific Measure in Njettiness
+   Added new Nsubjettiness constructor to allow choice of both AxesMode and MeasureMode
+2014-01-6 <TJ>
+   Updated copyright information
+   Fixed bug in WinnerTakeAllRecombiner
+   Moved KMeansParameters to AxesFinder
+   Updated README with descriptions of new header files
+2013-12-30 <TJ>
+   Changed name of MeasureFunctor to MeasureFunction
+   Created separate .hh/.cc files for MeasureFunction, AxesFinder, and WinnerTakeAllRecombiner
+   Updated Makefile to account for new files
+   Removed getMinimumAxes in AxesFinderFromKMeansMinimization, consolidated with getAxes
+   Updated comments on classes and major functions
+2013-12-22 <TJ>
+   Created .cc files and moved all function definitions into .cc files
+   Updated Makefile to account for new .cc files
+2013-11-12 <TJ>
+   Added to fjcontrib svn
+2013-11-12 <jthaler>
+   Debugging svn
+2013-11-11 <TJ>
+   Changed MeasureFunctor to separately treat tau numerator and denominator
+   Changed some of the function names in MeasureFunctor.  Should not affect users
+   Added more informative function names to Njettiness.
+   Njettiness now allows finding unnormalized tau values
+   Added WTARecombiner to define winner-take-all axes
+   Added various WTA options to AxesMode
+   Added setAxes to Nsubjettiness
+   Added NsubjettinessRatio function
+2013-08-26 <jthaler>
+   Added inlines to fix compile issue
+   Put some of the minimization code inside of the AxesFinderFromKmeansMinimization class
+2013-02-23 <jthaler>
+   Fixed dependency issue (now using make depend)
+2013-02-22 <jthaler>
+   Fixed memory management and failed make check issues.
+2013-02-21 <jthaler>
+   First version submitted to fjcontrib
+2013-02-20 <jthaler>
+   Initial creation based on previous plugin hosted at http://www.jthaler.net/jets/
+
+
+

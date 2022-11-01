@@ -1,0 +1,6 @@
+------------------------------------------------
+MG5aMC_PY8_interface compilation output log:
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-90605/x86_64-slc6-gcc62-opt/bin/g++ MG5aMC_PY8_interface.cc -o MG5aMC_PY8_interface -I/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/include -I/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/pythia8//include -ldl -fPIC -lstdc++ -std=c++11 -DHEPMC2HACK -DGZIP -I/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/include -L/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib -Wl,-rpath,/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib -lz -L/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/pythia8//lib -Wl,-rpath,/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/pythia8//lib -lpythia8 -ldl -L/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib -Wl,-rpath,/afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/hepmc/lib -lHepMC
+
+------------------------------------------------
+Successful compilation of the MG5aMC_PY8_interface.

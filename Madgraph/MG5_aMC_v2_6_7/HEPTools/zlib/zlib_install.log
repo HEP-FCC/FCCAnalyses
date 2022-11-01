@@ -1,0 +1,377 @@
+ Set environment variables
+ Unpack zlib
+zlib-1.2.10/
+zlib-1.2.10/adler32.c
+zlib-1.2.10/amiga/
+zlib-1.2.10/ChangeLog
+zlib-1.2.10/CMakeLists.txt
+zlib-1.2.10/compress.c
+zlib-1.2.10/configure
+zlib-1.2.10/contrib/
+zlib-1.2.10/crc32.c
+zlib-1.2.10/crc32.h
+zlib-1.2.10/deflate.c
+zlib-1.2.10/deflate.h
+zlib-1.2.10/doc/
+zlib-1.2.10/examples/
+zlib-1.2.10/FAQ
+zlib-1.2.10/gzclose.c
+zlib-1.2.10/gzguts.h
+zlib-1.2.10/gzlib.c
+zlib-1.2.10/gzread.c
+zlib-1.2.10/gzwrite.c
+zlib-1.2.10/INDEX
+zlib-1.2.10/infback.c
+zlib-1.2.10/inffast.c
+zlib-1.2.10/inffast.h
+zlib-1.2.10/inffixed.h
+zlib-1.2.10/inflate.c
+zlib-1.2.10/inflate.h
+zlib-1.2.10/inftrees.c
+zlib-1.2.10/inftrees.h
+zlib-1.2.10/make_vms.com
+zlib-1.2.10/Makefile
+zlib-1.2.10/Makefile.in
+zlib-1.2.10/msdos/
+zlib-1.2.10/nintendods/
+zlib-1.2.10/old/
+zlib-1.2.10/os400/
+zlib-1.2.10/qnx/
+zlib-1.2.10/README
+zlib-1.2.10/test/
+zlib-1.2.10/treebuild.xml
+zlib-1.2.10/trees.c
+zlib-1.2.10/trees.h
+zlib-1.2.10/uncompr.c
+zlib-1.2.10/watcom/
+zlib-1.2.10/win32/
+zlib-1.2.10/zconf.h
+zlib-1.2.10/zconf.h.cmakein
+zlib-1.2.10/zconf.h.in
+zlib-1.2.10/zlib.3
+zlib-1.2.10/zlib.3.pdf
+zlib-1.2.10/zlib.h
+zlib-1.2.10/zlib.map
+zlib-1.2.10/zlib.pc.cmakein
+zlib-1.2.10/zlib.pc.in
+zlib-1.2.10/zlib2ansi
+zlib-1.2.10/zutil.c
+zlib-1.2.10/zutil.h
+zlib-1.2.10/win32/DLL_FAQ.txt
+zlib-1.2.10/win32/Makefile.bor
+zlib-1.2.10/win32/Makefile.gcc
+zlib-1.2.10/win32/Makefile.msc
+zlib-1.2.10/win32/README-WIN32.txt
+zlib-1.2.10/win32/VisualC.txt
+zlib-1.2.10/win32/zlib.def
+zlib-1.2.10/win32/zlib1.rc
+zlib-1.2.10/watcom/watcom_f.mak
+zlib-1.2.10/watcom/watcom_l.mak
+zlib-1.2.10/test/example.c
+zlib-1.2.10/test/infcover.c
+zlib-1.2.10/test/minigzip.c
+zlib-1.2.10/qnx/package.qpg
+zlib-1.2.10/os400/bndsrc
+zlib-1.2.10/os400/make.sh
+zlib-1.2.10/os400/README400
+zlib-1.2.10/os400/zlib.inc
+zlib-1.2.10/old/descrip.mms
+zlib-1.2.10/old/Makefile.emx
+zlib-1.2.10/old/Makefile.riscos
+zlib-1.2.10/old/os2/
+zlib-1.2.10/old/README
+zlib-1.2.10/old/visual-basic.txt
+zlib-1.2.10/old/os2/Makefile.os2
+zlib-1.2.10/old/os2/zlib.def
+zlib-1.2.10/nintendods/Makefile
+zlib-1.2.10/nintendods/README
+zlib-1.2.10/msdos/Makefile.bor
+zlib-1.2.10/msdos/Makefile.dj2
+zlib-1.2.10/msdos/Makefile.emx
+zlib-1.2.10/msdos/Makefile.msc
+zlib-1.2.10/msdos/Makefile.tc
+zlib-1.2.10/examples/enough.c
+zlib-1.2.10/examples/fitblk.c
+zlib-1.2.10/examples/gun.c
+zlib-1.2.10/examples/gzappend.c
+zlib-1.2.10/examples/gzjoin.c
+zlib-1.2.10/examples/gzlog.c
+zlib-1.2.10/examples/gzlog.h
+zlib-1.2.10/examples/README.examples
+zlib-1.2.10/examples/zlib_how.html
+zlib-1.2.10/examples/zpipe.c
+zlib-1.2.10/examples/zran.c
+zlib-1.2.10/doc/algorithm.txt
+zlib-1.2.10/doc/rfc1950.txt
+zlib-1.2.10/doc/rfc1951.txt
+zlib-1.2.10/doc/rfc1952.txt
+zlib-1.2.10/doc/txtvsbin.txt
+zlib-1.2.10/contrib/ada/
+zlib-1.2.10/contrib/amd64/
+zlib-1.2.10/contrib/asm686/
+zlib-1.2.10/contrib/blast/
+zlib-1.2.10/contrib/delphi/
+zlib-1.2.10/contrib/dotzlib/
+zlib-1.2.10/contrib/gcc_gvmat64/
+zlib-1.2.10/contrib/infback9/
+zlib-1.2.10/contrib/inflate86/
+zlib-1.2.10/contrib/iostream/
+zlib-1.2.10/contrib/iostream2/
+zlib-1.2.10/contrib/iostream3/
+zlib-1.2.10/contrib/masmx64/
+zlib-1.2.10/contrib/masmx86/
+zlib-1.2.10/contrib/minizip/
+zlib-1.2.10/contrib/pascal/
+zlib-1.2.10/contrib/puff/
+zlib-1.2.10/contrib/README.contrib
+zlib-1.2.10/contrib/testzlib/
+zlib-1.2.10/contrib/untgz/
+zlib-1.2.10/contrib/vstudio/
+zlib-1.2.10/contrib/vstudio/readme.txt
+zlib-1.2.10/contrib/vstudio/vc10/
+zlib-1.2.10/contrib/vstudio/vc11/
+zlib-1.2.10/contrib/vstudio/vc12/
+zlib-1.2.10/contrib/vstudio/vc14/
+zlib-1.2.10/contrib/vstudio/vc9/
+zlib-1.2.10/contrib/vstudio/vc9/miniunz.vcproj
+zlib-1.2.10/contrib/vstudio/vc9/minizip.vcproj
+zlib-1.2.10/contrib/vstudio/vc9/testzlib.vcproj
+zlib-1.2.10/contrib/vstudio/vc9/testzlibdll.vcproj
+zlib-1.2.10/contrib/vstudio/vc9/zlib.rc
+zlib-1.2.10/contrib/vstudio/vc9/zlibstat.vcproj
+zlib-1.2.10/contrib/vstudio/vc9/zlibvc.def
+zlib-1.2.10/contrib/vstudio/vc9/zlibvc.sln
+zlib-1.2.10/contrib/vstudio/vc9/zlibvc.vcproj
+zlib-1.2.10/contrib/vstudio/vc14/miniunz.vcxproj
+zlib-1.2.10/contrib/vstudio/vc14/miniunz.vcxproj.user
+zlib-1.2.10/contrib/vstudio/vc14/minizip.vcxproj
+zlib-1.2.10/contrib/vstudio/vc14/minizip.vcxproj.user
+zlib-1.2.10/contrib/vstudio/vc14/testzlib.vcxproj
+zlib-1.2.10/contrib/vstudio/vc14/testzlib.vcxproj.user
+zlib-1.2.10/contrib/vstudio/vc14/testzlibdll.vcxproj
+zlib-1.2.10/contrib/vstudio/vc14/testzlibdll.vcxproj.user
+zlib-1.2.10/contrib/vstudio/vc14/zlib.rc
+zlib-1.2.10/contrib/vstudio/vc14/zlibstat.vcxproj
+zlib-1.2.10/contrib/vstudio/vc14/zlibstat.vcxproj.user
+zlib-1.2.10/contrib/vstudio/vc14/zlibvc.def
+zlib-1.2.10/contrib/vstudio/vc14/zlibvc.sln
+zlib-1.2.10/contrib/vstudio/vc14/zlibvc.vcxproj
+zlib-1.2.10/contrib/vstudio/vc14/zlibvc.vcxproj.user
+zlib-1.2.10/contrib/vstudio/vc12/miniunz.vcxproj
+zlib-1.2.10/contrib/vstudio/vc12/minizip.vcxproj
+zlib-1.2.10/contrib/vstudio/vc12/testzlib.vcxproj
+zlib-1.2.10/contrib/vstudio/vc12/testzlibdll.vcxproj
+zlib-1.2.10/contrib/vstudio/vc12/zlib.rc
+zlib-1.2.10/contrib/vstudio/vc12/zlibstat.vcxproj
+zlib-1.2.10/contrib/vstudio/vc12/zlibvc.def
+zlib-1.2.10/contrib/vstudio/vc12/zlibvc.sln
+zlib-1.2.10/contrib/vstudio/vc12/zlibvc.vcxproj
+zlib-1.2.10/contrib/vstudio/vc11/miniunz.vcxproj
+zlib-1.2.10/contrib/vstudio/vc11/minizip.vcxproj
+zlib-1.2.10/contrib/vstudio/vc11/testzlib.vcxproj
+zlib-1.2.10/contrib/vstudio/vc11/testzlibdll.vcxproj
+zlib-1.2.10/contrib/vstudio/vc11/zlib.rc
+zlib-1.2.10/contrib/vstudio/vc11/zlibstat.vcxproj
+zlib-1.2.10/contrib/vstudio/vc11/zlibvc.def
+zlib-1.2.10/contrib/vstudio/vc11/zlibvc.sln
+zlib-1.2.10/contrib/vstudio/vc11/zlibvc.vcxproj
+zlib-1.2.10/contrib/vstudio/vc10/miniunz.vcxproj
+zlib-1.2.10/contrib/vstudio/vc10/miniunz.vcxproj.filters
+zlib-1.2.10/contrib/vstudio/vc10/minizip.vcxproj
+zlib-1.2.10/contrib/vstudio/vc10/minizip.vcxproj.filters
+zlib-1.2.10/contrib/vstudio/vc10/testzlib.vcxproj
+zlib-1.2.10/contrib/vstudio/vc10/testzlib.vcxproj.filters
+zlib-1.2.10/contrib/vstudio/vc10/testzlibdll.vcxproj
+zlib-1.2.10/contrib/vstudio/vc10/testzlibdll.vcxproj.filters
+zlib-1.2.10/contrib/vstudio/vc10/zlib.rc
+zlib-1.2.10/contrib/vstudio/vc10/zlibstat.vcxproj
+zlib-1.2.10/contrib/vstudio/vc10/zlibstat.vcxproj.filters
+zlib-1.2.10/contrib/vstudio/vc10/zlibvc.def
+zlib-1.2.10/contrib/vstudio/vc10/zlibvc.sln
+zlib-1.2.10/contrib/vstudio/vc10/zlibvc.vcxproj
+zlib-1.2.10/contrib/vstudio/vc10/zlibvc.vcxproj.filters
+zlib-1.2.10/contrib/untgz/Makefile
+zlib-1.2.10/contrib/untgz/Makefile.msc
+zlib-1.2.10/contrib/untgz/untgz.c
+zlib-1.2.10/contrib/testzlib/testzlib.c
+zlib-1.2.10/contrib/testzlib/testzlib.txt
+zlib-1.2.10/contrib/puff/Makefile
+zlib-1.2.10/contrib/puff/puff.c
+zlib-1.2.10/contrib/puff/puff.h
+zlib-1.2.10/contrib/puff/pufftest.c
+zlib-1.2.10/contrib/puff/README
+zlib-1.2.10/contrib/puff/zeros.raw
+zlib-1.2.10/contrib/pascal/example.pas
+zlib-1.2.10/contrib/pascal/readme.txt
+zlib-1.2.10/contrib/pascal/zlibd32.mak
+zlib-1.2.10/contrib/pascal/zlibpas.pas
+zlib-1.2.10/contrib/minizip/configure.ac
+zlib-1.2.10/contrib/minizip/crypt.h
+zlib-1.2.10/contrib/minizip/ioapi.c
+zlib-1.2.10/contrib/minizip/ioapi.h
+zlib-1.2.10/contrib/minizip/iowin32.c
+zlib-1.2.10/contrib/minizip/iowin32.h
+zlib-1.2.10/contrib/minizip/make_vms.com
+zlib-1.2.10/contrib/minizip/Makefile
+zlib-1.2.10/contrib/minizip/Makefile.am
+zlib-1.2.10/contrib/minizip/miniunz.c
+zlib-1.2.10/contrib/minizip/miniunzip.1
+zlib-1.2.10/contrib/minizip/minizip.1
+zlib-1.2.10/contrib/minizip/minizip.c
+zlib-1.2.10/contrib/minizip/minizip.pc.in
+zlib-1.2.10/contrib/minizip/MiniZip64_Changes.txt
+zlib-1.2.10/contrib/minizip/MiniZip64_info.txt
+zlib-1.2.10/contrib/minizip/mztools.c
+zlib-1.2.10/contrib/minizip/mztools.h
+zlib-1.2.10/contrib/minizip/unzip.c
+zlib-1.2.10/contrib/minizip/unzip.h
+zlib-1.2.10/contrib/minizip/zip.c
+zlib-1.2.10/contrib/minizip/zip.h
+zlib-1.2.10/contrib/masmx86/bld_ml32.bat
+zlib-1.2.10/contrib/masmx86/inffas32.asm
+zlib-1.2.10/contrib/masmx86/match686.asm
+zlib-1.2.10/contrib/masmx86/readme.txt
+zlib-1.2.10/contrib/masmx64/bld_ml64.bat
+zlib-1.2.10/contrib/masmx64/gvmat64.asm
+zlib-1.2.10/contrib/masmx64/inffas8664.c
+zlib-1.2.10/contrib/masmx64/inffasx64.asm
+zlib-1.2.10/contrib/masmx64/readme.txt
+zlib-1.2.10/contrib/iostream3/README
+zlib-1.2.10/contrib/iostream3/test.cc
+zlib-1.2.10/contrib/iostream3/TODO
+zlib-1.2.10/contrib/iostream3/zfstream.cc
+zlib-1.2.10/contrib/iostream3/zfstream.h
+zlib-1.2.10/contrib/iostream2/zstream.h
+zlib-1.2.10/contrib/iostream2/zstream_test.cpp
+zlib-1.2.10/contrib/iostream/test.cpp
+zlib-1.2.10/contrib/iostream/zfstream.cpp
+zlib-1.2.10/contrib/iostream/zfstream.h
+zlib-1.2.10/contrib/inflate86/inffas86.c
+zlib-1.2.10/contrib/inflate86/inffast.S
+zlib-1.2.10/contrib/infback9/infback9.c
+zlib-1.2.10/contrib/infback9/infback9.h
+zlib-1.2.10/contrib/infback9/inffix9.h
+zlib-1.2.10/contrib/infback9/inflate9.h
+zlib-1.2.10/contrib/infback9/inftree9.c
+zlib-1.2.10/contrib/infback9/inftree9.h
+zlib-1.2.10/contrib/infback9/README
+zlib-1.2.10/contrib/gcc_gvmat64/gvmat64.S
+zlib-1.2.10/contrib/dotzlib/DotZLib/
+zlib-1.2.10/contrib/dotzlib/DotZLib.build
+zlib-1.2.10/contrib/dotzlib/DotZLib.chm
+zlib-1.2.10/contrib/dotzlib/DotZLib.sln
+zlib-1.2.10/contrib/dotzlib/LICENSE_1_0.txt
+zlib-1.2.10/contrib/dotzlib/readme.txt
+zlib-1.2.10/contrib/dotzlib/DotZLib/AssemblyInfo.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/ChecksumImpl.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/CircularBuffer.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/CodecBase.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/Deflater.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/DotZLib.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/DotZLib.csproj
+zlib-1.2.10/contrib/dotzlib/DotZLib/GZipStream.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/Inflater.cs
+zlib-1.2.10/contrib/dotzlib/DotZLib/UnitTests.cs
+zlib-1.2.10/contrib/delphi/readme.txt
+zlib-1.2.10/contrib/delphi/ZLib.pas
+zlib-1.2.10/contrib/delphi/ZLibConst.pas
+zlib-1.2.10/contrib/delphi/zlibd32.mak
+zlib-1.2.10/contrib/blast/blast.c
+zlib-1.2.10/contrib/blast/blast.h
+zlib-1.2.10/contrib/blast/Makefile
+zlib-1.2.10/contrib/blast/README
+zlib-1.2.10/contrib/blast/test.pk
+zlib-1.2.10/contrib/blast/test.txt
+zlib-1.2.10/contrib/asm686/match.S
+zlib-1.2.10/contrib/asm686/README.686
+zlib-1.2.10/contrib/amd64/amd64-match.S
+zlib-1.2.10/contrib/ada/buffer_demo.adb
+zlib-1.2.10/contrib/ada/mtest.adb
+zlib-1.2.10/contrib/ada/read.adb
+zlib-1.2.10/contrib/ada/readme.txt
+zlib-1.2.10/contrib/ada/test.adb
+zlib-1.2.10/contrib/ada/zlib-streams.adb
+zlib-1.2.10/contrib/ada/zlib-streams.ads
+zlib-1.2.10/contrib/ada/zlib-thin.adb
+zlib-1.2.10/contrib/ada/zlib-thin.ads
+zlib-1.2.10/contrib/ada/zlib.adb
+zlib-1.2.10/contrib/ada/zlib.ads
+zlib-1.2.10/contrib/ada/zlib.gpr
+zlib-1.2.10/amiga/Makefile.pup
+zlib-1.2.10/amiga/Makefile.sas
+ Enter zlib directory
+ Configure zlib
+Checking for shared library support...
+Building shared library libz.so.1.2.10 with /cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc.
+Checking for size_t... Yes.
+Checking for off64_t... Yes.
+Checking for fseeko... Yes.
+Checking for strerror... Yes.
+Checking for unistd.h... Yes.
+Checking for stdarg.h... Yes.
+Checking whether to use vs[n]printf() or s[n]printf()... using vs[n]printf().
+Checking for vsnprintf() in stdio.h... Yes.
+Checking for return value of vsnprintf()... Yes.
+Checking for attribute(visibility) support... Yes.
+ Compile zlib
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -c -o example.o test/example.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o adler32.o adler32.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o crc32.o crc32.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o deflate.o deflate.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o infback.o infback.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o inffast.o inffast.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o inflate.o inflate.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o inftrees.o inftrees.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o trees.o trees.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o zutil.o zutil.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o compress.o compress.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o uncompr.o uncompr.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzclose.o gzclose.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzlib.o gzlib.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzread.o gzread.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -c -o gzwrite.o gzwrite.c
+ar rc libz.a adler32.o crc32.o deflate.o infback.o inffast.o inflate.o inftrees.o trees.o zutil.o compress.o uncompr.o gzclose.o gzlib.o gzread.o gzwrite.o 
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o example example.o -L. libz.a
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -c -o minigzip.o test/minigzip.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o minigzip minigzip.o -L. libz.a
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/adler32.o adler32.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/crc32.o crc32.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/deflate.o deflate.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/infback.o infback.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/inffast.o inffast.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/inflate.o inflate.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/inftrees.o inftrees.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/trees.o trees.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/zutil.o zutil.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/compress.o compress.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/uncompr.o uncompr.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzclose.o gzclose.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzlib.o gzlib.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzread.o gzread.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN  -DPIC -c -o objs/gzwrite.o gzwrite.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -shared -Wl,-soname,libz.so.1,--version-script,zlib.map -O3 -fPIC -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o libz.so.1.2.10 adler32.lo crc32.lo deflate.lo infback.lo inffast.lo inflate.lo inftrees.lo trees.lo zutil.lo compress.lo uncompr.lo gzclose.lo gzlib.lo gzread.lo gzwrite.lo  -lc 
+rm -f libz.so libz.so.1
+ln -s libz.so.1.2.10 libz.so
+ln -s libz.so.1.2.10 libz.so.1
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o examplesh example.o -L. libz.so.1.2.10
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o minigzipsh minigzip.o -L. libz.so.1.2.10
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -D_FILE_OFFSET_BITS=64 -c -o example64.o test/example.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o example64 example64.o -L. libz.a
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -I. -D_FILE_OFFSET_BITS=64 -c -o minigzip64.o test/minigzip.c
+/cvmfs/sft.cern.ch/lcg/releases/gcc/7.3.0-cb1ee/x86_64-slc6/bin/gcc -O3 -D_LARGEFILE64_SOURCE=1 -DHAVE_HIDDEN -o minigzip64 minigzip64.o -L. libz.a
+ Install zlib
+rm -f /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib/libz.a
+cp libz.a /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib
+chmod 644 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib/libz.a
+cp libz.so.1.2.10 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib
+chmod 755 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib/libz.so.1.2.10
+rm -f /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/share/man/man3/zlib.3
+cp zlib.3 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/share/man/man3
+chmod 644 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/share/man/man3/zlib.3
+rm -f /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib/pkgconfig/zlib.pc
+cp zlib.pc /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib/pkgconfig
+chmod 644 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/lib/pkgconfig/zlib.pc
+rm -f /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/include/zlib.h /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/include/zconf.h
+cp zlib.h zconf.h /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/include
+chmod 644 /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/include/zlib.h /afs/cern.ch/user/d/dimoulin/FCCAnalyses/Madgraph/MG5_aMC_v2_6_7/HEPTools/zlib/include/zconf.h
+ Finished zlib installation

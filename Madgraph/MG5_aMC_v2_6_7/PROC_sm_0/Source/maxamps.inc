@@ -1,0 +1,1 @@
+../SubProcesses/P3_qq_ttx/maxamps.inc
