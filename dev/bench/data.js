@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667890927092,
+  "lastUpdate": 1667890928678,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -11704,6 +11704,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "clement.helsens@cern.ch",
+            "name": "Clement Helsens",
+            "username": "clementhelsens"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8ce567fdf79e4a78d0f389dfa984aeabb596c154",
+          "message": "Merge pull request #223 from EmanuelPerez/master\n\nfix vertexing tutorial file",
+          "timestamp": "2022-11-08T07:51:29+01:00",
+          "tree_id": "7388ef7c5f2f387d3f2d5f0ee3b392596a0c04ee",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/8ce567fdf79e4a78d0f389dfa984aeabb596c154"
+        },
+        "date": 1667890928195,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 6.971327962497838,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 4.103422666835944,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 4.548275101684914,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 3.126685648015177,
+            "unit": "Evt/s"
           }
         ]
       }
