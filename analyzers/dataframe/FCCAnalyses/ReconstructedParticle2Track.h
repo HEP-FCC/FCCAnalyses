@@ -8,10 +8,47 @@
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/TrackState.h"
+#include <TVectorD.h>
+#include <TVector3.h>
+#include <TMath.h>
+#include <iostream>
 
 namespace FCCAnalyses{
 
 namespace ReconstructedParticle2Track{
+
+  //compute the magnetic field Bz
+  ROOT::VecOps::RVec<float> getRP2TRK_Bz(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& rps, 
+					 const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks); //here computed for all particles passed
+
+  float Bz(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& rps, 
+	   const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks); //here only computed for the first charged particle encountered
+
+  
+  ROOT::VecOps::RVec<float> XPtoPar_dxy(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in, 
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
+					const TVector3& x,
+					const float& Bz); 
+
+  ROOT::VecOps::RVec<float> XPtoPar_dz(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
+                                        const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
+                                        const TVector3& V,
+                                        const float& Bz);
+
+  ROOT::VecOps::RVec<float> XPtoPar_phi(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
+                                        const TVector3& V,
+                                        const float& Bz);
+
+  ROOT::VecOps::RVec<float> XPtoPar_C(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
+                                        const TVector3& V,
+                                        const float& Bz);
+
+  ROOT::VecOps::RVec<float> XPtoPar_ct(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
+                                        const TVector3& V,
+                                        const float& Bz);
 
   /// Return the D0 of a track to a reconstructed particle
   ROOT::VecOps::RVec<float> getRP2TRK_D0 (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
