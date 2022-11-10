@@ -96,22 +96,22 @@ namespace FCCAnalyses {
       }
       return out;
     };
-    
- 
+
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_Bz(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Bz);
     }
-    
-    
+
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_pt(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_pt);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_e(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_e);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_theta(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_theta);
     }
@@ -161,7 +161,7 @@ namespace FCCAnalyses {
 						    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_z0(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 						    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0);
@@ -182,13 +182,13 @@ namespace FCCAnalyses {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_tanLambda);
     }
 
- 
+
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dxy(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							 const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
 							 const TVector3& V,
 							 const float& Bz) {
-      
-      return cast_constituent_4(jcs, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_dxy); 
+
+      return cast_constituent_4(jcs, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_dxy);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dz(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -211,7 +211,7 @@ namespace FCCAnalyses {
 						       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
 						       const TVector3& V,
 						       const float& Bz) {
-      
+
       return cast_constituent_4(jcs, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_C);
     }
 
@@ -219,11 +219,11 @@ namespace FCCAnalyses {
 							const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
 							const TVector3& V,
 							const float& Bz) {
-      
+
       return cast_constituent_4(jcs, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_ct);
     }
 
-   
+
     //Covariance matrix elements of tracks parameters
     //diagonal
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -235,7 +235,7 @@ namespace FCCAnalyses {
                                                         const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0_cov);
@@ -255,59 +255,59 @@ namespace FCCAnalyses {
 							   const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_z0_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_phi0_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi0_z0_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 								    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi0_tanlambda_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 								  const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_tanlambda_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 								  const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_z0_tanlambda_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 								     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_omega_tanlambda_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 								const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi0_omega_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							      const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_omega_cov);
     }
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							      const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_omega_z0_cov);
     }
-    
 
-    //neutrals are set to 0; muons and electrons are also set to 0; 
+
+    //neutrals are set to 0; muons and electrons are also set to 0;
     // only charged hads are considered (mtof used to disctriminate charged kaons and pions)
     rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-						      const rv::RVec<edm4hep::Quantity>& dNdx, //ETrackFlow_2 
+						      const rv::RVec<edm4hep::Quantity>& dNdx, //ETrackFlow_2
 						      const rv::RVec<edm4hep::TrackData>& trackdata,  //Eflowtrack
-						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad) { 
+						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for(int i = 0; i < jcs.size(); ++i){
 	FCCAnalysesJetConstituents ct = jcs.at(i);
@@ -315,7 +315,7 @@ namespace FCCAnalyses {
 	FCCAnalysesJetConstituentsData tmp;
 	for(int j = 0; j < ct.size(); ++j) {
 	  if (ct.at(j).tracks_begin < trackdata.size() && (int)isChargedHad.at(j) == 1) {
-	    tmp.push_back( dNdx.at( trackdata.at(ct.at(j).tracks_begin).dxQuantities_begin).value ); 
+	    tmp.push_back( dNdx.at( trackdata.at(ct.at(j).tracks_begin).dxQuantities_begin).value );
 	  } else {
 	    tmp.push_back(0.);
 	  }
@@ -331,8 +331,8 @@ namespace FCCAnalyses {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       rv::RVec<FCCAnalysesJetConstituentsData> D0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
-      
-      
+
+
       for(int i = 0; i < jets.size(); ++i){
 	TVector2 p(jets[i].momentum.x, jets[i].momentum.y);
 	FCCAnalysesJetConstituentsData cprojs;
@@ -424,7 +424,7 @@ namespace FCCAnalyses {
       rv::RVec<FCCAnalysesJetConstituentsData> D0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0);
       rv::RVec<FCCAnalysesJetConstituentsData> Z0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
-        
+
       for(int i = 0; i < jets.size(); ++i){
 	TVector3 p(jets[i].momentum.x, jets[i].momentum.y, jets[i].momentum.z);
 	FCCAnalysesJetConstituentsData cprojs;
@@ -437,7 +437,7 @@ namespace FCCAnalyses {
 	  }
 	}
 	out.push_back(cprojs);
-      } 
+      }
       return out;
     }
 
@@ -522,7 +522,7 @@ namespace FCCAnalyses {
 	TVector3 p_jet(jets[i].momentum.x, jets[i].momentum.y, jets[i].momentum.z);
 	FCCAnalysesJetConstituents ct = jcs.at(i);
 	for(int j = 0; j < ct.size(); ++j) {
-	  if (D0.at(i).at(j) != -9) { 
+	  if (D0.at(i).at(j) != -9) {
 	    TVector3 d( - D0.at(i).at(j)* TMath::Sin(phi0.at(i).at(j)) , D0.at(i).at(j)*TMath::Cos(phi0.at(i).at(j)), Z0.at(i).at(j) );
 	    TVector3 p_ct(ct[j].momentum.x, ct[j].momentum.y, ct[j].momentum.z);
 	    TVector3 r_jet(0.0, 0.0, 0.0);
@@ -537,7 +537,7 @@ namespace FCCAnalyses {
       return out;
     }
 
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistVal_cluster(const rv::RVec<fastjet::PseudoJet>& jets,
 								    const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 								    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks) {
@@ -554,7 +554,7 @@ namespace FCCAnalyses {
             TVector3 d( - D0.at(i).at(j)* TMath::Sin(phi0.at(i).at(j)) , D0.at(i).at(j)*TMath::Cos(phi0.at(i).at(j)), Z0.at(i).at(j) );
             TVector3 p_ct(ct[j].momentum.x, ct[j].momentum.y, ct[j].momentum.z);
             TVector3 r_jet(0.0, 0.0, 0.0);
-            TVector3 n = p_ct.Cross(p_jet).Unit(); //What if they are parallel? 
+            TVector3 n = p_ct.Cross(p_jet).Unit(); //What if they are parallel?
             tmp.push_back( n.Dot(d - r_jet) );
           } else {
             tmp.push_back(-9);
@@ -583,7 +583,7 @@ namespace FCCAnalyses {
             TVector3 d( - D0.at(i).at(j)* TMath::Sin(phi0.at(i).at(j)) , D0.at(i).at(j)*TMath::Cos(phi0.at(i).at(j)), Z0.at(i).at(j) );
             TVector3 p_ct(ct[j].momentum.x, ct[j].momentum.y, ct[j].momentum.z);
             TVector3 r_jet(0.0, 0.0, 0.0);
-            TVector3 n = p_ct.Cross(p_jet).Unit(); //What if they are parallel?                                                                                                                             
+            TVector3 n = p_ct.Cross(p_jet).Unit(); //What if they are parallel?
             tmp.push_back( n.Dot(d - r_jet) );
           } else {
             tmp.push_back(-9);
@@ -595,7 +595,7 @@ namespace FCCAnalyses {
     }
 
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistSig(const rv::RVec<FCCAnalysesJetConstituentsData>& JetDistVal, 
+    rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistSig(const rv::RVec<FCCAnalysesJetConstituentsData>& JetDistVal,
 							    const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0,
 							    const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
@@ -622,7 +622,7 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_mtof(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 						      const rv::RVec<float>& track_L,
 						      const rv::RVec<edm4hep::TrackData>& trackdata,
-						      const rv::RVec<edm4hep::TrackerHitData>& trackerhits, 
+						      const rv::RVec<edm4hep::TrackerHitData>& trackerhits,
 						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_Pids) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for(int i = 0; i < jcs.size(); ++i){
@@ -646,10 +646,10 @@ namespace FCCAnalyses {
 	      float p = std::sqrt( ct.at(j).momentum.x*ct.at(j).momentum.x + ct.at(j).momentum.y*ct.at(j).momentum.y + ct.at(j).momentum.z * ct.at(j).momentum.z );
 	      //std::cout << "tof: " << tof << " - L: " << L << " - beta: " << beta << " - momentum: " << p << " - mtof: " << p * std::sqrt(1/(beta*beta)-1) << std::endl;
 	      if (beta < 1. && beta > 0.) {
-		tmp.push_back( p * std::sqrt(1/(beta*beta)-1) ); 
+		tmp.push_back( p * std::sqrt(1/(beta*beta)-1) );
 	      } else {
 		tmp.push_back(0.13957039);
-	      } 
+	      }
 	    }
 	  } else {
 	    //float E = ct.at(j).energy;
@@ -661,7 +661,7 @@ namespace FCCAnalyses {
       }
       return out;
     }
-    
+
 
     //kinematics const/jet
     rv::RVec<FCCAnalysesJetConstituentsData> get_erel_log(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
@@ -696,7 +696,7 @@ namespace FCCAnalyses {
       return out;
     }
 
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_erel(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
@@ -758,13 +758,13 @@ namespace FCCAnalyses {
       for (size_t i = 0; i < jets.size(); ++i) {
         auto& jet_csts = out.emplace_back();
         TLorentzVector tlv_jet;
-        tlv_jet.SetXYZM(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).E());
+        tlv_jet.SetXYZM(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).m());
         float theta_jet = tlv_jet.Theta();
         float phi_jet = tlv_jet.Phi();
         auto csts = get_jet_constituents(jcs, i);
         for (const auto& jc : csts) {
           TLorentzVector tlv_const;
-          tlv_const.SetXYZM(jc.momentum.x, jc.momentum.y, jc.momentum.z, jc.energy);
+          tlv_const.SetXYZM(jc.momentum.x, jc.momentum.y, jc.momentum.z, jc.mass);
           TVector3 v_const = tlv_const.Vect();
           v_const.RotateZ(-phi_jet);
           v_const.RotateY(-theta_jet);
@@ -775,7 +775,7 @@ namespace FCCAnalyses {
       return out;
     }
 
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_phirel(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                         const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
@@ -805,7 +805,7 @@ namespace FCCAnalyses {
       for (size_t i = 0; i < jets.size(); ++i) {
         auto& jet_csts = out.emplace_back();
         TLorentzVector tlv_jet;
-        tlv_jet.SetXYZM(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).E());
+        tlv_jet.SetXYZM(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).m());
         float theta_jet = tlv_jet.Theta();
         float phi_jet = tlv_jet.Phi();
         auto csts = get_jet_constituents(jcs, i);
@@ -823,17 +823,17 @@ namespace FCCAnalyses {
     }
 
 
-    
+
     //Identification
-    
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_PIDs(const ROOT::VecOps::RVec< int > recin,
 						      const ROOT::VecOps::RVec< int > mcin,
-						      const rv::RVec<edm4hep::ReconstructedParticleData>& RecPart, 
+						      const rv::RVec<edm4hep::ReconstructedParticleData>& RecPart,
 						      const rv::RVec<edm4hep::MCParticleData>& Particle,
-						      const rv::RVec<edm4hep::ReconstructedParticleData>& jets) { 
+						      const rv::RVec<edm4hep::ReconstructedParticleData>& jets) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       FCCAnalysesJetConstituentsData PIDs = FCCAnalyses::ReconstructedParticle2MC::getRP2MC_pdg(recin, mcin, RecPart, Particle);
-      
+
       for (const auto& jet : jets) {
 	FCCAnalysesJetConstituentsData tmp;
         for (auto it = jet.particles_begin; it < jet.particles_end; ++it) {
@@ -865,14 +865,14 @@ namespace FCCAnalyses {
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_isMu(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs) {
-      rv::RVec<FCCAnalysesJetConstituentsData> out;      
+      rv::RVec<FCCAnalysesJetConstituentsData> out;
       for(int i = 0; i < PIDs.size(); ++i) {
 	FCCAnalysesJetConstituentsData is_Mu;
 	for (int j = 0; j < PIDs.at(i).size(); ++j) {
-	  if ( abs(PIDs.at(i).at(j)) == 13) {                                                                                         
-	    is_Mu.push_back(1.);                                                                                                                                        
-          } else {                                                                                                                                                   
-            is_Mu.push_back(0.);                                                                                                                                                     
+	  if ( abs(PIDs.at(i).at(j)) == 13) {
+	    is_Mu.push_back(1.);
+          } else {
+            is_Mu.push_back(0.);
 	  }
 	}
 	out.push_back(is_Mu);
@@ -886,11 +886,11 @@ namespace FCCAnalyses {
       for(int i = 0; i < PIDs.size(); ++i) {
         FCCAnalysesJetConstituentsData is_El;
         FCCAnalysesJetConstituentsData pids = PIDs.at(i);
-	for (int j = 0; j < pids.size(); ++j) {                                                                                                                                     
-	  if ( abs(pids.at(j)) == 11) {                                                                                                     
-	    is_El.push_back(1.);       
-	  } else {                                                                                                                                  
-            is_El.push_back(0.);                                                                                                                                                     
+	for (int j = 0; j < pids.size(); ++j) {
+	  if ( abs(pids.at(j)) == 11) {
+	    is_El.push_back(1.);
+	  } else {
+            is_El.push_back(0.);
 	  }
 	}
 	out.push_back(is_El);
@@ -898,7 +898,7 @@ namespace FCCAnalyses {
       return out;
     }
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs, 
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs,
 							      const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for(int i = 0; i < PIDs.size(); ++i) {
@@ -906,10 +906,10 @@ namespace FCCAnalyses {
         FCCAnalysesJetConstituents ct = jcs.at(i);
 	FCCAnalysesJetConstituentsData pids = PIDs.at(i);
         for (int j = 0; j < pids.size(); ++j) {
-	  if (ct.at(j).charge != 0 && abs(pids.at(j)) != 11 && abs(pids.at(j)) != 13) {                                                                                                       
-	    is_ChargedHad.push_back(1.);                                                                                                                                        
-	  } else {                                                                                                                                                 
-            is_ChargedHad.push_back(0.);                                                                                                                                 
+	  if (ct.at(j).charge != 0 && abs(pids.at(j)) != 11 && abs(pids.at(j)) != 13) {
+	    is_ChargedHad.push_back(1.);
+	  } else {
+            is_ChargedHad.push_back(0.);
           }
 	}
         out.push_back(is_ChargedHad);
@@ -942,10 +942,10 @@ namespace FCCAnalyses {
         FCCAnalysesJetConstituents ct = jcs.at(i);
         FCCAnalysesJetConstituentsData pids = PIDs.at(i);
         for (int j = 0; j < pids.size(); ++j) {
-	  if (ct.at(j).charge == 0 && abs(pids.at(j)) != 22 )                                                                                      
-            is_NeutralHad.push_back(1.);                                                                                                                         
-	  else                      
-	    is_NeutralHad.push_back(0.);                                                                                                
+	  if (ct.at(j).charge == 0 && abs(pids.at(j)) != 22 )
+            is_NeutralHad.push_back(1.);
+	  else
+	    is_NeutralHad.push_back(0.);
 	}
 	out.push_back(is_NeutralHad);
       }
@@ -957,7 +957,7 @@ namespace FCCAnalyses {
     int count_jets(rv::RVec<FCCAnalysesJetConstituents> jets) {
       return jets.size();
     }
-    
+
     rv::RVec<int> count_consts(rv::RVec<FCCAnalysesJetConstituents> jets) {
       rv::RVec<int> out;
       for(int i = 0; i < jets.size(); ++i) {
@@ -1004,7 +1004,7 @@ namespace FCCAnalyses {
       }
       return out;
     }
-    
+
     float InvariantMass(const TLorentzVector& tlv1, const TLorentzVector& tlv2) {
       float E = tlv1.E() + tlv2.E();
       float px = tlv1.Px() + tlv2.Px();
@@ -1056,7 +1056,7 @@ namespace FCCAnalyses {
 	double pt_jcs = std::sqrt( sum_tlv_jcs.at(i).Px()*sum_tlv_jcs.at(i).Px() + sum_tlv_jcs.at(i).Py()*sum_tlv_jcs.at(i).Py() );
 	double dpt = ( pt_jcs - pt_jet)/pt_jet;
 	out.push_back(dpt);
-      } 
+      }
       return out;
     }
 
@@ -1078,7 +1078,7 @@ namespace FCCAnalyses {
 	double theta_jcs = sum_tlv_jcs.at(i).Theta();
 	double dtheta = (theta_jcs - theta_jet)/theta_jet;
 	out.push_back(dtheta);
-      } 
+      }
       return out;
     }
 
