@@ -917,33 +917,15 @@ namespace FCCAnalyses {
       return out;
     }
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isGamma(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isNeutralHad(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for(int i = 0; i < PIDs.size(); ++i) {
-        FCCAnalysesJetConstituentsData is_Gamma;
-        FCCAnalysesJetConstituentsData pids = PIDs.at(i);
-        for (int j = 0; j < pids.size(); ++j) {
-          if ( abs(pids.at(j)) == 22) {
-            is_Gamma.push_back(1.);
-          } else {
-            is_Gamma.push_back(0.);
-          }
-        }
-        out.push_back(is_Gamma);
-      }
-      return out;
-    }
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isNeutralHad(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs,
-                                                              const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
-      rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for(int i = 0; i < PIDs.size(); ++i) {
+      for(int i = 0; i < jcs.size(); ++i) {
         FCCAnalysesJetConstituentsData is_NeutralHad;
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        FCCAnalysesJetConstituentsData pids = PIDs.at(i);
-        for (int j = 0; j < pids.size(); ++j) {
-          if (ct.at(j).charge == 0 && abs(pids.at(j)) != 22 )
+        for (int j = 0; j < ct.size(); ++j) {
+          if (ct.at(j).type == 130) {
             is_NeutralHad.push_back(1.);
+          }
           else
             is_NeutralHad.push_back(0.);
         }
@@ -951,6 +933,26 @@ namespace FCCAnalyses {
       }
       return out;
     }
+
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isGamma(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
+      rv::RVec<FCCAnalysesJetConstituentsData> out;
+      for(int i = 0; i < jcs.size(); ++i) {
+        FCCAnalysesJetConstituentsData is_NeutralHad;
+        FCCAnalysesJetConstituents ct = jcs.at(i);
+        for (int j = 0; j < ct.size(); ++j) {
+          if (ct.at(j).type == 22) {
+            is_NeutralHad.push_back(1.);
+          }
+          else
+            is_NeutralHad.push_back(0.);
+        }
+        out.push_back(is_NeutralHad);
+      }
+      return out;
+    }
+
+
+
 
 
     //countings

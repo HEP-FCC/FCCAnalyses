@@ -3,15 +3,15 @@ processList = {
     #prefall2022 samples (generated centrally)
     'p8_ee_ZH_Znunu_Hbb_ecm240':{}, #1030000 events
     'p8_ee_ZH_Znunu_Hcc_ecm240':{}, #1060000
-    'p8_ee_ZH_Znunu_Hss_ecm240':{}, #1060000 
-    'p8_ee_ZH_Znunu_Hgg_ecm240':{'fraction':0.5}, #2000000 
+    'p8_ee_ZH_Znunu_Hss_ecm240':{}, #1060000
+    'p8_ee_ZH_Znunu_Hgg_ecm240':{'fraction':0.5}, #2000000
     'p8_ee_ZH_Znunu_Huu_ecm240':{'fraction':0.5}, #we take only half sample for uu,dd because they will go into qq label which contains both
-    'p8_ee_ZH_Znunu_Hdd_ecm240':{'fraction':0.5}, #and we want for qq same number of jets as other classes; the two files 2080000 events in total, 1040000 each? 
+    'p8_ee_ZH_Znunu_Hdd_ecm240':{'fraction':0.5}, #and we want for qq same number of jets as other classes; the two files 2080000 events in total, 1040000 each?
 }
 
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
 #prodTag     = "FCCee/spring2021/IDEA/"
-prodTag     = "FCCee/pre_fall2022_training/IDEA/" #for prefall2022 samples 
+prodTag     = "FCCee/pre_fall2022_training/IDEA/" #for prefall2022 samples
 
 #Optional: output directory, default is local running directory
 #outputDir   = "/eos/home-a/adelvecc/FCCevaluate/"
@@ -31,9 +31,9 @@ class RDFanalysis():
     #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
 
-        from ROOT import JetFlavourUtils 
+        from ROOT import JetFlavourUtils
         weaver = JetFlavourUtils.setup_weaver(
-            "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/fccee_flavtagging_edm4hep_v2.onnx", #name of the trained model exported 
+            "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/fccee_flavtagging_edm4hep_v2.onnx", #name of the trained model exported
             "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/preprocess_fccee_flavtagging_edm4hep_v2.json", #.json file produced by weaver during training
             (
                 "pfcand_erel_log", #list of the training variables,
@@ -81,7 +81,7 @@ class RDFanalysis():
             ### MC primary vertex
             .Define("MC_PrimaryVertex",  "FCCAnalyses::MCParticle::get_EventPrimaryVertex(21)( Particle )" )
 
-            # CLUSTERING 
+            # CLUSTERING
             #define the RP px, py, pz and e
             .Define("RP_px",          "ReconstructedParticle::get_px(ReconstructedParticles)")
             .Define("RP_py",          "ReconstructedParticle::get_py(ReconstructedParticles)")
@@ -89,31 +89,31 @@ class RDFanalysis():
             .Define("RP_e",           "ReconstructedParticle::get_e(ReconstructedParticles)")
             .Define("RP_m",           "ReconstructedParticle::get_mass(ReconstructedParticles)")
             .Define("RP_q",           "ReconstructedParticle::get_charge(ReconstructedParticles)")
-            
+
             #build pseudo jets with the RP
             .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
             #run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=1.5, inclusive clustering, E-scheme
             .Define("FCCAnalysesJets_ee_genkt", "JetClustering::clustering_ee_genkt(1.5, 0, 0, 0, 0, -1)(pseudo_jets)")
             #get the jets out of the struct
             .Define("jets_ee_genkt",           "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_ee_genkt)")
-            #get the jets constituents out of the struct 
+            #get the jets constituents out of the struct
             .Define("jetconstituents_ee_genkt","JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_genkt)")
-            
+
             #===== COMPUTE TRAINING FEATURES
-            
+
             .Define("JetsConstituents", "JetConstituentsUtils::build_constituents_cluster(ReconstructedParticles, jetconstituents_ee_genkt)") #build jet constituents lists
 
-            ### Types of particles 
+            ### Types of particles
             .Alias("MCRecoAssociations0", "MCRecoAssociations#0.index")
             .Alias("MCRecoAssociations1", "MCRecoAssociations#1.index")
             .Define("JetsConstituents_Pids", "JetConstituentsUtils::get_PIDs_cluster(MCRecoAssociations0, MCRecoAssociations1, ReconstructedParticles, Particle, jetconstituents_ee_genkt)")
-            
+
             .Define("pfcand_isMu", "JetConstituentsUtils::get_isMu(JetsConstituents_Pids)")
             .Define("pfcand_isEl", "JetConstituentsUtils::get_isEl(JetsConstituents_Pids)")
             .Define("pfcand_isChargedHad", "JetConstituentsUtils::get_isChargedHad(JetsConstituents_Pids, JetsConstituents)")
-            .Define("pfcand_isGamma", "JetConstituentsUtils::get_isGamma(JetsConstituents_Pids)")
-            .Define("pfcand_isNeutralHad", "JetConstituentsUtils::get_isNeutralHad(JetsConstituents_Pids, JetsConstituents)")
-            
+            .Define("pfcand_isGamma", "JetConstituentsUtils::get_isGamma(JetsConstituents)")
+            .Define("pfcand_isNeutralHad", "JetConstituentsUtils::get_isNeutralHad(JetsConstituents)")
+
             ### Kinematics, displacement, PID
 
             .Define("pfcand_erel", "JetConstituentsUtils::get_erel_cluster(jets_ee_genkt, JetsConstituents)")
@@ -156,7 +156,7 @@ class RDFanalysis():
             .Define("pfcand_btagJetDistVal", "JetConstituentsUtils::get_JetDistVal_clusterV(jets_ee_genkt, JetsConstituents, pfcand_dxy, pfcand_dz, pfcand_phi0, MC_PrimaryVertex, Bz)")
             .Define("pfcand_btagJetDistSig", "JetConstituentsUtils::get_JetDistSig(pfcand_btagJetDistVal, pfcand_dxydxy, pfcand_dzdz)")
 
-       
+
             ##### RUN INFERENCE (fixed by the previous section)
 
             .Define(
@@ -197,20 +197,20 @@ class RDFanalysis():
                     pfcand_btagJetDistVal,\
                     pfcand_btagJetDistSig\
                )",
-            )              
-            
+            )
+
             ##### RECAST OUTPUT (get predictions per each sample)
             .Define("recojet_isG", "JetFlavourUtils::get_weight(MVAVec, 0)")
             .Define("recojet_isQ", "JetFlavourUtils::get_weight(MVAVec, 1)")
             .Define("recojet_isS", "JetFlavourUtils::get_weight(MVAVec, 2)")
             .Define("recojet_isC", "JetFlavourUtils::get_weight(MVAVec, 3)")
             .Define("recojet_isB", "JetFlavourUtils::get_weight(MVAVec, 4)")
-                        
-            ##### COMPUTE OBSERVABLES FOR ANALYSIS 
+
+            ##### COMPUTE OBSERVABLES FOR ANALYSIS
             #if not changing training etc... but only interested in the analysis using a trained model (fixed classes), you should only operate in this section.
             #if you're interested in saving variables used for training don't need to compute them again, just
             #add them to the list in at the end of the code
-            
+
             #EXAMPLE
 
             #EVENT LEVEL
@@ -254,10 +254,10 @@ class RDFanalysis():
             'recojet_isG', 'recojet_isQ', 'recojet_isS', 'recojet_isC', 'recojet_isB',
             #observables
             'recojet_mass', 'recojet_e', 'recojet_pt',
-            'invariant_mass', 
+            'invariant_mass',
             'nconst', 'nchargedhad',
             'pfcand_e', 'pfcand_pt', 'pfcand_phi',
-            'pfcand_erel', 
+            'pfcand_erel',
             'pfcand_erel_log',
         ]
         return branchList
