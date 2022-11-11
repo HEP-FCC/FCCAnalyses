@@ -200,7 +200,11 @@ namespace FCCAnalyses {
                                                       const rv::RVec<float>& track_L,
                                                       const rv::RVec<edm4hep::TrackData>& trackdata,
                                                       const rv::RVec<edm4hep::TrackerHitData>& trackerhits,
-						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
+                                                      const rv::RVec<edm4hep::ClusterData>& gammadata,
+                                                      const rv::RVec<edm4hep::ClusterData>& nhdata,
+                                                      const rv::RVec<edm4hep::CalorimeterHitData>& calohits,
+                                                      const TLorentzVector& V, // primary vertex
+						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_Pids);
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_PIDs(const ROOT::VecOps::RVec< int > recin,

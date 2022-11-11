@@ -6,10 +6,10 @@
 #include "edm4hep/Track.h"
 #include "edm4hep/TrackerHitData.h"
 #include "edm4hep/TrackData.h"
+#include "edm4hep/Cluster.h"
+#include "edm4hep/ClusterData.h"
+#include "edm4hep/CalorimeterHitData.h"
 #include "edm4hep/ReconstructedParticleData.h"
-
-
-
 #include "FCCAnalyses/JetClusteringUtils.h"
 //#include "FCCAnalyses/ExternalRecombiner.h"
 #include "fastjet/JetDefinition.hh"
@@ -619,10 +619,23 @@ namespace FCCAnalyses {
     //we measure L, tof; mtof in GeV
     //neutrals are set to 0; muons and electrons are set to their mass;
     // only charged hads are considered (mtof used to disctriminate charged kaons and pions)
+
+    // eventually will have to update this function to compute tof with respect to hard vertex
+    // reconstructed with a 4D algorithm
+
+    // TODO:
+    // - extend MC vertex method to 4-vector to have time as well
+    // - recompute neutral L here using Vertex pos
+    // - check if approx possible for charged as well
+    // - use Tin from vertex
     rv::RVec<FCCAnalysesJetConstituentsData> get_mtof(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                       const rv::RVec<float>& track_L,
                                                       const rv::RVec<edm4hep::TrackData>& trackdata,
                                                       const rv::RVec<edm4hep::TrackerHitData>& trackerhits,
+                                                      const rv::RVec<edm4hep::ClusterData>& gammadata,
+                                                      const rv::RVec<edm4hep::ClusterData>& nhdata,
+                                                      const rv::RVec<edm4hep::CalorimeterHitData>& calohits,
+                                                      const TLorentzVector& V, // primary vertex posotion and time in mm
                                                       const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_Pids) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for(int i = 0; i < jcs.size(); ++i){
@@ -630,18 +643,52 @@ namespace FCCAnalyses {
         FCCAnalysesJetConstituentsData pids = JetsConstituents_Pids.at(i);
         FCCAnalysesJetConstituentsData tmp;
         for(int j = 0; j < ct.size(); ++j) {
-          //if(ct.at(j).tracks_begin > 0 && ct.at(j).tracks_begin < trackdata.size()) { //??????????? CHECK!!!
+          if (ct.at(j).clusters_begin < nhdata.size() + gammadata.size()) {
+            if (ct.at(j).type == 130) {
+              // this assumes that in converter photons are filled first and nh after
+              float T = calohits.at(nhdata.at(ct.at(j).clusters_begin - gammadata.size()).hits_begin).time;
+              float X = calohits.at(nhdata.at(ct.at(j).clusters_begin - gammadata.size()).hits_begin).position.x;
+              float Y = calohits.at(nhdata.at(ct.at(j).clusters_begin - gammadata.size()).hits_begin).position.y;
+              float Z = calohits.at(nhdata.at(ct.at(j).clusters_begin - gammadata.size()).hits_begin).position.z;
+
+              float tof = T;
+              // compute path length wrt to PV
+              float L = std::sqrt((X-V.X())*(X-V.X()) + (Y-V.Y())*(Y-V.Y()) + (Z-V.Z())*(Z-V.Z())) * 0.001;
+              //std::cout << "tof n: " << T << "  -  L: " << L << std::endl;
+              float beta = L/(tof * 2.99792458e+8) ;
+              float E = ct.at(j).energy;
+              //std::cout << "tof: " << tof << " - L: " << L << " - beta: " << beta << " - energy: " << E <<" - true PID: "<<abs(pids.at(j))<<std::endl;
+              if (beta < 1. && beta > 0.) {
+                tmp.push_back( E * std::sqrt(1-beta*beta) );
+                //std::cout << "mtof n:" << E * std::sqrt(1-beta*beta)<< std::endl;
+              } else {
+                //std::cout << "problem" << std::endl;
+                tmp.push_back((9.));
+              }
+            } else if (ct.at(j).type == 22) {
+                tmp.push_back((0.));
+            }
+          }
+
           if (ct.at(j).tracks_begin < trackdata.size()) {
             if( abs(pids.at(j)) == 11) {
               tmp.push_back(0.00051099895);
             } else if (abs(pids.at(j)) == 13) {
               tmp.push_back(105.65837);
             } else {
-              float Tin = trackerhits.at(trackdata.at(ct.at(j).tracks_begin).trackerHits_begin).time;
-              float Tout = trackerhits.at(trackdata.at(ct.at(j).tracks_begin).trackerHits_end-1).time; //one track and two hits per recon. particle are assumed
+
+              // this is the time of the track origin from MC
+              //float Tin = trackerhits.at(trackdata.at(ct.at(j).tracks_begin).trackerHits_begin).time;
+
+              // time given by primary vertex
+              float Tin = V.T()*1e-3/2.99792458e+8;
+
+              float Tout = trackerhits.at(trackdata.at(ct.at(j).tracks_begin).trackerHits_end-1).time; //one track and 3 hits per recon. particle are assumed
               float tof = (Tout - Tin);
+
+              // TODO: path length will have to be re-calculated from vertex position
               float L = track_L.at(ct.at(j).tracks_begin) * 0.001;
-              //std::cout << "tof: " << tof << "  -  L: " << L <<  << std::endl;
+              //std::cout << "tof: " << tof << "  -  L: " << L << std::endl;
               float beta = L/(tof * 2.99792458e+8) ;
               float p = std::sqrt( ct.at(j).momentum.x*ct.at(j).momentum.x + ct.at(j).momentum.y*ct.at(j).momentum.y + ct.at(j).momentum.z * ct.at(j).momentum.z );
               //std::cout << "tof: " << tof << " - L: " << L << " - beta: " << beta << " - momentum: " << p << " - mtof: " << p * std::sqrt(1/(beta*beta)-1) << std::endl;
@@ -651,17 +698,12 @@ namespace FCCAnalyses {
                 tmp.push_back(0.13957039);
               }
             }
-          } else {
-            //float E = ct.at(j).energy;
-            //tmp.pushback( E * std::sqrt(1-beta*beta) );
-            tmp.push_back(0.);
           }
         }
         out.push_back(tmp);
       }
       return out;
     }
-
 
     //kinematics const/jet
     rv::RVec<FCCAnalysesJetConstituentsData> get_erel_log(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
