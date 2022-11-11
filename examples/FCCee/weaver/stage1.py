@@ -30,6 +30,10 @@ class RDFanalysis:
             # ===== VERTEX
             # MC primary vertex
             .Define(
+                "MC_PrimaryVertexP4",
+                "FCCAnalyses::MCParticle::get_EventPrimaryVertexP4(21)( Particle )",
+            )
+            .Define(
                 "MC_PrimaryVertex",
                 "FCCAnalyses::MCParticle::get_EventPrimaryVertex(21)( Particle )",
             )
@@ -124,7 +128,7 @@ class RDFanalysis:
             )
             .Define(
                 "JetsConstituents_mtof",
-                "JetConstituentsUtils::get_mtof(JetsConstituents, EFlowTrack_L, EFlowTrack, TrackerHits, JetsConstituents_Pids)",
+                "JetConstituentsUtils::get_mtof(JetsConstituents, EFlowTrack_L, EFlowTrack, TrackerHits, EFlowPhoton, EFlowNeutralHadron, CalorimeterHits,  MC_PrimaryVertexP4, JetsConstituents_Pids)",
             )
             .Define(
                 "JetsConstituents_d0_wrt0",

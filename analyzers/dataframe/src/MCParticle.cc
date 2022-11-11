@@ -96,6 +96,20 @@ TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCPart
   return result;
 }
 
+get_EventPrimaryVertexP4::get_EventPrimaryVertexP4( int arg_genstatus) { m_genstatus = arg_genstatus; };
+TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
+  TLorentzVector result;
+  for (auto & p: in) {
+     if ( p.generatorStatus == m_genstatus ) {   // generator status code for the incoming particles of the hardest subprocess
+       // vertex.time is in s, convert in mm here.
+       TLorentzVector res( p.vertex.x, p.vertex.y, p.vertex.z, p.time * 1.0e3 * 2.99792458e+8);
+       result = res;
+       break;
+     }
+   }
+
+  return result;
+}
 
 get_tree::get_tree(int arg_index) : m_index(arg_index) {};
 ROOT::VecOps::RVec<int> get_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
