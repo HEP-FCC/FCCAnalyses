@@ -4,6 +4,8 @@
 
 #include "Math/Vector4D.h"
 #include "ROOT/RVec.hxx"
+#include "TLorentzVector.h"
+
 
 #include "FastJet/JetClustering.h"
 #include "fastjet/JetDefinition.hh"
@@ -98,6 +100,12 @@ namespace FCCAnalyses {
     fastjet::RecombinationScheme recomb_scheme(int recombination);
 
     std::vector<float> exclusive_dmerge(fastjet::ClusterSequence& cs, int do_dmarge_max);
+
+		struct recoilBuilder {
+      recoilBuilder(float arg_sqrts);
+      float m_sqrts = 240.0;
+      double operator() (ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+    };
 
     ///@}
 
