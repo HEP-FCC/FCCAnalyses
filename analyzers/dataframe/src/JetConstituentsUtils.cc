@@ -108,6 +108,10 @@ namespace FCCAnalyses {
       return cast_constituent(jcs, ReconstructedParticle::get_pt);
     }
 
+    rv::RVec<FCCAnalysesJetConstituentsData> get_p(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
+      return cast_constituent(jcs, ReconstructedParticle::get_p);
+    }
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_e(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       return cast_constituent(jcs, ReconstructedParticle::get_e);
     }

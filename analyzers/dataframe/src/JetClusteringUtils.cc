@@ -98,6 +98,14 @@ namespace FCCAnalyses {
       return result;
     }
 
+    ROOT::VecOps::RVec<float> get_p(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in) {
+      ROOT::VecOps::RVec<float> result;
+      for (auto& p : in) {
+        result.push_back(sqrt(p.pt()*p.pt() + p.pz()*p.pz()));
+      }
+      return result;
+    }
+
     ROOT::VecOps::RVec<float> get_m(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in) {
       ROOT::VecOps::RVec<float> result;
       for (auto& p : in) {
