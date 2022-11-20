@@ -48,8 +48,6 @@ f.close()
 # convert to tuple
 variables = tuple(variables)
 
-
-# from examples.FCCee.weaver.stage1 import definitions, alias
 from examples.FCCee.weaver.stage1 import definition, alias
 
 # first aliases
