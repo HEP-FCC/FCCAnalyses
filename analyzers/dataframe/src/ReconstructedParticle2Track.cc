@@ -38,7 +38,7 @@ namespace ReconstructedParticle2Track{
 
   ROOT::VecOps::RVec<float> XPtoPar_dxy(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
 					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-					const TVector3& V,
+					const TLorentzVector& V, // primary vertex
 					const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e-9;
@@ -54,8 +54,8 @@ namespace ReconstructedParticle2Track{
         float phi0_wrt0 = tracks.at(rp.tracks_begin).phi;
 
         TVector3 X( - D0_wrt0 * TMath::Sin(phi0_wrt0) , D0_wrt0 * TMath::Cos(phi0_wrt0) , Z0_wrt0);
-        TVector3 x = X - V;
-
+        TVector3 x = X - V.Vect();
+        //std::cout<<"vertex: "<<V.Vect().X()<<", "<<V.Vect().Y()<<", "<<V.Vect().Z()<<", "<<std::endl;
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 
         double a = - rp.charge * Bz * cSpeed;
@@ -65,10 +65,11 @@ namespace ReconstructedParticle2Track{
         double D=-9;
         if (pt * pt - 2 * a * cross + a * a * r2 > 0) {
           double T = TMath::Sqrt(pt * pt - 2 * a * cross + a * a * r2);
-	  if (pt < 10.0) D = (T - pt) / a;
-          else D = (-2 * cross + a * r2) / (T + pt);
+      	  if (pt < 10.0) D = (T - pt) / a;
+                else D = (-2 * cross + a * r2) / (T + pt);
         }
-	out.push_back(D);
+        //std::cout<<"displ: "<<D<<std::endl;
+	      out.push_back(D);
 
       } else {
 	out.push_back(-9.);
@@ -81,7 +82,7 @@ namespace ReconstructedParticle2Track{
 
   ROOT::VecOps::RVec<float> XPtoPar_dz(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
                                         const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-                                        const TVector3& V,
+                                        const TLorentzVector& V, // primary vertex
                                         const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e-9; //Reduced speed of light ???
@@ -97,7 +98,7 @@ namespace ReconstructedParticle2Track{
         float phi0_wrt0 = tracks.at(rp.tracks_begin).phi;
 
         TVector3 X( - D0_wrt0 * TMath::Sin(phi0_wrt0) , D0_wrt0 * TMath::Cos(phi0_wrt0) , Z0_wrt0);
-        TVector3 x = X - V;
+        TVector3 x = X - V.Vect();
 
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 
@@ -111,7 +112,7 @@ namespace ReconstructedParticle2Track{
         if (pt < 10.0) D = (T - pt) / a;
         else D = (-2 * cross + a * r2) / (T + pt);
         double B = C * TMath::Sqrt(TMath::Max(r2 - D * D, 0.0) / (1 + 2 * C * D));
-        if ( TMath::Abs(B) > 1.) B = TMath::Sign(1, B);				
+        if ( TMath::Abs(B) > 1.) B = TMath::Sign(1, B);
         double st = TMath::ASin(B) / C;
         double ct = p(2) / pt;
         double z0;
@@ -129,7 +130,7 @@ namespace ReconstructedParticle2Track{
 
   ROOT::VecOps::RVec<float> XPtoPar_phi(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
 					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-					const TVector3& V,
+					const TLorentzVector& V, // primary vertex
 					const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e-9; //Reduced speed of light ???
@@ -145,7 +146,7 @@ namespace ReconstructedParticle2Track{
         float phi0_wrt0 = tracks.at(rp.tracks_begin).phi;
 
         TVector3 X( - D0_wrt0 * TMath::Sin(phi0_wrt0) , D0_wrt0 * TMath::Cos(phi0_wrt0) , Z0_wrt0);
-        TVector3 x = X - V;
+        TVector3 x = X - V.Vect();
 
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 
@@ -167,7 +168,6 @@ namespace ReconstructedParticle2Track{
 
   ROOT::VecOps::RVec<float> XPtoPar_C(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
 				       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-				       const TVector3& V,
 				       const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e3 * 1.0e-15;
@@ -193,7 +193,6 @@ namespace ReconstructedParticle2Track{
 
   ROOT::VecOps::RVec<float> XPtoPar_ct(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
 				       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-				       const TVector3& V,
 				       const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e-9;

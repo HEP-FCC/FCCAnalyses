@@ -66,23 +66,21 @@ namespace FCCAnalyses {
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dxy(const rv::RVec<FCCAnalysesJetConstituents>&,
 							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-							 const TVector3&,
+							 const TLorentzVector& V, // primary vertex
 							 const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dz(const rv::RVec<FCCAnalysesJetConstituents>&,
 							const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-							const TVector3&,
+							const TLorentzVector& V, // primary vertex
 							const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_phi(const rv::RVec<FCCAnalysesJetConstituents>&,
                                                          const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-                                                         const TVector3&,
+                                                         const TLorentzVector& V, // primary vertex
                                                          const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_C(const rv::RVec<FCCAnalysesJetConstituents>&,
 						       const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-						       const TVector3&,
 						       const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_ct(const rv::RVec<FCCAnalysesJetConstituents>&,
 							const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-							const TVector3&,
 							const float&);
 
     //covariance matrix
@@ -150,7 +148,7 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal_clusterV(const rv::RVec<fastjet::PseudoJet>& jets,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& D0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& phi0,
-                                                                   const TVector3& V,
+                                                                   const TLorentzVector& V, // primary vertex
                                                                    const float Bz);
 
 
@@ -170,7 +168,7 @@ namespace FCCAnalyses {
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& D0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& Z0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& phi0,
-                                                                   const TVector3& V,
+                                                                   const TLorentzVector& V, // primary vertex
                                                                    const float Bz);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip3dSig(const rv::RVec<FCCAnalysesJetConstituentsData>& Sip3dVals,
@@ -190,7 +188,7 @@ namespace FCCAnalyses {
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData>& D0,
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData>& Z0,
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData>& phi0,
-                                                                     const TVector3& V,
+                                                                     const TLorentzVector& V, // primary vertex
                                                                      const float Bz);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistSig(const rv::RVec<FCCAnalysesJetConstituentsData>& JetDistVal,
