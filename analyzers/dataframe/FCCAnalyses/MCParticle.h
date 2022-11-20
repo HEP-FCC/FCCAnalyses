@@ -76,7 +76,7 @@ namespace MCParticle{
 
   /// return the event primary vertex position and time (mm)
   struct get_EventPrimaryVertexP4 {
-    get_EventPrimaryVertexP4( int arg_genstatus  );
+    get_EventPrimaryVertexP4();
     int m_genstatus = 21;   // Pythia8  code of the incoming particles of the hardest subprocess
     TLorentzVector  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };

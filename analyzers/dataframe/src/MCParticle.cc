@@ -1,6 +1,7 @@
 #include "FCCAnalyses/MCParticle.h"
-
 #include <iostream>
+#include <algorithm>
+#include <set>
 
 
 namespace FCCAnalyses{
@@ -84,8 +85,10 @@ bool  filter_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) 
 
 get_EventPrimaryVertex::get_EventPrimaryVertex( int arg_genstatus) { m_genstatus = arg_genstatus; };
 TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
-  TVector3 result(-1e12,-1e12,-1e12);
+  TVector3 result;
+  int i=0;
   for (auto & p: in) {
+     i++;
      if ( p.generatorStatus == m_genstatus ) {   // generator status code for the incoming particles of the hardest subprocess
        TVector3 res( p.vertex.x, p.vertex.y, p.vertex.z );
        result = res;
@@ -96,9 +99,11 @@ TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCPart
   return result;
 }
 
-get_EventPrimaryVertexP4::get_EventPrimaryVertexP4( int arg_genstatus) { m_genstatus = arg_genstatus; };
+get_EventPrimaryVertexP4::get_EventPrimaryVertexP4() {};
 TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
   TLorentzVector result;
+  Bool_t found_py8 = false;
+  // first try pythia8 gen status == 21 code;
   for (auto & p: in) {
      if ( p.generatorStatus == m_genstatus ) {   // generator status code for the incoming particles of the hardest subprocess
        // vertex.time is in s, convert in mm here.
@@ -106,6 +111,18 @@ TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep
        result = res;
        break;
      }
+   }
+   // then try pythia6 status == 2 and W,Z or H
+   if (!found_py8) {
+     std::set<int> pdgs {23, 24, 25};
+     for (auto & p: in) {
+        if ( p.generatorStatus == 2 and pdgs.count(abs(p.PDG)) != 0 ) {   // generator status code for the incoming particles of the hardest subprocess
+          // vertex.time is in s, convert in mm here.
+          TLorentzVector res( p.vertex.x, p.vertex.y, p.vertex.z, p.time * 1.0e3 * 2.99792458e+8);
+          result = res;
+          break;
+        }
+      }
    }
 
   return result;
