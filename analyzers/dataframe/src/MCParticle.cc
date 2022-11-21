@@ -85,7 +85,7 @@ bool  filter_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) 
 
 get_EventPrimaryVertex::get_EventPrimaryVertex( int arg_genstatus) { m_genstatus = arg_genstatus; };
 TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
-  TVector3 result;
+  TVector3 result(-1e12,-1e12,-1e12);
   int i=0;
   for (auto & p: in) {
      i++;
@@ -101,7 +101,7 @@ TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCPart
 
 get_EventPrimaryVertexP4::get_EventPrimaryVertexP4() {};
 TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
-  TLorentzVector result;
+  TLorentzVector result(-1e12,-1e12,-1e12,-1e12);
   Bool_t found_py8 = false;
   // first try pythia8 gen status == 21 code;
   for (auto & p: in) {
