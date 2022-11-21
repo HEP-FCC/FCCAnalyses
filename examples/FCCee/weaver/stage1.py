@@ -40,9 +40,9 @@ definition["RP_q"] = "ReconstructedParticle::get_charge(ReconstructedParticles)"
 # definition[]"pseudo_jets"]=    "JetClusteringUtils::set_pseudoJets_xyzm(RP_px, RP_py, RP_pz, RP_m)"
 definition["pseudo_jets"] = "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)"
 # run jet clustering with all reconstructed particles. ee_genkt_algorithm, R=1.5, inclusive clustering, E-scheme
-definition[
-    "FCCAnalysesJets_ee_genkt"
-] = "JetClustering::clustering_ee_genkt(1.5, 0, 0, 0, 0, -1)(pseudo_jets)"
+
+definition["FCCAnalysesJets_ee_genkt"] = "JetClustering::clustering_ee_kt(2, 2, 1, 0)(pseudo_jets)"
+# ] = "JetClustering::clustering_ee_genkt(1.5, 0, 0, 0, 0, -1)(pseudo_jets)"
 
 # get the jets out of the struct
 definition["jets_ee_genkt"] = "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_ee_genkt)"
@@ -199,13 +199,13 @@ definition["pfcand_cdz"] = "JetConstituentsUtils::get_omega_z0_cov(JetsConstitue
 
 definition[
     "pfcand_sip2dval"
-] = "JetConstituentsUtils::get_Sip2dVal_clusterV(jets_ee_genkt, pfcand_dxy, pfcand_phi0, MC_PrimaryVertexP4, Bz)"
+] = "JetConstituentsUtils::get_Sip2dVal_clusterV(jets_ee_genkt, pfcand_dxy, pfcand_phi0, Bz)"
 
 definition["pfcand_sip2dsig"] = "JetConstituentsUtils::get_Sip2dSig(pfcand_sip2dval, pfcand_dxydxy)"
 
 definition[
     "pfcand_sip3dval"
-] = "JetConstituentsUtils::get_Sip3dVal_clusterV(jets_ee_genkt, pfcand_dxy, pfcand_dz, pfcand_phi0, MC_PrimaryVertexP4, Bz)"
+] = "JetConstituentsUtils::get_Sip3dVal_clusterV(jets_ee_genkt, pfcand_dxy, pfcand_dz, pfcand_phi0, Bz)"
 
 definition[
     "pfcand_sip3dsig"
@@ -213,7 +213,7 @@ definition[
 
 definition[
     "pfcand_jetdistval"
-] = "JetConstituentsUtils::get_JetDistVal_clusterV(jets_ee_genkt, JetsConstituents, pfcand_dxy, pfcand_dz, pfcand_phi0, MC_PrimaryVertexP4, Bz)"
+] = "JetConstituentsUtils::get_JetDistVal_clusterV(jets_ee_genkt, JetsConstituents, pfcand_dxy, pfcand_dz, pfcand_phi0, Bz)"
 
 definition[
     "pfcand_jetdistsig"
