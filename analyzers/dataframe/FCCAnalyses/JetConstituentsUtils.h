@@ -148,7 +148,6 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal_clusterV(const rv::RVec<fastjet::PseudoJet>& jets,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& D0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& phi0,
-                                                                   const TLorentzVector& V, // primary vertex
                                                                    const float Bz);
 
 
@@ -168,7 +167,6 @@ namespace FCCAnalyses {
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& D0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& Z0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData>& phi0,
-                                                                   const TLorentzVector& V, // primary vertex
                                                                    const float Bz);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip3dSig(const rv::RVec<FCCAnalysesJetConstituentsData>& Sip3dVals,
@@ -188,7 +186,6 @@ namespace FCCAnalyses {
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData>& D0,
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData>& Z0,
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData>& phi0,
-                                                                     const TLorentzVector& V, // primary vertex
                                                                      const float Bz);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistSig(const rv::RVec<FCCAnalysesJetConstituentsData>& JetDistVal,
