@@ -3,7 +3,7 @@ from array import array
 from ROOT import TFile, TTree
 from examples.FCCee.weaver.stage1 import branches_pfcand, branches_jet, branches_event
 
-debug = True
+debug = False
 
 if len(sys.argv) < 2:
     print(" Usage: stage2.py input_file output_file n_start n_events")
@@ -38,10 +38,10 @@ if len(branches_pfcand) == 0:
 
 print("")
 print("-> number of events: {}".format(numberOfEntries))
-print("-> requested to run over [{},{}] range".format(n_start, n_final))
+print("-> requested to run over [{},{}] event range".format(n_start, n_final))
 
-#branches_pfcand = [branches_pfcand[0]]
-#branches_jet = [branches_jet[-1]]
+# branches_pfcand = [branches_pfcand[0]]
+# branches_jet = [branches_jet[-1]]
 
 ## define variables for output tree
 maxn = 100
@@ -85,25 +85,18 @@ for b in branches_pfcand:
     pfcand_array[b] = array("f", maxn * [0])
     t.Branch(b, pfcand_array[b], "{}[jet_npfcand]/F".format(b))
 
-"""
-for key, item in jet_array.items():
-    print(key)
-for key, item in pfcand_array.items():
-    print(key)
-"""
+if debug:
+    for key, item in jet_array.items():
+        print(key)
+    for key, item in pfcand_array.items():
+        print(key)
 
 # Loop over all events
-
-if debug:
-    numberOfEntries = 3
-
-# numberOfEntries = 2
-
 for entry in range(n_start, n_final):
     # Load selected branches with data from specified event
 
     # if (entry+1)%100 == 0:
-    if (entry + 1) % 1 == 0:
+    if (entry + 100) % 1 == 0:
 
         if debug:
             print(
@@ -125,21 +118,21 @@ for entry in range(n_start, n_final):
             for f in flavors:
                 name = "jet_is{}".format(f)
                 jet_array[name][0] = match_flavor[f]
-                print("   jet:", j, name, jet_array[name][0])
+                if debug:
+                    print("   jet:", j, name, jet_array[name][0])
 
             for name in branches_jet:
-                # jet_array[name][0] = getattr(ev, name)
-                print("   jet:", j, name, getattr(ev, name)[j])
                 jet_array[name][0] = getattr(ev, name)[j]
+                if debug:
+                    print("   jet:", j, name, getattr(ev, name)[j])
 
             ## loop over constituents
             jet_npfcand[0] = len(getattr(ev, branches_pfcand[0])[j])
-            print(jet_npfcand[0], ev.jet_nconst)
             for k in range(jet_npfcand[0]):
                 for name in branches_pfcand:
-                    # jet_array[name][0] = getattr(ev, name)
-                    print("       const:", k, name, getattr(ev, name)[j][k])
                     pfcand_array[name][k] = getattr(ev, name)[j][k]
+                    if debug:
+                        print("       const:", k, name, getattr(ev, name)[j][k])
 
             ## fill tree at every jet
             t.Fill()
