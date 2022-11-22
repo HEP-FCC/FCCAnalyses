@@ -10,10 +10,10 @@ files and producing the plots.
 >
 > To have access to the FCC samples, you need to be subscribed to one of the
 > following e-groups (with owner approval) `fcc-eos-read-xx` with `xx=ee,hh,eh`.
-> For the time being, the configuration files are accessible on `helsens` public
-> AFS. This is not optimal and will be changed in the future, thus you are
-> also kindly asked to contact `clement.helsens@cern.ch` and request access to
-> `/afs/cern.ch/work/h/helsens/public/FCCDicts/`.
+> For the time being, the configuration files are accessible on `fccsw` public
+> AFS. This is not optimal and will be changed in the future with migration to DIRAC, thus you are
+> also kindly asked to contact `emmanuel.perez@cern.ch`, `gerardo.ganis@cern.ch`, `clement.helsens@cern.ch` and request access to
+> `/afs/cern.ch/work/f/fccsw/public/FCCDicts/`.
 >
 
 Detailed code documentation can be found
@@ -108,7 +108,7 @@ analysis should be located at `examples/FCCee/higgs/mH-recoil/mumu/`.
 
 The pre-selection runs over already existing and properly registered FCCSW
 EDM4hep events. The dataset names with the corresponding statistics can be found
-[here](http://fcc-physics-events.web.cern.ch/fcc-physics-events/Delphesevents_spring2021_IDEA.php)
+[here](http://fcc-physics-events.web.cern.ch/fcc-physics-events/FCCee/spring2021/Delphesevents_IDEA.php)
 for the IDEA spring 2021 campaign. The `processList` is a dictionary of
 processes, each process having it's own dictionary of parameters. For example
 ```python
@@ -190,3 +190,8 @@ fccanalysis plots examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py
 ```
 
 Resulting plots will be located the `outdir` defined in the analysis file.
+
+### Experimental
+
+In an attempt to ease the development of new physics case studies, such as for the [FCCee physics performance](https://github.com/HEP-FCC/FCCeePhysicsPerformance) cases, a new experimental analysis package creation tool is introduced.
+[See here](case-studies/README.md) for more details.

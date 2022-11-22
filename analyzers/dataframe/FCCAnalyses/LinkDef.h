@@ -15,11 +15,15 @@
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::TrackState>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::VertexData>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>+;
+#pragma link C++ class ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>+;
+#pragma link C++ class ROOT::VecOps::RVec<edm4hep::ClusterData>+;
+#pragma link C++ class ROOT::VecOps::RVec<podio::ObjectID>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::Vector3d>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::MCParticleData>+;
 #pragma link C++ class ROOT::VecOps::RVec<TVector3>+;
 #pragma link C++ class ROOT::VecOps::RVec<ROOT::VecOps::RVec<float>>+;
 #pragma link C++ class ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>>+;
+#pragma link C++ class ROOT::VecOps::RVec<std::vector<float>>+;
 
 //to load all other functions
 #pragma link C++ function dummyLoader;
