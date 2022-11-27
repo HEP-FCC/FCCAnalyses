@@ -1,35 +1,11 @@
 import sys
 
-# Mandatory: List of processes
-processList = {
-    # prefall2022 samples (generated centrally)
-    "p8_ee_ZH_Znunu_Hbb_ecm240": {},  # 1030000 events
-    "p8_ee_ZH_Znunu_Hcc_ecm240": {},  # 1060000
-    "p8_ee_ZH_Znunu_Hss_ecm240": {},  # 1060000
-    "p8_ee_ZH_Znunu_Hgg_ecm240": {"fraction": 0.5},  # 2000000
-    "p8_ee_ZH_Znunu_Huu_ecm240": {
-        "fraction": 0.5
-    },  # we take only half sample for uu,dd because they will go into qq label which contains both
-    "p8_ee_ZH_Znunu_Hdd_ecm240": {
-        "fraction": 0.5
-    },  # and we want for qq same number of jets as other classes; the two files 2080000 events in total, 1040000 each?
-}
-
-# Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
-# prodTag     = "FCCee/spring2021/IDEA/"
-prodTag = "FCCee/pre_fall2022_training/IDEA/"  # for prefall2022 samples
-
-# Optional: output directory, default is local running directory
-# outputDir   = "/eos/home-a/adelvecc/FCCevaluate/"
-
 # Optional
-nCPUS = 1
-runBatch = False
-# batchQueue = "longlunch"
-# compGroup = "group_u_FCC.local_gen"
+nCPUS = 8
 
-
-model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/"
+model_dir = (
+    "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/"
+)
 weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep_v2.json".format(model_dir)
 weaver_model = "{}/fccee_flavtagging_edm4hep_v2.onnx".format(model_dir)
 
@@ -48,7 +24,7 @@ f.close()
 # convert to tuple
 variables = tuple(variables)
 
-from examples.FCCee.weaver.stage1 import definition, alias
+from examples.FCCee.weaver.config import definition, alias
 
 # first aliases
 for var, al in alias.items():
@@ -91,9 +67,7 @@ class RDFanalysis:
         df = df.Define("MVAVec", get_weight_str)
 
         for i, scorename in enumerate(scores):
-            df = df.Define(
-                scorename, "JetFlavourUtils::get_weight(MVAVec, {})".format(i)
-            )
+            df = df.Define(scorename, "JetFlavourUtils::get_weight(MVAVec, {})".format(i))
 
         df2 = (
             df
