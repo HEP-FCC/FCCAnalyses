@@ -196,154 +196,17 @@ At the end of this stage we have a tree in which each entry is an event; the fea
 #### What if implicit clustering ?
 	...
 
-### Stage_ntuple : `stage2.cpp`
+### Stage_ntuple : `stage2.py`
 The main goal of this stage is to rearrange the tree obtained in _stage1_ to a per-jet format, but other tasks are accomplished:
 * setting the flags of the class which the jets belong to;
 * checking the number of events actually considered is the wanted one;
 * there is a $\sim 30\%$ cases in which the clustering returns more than 2 jets, and $\sim$ few per million cases in which less than 2 jets are returned; so in the first case just the two higher energy jets are considered, while in the second case no jet is considered; a count of this events is printed to stdout.
 
-`stage2.cpp` takes 4 arguments: `USAGE: ./stage [root_inFileName] [root_outFileName] N_i N_f`
+`stage2.py` takes 4 arguments: `USAGE: python stage2.py [root_inFileName] [root_outFileName] N_i N_f`
 1. [root_inFileName] : path to input file in the form `path_to_stage1file/stage1_infilename` ,
 2. [root_outFileName] : path to output file in the form `path_to_outputdir/outfilename` ,
 3. N_i : index of the event from where start reading the tree ,
 4. N_f : index of the event ehrtr to stop reading the tree .
 
-Our choices are implemented in the app `all_stages.py`, so will be explained in the next section.
+Our choices are implemented in the app `stage_all.py`, so will be explained in the next section.
 Now, let's go through the code.
-
-###### Loop structure
-
-The general structure of the loop is:
-```
-loop : events {
-	...
-	loop : jets {
-		...
-		loop : constituents {
-			...
-		}
-	ntuple.Fill()  
-	}
-}
-```
-
-The position of ntuple.Fill() inside the loop structure determines the per-jet structure.
-We modified this basic structure:
-* we insert where to start looping by `N_i` and how many events to consider by `Nevents_Max = N_f - N_i`;
-* we loop over the events from N_i to the end of the tree, but introduce an external counter `saved_events_counts` which grows only if the event has been saved; this is the reliable counter! In fact, if the event is "strange" we don't save any jet, we skip to the next event. The loop breaks when `saved_events_counts == Nevents_Max` if the loop has not reached the end of the input file. Let's study different cases:
-    - If `nentries - N_i < Nevents_Max` $\implies$ in the file there are less events than required; no error produced, but in stdout will be printed the actual number of saved events;
-    - If `nentries - N_i > Nevents_Max` $\implies$ in the file there are exactly $Nevents_{Max}$;
-    - If `nentries - N_i = Nevents_Max` but there are strange events I will have less saved events, no error, but I know from stdout.
-
-Are considered "strange" events those in which the clustering returns `njets < 2`; in that case we skip the loop. If `njets >= 2` the loop is performed on the first two jets only (the ones having more ENERGY, they're ordered in stage1; the successives not expected: leak in clustering).
-
-```
-int N_i = atoi(argv[3]); //where to start reading the tree
-int N_f = atoi(argv[4]);
-int Nevents_Max = N_f - N_i;  //number of events to be saved
-int saved_events_counts = 0; //counts the number of events actually saved
-int nentries = ev->GetEntries(); //total number of events in the tree
-
-for(int i = N_i+1; i < nentries; ++i) { // Loop over the events
-	ev->GetEntry(i);
-    	njet = nJets;
-
-    	if (njet < 2) {   //exclude the events with less than two jets
-      		continue ;
-    	}
-
-	for(int j=0; j < 2; ++j) {   //Loop over the jets inside the i-th event
-	//we only take the first two jets (the ones having more ENERGY, they're ordered in stage1),
-	//the third not expected: leak in clustering
-
-		...
-
-		nconst = (count_Const->at(j));
-
-		for(int k = 0; k < nconst; ++k){ //Loop over the constituents of the j-th jet in the i-th event
-			...
-		}
-		ntuple->Fill();
-	}
-	saved_events_counts += 1; //we count the num of events saved
-	if (saved_events_counts == Nevents_Max) { //interrupt the loop if Nevents_max events have already been saved
-		break;
-	}
-}
-```
-
-
-###### Translating
-As an example, we take one jet feature (stored as `RVec < float> *` in the per-event tree) and one constituent feature (`RVec < RVec < float> > *`) and follow them through the code.
-
-```
-//Setting variables for reading
-int nJets; //number of jets in the event
-int nconst = 0; //number of constituents of the jets
-ROOT::VecOps::RVec<float> *Jets_e=0;
-ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > *JetsConstituents_e = 0;
-
-ev->SetBranchAddress("njet", &nJets);
-ev->SetBranchAddress("nconst", &count_Const);
-ev->SetBranchAddress("Jets_e", &Jets_e);
-ev->SetBranchAddress("JetsConstituents_e", &JetsConstituents_e);
-
-int njet = 0;
-int nconst = 0;
-double recojet_e;
-float pfcand_e[1000] = {0.}; //here we initialize wit a large size
-
-ntuple->Branch("nconst", &nconst, "nconst/I");
-ntuple->Branch("recojet_e", &recojet_e);
-ntuple->Branch("pfcand_e", pfcand_e, "pfcand_e[nconst]/F");
-
-loop : i over events
-	loop : j over jets
-
-		recojet_e = (*Jets_e)[j];       //Pointer usage
-		nconst = (count_Const->at(j));
-
-		loop : k over constituents
-			pfcand_e[k] = (JetsConstituents_e->at(j))[k]; //k-th element of the j-th vector
-								      //pointed by JetsConstituents_e
-```
-
-In the ntuple, a jet overall property will be just a `double`.
-Since we don't know a priori how many constituents the jet has, we initialize a constituent feature as an array with a number of elements larger than possible number of constituents, to be sure that we succeed in reading all of them from the input file (this array works as a temporary "home" before being sent to the output file); we initialize all the values to 0. When we create the branch of the ntuple (`ntuple->Branch("pfcand_e", pfcand_e, "pfcand_e[nconst]/F")`), we pass as the size of the entry the actual number of constituents `nconst` which has already been read into another branch (during the loop), in order not to save all the padding zeros contained in the local array.  
-
-###### Setting the flags
-We read the name and take the character in the name corresponding to the class (in this case last letter before .root); we fix the flag in the beginning and never change it anymore; since it is pointing to the ntuple branch, everytime I call `ntuple.Fill()` the same value will be added to the branch.
-```
-std::string infileName(argv[1]);
-char flavour = infileName[infileName.length()-6];
-
-float is_q = 0.;
-float is_b = 0.;
-float is_c = 0.;
-float is_s = 0.;
-float is_g = 0.;
-
-if (flavour == 'q') {is_q = 1.;}
-if (flavour == 'b') {is_b = 1.;}
-if (flavour == 'c') {is_c = 1.;}
-if (flavour == 's') {is_s = 1.;}
-if (flavour == 'g') {is_g = 1.;}
-if (flavour == 't') {is_t = 1.;}
-
-ntuple->Branch("pfcand_isMu", pfcand_isMu, "pfcand_isMu[nconst]/F");
-ntuple->Branch("pfcand_isEl", pfcand_isEl, "pfcand_isEl[nconst]/F");
-ntuple->Branch("pfcand_isChargedHad", pfcand_isChargedHad, "pfcand_isChargedHad[nconst]/F");
-ntuple->Branch("pfcand_isGamma", pfcand_isGamma, "pfcand_isGamma[nconst]/F");
-ntuple->Branch("pfcand_isNeutralHad", pfcand_isNeutralHad, "pfcand_isNeutralHad[nconst]/F");
-
-loop : events {
-	...
-	loop: jets {
-		...
-		loop: constituents {
-			...
-		}
-	ntuple.Fill()
-	}
-}
-```
