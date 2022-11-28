@@ -3,9 +3,7 @@ import sys
 # Optional
 nCPUS = 8
 
-model_dir = (
-    "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/"
-)
+model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/"
 weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep_v2.json".format(model_dir)
 weaver_model = "{}/fccee_flavtagging_edm4hep_v2.onnx".format(model_dir)
 
@@ -24,7 +22,7 @@ f.close()
 # convert to tuple
 variables = tuple(variables)
 
-from examples.FCCee.weaver.config import definition, alias
+from examples.FCCee.weaver.config import definition, alias, variables_jet
 
 # first aliases
 for var, al in alias.items():
@@ -67,7 +65,9 @@ class RDFanalysis:
         df = df.Define("MVAVec", get_weight_str)
 
         for i, scorename in enumerate(scores):
-            df = df.Define(scorename, "JetFlavourUtils::get_weight(MVAVec, {})".format(i))
+            df = df.Define(
+                scorename, "JetFlavourUtils::get_weight(MVAVec, {})".format(i)
+            )
 
         df2 = (
             df
@@ -103,13 +103,10 @@ class RDFanalysis:
             "recojet_mass",
             "recojet_e",
             "recojet_pt",
-            "invariant_mass",
-            "nconst",
-            "nchargedhad",
-            "pfcand_e",
-            "pfcand_pt",
-            "pfcand_phi",
-            "pfcand_erel",
-            "pfcand_erel_log",
         ]
+
+        # add jet variables defined in config
+        branchList += list(variables_jet.keys())
+        branchList += ["event_invariant_mass", "event_njet"]
+
         return branchList
