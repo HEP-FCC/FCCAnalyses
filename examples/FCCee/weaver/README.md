@@ -53,7 +53,7 @@ fccanalysis run examples/FCCee/weaver/analysis_inference.py --output inference_g
 ## Generated samples
 The samples used are stored in the directory `/eos/experiment/fcc/ee/generation/DelphesEvents/pre_fall2022_training/IDEA/` .
 The events were simulated using Delphes.
-The processes considered are $e^+ e^- \to Z(\to \nu \nu) H(\to aa)$ with $j = u,d,b,c,s,g$.
+The processes considered are $e^+ e^- \to Z(\to \nu \nu) H(\to jj)$ with $j = u,d,b,c,s,g$.
 For the processes $j =  u,d,b,c,s$ samples of $\sim 10^6$ events were produced (i.e. $2 \times 10^6$ jets per sample), for $j = g$ $\sim 2 \times 10^6$ (i.e. $2 \times 10^6$ jets per sample).
 Beamspot of 20 um size on Y-axis and 600 um on Z-axis was set.
 Tre tree containing the events in the input .root file is called _events_ .
