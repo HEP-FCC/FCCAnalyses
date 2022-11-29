@@ -3,9 +3,11 @@ import sys
 # Optional
 nCPUS = 8
 
-model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/selvaggi_2022Oct30/"
-weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep_v2.json".format(model_dir)
-weaver_model = "{}/fccee_flavtagging_edm4hep_v2.onnx".format(model_dir)
+model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_winter2023_tests_v2/selvaggi_2022Nov26/"
+weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep_wzp6_v4.json".format(
+    model_dir
+)
+weaver_model = "{}/fccee_flavtagging_edm4hep_wzp6_v4.onnx".format(model_dir)
 
 ## extract input variables/score name and ordering from json file
 import json
