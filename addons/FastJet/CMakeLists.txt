@@ -11,3 +11,11 @@ fccanalyses_addon_build(FastJet
                                  ${FASTJET_LIBRARY_DIRS}/libfastjetplugins.so
                                  ROOT::MathCore
                         INSTALL_COMPONENT fastjet)
+
+
+install(FILES
+   ${CMAKE_CURRENT_LIST_DIR}/ExternalRecombiner.h
+   ${CMAKE_CURRENT_LIST_DIR}/ValenciaPlugin.h
+   ${CMAKE_CURRENT_LIST_DIR}/JetClustering.h
+   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/FastJet
+   )
