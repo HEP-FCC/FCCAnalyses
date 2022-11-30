@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669848889773,
+  "lastUpdate": 1669848891313,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -12472,6 +12472,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "thomas.madlener@desy.de",
+            "name": "Thomas Madlener",
+            "username": "tmadlener"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6044eee8975fe8a1ea9cfa4122b19b0efd5ceea0",
+          "message": "Install the FastJet addons headers to work around #227 (#230)",
+          "timestamp": "2022-11-30T22:46:10Z",
+          "tree_id": "c5dc2654c54051df5c9c2564eec8573c241b4979",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/6044eee8975fe8a1ea9cfa4122b19b0efd5ceea0"
+        },
+        "date": 1669848890888,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 9.841633686638955,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.539916011513839,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.811894036698604,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 9.311789004915198,
+            "unit": "Evt/s"
           }
         ]
       }
