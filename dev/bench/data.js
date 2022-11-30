@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669848547752,
+  "lastUpdate": 1669848550115,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -12376,6 +12376,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "valentin.volkl@cern.ch",
+            "name": "Valentin Volkl",
+            "username": "vvolkl"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "510f677a00df89a82dc71e90e470a9f0d806a221",
+          "message": "cmake: Get fastjetplugins.so via FindFastJet.cmake (#231)\n\nThis saves some lines and fixes an issue on macOS where the library is called libfastjetplugins.dylib",
+          "timestamp": "2022-11-30T23:32:17+01:00",
+          "tree_id": "4dcd6d7a173c8a19942985b6b912746b33acf8dd",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/510f677a00df89a82dc71e90e470a9f0d806a221"
+        },
+        "date": 1669848549240,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 7.30088340378651,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 6.75668319872093,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.2242894313621155,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 6.9573576404529645,
+            "unit": "Evt/s"
           }
         ]
       }
