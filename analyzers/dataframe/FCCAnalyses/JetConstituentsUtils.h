@@ -199,8 +199,8 @@ namespace FCCAnalyses {
                                                       const rv::RVec<edm4hep::ClusterData>& gammadata,
                                                       const rv::RVec<edm4hep::ClusterData>& nhdata,
                                                       const rv::RVec<edm4hep::CalorimeterHitData>& calohits,
-                                                      const TLorentzVector& V, // primary vertex
-						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_Pids);
+                                                      const TLorentzVector& V // primary vertex
+						                                          );
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_PIDs(const ROOT::VecOps::RVec< int > recin,
@@ -215,10 +215,9 @@ namespace FCCAnalyses {
                                                               const rv::RVec<edm4hep::MCParticleData>& Particle,
                                                               const std::vector<std::vector<int>>& indices);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isMu(const rv::RVec<FCCAnalysesJetConstituentsData>&);
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isEl(const rv::RVec<FCCAnalysesJetConstituentsData>&);
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs,
-                                                               const rv::RVec<FCCAnalysesJetConstituents>& jcs);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isMu(const rv::RVec<FCCAnalysesJetConstituents>& jcs);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isEl(const rv::RVec<FCCAnalysesJetConstituents>& jcs);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const rv::RVec<FCCAnalysesJetConstituents>& jcs);
     rv::RVec<FCCAnalysesJetConstituentsData> get_isGamma(const rv::RVec<FCCAnalysesJetConstituents>& jcs);
     rv::RVec<FCCAnalysesJetConstituentsData> get_isNeutralHad(const rv::RVec<FCCAnalysesJetConstituents>& jcs);
 

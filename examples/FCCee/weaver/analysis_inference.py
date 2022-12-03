@@ -4,10 +4,14 @@ import sys
 nCPUS = 8
 
 model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_winter2023_tests_v2/selvaggi_2022Nov26/"
+"""
 weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep_wzp6_v4.json".format(
     model_dir
 )
-weaver_model = "{}/fccee_flavtagging_edm4hep_wzp6_v4.onnx".format(model_dir)
+"""
+weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep__v4.json".format(model_dir)
+# weaver_model = "{}/fccee_flavtagging_edm4hep_wzp6_v4.onnx".format(model_dir)
+weaver_model = "{}/fccee_flavtagging_edm4hep__v4.onnx".format(model_dir)
 
 ## extract input variables/score name and ordering from json file
 import json
@@ -25,10 +29,6 @@ f.close()
 variables = tuple(variables)
 
 from examples.FCCee.weaver.config import definition, alias, variables_jet
-
-# first aliases
-for var, al in alias.items():
-    print(var, al)
 
 # then funcs
 for varname in variables:
@@ -68,7 +68,8 @@ class RDFanalysis:
 
         for i, scorename in enumerate(scores):
             df = df.Define(
-                scorename, "JetFlavourUtils::get_weight(MVAVec, {})".format(i)
+                scorename,
+                "JetFlavourUtils::get_weight(MVAVec, {})".format(i),
             )
 
         df2 = (

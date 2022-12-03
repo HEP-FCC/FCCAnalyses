@@ -641,12 +641,11 @@ namespace FCCAnalyses {
                                                       const rv::RVec<edm4hep::ClusterData>& gammadata,
                                                       const rv::RVec<edm4hep::ClusterData>& nhdata,
                                                       const rv::RVec<edm4hep::CalorimeterHitData>& calohits,
-                                                      const TLorentzVector& V, // primary vertex posotion and time in mm
-                                                      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_Pids) {
+                                                      const TLorentzVector& V // primary vertex posotion and time in mm
+                                                      ) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for(int i = 0; i < jcs.size(); ++i){
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        FCCAnalysesJetConstituentsData pids = JetsConstituents_Pids.at(i);
         FCCAnalysesJetConstituentsData tmp;
         for(int j = 0; j < ct.size(); ++j) {
           if (ct.at(j).clusters_begin < nhdata.size() + gammadata.size()) {
@@ -677,10 +676,10 @@ namespace FCCAnalyses {
           }
 
           if (ct.at(j).tracks_begin < trackdata.size()) {
-            if( abs(pids.at(j)) == 11) {
-              tmp.push_back(0.00051099895);
-            } else if (abs(pids.at(j)) == 13) {
-              tmp.push_back(105.65837);
+            if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass - 0.000510999) < 1.e-05) {
+              tmp.push_back(0.000510999);
+            } else if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass -  0.105658) < 1.e-03) {
+              tmp.push_back(0.105658);
             } else {
 
               // this is the time of the track origin from MC
@@ -911,59 +910,65 @@ namespace FCCAnalyses {
       return out;
     }
 
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isMu(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isEl(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for(int i = 0; i < PIDs.size(); ++i) {
+      for(int i = 0; i < jcs.size(); ++i) {
+        FCCAnalysesJetConstituentsData is_El;
+        FCCAnalysesJetConstituents ct = jcs.at(i);
+        for (int j = 0; j < ct.size(); ++j) {
+          if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass - 0.000510999) < 1.e-05) {
+            is_El.push_back(1.);
+          }
+          else {
+            is_El.push_back(0.);
+          }
+        }
+
+        out.push_back(is_El);
+      }
+      return out;
+    }
+
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isMu(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
+      rv::RVec<FCCAnalysesJetConstituentsData> out;
+      for(int i = 0; i < jcs.size(); ++i) {
         FCCAnalysesJetConstituentsData is_Mu;
-        for (int j = 0; j < PIDs.at(i).size(); ++j) {
-          if ( abs(PIDs.at(i).at(j)) == 13) {
+        FCCAnalysesJetConstituents ct = jcs.at(i);
+        for (int j = 0; j < ct.size(); ++j) {
+          if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass -  0.105658) < 1.e-03) {
             is_Mu.push_back(1.);
-          } else {
+          }
+          else {
             is_Mu.push_back(0.);
           }
         }
+
         out.push_back(is_Mu);
       }
       return out;
     }
 
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isEl(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for(int i = 0; i < PIDs.size(); ++i) {
-        FCCAnalysesJetConstituentsData is_El;
-        FCCAnalysesJetConstituentsData pids = PIDs.at(i);
-        for (int j = 0; j < pids.size(); ++j) {
-          if ( abs(pids.at(j)) == 11) {
-            is_El.push_back(1.);
-          } else {
-            is_El.push_back(0.);
-          }
-        }
-        out.push_back(is_El);
-      }
-      return out;
-    }
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const rv::RVec<FCCAnalysesJetConstituentsData>& PIDs,
-                                                              const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
-      rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for(int i = 0; i < PIDs.size(); ++i) {
+      for(int i = 0; i < jcs.size(); ++i) {
         FCCAnalysesJetConstituentsData is_ChargedHad;
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        FCCAnalysesJetConstituentsData pids = PIDs.at(i);
-        for (int j = 0; j < pids.size(); ++j) {
-          if (ct.at(j).charge != 0 && abs(pids.at(j)) != 11 && abs(pids.at(j)) != 13) {
+        for (int j = 0; j < ct.size(); ++j) {
+          if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass - 0.13957) < 1.e-03) {
             is_ChargedHad.push_back(1.);
-          } else {
+          }
+          else {
             is_ChargedHad.push_back(0.);
           }
         }
+
         out.push_back(is_ChargedHad);
       }
       return out;
     }
+
+
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_isNeutralHad(const rv::RVec<FCCAnalysesJetConstituents>& jcs) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
