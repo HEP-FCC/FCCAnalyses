@@ -98,7 +98,7 @@ definition["pfcand_omega_wrt0"] = "JetConstituentsUtils::get_omega(JetsConstitue
 
 definition["pfcand_tanlambda_wrt0"] = "JetConstituentsUtils::get_tanLambda(JetsConstituents, EFlowTrack_1)"
 
-definition["Bz"] = "B[0]"
+definition["Bz"] = "magFieldBz[0]"
 
 definition["pfcand_dxy"] = "JetConstituentsUtils::XPtoPar_dxy(JetsConstituents, EFlowTrack_1, MC_PrimaryVertexP4, Bz)"
 
