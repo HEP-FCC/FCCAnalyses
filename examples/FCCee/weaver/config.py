@@ -36,9 +36,7 @@ definition["FCCAnalysesJets_ee_genkt"] = "JetClustering::clustering_ee_kt(2, 2, 
 # get the jets out of the struct
 definition["jets_ee_genkt"] = "JetClusteringUtils::get_pseudoJets(FCCAnalysesJets_ee_genkt)"
 # get the jets constituents out of the struct
-definition[
-    "jetconstituents_ee_genkt"
-] = "JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_genkt)"
+definition["jetconstituents_ee_genkt"] = "JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_genkt)"
 
 # ===== OBSERVABLES
 # JET LEVEL
@@ -74,21 +72,13 @@ definition["pfcand_p"] = "JetConstituentsUtils::get_p(JetsConstituents)"
 definition["pfcand_theta"] = "JetConstituentsUtils::get_theta(JetsConstituents)"
 definition["pfcand_phi"] = "JetConstituentsUtils::get_phi(JetsConstituents)"
 definition["pfcand_charge"] = "JetConstituentsUtils::get_charge(JetsConstituents)"
-definition[
-    "pfcand_erel"
-] = "JetConstituentsUtils::get_erel_cluster(jets_ee_genkt, JetsConstituents)"
+definition["pfcand_erel"] = "JetConstituentsUtils::get_erel_cluster(jets_ee_genkt, JetsConstituents)"
 
-definition[
-    "pfcand_erel_log"
-] = "JetConstituentsUtils::get_erel_log_cluster(jets_ee_genkt, JetsConstituents)"
+definition["pfcand_erel_log"] = "JetConstituentsUtils::get_erel_log_cluster(jets_ee_genkt, JetsConstituents)"
 
-definition[
-    "pfcand_thetarel"
-] = "JetConstituentsUtils::get_thetarel_cluster(jets_ee_genkt, JetsConstituents)"
+definition["pfcand_thetarel"] = "JetConstituentsUtils::get_thetarel_cluster(jets_ee_genkt, JetsConstituents)"
 
-definition[
-    "pfcand_phirel"
-] = "JetConstituentsUtils::get_phirel_cluster(jets_ee_genkt, JetsConstituents)"
+definition["pfcand_phirel"] = "JetConstituentsUtils::get_phirel_cluster(jets_ee_genkt, JetsConstituents)"
 
 definition[
     "pfcand_dndx"
@@ -106,23 +96,15 @@ definition["pfcand_phi0_wrt0"] = "JetConstituentsUtils::get_phi0(JetsConstituent
 
 definition["pfcand_omega_wrt0"] = "JetConstituentsUtils::get_omega(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_tanlambda_wrt0"
-] = "JetConstituentsUtils::get_tanLambda(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_tanlambda_wrt0"] = "JetConstituentsUtils::get_tanLambda(JetsConstituents, EFlowTrack_1)"
 
 definition["Bz"] = "B[0]"
 
-definition[
-    "pfcand_dxy"
-] = "JetConstituentsUtils::XPtoPar_dxy(JetsConstituents, EFlowTrack_1, MC_PrimaryVertexP4, Bz)"
+definition["pfcand_dxy"] = "JetConstituentsUtils::XPtoPar_dxy(JetsConstituents, EFlowTrack_1, MC_PrimaryVertexP4, Bz)"
 
-definition[
-    "pfcand_dz"
-] = "JetConstituentsUtils::XPtoPar_dz(JetsConstituents, EFlowTrack_1, MC_PrimaryVertexP4, Bz)"
+definition["pfcand_dz"] = "JetConstituentsUtils::XPtoPar_dz(JetsConstituents, EFlowTrack_1, MC_PrimaryVertexP4, Bz)"
 
-definition[
-    "pfcand_phi0"
-] = "JetConstituentsUtils::XPtoPar_phi(JetsConstituents, EFlowTrack_1, MC_PrimaryVertexP4, Bz)"
+definition["pfcand_phi0"] = "JetConstituentsUtils::XPtoPar_phi(JetsConstituents, EFlowTrack_1, MC_PrimaryVertexP4, Bz)"
 
 definition["pfcand_C"] = "JetConstituentsUtils::XPtoPar_C(JetsConstituents, EFlowTrack_1, Bz)"
 
@@ -136,37 +118,23 @@ definition["pfcand_dzdz"] = "JetConstituentsUtils::get_z0_cov(JetsConstituents, 
 
 definition["pfcand_dphidphi"] = "JetConstituentsUtils::get_phi0_cov(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_detadeta"
-] = "JetConstituentsUtils::get_tanlambda_cov(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_detadeta"] = "JetConstituentsUtils::get_tanlambda_cov(JetsConstituents, EFlowTrack_1)"
 
 definition["pfcand_dxydz"] = "JetConstituentsUtils::get_d0_z0_cov(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_dphidxy"
-] = "JetConstituentsUtils::get_phi0_d0_cov(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_dphidxy"] = "JetConstituentsUtils::get_phi0_d0_cov(JetsConstituents, EFlowTrack_1)"
 
 definition["pfcand_phidz"] = "JetConstituentsUtils::get_phi0_z0_cov(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_phictgtheta"
-] = "JetConstituentsUtils::get_tanlambda_phi0_cov(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_phictgtheta"] = "JetConstituentsUtils::get_tanlambda_phi0_cov(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_dxyctgtheta"
-] = "JetConstituentsUtils::get_tanlambda_d0_cov(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_dxyctgtheta"] = "JetConstituentsUtils::get_tanlambda_d0_cov(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_dlambdadz"
-] = "JetConstituentsUtils::get_tanlambda_z0_cov(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_dlambdadz"] = "JetConstituentsUtils::get_tanlambda_z0_cov(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_cctgtheta"
-] = "JetConstituentsUtils::get_omega_tanlambda_cov(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_cctgtheta"] = "JetConstituentsUtils::get_omega_tanlambda_cov(JetsConstituents, EFlowTrack_1)"
 
-definition[
-    "pfcand_phic"
-] = "JetConstituentsUtils::get_omega_phi0_cov(JetsConstituents, EFlowTrack_1)"
+definition["pfcand_phic"] = "JetConstituentsUtils::get_omega_phi0_cov(JetsConstituents, EFlowTrack_1)"
 
 definition["pfcand_dxyc"] = "JetConstituentsUtils::get_omega_d0_cov(JetsConstituents, EFlowTrack_1)"
 
@@ -176,9 +144,7 @@ definition[
     "pfcand_btagSip2dVal"
 ] = "JetConstituentsUtils::get_Sip2dVal_clusterV(jets_ee_genkt, pfcand_dxy, pfcand_phi0, Bz)"
 
-definition[
-    "pfcand_btagSip2dSig"
-] = "JetConstituentsUtils::get_Sip2dSig(pfcand_btagSip2dVal, pfcand_dxydxy)"
+definition["pfcand_btagSip2dSig"] = "JetConstituentsUtils::get_Sip2dSig(pfcand_btagSip2dVal, pfcand_dxydxy)"
 
 definition[
     "pfcand_btagSip3dVal"
@@ -509,7 +475,7 @@ variables_pfcand = {
         "scale": "log",
     },
     "pfcand_theta": {
-        "name": "pfcand_theta,",
+        "name": "pfcand_theta",
         "title": "#theta",
         "bin": 100,
         "xmin": 0,
@@ -517,7 +483,7 @@ variables_pfcand = {
         "scale": "lin",
     },
     "pfcand_phi": {
-        "name": "pfcand_phi,",
+        "name": "pfcand_phi",
         "title": "#phi",
         "bin": 100,
         "xmin": -3.14,
@@ -526,127 +492,137 @@ variables_pfcand = {
     },
 }
 
-
 variables_jet = {
     ### jet based variables
     "jet_p": {
-        "name": ",",
-        "title": "",
+        "name": "jet_p",
+        "title": "p_{jet} [GeV]",
         "bin": 100,
         "xmin": 0,
-        "xmax": 1.0,
-        "scale": "log",
+        "xmax": 100.0,
+        "scale": "lin",
     },
     "jet_e": {
-        "name": ",",
-        "title": "",
+        "name": "jet_e",
+        "title": "E_{jet} [GeV]",
         "bin": 100,
         "xmin": 0,
-        "xmax": 1.0,
-        "scale": "log",
+        "xmax": 100.0,
+        "scale": "lin",
     },
     "jet_mass": {
-        "name": ",",
-        "title": "",
+        "name": "jet_mass",
+        "title": "m_{jet} [GeV]",
         "bin": 100,
         "xmin": 0,
-        "xmax": 1.0,
-        "scale": "log",
+        "xmax": 25,
+        "scale": "lin",
     },
     "jet_phi": {
-        "name": ",",
-        "title": "",
+        "name": "jet_phi",
+        "title": "#phi_{jet}",
         "bin": 100,
-        "xmin": 0,
-        "xmax": 1.0,
-        "scale": "log",
+        "xmin": -3.14,
+        "xmax": 3.14,
+        "scale": "lin",
     },
     "jet_theta": {
-        "name": ",",
-        "title": "",
+        "name": "jet_theta",
+        "title": "#theta_{jet}",
         "bin": 100,
         "xmin": 0,
-        "xmax": 1.0,
-        "scale": "log",
+        "xmax": 3.14,
+        "scale": "lin",
     },
     "jet_nconst": {
-        "name": ",",
-        "title": "",
+        "name": "jet_nconst",
+        "title": "N_{const}^{jet}",
         "bin": 100,
         "xmin": 0,
-        "xmax": 1.0,
+        "xmax": 100,
         "scale": "log",
     },
     "jet_nmu": {
-        "name": ",",
-        "title": "",
-        "bin": 100,
+        "name": "jet_nmu",
+        "title": "N_{#mu}^{jet}",
+        "bin": 5,
         "xmin": 0,
-        "xmax": 1.0,
+        "xmax": 5,
         "scale": "log",
     },
     "jet_nel": {
-        "name": ",",
+        "name": "N_{el}^{jet}",
         "title": "",
-        "bin": 100,
+        "bin": 5,
         "xmin": 0,
-        "xmax": 1.0,
+        "xmax": 5,
         "scale": "log",
     },
     "jet_nchad": {
-        "name": ",",
-        "title": "",
-        "bin": 100,
+        "name": "jet_nchad",
+        "title": "N_{ch.had}^{jet}",
+        "bin": 50,
         "xmin": 0,
-        "xmax": 1.0,
+        "xmax": 50,
         "scale": "log",
     },
     "jet_ngamma": {
-        "name": ",",
-        "title": "",
-        "bin": 100,
+        "name": "jet_ngamma",
+        "title": "N_{#gamma}^{jet}",
+        "bin": 50,
         "xmin": 0,
-        "xmax": 1.0,
+        "xmax": 50,
         "scale": "log",
     },
     "jet_nnhad": {
-        "name": ",",
-        "title": "",
-        "bin": 100,
+        "name": "jet_nnhad",
+        "title": "N_{neutr. had}^{jet}",
+        "bin": 20,
         "xmin": 0,
-        "xmax": 1.0,
+        "xmax": 20,
         "scale": "log",
     },
     "jet_de": {
-        "name": ",",
-        "title": "",
+        "name": "jet_de",
+        "title": "#Delta E [GeV]",
         "bin": 100,
-        "xmin": 0,
-        "xmax": 1.0,
+        "xmin": -0.5,
+        "xmax": 0.5,
         "scale": "log",
     },
     "jet_dpt": {
-        "name": ",",
-        "title": "",
+        "name": "jet_dpt",
+        "title": "#Delta p [GeV]",
         "bin": 100,
-        "xmin": 0,
-        "xmax": 1.0,
+        "xmin": -0.5,
+        "xmax": 0.5,
         "scale": "log",
     },
     "jet_dphi": {
-        "name": ",",
-        "title": "",
+        "name": "jet_dphi",
+        "title": "#Delta #phi",
         "bin": 100,
-        "xmin": 0,
-        "xmax": 1.0,
+        "xmin": -0.5,
+        "xmax": 0.5,
         "scale": "log",
     },
     "jet_dtheta": {
-        "name": ",",
-        "title": "",
+        "name": "jet_dtheta",
+        "title": "#Delta #theta",
+        "bin": 100,
+        "xmin": -0.5,
+        "xmax": 0.5,
+        "scale": "log",
+    },
+}
+
+variables_event = {
+    "event_invariant_mass": {
+        "name": "event_invariant_mass",
+        "title": "m_{jj} [GeV]",
         "bin": 100,
         "xmin": 0,
-        "xmax": 1.0,
-        "scale": "log",
+        "xmax": 200,
+        "scale": "lin",
     },
 }

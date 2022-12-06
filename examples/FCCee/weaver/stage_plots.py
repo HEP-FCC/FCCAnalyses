@@ -22,7 +22,7 @@ def main():
     # Enable multi-threading
     ROOT.ROOT.EnableImplicitMT()
 
-    from examples.FCCee.weaver.config import variables_pfcand, variables_jet, flavors
+    from examples.FCCee.weaver.config import variables_pfcand, variables_jet, variables_event, flavors
 
     input_dir = args.indir
     output_dir = args.outdir
@@ -45,20 +45,43 @@ def main():
         df_a = ROOT.RDataFrame("tree", sample_a["file"])
         df_b = ROOT.RDataFrame("tree", sample_b["file"])
 
-        sample_a["histos"] = dfhs(df_a, variables_pfcand)
-        sample_b["histos"] = dfhs(df_b, variables_pfcand)
+        print(sample_a["file"])
+        print(sample_b["file"])
+
+        sample_a["histos_pfcand"] = dfhs_pfcand(df_a, variables_pfcand)
+        sample_b["histos_pfcand"] = dfhs_pfcand(df_b, variables_pfcand)
+
+        sample_a["histos_jet"] = dfhs_jet(df_a, variables_jet)
+        sample_b["histos_jet"] = dfhs_jet(df_b, variables_jet)
+
+        #sample_a["histos_event"] = dfhs_event(df_a, variables_event)
+        #sample_b["histos_event"] = dfhs_event(df_b, variables_event)
 
         # RunGraphs allows to run the event loops of the separate RDataFrame graphs
         # concurrently. This results in an improved usage of the available resources
         # if each separate RDataFrame can not utilize all available resources, e.g.,
-        ROOT.RDF.RunGraphs(list(sample_a["histos"].values()) + list(sample_b["histos"].values()))
+        ROOT.RDF.RunGraphs(
+            list(sample_a["histos_pfcand"].values())
+            + list(sample_b["histos_pfcand"].values())
+            + list(sample_a["histos_jet"].values())
+            + list(sample_b["histos_jet"].values())
+            #+ list(sample_a["histos_event"].values())
+            #+ list(sample_b["histos_event"].values())
+        )
 
-        for pfcand_var, params in variables_pfcand.items():
-            plot(sample_a, sample_b, pfcand_var, params, output_dir)
 
+        for var, params in variables_pfcand.items():
+            plot(sample_a, sample_b, "histos_pfcand", var, params, output_dir)
+        for var, params in variables_jet.items():
+            plot(sample_a, sample_b, "histos_jet", var, params, output_dir)
+
+        """
+        for var, params in variables_event.items():
+            plot(sample_a, sample_b, "histos_event", var, params, output_dir)
+        """
 
 # _______________________________________________________________________________
-def dfhs(df, vars):
+def dfhs_pfcand(df, vars):
 
     ## extract charged particles
     # df_charged = df.Filter("All(abs(pfcand_charge)>0)", "select charged constituents")
@@ -87,10 +110,51 @@ def dfhs(df, vars):
 
 
 # _______________________________________________________________________________
-def plot(sample_a, sample_b, pfcand_var, params, outdir):
+def dfhs_jet(df, vars):
 
-    dfh_a = sample_a["histos"][pfcand_var].GetValue()
-    dfh_b = sample_b["histos"][pfcand_var].GetValue()
+    ## extract charged particles
+    # df_charged = df.Filter("All(abs(pfcand_charge)>0)", "select charged constituents")
+    df_dict = dict()
+    for jet_var, params in vars.items():
+        df_dict[jet_var] = df.Histo1D(
+            (
+                "h_{}".format(jet_var),
+                ";{};N_{{Events}}".format(params["title"]),
+                params["bin"],
+                params["xmin"],
+                params["xmax"],
+            ),
+            jet_var,
+        )
+    return df_dict
+
+
+# _______________________________________________________________________________
+def dfhs_event(df, vars):
+
+    ## extract charged particles
+    # df_charged = df.Filter("All(abs(pfcand_charge)>0)", "select charged constituents")
+    df_dict = dict()
+    for event_var, params in vars.items():
+        print(event_var)
+        df_dict[event_var] = df.Histo1D(
+            (
+                "h_{}".format(event_var),
+                ";{};N_{{Events}}".format(params["title"]),
+                params["bin"],
+                params["xmin"],
+                params["xmax"],
+            ),
+            event_var,
+        )
+    return df_dict
+
+
+# _______________________________________________________________________________
+def plot(sample_a, sample_b, histo_coll, var, params, outdir):
+
+    dfh_a = sample_a[histo_coll][var].GetValue()
+    dfh_b = sample_b[histo_coll][var].GetValue()
 
     # Create canvas with pads for main plot and data/MC ratio
     c = ROOT.TCanvas("c", "", 700, 750)
@@ -158,9 +222,11 @@ def plot(sample_a, sample_b, pfcand_var, params, outdir):
     ratio.Draw("AXIS")
 
     ratiodata = dfh_a.Clone()
+    ratiodata.Sumw2()
     ratiodata.Divide(dfh_b)
-    # ratiodata.SetLineColor(ROOT.kBlack)
-    ratiodata.Draw("SAME")
+    ratiodata.SetLineColor(ROOT.kBlack)
+    ratiodata.SetMarkerColor(ROOT.kBlack)
+    ratiodata.Draw("same e")
 
     # Add legend
     upper_pad.cd()
@@ -191,7 +257,7 @@ def plot(sample_a, sample_b, pfcand_var, params, outdir):
     text.DrawLatex(0.95, 0.91, "#sqrt{s} = 240 GeV, 5 ab^{-1}")
 
     # Save the plot
-    figpath = "{}/{}_{}.png".format(outdir, sample_a["flavor"], pfcand_var)
+    figpath = "{}/{}_{}.png".format(outdir, sample_a["flavor"], var)
     c.SaveAs(figpath)
 
 
