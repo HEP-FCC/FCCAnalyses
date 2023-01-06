@@ -103,28 +103,30 @@ get_EventPrimaryVertexP4::get_EventPrimaryVertexP4() {};
 TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
   TLorentzVector result(-1e12,-1e12,-1e12,-1e12);
   Bool_t found_py8 = false;
+  //std::cout<<"-------------------------------------------"<<std::endl;
   // first try pythia8 gen status == 21 code;
   for (auto & p: in) {
      if ( p.generatorStatus == m_genstatus ) {   // generator status code for the incoming particles of the hardest subprocess
        // vertex.time is in s, convert in mm here.
        TLorentzVector res( p.vertex.x, p.vertex.y, p.vertex.z, p.time * 1.0e3 * 2.99792458e+8);
        result = res;
+       found_py8 = true;
        break;
      }
    }
-   // then try pythia6 status == 2 and W,Z or H
+
    if (!found_py8) {
-     std::set<int> pdgs {23, 24, 25};
      for (auto & p: in) {
-        if ( p.generatorStatus == 2 and pdgs.count(abs(p.PDG)) != 0 ) {   // generator status code for the incoming particles of the hardest subprocess
+        // std::cout<< p.generatorStatus<<", "<<p.PDG<<", "<<p.momentum.x<<", "<<p.momentum.y<<",     "<< p.vertex.y<<", "<< p.vertex.z<<", "<< p.time * 1.0e3 * 2.99792458e+8<<std::endl;
+        if ( p.generatorStatus == 2 and abs(p.vertex.z) > 1.e-12 ) {   // generator status code for the incoming particles of the hardest subprocess
           // vertex.time is in s, convert in mm here.
           TLorentzVector res( p.vertex.x, p.vertex.y, p.vertex.z, p.time * 1.0e3 * 2.99792458e+8);
           result = res;
-          break;
+          //break;
         }
       }
    }
-
+  //std::cout<<result.X()<<", "<<result.Y()<<", "<<result.Z()<<", "<<result.T()<<std::endl;
   return result;
 }
 
