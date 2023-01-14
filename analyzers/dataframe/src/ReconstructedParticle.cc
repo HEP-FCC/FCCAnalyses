@@ -234,6 +234,16 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get(ROOT::VecOps::RVec<in
   return result;
 }
 
+TLorentzVector get_P4vis(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+    TLorentzVector P4sum;
+    for (auto & p: in) {
+      TLorentzVector tlv;
+      tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+      P4sum += tlv;
+    }
+    return P4sum;
+  }
+
 
 ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<float> result;
