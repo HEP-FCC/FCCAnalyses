@@ -25,6 +25,7 @@ definition["RP_pz"] = "ReconstructedParticle::get_pz(ReconstructedParticles)"
 definition["RP_e"] = "ReconstructedParticle::get_e(ReconstructedParticles)"
 definition["RP_m"] = "ReconstructedParticle::get_mass(ReconstructedParticles)"
 definition["RP_q"] = "ReconstructedParticle::get_charge(ReconstructedParticles)"
+
 # build pseudo jets with the RP, using the interface that takes px,py,pz,E
 # definition[]"pseudo_jets"]=    "JetClusteringUtils::set_pseudoJets_xyzm(RP_px, RP_py, RP_pz, RP_m)"
 definition["pseudo_jets"] = "JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)"

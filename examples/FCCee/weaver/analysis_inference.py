@@ -3,15 +3,24 @@ import sys
 # Optional
 nCPUS = 8
 
-model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_winter2023_tests_v2/selvaggi_2022Nov26/"
 """
+model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_winter2023_tests_v2/selvaggi_2022Nov26/"
+
 weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep_wzp6_v4.json".format(
     model_dir
 )
-"""
+
 weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep__v4.json".format(model_dir)
 # weaver_model = "{}/fccee_flavtagging_edm4hep_wzp6_v4.onnx".format(model_dir)
 weaver_model = "{}/fccee_flavtagging_edm4hep__v4.onnx".format(model_dir)
+"""
+
+model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/weavercore_v1/mgarcia_2023Jan11"
+# model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_test"
+model_name = "fccee_flavtagging_edm4hep_wc_v1"
+
+weaver_preproc = "{}/{}.json".format(model_dir, model_name)
+weaver_model = "{}/{}.onnx".format(model_dir, model_name)
 
 ## extract input variables/score name and ordering from json file
 import json
@@ -21,6 +30,10 @@ f = open(weaver_preproc)
 data = json.load(f)
 for varname in data["pf_features"]["var_names"]:
     variables.append(varname)
+
+for varname in data["pf_vectors"]["var_names"]:
+    variables.append(varname)
+
 for scorename in data["output_names"]:
     scores.append(scorename)
 
@@ -45,8 +58,10 @@ class RDFanalysis:
         get_weight_str = "JetFlavourUtils::get_weights("
         for var in variables:
             get_weight_str += "{},".format(var)
+
         get_weight_str = "{})".format(get_weight_str[:-1])
 
+        print(get_weight_str)
         from ROOT import JetFlavourUtils
 
         weaver = JetFlavourUtils.setup_weaver(
