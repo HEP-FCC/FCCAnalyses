@@ -122,7 +122,7 @@ TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep
           // vertex.time is in s, convert in mm here.
           TLorentzVector res( p.vertex.x, p.vertex.y, p.vertex.z, p.time * 1.0e3 * 2.99792458e+8);
           result = res;
-          //break;
+          break;
         }
       }
    }
