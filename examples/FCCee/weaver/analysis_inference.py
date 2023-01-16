@@ -3,20 +3,8 @@ import sys
 # Optional
 nCPUS = 8
 
-"""
-model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_winter2023_tests_v2/selvaggi_2022Nov26/"
-
-weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep_wzp6_v4.json".format(
-    model_dir
-)
-
-weaver_preproc = "{}/preprocess_fccee_flavtagging_edm4hep__v4.json".format(model_dir)
-# weaver_model = "{}/fccee_flavtagging_edm4hep_wzp6_v4.onnx".format(model_dir)
-weaver_model = "{}/fccee_flavtagging_edm4hep__v4.onnx".format(model_dir)
-"""
-
-model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/weavercore_v1/mgarcia_2023Jan11"
-# model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_test"
+## latest particle transformer model, trainied on 9M jets in winter2023 samples
+model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_13_01_2022"
 model_name = "fccee_flavtagging_edm4hep_wc_v1"
 
 weaver_preproc = "{}/{}.json".format(model_dir, model_name)

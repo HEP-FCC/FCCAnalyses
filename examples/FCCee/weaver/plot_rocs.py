@@ -40,32 +40,51 @@ ROOT.ROOT.EnableImplicitMT()
 def main():
     parser = argparse.ArgumentParser()
 
+    """
     parser.add_argument(
         "--indir",
         help="path input directory where inference_files were produced",
         default="/eos/experiment/fcc/ee/jet_flavour_tagging/pre_winter2023_tests_v2/selvaggi_2022Nov26/",
     )
-
+    """
     args = parser.parse_args()
 
-    proc_p8 = Process("p8_ee_ZH_Znunu", "Pythia8")
-    proc_wzp6 = Process("wzp6_ee_nunuH", "WZ-Pythia6")
-
-    processes = [proc_p8, proc_wzp6]
+    """
+    proc_pnet = Process(
+        "wzp6_pnet",
+        "wzp6_ee_nunuH",
+        "WZ-Pythia (PNet)",
+        "/eos/experiment/fcc/ee/analyses/case-studies/higgs/flat_trees/pnet_test/",
+    )
+    """
+    proc_pt = Process(
+        "wzp6_ptold",
+        "wzp6_ee_nunuH",
+        "WZ-Pythia6 (PT -old)",
+        "/eos/experiment/fcc/ee/analyses/case-studies/higgs/flat_trees/pt_test/",
+    )
+    proc_pt2 = Process(
+        "wzp6_ptnew",
+        "wzp6_ee_nunuH",
+        "WZ-Pythia6 (PT - new)",
+        "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_13_01_2022/",
+    )
 
     samples = dict()
 
     nfiles_max = 5
     ### retrieve samples
+
+    # processes = [proc_pnet, proc_pt]
+    processes = [proc_pt, proc_pt2]
+
     for proc in processes:
         samples[proc] = dict()
         for f in flavors:
             fs = f
-            if f == "q":
-                fs = "u"
 
             files = []
-            dirpath = "{}/{}_H{}{}_ecm240/".format(args.indir, proc.name, fs, fs)
+            dirpath = "{}/{}_H{}{}_ecm240/".format(proc.dir, proc.name, fs, fs)
 
             for i, fname in enumerate(glob.glob("{}/*.root".format(dirpath))):
                 if i >= nfiles_max:
@@ -74,8 +93,6 @@ def main():
 
             # print(files)
             samples[proc][f] = Sample(files, "events", f, proc)
-
-    ### produce ROC curves
 
     roc_param = RocParam(2, 100)  # ndecades, nbins
     plot_param = PlotParams(
@@ -89,7 +106,7 @@ def main():
         "sig": "c",
         "bkg": ["g", "q", "b"],
         "samples": samples,
-        "variants": [proc_p8, proc_wzp6],
+        "variants": processes,
         "param_roc": roc_param,
         "param_plot": plot_param,
     }
@@ -125,9 +142,11 @@ class Sample:
 
 # _______________________________________________________________________________
 class Process:
-    def __init__(self, name, label):
+    def __init__(self, procname, name, label, dir):
+        self.procname = procname
         self.name = name
         self.label = label
+        self.dir = dir
 
 
 # _______________________________________________________________________________
@@ -237,7 +256,17 @@ class Graph:
         fig, ax = plt.subplots()
 
         ## plot curves
+
+        print(fig_file)
         for roc in rocs:
+            print(
+                roc.name,
+                roc.sample_s.label.label,
+                roc.sample_b.label.label,
+            )
+            for x, y in zip(roc.x, roc.y):
+                print(x, y)
+
             ax.plot(
                 roc.x,
                 roc.y,
@@ -342,7 +371,7 @@ def dfhs(df, fs, fb, m, nbins, label):
     df_dict = OrderedDict()
     dh_dict = OrderedDict()
 
-    # print("producing roc curve: {} vs {} -- {}".format(fs, fb, label))
+    print("producing roc curve: {} vs {} -- {}".format(fs, fb, label))
     df = df.Define(binary_discr_var, binary_discr_func)
 
     for i, cut in enumerate(cutvals):
