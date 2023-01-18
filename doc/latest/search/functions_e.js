@@ -1,7 +1,7 @@
 var searchData=
 [
   ['r_0',['R',['../classcontrib_1_1_valencia_info.html#a9985685d7eadc5ebe7b846e376ed43b9',1,'contrib::ValenciaInfo::R()'],['../classcontrib_1_1_valencia_plugin.html#a85faaa3e156cf408c7382f002b0826d8',1,'contrib::ValenciaPlugin::R()']]],
-  ['recoilbuilder_1',['recoilBuilder',['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1recoil_builder.html#a6660e83105a806e54d1eccfaa9da37b7',1,'FCCAnalyses::ReconstructedParticle::recoilBuilder']]],
+  ['recoilbuilder_1',['recoilBuilder',['../struct_f_c_c_analyses_1_1_jet_clustering_utils_1_1recoil_builder.html#a301b0c7477c734909f8f70952a8cdea7',1,'FCCAnalyses::JetClusteringUtils::recoilBuilder::recoilBuilder()'],['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1recoil_builder.html#a6660e83105a806e54d1eccfaa9da37b7',1,'FCCAnalyses::ReconstructedParticle::recoilBuilder::recoilBuilder()']]],
   ['recomb_5fscheme_2',['recomb_scheme',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#ab363eb077d6d3b25ae9245a6978b36b5',1,'FCCAnalyses::JetClusteringUtils']]],
   ['recombine_3',['recombine',['../class_external_recombiner.html#aaf4506055fff2fe78cd90b767cbe6a2f',1,'ExternalRecombiner']]],
   ['reginv3_4',['RegInv3',['../namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#a524c4b324b1a10a5357d7b2cc46024ef',1,'FCCAnalyses::VertexFitterSimple']]],
