@@ -1,4 +1,5 @@
 #include "FCCAnalyses/JetClusteringUtils.h"
+#include "TLorentzVector.h"
 
 namespace FCCAnalyses {
   namespace JetClusteringUtils {
@@ -94,6 +95,14 @@ namespace FCCAnalyses {
       ROOT::VecOps::RVec<float> result;
       for (auto& p : in) {
         result.push_back(p.pt());
+      }
+      return result;
+    }
+
+    ROOT::VecOps::RVec<float> get_p(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in) {
+      ROOT::VecOps::RVec<float> result;
+      for (auto& p : in) {
+        result.push_back(sqrt(p.pt()*p.pt() + p.pz()*p.pz()));
       }
       return result;
     }
@@ -240,6 +249,19 @@ namespace FCCAnalyses {
 
       return recomb_scheme;
     }
+
+	  recoilBuilder::recoilBuilder(float arg_sqrts) : m_sqrts(arg_sqrts) {};
+	  double recoilBuilder::operator() (ROOT::VecOps::RVec<fastjet::PseudoJet> in) {
+			double result;
+			auto recoil_p4 = TLorentzVector(0, 0, 0, m_sqrts);
+			for (auto & v1: in) {
+				TLorentzVector tv1;
+				tv1.SetPxPyPzE(v1.px(), v1.py(), v1.pz(), v1.e());
+				recoil_p4 -= tv1;
+			}
+			result = recoil_p4.M();
+			return result;
+	  }
 
   }  // namespace JetClusteringUtils
 

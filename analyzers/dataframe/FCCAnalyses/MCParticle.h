@@ -74,6 +74,13 @@ namespace MCParticle{
     TVector3  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
+  /// return the event primary vertex position and time (mm)
+  struct get_EventPrimaryVertexP4 {
+    get_EventPrimaryVertexP4();
+    int m_genstatus = 21;   // Pythia8  code of the incoming particles of the hardest subprocess
+    TLorentzVector  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+  };
+
 
  /// return a list of indices that correspond to a given MC decay. The list contains the index of the mother, followed by the indices of the daughters, in the order specified. If m_inclusiveDecay is true, the list of daughters is the minimum required for the mother's decay (otherwise, the list is the exact daughters required for the mother's decay). In case there are several such decays in the event, keep only the first one.
   struct get_indices{

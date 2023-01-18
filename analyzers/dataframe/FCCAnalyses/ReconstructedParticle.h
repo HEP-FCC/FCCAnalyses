@@ -126,6 +126,9 @@ namespace ReconstructedParticle{
   /// return the TlorentzVector of the one input ReconstructedParticle
   TLorentzVector get_tlv(edm4hep::ReconstructedParticleData in);
 
+	/// return visible 4-momentum vector
+  TLorentzVector get_P4vis(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+	
   /// concatenate both input vectors and return the resulting vector
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
 
