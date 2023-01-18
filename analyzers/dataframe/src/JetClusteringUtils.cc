@@ -1,4 +1,5 @@
 #include "FCCAnalyses/JetClusteringUtils.h"
+#include "TLorentzVector.h"
 
 namespace FCCAnalyses {
   namespace JetClusteringUtils {

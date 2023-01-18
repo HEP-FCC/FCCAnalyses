@@ -4,8 +4,6 @@
 
 #include "Math/Vector4D.h"
 #include "ROOT/RVec.hxx"
-#include "TLorentzVector.h"
-
 
 #include "FastJet/JetClustering.h"
 #include "fastjet/JetDefinition.hh"
