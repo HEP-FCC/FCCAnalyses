@@ -122,22 +122,6 @@ file(GLOB _run_python_files config/*.py)
 install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
 install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
 
-#--- Awkward setup ------------------------------------------------------------
-
-execute_process(COMMAND python -m awkward.config --incdir OUTPUT_VARIABLE _AWKWARD_INCLUDE OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(AWKWARD_INCLUDE ${_AWKWARD_INCLUDE})
-execute_process(COMMAND python -m awkward.config --libdir OUTPUT_VARIABLE _AWKWARD_LIBRARIES OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(AWKWARD_LIBRARIES ${_AWKWARD_LIBRARIES})
-
-include_directories(BEFORE "${AWKWARD_INCLUDE}")
-
-find_library(CPU-KERNELS awkward-cpu-kernels REQUIRED HINTS ${AWKWARD_LIBRARIES})
-find_library(LIBAWKWARD awkward REQUIRED HINTS ${AWKWARD_LIBRARIES})
-find_library(LIBDL dl REQUIRED)
-
-message(STATUS "Libraries: ${CPU-KERNELS} ${LIBAWKWARD} ${LIBDL}")
-message(STATUS "includes--------------------- main: ${AWKWARD_INCLUDE}")
-message(STATUS "Library---------------------- main: ${AWKWARD_LIBRARIES}")
 
 #--- Descend into subdirectories ----------------------------------------------
 

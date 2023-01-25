@@ -4,8 +4,6 @@ import ROOT
 print ("Load cxx analyzers ... ",)
 ROOT.gSystem.Load("libedm4hep")
 ROOT.gSystem.Load("libpodio")
-ROOT.gSystem.Load("libawkward")
-ROOT.gSystem.Load("libawkward-cpu-kernels")
 ROOT.gSystem.Load("libFCCAnalyses")
 
 ROOT.gErrorIgnoreLevel = ROOT.kFatal
