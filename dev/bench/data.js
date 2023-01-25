@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1674644093113,
+  "lastUpdate": 1674644095091,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -12952,6 +12952,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "98302868+amanmdesai@users.noreply.github.com",
+            "name": "Aman Desai",
+            "username": "amanmdesai"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a2326412ebe502351d3a2bdba7832730e5573bd9",
+          "message": "Fix link to analysis_stage1 file in README.md (#234)\n\n* Fix link to analysis_stage1 file\r\n\r\n* update link",
+          "timestamp": "2023-01-25T11:44:13+01:00",
+          "tree_id": "820c9161348ef513ea0b07e0468b12daddf2d7da",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/a2326412ebe502351d3a2bdba7832730e5573bd9"
+        },
+        "date": 1674644094417,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 8.347820714943202,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 7.46207285842645,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 2.1286816926423477,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 2.52346940728391,
+            "unit": "Evt/s"
           }
         ]
       }
