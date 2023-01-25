@@ -120,7 +120,7 @@ where `p8_ee_ZH_ecm240` should match an existing sample in the database,
 of output files) and `output` in case you need to change the name of the output
 file (please note that then the sample will not be matched in the database for
 `finalSel.py` histograms normalisation). The other parameters are explained in
-[the example file](https://github.com/HEP-FCC/FCCAnalyses/tree/master/example/FCCee/higgs/mH-recoil/analysis_stage1.py).
+[the example file](https://github.com/HEP-FCC/FCCAnalyses/blob/master/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py).
 
 To run the pre-selection stage of the example analysis run:
 
