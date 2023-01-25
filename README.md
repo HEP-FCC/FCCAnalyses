@@ -10,11 +10,11 @@ files and producing the plots.
 >
 > To have access to the FCC samples, you need to be subscribed to one of the
 > following e-groups (with owner approval) `fcc-eos-read-xx` with `xx=ee,hh,eh`.
-> For the time being, the configuration files are accessible on `fccsw` public
-> AFS. This is not optimal and will be changed in the future with migration to DIRAC, thus you are
-> also kindly asked to contact `emmanuel.perez@cern.ch`, `gerardo.ganis@cern.ch`, `clement.helsens@cern.ch` and request access to
-> `/afs/cern.ch/work/f/fccsw/public/FCCDicts/`.
->
+> The configuration files are accessible at `/afs/cern.ch/work/f/fccsw/public/FCCDicts/` with a mirror at `/cvmfs/fcc.cern.ch/FCCDicts/`.
+> For accessing/reading information about existing datasets you do not need special rights.
+> However, if you need new datasets, you are invited to contact `emmanuel.perez@cern.ch`, `gerardo.ganis@cern.ch` or `juraj.smiesko@cern.ch`
+> who will explian the procedure, including granting the required access, where relevant.
+> 
 
 Detailed code documentation can be found
 [here](http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html).
