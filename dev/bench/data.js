@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1674654688717,
+  "lastUpdate": 1674654690355,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -13048,6 +13048,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "valentin.volkl@cern.ch",
+            "name": "Valentin Volkl",
+            "username": "vvolkl"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10ca6e9f94a448d992d8541de1e73079ef1b9d68",
+          "message": "Remove awkward-dependent analyzers (#228)\n\nThese only work with a specific version of awkward and lack a maintainer, thus better to remove them completely.",
+          "timestamp": "2023-01-25T14:42:21+01:00",
+          "tree_id": "ee1a41eb417c3d4468c93abe91bf5ccf12abb259",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/10ca6e9f94a448d992d8541de1e73079ef1b9d68"
+        },
+        "date": 1674654689893,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 9.257226933585072,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 4.92174355418309,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 5.821444881713593,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 4.258161389533294,
+            "unit": "Evt/s"
           }
         ]
       }
