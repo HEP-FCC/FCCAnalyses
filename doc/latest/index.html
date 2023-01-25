@@ -129,7 +129,7 @@ Example analysis</h1>
 <h2><a class="anchor" id="autotoc_md6"></a>
 Pre-selection</h2>
 <p >The pre-selection runs over already existing and properly registered FCCSW EDM4hep events. The dataset names with the corresponding statistics can be found <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/FCCee/spring2021/Delphesevents_IDEA.php">here</a> for the IDEA spring 2021 campaign. The <code>processList</code> is a dictionary of processes, each process having it's own dictionary of parameters. For example </p><div class="fragment"><div class="line"><span class="stringliteral">&#39;p8_ee_ZH_ecm240&#39;</span>:{<span class="stringliteral">&#39;fraction&#39;</span>:0.2, <span class="stringliteral">&#39;chunks&#39;</span>:2, <span class="stringliteral">&#39;output&#39;</span>:<span class="stringliteral">&#39;p8_ee_ZH_ecm240_out&#39;</span>}</div>
-</div><!-- fragment --><p> where <code>p8_ee_ZH_ecm240</code> should match an existing sample in the database, <code>fraction</code> is the fraction of the sample you want to run on (default is 1), <code>chunks</code> is the number of jobs to run (you will have the corresponding number of output files) and <code>output</code> in case you need to change the name of the output file (please note that then the sample will not be matched in the database for <code>finalSel.py</code> histograms normalisation). The other parameters are explained in <a href="https://github.com/HEP-FCC/FCCAnalyses/tree/master/example/FCCee/higgs/mH-recoil/analysis_stage1.py">the example file</a>.</p>
+</div><!-- fragment --><p> where <code>p8_ee_ZH_ecm240</code> should match an existing sample in the database, <code>fraction</code> is the fraction of the sample you want to run on (default is 1), <code>chunks</code> is the number of jobs to run (you will have the corresponding number of output files) and <code>output</code> in case you need to change the name of the output file (please note that then the sample will not be matched in the database for <code>finalSel.py</code> histograms normalisation). The other parameters are explained in <a href="https://github.com/HEP-FCC/FCCAnalyses/blob/master/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py">the example file</a>.</p>
 <p >To run the pre-selection stage of the example analysis run:</p>
 <div class="fragment"><div class="line">fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py</div>
 </div><!-- fragment --><p >This will create the output files in the <code>ZH_mumu_recoil/stage1</code> subdirectory of the output director specified with parameter <code>outDir</code> in the file.</p>
@@ -160,7 +160,7 @@ Experimental</h2>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 25 2023 11:13:05 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 25 2023 11:50:04 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
