@@ -46,6 +46,9 @@ class RDFanalysis():
              .Define("selected_Jets_eta",     "JetClusteringUtils::get_eta(jets_antikt)") 
              .Define("met",      "ReconstructedParticle::sel_pt(4000.)(MissingET)")
              .Define("selected_met",               "ReconstructedParticle::get_pt(met)")  
+             .Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
+            #select muons on pT
+             .Define("selected_muons", "ReconstructedParticle::sel_pt(200.)(muons)")
                )
         return df2
 
@@ -53,8 +56,10 @@ class RDFanalysis():
     #Mandatory: output function, please make sure you return the branchlist as a python list
     def output():
         branchList = [
-            "selected_Jets_pt",
+             "selected_Jets_pt",
             "selected_Jets_eta",
-            "selected_met"
+            "selected_met",
+            "selected_muons",
+            "selected_Jets_phi"
         ]
         return branchList
