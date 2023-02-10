@@ -135,6 +135,9 @@ Classes</h2></td></tr>
 <tr class="memitem:a0a340b3f2c3086f9f39cbbfbc4e9a7e6"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a0a340b3f2c3086f9f39cbbfbc4e9a7e6">get_phi</a> (const ROOT::VecOps::RVec&lt; fastjet::PseudoJet &gt; &amp;in)</td></tr>
 <tr class="memdesc:a0a340b3f2c3086f9f39cbbfbc4e9a7e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get jet phi.  <a href="namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a0a340b3f2c3086f9f39cbbfbc4e9a7e6">More...</a><br /></td></tr>
 <tr class="separator:a0a340b3f2c3086f9f39cbbfbc4e9a7e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8da41dde5ba94984207e81f88a2225f4"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a8da41dde5ba94984207e81f88a2225f4">get_phi_std</a> (const ROOT::VecOps::RVec&lt; fastjet::PseudoJet &gt; &amp;in)</td></tr>
+<tr class="memdesc:a8da41dde5ba94984207e81f88a2225f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get jet phi.  <a href="namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a8da41dde5ba94984207e81f88a2225f4">More...</a><br /></td></tr>
+<tr class="separator:a8da41dde5ba94984207e81f88a2225f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6877af1c186b3d0bd851489ff144512f"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a6877af1c186b3d0bd851489ff144512f">get_theta</a> (const ROOT::VecOps::RVec&lt; fastjet::PseudoJet &gt; &amp;in)</td></tr>
 <tr class="memdesc:a6877af1c186b3d0bd851489ff144512f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get jet theta.  <a href="namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a6877af1c186b3d0bd851489ff144512f">More...</a><br /></td></tr>
 <tr class="separator:a6877af1c186b3d0bd851489ff144512f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -468,7 +471,28 @@ Classes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get jet phi. </p>
-<p >Details. </p>
+<p >Details (range [0,2*pi]). </p>
+
+</div>
+</div>
+<a id="a8da41dde5ba94984207e81f88a2225f4" name="a8da41dde5ba94984207e81f88a2225f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8da41dde5ba94984207e81f88a2225f4">&#9670;&nbsp;</a></span>get_phi_std()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::VecOps::RVec&lt; float &gt; FCCAnalyses::JetClusteringUtils::get_phi_std </td>
+          <td>(</td>
+          <td class="paramtype">const ROOT::VecOps::RVec&lt; fastjet::PseudoJet &gt; &amp;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get jet phi. </p>
+<p >Details (range [-pi,pi]). </p>
 
 </div>
 </div>
@@ -738,7 +762,7 @@ Classes</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 10 2023 16:21:18 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Feb 10 2023 16:53:10 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
