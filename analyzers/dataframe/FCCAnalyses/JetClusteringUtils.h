@@ -78,9 +78,13 @@ namespace FCCAnalyses {
     /** Get jet eta. Details. */
     ROOT::VecOps::RVec<float> get_eta(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
 
-    /** Get jet phi. Details. */
+    /** Get jet phi. Details (range [0,2*pi]). */
     ROOT::VecOps::RVec<float> get_phi(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
 
+    /** Get jet phi. Details (range [-pi,pi]). */
+    ROOT::VecOps::RVec<float> get_phi_std(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+	  
     /** Get jet theta. Details. */
     ROOT::VecOps::RVec<float> get_theta(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
 
