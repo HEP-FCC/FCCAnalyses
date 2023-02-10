@@ -58,12 +58,12 @@ def getElement(rdfModule, element, isFinal=False):
             return ""
 
         elif element=='batchQueue':
-            print('The variable <{}> is optional in your analysys.py file, return default value workday'.format(element))
+            print('The variable <{}> is optional in your analysis.py file, return default value workday'.format(element))
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return "workday"
 
         elif element=='compGroup':
-             print('The variable <{}> is optional in your analysys.py file, return default value group_u_FCC.local_gen'.format(element))
+             print('The variable <{}> is optional in your analysis.py file, return default value group_u_FCC.local_gen'.format(element))
              if isFinal: print('The option <{}> is not available in final analysis'.format(element))
              return "group_u_FCC.local_gen"
 
@@ -83,7 +83,7 @@ def getElement(rdfModule, element, isFinal=False):
             return ""
 
         elif element=='testFile':
-            print('The variable <{}> is optional in your analysys.py file, return default file'.format(element))
+            print('The variable <{}> is optional in your analysis.py file, return default file'.format(element))
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return "root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root"
 
@@ -148,12 +148,12 @@ def getElement(rdfModule, element, isFinal=False):
             else: print('The option <{}> is not available in presel analysis'.format(element))
 
         elif element=='geometryFile':
-            print('The variable <{}> is optional in your analysys.py file, return default value empty string'.format(element))
+            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return ""
 
         elif element=='readoutName':
-            print('The variable <{}> is optional in your analysys.py file, return default value empty string'.format(element))
+            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return ""
 
