@@ -126,7 +126,7 @@ namespace FCCAnalyses {
     ROOT::VecOps::RVec<float> get_phi(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in) {
       ROOT::VecOps::RVec<float> result;
       for (auto& p : in) {
-        result.push_back(p.phi());
+        result.push_back(p.phi_std());
       }
       return result;
     }
