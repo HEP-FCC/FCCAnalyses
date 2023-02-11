@@ -30,7 +30,7 @@ namespace VertexingUtils{
     edm4hep::VertexData vertex;
     int ntracks;
     int mc_ind; ///index in the MC vertex collection if any
-    ROOT::VecOps::RVec<int> reco_ind;
+    ROOT::VecOps::RVec<int> reco_ind;      // indices of the tracks fitted to that vertex, in the collection of all tracks
     ROOT::VecOps::RVec<float> reco_chi2;
     ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
     ROOT::VecOps::RVec< TVectorD >  updated_track_parameters;
@@ -95,8 +95,15 @@ namespace VertexingUtils{
    /// Retrieve the tracks indices from FCCAnalysesVertex
   ROOT::VecOps::RVec<int> get_VertexRecoInd( FCCAnalysesVertex TheVertex ) ;
 
+  /// Retrieve the indices of the tracks fitted to that vertex, but now in the collection of RecoParticles
+  ROOT::VecOps::RVec<int> get_VertexRecoParticlesInd( FCCAnalysesVertex TheVertex, 
+						      const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco );
+ 
   /// Return the number of tracks in a given track collection
   int get_nTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+
+  /// compare two track states
+  bool compare_Tracks( const edm4hep::TrackState& tr1, const edm4hep::TrackState& tr2 ) ;
 
   ///////////////////////////////////////////////////
   /// functions used for SV reconstruction

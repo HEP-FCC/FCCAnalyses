@@ -75,6 +75,21 @@ get_nTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks) {
   return nt;
 }
 
+bool compare_Tracks( const edm4hep::TrackState& tr1, const edm4hep::TrackState& tr2 ) {
+ if ( tr1.D0 == tr2.D0 &&
+      tr1.phi == tr2.phi &&
+      tr1.omega == tr2.omega &&
+      tr1.Z0 == tr2.Z0 && 
+      tr1.tanLambda == tr2.tanLambda &&
+      tr1.time == tr2.time &&
+      tr1.referencePoint.x == tr2.referencePoint.x && 
+      tr1.referencePoint.y == tr2.referencePoint.y &&  
+      tr1.referencePoint.z == tr2.referencePoint.z ) 
+   return true;
+ return false;
+}
+  
+
 
 TVectorD
 get_trackParam( edm4hep::TrackState & atrack) {
@@ -214,6 +229,28 @@ ROOT::VecOps::RVec<int> get_VertexNtrk( ROOT::VecOps::RVec<FCCAnalysesVertex> ve
 ROOT::VecOps::RVec<int> get_VertexRecoInd( FCCAnalysesVertex TheVertex ) {
   return TheVertex.reco_ind;
 }
+
+ROOT::VecOps::RVec<int> get_VertexRecoParticlesInd( FCCAnalysesVertex TheVertex,
+					            const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco ) {
+
+  ROOT::VecOps::RVec<int>  result;
+  ROOT::VecOps::RVec<int> indices_tracks = TheVertex.reco_ind;
+  for (int i=0; i < indices_tracks.size(); i++) {
+     int tk_index = indices_tracks[i];
+     for ( int j=0; j < reco.size(); j++) {
+        auto & p = reco[j];
+        if ( p.tracks_begin == p.tracks_end ) continue;  
+        if ( p.tracks_begin == tk_index ) {
+           result.push_back( j );
+           break;
+        }
+     }
+  }
+  return result;
+}
+
+
+
 
 TVectorD ParToACTS(TVectorD Par){
 

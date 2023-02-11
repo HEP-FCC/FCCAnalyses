@@ -62,7 +62,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>> get_SV
     }
     
     // start finding SVs
-    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> i_result = findSVfromTracks(tracks_fin, PV, chi2_cut, invM_cut, chi2Tr_cut);
+    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> i_result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut);
     //
     result.push_back(i_result);
     
@@ -116,7 +116,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
   //if(debug_me) std::cout << "tracks_fin.size() = " << tracks_fin.size() << std::endl;
 
   // start finding SVs (only if there are 2 or more tracks)
-  result = findSVfromTracks(tracks_fin, PV, chi2_cut, invM_cut, chi2Tr_cut);
+  result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut);
 
   //if(debug_me) std::cout<<"no more SVs can be reconstructed"<<std::endl;
   
@@ -124,6 +124,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
 }
 
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
+                                                                   ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
 								   VertexingUtils::FCCAnalysesVertex PV,
 								   bool V0_rej,
 								   double chi2_cut, double invM_cut, double chi2Tr_cut) {
@@ -142,7 +143,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
   }
 
   // start finding SVs (only if there are 2 or more tracks)
-  result = findSVfromTracks(tracks_fin, PV, chi2_cut, invM_cut, chi2Tr_cut);
+  result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut);
   
   return result;
 }
@@ -271,6 +272,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState> V0rejection_tight(ROOT::VecOps::RVec<edm
 }
 
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks_fin,
+                                                                       const ROOT::VecOps::RVec<edm4hep::TrackState>&  alltracks,
 								       VertexingUtils::FCCAnalysesVertex PV,
 								       double chi2_cut, double invM_cut, double chi2Tr_cut) {
 
@@ -302,7 +304,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks(ROOT::Vec
       tr_vtx_fin.push_back(tracks_fin[i_tr]);
       if(debug_me) std::cout << "Pushing back tracks_fin[i_tr]" << std::endl;
     }
-    VertexingUtils::FCCAnalysesVertex sec_vtx = VertexFitterSimple::VertexFitter_Tk(2, tr_vtx_fin); // flag 2 for SVs
+    VertexingUtils::FCCAnalysesVertex sec_vtx = VertexFitterSimple::VertexFitter_Tk(2, tr_vtx_fin, alltracks); // flag 2 for SVs
 
     // see if we can also get indices in the reco collection (for tracks forming an SV)
     //sec_vtx.reco_ind = VertexFitterSimple::get_reco_ind(recoparticles,thetracks); // incorrect
