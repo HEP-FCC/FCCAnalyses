@@ -271,15 +271,12 @@ namespace FCCAnalyses {
           TLorentzVector reso_lv;
           for (int i = 0; i < n; ++i) {
               if (v[i]) {
-                //reso.charge += legs[i].charge;
                 TLorentzVector leg_lv;
                 leg_lv.SetXYZM(legs[i].px(), legs[i].py(), legs[i].pz(), legs[i].m());
                 reso_lv += leg_lv;
               }
           }
-
           result.emplace_back(reso_lv);
-
         } while (std::next_permutation(v.begin(), v.end()));
       }
       if (result.size() > 1) {
