@@ -259,6 +259,40 @@ namespace FCCAnalyses {
       return recomb_scheme;
     }
 
+    resonanceBuilder::resonanceBuilder(float arg_resonance_mass) {m_resonance_mass = arg_resonance_mass;}
+    ROOT::VecOps::RVec<fastjet::PseudoJet> resonanceBuilder::operator()(ROOT::VecOps::RVec<fastjet::PseudoJet> legs) {
+      ROOT::VecOps::RVec<fastjet::PseudoJet> result;
+      int n = legs.size();
+      if (n >1) {
+        ROOT::VecOps::RVec<bool> v(n);
+        std::fill(v.end() - 2, v.end(), true);
+        do {
+          TLorentzVector reso;
+          TLorentzVector reso_lv;
+          for (int i = 0; i < n; ++i) {
+              if (v[i]) {
+                //reso.charge += legs[i].charge;
+                TLorentzVector leg_lv;
+                leg_lv.SetXYZM(legs[i].px(), legs[i].py(), legs[i].pz(), legs[i].m());
+                reso_lv += leg_lv;
+              }
+          }
+
+          result.emplace_back(reso_lv);
+
+        } while (std::next_permutation(v.begin(), v.end()));
+      }
+      if (result.size() > 1) {
+        auto resonancesort = [&] (fastjet::PseudoJet i ,fastjet::PseudoJet j) { return (abs( m_resonance_mass -i.m())<abs(m_resonance_mass-j.m())); };
+        std::sort(result.begin(), result.end(), resonancesort);
+        ROOT::VecOps::RVec<fastjet::PseudoJet>::const_iterator first = result.begin();
+        ROOT::VecOps::RVec<fastjet::PseudoJet>::const_iterator last = result.begin() + 1;
+        ROOT::VecOps::RVec<fastjet::PseudoJet> onlyBestReso(first, last);
+        return onlyBestReso;
+      } else {
+        return result;
+      }
+    }
 	  recoilBuilder::recoilBuilder(float arg_sqrts) : m_sqrts(arg_sqrts) {};
 	  double recoilBuilder::operator() (ROOT::VecOps::RVec<fastjet::PseudoJet> in) {
 			double result;
