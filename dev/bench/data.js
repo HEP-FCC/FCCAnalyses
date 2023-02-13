@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676044525254,
+  "lastUpdate": 1676281506130,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -13572,6 +13572,58 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: examples/FCCee/test",
             "value": 2.9523210702659415,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2e996e40aca351f381d98729269b36bc1fe846ce",
+          "message": "Merge pull request #238 from amanmdesai/jet-resonance-builder\n\nAdd resonance builder for fastjet::PseudoJet in JetClusteringUtils",
+          "timestamp": "2023-02-13T10:34:00+01:00",
+          "tree_id": "8de1f8716bf02fbd886075bce58e9c7ffbf3e66d",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/2e996e40aca351f381d98729269b36bc1fe846ce"
+        },
+        "date": 1676281502556,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "value": 10.274911642074585,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: case-studies/analysis_example/scripts"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 12.204269409179688,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "value": 16.146193981170654,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "value": 11.308961868286133,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test"
           }
         ]
       }
