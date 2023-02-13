@@ -103,6 +103,13 @@ namespace FCCAnalyses {
 
     std::vector<float> exclusive_dmerge(fastjet::ClusterSequence& cs, int do_dmarge_max);
 
+    // build the resonance from 2 <fastjet::PseudoJet> objects. Keep the closest to the mass given as input
+    struct resonanceBuilder {
+      float m_resonance_mass;
+      resonanceBuilder(float arg_resonance_mass);
+      ROOT::VecOps::RVec<fastjet::PseudoJet> operator()(ROOT::VecOps::RVec<fastjet::PseudoJet> legs);
+    };
+
 		struct recoilBuilder {
       recoilBuilder(float arg_sqrts);
       float m_sqrts = 240.0;
