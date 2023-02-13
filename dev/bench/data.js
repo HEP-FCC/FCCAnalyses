@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676281506130,
+  "lastUpdate": 1676281507888,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -13624,6 +13624,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2e996e40aca351f381d98729269b36bc1fe846ce",
+          "message": "Merge pull request #238 from amanmdesai/jet-resonance-builder\n\nAdd resonance builder for fastjet::PseudoJet in JetClusteringUtils",
+          "timestamp": "2023-02-13T10:34:00+01:00",
+          "tree_id": "8de1f8716bf02fbd886075bce58e9c7ffbf3e66d",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/2e996e40aca351f381d98729269b36bc1fe846ce"
+        },
+        "date": 1676281507377,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 9.73244378963917,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 8.193853859435697,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.193410045526386,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test",
+            "value": 8.842544626525914,
+            "unit": "Evt/s"
           }
         ]
       }
