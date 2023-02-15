@@ -304,6 +304,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
 
   //FCCAnalysesVertex thevertex = VertexFitter_Tk( Primary, tracks, thetracks) ;
   thevertex = VertexFitter_Tk( Primary, tracks,
+                               thetracks,
 			       BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z );
 
   //fill the indices of the tracks
@@ -323,9 +324,20 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
 }
 
 
+VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
+                                                                        ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                                                                        bool BeamSpotConstraint,
+                                                                        double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
+                                                                        double bsc_x, double bsc_y, double bsc_z )  {
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> dummy;
+  return VertexFitter_Tk( Primary, tracks, dummy, BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z );
+}
+
 
 VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
 									ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                                                                        const ROOT::VecOps::RVec<edm4hep::TrackState>& alltracks,
                                                                         bool BeamSpotConstraint,
                                                                         double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
 									double bsc_x, double bsc_y, double bsc_z )  {
@@ -342,6 +354,20 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
   ROOT::VecOps::RVec<int> reco_ind;
   ROOT::VecOps::RVec<float> final_track_phases;
   ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
+
+  // if the collection of all tracks has been passed, keep trace of the indices of the tracks that are used to fit this vertex
+  if ( alltracks.size() > 0 ) {
+     for (int i=0; i < tracks.size(); i++) {     // the fitted tracks
+        edm4hep::TrackState tr1 = tracks[i];
+        for ( int j=0; j < alltracks.size(); j++) {     // the collection of all tracks
+           edm4hep::TrackState tr2 = alltracks[j];
+           if ( VertexingUtils::compare_Tracks( tr1, tr2 ) ) {
+              reco_ind.push_back( j ) ;
+              break;
+           }
+        }
+     }
+  }
 
   TheVertex.vertex = result;
   TheVertex.reco_chi2 = reco_chi2;

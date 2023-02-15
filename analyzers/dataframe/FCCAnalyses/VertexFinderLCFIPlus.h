@@ -50,6 +50,7 @@ namespace VertexFinderLCFIPlus{
    *  SV finding done before jet clustering
    */
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event( ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
+                                                                      ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
 								      VertexingUtils::FCCAnalysesVertex PV,
 								      bool V0_rej=true,
 								      double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5. ) ;
@@ -82,6 +83,7 @@ namespace VertexFinderLCFIPlus{
    *  default values of thresholds for the constraints are set
    */
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks_fin,
+                                                                          const ROOT::VecOps::RVec<edm4hep::TrackState>& alltracks,
 									  VertexingUtils::FCCAnalysesVertex PV,
 									  double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.) ;
 

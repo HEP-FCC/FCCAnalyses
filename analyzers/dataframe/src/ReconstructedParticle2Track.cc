@@ -339,7 +339,7 @@ hasTRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in ) {
   result.reserve( in.size() );
   
   for (auto & p: in) {
-    if (p.tracks_begin >= 0) result.push_back(true) ;
+    if (p.tracks_begin >= 0 && p.tracks_begin != p.tracks_end) result.push_back(true) ;
     else result.push_back(false);
   }
  return result ;
