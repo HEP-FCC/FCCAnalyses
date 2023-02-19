@@ -148,6 +148,20 @@ namespace FCCAnalyses {
       return result;
     }
 
+    sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
+    ROOT::VecOps::RVec<fastjet::PseudoJet>  sel_pt::operator() (ROOT::VecOps::RVec<fastjet::PseudoJet> in) {
+      ROOT::VecOps::RVec<fastjet::PseudoJet> result;
+      result.reserve(in.size());
+      for (size_t i = 0; i < in.size(); ++i) {
+        auto & p = in[i];
+        if (std::sqrt(std::pow(p.px(),2) + std::pow(p.py(),2)) > m_min_pt) {
+          result.emplace_back(p);
+        }
+      }
+      return result;
+    }
+
+
     JetClustering::FCCAnalysesJet initialise_FCCAnalysesJet() {
       JetClustering::FCCAnalysesJet result;
       std::vector<fastjet::PseudoJet> jets;
