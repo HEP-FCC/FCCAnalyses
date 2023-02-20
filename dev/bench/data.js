@@ -6566,13 +6566,6 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 9.612628936767578,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
-          },
-          {
             "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
             "value": 11.330666065216064,
             "unit": "Seconds",
@@ -6625,11 +6618,6 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 10.40298139643231,
-            "unit": "Evt/s"
-          },
-          {
             "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
             "value": 8.825606493424894,
             "unit": "Evt/s"
@@ -6673,13 +6661,6 @@ window.BENCHMARK_DATA = {
         "date": 1664962477533,
         "tool": "customSmallerIsBetter",
         "benches": [
-          {
-            "name": "prod | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 9.753951072692871,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
-          },
           {
             "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
             "value": 10.004729509353638,
@@ -6732,11 +6713,6 @@ window.BENCHMARK_DATA = {
         "date": 1664962480458,
         "tool": "customBiggerIsBetter",
         "benches": [
-          {
-            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 10.252255650529113,
-            "unit": "Evt/s"
-          },
           {
             "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
             "value": 9.995272726414827,
@@ -6808,13 +6784,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "prod | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 8.946643114089966,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -6858,11 +6827,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "prod | Events processed per second: examples/FCCee/test",
             "value": 9.678422975363091,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 11.177376667960651,
             "unit": "Evt/s"
           }
         ]
@@ -6916,13 +6880,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "nightly | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 10.733657121658325,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -6966,11 +6923,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "nightly | Events processed per second: examples/FCCee/test",
             "value": 7.679042791193088,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "nightly | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 9.316489139402492,
             "unit": "Evt/s"
           }
         ]
@@ -7024,13 +6976,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "nightly | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 10.436131238937378,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -7074,11 +7019,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "nightly | Events processed per second: examples/FCCee/test",
             "value": 8.264740043306148,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "nightly | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 9.582094907631896,
             "unit": "Evt/s"
           }
         ]
@@ -7132,13 +7072,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "prod | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 14.900837659835815,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -7182,11 +7115,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "prod | Events processed per second: examples/FCCee/test",
             "value": 6.074850698263179,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 6.711032109929171,
             "unit": "Evt/s"
           }
         ]
@@ -7240,13 +7168,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "prod | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 10.824406147003174,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -7290,11 +7211,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "prod | Events processed per second: examples/FCCee/test",
             "value": 7.8435476386555125,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 9.238382100775647,
             "unit": "Evt/s"
           }
         ]
@@ -7348,13 +7264,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "nightly | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 13.606652021408081,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -7398,11 +7307,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "nightly | Events processed per second: examples/FCCee/test",
             "value": 6.905286682310491,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "nightly | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 7.349346469849056,
             "unit": "Evt/s"
           }
         ]
@@ -7456,13 +7360,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "nightly | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 10.547279596328735,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -7506,11 +7403,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "nightly | Events processed per second: examples/FCCee/test",
             "value": 8.196066497602317,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "nightly | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 9.48111776943959,
             "unit": "Evt/s"
           }
         ]
@@ -7564,13 +7456,6 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
-          },
-          {
-            "name": "prod | Time spent running the analysis: /Package/dummy_analysis/scripts",
-            "value": 15.551825761795044,
-            "unit": "Seconds",
-            "range": 10,
-            "extra": "Analysis path: /Package/dummy_analysis/scripts"
           }
         ]
       },
@@ -7614,11 +7499,6 @@ window.BENCHMARK_DATA = {
           {
             "name": "prod | Events processed per second: examples/FCCee/test",
             "value": 5.958106692978926,
-            "unit": "Evt/s"
-          },
-          {
-            "name": "prod | Events processed per second: /Package/dummy_analysis/scripts",
-            "value": 6.430113192604189,
             "unit": "Evt/s"
           }
         ]
