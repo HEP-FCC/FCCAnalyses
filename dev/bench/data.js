@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676912256200,
+  "lastUpdate": 1676912258142,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -14231,6 +14231,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce16f2ba81644f8fcfca827e151b0fd53d3f1cda",
+          "message": "Merge pull request #239 from amanmdesai/new_functions_jetclusteringutils\n\nAdd: sel_pt option in JetClusteringUtils",
+          "timestamp": "2023-02-20T17:47:36+01:00",
+          "tree_id": "69a70f5ea36157081b3a010b4093318004115e3e",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/ce16f2ba81644f8fcfca827e151b0fd53d3f1cda"
+        },
+        "date": 1676912257448,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
+            "value": 2.585009366066178,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.038395030130864,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 7.357584400497515,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 5.68895763971974,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.0524909095426,
+            "unit": "Evt/s"
           }
         ]
       }
