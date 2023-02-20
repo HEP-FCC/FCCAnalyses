@@ -3640,11 +3640,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.183067560195923,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -3681,7 +3681,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.208113392288523,
             "unit": "Evt/s"
           }
@@ -3724,11 +3724,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.329459428787231,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -3765,7 +3765,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.826546458687002,
             "unit": "Evt/s"
           }
@@ -3808,11 +3808,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.810845851898193,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -3849,7 +3849,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.751808843327051,
             "unit": "Evt/s"
           }
@@ -3892,11 +3892,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.974450588226318,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -3933,7 +3933,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.259996201290528,
             "unit": "Evt/s"
           }
@@ -3976,11 +3976,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.21285367012024,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4017,7 +4017,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.188094502815366,
             "unit": "Evt/s"
           }
@@ -4060,11 +4060,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.448940992355347,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4101,7 +4101,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.734432299613712,
             "unit": "Evt/s"
           }
@@ -4144,11 +4144,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.19059419631958,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4185,7 +4185,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.93607598003049,
             "unit": "Evt/s"
           }
@@ -4228,11 +4228,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.002569675445557,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4269,7 +4269,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.331549218545804,
             "unit": "Evt/s"
           }
@@ -4312,11 +4312,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.063655376434326,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4353,7 +4353,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.289361464630728,
             "unit": "Evt/s"
           }
@@ -4396,11 +4396,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.49708104133606,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4437,7 +4437,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.001868569887183,
             "unit": "Evt/s"
           }
@@ -4480,11 +4480,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.261362791061401,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4521,7 +4521,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.155700284221304,
             "unit": "Evt/s"
           }
@@ -4564,11 +4564,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 17.30794048309326,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4605,7 +4605,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 5.777694931276311,
             "unit": "Evt/s"
           }
@@ -4648,11 +4648,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.027905464172363,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4689,7 +4689,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.239118406552426,
             "unit": "Evt/s"
           }
@@ -4732,11 +4732,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 13.376818418502808,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4773,7 +4773,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.475619154826835,
             "unit": "Evt/s"
           }
@@ -4816,11 +4816,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.16354489326477,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4857,7 +4857,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.221287533979693,
             "unit": "Evt/s"
           }
@@ -4900,11 +4900,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.77662992477417,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -4941,7 +4941,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.338489302013048,
             "unit": "Evt/s"
           }
@@ -4984,11 +4984,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 13.910701274871826,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5025,7 +5025,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.1887101896609025,
             "unit": "Evt/s"
           }
@@ -5068,11 +5068,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 10.952911615371704,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5109,7 +5109,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.12999241769252,
             "unit": "Evt/s"
           }
@@ -5152,11 +5152,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 13.707803726196289,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5193,7 +5193,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.295114665881528,
             "unit": "Evt/s"
           }
@@ -5236,11 +5236,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.168449401855469,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5277,7 +5277,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.953794425874957,
             "unit": "Evt/s"
           }
@@ -5320,11 +5320,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.094730854034424,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5361,7 +5361,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.013287597115218,
             "unit": "Evt/s"
           }
@@ -5404,11 +5404,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.440597295761108,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5445,7 +5445,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.92492131397875,
             "unit": "Evt/s"
           }
@@ -5488,11 +5488,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.734662771224976,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5529,7 +5529,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.521761719920397,
             "unit": "Evt/s"
           }
@@ -5572,11 +5572,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 10.932110786437988,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5613,7 +5613,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.147364306265233,
             "unit": "Evt/s"
           }
@@ -5656,11 +5656,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.120184421539307,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5697,7 +5697,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.203402975116277,
             "unit": "Evt/s"
           }
@@ -5740,11 +5740,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.285281658172607,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5781,7 +5781,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.861099175808494,
             "unit": "Evt/s"
           }
@@ -5824,11 +5824,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.09563183784485,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5865,7 +5865,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.212865764292337,
             "unit": "Evt/s"
           }
@@ -5908,11 +5908,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.735000610351562,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -5949,7 +5949,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.521516386781352,
             "unit": "Evt/s"
           }
@@ -5992,11 +5992,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.249431848526001,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6033,7 +6033,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.889337821367652,
             "unit": "Evt/s"
           }
@@ -6076,11 +6076,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.869403839111328,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6117,7 +6117,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.425022971287417,
             "unit": "Evt/s"
           }
@@ -6160,11 +6160,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.598358869552612,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6201,7 +6201,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.410930844474677,
             "unit": "Evt/s"
           }
@@ -6244,11 +6244,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.081299781799316,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6289,11 +6289,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.157129526138306,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6330,7 +6330,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.218402825446932,
             "unit": "Evt/s"
           }
@@ -6369,7 +6369,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.59755528430044,
             "unit": "Evt/s"
           }
@@ -6412,11 +6412,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.987942695617676,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6453,7 +6453,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.341714882951193,
             "unit": "Evt/s"
           }
@@ -6496,11 +6496,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.616690397262573,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6537,7 +6537,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.926008870099315,
             "unit": "Evt/s"
           }
@@ -6587,11 +6587,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.609935760498047,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6633,7 +6633,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.9302545151150206,
             "unit": "Evt/s"
           }
@@ -6683,11 +6683,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.125633955001831,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6729,7 +6729,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.988251851935349,
             "unit": "Evt/s"
           }
@@ -6779,11 +6779,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 10.332261800765991,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6825,7 +6825,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.678422975363091,
             "unit": "Evt/s"
           }
@@ -6875,11 +6875,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 13.022456407546997,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -6921,7 +6921,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.679042791193088,
             "unit": "Evt/s"
           }
@@ -6971,11 +6971,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.099594116210938,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7017,7 +7017,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.264740043306148,
             "unit": "Evt/s"
           }
@@ -7067,11 +7067,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.461309909820557,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7113,7 +7113,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.074850698263179,
             "unit": "Evt/s"
           }
@@ -7163,11 +7163,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.749332904815674,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7209,7 +7209,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.8435476386555125,
             "unit": "Evt/s"
           }
@@ -7259,11 +7259,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.481657981872559,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7305,7 +7305,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.905286682310491,
             "unit": "Evt/s"
           }
@@ -7355,11 +7355,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.200974702835083,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7401,7 +7401,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.196066497602317,
             "unit": "Evt/s"
           }
@@ -7451,11 +7451,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.783855199813843,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7497,7 +7497,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 5.958106692978926,
             "unit": "Evt/s"
           }
@@ -7547,11 +7547,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.167802572250366,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7593,7 +7593,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.058257587232622,
             "unit": "Evt/s"
           }
@@ -7643,11 +7643,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.795809030532837,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7689,7 +7689,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.7586706339368545,
             "unit": "Evt/s"
           }
@@ -7739,11 +7739,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 13.318174839019775,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7785,7 +7785,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.508536357926357,
             "unit": "Evt/s"
           }
@@ -7835,11 +7835,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 20.266969442367554,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7881,7 +7881,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 4.934136812332321,
             "unit": "Evt/s"
           }
@@ -7931,11 +7931,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.203566312789917,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -7977,7 +7977,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.9257292908456,
             "unit": "Evt/s"
           }
@@ -8027,11 +8027,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.505601167678833,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8073,7 +8073,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.691418948269892,
             "unit": "Evt/s"
           }
@@ -8123,11 +8123,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.487607479095459,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8169,7 +8169,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.456775207854146,
             "unit": "Evt/s"
           }
@@ -8219,11 +8219,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.768010139465332,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8265,7 +8265,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.771392967341262,
             "unit": "Evt/s"
           }
@@ -8315,11 +8315,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 13.245678186416626,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8361,7 +8361,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.549632309695511,
             "unit": "Evt/s"
           }
@@ -8411,11 +8411,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.039520740509033,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8457,7 +8457,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.2346002488367604,
             "unit": "Evt/s"
           }
@@ -8507,11 +8507,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.8104989528656,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8553,7 +8553,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.467042789562827,
             "unit": "Evt/s"
           }
@@ -8603,11 +8603,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.764866590499878,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8649,7 +8649,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.499883889949924,
             "unit": "Evt/s"
           }
@@ -8699,11 +8699,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.612170934677124,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8745,7 +8745,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.611654148267194,
             "unit": "Evt/s"
           }
@@ -8795,11 +8795,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.478702306747437,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8841,7 +8841,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.711786169523517,
             "unit": "Evt/s"
           }
@@ -8891,11 +8891,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.00294041633606,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -8937,7 +8937,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.088479644180392,
             "unit": "Evt/s"
           }
@@ -8987,11 +8987,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.077309370040894,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9033,7 +9033,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.279989932862124,
             "unit": "Evt/s"
           }
@@ -9083,11 +9083,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.356642484664917,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9129,7 +9129,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.805419395303835,
             "unit": "Evt/s"
           }
@@ -9179,11 +9179,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.83335018157959,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9225,7 +9225,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.7415653763896435,
             "unit": "Evt/s"
           }
@@ -9275,11 +9275,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.327765703201294,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9321,7 +9321,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.111770000141375,
             "unit": "Evt/s"
           }
@@ -9371,11 +9371,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.350813150405884,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9417,7 +9417,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.115903782896428,
             "unit": "Evt/s"
           }
@@ -9467,11 +9467,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.135193109512329,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9513,7 +9513,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.980535767680058,
             "unit": "Evt/s"
           }
@@ -9563,11 +9563,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 10.373602628707886,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9609,7 +9609,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.639852573806925,
             "unit": "Evt/s"
           }
@@ -9659,11 +9659,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.311075448989868,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9705,7 +9705,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.122767211877097,
             "unit": "Evt/s"
           }
@@ -9755,11 +9755,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.693071603775024,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9801,7 +9801,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.552072833259288,
             "unit": "Evt/s"
           }
@@ -9851,11 +9851,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.950795412063599,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9897,7 +9897,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.367643872394979,
             "unit": "Evt/s"
           }
@@ -9947,11 +9947,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.274235486984253,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -9993,7 +9993,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.546972520177114,
             "unit": "Evt/s"
           }
@@ -10043,11 +10043,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.4156334400177,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10089,7 +10089,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.759916874121787,
             "unit": "Evt/s"
           }
@@ -10139,11 +10139,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.483720064163208,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10185,7 +10185,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.9043035599278175,
             "unit": "Evt/s"
           }
@@ -10235,11 +10235,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.399655103683472,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10281,7 +10281,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.064740443489736,
             "unit": "Evt/s"
           }
@@ -10331,11 +10331,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.730891466140747,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10377,7 +10377,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 5.976967826393212,
             "unit": "Evt/s"
           }
@@ -10427,11 +10427,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.344253301620483,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10473,7 +10473,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.10093551684269,
             "unit": "Evt/s"
           }
@@ -10523,11 +10523,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.583706855773926,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10569,7 +10569,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.63281514674681,
             "unit": "Evt/s"
           }
@@ -10619,11 +10619,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.268495559692383,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10665,7 +10665,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.150958649611916,
             "unit": "Evt/s"
           }
@@ -10715,11 +10715,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.29742693901062,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10761,7 +10761,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.994265501518274,
             "unit": "Evt/s"
           }
@@ -10811,11 +10811,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.350926399230957,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10857,7 +10857,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.80985361747876,
             "unit": "Evt/s"
           }
@@ -10907,11 +10907,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 17.480422496795654,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -10953,7 +10953,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 5.720685527957408,
             "unit": "Evt/s"
           }
@@ -11003,11 +11003,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.346898555755615,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11049,7 +11049,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.51597452323659,
             "unit": "Evt/s"
           }
@@ -11099,11 +11099,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.115655183792114,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11145,7 +11145,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.084332869991189,
             "unit": "Evt/s"
           }
@@ -11195,11 +11195,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.205228805541992,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11241,7 +11241,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.170847767715641,
             "unit": "Evt/s"
           }
@@ -11291,11 +11291,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.955008029937744,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11337,7 +11337,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.364695343539703,
             "unit": "Evt/s"
           }
@@ -11387,11 +11387,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 16.03060746192932,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11433,7 +11433,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.2380667880170755,
             "unit": "Evt/s"
           }
@@ -11483,11 +11483,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 30.469630002975464,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11529,7 +11529,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 3.2819564920950683,
             "unit": "Evt/s"
           }
@@ -11579,11 +11579,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 31.98274827003479,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11625,7 +11625,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 3.126685648015177,
             "unit": "Evt/s"
           }
@@ -11675,11 +11675,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 25.43750524520874,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11721,7 +11721,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 3.9312031205904288,
             "unit": "Evt/s"
           }
@@ -11771,11 +11771,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.081326246261597,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11817,7 +11817,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.024190586730182,
             "unit": "Evt/s"
           }
@@ -11867,11 +11867,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.539955377578735,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -11913,7 +11913,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.665544772754709,
             "unit": "Evt/s"
           }
@@ -11963,11 +11963,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.384587049484253,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12009,7 +12009,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.78380564576826,
             "unit": "Evt/s"
           }
@@ -12059,11 +12059,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.054717779159546,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12105,7 +12105,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.6424360434329355,
             "unit": "Evt/s"
           }
@@ -12155,11 +12155,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.016988515853882,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12201,7 +12201,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.076890645396976,
             "unit": "Evt/s"
           }
@@ -12251,11 +12251,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.373272895812988,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12297,7 +12297,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.9573576404529645,
             "unit": "Evt/s"
           }
@@ -12347,11 +12347,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 10.739074945449829,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12393,7 +12393,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 9.311789004915198,
             "unit": "Evt/s"
           }
@@ -12443,11 +12443,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.107838869094849,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12489,7 +12489,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.088257877616088,
             "unit": "Evt/s"
           }
@@ -12539,11 +12539,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 15.643688201904297,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12585,7 +12585,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.392354456912984,
             "unit": "Evt/s"
           }
@@ -12635,11 +12635,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 26.135987520217896,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12681,7 +12681,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 3.8261420167362514,
             "unit": "Evt/s"
           }
@@ -12731,11 +12731,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 28.083942413330078,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12777,7 +12777,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 3.56075363381086,
             "unit": "Evt/s"
           }
@@ -12827,11 +12827,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 39.62798190116882,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12873,7 +12873,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 2.52346940728391,
             "unit": "Evt/s"
           }
@@ -12923,11 +12923,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 23.48431420326233,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -12969,7 +12969,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 4.258161389533294,
             "unit": "Evt/s"
           }
@@ -13019,11 +13019,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 30.010231494903564,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13065,7 +13065,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 3.332196888150707,
             "unit": "Evt/s"
           }
@@ -13115,11 +13115,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 13.147392749786377,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13161,7 +13161,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 7.606070793133097,
             "unit": "Evt/s"
           }
@@ -13211,11 +13211,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 14.43288779258728,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13257,7 +13257,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 6.928620345220166,
             "unit": "Evt/s"
           }
@@ -13307,11 +13307,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 23.401255130767822,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13353,7 +13353,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 4.273275063290115,
             "unit": "Evt/s"
           }
@@ -13403,11 +13403,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 33.871654748916626,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13449,7 +13449,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 2.9523210702659415,
             "unit": "Evt/s"
           }
@@ -13499,11 +13499,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.308961868286133,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13545,7 +13545,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.842544626525914,
             "unit": "Evt/s"
           }
@@ -13595,11 +13595,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.049688816070557,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13641,7 +13641,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.298969502567646,
             "unit": "Evt/s"
           }
@@ -13691,11 +13691,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/test",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 11.262612104415894,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13737,7 +13737,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.87893492849599,
             "unit": "Evt/s"
           }
@@ -13787,11 +13787,11 @@ window.BENCHMARK_DATA = {
             "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/test",
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
             "value": 12.109532594680786,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/test"
+            "extra": "Analysis path: examples/FCCee/test/weaver_inference.py"
           }
         ]
       },
@@ -13833,7 +13833,7 @@ window.BENCHMARK_DATA = {
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/test",
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
             "value": 8.257957044842989,
             "unit": "Evt/s"
           }
