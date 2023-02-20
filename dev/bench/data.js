@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676890882886,
+  "lastUpdate": 1676890884428,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -13816,6 +13816,50 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e523270663b8760155dba6a3373fcb282c4a719",
+          "message": "Merge pull request #206 from kunal2796/lcfiplus\n\nImplementation of the Lcfiplus vertexing module",
+          "timestamp": "2023-02-20T11:50:54+01:00",
+          "tree_id": "0b443f24a75dcd9d6196062eef504e02822deb01",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/5e523270663b8760155dba6a3373fcb282c4a719"
+        },
+        "date": 1676890883969,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "value": 10.852310066578521,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "value": 9.192222418126608,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "value": 6.679700428390345,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test",
+            "value": 8.87893492849599,
+            "unit": "Evt/s"
           }
         ]
       }
