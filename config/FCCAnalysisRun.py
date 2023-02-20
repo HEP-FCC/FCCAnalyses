@@ -570,10 +570,9 @@ def runLocal(rdfModule, fileList, args):
     if args.bench:
         import json
 
-        analysis_path = args.pathToAnalysisScript.rsplit('/', 1)[0]
         analysis_name = getElement(rdfModule, 'analysisName')
         if not analysis_name:
-            analysis_name = analysis_path
+            analysis_name = args.pathToAnalysisScript
 
         bench_time = {}
         bench_time['name'] = 'Time spent running the analysis: '
@@ -581,7 +580,7 @@ def runLocal(rdfModule, fileList, args):
         bench_time['unit'] = 'Seconds'
         bench_time['value'] = elapsed_time
         bench_time['range'] = 10
-        bench_time['extra'] = 'Analysis path: ' + analysis_path
+        bench_time['extra'] = 'Analysis path: ' + args.pathToAnalysisScript
         saveBenchmark('benchmarks_smaller_better.json', bench_time)
 
         bench_evt_per_sec = {}
@@ -590,7 +589,7 @@ def runLocal(rdfModule, fileList, args):
         bench_evt_per_sec['unit'] = 'Evt/s'
         bench_evt_per_sec['value'] = nevents_local / elapsed_time
         bench_time['range'] = 1000
-        bench_time['extra'] = 'Analysis path: ' + analysis_path
+        bench_time['extra'] = 'Analysis path: ' + args.pathToAnalysisScript
         saveBenchmark('benchmarks_bigger_better.json', bench_evt_per_sec)
 
 
