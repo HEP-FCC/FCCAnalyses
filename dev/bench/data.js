@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676910456732,
+  "lastUpdate": 1676910458412,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -14015,6 +14015,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "brieuc.francois@cern.ch",
+            "name": "Brieuc Francois",
+            "username": "BrieucF"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a1a1a8693c207d686329cbe594389710c0ac1c7e",
+          "message": "Merge pull request #242 from kjvbrt/bench-clean\n\nUsing full path in the name of the interation benchmark",
+          "timestamp": "2023-02-20T17:19:21+01:00",
+          "tree_id": "a190d4275099ed2065fa5cec58ab615332fdd55b",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/a1a1a8693c207d686329cbe594389710c0ac1c7e"
+        },
+        "date": 1676910457892,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/weaver_inference.py",
+            "value": 3.435451203202506,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 10.07940331181246,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 8.01577414477564,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.278406551726466,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.276635549575042,
+            "unit": "Evt/s"
           }
         ]
       }
