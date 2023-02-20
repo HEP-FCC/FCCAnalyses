@@ -456,6 +456,81 @@ float getAxisCosTheta(const ROOT::VecOps::RVec<float> & axis,
   return result;
 }
 
+
+
+jets_TwoHemispheres::jets_TwoHemispheres(int arg_sorted, int arg_recombination) : m_sorted( arg_sorted ), m_recombination( arg_recombination ) {
+   if ( arg_recombination  != 0 ) {
+      std::cout << " ....... in jets_TwoHemispheres: only E-scheme is implemented so far. m_recombination  is set to zero. " << std::endl;
+      m_recombination = 0;
+   }
+};
+
+JetClustering::FCCAnalysesJet jets_TwoHemispheres::operator() ( const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> & in) {
+
+ ROOT::VecOps::RVec<float> RP_e = ReconstructedParticle::get_e( in );
+ ROOT::VecOps::RVec<float> RP_px = ReconstructedParticle::get_px( in );
+ ROOT::VecOps::RVec<float> RP_py = ReconstructedParticle::get_py( in );
+ ROOT::VecOps::RVec<float> RP_pz = ReconstructedParticle::get_pz( in );
+
+ ROOT::VecOps::RVec<float> mt =  minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz) ;
+ ROOT::VecOps::RVec<float> costheta = getAxisCosTheta( mt, RP_px, RP_py, RP_pz) ;
+ 
+ JetClustering::FCCAnalysesJet result;
+
+ std::vector<int> constituents_JetPlus;
+ std::vector<int> constituents_JetMimus;
+
+ float px_plus=0;
+ float py_plus=0;
+ float pz_plus=0;
+ float e_plus=0;
+ float px_minus=0;
+ float py_minus=0;
+ float pz_minus=0;
+ float e_minus=0;
+
+ for ( int i=0; i < in.size(); i++) {
+     if ( costheta[i] > 0 ) {
+        constituents_JetPlus.push_back( i );
+	px_plus += RP_px[i];
+	py_plus += RP_py[i];
+	pz_plus += RP_pz[i];
+	e_plus += RP_e[i];
+     }
+     else {
+	constituents_JetMimus.push_back( i );
+        px_minus += RP_px[i];
+        py_minus += RP_py[i];
+        pz_minus += RP_pz[i];
+        e_minus += RP_e[i];
+     }
+ }
+
+
+ float pt_plus = sqrt( pow( px_plus,2) + pow( py_plus,2) + pow( pz_plus, 2) ) ;
+ float pt_minus = sqrt( pow( px_minus, 2) + pow( py_minus, 2) + pow( pz_minus, 2) ) ;
+
+ bool plus_is_first = (  ( m_sorted == 1 && e_plus > e_minus ) || ( m_sorted == 0 && pt_plus > pt_minus ) ) ;
+
+ // sorting :
+    if ( plus_is_first ) {
+ 	result.jets.push_back( fastjet::PseudoJet( px_plus, py_plus, pz_plus, e_plus) );
+ 	result.jets.push_back( fastjet::PseudoJet( px_minus, py_minus, pz_minus, e_minus) );
+ 	result.constituents.push_back( constituents_JetPlus );
+ 	result.constituents.push_back( constituents_JetMimus );
+    }
+    else {
+        result.jets.push_back( fastjet::PseudoJet( px_minus, py_minus, pz_minus, e_minus) );
+        result.jets.push_back( fastjet::PseudoJet( px_plus, py_plus, pz_plus, e_plus) );
+        result.constituents.push_back( constituents_JetMimus );
+        result.constituents.push_back( constituents_JetPlus );
+    }
+
+
+ return result;
+}
+
+
 }//end NS Algorithms
 
 }//end NS FCCAnalyses
