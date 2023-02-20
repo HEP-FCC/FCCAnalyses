@@ -26,18 +26,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 19.4909245967865,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.239745616912842,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -64,12 +64,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.130592933312521,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.157731922589678,
             "unit": "Evt/s"
           }
@@ -98,18 +98,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 39.08949375152588,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.136297702789307,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -136,12 +136,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 2.558232159148811,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.83556621940122,
             "unit": "Evt/s"
           }
@@ -170,18 +170,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 18.52289319038391,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.928242921829224,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -208,12 +208,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.398724646963608,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.0180038647793115,
             "unit": "Evt/s"
           }
@@ -242,18 +242,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 42.97273397445679,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.54971480369568,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -280,12 +280,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 2.3270569673188706,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.866247583251905,
             "unit": "Evt/s"
           }
@@ -314,18 +314,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.469533681869507,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.398657083511353,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -352,12 +352,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.464318967623522,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.435179293037574,
             "unit": "Evt/s"
           }
@@ -386,18 +386,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 17.682753324508667,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.42025589942932,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -424,12 +424,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.655227902851413,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.428806230813444,
             "unit": "Evt/s"
           }
@@ -458,18 +458,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.59491515159607,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.00275421142578,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -496,12 +496,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.025942229079862,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.262395065862243,
             "unit": "Evt/s"
           }
@@ -530,18 +530,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 27.20731282234192,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.357932567596436,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -568,12 +568,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 3.6754824209571577,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.113241975217017,
             "unit": "Evt/s"
           }
@@ -602,18 +602,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.777647256851196,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.451061964035034,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -640,12 +640,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.7669770608198885,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.4720470497605245,
             "unit": "Evt/s"
           }
@@ -674,18 +674,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 27.823413848876953,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.20130181312561,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -712,12 +712,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 3.594095266064424,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.494112510561548,
             "unit": "Evt/s"
           }
@@ -746,18 +746,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 20.83799719810486,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.17397928237915,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -784,12 +784,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 4.798925686058478,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.1827703779085255,
             "unit": "Evt/s"
           }
@@ -818,18 +818,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 36.59964609146118,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 22.114228010177612,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -856,12 +856,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 2.732266857174073,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.521975623746716,
             "unit": "Evt/s"
           }
@@ -890,18 +890,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 34.41729712486267,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.575623989105225,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -928,12 +928,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 2.9055157828695712,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.420288527120814,
             "unit": "Evt/s"
           }
@@ -962,18 +962,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.267730951309204,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.10770893096924,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1000,12 +1000,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.147138792700044,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.2334898109067804,
             "unit": "Evt/s"
           }
@@ -1034,18 +1034,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.7659912109375,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.5219566822052,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1072,12 +1072,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.342766443420696,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.707125169505592,
             "unit": "Evt/s"
           }
@@ -1106,18 +1106,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 18.147648334503174,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.32118844985962,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1144,12 +1144,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.510355840975563,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.773275909414314,
             "unit": "Evt/s"
           }
@@ -1178,18 +1178,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 20.94969081878662,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.615589141845703,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1216,12 +1216,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 4.773340134944859,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.0979860598054225,
             "unit": "Evt/s"
           }
@@ -1250,18 +1250,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 30.152551651000977,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.412286043167114,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1288,12 +1288,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 3.3164689064277018,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.743071286107303,
             "unit": "Evt/s"
           }
@@ -1322,18 +1322,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 18.898069381713867,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.882794618606567,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1360,12 +1360,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.291545817731091,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.7886311112258895,
             "unit": "Evt/s"
           }
@@ -1394,18 +1394,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.597948789596558,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.05997133255005,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1432,12 +1432,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.850277490442114,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.861674562676562,
             "unit": "Evt/s"
           }
@@ -1466,18 +1466,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.777862787246704,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.390047550201416,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1504,12 +1504,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.33799402038344,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.101263568254328,
             "unit": "Evt/s"
           }
@@ -1538,18 +1538,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 28.019956827163696,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.44518232345581,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1576,12 +1576,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 3.5688848707666776,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.474510815462184,
             "unit": "Evt/s"
           }
@@ -1610,18 +1610,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 18.022693157196045,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.55270743370056,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1648,12 +1648,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.548560313810387,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.114381235390577,
             "unit": "Evt/s"
           }
@@ -1682,18 +1682,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 18.14177942276001,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.803792476654053,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1720,12 +1720,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.512138455092431,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.3180761340647384,
             "unit": "Evt/s"
           }
@@ -1754,18 +1754,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.50373649597168,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.037185668945312,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1792,12 +1792,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.059233921021978,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.869514011476433,
             "unit": "Evt/s"
           }
@@ -1826,18 +1826,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 17.431204795837402,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.283274173736572,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1864,12 +1864,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.736838111378288,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.469479867213679,
             "unit": "Evt/s"
           }
@@ -1898,18 +1898,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.025207042694092,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.095001459121704,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -1936,12 +1936,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.677421147488825,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.849663145049988,
             "unit": "Evt/s"
           }
@@ -1970,18 +1970,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 17.18929433822632,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.457595348358154,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2008,12 +2008,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.817574475853586,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.88816003529103,
             "unit": "Evt/s"
           }
@@ -2042,18 +2042,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.01555848121643,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.06679105758667,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2080,12 +2080,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.322542822818187,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.637113345356071,
             "unit": "Evt/s"
           }
@@ -2114,18 +2114,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.543778896331787,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.798264265060425,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2152,12 +2152,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.972079293365358,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.3298092956427405,
             "unit": "Evt/s"
           }
@@ -2186,18 +2186,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.748133659362793,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.479139804840088,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2224,12 +2224,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.970814541720385,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.133696918954936,
             "unit": "Evt/s"
           }
@@ -2258,18 +2258,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.145096063613892,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.04064154624939,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2296,12 +2296,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.069587901720568,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.2519238785679425,
             "unit": "Evt/s"
           }
@@ -2330,18 +2330,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.543112993240356,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.718513011932373,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2368,12 +2368,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.972502524205217,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.361924943160154,
             "unit": "Evt/s"
           }
@@ -2402,18 +2402,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.348090648651123,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.087475299835205,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2440,12 +2440,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.116922284637012,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.23903755887838,
             "unit": "Evt/s"
           }
@@ -2474,18 +2474,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.593294858932495,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.952098608016968,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2512,12 +2512,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.940733630092798,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.898974652772967,
             "unit": "Evt/s"
           }
@@ -2546,18 +2546,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.404701709747314,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.577632904052734,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2584,12 +2584,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.460069023936904,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.032224297568623,
             "unit": "Evt/s"
           }
@@ -2618,18 +2618,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.528167963027954,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.99516248703003,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2656,12 +2656,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.3919839163216166,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.884027297551033,
             "unit": "Evt/s"
           }
@@ -2690,18 +2690,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.019376277923584,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.69191265106201,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2728,12 +2728,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.680859502429917,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.9909251917657,
             "unit": "Evt/s"
           }
@@ -2762,18 +2762,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.885790824890137,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.410399436950684,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2800,12 +2800,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.760486054673528,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.093696889231943,
             "unit": "Evt/s"
           }
@@ -2834,18 +2834,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.456899404525757,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.554574012756348,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2872,12 +2872,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.469602821554247,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.865097176810336,
             "unit": "Evt/s"
           }
@@ -2906,18 +2906,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.403022527694702,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.77198839187622,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -2944,12 +2944,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.492232275853623,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.0576602624897005,
             "unit": "Evt/s"
           }
@@ -2978,18 +2978,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.596736192703247,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.576236248016357,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3016,12 +3016,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.8508465645894825,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.689500220007906,
             "unit": "Evt/s"
           }
@@ -3050,18 +3050,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.47584867477417,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.91497492790222,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3088,12 +3088,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.0694900744693,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.781263202309276,
             "unit": "Evt/s"
           }
@@ -3122,18 +3122,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.536749124526978,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.555923223495483,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3160,12 +3160,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.387298019641356,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.38911477459554,
             "unit": "Evt/s"
           }
@@ -3194,18 +3194,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.679948091506958,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.277568101882935,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3232,12 +3232,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.377572133300938,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.699785216109853,
             "unit": "Evt/s"
           }
@@ -3266,18 +3266,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.928080558776855,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.692692279815674,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3304,12 +3304,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.907344288254352,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.609847349056191,
             "unit": "Evt/s"
           }
@@ -3338,18 +3338,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.08647632598877,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.740945100784302,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3376,12 +3376,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.019998515270478,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.352858698110665,
             "unit": "Evt/s"
           }
@@ -3410,18 +3410,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.723160743713379,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.641988515853882,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3448,12 +3448,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.360044372120484,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.620647493955779,
             "unit": "Evt/s"
           }
@@ -3482,18 +3482,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.82590103149414,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.318888425827026,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3520,12 +3520,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.796723189618328,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.527888788027468,
             "unit": "Evt/s"
           }
@@ -3554,18 +3554,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.083185911178589,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.314773559570312,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           }
         ]
       },
@@ -3592,12 +3592,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.643398227228246,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.129413910335249,
             "unit": "Evt/s"
           }
@@ -3626,18 +3626,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.552194595336914,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.411823749542236,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -3671,12 +3671,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.966734361905891,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.743223767850799,
             "unit": "Evt/s"
           },
@@ -3710,18 +3710,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.743072032928467,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.00714111328125,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -3755,12 +3755,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.847401297081042,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.247211747076386,
             "unit": "Evt/s"
           },
@@ -3794,18 +3794,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.145976543426514,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.111849308013916,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -3839,12 +3839,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.069147873461514,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.232356031504933,
             "unit": "Evt/s"
           },
@@ -3878,18 +3878,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 17.506366729736328,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.004283666610718,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -3923,12 +3923,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.712207538194657,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.760933607031986,
             "unit": "Evt/s"
           },
@@ -3962,18 +3962,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.315181016921997,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.703903913497925,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4007,12 +4007,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.510224597991721,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.986624475203847,
             "unit": "Evt/s"
           },
@@ -4046,18 +4046,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.026071548461914,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.27160143852234,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4091,12 +4091,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.31526734204318,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.14567658738581,
             "unit": "Evt/s"
           },
@@ -4130,18 +4130,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.452759027481079,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.68084454536438,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4175,12 +4175,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.731520479916533,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.811597227325453,
             "unit": "Evt/s"
           },
@@ -4214,18 +4214,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.01621675491333,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.170862674713135,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4259,12 +4259,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.322086896369512,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.18396198221218,
             "unit": "Evt/s"
           },
@@ -4298,18 +4298,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.797379732131958,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.348145008087158,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4343,12 +4343,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.476458524737895,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.515445348431916,
             "unit": "Evt/s"
           },
@@ -4382,18 +4382,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.800161123275757,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.183444738388062,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4427,12 +4427,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.474460556538547,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.586120720495765,
             "unit": "Evt/s"
           },
@@ -4466,18 +4466,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.318830251693726,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.652907371520996,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4511,12 +4511,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.117653864598948,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.388589520560293,
             "unit": "Evt/s"
           },
@@ -4550,18 +4550,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 17.259134769439697,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 22.060819625854492,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4595,12 +4595,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.794033208261831,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.532923150452832,
             "unit": "Evt/s"
           },
@@ -4634,18 +4634,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.159759998321533,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.01851749420166,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4679,12 +4679,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.188210716643484,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.2580333893263695,
             "unit": "Evt/s"
           },
@@ -4718,18 +4718,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.599524736404419,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.26470375061035,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4763,12 +4763,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.353198140249056,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.792164258623015,
             "unit": "Evt/s"
           },
@@ -4802,18 +4802,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.7861967086792,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.47204852104187,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4847,12 +4847,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.484501189969222,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.07089032504106,
             "unit": "Evt/s"
           },
@@ -4886,18 +4886,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.057196140289307,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.464080810546875,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -4931,12 +4931,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.227737341333757,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.8866108830288395,
             "unit": "Evt/s"
           },
@@ -4970,18 +4970,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.36657452583313,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.536491632461548,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5015,12 +5015,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.96060148647027,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.394764121646277,
             "unit": "Evt/s"
           },
@@ -5054,18 +5054,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.22815752029419,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.981608390808105,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5099,12 +5099,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.906180717473573,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.674850749760254,
             "unit": "Evt/s"
           },
@@ -5138,18 +5138,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.315537452697754,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.933958292007446,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5183,12 +5183,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.510023561214933,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.57601385995007,
             "unit": "Evt/s"
           },
@@ -5222,18 +5222,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.449501991271973,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.006057262420654,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5267,12 +5267,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.734004332785009,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.663975636720236,
             "unit": "Evt/s"
           },
@@ -5306,18 +5306,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.454594850540161,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.245141506195068,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5351,12 +5351,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.730121082832042,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 7.019937285741318,
             "unit": "Evt/s"
           },
@@ -5390,18 +5390,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.620755434036255,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.4407160282135,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5435,12 +5435,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.8395918700073395,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.143843460028641,
             "unit": "Evt/s"
           },
@@ -5474,18 +5474,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.008449792861938,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.96403169631958,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5519,12 +5519,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.327469550602775,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.264081774722012,
             "unit": "Evt/s"
           },
@@ -5558,18 +5558,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 10.585432529449463,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.149730205535889,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5603,12 +5603,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.44694510326267,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 7.067272559082177,
             "unit": "Evt/s"
           },
@@ -5642,18 +5642,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.446303129196167,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.760369062423706,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5687,12 +5687,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.080393825556809,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.816870051746822,
             "unit": "Evt/s"
           },
@@ -5726,18 +5726,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 10.641564846038818,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.703433275222778,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5771,12 +5771,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.397114188259978,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.801132642164138,
             "unit": "Evt/s"
           },
@@ -5810,18 +5810,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.242998838424683,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.35530734062195,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5855,12 +5855,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.156498624098802,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.912723661039281,
             "unit": "Evt/s"
           },
@@ -5894,18 +5894,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.709981918334961,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.897730112075806,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -5939,12 +5939,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.539722836243199,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.290206167485551,
             "unit": "Evt/s"
           },
@@ -5978,18 +5978,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.427260398864746,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.4165780544281,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6023,12 +6023,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.04682583211463,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.48652376986325,
             "unit": "Evt/s"
           },
@@ -6062,18 +6062,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.402708530426025,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.631524085998535,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6107,12 +6107,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.76984619339944,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.397328849691117,
             "unit": "Evt/s"
           },
@@ -6146,18 +6146,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.2638099193573,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.251838207244873,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6191,12 +6191,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.551444267736964,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.4789001997785665,
             "unit": "Evt/s"
           },
@@ -6230,18 +6230,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.615785598754883,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 22.22922372817993,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6275,18 +6275,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.654988288879395,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.4419584274292,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6320,12 +6320,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.018373275561138,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.498582641607509,
             "unit": "Evt/s"
           },
@@ -6359,12 +6359,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.387740326259812,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.66375309598945,
             "unit": "Evt/s"
           },
@@ -6398,18 +6398,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.780085325241089,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.392412185668945,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6443,12 +6443,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.488902859279877,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.496707520157541,
             "unit": "Evt/s"
           },
@@ -6482,18 +6482,18 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.659751892089844,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.841902017593384,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6527,12 +6527,12 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.576511826794663,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.312373343108927,
             "unit": "Evt/s"
           },
@@ -6566,25 +6566,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.330666065216064,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.773407459259033,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.797377109527588,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6618,17 +6618,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.825606493424894,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.260367508606305,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.618805478166013,
             "unit": "Evt/s"
           },
@@ -6662,25 +6662,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.004729509353638,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.899055004119873,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.7676682472229,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6714,17 +6714,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.995272726414827,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.4040287203796,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.342091831974751,
             "unit": "Evt/s"
           },
@@ -6758,25 +6758,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.057350635528564,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.107546091079712,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.142598628997803,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6810,17 +6810,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.040756179598235,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.002888593035717,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.603886324273418,
             "unit": "Evt/s"
           },
@@ -6854,25 +6854,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.339291095733643,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.448963165283203,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.057738304138184,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -6906,17 +6906,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.818893452486156,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.032797484602813,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.862441914455924,
             "unit": "Evt/s"
           },
@@ -6950,25 +6950,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.224262952804565,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.541605710983276,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.313856601715088,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7002,17 +7002,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.780656117864174,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.664305687105351,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.129758428150394,
             "unit": "Evt/s"
           },
@@ -7046,25 +7046,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 15.043445587158203,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.36135196685791,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 22.59587001800537,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7098,17 +7098,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 6.647413281792619,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.1119643537137565,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.42558750427913,
             "unit": "Evt/s"
           },
@@ -7142,25 +7142,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.126461267471313,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.67459487915039,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.050408363342285,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7194,17 +7194,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.98758352688058,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.889798526381243,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.864962168002739,
             "unit": "Evt/s"
           },
@@ -7238,25 +7238,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.689368486404419,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.692399024963379,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.161144495010376,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7290,17 +7290,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.880612822233156,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.37251193019758,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.960035876175022,
             "unit": "Evt/s"
           },
@@ -7334,25 +7334,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.892454624176025,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.329636335372925,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.712114334106445,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7386,17 +7386,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.10871455054355,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.110539295721683,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.983683332989042,
             "unit": "Evt/s"
           },
@@ -7430,25 +7430,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 15.788125991821289,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 17.376204252243042,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 23.49120306968689,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7482,17 +7482,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 6.333873953869061,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.754996807607812,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.256912670813367,
             "unit": "Evt/s"
           },
@@ -7526,25 +7526,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.012470960617065,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.261629104614258,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.64790439605713,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7578,17 +7578,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.684935497850893,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.011821669632795,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.362532854959498,
             "unit": "Evt/s"
           },
@@ -7622,25 +7622,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.379862070083618,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.510961532592773,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.02259135246277,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7674,17 +7674,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.473918600670227,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.447053574974874,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.994358534301308,
             "unit": "Evt/s"
           },
@@ -7718,25 +7718,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.119358539581299,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.273059368133545,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.46633243560791,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7770,17 +7770,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.25126178695055,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.006206407524862,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.415260466511146,
             "unit": "Evt/s"
           },
@@ -7814,25 +7814,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.933893918991089,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.437933206558228,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.295538187026978,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7866,17 +7866,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.731623641443978,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.47755102072334,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.927191340208981,
             "unit": "Evt/s"
           },
@@ -7910,25 +7910,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.699428081512451,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.883879899978638,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.405611753463745,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -7962,17 +7962,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.309886228302938,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.414760233329163,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.491141124435798,
             "unit": "Evt/s"
           },
@@ -8006,25 +8006,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 17.670581102371216,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.348944664001465,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.528152704238892,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8058,17 +8058,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 5.659123456136991,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.097857972552992,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.439916061148851,
             "unit": "Evt/s"
           },
@@ -8102,25 +8102,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.380082845687866,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.892730474472046,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.643150091171265,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8154,17 +8154,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.473795278646425,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.919706121583955,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.620399506483683,
             "unit": "Evt/s"
           },
@@ -8198,25 +8198,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.155470371246338,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 19.900495529174805,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.69023847579956,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8250,17 +8250,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.601400571625938,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.025000500786354,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.833197071022912,
             "unit": "Evt/s"
           },
@@ -8294,25 +8294,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.810560941696167,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.227447032928467,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.27363395690918,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8346,17 +8346,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.250213799202735,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.560037832777523,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.144909014470226,
             "unit": "Evt/s"
           },
@@ -8390,25 +8390,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.33238935470581,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.810166597366333,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.71328115463257,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8442,17 +8442,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.500531025573741,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.325044039489,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.605476219270749,
             "unit": "Evt/s"
           },
@@ -8486,25 +8486,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.255722522735596,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.494158267974854,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.399247407913208,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8538,17 +8538,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.750653820665788,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.700071607559213,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.493823844184296,
             "unit": "Evt/s"
           },
@@ -8582,25 +8582,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.705596923828125,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.71677541732788,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.205827474594116,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8634,17 +8634,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.303333301890055,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.534771422870365,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.1706198067806195,
             "unit": "Evt/s"
           },
@@ -8678,25 +8678,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.827019929885864,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.700944423675537,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.752864122390747,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8730,17 +8730,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.236151835646817,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.546318688401024,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.348051962046849,
             "unit": "Evt/s"
           },
@@ -8774,25 +8774,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.734875679016113,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.341895818710327,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.905368089675903,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8826,17 +8826,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.315431588599946,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.102482914205117,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.287185523540917,
             "unit": "Evt/s"
           },
@@ -8870,25 +8870,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.385127305984497,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.964916229248047,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.722096681594849,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -8922,17 +8922,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.655156476804981,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.357768502845978,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.360474816127133,
             "unit": "Evt/s"
           },
@@ -8966,25 +8966,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.811529397964478,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.295857191085815,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.294183015823364,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9018,17 +9018,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.192090951768053,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.132820546459946,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.1371594944582055,
             "unit": "Evt/s"
           },
@@ -9062,25 +9062,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.207674980163574,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.628074407577515,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.08692979812622,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9114,17 +9114,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.796550163903978,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.599876169938705,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.216226542596576,
             "unit": "Evt/s"
           },
@@ -9158,25 +9158,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.736369132995605,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.454318046569824,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.273256301879883,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9210,17 +9210,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.27994414184705,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.470683449030971,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.9326067066358394,
             "unit": "Evt/s"
           },
@@ -9254,25 +9254,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.929863452911377,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.478997945785522,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.116379499435425,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9306,17 +9306,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.149245132917292,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.013463936322912,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.20486753886027,
             "unit": "Evt/s"
           },
@@ -9350,25 +9350,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 14.273345470428467,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.489856958389282,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.061500787734985,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9402,17 +9402,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.006065971511732,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.064333987392449,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.747999727456948,
             "unit": "Evt/s"
           },
@@ -9446,25 +9446,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.684780597686768,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.253134489059448,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.08163070678711,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9498,17 +9498,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.325479136190781,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.886412945408434,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.630582723060412,
             "unit": "Evt/s"
           },
@@ -9542,25 +9542,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.875715017318726,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 10.264902353286743,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 13.778132438659668,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9594,17 +9594,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.125849097977534,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.741933878989192,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 7.257877687357167,
             "unit": "Evt/s"
           },
@@ -9638,25 +9638,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.726610660552979,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 10.964385747909546,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.217695713043213,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9690,17 +9690,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.281073591807035,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.120437961521544,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.571297119201113,
             "unit": "Evt/s"
           },
@@ -9734,25 +9734,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.917067766189575,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.976951360702515,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.68760871887207,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9786,17 +9786,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.083625760926195,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.34937013505033,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.992470322420113,
             "unit": "Evt/s"
           },
@@ -9830,25 +9830,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.59196662902832,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.091991424560547,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.361949920654297,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9882,17 +9882,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.441117358313821,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.269936397480885,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.509590287464028,
             "unit": "Evt/s"
           },
@@ -9926,25 +9926,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 14.356059074401855,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 16.363149642944336,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.86074733734131,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -9978,17 +9978,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 6.965699951618965,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.1112928856651525,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.793692113848542,
             "unit": "Evt/s"
           },
@@ -10022,25 +10022,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.269208431243896,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.156721591949463,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.426891088485718,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10074,17 +10074,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.737848897462404,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.225901962435573,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.482187462556064,
             "unit": "Evt/s"
           },
@@ -10118,25 +10118,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.381439924240112,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.289376735687256,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.288722038269043,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10170,17 +10170,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.076605032361558,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.540488976675412,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.184376642558219,
             "unit": "Evt/s"
           },
@@ -10214,25 +10214,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.746426343917847,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.564445495605469,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.761439323425293,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10266,17 +10266,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.30541901090654,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.958966437076425,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.34459822786463,
             "unit": "Evt/s"
           },
@@ -10310,25 +10310,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 14.00324273109436,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.0648033618927,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.34517216682434,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10362,17 +10362,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.141203071339245,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.63798906615375,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.169248385987136,
             "unit": "Evt/s"
           },
@@ -10406,25 +10406,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.930555820465088,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.837672233581543,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.259841680526733,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10458,17 +10458,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.069929801302562,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.44760676143037,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.553147935185408,
             "unit": "Evt/s"
           },
@@ -10502,25 +10502,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.992976188659668,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.487118005752563,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.48502206802368,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10554,17 +10554,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.007028748200463,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.008252981507184,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.066112595261364,
             "unit": "Evt/s"
           },
@@ -10598,25 +10598,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.288846492767334,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.854814291000366,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.741803884506226,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10650,17 +10650,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.719262511137297,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.43539152493645,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.3525121220970355,
             "unit": "Evt/s"
           },
@@ -10694,25 +10694,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.213903188705444,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.678302526473999,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.088988304138184,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10746,17 +10746,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.187390914680979,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.81277687386798,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.9778514719629126,
             "unit": "Evt/s"
           },
@@ -10790,25 +10790,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.641982078552246,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.554599285125732,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.890701055526733,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10842,17 +10842,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.396745762383786,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.654562354986233,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.292988562969683,
             "unit": "Evt/s"
           },
@@ -10886,25 +10886,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 14.3631591796875,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 17.460097789764404,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 22.700366020202637,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -10938,17 +10938,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 6.962256614228772,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 5.7273447837516,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.405215312872182,
             "unit": "Evt/s"
           },
@@ -10982,25 +10982,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 14.007936239242554,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.006455898284912,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 20.350921392440796,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11034,17 +11034,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.138810335233741,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.663798612930918,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.913782431351943,
             "unit": "Evt/s"
           },
@@ -11078,25 +11078,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.905697107315063,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.880867958068848,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.640887022018433,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11130,17 +11130,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.191297151682903,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.296885048350987,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.091419745345254,
             "unit": "Evt/s"
           },
@@ -11174,25 +11174,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 15.240371227264404,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.680469751358032,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.035823106765747,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11226,17 +11226,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 6.561519959638782,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.377359963424523,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.75379544182595,
             "unit": "Evt/s"
           },
@@ -11270,25 +11270,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.889419078826904,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.241765975952148,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.662387609481812,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11322,17 +11322,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.111817408375227,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.168756059905167,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.384722591047438,
             "unit": "Evt/s"
           },
@@ -11366,25 +11366,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 14.24961256980896,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.760960817337036,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.349910020828247,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11418,17 +11418,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.01773465840557,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.774626749401573,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.167982687896738,
             "unit": "Evt/s"
           },
@@ -11462,25 +11462,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 23.755661249160767,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 23.90258502960205,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 41.23330760002136,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11514,17 +11514,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 4.209522898611495,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 4.183647914071028,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 2.425223825603265,
             "unit": "Evt/s"
           },
@@ -11558,25 +11558,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 14.34446930885315,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 24.36989998817444,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 21.98635697364807,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11610,17 +11610,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 6.971327962497838,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 4.103422666835944,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.548275101684914,
             "unit": "Evt/s"
           },
@@ -11654,25 +11654,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 26.74868631362915,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 22.169143438339233,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 28.487290143966675,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11706,17 +11706,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 3.7385013539542467,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 4.510774188373032,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 3.5103373994026246,
             "unit": "Evt/s"
           },
@@ -11750,25 +11750,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.64340329170227,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.145554780960083,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.05089521408081,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11802,17 +11802,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.369783050144305,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.972186846259971,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.64412306229103,
             "unit": "Evt/s"
           },
@@ -11846,25 +11846,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.994539022445679,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.700167655944824,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.961067199707031,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11898,17 +11898,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.005463961411383,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.54688607382393,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.265245221311738,
             "unit": "Evt/s"
           },
@@ -11942,25 +11942,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.979026556015015,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.206175088882446,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.39954924583435,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -11994,17 +11994,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.137064733705504,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.923651398166104,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.944661828836693,
             "unit": "Evt/s"
           },
@@ -12038,25 +12038,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.96198058128357,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.47307825088501,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.39880633354187,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12090,17 +12090,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.359819623555149,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.9093801792915155,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.4351352031841005,
             "unit": "Evt/s"
           },
@@ -12134,25 +12134,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.627065420150757,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 10.79981255531311,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.235664367675781,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12186,17 +12186,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.387381370722423,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.259419965655207,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 7.024610683226352,
             "unit": "Evt/s"
           },
@@ -12230,25 +12230,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 13.696972608566284,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.800161123275757,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 19.141359090805054,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12282,17 +12282,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 7.30088340378651,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.75668319872093,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.2242894313621155,
             "unit": "Evt/s"
           },
@@ -12326,25 +12326,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.160914659500122,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 11.709717035293579,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.68020486831665,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12378,17 +12378,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.841633686638955,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.539916011513839,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.811894036698604,
             "unit": "Evt/s"
           },
@@ -12422,25 +12422,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.322636842727661,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 14.263547897338867,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.861047744750977,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12474,17 +12474,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.115146236660873,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.010878409757847,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.5987756949694125,
             "unit": "Evt/s"
           },
@@ -12518,25 +12518,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.455747127532959,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 48.47781586647034,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 41.4681499004364,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12570,17 +12570,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.564118066385857,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 2.0627992043916517,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 2.411489305409008,
             "unit": "Evt/s"
           },
@@ -12614,25 +12614,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.227785348892212,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 25.089930534362793,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.285197496414185,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12666,17 +12666,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.178095799584803,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 3.985662688983594,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.140545733143172,
             "unit": "Evt/s"
           },
@@ -12710,25 +12710,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 16.660080432891846,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.044313192367554,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 28.384833335876465,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12762,17 +12762,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 6.002371981504417,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.302673502659305,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 3.5230081789350134,
             "unit": "Evt/s"
           },
@@ -12806,25 +12806,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.979174375534058,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.401102066040039,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 46.97743225097656,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12858,17 +12858,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.347820714943202,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.46207285842645,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 2.1286816926423477,
             "unit": "Evt/s"
           },
@@ -12902,25 +12902,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.80237102508545,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 20.318002939224243,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.177865982055664,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -12954,17 +12954,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.257226933585072,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 4.92174355418309,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.821444881713593,
             "unit": "Evt/s"
           },
@@ -12998,25 +12998,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 22.2558434009552,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 21.204939603805542,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 23.427907466888428,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13050,17 +13050,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 4.493201996366855,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 4.715882330645899,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.26841364903519,
             "unit": "Evt/s"
           },
@@ -13094,25 +13094,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.959667444229126,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.293101787567139,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 17.77041459083557,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13146,17 +13146,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.361436508692622,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.52269873488283,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.627330723705865,
             "unit": "Evt/s"
           },
@@ -13190,25 +13190,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 12.301137208938599,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 15.055771827697754,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 18.20191264152527,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13242,17 +13242,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.129329695415086,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 6.6419710091536,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 5.493928136533474,
             "unit": "Evt/s"
           },
@@ -13286,25 +13286,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 33.68443942070007,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.70038390159607,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 22.17330026626587,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13338,17 +13338,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 2.968729826584173,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.873777735760641,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 4.5099285536731095,
             "unit": "Evt/s"
           },
@@ -13382,25 +13382,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.187297344207764,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.702976703643799,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.480220794677734,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13434,17 +13434,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.938709406144024,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.297684449350973,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.459856182050134,
             "unit": "Evt/s"
           },
@@ -13478,25 +13478,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.274911642074585,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.204269409179688,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 16.146193981170654,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13530,17 +13530,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.73244378963917,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.193853859435697,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.193410045526386,
             "unit": "Evt/s"
           },
@@ -13574,25 +13574,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.725322961807251,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 12.265404462814331,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.125833749771118,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13626,17 +13626,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.3237285586736,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 8.153012834038636,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.611205812143293,
             "unit": "Evt/s"
           },
@@ -13670,25 +13670,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "nightly | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 9.214627981185913,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 10.878762006759644,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 14.970731258392334,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "nightly | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13722,17 +13722,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 10.852310066578521,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 9.192222418126608,
             "unit": "Evt/s"
           },
           {
-            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.679700428390345,
             "unit": "Evt/s"
           },
@@ -13766,25 +13766,25 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts",
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 11.326530456542969,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: case-studies/analysis_example/scripts"
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 13.267725467681885,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu"
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
           },
           {
-            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 15.778343915939331,
             "unit": "Seconds",
             "range": 10,
-            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu"
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
           },
           {
             "name": "prod | Time spent running the analysis: examples/FCCee/test/weaver_inference.py",
@@ -13818,17 +13818,17 @@ window.BENCHMARK_DATA = {
         "tool": "customBiggerIsBetter",
         "benches": [
           {
-            "name": "prod | Events processed per second: case-studies/analysis_example/scripts",
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
             "value": 8.82882895019571,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu",
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
             "value": 7.5370869139239005,
             "unit": "Evt/s"
           },
           {
-            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu",
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
             "value": 6.337800756071726,
             "unit": "Evt/s"
           },
