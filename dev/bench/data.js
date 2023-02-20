@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676912370726,
+  "lastUpdate": 1676912373103,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -14447,6 +14447,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc5f7369686419493d5b5a7a4cd9b972e6fb72c5",
+          "message": "Merge pull request #240 from amanmdesai/new_function_seleta\n\nAdd select eta function in ReconstructedParticle",
+          "timestamp": "2023-02-20T17:48:29+01:00",
+          "tree_id": "6e5576281a694db56098bbc273d9042b95159dab",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/cc5f7369686419493d5b5a7a4cd9b972e6fb72c5"
+        },
+        "date": 1676912372159,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/weaver_inference.py",
+            "value": 2.5618712574401346,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 7.936688511603718,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 6.9789869182265445,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 5.53968898815933,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 6.888109636042835,
+            "unit": "Evt/s"
           }
         ]
       }
