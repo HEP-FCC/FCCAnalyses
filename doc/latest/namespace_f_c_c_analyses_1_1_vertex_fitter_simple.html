@@ -89,6 +89,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a358709fbd2843563cd5515b47836b982"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html">VertexingUtils::FCCAnalysesVertex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#a358709fbd2843563cd5515b47836b982">VertexFitter_Tk</a> (int Primary, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks, bool BeamSpotConstraint=false, double sigmax=0., double sigmay=0., double sigmaz=0., double bsc_x=0., double bsc_y=0., double bsc_z=0.)</td></tr>
 <tr class="memdesc:a358709fbd2843563cd5515b47836b982"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertex (code from Franco Bedeschi): passing the tracks. Units for the beamspot constraint: mum.  <a href="namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#a358709fbd2843563cd5515b47836b982">More...</a><br /></td></tr>
 <tr class="separator:a358709fbd2843563cd5515b47836b982"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1b272ed0887c755d5836c90647c9a24"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html">VertexingUtils::FCCAnalysesVertex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#ae1b272ed0887c755d5836c90647c9a24">VertexFitter_Tk</a> (int Primary, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks, const ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; &amp;alltracks, bool BeamSpotConstraint=false, double sigmax=0., double sigmay=0., double sigmaz=0., double bsc_x=0., double bsc_y=0., double bsc_z=0.)</td></tr>
+<tr class="separator:ae1b272ed0887c755d5836c90647c9a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6b47bf6e27fece38ce53ae9726aa9d6"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#ab6b47bf6e27fece38ce53ae9726aa9d6">get_PrimaryTracks</a> (<a class="el" href="struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html">VertexingUtils::FCCAnalysesVertex</a> initialVertex, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks, bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z, int ipass=0)</td></tr>
 <tr class="memdesc:ab6b47bf6e27fece38ce53ae9726aa9d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tracks that are flagged as coming from the primary vertex.  <a href="namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html#ab6b47bf6e27fece38ce53ae9726aa9d6">More...</a><br /></td></tr>
 <tr class="separator:ab6b47bf6e27fece38ce53ae9726aa9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -499,7 +501,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a358709fbd2843563cd5515b47836b982" name="a358709fbd2843563cd5515b47836b982"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a358709fbd2843563cd5515b47836b982">&#9670;&nbsp;</a></span>VertexFitter_Tk()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a358709fbd2843563cd5515b47836b982">&#9670;&nbsp;</a></span>VertexFitter_Tk() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -570,6 +572,82 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ae1b272ed0887c755d5836c90647c9a24" name="ae1b272ed0887c755d5836c90647c9a24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1b272ed0887c755d5836c90647c9a24">&#9670;&nbsp;</a></span>VertexFitter_Tk() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html">VertexingUtils::FCCAnalysesVertex</a> FCCAnalyses::VertexFitterSimple::VertexFitter_Tk </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Primary</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt;&#160;</td>
+          <td class="paramname"><em>tracks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; &amp;&#160;</td>
+          <td class="paramname"><em>alltracks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>BeamSpotConstraint</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sigmax</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sigmay</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sigmaz</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>bsc_x</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>bsc_y</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>bsc_z</em> = <code>0.</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="abb28e674ab8a7c1662b03ae7e6c67d5b" name="abb28e674ab8a7c1662b03ae7e6c67d5b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abb28e674ab8a7c1662b03ae7e6c67d5b">&#9670;&nbsp;</a></span>XPtoPar()</h2>
 
@@ -608,7 +686,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Feb 13 2023 10:41:42 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Feb 20 2023 11:57:55 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>

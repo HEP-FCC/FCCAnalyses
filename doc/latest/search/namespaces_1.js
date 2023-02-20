@@ -15,8 +15,9 @@ var searchData=
   ['reconstructedparticle2track_12',['ReconstructedParticle2Track',['../namespace_f_c_c_analyses_1_1_reconstructed_particle2_track.html',1,'FCCAnalyses']]],
   ['utils_13',['Utils',['../namespace_f_c_c_analyses_1_1_utils.html',1,'FCCAnalyses']]],
   ['vertexfinderacts_14',['VertexFinderActs',['../namespace_f_c_c_analyses_1_1_vertex_finder_acts.html',1,'FCCAnalyses']]],
-  ['vertexfitteracts_15',['VertexFitterActs',['../namespace_f_c_c_analyses_1_1_vertex_fitter_acts.html',1,'FCCAnalyses']]],
-  ['vertexfittersimple_16',['VertexFitterSimple',['../namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html',1,'FCCAnalyses']]],
-  ['vertexingutils_17',['VertexingUtils',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html',1,'FCCAnalyses']]],
-  ['weaverutils_18',['WeaverUtils',['../namespace_f_c_c_analyses_1_1_weaver_utils.html',1,'FCCAnalyses']]]
+  ['vertexfinderlcfiplus_15',['VertexFinderLCFIPlus',['../namespace_f_c_c_analyses_1_1_vertex_finder_l_c_f_i_plus.html',1,'FCCAnalyses']]],
+  ['vertexfitteracts_16',['VertexFitterActs',['../namespace_f_c_c_analyses_1_1_vertex_fitter_acts.html',1,'FCCAnalyses']]],
+  ['vertexfittersimple_17',['VertexFitterSimple',['../namespace_f_c_c_analyses_1_1_vertex_fitter_simple.html',1,'FCCAnalyses']]],
+  ['vertexingutils_18',['VertexingUtils',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html',1,'FCCAnalyses']]],
+  ['weaverutils_19',['WeaverUtils',['../namespace_f_c_c_analyses_1_1_weaver_utils.html',1,'FCCAnalyses']]]
 ];

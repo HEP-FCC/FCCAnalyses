@@ -1,5 +1,8 @@
 <map id="analyzers/dataframe/FCCAnalyses/VertexFitterSimple.h" name="analyzers/dataframe/FCCAnalyses/VertexFitterSimple.h">
-<area shape="rect" id="node1" title=" " alt="" coords="73,6,319,47"/>
-<area shape="rect" id="node2" href="$_vertex_fitter_simple_8cc.html" title=" " alt="" coords="5,97,192,138"/>
-<area shape="rect" id="node3" href="$my_utils_8cc.html" title=" " alt="" coords="216,97,373,138"/>
+<area shape="rect" id="node1" title=" " alt="" coords="359,6,605,47"/>
+<area shape="rect" id="node2" href="$_vertex_finder_l_c_f_i_plus_8h.html" title=" " alt="" coords="5,97,267,138"/>
+<area shape="rect" id="node4" href="$_vertex_fitter_simple_8cc.html" title=" " alt="" coords="291,97,477,138"/>
+<area shape="rect" id="node5" href="$_vertexing_utils_8cc.html" title=" " alt="" coords="502,97,660,138"/>
+<area shape="rect" id="node6" href="$my_utils_8cc.html" title=" " alt="" coords="685,97,843,138"/>
+<area shape="rect" id="node3" href="$_vertex_finder_l_c_f_i_plus_8cc.html" title=" " alt="" coords="35,187,237,229"/>
 </map>
