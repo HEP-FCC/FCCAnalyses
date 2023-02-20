@@ -3,8 +3,17 @@ inputDir  = "/eos/experiment/fcc/ee/analyses/case-studies/bsm/LLPs/HNLs/"
 #inputDir = "/eos/user/j/jalimena/FCCeeLLP/"
 #inputDir = "output_stage1/"
 
-#Input directory where the files produced at the final-selection level are
+#Output directory where the files produced at the final-selection level are
 outputDir  = "output_finalSel/"
+
+#Integrated luminosity for scaling number of events (required only if setting doScale to true)
+#intLumi = 150e6 #pb^-1
+
+#Scale event yields by intLumi and cross section (optional)
+#doScale = True
+
+#Save event yields in a table (optional)
+#saveTabular = True
 
 processList = {
     #run over the full statistics from stage1
@@ -44,6 +53,15 @@ cutList = {
     # "sel2RecoEle_vetoes_absD0Gt0p5": "n_RecoElectrons==2 && n_RecoMuons==0 && n_RecoPhotons==0 && n_RecoJets==0 && n_RecoPhotons==0 && RecoElectronTrack_absD0[0]>0.5 && RecoElectronTrack_absD0[1]>0.5", #both electrons displaced
     "sel2RecoEle_vetoes_MissingEnergyGt10_absD0Gt0p5": "n_RecoElectrons==2 && n_RecoMuons==0 && n_RecoPhotons==0 && n_RecoJets==0 && n_RecoPhotons==0 && RecoMissingEnergy_p[0]>10 && RecoElectronTrack_absD0[0]>0.5 && RecoElectronTrack_absD0[1]>0.5", #both electrons displaced
     # "sel2RecoEle_vetoes_MissingEnergyGt10_chi2Gt1_LxyzGt5": "n_RecoElectrons==2 && n_RecoMuons==0 && n_RecoPhotons==0 && n_RecoJets==0 && n_RecoPhotons==0 && RecoMissingEnergy_p[0]>10 && RecoDecayVertex.chi2>1 && Reco_Lxyz>5", #displaced vertex
+}
+
+###Dictionary for prettier names of cuts (optional)
+cutLabels = {
+    "selNone": "Before selection",
+    "sel2RecoEle": "Exactly 2 electrons",
+    "sel2RecoEle_vetoes": "Veto photons, muons, and jets",
+    "sel2RecoEle_vetoes_MissingEnergyGt10": "$\\not\\! p >$ 10 GeV",
+    "sel2RecoEle_vetoes_MissingEnergyGt10_absD0Gt0p5": "Electron $|d_0| >$ 0.5 mm",
 }
 
 ###Dictionary for the ouput variable/hitograms. The key is the name of the variable in the output files. "name" is the name of the variable in the input file, "title" is the x-axis label of the histogram, "bin" the number of bins of the histogram, "xmin" the minimum x-axis value and "xmax" the maximum x-axis value.

@@ -30,7 +30,7 @@ macro(find_catch_instance)
 endmacro()
 
 function(add_integration_test _testname)
-
+  #FIXME make this call 'add_generic_test'
   add_test(NAME ${_testname}
           COMMAND python config/FCCAnalysisRun.py ${_testname} --test --nevents 100 --bench
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -44,7 +44,7 @@ function(add_integration_test _testname)
 endfunction()
 
 function(add_integration_test_2 _testname)
-
+  #FIXME make this call 'add_generic_test'
   add_test(NAME fccanalysisrun_${_testname}
           # todo: figure out how to make ctest pick fccanalysis up from PATH
           COMMAND ${CMAKE_SOURCE_DIR}/bin/fccanalysis run ${_testname} --test --nevents 100 --bench
@@ -53,10 +53,23 @@ function(add_integration_test_2 _testname)
   set_property(TEST fccanalysisrun_${_testname} APPEND PROPERTY ENVIRONMENT
     LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
     PYTHONPATH=${CMAKE_SOURCE_DIR}:$ENV{PYTHONPATH}
-    PATH=${CMAKE_SOURCE_DIR}/bin:$CMAKE_BINARY_DIR:$ENV{PATH}
+    PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
     ROOT_INCLUDE_PATH=${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
     TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
     )
+endfunction()
+
+function(add_generic_test _testname _testcmd)
+  add_test(NAME ${_testname}
+           COMMAND ${_testcmd}
+           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+  set_property(TEST ${_testname}
+               APPEND PROPERTY ENVIRONMENT
+               LD_LIBRARY_PATH=${INSTALL_LIB_DIR}:${CMAKE_BINARY_DIR}/analyzers/dataframe:${CMAKE_BINARY_DIR}/case-studies:$ENV{LD_LIBRARY_PATH}
+               PYTHONPATH=${CMAKE_SOURCE_DIR}:$ENV{PYTHONPATH}
+               PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
+               ROOT_INCLUDE_PATH=${INSTALL_LIB_DIR}:${CMAKE_SOURCE_DIR}/analyzers/dataframe:${CMAKE_BINARY_DIR}/case-studies:$ENV{ROOT_INCLUDE_PATH}
+               TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR})
 endfunction()
 
 macro(fccanalyses_addon_build _name)
@@ -71,11 +84,13 @@ macro(fccanalyses_addon_build _name)
       list(APPEND sources ${s})
     endforeach()
     add_library(${_name} SHARED ${sources})
+    target_include_directories(${_name} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
+                                               $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/analyzers/dataframe>)
     if(ARG_EXT_LIBS)
       target_link_libraries(${_name} ${ARG_EXT_LIBS})
     endif()
     if(ARG_EXT_HEADERS)
-      target_include_directories(${_name} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons> ${ARG_EXT_HEADERS})
+      target_include_directories(${_name} PUBLIC ${ARG_EXT_HEADERS})
     endif()
   else() # interfacing library (only includes)
     add_library(${_name} INTERFACE)
@@ -91,4 +106,15 @@ macro(fccanalyses_addon_build _name)
             PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/${_name}"
             COMPONENT ${ARG_INSTALL_COMPONENT})
   endif()
+endmacro()
+
+macro(get_subdirectories result dir)
+  file(GLOB sub_dirs RELATIVE ${dir} ${dir}/*)
+  set(dirs)
+  foreach(_dir ${sub_dirs})
+    if(IS_DIRECTORY ${dir}/${_dir})
+      list(APPEND dirs ${_dir})
+    endif()
+  endforeach()
+  set(${result} ${dirs})
 endmacro()

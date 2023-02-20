@@ -4,7 +4,6 @@
 find_package(Vdt)
 
 
-message(STATUS "includes-------------------------- dataframe awkward: ${AWKWARD_INCLUDE}")
 message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
 message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
 
@@ -42,7 +41,6 @@ target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                            $<INSTALL_INTERFACE:include>
                            ${VDT_INCLUDE_DIR}
-                           ${AWKWARD_INCLUDE}
                            )
 
 
@@ -55,10 +53,6 @@ target_link_libraries(FCCAnalyses
                       EDM4HEP::edm4hep
                       EDM4HEP::edm4hepDict
                       podio::podio
-                      #${AWKWARD_LIBRARIES}
-                      ${LIBAWKWARD}
-                      ${CPU-KERNELS}
-                      ${LIBDL}
                       ${ADDONS_LIBRARIES}
                       gfortran # todo: why necessary?
                       )

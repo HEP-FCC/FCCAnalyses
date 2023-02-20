@@ -58,12 +58,12 @@ def getElement(rdfModule, element, isFinal=False):
             return ""
 
         elif element=='batchQueue':
-            print('The variable <{}> is optional in your analysys.py file, return default value workday'.format(element))
+            print('The variable <{}> is optional in your analysis.py file, return default value workday'.format(element))
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return "workday"
 
         elif element=='compGroup':
-             print('The variable <{}> is optional in your analysys.py file, return default value group_u_FCC.local_gen'.format(element))
+             print('The variable <{}> is optional in your analysis.py file, return default value group_u_FCC.local_gen'.format(element))
              if isFinal: print('The option <{}> is not available in final analysis'.format(element))
              return "group_u_FCC.local_gen"
 
@@ -83,7 +83,7 @@ def getElement(rdfModule, element, isFinal=False):
             return ""
 
         elif element=='testFile':
-            print('The variable <{}> is optional in your analysys.py file, return default file'.format(element))
+            print('The variable <{}> is optional in your analysis.py file, return default file'.format(element))
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return "root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root"
 
@@ -122,6 +122,40 @@ def getElement(rdfModule, element, isFinal=False):
                 print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
                 return {}
             else: print('The option <{}> is not available in presel analysis'.format(element))
+
+        elif element=='doScale':
+            if isFinal:
+                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
+                return {}
+            else: print('The option <{}> is not available in presel analysis'.format(element))
+
+        elif element=='intLumi':
+            if isFinal:
+                print('The variable <{}> is optional in your analysis_final.py file, return empty dictionary. However, if you set doScale, then it is mandatory!'.format(element))
+                return {}
+            else: print('The option <{}> is not available in presel analysis'.format(element))
+
+        elif element=='saveTabular':
+            if isFinal:
+                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
+                return {}
+            else: print('The option <{}> is not available in presel analysis'.format(element))
+
+        elif element=='cutLabels':
+            if isFinal:
+                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
+                return {}
+            else: print('The option <{}> is not available in presel analysis'.format(element))
+
+        elif element=='geometryFile':
+            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
+            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
+            return ""
+
+        elif element=='readoutName':
+            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
+            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
+            return ""
 
         return None
 
@@ -310,11 +344,15 @@ def runPreprocess(df):
     d1.Print()
     sys.exit(3)
     return df
+
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt, args):
     # for convenience and compatibility with user code
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
-
+    geometryFile = getElement(rdfModule, "geometryFile")
+    readoutName  = getElement(rdfModule, "readoutName")
+    if geometryFile!="" and readoutName!="":
+        ROOT.CaloNtupleizer.loadGeometry(geometryFile, readoutName)
     ncpus = 1
     # cannot use MT with Range()
     if args.nevents < 0:
@@ -455,7 +493,7 @@ def addeosType(fileName):
     else:
         print('unknown eos type, please check with developers as it might not run with best performances')
     return fileName
-    
+
 #__________________________________________________________
 def runLocal(rdfModule, fileList, args):
     #Create list of files to be Processed
@@ -502,6 +540,19 @@ def runLocal(rdfModule, fileList, args):
     if nevents_meta>nevents_local:n[0]=nevents_meta
     p = ROOT.TParameter(int)( "eventsProcessed", n[0])
     p.Write()
+
+#    if args.test:
+#        outf2 = ROOT.TFile(fileListRoot[0])
+#        outt2_1 = outf2.Get("metadata")
+#        outt2_2 = outf2.Get("run_metadata")
+#        outt2_3 = outf2.Get("evt_metadata")
+#        outt2_4 = outf2.Get("col_metadata")
+#        outf.cd()
+#        outt2_1.Write()
+#        outt2_2.Write()
+#        outt2_3.Write()
+#        outt2_4.Write()
+
     outf.Write()
     outf.Close()
 
@@ -545,6 +596,21 @@ def runLocal(rdfModule, fileList, args):
 
 #__________________________________________________________
 def runStages(args, rdfModule, preprocess, analysisFile):
+    # check if analyses plugins need to be loaded before anything
+    analysesList = getElement(rdfModule, "analysesList")
+    if analysesList and len(analysesList) > 0:
+        _ana = []
+        for analysis in analysesList:
+            print(f'----> Load cxx analyzers from {analysis}...')
+            if analysis.startswith('libFCCAnalysis_'):
+                ROOT.gSystem.Load(analysis)
+            else:
+                ROOT.gSystem.Load(f'libFCCAnalysis_{analysis}')
+            if not hasattr(ROOT, analysis):
+                print(f'----> ERROR: analysis "{analysis}" not properly loaded. Exit')
+                sys.exit(4)
+            _ana.append(getattr(ROOT, analysis).dictionary)
+
     #check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
@@ -682,6 +748,8 @@ def runFinal(rdfModule):
     processEvents={}
     eventsTTree={}
     processList={}
+    saveTab=[]
+    efficiencyList=[]
 
     inputDir = getElement(rdfModule,"inputDir", True)
     if inputDir!="":
@@ -693,6 +761,23 @@ def runFinal(rdfModule):
 
     if not os.path.exists(outputDir) and outputDir!='':
         os.system("mkdir -p {}".format(outputDir))
+
+    cutList = getElement(rdfModule,"cutList", True)
+    length_cuts_names = max([len(cut) for cut in cutList])
+    cutLabels = getElement(rdfModule,"cutLabels", True)
+
+    # save a table in a separate tex file
+    saveTabular = getElement(rdfModule,"saveTabular", True)
+    if saveTabular:
+        # option to rewrite the cuts in a better way for the table. otherwise, take them from the cutList
+        if cutLabels:
+            cutNames = list(cutLabels.values())
+        else:
+            cutNames = [cut for cut in cutList]
+
+        cutNames.insert(0,' ')
+        saveTab.append(cutNames)
+        efficiencyList.append(cutNames)
 
     for pr in getElement(rdfModule,"processList", True):
         processEvents[pr]=0
@@ -745,10 +830,9 @@ def runFinal(rdfModule):
     print('processed events ',processEvents)
     print('events in ttree  ',eventsTTree)
 
-    cutList = getElement(rdfModule,"cutList", True)
-    length_cuts_names = max([len(cut) for cut in cutList])
-
     histoList = getElement(rdfModule,"histoList", True)
+    doScale = getElement(rdfModule,"doScale", True)
+    intLumi = getElement(rdfModule,"intLumi", True)
 
     doTree = getElement(rdfModule,"doTree", True)
     for pr in getElement(rdfModule,"processList", True):
@@ -766,6 +850,10 @@ def runFinal(rdfModule):
         histos_list = []
         tdf_list = []
         count_list = []
+        cuts_list = []
+        cuts_list.append(pr)
+        eff_list=[]
+        eff_list.append(pr)
 
         # Define all histos, snapshots, etc...
         print ('----> Defining snapshots and histograms')
@@ -796,11 +884,45 @@ def runFinal(rdfModule):
         print ('----> Done')
 
         nevents_real += all_events
+        uncertainty = ROOT.Math.sqrt(all_events)
+
+        if doScale:
+            all_events = all_events*1.*procDict[pr]["crossSection"]*procDict[pr]["kfactor"]*procDict[pr]["matchingEfficiency"]*intLumi/processEvents[pr]
+            uncertainty = ROOT.Math.sqrt(all_events)*procDict[pr]["crossSection"]*procDict[pr]["kfactor"]*procDict[pr]["matchingEfficiency"]*intLumi/processEvents[pr]
+            print('  Printing scaled number of events!!! ')
 
         print ('----> Cutflow')
         print ('       {cutname:{width}} : {nevents}'.format(cutname='All events', width=16+length_cuts_names, nevents=all_events))
+
+        if saveTabular:
+            cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=all_events,uncertainty=uncertainty)) # scientific notation - recomended for backgrounds
+            # cuts_list.append('{nevents:.3f} $\\pm$ {uncertainty:.3f}'.format(nevents=all_events,uncertainty=uncertainty)) # float notation - recomended for signals with few events
+            eff_list.append(1.) #start with 100% efficiency
+
         for i, cut in enumerate(cutList):
-            print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut, width=length_cuts_names, nevents=count_list[i].GetValue()))
+            neventsThisCut = count_list[i].GetValue()
+            neventsThisCut_raw = neventsThisCut
+            uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)
+            if doScale:
+                neventsThisCut = neventsThisCut*1.*procDict[pr]["crossSection"]*procDict[pr]["kfactor"]*procDict[pr]["matchingEfficiency"]*intLumi/processEvents[pr]
+                uncertainty = ROOT.Math.sqrt(neventsThisCut_raw)*procDict[pr]["crossSection"]*procDict[pr]["kfactor"]*procDict[pr]["matchingEfficiency"]*intLumi/processEvents[pr]
+            print ('       After selection {cutname:{width}} : {nevents}'.format(cutname=cut, width=length_cuts_names, nevents=neventsThisCut))
+
+            # Saving the number of events, uncertainty and efficiency for the output-file
+            if saveTabular and cut != 'selNone':
+                if neventsThisCut != 0:
+                    cuts_list.append('{nevents:.2e} $\\pm$ {uncertainty:.2e}'.format(nevents=neventsThisCut,uncertainty=uncertainty)) # scientific notation - recomended for backgrounds
+                    # cuts_list.append('{nevents:.3f} $\\pm$ {uncertainty:.3f}'.format(nevents=neventsThisCut,uncertainty=uncertainty)) # # float notation - recomended for signals with few events
+                    prevNevents = cuts_list[-2].split()
+                    eff_list.append('{eff:.3f}'.format(eff=1.*neventsThisCut/all_events))
+                # if number of events is zero, the previous uncertainty is saved instead:
+                elif '$\\pm$' in cuts_list[-1]:
+                    cut = (cuts_list[-1]).split()
+                    cuts_list.append('$\\leq$ {uncertainty}'.format(uncertainty=cut[2]))
+                    eff_list.append('0.')
+                else:
+                    cuts_list.append(cuts_list[-1])
+                    eff_list.append('0.')
 
         # And save everything
         print ('----> Saving outputs')
@@ -821,6 +943,38 @@ def runFinal(rdfModule):
                 validfile = testfile(fout_list[i])
                 if not validfile: continue
 
+        if saveTabular and cut != 'selNone':
+            saveTab.append(cuts_list)
+            efficiencyList.append(eff_list)
+
+    if saveTabular:
+        f = open(outputDir+"outputTabular.txt","w")
+        # Printing the number of events in format of a LaTeX table
+        print('\\begin{table}[H] \n    \\centering \n    \\resizebox{\\textwidth}{!}{ \n    \\begin{tabular}{|l||',end='',file=f)
+        print('c|' * (len(cuts_list)-1),end='',file=f)
+        print('} \hline',file=f)
+        for i, row in enumerate(saveTab):
+            print('        ', end='', file=f)
+            print(*row, sep = ' & ', end='', file=f)
+            print(' \\\\ ', file=f)
+            if (i == 0):
+                print('        \\hline',file=f)
+        print('        \\hline \n    \\end{tabular}} \n    \\caption{Caption} \n    \\label{tab:my_label} \n\\end{table}', file=f)
+
+        # Efficiency:
+        print('\n\nEfficiency: ', file=f)
+        print('\\begin{table}[H] \n    \\centering \n    \\resizebox{\\textwidth}{!}{ \n    \\begin{tabular}{|l||',end='',file=f)
+        print('c|' * (len(cuts_list)-1),end='',file=f)
+        print('} \hline',file=f)
+        for i in range(len(eff_list)):
+            print('        ', end='', file=f)
+            v = [row[i] for row in efficiencyList]
+            print(*v, sep = ' & ', end='', file=f)
+            print(' \\\\ ', file=f)
+            if (i == 0):
+                print('        \\hline',file=f)
+        print('        \\hline \n    \\end{tabular}} \n    \\caption{Caption} \n    \\label{tab:my_label} \n\\end{table}', file=f)
+        f.close()
 
     elapsed_time = time.time() - start_time
     print  ('==============================SUMMARY==============================')
@@ -883,10 +1037,8 @@ def run(mainparser, subparser=None):
     """
 
     if subparser:
-        print("===================setup subparser")
         setup_run_parser(subparser)
     args, _ = mainparser.parse_known_args()
-    print("args in mains code==============================",args)
     #check that the analysis file exists
     analysisFile = args.pathToAnalysisScript
     if not os.path.isfile(analysisFile):
