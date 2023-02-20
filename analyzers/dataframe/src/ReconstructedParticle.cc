@@ -18,6 +18,22 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_pt::operator() (ROOT
   return result;
 }
 
+sel_eta::sel_eta(float arg_min_eta) : m_min_eta(arg_min_eta) {};
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_eta::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  result.reserve(in.size());
+  for (size_t i = 0; i < in.size(); ++i) {
+    auto & p = in[i];
+    TLorentzVector tv1;
+    tv1.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+    if (abs(tv1.Eta()) < abs(m_min_eta)){
+      result.emplace_back(p);
+    }
+  }
+  return result;
+}
+
+
 sel_p::sel_p(float arg_min_p, float arg_max_p) : m_min_p(arg_min_p), m_max_p(arg_max_p)  {};
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_p::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
