@@ -1,5 +1,6 @@
 #include "FCCAnalyses/Algorithms.h"
 #include "FCCAnalyses/Utils.h"
+
 #include "Math/Minimizer.h"
 #include "Math/IFunction.h"
 #include "Math/Factory.h"
@@ -465,16 +466,13 @@ jets_TwoHemispheres::jets_TwoHemispheres(int arg_sorted, int arg_recombination) 
    }
 };
 
-JetClustering::FCCAnalysesJet jets_TwoHemispheres::operator() ( const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> & in) {
+JetClustering::FCCAnalysesJet jets_TwoHemispheres::operator() ( 
+					const ROOT::VecOps::RVec<float> & RP_px,
+					const ROOT::VecOps::RVec<float> & RP_py,
+					const ROOT::VecOps::RVec<float> & RP_pz,
+					const ROOT::VecOps::RVec<float> & RP_e,
+				        const ROOT::VecOps::RVec<float> & RP_costheta ) {
 
- ROOT::VecOps::RVec<float> RP_e = ReconstructedParticle::get_e( in );
- ROOT::VecOps::RVec<float> RP_px = ReconstructedParticle::get_px( in );
- ROOT::VecOps::RVec<float> RP_py = ReconstructedParticle::get_py( in );
- ROOT::VecOps::RVec<float> RP_pz = ReconstructedParticle::get_pz( in );
-
- ROOT::VecOps::RVec<float> mt =  minimize_thrust("Minuit2","Migrad")(RP_px, RP_py, RP_pz) ;
- ROOT::VecOps::RVec<float> costheta = getAxisCosTheta( mt, RP_px, RP_py, RP_pz) ;
- 
  JetClustering::FCCAnalysesJet result;
 
  std::vector<int> constituents_JetPlus;
@@ -489,8 +487,8 @@ JetClustering::FCCAnalysesJet jets_TwoHemispheres::operator() ( const ROOT::VecO
  float pz_minus=0;
  float e_minus=0;
 
- for ( int i=0; i < in.size(); i++) {
-     if ( costheta[i] > 0 ) {
+ for ( int i=0; i < RP_costheta.size(); i++) {
+     if ( RP_costheta[i] > 0 ) {
         constituents_JetPlus.push_back( i );
 	px_plus += RP_px[i];
 	py_plus += RP_py[i];
