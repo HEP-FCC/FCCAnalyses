@@ -11,14 +11,14 @@ namespace FCCAnalyses {
 
     /// Compute all weights given a collection of input variables
     /// \note This helper should not be used directly in RDataFrame examples
-    rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>&);
+    rv::RVec<rv::RVec<float> > compute_weights(unsigned int slot, const rv::RVec<Variables>&);
 
     /// Setup the ONNXRuntime instance using Weaver-provided parameters
-    void setup_weaver(const std::string&, const std::string&, const rv::RVec<std::string>&);
+    void setup_weaver(const std::string&, const std::string&, const rv::RVec<std::string>&, unsigned int nSlots);
     /// Compute all weights given an unspecified collection of input variables
     template <typename... Args>
-    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_weights(Args&&... args) {
-      return compute_weights(std::vector<Variables>{std::forward<Args>(args)...});
+    ROOT::VecOps::RVec<ROOT::VecOps::RVec<float> > get_weights(unsigned int slot, Args&&... args) {
+      return compute_weights(slot, std::vector<Variables>{std::forward<Args>(args)...});
     }
     /// Get one specific weight previously computed
     rv::RVec<float> get_weight(const rv::RVec<rv::RVec<float> >&, int);

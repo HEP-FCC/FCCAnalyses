@@ -1,5 +1,7 @@
 import sys
 
+import ROOT
+
 # Optional
 nCPUS = 8
 
@@ -43,7 +45,7 @@ class RDFanalysis:
     # Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
 
-        get_weight_str = "JetFlavourUtils::get_weights("
+        get_weight_str = "JetFlavourUtils::get_weights(rdfslot_, "
         for var in variables:
             get_weight_str += "{},".format(var)
 
@@ -55,7 +57,7 @@ class RDFanalysis:
         weaver = JetFlavourUtils.setup_weaver(
             weaver_model,  # name of the trained model exported
             weaver_preproc,  # .json file produced by weaver during training
-            variables,
+            variables, ROOT.GetThreadPoolSize()
         )
 
         ### COMPUTE THE VARIABLES FOR INFERENCE OF THE TRAINING MODEL

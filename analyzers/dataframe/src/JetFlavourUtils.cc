@@ -4,17 +4,23 @@
 #include <memory>
 
 namespace FCCAnalyses {
-  std::unique_ptr<WeaverInterface> gWeaver;
+  std::vector<WeaverInterface *> gWeavers;
+  bool isSetup = false;
 
   namespace JetFlavourUtils {
     void setup_weaver(const std::string& onnx_filename,
                       const std::string& json_filename,
-                      const rv::RVec<std::string>& vars) {
-      gWeaver = std::make_unique<WeaverInterface>(onnx_filename, json_filename, vars);
+                      const rv::RVec<std::string>& vars,
+                      const unsigned int nSlots) {
+      for(unsigned int i=0; i<nSlots; i++) {
+        WeaverInterface *gWeaver = new WeaverInterface(onnx_filename, json_filename, vars);
+        gWeavers.push_back(gWeaver);
+      }
+      isSetup = true;
     }
 
-    rv::RVec<rv::RVec<float> > compute_weights(const rv::RVec<Variables>& vars) {
-      if (!gWeaver)
+    rv::RVec<rv::RVec<float> > compute_weights(unsigned int slot, const rv::RVec<Variables>& vars) {
+      if (!isSetup)
         throw std::runtime_error("Weaver interface is not initialised!");
       rv::RVec<rv::RVec<float> > out;
       if (vars.empty())  // no variables registered
@@ -33,7 +39,7 @@ namespace FCCAnalyses {
             constit_vars.push_back((float)vars.at(k).at(i).at(j));
           jet_sc_vars.push_back(constit_vars);
         }
-        out.emplace_back(gWeaver->run(jet_sc_vars));
+        out.emplace_back(gWeavers.at(slot)->run(jet_sc_vars));
       }
       return out;
     }
