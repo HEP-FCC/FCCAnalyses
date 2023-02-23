@@ -1,6 +1,5 @@
 import sys
 
-import ROOT
 
 # Optional
 nCPUS = 8
