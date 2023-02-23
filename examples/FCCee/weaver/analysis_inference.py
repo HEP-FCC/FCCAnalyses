@@ -2,7 +2,7 @@ import sys
 import ROOT
 
 # Optional
-nCPUS = 64
+nCPUS = 8
 
 ## latest particle transformer model, trainied on 9M jets in winter2023 samples
 model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_13_01_2022"
