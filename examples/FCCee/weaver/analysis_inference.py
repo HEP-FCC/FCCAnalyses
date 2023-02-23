@@ -1,8 +1,8 @@
 import sys
-
+import ROOT
 
 # Optional
-nCPUS = 8
+nCPUS = 64
 
 ## latest particle transformer model, trainied on 9M jets in winter2023 samples
 model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_13_01_2022"
@@ -56,7 +56,8 @@ class RDFanalysis:
         weaver = JetFlavourUtils.setup_weaver(
             weaver_model,  # name of the trained model exported
             weaver_preproc,  # .json file produced by weaver during training
-            variables, ROOT.GetThreadPoolSize()
+            variables, 
+            ROOT.GetThreadPoolSize() if ROOT.GetThreadPoolSize() > 0 else 1
         )
 
         ### COMPUTE THE VARIABLES FOR INFERENCE OF THE TRAINING MODEL
