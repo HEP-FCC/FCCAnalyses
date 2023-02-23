@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['onnxruntime_0',['ONNXRuntime',['../class_o_n_n_x_runtime.html',1,'']]]
+  ['minimize_5fsphericity_0',['minimize_sphericity',['../struct_f_c_c_analyses_1_1_algorithms_1_1minimize__sphericity.html',1,'FCCAnalyses::Algorithms']]],
+  ['minimize_5fthrust_1',['minimize_thrust',['../struct_f_c_c_analyses_1_1_algorithms_1_1minimize__thrust.html',1,'FCCAnalyses::Algorithms']]]
 ];

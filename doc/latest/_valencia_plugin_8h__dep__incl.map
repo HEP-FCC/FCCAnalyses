@@ -1,9 +1,12 @@
 <map id="addons/FastJet/ValenciaPlugin.h" name="addons/FastJet/ValenciaPlugin.h">
-<area shape="rect" id="node1" title=" " alt="" coords="153,5,380,32"/>
-<area shape="rect" id="node2" href="$_jet_clustering_8h.html" title=" " alt="" coords="59,88,273,115"/>
-<area shape="rect" id="node7" href="$_valencia_plugin_8cc.html" title=" " alt="" coords="299,81,437,122"/>
-<area shape="rect" id="node3" href="$_jet_clustering_8cc.html" title=" " alt="" coords="5,275,144,317"/>
-<area shape="rect" id="node4" href="$_jet_clustering_utils_8h.html" title=" " alt="" coords="148,171,345,227"/>
-<area shape="rect" id="node5" href="$_jet_clustering_utils_8cc.html" title=" " alt="" coords="169,275,348,317"/>
-<area shape="rect" id="node6" href="$_jet_constituents_utils_8cc.html" title=" " alt="" coords="373,275,568,317"/>
+<area shape="rect" id="node1" title=" " alt="" coords="424,5,651,32"/>
+<area shape="rect" id="node2" href="$_jet_clustering_8h.html" title=" " alt="" coords="330,88,544,115"/>
+<area shape="rect" id="node10" href="$_valencia_plugin_8cc.html" title=" " alt="" coords="569,81,708,122"/>
+<area shape="rect" id="node3" href="$_jet_clustering_8cc.html" title=" " alt="" coords="368,275,507,317"/>
+<area shape="rect" id="node4" href="$_algorithms_8h.html" title=" " alt="" coords="167,178,364,219"/>
+<area shape="rect" id="node7" href="$_jet_clustering_utils_8h.html" title=" " alt="" coords="503,171,700,227"/>
+<area shape="rect" id="node5" href="$_algorithms_8cc.html" title=" " alt="" coords="187,275,344,317"/>
+<area shape="rect" id="node6" href="$my_utils_8cc.html" title=" " alt="" coords="5,275,163,317"/>
+<area shape="rect" id="node8" href="$_jet_clustering_utils_8cc.html" title=" " alt="" coords="751,275,931,317"/>
+<area shape="rect" id="node9" href="$_jet_constituents_utils_8cc.html" title=" " alt="" coords="531,275,727,317"/>
 </map>
