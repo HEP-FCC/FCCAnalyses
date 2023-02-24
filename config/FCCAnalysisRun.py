@@ -1058,12 +1058,15 @@ def run(mainparser, subparser=None):
     rdfSpec.loader.exec_module(rdfModule)
 
     try:
+        print(args.command)
         args.command
         if args.command == "run":      runStages(args, rdfModule, args.preprocess, analysisFile)
         elif args.command == "final":  runFinal(rdfModule)
         elif args.command == "plots":  runPlots(analysisFile)
         return
-    except AttributeError:
+    except Exception as e:
+ 
+        print("Exception occurred for value '"+ elem + "': "+ repr(e))
         print("============running the old way")
 
 
