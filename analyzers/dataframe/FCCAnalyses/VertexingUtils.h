@@ -19,11 +19,19 @@
 
 #include "fastjet/JetDefinition.hh"
 
+
 /** Vertexing utilities
 */
 namespace FCCAnalyses{
 
 namespace VertexingUtils{
+
+  /// from delphes: returns track state parameters (delphes convention) for a given vertex (x), momentum (p) and charge
+  TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q);
+
+  /// from delphes: returns the momentum corresponding to a given track state
+  TVector3 ParToP(TVectorD Par);
+
 
   /// Structure to keep useful track information that is related to the vertex
   struct FCCAnalysesVertex{

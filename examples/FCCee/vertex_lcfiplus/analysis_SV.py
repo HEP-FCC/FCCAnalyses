@@ -37,10 +37,9 @@ class RDFanalysis():
                #####
                # determime the primary (and secondary) tracks without using the MC-matching:
 
-               # First, reconstruct a vertex from all tracks
-               .Define("VertexObject_allTracks",  "VertexFitterSimple::VertexFitter_Tk ( 1, EFlowTrack_1, true, 4.5, 20e-3, 300)")
 	       # Select the tracks that are reconstructed  as primaries
-               .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
+               .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0.)")
+
                .Define("n_RecoedPrimaryTracks",  "ReconstructedParticle2Track::getTK_n( RecoedPrimaryTracks )")
                # the final primary vertex :
                .Define("PrimaryVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
@@ -72,7 +71,7 @@ class RDFanalysis():
                .Define("SV_jet", "VertexFinderLCFIPlus::get_SV_jets(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco, jets_ee_kt, jetconstituents_ee_kt)")
                # finding SVs in the event (two interfaces)
 	       #.Define("SV_evt1", "VertexFinderLCFIPlus::get_SV_event(ReconstructedParticles, EFlowTrack_1, PrimaryVertexObject, IsPrimary_based_on_reco)")
-               #.Define("SV_evt2", "VertexFinderLCFIPlus::get_SV_event(SecondaryTracks, PrimaryVertexObject)")
+               #.Define("SV_evt2", "VertexFinderLCFIPlus::get_SV_event(SecondaryTracks, EFlowTrack_1, PrimaryVertexObject)")
 
 	       # multiplicity
                #.Define("SV_evt2_n","VertexingUtils::get_n_SV(SV_evt2)")
@@ -118,11 +117,6 @@ class RDFanalysis():
                 'SV_jet_position',
                 #'SV_evt1_position',
 		#'SV_evt2_position',
-
-                # SV chi2
-                'SV_jet_chi2',
-                #'SV_evt1_chi2',
-                #'SV_evt2_chi2',
 
                 # more SV variables
                 'sv_mass',

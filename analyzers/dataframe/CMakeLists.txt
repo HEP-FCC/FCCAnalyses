@@ -6,6 +6,14 @@ find_package(Vdt)
 
 message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
 message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
+message(STATUS "includes-------------------------- dataframe delphes: ${DELPHES_INCLUDE_DIR}")
+message(STATUS "includes-------------------------- dataframe delphes EXt TrkCov: ${DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR}")
+message(STATUS "includes-------------------------- dataframe delphes EXt: ${DELPHES_EXTERNALS_INCLUDE_DIR}")
+
+include_directories(${DELPHES_INCLUDE_DIR}
+                    ${DELPHES_EXTERNALS_INCLUDE_DIR}
+                    ${DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR}
+                    )
 
 
 file(GLOB sources src/*.cc)
@@ -41,8 +49,13 @@ target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                            $<INSTALL_INTERFACE:include>
                            ${VDT_INCLUDE_DIR}
+                           ${DELPHES_INCLUDE_DIR}
+                           ${DELPHES_EXTERNALS_INCLUDE_DIR}
+                           ${DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR}
                            )
 
+message(STATUS " ====== DELPHES LIBRARY = " ${DELPHES_LIBRARY} )
+message(STATUS " ====== DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR = " ${DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR} )
 
 
 target_link_libraries(FCCAnalyses
@@ -53,6 +66,7 @@ target_link_libraries(FCCAnalyses
                       EDM4HEP::edm4hep
                       EDM4HEP::edm4hepDict
                       podio::podio
+                      ${DELPHES_LIBRARY}
                       ${ADDONS_LIBRARIES}
                       gfortran # todo: why necessary?
                       )

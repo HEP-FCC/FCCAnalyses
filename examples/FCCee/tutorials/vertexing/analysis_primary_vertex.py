@@ -40,7 +40,7 @@ class RDFanalysis():
 
                # This is not a good estimate of the primary vertex: even in a Z -> uds event, there are displaced tracks (e.g. Ks, Lambdas), which would bias the fit.
                # Below, we determine the "primary tracks" using an iterative algorithm - cf LCFI+.
-               .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( VertexObject_allTracks, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., 0)")
+               .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0.)")
 
                # Now we run again the vertex fit, but only on the primary tracks :
                .Define("PrimaryVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")

@@ -22,6 +22,9 @@
 #include "edm4hep/VertexData.h"
 #include "edm4hep/Vertex.h"
 
+#include "VertexFit.h"    // from Delphes - updates Franco, Jul 2022
+#include "VertexMore.h"
+
 
 /** Vertex interface using Franco Bedeshi's code.
 This represents a set functions and utilities to perfom vertexing from a list of tracks.
@@ -52,12 +55,10 @@ namespace VertexFitterSimple{
                                                       double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
 
 /// Return the tracks that are flagged as coming from the primary vertex
-  ROOT::VecOps::RVec<edm4hep::TrackState> get_PrimaryTracks( VertexingUtils::FCCAnalysesVertex  initialVertex,
-                                                                        ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+   ROOT::VecOps::RVec<edm4hep::TrackState> get_PrimaryTracks(           ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                                                                         bool BeamSpotConstraint,
                                                                         double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
-                                                                        double bsc_x, double bsc_y, double bsc_z,
-                                                                        int ipass = 0 ) ;
+                                                                        double bsc_x, double bsc_y, double bsc_z ) ;
 
 
 /// Return the tracks that are NOT flagged as coming from the primary vertex
@@ -69,7 +70,7 @@ namespace VertexFitterSimple{
                                                                  ROOT::VecOps::RVec<edm4hep::TrackState> primaryTracks ) ;
 
 
-
+/*
   Double_t FastRv(TVectorD p1, TVectorD p2) ;
   TMatrixDSym RegInv3(TMatrixDSym &Smat0) ;
   TMatrixD Fill_A(TVectorD par, Double_t phi) ;
@@ -79,6 +80,12 @@ namespace VertexFitterSimple{
 
   TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q);
   TVector3 ParToP(TVectorD Par);
+
+  TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q);
+  TVector3 ParToP(TVectorD Par);
+*/
+
+
 
 }//end NS VertexFitterSimple
 

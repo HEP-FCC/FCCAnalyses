@@ -1,9 +1,25 @@
 ﻿#include "FCCAnalyses/VertexingUtils.h"
 #include "FCCAnalyses/VertexFitterSimple.h"
 
+#include "TrkUtil.h"    // from delphes
+
 namespace FCCAnalyses{
 
 namespace VertexingUtils{
+
+
+TVector3 ParToP(TVectorD Par){
+  double fB = 2;  // 2 Tesla
+  TrkUtil tu;
+  return tu.ParToP( Par, fB );
+}
+
+TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q){
+  double fB = 2;  // 2 Tesla
+  TrkUtil tu;
+  return tu.XPtoPar( x, p, Q, fB);
+}
+
 
 //
 // Selection of particles based on the d0 / z0 significances of the associated track
@@ -464,7 +480,7 @@ double get_PV2vtx_angle( ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   TVector3 p_sum;
   for(edm4hep::TrackState tr : tracks) {
     TVectorD ipar = get_trackParam(tr);
-    TVector3 ip   = VertexFitterSimple::ParToP(ipar);
+    TVector3 ip   = ParToP(ipar);
     p_sum += ip;
   }
   
@@ -489,7 +505,7 @@ double get_trackE( edm4hep::TrackState track ) {
   const double m_pi = 0.13957039;
   
   TVectorD par = get_trackParam(track);
-  TVector3 p   = VertexFitterSimple::ParToP(par);
+  TVector3 p   = ParToP(par);
   TLorentzVector p4;
   p4.SetXYZM(p[0], p[1], p[2], m_pi);
 
