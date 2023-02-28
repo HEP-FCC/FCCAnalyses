@@ -1065,8 +1065,6 @@ def run(mainparser, subparser=None):
         elif args.command == "plots":  runPlots(analysisFile)
         return
     except Exception as e:
- 
-        print("Exception occurred for value '"+ elem + "': "+ repr(e))
         print("============running the old way")
 
 
