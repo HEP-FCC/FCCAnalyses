@@ -4,13 +4,16 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   else
     echo "INFO: Key4hep stack already set up."
   fi
-  export PYTHONPATH=$PWD:$PYTHONPATH
-  export PYTHONPATH=$PWD/python:$PYTHONPATH
-  export PATH=$PWD/bin:$PATH
-  export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH
-  export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
-  export ROOT_INCLUDE_PATH=$PWD/install/include:$ROOT_INCLUDE_PATH
-  export LOCAL_DIR=$PWD
+  # Determinig the location of this setup script
+  export LOCAL_DIR=$(cd $(dirname "${BASH_SOURCE}") && pwd)
+
+  export PYTHONPATH=${LOCAL_DIR}:${PYTHONPATH}
+  export PYTHONPATH=${LOCAL_DIR}/python:${PYTHONPATH}
+  export PATH=${LOCAL_DIR}/bin:${PATH}
+  export LD_LIBRARY_PATH=${LOCAL_DIR}/install/lib:${LD_LIBRARY_PATH}
+  export CMAKE_PREFIX_PATH=${LOCAL_DIR}/install:${CMAKE_PREFIX_PATH}
+  export ROOT_INCLUDE_PATH=${LOCAL_DIR}/install/include:${ROOT_INCLUDE_PATH}
+
   export ONNXRUNTIME_ROOT_DIR=`python -c "import onnxruntime; print(onnxruntime.__path__[0]+'/../../../..')"`
   export LD_LIBRARY_PATH=$ONNXRUNTIME_ROOT_DIR/lib:$LD_LIBRARY_PATH
 else
