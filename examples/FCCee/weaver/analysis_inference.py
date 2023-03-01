@@ -1,3 +1,5 @@
+testFile = "https://fccsw.web.cern.ch/fccsw/testsamples/wzp6_ee_nunuH_Hss_ecm240.root"
+
 ## latest particle transformer model, trainied on 9M jets in winter2023 samples
 model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_13_01_2022"
 model_name = "fccee_flavtagging_edm4hep_wc_v1"
@@ -21,7 +23,7 @@ class RDFanalysis:
 
         from examples.FCCee.weaver.config import collections, njets
 
-        tag = "test"
+        tag = ""
 
         ## define jet clustering parameters
         jetClusteringHelper = ExclusiveJetClusteringHelper(collections["PFParticles"], njets, tag)
