@@ -404,9 +404,6 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
         print('----> Aborting job submission...')
         sys.exit(3)
 
-    print('----> Running')
-    return
-
     outputDir       = getElement(rdfModule, "outputDir")
     outputDirEos    = getElement(rdfModule, "outputDirEos")
     eosType         = getElement(rdfModule, "eosType")
