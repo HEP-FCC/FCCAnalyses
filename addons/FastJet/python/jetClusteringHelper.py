@@ -3,9 +3,9 @@ import ROOT
 
 
 class ExclusiveJetClusteringHelper:
-    def __init__(self, input_coll, njets, tag):
+    def __init__(self, coll, njets, tag=""):
 
-        self.input_coll = input_coll
+        self.input_coll = coll
         self.njets = njets
 
         self.tag = tag
@@ -41,12 +41,12 @@ class ExclusiveJetClusteringHelper:
         self.definition = dict()
 
         # get single particle properties
-        self.definition[part_px] = "ReconstructedParticle::get_px({})".format(input_coll)
-        self.definition[part_py] = "ReconstructedParticle::get_py({})".format(input_coll)
-        self.definition[part_pz] = "ReconstructedParticle::get_pz({})".format(input_coll)
-        self.definition[part_e] = "ReconstructedParticle::get_e({})".format(input_coll)
-        self.definition[part_m] = "ReconstructedParticle::get_mass({})".format(input_coll)
-        self.definition[part_q] = "ReconstructedParticle::get_charge({})".format(input_coll)
+        self.definition[part_px] = "ReconstructedParticle::get_px({})".format(self.input_coll)
+        self.definition[part_py] = "ReconstructedParticle::get_py({})".format(self.input_coll)
+        self.definition[part_pz] = "ReconstructedParticle::get_pz({})".format(self.input_coll)
+        self.definition[part_e] = "ReconstructedParticle::get_e({})".format(self.input_coll)
+        self.definition[part_m] = "ReconstructedParticle::get_mass({})".format(self.input_coll)
+        self.definition[part_q] = "ReconstructedParticle::get_charge({})".format(self.input_coll)
 
         # form fastjet pseudo jets
         self.definition[pjetc] = "JetClusteringUtils::set_pseudoJets({}, {}, {}, {})".format(
@@ -63,7 +63,9 @@ class ExclusiveJetClusteringHelper:
         self.definition[_jetc] = "JetClusteringUtils::get_constituents({})".format(_jet)
 
         # get constituents
-        self.definition[jetc] = "JetConstituentsUtils::build_constituents_cluster({}, {})".format(input_coll, _jetc)
+        self.definition[jetc] = "JetConstituentsUtils::build_constituents_cluster({}, {})".format(
+            self.input_coll, _jetc
+        )
 
         # compute jet observables
         self.definition[jet_p] = "JetClusteringUtils::get_p({})".format(self.jets)
@@ -82,6 +84,7 @@ class ExclusiveJetClusteringHelper:
         return df
 
     def outputBranches(self):
-        
+
         out = [obs for obs in self.definition.keys() if "{}_".format(self.jets) in obs]
+        out += [obs for obs in self.definition.keys() if "event_" in obs]
         return out
