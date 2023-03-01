@@ -244,7 +244,7 @@ class JetFlavourHelper:
 
         # then funcs
         for varname in self.variables:
-            matches = [obs for obs in self.definition if obs in varname]
+            matches = [obs for obs in self.definition.keys() if obs == varname]
             if len(matches) != 1:
                 print("ERROR: {} variables was not defined.".format(varname))
                 sys.exit()
