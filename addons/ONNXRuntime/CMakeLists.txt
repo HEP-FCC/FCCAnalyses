@@ -40,5 +40,5 @@ if(BUILD_TESTING)
     )
   endif()
   # add all integration tests
-  add_integration_test("examples/FCCee/test/weaver_inference.py")
+  add_integration_test("examples/FCCee/weaver/analysis_inference.py")
 endif()
