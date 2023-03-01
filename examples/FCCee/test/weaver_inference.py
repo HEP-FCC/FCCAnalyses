@@ -30,7 +30,8 @@ class RDFanalysis():
         test_inputs_path = getenv('TEST_INPUT_DATA_DIR', '/afs/cern.ch/work/s/selvaggi/public/4Laurent/ONNX')
         weaver = JetFlavourUtils.setup_weaver(test_inputs_path + '/fccee_flavtagging_dummy.onnx',
                                               test_inputs_path + '/preprocess.json',
-                                              ('pfcand_e', 'pfcand_theta', 'pfcand_phi', 'pfcand_pid', 'pfcand_charge'))
+                                              ('pfcand_e', 'pfcand_theta', 'pfcand_phi', 'pfcand_pid', 'pfcand_charge'),
+                                              ROOT.GetThreadPoolSize() if ROOT.GetThreadPoolSize() > 0 else 1)
 
         df2 = (df
                # retrieve all information about jet constituents for each jet in collection
