@@ -17,7 +17,7 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _fcc  = ROOT.dummyLoader
 
 
-date=datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
+DATE = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
 
 #__________________________________________________________
 def getElement(rdfModule, element, isFinal=False):
@@ -389,9 +389,20 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
 #__________________________________________________________
 def sendToBatch(rdfModule, chunkList, process, analysisFile):
     localDir = os.environ["LOCAL_DIR"]
-    logDir   = localDir+"/BatchOutputs/{}/{}".format(date,process)
+    logDir   = localDir+"/BatchOutputs/{}/{}".format(DATE, process)
     if not os.path.exists(logDir):
         os.system("mkdir -p {}".format(logDir))
+
+    # Making sure the FCCAnalyses libraries are compiled and installed
+    try:
+        subprocess.check_output(['make', 'install'],
+                                cwd=localDir+'/build',
+                                stderr=subprocess.DEVNULL
+        )
+    except subprocess.CalledProcessError as e:
+        print("----> The FCCanalyses libraries are not properly build and installed!")
+        print('----> Aborting job submission...')
+        sys.exit(3)
 
     outputDir       = getElement(rdfModule, "outputDir")
     outputDirEos    = getElement(rdfModule, "outputDirEos")
@@ -416,10 +427,7 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
 
         subprocess.getstatusoutput('chmod 777 %s'%(frunname))
         frun.write('#!/bin/bash\n')
-        frun.write('source /cvmfs/sw.hsf.org/key4hep/setup.sh\n')
-        frun.write('export PYTHONPATH=$LOCAL_DIR:$PYTHONPATH\n')
-        frun.write('export LD_LIBRARY_PATH=$LOCAL_DIR/install/lib:$LD_LIBRARY_PATH\n')
-        frun.write('export ROOT_INCLUDE_PATH=$LOCAL_DIR/install/include/FCCAnalyses:$ROOT_INCLUDE_PATH\n')
+        frun.write('source ${LOCAL_DIR}/setup.sh\n')
 
         #add userBatchConfig if any
         if userBatchConfig!="":
