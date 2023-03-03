@@ -3,55 +3,33 @@
 ## stage 1: produce event based tree (Whizard or Pythia8)
 ```
 ### test produce input files for training (WHIZARD)
-fccanalysis run examples/FCCee/weaver/stage1.py --output test_Hbb_wz.root --files-list /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/wzp6_ee_nunuH_Hbb_ecm240/events_1.root --nevents 100
+fccanalysis run examples/FCCee/weaver/stage1.py --output test_Hss.root --files-list /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/wzp6_ee_nunuH_Hss_ecm240/events_196755633.root --ncpus 64
 ```
-
-```
-### test produce input files for training (PYTHIA8)
-fccanalysis run examples/FCCee/weaver/stage1.py --output test_Hbb_wz.root --files-list /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/wzp6_ee_nunuH_Hbb_ecm240/events_1.root --nevents 100
-```
-
 
 ## stage 2: produce jet based tree
 ```
-python examples/FCCee/weaver/stage2.py  test_Hbb_wz.root out_Hbb_wz.root 0 100
-python examples/FCCee/weaver/stage2.py  test_Hbb_py8.root out_Hbb_py8.root 0 100
+python examples/FCCee/weaver/stage2.py  test_Hss.root out_Hss.root 0 100
 ```
 ## run all stages in one go:
 ```
 ### whizard
-python examples/FCCee/weaver/stage_all.py --indir /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/ --outdir /tmp/selvaggi/data/pre_winter2023_tests_v2/ --fsplit 0.9 --sample wzp6_ee_nunuH --ncpus 16 --nev 900000
-```
-
-```
-### PYTHIA8
-python examples/FCCee/weaver/stage_all.py --indir /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/ --outdir /tmp/selvaggi/data/pre_winter2023_tests_v2/  --fsplit 0.9 --sample p8_ee_ZH_Znunu --ncpus 16 --nev 900000
+python examples/FCCee/weaver/stage_all.py --indir /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023_training/IDEA/ --outdir /tmp/selvaggi/data/pre_winter2023_tests_v2/ --fsplit 0.9 --sample wzp6_ee_nunuH --ncpus 64 --nev 100000
 ```
 
 ## run validation plots
 ```
-python examples/FCCee/weaver/stage_plots.py --indir /tmp/selvaggi/data/pre_winter2023_tests_v2/selvaggi_2022Nov26/  --outdir /eos/user/s/selvaggi/www/test_tag
+python examples/FCCee/weaver/stage_plots.py --indir /tmp/selvaggi/data/winter2023_training_test/selvaggi_2023Mar01/  --outdir /eos/user/s/selvaggi/www/test_tag2
 ```
 
 ## test inference
 ```
-### bb
-fccanalysis run examples/FCCee/weaver/analysis_inference.py --output inference_bb.root --files-list /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/p8_ee_ZH_Znunu_Hbb_ecm240/events_0.root --nevents 100
-
-### cc
-fccanalysis run examples/FCCee/weaver/analysis_inference.py --output inference_cc.root --files-list /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/p8_ee_ZH_Znunu_Hcc_ecm240/events_0.root --nevents 100
-
-### ss
-fccanalysis run examples/FCCee/weaver/analysis_inference.py --output inference_ss.root --files-list /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/p8_ee_ZH_Znunu_Hss_ecm240/events_0.root --nevents 100
-
-### gg
-fccanalysis run examples/FCCee/weaver/analysis_inference.py --output inference_gg.root --files-list /eos/experiment/fcc/ee/generation/DelphesStandalone/Edm4Hep/pre_winter2023_tests_v2/p8_ee_ZH_Znunu_Hgg_ecm240/events_0.root --nevents 100
+fccanalysis run examples/FCCee/weaver/analysis_inference.py --output test_ss.root --files-list /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/wzp6_ee_nunuH_Hss_ecm240/events_196755633.root --ncpus 64
 ```
 
 
 # Preparation of dataset
 ## Generated samples
-The samples used are stored in the directory `/eos/experiment/fcc/ee/generation/DelphesEvents/pre_fall2022_training/IDEA/` .
+The samples used are stored in the directory `/eos/experiment/fcc/ee/generation/DelphesEvents/winter2023_training/IDEA/` .
 The events were simulated using Delphes.
 The processes considered are $e^+ e^- \to Z(\to \nu \nu) H(\to jj)$ with $j = u,d,b,c,s,g$.
 For the processes $j =  u,d,b,c,s$ samples of $\sim 10^6$ events were produced (i.e. $2 \times 10^6$ jets per sample), for $j = g$ $\sim 2 \times 10^6$ (i.e. $2 \times 10^6$ jets per sample).
