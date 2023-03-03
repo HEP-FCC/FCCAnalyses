@@ -10,5 +10,6 @@ var searchData=
   ['operator_3d_7',['operator=',['../class_o_n_n_x_runtime.html#a76c62bd95a41c9b824e3c9b40bdda0e5',1,'ONNXRuntime']]],
   ['ort_8',['Ort',['../namespace_ort.html',1,'']]],
   ['output_5fnode_5fdims_5f_9',['output_node_dims_',['../class_o_n_n_x_runtime.html#af39f5339415ad28552f5745ff8db6160',1,'ONNXRuntime']]],
-  ['output_5fnode_5fstrings_5f_10',['output_node_strings_',['../class_o_n_n_x_runtime.html#a27b04191237164cc11bde35518b39229',1,'ONNXRuntime']]]
+  ['output_5fnode_5fstrings_5f_10',['output_node_strings_',['../class_o_n_n_x_runtime.html#a27b04191237164cc11bde35518b39229',1,'ONNXRuntime']]],
+  ['outputbranches_11',['outputBranches',['../classjet_clustering_helper_1_1_exclusive_jet_clustering_helper.html#a48ea6fae66375a293b2e1e4f2edbc90e',1,'jetClusteringHelper.ExclusiveJetClusteringHelper.outputBranches()'],['../classjet_flavour_helper_1_1_jet_flavour_helper.html#a231d1109d038d2e3351e8ea2bb368b76',1,'jetFlavourHelper.JetFlavourHelper.outputBranches()']]]
 ];
