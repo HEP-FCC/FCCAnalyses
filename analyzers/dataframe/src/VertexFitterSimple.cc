@@ -123,33 +123,36 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
   TVectorD** trkPar = new TVectorD*[Ntr];
   TMatrixDSym** trkCov = new TMatrixDSym*[Ntr];
 
+  bool Units_mm = true;   
+
   for (Int_t i = 0; i < Ntr; i++) {
     edm4hep::TrackState t = tracks[i] ;
-    TVectorD par = VertexingUtils::get_trackParam( t ) ;
+    TVectorD par = VertexingUtils::get_trackParam( t, Units_mm ) ;
     trkPar[i] = new TVectorD( par );
-    TMatrixDSym Cov = VertexingUtils::get_trackCov( t );
+    TMatrixDSym Cov = VertexingUtils::get_trackCov( t, Units_mm );
     trkCov[i] = new TMatrixDSym ( Cov );
   }
 
   VertexFit theVertexFit( Ntr, trkPar, trkCov );
 
   if ( BeamSpotConstraint ){
-     //TVectorD xv_BS(  bsc_x*1e-6, bsc_y*1e-6, bsc_z*1e-6 );
+     float conv_BSC = 1e-6;   // convert mum to m
+     if ( Units_mm)  conv_BSC = 1e-3;   // convert mum to mm
      TVectorD xv_BS(3);
-     xv_BS[0] = bsc_x*1e-6;
-     xv_BS[1] = bsc_y*1e-6;
-     xv_BS[2] = bsc_z*1e-6 ;
+     xv_BS[0] = bsc_x * conv_BSC ;
+     xv_BS[1] = bsc_y * conv_BSC ;
+     xv_BS[2] = bsc_z * conv_BSC ;
      TMatrixDSym cov_BS(3);
-     cov_BS[0][0] = pow( bsc_sigmax * 1e-6, 2) ;
-     cov_BS[1][1] = pow( bsc_sigmay * 1e-6, 2) ;
-     cov_BS[2][2] = pow( bsc_sigmaz * 1e-6, 2) ;
+     cov_BS[0][0] = pow( bsc_sigmax * conv_BSC, 2) ;
+     cov_BS[1][1] = pow( bsc_sigmay * conv_BSC, 2) ;
+     cov_BS[2][2] = pow( bsc_sigmaz * conv_BSC, 2) ;
      theVertexFit.AddVtxConstraint( xv_BS, cov_BS );
   }
-
 
   TVectorD  x = theVertexFit.GetVtx() ;   // this actually runs the fit
 
   float conv = 1e3;
+  if ( Units_mm ) conv = 1. ;
   result.position = edm4hep::Vector3f( x(0)*conv, x(1)*conv, x(2)*conv ) ;  // store the  vertex in mm
 
   // store the results in an edm4hep::VertexData object
@@ -184,13 +187,13 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
   TheVertex.vertex = result;
 
   // Use VertexMore to retrieve more information :
-   VertexMore theVertexMore( &theVertexFit );
+   VertexMore theVertexMore( &theVertexFit, Units_mm );
 
   // for the units & conventions gymnastics:
-  double scale0 = 1e-3;   //convert mm to m
+  double scale0 = 1./conv ;   //convert mm to m
   double scale1 = 1;
-  double scale2 = 0.5*1e3;  // C = rho/2, convert from mm-1 to m-1
-  double scale3 = 1e-3 ;  //convert mm to m
+  double scale2 = 0.5*conv;  // C = rho/2, convert from mm-1 to m-1
+  double scale3 = 1./conv ;  //convert mm to m
   double scale4 = 1.;
   scale2 = -scale2 ;   // sign of omega (sign convention)
 
@@ -299,7 +302,7 @@ if ( seltracks.size() <= 1 ) return seltracks;
             }
         }
         if ( n_removed > 0) {
-            if ( theVertexFit.GetNtrk() > 0 ) {
+            if ( theVertexFit.GetNtrk() > 1 ) {
                  // run the fit again:
                  x = theVertexFit.GetVtx() ;
                  TVectorD new_tracks_chi2 = theVertexFit.GetVtxChi2List();
