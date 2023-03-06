@@ -236,7 +236,8 @@ class JetFlavourHelper:
 
         for scorename in data["output_names"]:
             # self.scores.append(scorename)
-            self.scores.append(scorename.replace("jet", "jet{}".format(self.tag)))
+            #self.scores.append(scorename.replace("jet", "jet{}".format(self.tag)))
+            self.scores.append("{}{}".format(scorename,self.tag))
 
         f.close()
         # convert to tuple
@@ -264,10 +265,10 @@ class JetFlavourHelper:
         )
 
         # run inference and cast scores
-        df = df.Define("MVAVec", self.get_weight_str)
+        df = df.Define("MVAVec_{}".format(self.tag), self.get_weight_str)
 
         for i, scorename in enumerate(self.scores):
-            df = df.Define(scorename, "JetFlavourUtils::get_weight(MVAVec, {})".format(i))
+            df = df.Define(scorename, "JetFlavourUtils::get_weight(MVAVec_{}, {})".format(self.tag, i))
 
         return df
 

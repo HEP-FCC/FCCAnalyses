@@ -27,13 +27,13 @@ class ExclusiveJetClusteringHelper:
         jetc = "jetc{}".format(self.tag)
 
         # compute jet observables
-        jet_p = "{}_p".format(jet)
-        jet_e = "{}_e".format(jet)
-        jet_mass = "{}_mass".format(jet)
-        jet_phi = "{}_phi".format(jet)
-        jet_theta = "{}_theta".format(jet)
-        jet_nconst = "{}_nconst".format(jet)
-        event_njet = "event_n{}".format(jet)
+        jet_p = "jet_p{}".format(self.tag)
+        jet_e = "jet_e{}".format(self.tag)
+        jet_mass = "jet_mass{}".format(self.tag)
+        jet_phi = "jet_phi{}".format(self.tag)
+        jet_theta = "jet_theta{}".format(self.tag)
+        jet_nconst = "jet_nconst{}".format(self.tag)
+        event_njet = "event_njet{}".format(self.tag)
 
         self.jets = jet
         self.constituents = jetc
