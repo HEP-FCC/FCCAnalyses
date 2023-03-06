@@ -257,7 +257,6 @@ std::array<float, 21> Delphes2Edm4hep_TrackCovMatrix( const TMatrixDSym& cov, bo
 }
 
 
-// -----------------------------------------------------------------------------------------
 
 
 TVectorD
@@ -267,26 +266,6 @@ get_trackParam( edm4hep::TrackState & atrack, bool Units_mm ) {
     double omega = atrack.omega ;
     double z0 = atrack.Z0 ;
     double tanlambda = atrack.tanLambda ;
-/*
-    TVectorD res(5);
-
-    double conv=1e-3;       //convert mm to m
-    if ( Units_mm ) conv = 1. ;
-
-    double scale0 = conv;   //convert mm to m if needed
-    double scale1 = 1;
-    double scale2 = 0.5 / conv ;   // C = rho/2, convert from mm-1 to m-1
-    double scale3 = conv  ;  //convert mm to m
-    double scale4 = 1.;
-
-  scale2 = -scale2 ;   // sign of omega
-
-    res[0] = d0 * scale0;
-    res[1] = phi0 * scale1 ;
-    res[2] = omega * scale2 ;
-    res[3] = z0 * scale3 ;
-    res[4] = tanlambda * scale4 ;
-*/
     TVectorD param(5);
     param[0] = d0;
     param[1] = phi0 ;
@@ -298,76 +277,31 @@ get_trackParam( edm4hep::TrackState & atrack, bool Units_mm ) {
     return res;
 }
 
-float get_trackMom( edm4hep::TrackState & atrack ) {
-  double fB = 2;  // 2 Tesla
-  
-  float C    = -0.5*1e3 * atrack.omega;
-  float phi0 = atrack.phi;
-  float ct   = atrack.tanLambda;
-  //
-  float pt = fB*0.2998 / TMath::Abs(2 * C);
-  TVector3 p(pt*TMath::Cos(phi0), pt*TMath::Sin(phi0), pt*ct);
-  float result = p.Mag();
-  return result;
-}
 
 TMatrixDSym
 get_trackCov( edm4hep::TrackState &  atrack, bool Units_mm ) {
   auto covMatrix = atrack.covMatrix;
-/*
-  TMatrixDSym covM(5);
-
-    double conv=1e-3;       //convert mm to m
-    if ( Units_mm ) conv = 1. ;
-
-    double scale0 = conv;   //convert mm to m if needed
-    double scale1 = 1;
-    double scale2 = 0.5 / conv ;   // C = rho/2, convert from mm-1 to m-1
-    double scale3 = conv  ;  //convert mm to m
-    double scale4 = 1.;
-
-  scale2 = -scale2 ;   // sign of omega
-
-  // covMatrix = lower-triang;e
-
-  covM[0][0] = covMatrix[0] *scale0 * scale0;
-
-  covM[1][0] = covMatrix[1] *scale1 * scale0;
-  covM[1][1] = covMatrix[2] *scale1 * scale1;
-
-  covM[0][1] = covM[1][0];
-
-  covM[2][0] = covMatrix[3] *scale2 * scale0;
-  covM[2][1] = covMatrix[4] *scale2 * scale1;
-  covM[2][2] = covMatrix[5] *scale2 * scale2;
-
-  covM[0][2] = covM[2][0];
-  covM[1][2] = covM[2][1];
-
-  covM[3][0] = covMatrix[6] *scale3 * scale0;
-  covM[3][1] = covMatrix[7] *scale3 * scale1;
-  covM[3][2] = covMatrix[8] *scale3 * scale2;
-  covM[3][3] = covMatrix[9] *scale3 * scale3;
-
-  covM[0][3] = covM[3][0];
-  covM[1][3] = covM[3][1];
-  covM[2][3] = covM[3][2];
-
-  covM[4][0] = covMatrix[10] *scale4 * scale0;
-  covM[4][1] = covMatrix[11] *scale4 * scale1;
-  covM[4][2] = covMatrix[12] *scale4 * scale2;
-  covM[4][3] = covMatrix[13] *scale4 * scale3;
-  covM[4][4] = covMatrix[14] *scale4 * scale4;
-
-  covM[0][4] = covM[4][0];
-  covM[1][4] = covM[4][1];
-  covM[2][4] = covM[4][2];
-  covM[3][4] = covM[4][3];
-*/
 
  TMatrixDSym covM = Edm4hep2Delphes_TrackCovMatrix( covMatrix, Units_mm );
 
   return covM;
+}
+
+
+// ----------------------------------------------------------------------------------------
+
+
+float get_trackMom( edm4hep::TrackState & atrack ) {
+  double fB = 2;  // 2 Tesla
+
+  float C    = -0.5*1e3 * atrack.omega;
+  float phi0 = atrack.phi;
+  float ct   = atrack.tanLambda;
+  //
+      float pt = fB*0.2998 / TMath::Abs(2 * C);
+  TVector3 p(pt*TMath::Cos(phi0), pt*TMath::Sin(phi0), pt*ct);
+  float result = p.Mag();
+  return result;
 }
 
 

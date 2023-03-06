@@ -136,8 +136,7 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
   VertexFit theVertexFit( Ntr, trkPar, trkCov );
 
   if ( BeamSpotConstraint ){
-     float conv_BSC = 1e-6;   // convert mum to m
-     if ( Units_mm)  conv_BSC = 1e-3;   // convert mum to mm
+     float conv_BSC = 1e-3;    // convert mum to mm
      TVectorD xv_BS(3);
      xv_BS[0] = bsc_x * conv_BSC ;
      xv_BS[1] = bsc_y * conv_BSC ;
@@ -151,12 +150,9 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
 
   TVectorD  x = theVertexFit.GetVtx() ;   // this actually runs the fit
 
-  float conv = 1e3;
-  if ( Units_mm ) conv = 1. ;
-  result.position = edm4hep::Vector3f( x(0)*conv, x(1)*conv, x(2)*conv ) ;  // store the  vertex in mm
+  result.position = edm4hep::Vector3f( x(0), x(1), x(2) ) ;  // vertex position in mm
 
   // store the results in an edm4hep::VertexData object
-  // go back from meters to millimeters for the units 
 
   float Chi2 = theVertexFit.GetVtxChi2();
   float Ndof = 2.0 * Ntr - 3.0; ;
@@ -172,12 +168,12 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
  //std::cout << " Fitted vertex: " <<  x(0)*conv << " " << x(1)*conv << " " << x(2)*conv << std::endl;
   TMatrixDSym covX = theVertexFit.GetVtxCov() ;
   std::array<float,6> covMatrix;        // covMat in edm4hep is a LOWER-triangle matrix.
-  covMatrix[0] = covX(0,0) * pow(conv,2);
-  covMatrix[1] = covX(1,0) * pow(conv,2);
-  covMatrix[2] = covX(1,1) * pow(conv,2);
-  covMatrix[3] = covX(2,0) * pow(conv,2);
-  covMatrix[4] = covX(2,1) * pow(conv,2);
-  covMatrix[5] = covX(2,2) * pow(conv,2);
+  covMatrix[0] = covX(0,0) ;
+  covMatrix[1] = covX(1,0) ;
+  covMatrix[2] = covX(1,1) ;
+  covMatrix[3] = covX(2,0) ;
+  covMatrix[4] = covX(2,1) ;
+  covMatrix[5] = covX(2,2) ;
   result.covMatrix = covMatrix;
 
   result.algorithmType = 1;
@@ -189,28 +185,16 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary,
   // Use VertexMore to retrieve more information :
    VertexMore theVertexMore( &theVertexFit, Units_mm );
 
-  // for the units & conventions gymnastics:
-  double scale0 = 1./conv ;   //convert mm to m
-  double scale1 = 1;
-  double scale2 = 0.5*conv;  // C = rho/2, convert from mm-1 to m-1
-  double scale3 = 1./conv ;  //convert mm to m
-  double scale4 = 1.;
-  scale2 = -scale2 ;   // sign of omega (sign convention)
-
 
   for (Int_t i = 0; i < Ntr; i++) {
+
     TVectorD updated_par = theVertexFit.GetNewPar(i);   // updated track parameters
+    TVectorD updated_par_edm4hep = VertexingUtils::Delphes2Edm4hep_TrackParam( updated_par, Units_mm );
+    updated_track_parameters.push_back( updated_par_edm4hep );
+
     // Momenta of the tracks at the vertex:
     TVector3 ptrack_at_vertex = theVertexMore.GetMomentum( i );
     updated_track_momentum_at_vertex.push_back( ptrack_at_vertex );
-
-    // back to EDM4HEP units...
-    updated_par[0] = updated_par[0] / scale0 ;
-    updated_par[1] = updated_par[1] / scale1 ;
-    updated_par[2] = updated_par[2] / scale2 ;
-    updated_par[3] = updated_par[3] / scale3 ;
-    updated_par[4] = updated_par[4] / scale4 ;
-    updated_track_parameters.push_back( updated_par );
 
   }
 
