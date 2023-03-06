@@ -27,12 +27,12 @@ class ExclusiveJetClusteringHelper:
         jetc = "jetc{}".format(self.tag)
 
         # compute jet observables
-        jet_p = "jet_p{}".format(self.tag)
-        jet_e = "jet_e{}".format(self.tag)
-        jet_mass = "jet_mass{}".format(self.tag)
-        jet_phi = "jet_phi{}".format(self.tag)
-        jet_theta = "jet_theta{}".format(self.tag)
-        jet_nconst = "jet_nconst{}".format(self.tag)
+
+        observables = ["p", "e", "mass", "phi", "theta", "nconst"]
+
+        self.jet_obs = dict()
+        for obs in observables:
+            self.jet_obs[obs] = "jet_{}{}".format(obs, self.tag)
         event_njet = "event_njet{}".format(self.tag)
 
         self.jets = jet
@@ -68,12 +68,12 @@ class ExclusiveJetClusteringHelper:
         )
 
         # compute jet observables
-        self.definition[jet_p] = "JetClusteringUtils::get_p({})".format(self.jets)
-        self.definition[jet_e] = "JetClusteringUtils::get_e({})".format(self.jets)
-        self.definition[jet_mass] = "JetClusteringUtils::get_m({})".format(self.jets)
-        self.definition[jet_phi] = "JetClusteringUtils::get_phi({})".format(self.jets)
-        self.definition[jet_theta] = "JetClusteringUtils::get_theta({})".format(self.jets)
-        self.definition[jet_nconst] = "JetConstituentsUtils::count_consts({})".format(self.constituents)
+        self.definition[self.jet_obs["p"]] = "JetClusteringUtils::get_p({})".format(self.jets)
+        self.definition[self.jet_obs["e"]] = "JetClusteringUtils::get_e({})".format(self.jets)
+        self.definition[self.jet_obs["mass"]] = "JetClusteringUtils::get_m({})".format(self.jets)
+        self.definition[self.jet_obs["phi"]] = "JetClusteringUtils::get_phi({})".format(self.jets)
+        self.definition[self.jet_obs["theta"]] = "JetClusteringUtils::get_theta({})".format(self.jets)
+        self.definition[self.jet_obs["nconst"]] = "JetConstituentsUtils::count_consts({})".format(self.constituents)
         self.definition[event_njet] = "JetConstituentsUtils::count_jets({})".format(self.constituents)
 
     def define(self, df):
@@ -85,6 +85,6 @@ class ExclusiveJetClusteringHelper:
 
     def outputBranches(self):
 
-        out = [obs for obs in self.definition.keys() if "{}_".format(self.jets) in obs]
+        out = list(self.jet_obs.values())
         out += [obs for obs in self.definition.keys() if "event_" in obs]
         return out
