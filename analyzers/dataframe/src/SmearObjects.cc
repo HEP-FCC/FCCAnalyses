@@ -64,6 +64,7 @@ namespace FCCAnalyses
       for (int itrack = 0; itrack < ntracks; itrack++)
       {
         edm4hep::TrackState track = alltracks[itrack];
+        edm4hep::TrackState smeared_track = track;
 
         // find the corresponding MC particle
         int MCindex = -1;
@@ -92,6 +93,12 @@ namespace FCCAnalyses
 
         // the covariance matrix of the track, in Delphes's convention
         TMatrixDSym Cov = VertexingUtils::get_trackCov(track);
+   
+        // if the covMat of the track is pathological (numerical precision issue, fraction of tracks = 5e-6): return original track
+        if ( Cov.Determinant() <= 0 ) {
+	     result[itrack] = smeared_track;
+             continue;
+        }
 
         // scale the covariance matrix
         for (int j = 0; j < 5; j++)
@@ -116,8 +123,6 @@ namespace FCCAnalyses
         double scale3 = 1e-3;      // convert mm to m
         double scale4 = 1.;
         scale2 = -scale2; // sign of omega
-
-        edm4hep::TrackState smeared_track = track;
 
         smeared_track.D0 = smeared_param[0] / scale0;
         smeared_track.phi = smeared_param[1] / scale1;
