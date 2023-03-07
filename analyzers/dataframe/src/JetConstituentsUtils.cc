@@ -1068,6 +1068,36 @@ namespace FCCAnalyses {
       return std::sqrt(E*E - px*px - py*py - pz*pz);
     }
 
+    rv::RVec<double> AllInvariantMasses(rv::RVec<TLorentzVector> AllJets) {
+
+      TLorentzVector tlv1;
+      TLorentzVector tlv2;
+      double E, px, py, pz; 
+      double invmass; 
+      
+      rv::RVec<double> InvariantMasses;
+
+      // For each jet, take its invariant mass with the remaining jets. Stop at last jet.
+      for(int i = 0; i < AllJets.size()-1; ++i) {
+
+        tlv1 = AllJets.at(i); 
+
+        for(int j=i+1; j < AllJets.size(); ++j){ // go until end
+          tlv2 = AllJets.at(j);
+          E = tlv1.E() + tlv2.E();
+          px = tlv1.Px() + tlv2.Px();
+          py = tlv1.Py() + tlv2.Py();
+          pz = tlv1.Pz() + tlv2.Pz();
+
+          invmass = std::sqrt(E*E - px*px - py*py - pz*pz);
+          InvariantMasses.push_back(invmass);
+
+        }
+      }
+
+      return InvariantMasses;
+    }    
+
     rv::RVec<double> compute_residue_energy(const rv::RVec<TLorentzVector>& tlv_jet, const rv::RVec<TLorentzVector>& sum_tlv_jcs) {
       rv::RVec<double> out;
       for(int i = 0; i < tlv_jet.size(); ++i) {
