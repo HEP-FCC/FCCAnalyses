@@ -61,6 +61,9 @@ namespace FCCAnalyses
 
       edm4hep::TrackState dummy;
 
+      TVectorD zero(5);
+      for (int k=0; k<5; k++) { zero(k) = 0. ; }
+
       for (int itrack = 0; itrack < ntracks; itrack++)
       {
         edm4hep::TrackState track = alltracks[itrack];
@@ -114,6 +117,11 @@ namespace FCCAnalyses
 
         // generate a new track state (in Delphes's convention)
         TVectorD smeared_param = CovSmear(mcTrackParam, Cov, &m_random, m_debug);
+
+        if ( smeared_param == zero )  {   // Cholesky decomposition failed
+            result[itrack] = smeared_track;
+            continue;
+        }
 
         // back to the edm4hep conventions..
 
@@ -270,8 +278,11 @@ namespace FCCAnalyses
       Bool_t OK = Chl.Decompose(); // Choleski decomposition of normalized matrix
       if (!OK)
       {
-        std::cout << "TrkUtil::CovSmear: covariance matrix is not positive definite. Aborting." << std::endl;
-        exit(EXIT_FAILURE);
+        std::cout << "SmearingObjects::CovSmear: covariance matrix is not positive definite. Will use the original track." << std::endl;
+        // exit(EXIT_FAILURE);
+        TVectorD zero(5);
+        for (int k=0; k <5; k++) { zero(k) = 0. ; }
+        return zero ;
       }
       TMatrixD U = Chl.GetU();               // Get Upper triangular matrix
       TMatrixD Ut(TMatrixD::kTransposed, U); // Transposed of U (lower triangular)
