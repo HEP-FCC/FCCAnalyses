@@ -31,6 +31,7 @@ jobs:
           spack concretize -f'
           # spack install'
     - name: Add upstream
+      run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
           git remote add upstream https://github.com/HEP-FCC/FCCAnalyses.git
           git fetch upstream'
