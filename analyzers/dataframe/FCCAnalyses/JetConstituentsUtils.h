@@ -251,8 +251,8 @@ namespace FCCAnalyses {
     //residues
     rv::RVec<TLorentzVector> compute_tlv_jets(const rv::RVec<fastjet::PseudoJet>& jets);
     rv::RVec<TLorentzVector> sum_tlv_constituents(const rv::RVec<FCCAnalysesJetConstituents>& jets);
-    float InvariantMass(const TLorentzVector& tlv1, const TLorentzVector& tlv2);
-    rv::RVec<double> AllInvariantMasses(rv::RVec<TLorentzVector> AllJets); // invariant masses of all jet pairs given a vector of jets
+    float invariant_mass(const TLorentzVector& tlv1, const TLorentzVector& tlv2);
+    rv::RVec<double> all_invariant_masses(rv::RVec<TLorentzVector> AllJets); // invariant masses of all jet pairs given a vector of jets
     rv::RVec<double> compute_residue_energy(const rv::RVec<TLorentzVector>& tlv_jet,
 					    const rv::RVec<TLorentzVector>& sum_tlv_jcs);
     rv::RVec<double> compute_residue_pt(const rv::RVec<TLorentzVector>& tlv_jet,

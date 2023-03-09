@@ -1060,7 +1060,7 @@ namespace FCCAnalyses {
       return out;
     }
 
-    float InvariantMass(const TLorentzVector& tlv1, const TLorentzVector& tlv2) {
+    float invariant_mass(const TLorentzVector& tlv1, const TLorentzVector& tlv2) {
       float E = tlv1.E() + tlv2.E();
       float px = tlv1.Px() + tlv2.Px();
       float py = tlv1.Py() + tlv2.Py();
@@ -1068,7 +1068,7 @@ namespace FCCAnalyses {
       return std::sqrt(E*E - px*px - py*py - pz*pz);
     }
 
-    rv::RVec<double> AllInvariantMasses(rv::RVec<TLorentzVector> AllJets) {
+    rv::RVec<double> all_invariant_masses(rv::RVec<TLorentzVector> AllJets) {
 
       TLorentzVector tlv1;
       TLorentzVector tlv2;
