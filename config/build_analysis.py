@@ -1,3 +1,7 @@
+'''
+The module takes care of building FCCAnalyses
+'''
+
 import os
 import sys
 import subprocess
@@ -5,7 +9,30 @@ import pathlib
 import shutil
 
 
+def run_subprocess(command, run_dir):
+    '''
+    Run subprocess in specified directory.
+    Check only the return value, otherwise keep the subprocess connected to
+    stdin/stout/stderr.
+    '''
+    try:
+        proc = subprocess.Popen(command, cwd=run_dir)
+        status = proc.wait()
+
+        if status != 0:
+            print('----> Error encountered!')
+            print('      Aborting...')
+            sys.exit(3)
+
+    except KeyboardInterrupt:
+        print('----> Aborting...')
+        sys.exit(0)
+
+
 def build_analysis(mainparser):
+    '''
+    Main build steering function
+    '''
     args, _ = mainparser.parse_known_args()
 
     if 'LOCAL_DIR' not in os.environ:
@@ -31,24 +58,12 @@ def build_analysis(mainparser):
         print('----> Creating build directory...')
         os.makedirs(build_path)
 
-        with subprocess.Popen(['cmake', '-DCMAKE_INSTALL_PREFIX=../install', '..'],
-                              cwd=local_dir+'/build',
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT,
-                              bufsize=1,
-                              universal_newlines=True) as proc:
-            for line in proc.stdout:
-                print(line, end='')
+        run_subprocess(['cmake', '-DCMAKE_INSTALL_PREFIX=../install', '..'],
+                       local_dir + '/build')
 
     if not install_path.is_dir():
         print('----> Creating install directory...')
         os.makedirs(install_path)
 
-    with subprocess.Popen(['make', '-j'+str(args.build_threads), 'install'],
-                          cwd=local_dir+'/build',
-                          stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT,
-                          bufsize=1,
-                          universal_newlines=True) as proc:
-        for line in proc.stdout:
-            print(line, end='')
+    run_subprocess(['make', '-j{}'.format(args.build_threads), 'install'],
+                   local_dir + '/build')
