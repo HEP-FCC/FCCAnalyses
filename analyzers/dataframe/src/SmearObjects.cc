@@ -96,7 +96,7 @@ namespace FCCAnalyses
 
         // the covariance matrix of the track, in Delphes's convention
         TMatrixDSym Cov = VertexingUtils::get_trackCov(track);
-   
+
         // if the covMat of the track is pathological (numerical precision issue, fraction of tracks = 5e-6): return original track
         if ( Cov.Determinant() <= 0 ) {
 	     result[itrack] = smeared_track;
@@ -298,7 +298,7 @@ namespace FCCAnalyses
 
     // -------------------------------------------------------------------------------------------
 
-    SmearedReconstructedParticle::SmearedReconstructedParticle(float scale, int type, bool mode, bool debug = false)
+    SmearedReconstructedParticle::SmearedReconstructedParticle(float scale, int type, int mode, bool debug = false)
     {
 
       // rescale resolution by this factor
@@ -363,10 +363,9 @@ namespace FCCAnalyses
           gen_p4.SetXYZM(mc_part.momentum.x, mc_part.momentum.y, mc_part.momentum.z, mc_part.mass);
           reco_p4.SetXYZM(reco_part.momentum.x, reco_part.momentum.y, reco_part.momentum.z, reco_part.mass);
 
-          float smeared_p = -1; 
+          float smeared_p = -1;
 
-          // energy resolution mode
-          if (m_mode == 0)
+					if (m_mode == 0)
           {
             // rescale existing smearing of the energy
             smeared_part.energy = gen_p4.E() + m_scale * (reco_p4.E() - gen_p4.E());
@@ -374,24 +373,44 @@ namespace FCCAnalyses
             // recompute momentum magnitude
             smeared_p = (smeared_part.energy - reco_p4.M()) > 0 ? std::sqrt(smeared_part.energy * smeared_part.energy - reco_p4.M() * reco_p4.M()) : smeared_part.energy;
 
+						// recompute mom x, y, z using original reco particle direction
+						smeared_part.momentum.x = smeared_p * std::sin(reco_p4.Theta()) * std::cos(reco_p4.Phi());
+						smeared_part.momentum.y = smeared_p * std::sin(reco_p4.Theta()) * std::sin(reco_p4.Phi());
+						smeared_part.momentum.z = smeared_p * std::cos(reco_p4.Theta());
+
             smeared_p4.SetXYZM(smeared_part.momentum.x, smeared_part.momentum.y, smeared_part.momentum.z, smeared_part.mass);
           }
 
           // momentum resolution mode
-          else if ((m_mode == 1))
+          else if (m_mode == 1)
           {
             // rescale existing momentum smearing
             smeared_p = gen_p4.P() + m_scale * (reco_p4.P() - gen_p4.P());
 
             // recompute energy
             smeared_part.energy = std::sqrt(smeared_p * smeared_p + reco_p4.M() * reco_p4.M());
+						// recompute mom x, y, z using original reco particle direction
+						smeared_part.momentum.x = smeared_p * std::sin(reco_p4.Theta()) * std::cos(reco_p4.Phi());
+						smeared_part.momentum.y = smeared_p * std::sin(reco_p4.Theta()) * std::sin(reco_p4.Phi());
+						smeared_part.momentum.z = smeared_p * std::cos(reco_p4.Theta());
 
           }
 
-					// recompute mom x, y, z using original reco particle direction
-					smeared_part.momentum.x = smeared_p * std::sin(reco_p4.Theta()) * std::cos(reco_p4.Phi());
-					smeared_part.momentum.y = smeared_p * std::sin(reco_p4.Theta()) * std::sin(reco_p4.Phi());
-					smeared_part.momentum.z = smeared_p * std::cos(reco_p4.Theta());
+					// return mc truth particle
+					else if (m_mode == -1)
+					{
+						smeared_part.energy = gen_p4.E();
+						smeared_p = gen_p4.P();
+						smeared_p4 = gen_p4;
+
+						// recompute mom x, y, z using original reco particle direction
+						smeared_part.momentum.x = gen_p4.Px();
+						smeared_part.momentum.y = gen_p4.Py();
+						smeared_part.momentum.z = gen_p4.Pz();
+
+						// set type
+						smeared_part.type = mc_part.PDG;
+					}
 
           if (m_debug)
           {

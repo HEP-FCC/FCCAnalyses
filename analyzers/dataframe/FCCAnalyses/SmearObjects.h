@@ -52,7 +52,7 @@ namespace FCCAnalyses
       float m_scale;
       int m_type;
       int m_mode;
-      SmearedReconstructedParticle(float scale, int type, bool mode, bool debug);
+      SmearedReconstructedParticle(float scale, int type, int mode, bool debug);
 
       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(
           const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &allRecoParticles,
