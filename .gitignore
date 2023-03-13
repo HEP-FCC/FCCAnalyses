@@ -97,3 +97,6 @@ venv.bak/
 
 # Benchmarking
 benchmark*json
+
+# Local configuration
+.fccana/*
