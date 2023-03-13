@@ -1060,7 +1060,7 @@ namespace FCCAnalyses {
       return out;
     }
 
-    float invariant_mass(const TLorentzVector& tlv1, const TLorentzVector& tlv2) {
+    float InvariantMass(const TLorentzVector& tlv1, const TLorentzVector& tlv2) {
       float E = tlv1.E() + tlv2.E();
       float px = tlv1.Px() + tlv2.Px();
       float py = tlv1.Py() + tlv2.Py();
