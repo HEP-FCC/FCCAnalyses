@@ -52,6 +52,7 @@ class JetFlavourHelper:
         self.definition["pfcand_theta{}".format(self.tag)] = "JetConstituentsUtils::get_theta({})".format(self.const)
         self.definition["pfcand_phi{}".format(self.tag)] = "JetConstituentsUtils::get_phi({})".format(self.const)
         self.definition["pfcand_charge{}".format(self.tag)] = "JetConstituentsUtils::get_charge({})".format(self.const)
+        self.definition["pfcand_type{}".format(self.tag)] = "JetConstituentsUtils::get_type({})".format(self.const)
         self.definition["pfcand_erel{}".format(self.tag)] = "JetConstituentsUtils::get_erel_cluster({}, {})".format(
             jet, self.const
         )
@@ -200,17 +201,21 @@ class JetFlavourHelper:
             self.tag, self.tag, self.tag
         )
 
-        self.definition["{}_nmu".format(self.jet)] = "JetConstituentsUtils::count_type(pfcand_isMu{})".format(self.tag)
-        self.definition["{}_nel".format(self.jet)] = "JetConstituentsUtils::count_type(pfcand_isEl{})".format(self.tag)
-        self.definition["{}_nchad".format(self.jet)] = "JetConstituentsUtils::count_type(pfcand_isChargedHad{})".format(
+        self.definition["jet_nmu{}".format(self.tag)] = "JetConstituentsUtils::count_type(pfcand_isMu{})".format(
             self.tag
         )
-        self.definition["{}_ngamma".format(self.jet)] = "JetConstituentsUtils::count_type(pfcand_isGamma{})".format(
+        self.definition["jet_nel{}".format(self.tag)] = "JetConstituentsUtils::count_type(pfcand_isEl{})".format(
             self.tag
         )
-        self.definition["{}_nnhad".format(self.jet)] = "JetConstituentsUtils::count_type(pfcand_isNeutralHad{})".format(
+        self.definition[
+            "jet_nchad{}".format(self.tag)
+        ] = "JetConstituentsUtils::count_type(pfcand_isChargedHad{})".format(self.tag)
+        self.definition["jet_ngamma{}".format(self.tag)] = "JetConstituentsUtils::count_type(pfcand_isGamma{})".format(
             self.tag
         )
+        self.definition[
+            "jet_nnhad{}".format(self.tag)
+        ] = "JetConstituentsUtils::count_type(pfcand_isNeutralHad{})".format(self.tag)
 
     def define(self, df):
 
@@ -236,8 +241,8 @@ class JetFlavourHelper:
 
         for scorename in data["output_names"]:
             # self.scores.append(scorename)
-            #self.scores.append(scorename.replace("jet", "jet{}".format(self.tag)))
-            self.scores.append("{}{}".format(scorename,self.tag))
+            # self.scores.append(scorename.replace("jet", "jet{}".format(self.tag)))
+            self.scores.append("{}{}".format(scorename, self.tag))
 
         f.close()
         # convert to tuple
@@ -275,4 +280,5 @@ class JetFlavourHelper:
     def outputBranches(self):
 
         out = self.scores
+        out += [obs for obs in self.definition.keys() if "jet_" in obs]
         return out
