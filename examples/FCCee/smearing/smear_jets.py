@@ -139,6 +139,7 @@ class RDFanalysis:
         collections_ip = deepcopy(collections)
         collections_res = deepcopy(collections)
 
+
         ## 1. do Impact parameter smearing first
         for sf in scale_factors:
 
@@ -157,6 +158,7 @@ class RDFanalysis:
 
             ## run full sequence with covariance smeared detector
             df = jet_sequence(df, collections_ip, output_branches, ip_tag)
+
 
         ## 2. do Neutral Hadron energy smearing
         for sf in scale_factors:
