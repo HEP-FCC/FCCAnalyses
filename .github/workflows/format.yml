@@ -9,8 +9,6 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
     - uses: cvmfs-contrib/github-action-cvmfs@v2
     - name: Start container
       run: |
