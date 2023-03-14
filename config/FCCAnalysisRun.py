@@ -874,8 +874,28 @@ def runFinal(rdfModule):
             histos = []
 
             for v in histoList:
-                model = ROOT.RDF.TH1DModel(v, ";{};".format(histoList[v]["title"]), histoList[v]["bin"], histoList[v]["xmin"], histoList[v]["xmax"])
-                histos.append(df_cut.Histo1D(model,histoList[v]["name"]))
+                if "name" in histoList[v]: # default 1D histogram
+                    model = ROOT.RDF.TH1DModel(v, ";{};".format(histoList[v]["title"]), histoList[v]["bin"], histoList[v]["xmin"], histoList[v]["xmax"])
+                    histos.append(df_cut.Histo1D(model,histoList[v]["name"]))
+                elif "cols" in histoList[v]: # multi dim histogram (1, 2 or 3D)
+                    cols = histoList[v]['cols']
+                    bins = histoList[v]['bins']
+                    bins_unpacked = tuple([i for sub in bins for i in sub])
+                    if len(bins) != len(cols):
+                        print ('----> Amount of columns should be equal to the amount of bin configs.')
+                        sys.exit(3)
+                    if len(cols) == 1:
+                        histos.append(df_cut.Histo1D((v, "", *bins_unpacked), cols[0]))
+                    elif len(cols) == 2:
+                        histos.append(df_cut.Histo2D((v, "", *bins_unpacked), cols[0], cols[1]))
+                    elif len(cols) == 3:
+                        histos.append(df_cut.Histo3D((v, "", *bins_unpacked), cols[0], cols[1], cols[2]))
+                    else:
+                        print ('----> Only 1, 2 or 3D histograms supported.')
+                        sys.exit(3)
+                else:
+                    print ('----> Error parsing the histogram config. Provide either name or cols.')
+                    sys.exit(3)
             histos_list.append(histos)
 
             if doTree:
@@ -1029,7 +1049,7 @@ def setup_run_parser(parser):
     publicOptions.add_argument("--rerunfailed", action='store_true', help="Rerun failed jobs", default=False)
     publicOptions.add_argument("--jobdir", help="Specify the batch job directory", type=str, default="output.root")
     publicOptions.add_argument("--eloglevel", help="Specify the RDataFrame ELogLevel", type=str, default="kUnset", choices = ['kUnset','kFatal','kError','kWarning','kInfo','kDebug'])
-
+    
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
     internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
 
