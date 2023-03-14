@@ -14,5 +14,7 @@ var searchData=
   ['selrp_5fpdg_11',['selRP_PDG',['../struct_f_c_c_analyses_1_1_reconstructed_particle2_m_c_1_1sel_r_p___p_d_g.html',1,'FCCAnalyses::ReconstructedParticle2MC']]],
   ['selrp_5fpdg_5findex_12',['selRP_PDG_index',['../struct_f_c_c_analyses_1_1_reconstructed_particle2_m_c_1_1sel_r_p___p_d_g__index.html',1,'FCCAnalyses::ReconstructedParticle2MC']]],
   ['seltracks_13',['selTracks',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1sel_tracks.html',1,'FCCAnalyses::VertexingUtils']]],
-  ['sphericityfit_14',['sphericityFit',['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html',1,'FCCAnalyses::Algorithms']]]
+  ['smearedreconstructedparticle_14',['SmearedReconstructedParticle',['../struct_f_c_c_analyses_1_1_smear_objects_1_1_smeared_reconstructed_particle.html',1,'FCCAnalyses::SmearObjects']]],
+  ['smearedtracks_15',['SmearedTracks',['../struct_f_c_c_analyses_1_1_smear_objects_1_1_smeared_tracks.html',1,'FCCAnalyses::SmearObjects']]],
+  ['sphericityfit_16',['sphericityFit',['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html',1,'FCCAnalyses::Algorithms']]]
 ];

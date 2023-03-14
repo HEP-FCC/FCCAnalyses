@@ -25,8 +25,12 @@ var searchData=
   ['set_5fpseudojets_22',['set_pseudoJets',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#ae9e847f3943c1e33bd8f6e51cafa3621',1,'FCCAnalyses::JetClusteringUtils']]],
   ['set_5fpseudojets_5fxyzm_23',['set_pseudoJets_xyzm',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a2968c138f4aa7e9cf9c22d45bfdda475',1,'FCCAnalyses::JetClusteringUtils']]],
   ['setup_5fweaver_24',['setup_weaver',['../namespace_f_c_c_analyses_1_1_jet_flavour_utils.html#a76e2054bfaaccc7b043f3b92edd18fcb',1,'FCCAnalyses::JetFlavourUtils::setup_weaver()'],['../namespace_f_c_c_analyses_1_1_weaver_utils.html#ad8525bf149cf2c483fb2575cfcd9036c',1,'FCCAnalyses::WeaverUtils::setup_weaver(const std::string &amp;, const std::string &amp;, const ROOT::VecOps::RVec&lt; std::string &gt; &amp;)'],['../namespace_f_c_c_analyses_1_1_weaver_utils.html#a4f2546dc6505a1fbc2f8c3813901bc21',1,'FCCAnalyses::WeaverUtils::setup_weaver(const std::string &amp;onnx_filename, const std::string &amp;json_filename, const rv::RVec&lt; std::string &gt; &amp;vars)']]],
-  ['smearing_2ecc_25',['Smearing.cc',['../_smearing_8cc.html',1,'']]],
-  ['smearing_2eh_26',['Smearing.h',['../_smearing_8h.html',1,'']]],
-  ['sphericityfit_27',['sphericityFit',['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html',1,'FCCAnalyses::Algorithms::sphericityFit'],['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html#a024b324a41bea3f3c760fceb01f6f419',1,'FCCAnalyses::Algorithms::sphericityFit::sphericityFit()']]],
-  ['sum_5ftlv_5fconstituents_28',['sum_tlv_constituents',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a27bc13971584b1eacbd2c416ee88c617',1,'FCCAnalyses::JetConstituentsUtils']]]
+  ['smearedreconstructedparticle_25',['SmearedReconstructedParticle',['../struct_f_c_c_analyses_1_1_smear_objects_1_1_smeared_reconstructed_particle.html',1,'FCCAnalyses::SmearObjects::SmearedReconstructedParticle'],['../struct_f_c_c_analyses_1_1_smear_objects_1_1_smeared_reconstructed_particle.html#ae4880df6b35ca2ff3a08c7e31bac508d',1,'FCCAnalyses::SmearObjects::SmearedReconstructedParticle::SmearedReconstructedParticle()']]],
+  ['smearedtracks_26',['SmearedTracks',['../struct_f_c_c_analyses_1_1_smear_objects_1_1_smeared_tracks.html',1,'FCCAnalyses::SmearObjects::SmearedTracks'],['../struct_f_c_c_analyses_1_1_smear_objects_1_1_smeared_tracks.html#a6f39d65679617192acc145fab83b1c8c',1,'FCCAnalyses::SmearObjects::SmearedTracks::SmearedTracks()']]],
+  ['smearing_2ecc_27',['Smearing.cc',['../_smearing_8cc.html',1,'']]],
+  ['smearing_2eh_28',['Smearing.h',['../_smearing_8h.html',1,'']]],
+  ['smearobjects_2ecc_29',['SmearObjects.cc',['../_smear_objects_8cc.html',1,'']]],
+  ['smearobjects_2eh_30',['SmearObjects.h',['../_smear_objects_8h.html',1,'']]],
+  ['sphericityfit_31',['sphericityFit',['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html',1,'FCCAnalyses::Algorithms::sphericityFit'],['../struct_f_c_c_analyses_1_1_algorithms_1_1sphericity_fit.html#a024b324a41bea3f3c760fceb01f6f419',1,'FCCAnalyses::Algorithms::sphericityFit::sphericityFit()']]],
+  ['sum_5ftlv_5fconstituents_32',['sum_tlv_constituents',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a27bc13971584b1eacbd2c416ee88c617',1,'FCCAnalyses::JetConstituentsUtils']]]
 ];

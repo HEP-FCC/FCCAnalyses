@@ -29,6 +29,7 @@ var searchData=
   ['count_5fconsts_26',['count_consts',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a75defe49908de7f485a22a47bec43d6e',1,'FCCAnalyses::JetConstituentsUtils']]],
   ['count_5fjets_27',['count_jets',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#aa8b139592f4c01d72c65ddf9281c6b4b',1,'FCCAnalyses::JetConstituentsUtils']]],
   ['count_5ftype_28',['count_type',['../namespace_f_c_c_analyses_1_1_jet_constituents_utils.html#a63032e3957445718fee0924113f0c661',1,'FCCAnalyses::JetConstituentsUtils']]],
-  ['covtoacts_29',['CovToACTS',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
-  ['cross_30',['cross',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a228c5c14c629b915dd83201596e84dcb',1,'FCCAnalyses::Algorithms::calculate_thrust']]]
+  ['covsmear_29',['CovSmear',['../namespace_f_c_c_analyses_1_1_smear_objects.html#ae59c02f8fff1f0a8bbb3eb2a76dad5c7',1,'FCCAnalyses::SmearObjects']]],
+  ['covtoacts_30',['CovToACTS',['../namespace_f_c_c_analyses_1_1_vertexing_utils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
+  ['cross_31',['cross',['../struct_f_c_c_analyses_1_1_algorithms_1_1calculate__thrust.html#a228c5c14c629b915dd83201596e84dcb',1,'FCCAnalyses::Algorithms::calculate_thrust']]]
 ];

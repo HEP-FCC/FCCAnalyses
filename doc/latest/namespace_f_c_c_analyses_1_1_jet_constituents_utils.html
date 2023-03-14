@@ -2654,9 +2654,10 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jcs, <span class="keyword">auto</span>&amp;&amp; meth) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jcs, <span class="keyword">auto</span> &amp;&amp;meth)</div>
+<div class="line">    {</div>
 <div class="line">      rv::RVec&lt;FCCAnalysesJetConstituentsData&gt; out;</div>
-<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jc : jcs)</div>
+<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jc : jcs)</div>
 <div class="line">        out.emplace_back(meth(jc));</div>
 <div class="line">      <span class="keywordflow">return</span> out;</div>
 <div class="line">    }</div>
@@ -2683,9 +2684,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jcs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; coll, <span class="keyword">auto</span>&amp;&amp; meth) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jcs, <span class="keyword">const</span> <span class="keyword">auto</span> &amp;coll, <span class="keyword">auto</span> &amp;&amp;meth)</div>
+<div class="line">    {</div>
 <div class="line">      rv::RVec&lt;FCCAnalysesJetConstituentsData&gt; out;</div>
-<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jc : jcs) {</div>
+<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jc : jcs)</div>
+<div class="line">      {</div>
 <div class="line">        out.emplace_back(meth(jc, coll));</div>
 <div class="line">      }</div>
 <div class="line">      <span class="keywordflow">return</span> out;</div>
@@ -2706,9 +2709,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jcs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; coll1, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; coll2, <span class="keyword">auto</span>&amp;&amp; meth) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jcs, <span class="keyword">const</span> <span class="keyword">auto</span> &amp;coll1, <span class="keyword">const</span> <span class="keyword">auto</span> &amp;coll2, <span class="keyword">auto</span> &amp;&amp;meth)</div>
+<div class="line">    {</div>
 <div class="line">      rv::RVec&lt;FCCAnalysesJetConstituentsData&gt; out;</div>
-<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jc : jcs) {</div>
+<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jc : jcs)</div>
+<div class="line">      {</div>
 <div class="line">        out.emplace_back(meth(jc, coll1, coll2));</div>
 <div class="line">      }</div>
 <div class="line">      <span class="keywordflow">return</span> out;</div>
@@ -2727,9 +2732,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jcs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; coll1, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; coll2, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; coll3,<span class="keyword">auto</span>&amp;&amp; meth) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jcs, <span class="keyword">const</span> <span class="keyword">auto</span> &amp;coll1, <span class="keyword">const</span> <span class="keyword">auto</span> &amp;coll2, <span class="keyword">const</span> <span class="keyword">auto</span> &amp;coll3, <span class="keyword">auto</span> &amp;&amp;meth)</div>
+<div class="line">    {</div>
 <div class="line">      rv::RVec&lt;FCCAnalysesJetConstituentsData&gt; out;</div>
-<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; jc : jcs) {</div>
+<div class="line">      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;jc : jcs)</div>
+<div class="line">      {</div>
 <div class="line">        out.emplace_back(meth(jc, coll1, coll2, coll3));</div>
 <div class="line">      }</div>
 <div class="line">      <span class="keywordflow">return</span> out;</div>
@@ -2741,7 +2748,7 @@ Variables</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 14 2023 16:14:19 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 14 2023 17:23:08 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
