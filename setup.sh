@@ -1,11 +1,18 @@
 if [ "${0}" != "${BASH_SOURCE}" ]; then
-  if [ -z "${KEY4HEP_STACK}" ]; then
-    source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
-  else
-    echo "INFO: Key4hep stack already set up."
-  fi
   # Determinig the location of this setup script
   export LOCAL_DIR=$(cd $(dirname "${BASH_SOURCE}") && pwd)
+
+  # Sourcing of the stack
+  if [ -n "${KEY4HEP_STACK}" ]; then
+    echo "INFO: Key4hep stack already set up."
+  elif [ -f "${LOCAL_DIR}/.fccana/stackpin" ]; then
+    STACK_PATH=$(<${LOCAL_DIR}/.fccana/stackpin)
+    echo "INFO: Sourcing pinned Key4hep stack..."
+    echo "      ${STACK_PATH}"
+    source ${STACK_PATH}
+  else
+    source /cvmfs/fcc.cern.ch/sw/latest/setup.sh
+  fi
 
   export PYTHONPATH=${LOCAL_DIR}:${PYTHONPATH}
   export PYTHONPATH=${LOCAL_DIR}/python:${PYTHONPATH}

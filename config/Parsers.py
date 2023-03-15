@@ -18,6 +18,21 @@ def setup_build_parser(parser):
                                default=1,
                                help='bumber of threads when building (equivalen to `make -j`)')
 
+def setup_pin_parser(parser):
+    publicOptions = parser.add_argument_group('User pin options')
+    publicOptions.add_argument('-c', '--clear',
+                               action='store_true',
+                               default=False,
+                               help='clear analysis pin')
+    publicOptions.add_argument('-f', '--force',
+                               action='store_true',
+                               default=False,
+                               help='force recreate analysis pin')
+    publicOptions.add_argument('-s', '--show',
+                               action='store_true',
+                               default=False,
+                               help='show pinned stack')
+
 def setup_run_parser(parser):
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument("pathToAnalysisScript", help="path to analysis script")
