@@ -1093,6 +1093,7 @@ def run(mainparser, subparser=None):
         elif args.command == "plots":  runPlots(analysisFile)
         return
     except Exception as e:
+        print("Exception:",e)
         print("============running the old way")
 
 
