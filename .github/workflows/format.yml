@@ -8,7 +8,9 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - uses: cvmfs-contrib/github-action-cvmfs@v2
     - name: Start container
       run: |
@@ -40,7 +42,7 @@ jobs:
           source ../Spack/key4hep-spack/environments/key4hep-release-user/setup_clingo_centos7.sh
           spack env activate ../Spack/key4hep-spack/environments/key4hep-release-user
           spack load llvm
-          git clang-format upstream/master'
+          git clang-format --style=file $(git merge-base upstream/master HEAD)'
     - name: Check cleanliness
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
