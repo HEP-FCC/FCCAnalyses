@@ -10,14 +10,6 @@ from array import array
 from config.common_defaults import deffccdicts
 import datetime
 
-def load_fccana_libs():
-    print ("----> Info: Loading analyzers from libFCCAnalyses... ",)
-    ROOT.gSystem.Load("libFCCAnalyses")
-    ROOT.gErrorIgnoreLevel = ROOT.kFatal
-    #Is this still needed?? 01/04/2022 still to be the case
-    _fcc = ROOT.dummyLoader
-
-
 DATE = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
 
 #__________________________________________________________
@@ -349,7 +341,6 @@ def runPreprocess(df):
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt, args):
     # for convenience and compatibility with user code
-    load_fccana_libs()
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
     geometryFile = getElement(rdfModule, "geometryFile")
     readoutName  = getElement(rdfModule, "readoutName")
@@ -726,7 +717,6 @@ def testfile(f):
 
 #__________________________________________________________
 def runFinal(rdfModule):
-    load_fccana_libs()
 
     procFile = getElement(rdfModule,"procDict", True)
     procDict = None
@@ -1075,6 +1065,12 @@ def run(mainparser, subparser=None):
         print("specify a valid analysis script in the command line arguments")
         sys.exit(3)
 
+    print ("----> Info: Loading analyzers from libFCCAnalyses... ",)
+    ROOT.gSystem.Load("libFCCAnalyses")
+    ROOT.gErrorIgnoreLevel = ROOT.kFatal
+    #Is this still needed?? 01/04/2022 still to be the case
+    _fcc = ROOT.dummyLoader
+
     #set the RDF ELogLevel
     try:
         verbosity = ROOT.Experimental.RLogScopedVerbosity(ROOT.Detail.RDF.RDFLogChannel(), getattr(ROOT.Experimental.ELogLevel,args.eloglevel))
@@ -1124,19 +1120,19 @@ def run(mainparser, subparser=None):
     # final analysis
     if args.final:
         if args.plots:
-            print ('----> Can not have --plots with --final, exit')
+            print('----> Can not have --plots with --final, exit')
             sys.exit(3)
         if args.preprocess:
-            print ('----> Can not have --preprocess with --final, exit')
+            print('----> Can not have --preprocess with --final, exit')
             sys.exit(3)
         runFinal(rdfModule)
 
     elif args.plots:
         if args.final:
-            print ('----> Can not have --final with --plots, exit')
+            print('----> Can not have --final with --plots, exit')
             sys.exit(3)
         if args.preprocess:
-            print ('----> Can not have --preprocess with --plots, exit')
+            print('----> Can not have --preprocess with --plots, exit')
             sys.exit(3)
         runPlots(analysisFile)
 
@@ -1146,11 +1142,12 @@ def run(mainparser, subparser=None):
     else:
         if args.preprocess:
             if args.plots:
-                print ('----> Can not have --plots with --preprocess, exit')
+                print('----> Can not have --plots with --preprocess, exit')
                 sys.exit(3)
             if args.final:
-                print ('----> Can not have --final with --preprocess, exit')
+                print('----> Can not have --final with --preprocess, exit')
                 sys.exit(3)
+        print('asdasdasdasdas')
         runStages(args, rdfModule, args.preprocess, analysisFile)
 
 
