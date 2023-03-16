@@ -1,12 +1,11 @@
 import sys
 import os
 import argparse
-import multiprocessing as mp
 import subprocess
 from subprocess import Popen, PIPE
 from datetime import date
 import time
-
+import concurrent.futures
 
 # ________________________________________________________________________________
 def main():
@@ -15,145 +14,145 @@ def main():
     parser.add_argument(
         "--indir",
         help="path input directory",
-        default="/eos/experiment/fcc/ee/generation/DelphesEvents/pre_fall2022_training/IDEA/",
+        default="/eos/experiment/fcc/ee/generation/DelphesEvents/winter2023_training/IDEA/",
     )
     parser.add_argument(
         "--outdir",
         help="path output directory",
-        default="/eos/experiment/fcc/ee/jet_flavour_tagging/pre_fall2022_training/IDEA/",
+        default="/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/samples_gen_v1",
     )
-    parser.add_argument("--nev", help="number of events", type=int, default=1000000)
-    parser.add_argument("--fsplit", help="fraction train/test", type=float, default=0.9)
-    parser.add_argument("--ncpus", help="number of cpus", type=int, default=8)
-    parser.add_argument("--sample", help="sample", default="p8_ee_ZH_Znunu")
-    parser.add_argument("--dry", help="dry run ", action="store_true")
 
-    ## qq is merge of uu/dd
-    flavors = ["bb", "cc", "ss", "gg", "qq"]
-
-    ## sample (CLASS)
-
-    # sample = "wzp6_ee_nunuH"
+    parser.add_argument("--sample", help="sample name", default="wzp6_ee_nunuH_HXX_ecm240")
+    parser.add_argument("--ncpus", help="number of cpus", type=int, default=64)
+    parser.add_argument("--opt", help="option 1: run stage 1, 2: run stage 2, 3: all 4: clean", default="3")
 
     args = parser.parse_args()
-    inDIR = args.indir
-    outDIR = args.outdir
+    indir = args.indir
+    outdir = args.outdir
+    ncpus = args.ncpus
     sample = args.sample
+    opt = args.opt
 
-    # create necessary subdirectories
-    actualDIR = subprocess.check_output(["bash", "-c", "pwd"], universal_newlines=True)[:-1]
-    username = subprocess.check_output(["bash", "-c", "echo $USER"], universal_newlines=True)[:-1]
-    today = date.today().strftime("%Y%b%d")
-    subdir = username + "_" + today
-    subprocess.call(["bash", "-c", "mkdir -p {}".format(outDIR)])
-    subprocess.call(["bash", "-c", "mkdir -p {}".format(subdir)], cwd=outDIR)
-    OUTDIR = outDIR + username + "_" + today + "/"
-    print(OUTDIR)
+    ## qq is merge of uu/dd
+    flavors = ["bb", "cc", "ss", "gg", "qq", "tautau"]
 
-    # set total number of events
-    N = args.nev
-    frac_split = args.fsplit
-    N_split = int(frac_split * N)
+    outtmpdir = "/tmp/selvaggi/data/stage_all"
+    os.system("rm -rf {}".format(outtmpdir))
+    os.system("mkdir -p {}".format(outtmpdir))
+    os.system("mkdir -p {}".format(outdir))
 
-    print("")
-    print("=================================================")
-    print("")
-    print(" INDIR           = {}".format(inDIR))
-    print(" OUTDIR          = {}".format(OUTDIR))
-    print(" NEVENTS         = {}".format(N))
-    print(" FRAC SPLIT      = {}".format(frac_split))
-    print(" NCPUS           = {}".format(args.ncpus))
-    print("")
+    ## fill name of stage1 files
+    stage1_files = dict()
+    for f in flavors:
+        stage1_files[f] = "{}/stage1_H{}.root".format(outtmpdir, f)
 
-    # create commands
-    # cmdbase_stage1 = "fccanalysis run stage1.py --nevents {}".format(N)
-    cmdbase_stage1 = "fccanalysis run examples/FCCee/weaver/stage1.py --ncpus {}".format(args.ncpus)
-    opt1_out = " --output {}stage1_{}_HDUMMYCLASS.root ".format(OUTDIR, sample)
-    opt1_in = " --files-list {}{}_HDUMMYCLASS_ecm240/*.root ".format(inDIR, sample)
-    wait = " ; sleep 30;"
-    cmd_stage1 = cmdbase_stage1 + opt1_out + opt1_in
+    edm_files = ""
 
-    cmdbase_stagentuple = "python examples/FCCee/weaver/stage2.py DIRstage1_{}_HDUMMYCLASS.root DIRntuple_MOD_{}_HDUMMYCLASS.root ".format(
-        sample, sample
-    )
-    cmd_stage2 = cmdbase_stagentuple.replace("DIR", OUTDIR)
+    for f in flavors:
+        ### run stage 1
+        if opt == "1" or opt == "3":
 
-    mods = ["train", "test"]
-
-    # create files storing stdout and stderr
-    list_stdout = [open(OUTDIR + "{}_stdout.txt".format(flavor), "w") for flavor in flavors]
-    list_stderr = [open(OUTDIR + "{}_stderr.txt".format(flavor), "w") for flavor in flavors]
-
-    ###=== RUN STAGE 1
-
-    for i, flavor in enumerate(flavors):
-
-        if flavor == "qq":
-            cmd_stage1_f = (
-                cmdbase_stage1
-                + opt1_out.replace("DUMMYCLASS", "qq")
-                + " --files-list {}{}_Huu_ecm240/*.root {}{}_Hdd_ecm240/*.root".format(
-                    inDIR, sample, inDIR, sample
+            sample_f = sample.replace("XX", f)
+            edm_files = "{}/{}/*.root".format(indir, sample_f)
+            cmd_stage1 = (
+                "fccanalysis run examples/FCCee/weaver/stage1_gen.py --output {} --files-list {} --ncpus {}".format(
+                    stage1_files[f], edm_files, ncpus
                 )
             )
-        else:
-            cmd_stage1_f = cmd_stage1.replace("DUMMYCLASS", flavor)
+            print("running stage 1: ")
+            print("")
+            print("{}".format(cmd_stage1))
+            print("")
+            os.system(cmd_stage1)
 
-        print(cmd_stage1_f)
-        # run stage1
-        start1_time = time.time()
-        if not args.dry:
-            # subprocess.check_call(
-            #    cmd_stage1_f, shell=True, stdout=list_stdout[i], stderr=list_stderr[i]
-            # )
-            os.system(cmd_stage1_f)
+        ### run stage 2
+        if opt == "2" or opt == "3":
 
-        end1_time = time.time()
-        list_stdout[i].write("Stage1 time: {} \n".format(end1_time - start1_time))
-    
-    ###=== RUN STAGE 2
+            nevents = count_events(stage1_files[f])
+            nevents_per_thread = int(nevents / ncpus)
 
-    threads = []
-    for i, flavor in enumerate(flavors):
+            commands_stage2 = []
+            stage2_files = dict()
 
-        cmd_stage2_train = cmd_stage2.replace("DUMMYCLASS", flavor).replace(
-            "MOD", mods[0]
-        ) + " {} {} ".format(0, N_split)
-        cmd_stage2_test = cmd_stage2.replace("DUMMYCLASS", flavor).replace(
-            "MOD", mods[1]
-        ) + " {} {} ".format(N_split, N)
-        print(cmd_stage2_train)
-        print(cmd_stage2_test)
+            stage2_final_file = "{}/stage2_H{}.root".format(outtmpdir, f)
+            stage2_wild_files = "{}/stage2_H{}_*.root".format(outtmpdir, f)
+            hadd_cmd = "hadd -f {} {}".format(stage2_final_file, stage2_wild_files)
 
-        if not args.dry:
-            thread = mp.Process(
-                target=ntuplizer,
-                args=(
-                    cmd_stage2_train,
-                    cmd_stage2_test,
-                    list_stdout[i],
-                    list_stderr[i],
-                ),
-            )
-            thread.start()
-            threads.append(thread)
+            for i in range(ncpus):
 
-    for proc in threads:
-        proc.join()
+                stage2_files[i] = "{}/stage2_H{}_{}.root".format(outtmpdir, f, i)
+                nstart = i * nevents_per_thread
+                nend = nstart + nevents_per_thread
 
-    for i in range(len(list_stdout)):
-        list_stdout[i].close()
-        list_stderr[i].close()
+                cmd_stage2 = "python examples/FCCee/weaver/stage2.py {} {} {} {}".format(
+                    stage1_files[f], stage2_files[i], nstart, nend
+                )
+
+                commands_stage2.append(cmd_stage2)
+
+            # Create a thread pool executor with 4 threads
+
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=ncpus)
+
+            # Submit each command to the executor
+            future_to_command = {executor.submit(run_command, command): command for command in commands_stage2}
+
+            # Wait for all threads to finish
+            concurrent.futures.wait(future_to_command)
+
+            # Run the final command
+            print("")
+            print("now collect and hadd stage 2 files into: {}".format(stage2_final_file))
+            print(hadd_cmd)
+            os.system(hadd_cmd)
+            print("")
+            print("copy file to final destination...")
+            os.system("cp {} {}".format(stage2_final_file, outdir))
+            print("file {} copied".format(outdir))
+            print("cleaning up tmp files...".format(outdir))
+            os.system("rm -rf {} {} {}".format(stage2_final_file, stage1_files[f], stage2_wild_files))
+            print("done.")
 
 
 # ________________________________________________________________________________
-def ntuplizer(cmd_stage2_train, cmd_stage2_test, f_stdout, f_stderr):
 
-    start2_time = time.time()
-    subprocess.check_call(cmd_stage2_train, shell=True, stdout=f_stdout, stderr=f_stderr)
-    subprocess.check_call(cmd_stage2_test, shell=True, stdout=f_stdout, stderr=f_stderr)
-    end2_time = time.time()
-    f_stdout.write("stage2 time (run only): {} \n".format(end2_time - start2_time))
+
+def run_command(command):
+    # Replace this with code to run the command
+    print("running command: {}".format(command))
+    os.system(command)
+
+
+# ________________________________________________________________________________
+def count_events(file, tree_name="events"):
+    import ROOT
+
+    # Open the ROOT file
+    root_file = ROOT.TFile.Open(file)
+
+    # Get the tree from the file
+    tree = root_file.Get(tree_name)
+
+    # Get the number of events in the tree
+    num_events = tree.GetEntries()
+
+    return num_events
+
+
+# ________________________________________________________________________________
+def count_events(file, tree_name="events"):
+    import ROOT
+
+    # Open the ROOT file
+    root_file = ROOT.TFile.Open(file)
+
+    # Get the tree from the file
+    tree = root_file.Get(tree_name)
+
+    # Get the number of events in the tree
+    num_events = tree.GetEntries()
+
+    return num_events
 
 
 # _______________________________________________________________________________________

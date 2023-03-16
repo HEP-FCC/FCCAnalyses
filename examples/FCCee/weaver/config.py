@@ -23,9 +23,8 @@ collections = {
     "Bz": "magFieldBz",
 }
 
-
 #### list of flavors f = g, q, c, s, ...(will look for input file name ccontaining "[Hff]")
-flavors = ["g", "q", "s", "c", "b"]
+flavors = ["g", "q", "s", "c", "b", "tau"]
 
 ## define here the branches to be stored in the output root files in addition to the predefined one
 ## only the name of the var is used here, the metadata is used in stage_plots
@@ -238,6 +237,14 @@ variables_pfcand = {
         "xmax": 1.5,
         "scale": "lin",
     },
+    "pfcand_type": {
+        "name": "pfcand_type",
+        "title": "PDG code",
+        "bin": 10000,
+        "xmin": -5000,
+        "xmax": 5000,
+        "scale": "lin",
+    },
     "pfcand_dxy": {
         "name": "pfcand_dxy",
         "title": "d_{xy} [mm]",
@@ -446,5 +453,4 @@ variables_event = {
         "xmax": 10,
         "scale": "lin",
     },
-
 }
