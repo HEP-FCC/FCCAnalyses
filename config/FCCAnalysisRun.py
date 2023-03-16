@@ -10,11 +10,12 @@ from array import array
 from config.common_defaults import deffccdicts
 import datetime
 
-print ("----> Load cxx analyzers from libFCCAnalyses... ",)
-ROOT.gSystem.Load("libFCCAnalyses")
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
-#Is this still needed?? 01/04/2022 still to be the case
-_fcc  = ROOT.dummyLoader
+def load_fccana_libs():
+    print ("----> Info: Loading analyzers from libFCCAnalyses... ",)
+    ROOT.gSystem.Load("libFCCAnalyses")
+    ROOT.gErrorIgnoreLevel = ROOT.kFatal
+    #Is this still needed?? 01/04/2022 still to be the case
+    _fcc = ROOT.dummyLoader
 
 
 DATE = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
@@ -348,6 +349,7 @@ def runPreprocess(df):
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt, args):
     # for convenience and compatibility with user code
+    load_fccana_libs()
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
     geometryFile = getElement(rdfModule, "geometryFile")
     readoutName  = getElement(rdfModule, "readoutName")
@@ -724,6 +726,7 @@ def testfile(f):
 
 #__________________________________________________________
 def runFinal(rdfModule):
+    load_fccana_libs()
 
     procFile = getElement(rdfModule,"procDict", True)
     procDict = None
@@ -1013,7 +1016,6 @@ def runFinal(rdfModule):
 
 #__________________________________________________________
 def runPlots(analysisFile):
-
     import config.doPlots as dp
     dp.run(analysisFile)
 
@@ -1079,25 +1081,47 @@ def run(mainparser, subparser=None):
     except AttributeError:
         pass
     #load the analysis
-    analysisFile=os.path.abspath(analysisFile)
-    print ("--------------loading analysis file  ",analysisFile)
+    analysisFile = os.path.abspath(analysisFile)
+    print('----> Info: Loading analysis file:')
+    print('      ' + analysisFile)
     rdfSpec   = importlib.util.spec_from_file_location("rdfanalysis", analysisFile)
     rdfModule = importlib.util.module_from_spec(rdfSpec)
     rdfSpec.loader.exec_module(rdfModule)
 
-    try:
-        print(args.command)
-        args.command
-        if args.command == "run":      runStages(args, rdfModule, args.preprocess, analysisFile)
-        elif args.command == "final":  runFinal(rdfModule)
-        elif args.command == "plots":  runPlots(analysisFile)
+    if hasattr(args, 'command'):
+        if args.command == "run":
+            try:
+                runStages(args, rdfModule, args.preprocess, analysisFile)
+            except Exception as excp:
+                print('----> Error: During the execution of the stage file:')
+                print('      ' + analysisFile)
+                print('      exception occurred:')
+                print(excp)
+        elif args.command == "final":
+            try:
+                runFinal(rdfModule)
+            except Exception as excp:
+                print('----> Error: During the execution of the final stage file:')
+                print('      ' + analysisFile)
+                print('      exception occurred:')
+                print(excp)
+        elif args.command == "plots":
+            try:
+                runPlots(analysisFile)
+            except Exception as excp:
+                print('----> Error: During the execution of the plots file:')
+                print('      ' + analysisFile)
+                print('      exception occurred:')
+                print(excp)
         return
-    except Exception as e:
-        print("============running the old way")
 
+    print('----> Info: Running the old way...')
+    print('      This way of running the analysis is deprecated and will')
+    print('      be removed in the next release!')
 
-    #below is legacy using the old way of runnig with options in "python config/FCCAnalysisRun.py analysis.py --options
-    #check if this is final analysis
+    # below is legacy using the old way of runnig with options in
+    # "python config/FCCAnalysisRun.py analysis.py --options check if this is
+    # final analysis
     if args.final:
         if args.plots:
             print ('----> Can not have --plots with --final, exit')
