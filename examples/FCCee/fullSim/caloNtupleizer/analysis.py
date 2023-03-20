@@ -149,7 +149,7 @@ class analysis():
 
             dict_outputBranchName_function["highestEnergyCluster_cells_transient"] = "myRange(PositionedCaloClusterCells, highestEnergyCluster_firstCell_index, highestEnergyCluster_lastCell_index)"
             dict_outputBranchName_function["highestEnergyCluster_cells_energy"] = "CaloNtupleizer::getCaloHit_energy(highestEnergyCluster_cells_transient)"
-            dict_outputBranchName_function["relative_highestEnergyCluster_cells_phi"] =    "CaloNtupleizer::getCaloHit_phi(highestEnergyCluster_cells_transient) - highestEnergyCluster_phi"
+            dict_outputBranchName_function["highestEnergyCluster_cells_relative_phi"] =    "CaloNtupleizer::getCaloHit_phi(highestEnergyCluster_cells_transient) - highestEnergyCluster_phi"
             dict_outputBranchName_function["highestEnergyCluster_cells_relative_theta"] =  "CaloNtupleizer::getCaloHit_theta(highestEnergyCluster_cells_transient) - highestEnergyCluster_theta"
             dict_outputBranchName_function["highestEnergyCluster_cells_layer"] = "CaloNtupleizer::getCaloHit_layer(highestEnergyCluster_cells_transient)"
             dict_outputBranchName_function["highestEnergyCluster_cells_n"] =     "highestEnergyCluster_cells_transient.size()"
@@ -175,7 +175,7 @@ class analysis():
             weaver = WeaverUtils.setup_weaver(args.weaverFiles[0], args.weaverFiles[1], ('highestEnergyCluster_cells_energy', 'relative_highestEnergyCluster_cells_phi', 'highestEnergyCluster_cells_relative_theta', 'highestEnergyCluster_cells_layer'))
             df2 = (df2.Define("cells_e", "Utils::as_vector(highestEnergyCluster_cells_energy)")
             .Define("cells_theta", "Utils::as_vector(highestEnergyCluster_cells_relative_theta)")
-            .Define("cells_phi", "Utils::as_vector(relative_highestEnergyCluster_cells_phi)")
+            .Define("cells_phi", "Utils::as_vector(highestEnergyCluster_cells_relative_phi)")
             .Define("cells_layer", "Utils::as_vector(highestEnergyCluster_cells_layer)")
             .Define("MVAVec", "WeaverUtils::get_weights(cells_e, cells_phi, cells_theta, cells_layer)")
             .Define("highestEnergyCluster_isPhoton_inferred", "WeaverUtils::get_weight(MVAVec, 0)")
