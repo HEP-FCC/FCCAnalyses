@@ -102,7 +102,8 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
   //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
   //Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
-  Finder::Config finderConfig = {std::move(fitter), seedFinder, ipEstimator, std::move(linearizer), bField};
+  Finder::Config finderConfig = {std::move(fitter), seedFinder, ipEstimator,
+                                 std::move(linearizer), bField};
 
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;
