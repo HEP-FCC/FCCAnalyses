@@ -1147,7 +1147,6 @@ def run(mainparser, subparser=None):
             if args.final:
                 print('----> Can not have --final with --preprocess, exit')
                 sys.exit(3)
-        print('asdasdasdasdas')
         runStages(args, rdfModule, args.preprocess, analysisFile)
 
 
