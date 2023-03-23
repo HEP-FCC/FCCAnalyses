@@ -39,9 +39,8 @@ class PinAnalysis:
         Show current pin
         '''
         if not self.pin_path.is_file():
-            print('----> Error: Analysis pin file not found!')
-            print('      Aborting...')
-            sys.exit(3)
+            print('----> Info: Analysis not pinned.')
+            sys.exit(0)
 
         with open(self.pin_path, 'r') as pinfile:
             lines = pinfile.readlines()

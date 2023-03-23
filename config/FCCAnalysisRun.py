@@ -10,13 +10,6 @@ from array import array
 from config.common_defaults import deffccdicts
 import datetime
 
-print ("----> Load cxx analyzers from libFCCAnalyses... ",)
-ROOT.gSystem.Load("libFCCAnalyses")
-ROOT.gErrorIgnoreLevel = ROOT.kFatal
-#Is this still needed?? 01/04/2022 still to be the case
-_fcc  = ROOT.dummyLoader
-
-
 DATE = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
 
 #__________________________________________________________
@@ -1013,7 +1006,6 @@ def runFinal(rdfModule):
 
 #__________________________________________________________
 def runPlots(analysisFile):
-
     import config.doPlots as dp
     dp.run(analysisFile)
 
@@ -1073,46 +1065,74 @@ def run(mainparser, subparser=None):
         print("specify a valid analysis script in the command line arguments")
         sys.exit(3)
 
+    print ("----> Info: Loading analyzers from libFCCAnalyses... ",)
+    ROOT.gSystem.Load("libFCCAnalyses")
+    ROOT.gErrorIgnoreLevel = ROOT.kFatal
+    #Is this still needed?? 01/04/2022 still to be the case
+    _fcc = ROOT.dummyLoader
+
     #set the RDF ELogLevel
     try:
         verbosity = ROOT.Experimental.RLogScopedVerbosity(ROOT.Detail.RDF.RDFLogChannel(), getattr(ROOT.Experimental.ELogLevel,args.eloglevel))
     except AttributeError:
         pass
     #load the analysis
-    analysisFile=os.path.abspath(analysisFile)
-    print ("--------------loading analysis file  ",analysisFile)
+    analysisFile = os.path.abspath(analysisFile)
+    print('----> Info: Loading analysis file:')
+    print('      ' + analysisFile)
     rdfSpec   = importlib.util.spec_from_file_location("rdfanalysis", analysisFile)
     rdfModule = importlib.util.module_from_spec(rdfSpec)
     rdfSpec.loader.exec_module(rdfModule)
 
-    try:
-        print(args.command)
-        args.command
-        if args.command == "run":      runStages(args, rdfModule, args.preprocess, analysisFile)
-        elif args.command == "final":  runFinal(rdfModule)
-        elif args.command == "plots":  runPlots(analysisFile)
+    if hasattr(args, 'command'):
+        if args.command == "run":
+            try:
+                runStages(args, rdfModule, args.preprocess, analysisFile)
+            except Exception as excp:
+                print('----> Error: During the execution of the stage file:')
+                print('      ' + analysisFile)
+                print('      exception occurred:')
+                print(excp)
+        elif args.command == "final":
+            try:
+                runFinal(rdfModule)
+            except Exception as excp:
+                print('----> Error: During the execution of the final stage file:')
+                print('      ' + analysisFile)
+                print('      exception occurred:')
+                print(excp)
+        elif args.command == "plots":
+            try:
+                runPlots(analysisFile)
+            except Exception as excp:
+                print('----> Error: During the execution of the plots file:')
+                print('      ' + analysisFile)
+                print('      exception occurred:')
+                print(excp)
         return
-    except Exception as e:
-        print("============running the old way")
 
+    print('----> Info: Running the old way...')
+    print('      This way of running the analysis is deprecated and will')
+    print('      be removed in the next release!')
 
-    #below is legacy using the old way of runnig with options in "python config/FCCAnalysisRun.py analysis.py --options
-    #check if this is final analysis
+    # below is legacy using the old way of runnig with options in
+    # "python config/FCCAnalysisRun.py analysis.py --options check if this is
+    # final analysis
     if args.final:
         if args.plots:
-            print ('----> Can not have --plots with --final, exit')
+            print('----> Can not have --plots with --final, exit')
             sys.exit(3)
         if args.preprocess:
-            print ('----> Can not have --preprocess with --final, exit')
+            print('----> Can not have --preprocess with --final, exit')
             sys.exit(3)
         runFinal(rdfModule)
 
     elif args.plots:
         if args.final:
-            print ('----> Can not have --final with --plots, exit')
+            print('----> Can not have --final with --plots, exit')
             sys.exit(3)
         if args.preprocess:
-            print ('----> Can not have --preprocess with --plots, exit')
+            print('----> Can not have --preprocess with --plots, exit')
             sys.exit(3)
         runPlots(analysisFile)
 
@@ -1122,10 +1142,10 @@ def run(mainparser, subparser=None):
     else:
         if args.preprocess:
             if args.plots:
-                print ('----> Can not have --plots with --preprocess, exit')
+                print('----> Can not have --plots with --preprocess, exit')
                 sys.exit(3)
             if args.final:
-                print ('----> Can not have --final with --preprocess, exit')
+                print('----> Can not have --final with --preprocess, exit')
                 sys.exit(3)
         runStages(args, rdfModule, args.preprocess, analysisFile)
 
