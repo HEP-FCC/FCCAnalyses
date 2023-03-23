@@ -31,6 +31,8 @@ Detailed code documentation can be found
     * [Pre-selection](#pre-selection)
     * [Final selection](#final-selection)
     * [Plotting](#plotting)
+  * [Contributing](#contributing)
+    * [Formating](#code-formating)
 
 
 ## RootDataFrame based
@@ -195,3 +197,15 @@ Resulting plots will be located the `outdir` defined in the analysis file.
 
 In an attempt to ease the development of new physics case studies, such as for the [FCCee physics performance](https://github.com/HEP-FCC/FCCeePhysicsPerformance) cases, a new experimental analysis package creation tool is introduced.
 [See here](case-studies/README.md) for more details.
+
+
+## Contributing
+
+### Code formating
+
+The preferred style of the C++ code in the FCCAnalyses is LLVM which is checked
+by CI job.
+
+Currently `clang-format` is not available in the Key4hep stack, but one way to
+obtain a recent version of it is through downloading of the
+[Key4hep Spack instance](https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance).

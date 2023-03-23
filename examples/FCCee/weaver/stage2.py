@@ -17,7 +17,6 @@ n_events = n_final - n_start
 
 # Opening the input file containing the tree (output of stage1.py)
 infile = TFile.Open(input_file, "READ")
-print(input_file)
 
 ev = infile.Get("events")
 numberOfEntries = ev.GetEntries()
@@ -38,9 +37,9 @@ if len(branches_pfcand) == 0:
     print("ERROR: branches_pfcand is empty ...")
     sys.exit()
 
-print("")
-print("-> number of events: {}".format(numberOfEntries))
-print("-> requested to run over [{},{}] event range".format(n_start, n_final))
+# print("")
+# print("-> number of events: {}".format(numberOfEntries))
+# print("-> requested to run over [{},{}] event range".format(n_start, n_final))
 
 # branches_pfcand = [branches_pfcand[0]]
 # branches_jet = [branches_jet[-1]]
@@ -56,9 +55,7 @@ for f in flavors:
 
 if True in match_flavor.values():
     f0 = list(match_flavor.keys())[list(match_flavor.values()).index(True)]
-    print("")
-    print("producing  '{}-flavor' jets ...".format(f0, f0))
-    print("")
+    # print("producing  '{}-flavor' jets ...".format(f0, f0))
 else:
     print("ERROR: could not infer jet flavor from file name")
     str_err = "ERROR: please provide input file containing: "
@@ -72,7 +69,6 @@ t = TTree("tree", "tree with jets")
 jet_array = dict()
 for f in flavors:
     b = "recojet_is{}".format(f.upper())
-    print(b)
     jet_array[b] = array("i", [0])
     t.Branch(b, jet_array[b], "{}/I".format(b))
 for b in branches_jet:
@@ -99,8 +95,8 @@ for entry in range(n_start, n_final):
     # Load selected branches with data from specified event
 
     # if (entry+1)%100 == 0:
-    if (entry + 1) % 1000 == 0:
-        print(" ... processed {} events ...".format(entry + 1))
+    # if (entry + 1) % 1000 == 0:
+    #    print(" ... processed {} events ...".format(entry + 1))
 
     ev.GetEntry(entry)
 
