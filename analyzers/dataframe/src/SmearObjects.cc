@@ -21,7 +21,7 @@ namespace FCCAnalyses
       TVector3 p(aMCParticle.momentum.x, aMCParticle.momentum.y, aMCParticle.momentum.z);
       TVector3 x(1e-3 * aMCParticle.vertex.x, 1e-3 * aMCParticle.vertex.y, 1e-3 * aMCParticle.vertex.z); // mm to m
       float Q = aMCParticle.charge;
-      TVectorD param = VertexFitterSimple::XPtoPar(x, p, Q); // convention Franco
+      TVectorD param = VertexingUtils::XPtoPar(x, p, Q); // convention Franco
 
       return param;
     }
@@ -93,6 +93,8 @@ namespace FCCAnalyses
 
         // the MC-truth track parameters, in Delphes's comvention
         TVectorD mcTrackParam = TrackParamFromMC_DelphesConv(MCpart);
+        // and in edm4hep convention
+        TVectorD mcTrackParam_edm4hep = VertexingUtils::Delphes2Edm4hep_TrackParam( mcTrackParam, false );
 
         // the covariance matrix of the track, in Delphes's convention
         TMatrixDSym Cov = VertexingUtils::get_trackCov(track);
@@ -116,53 +118,34 @@ namespace FCCAnalyses
         //}
 
         // generate a new track state (in Delphes's convention)
-        TVectorD smeared_param = CovSmear(mcTrackParam, Cov, &m_random, m_debug);
+        TVectorD smeared_param_delphes = CovSmear(mcTrackParam, Cov, &m_random, m_debug);
 
-        if ( smeared_param == zero )  {   // Cholesky decomposition failed
+        if ( smeared_param_delphes == zero )  {   // Cholesky decomposition failed
             result[itrack] = smeared_track;
             continue;
         }
 
         // back to the edm4hep conventions..
+        TVectorD smeared_param = VertexingUtils::Delphes2Edm4hep_TrackParam( smeared_param_delphes, false) ;
 
-        double scale0 = 1e-3; // convert mm to m
-        double scale1 = 1;
-        double scale2 = 0.5 * 1e3; // C = rho/2, convert from mm-1 to m-1
-        double scale3 = 1e-3;      // convert mm to m
-        double scale4 = 1.;
-        scale2 = -scale2; // sign of omega
-
-        smeared_track.D0 = smeared_param[0] / scale0;
-        smeared_track.phi = smeared_param[1] / scale1;
-        smeared_track.omega = smeared_param[2] / scale2;
-        smeared_track.Z0 = smeared_param[3] / scale3;
-        smeared_track.tanLambda = smeared_param[4] / scale4;
+        smeared_track.D0 = smeared_param[0] ;
+        smeared_track.phi = smeared_param[1] ;
+        smeared_track.omega = smeared_param[2] ;
+        smeared_track.Z0 = smeared_param[3] ;
+        smeared_track.tanLambda = smeared_param[4] ;
 
         // transform rescaled cov matrix from Delphes convention to EDM4hep convention
-        smeared_track.covMatrix = track.covMatrix;
+        std::array<float, 21> covMatrix_edm4hep = VertexingUtils::Delphes2Edm4hep_TrackCovMatrix( Cov, false );
 
-        smeared_track.covMatrix[0] = Cov[0][0] / (scale0 * scale0);
-        smeared_track.covMatrix[1] = Cov[1][0] / (scale1 * scale0);
-        smeared_track.covMatrix[2] = Cov[1][1] / (scale1 * scale1);
-        smeared_track.covMatrix[3] = Cov[2][0] / (scale2 * scale0);
-        smeared_track.covMatrix[4] = Cov[2][1] / (scale2 * scale1);
-        smeared_track.covMatrix[5] = Cov[2][2] / (scale2 * scale2);
-        smeared_track.covMatrix[6] = Cov[3][0] / (scale3 * scale0);
-        smeared_track.covMatrix[7] = Cov[3][1] / (scale3 * scale1);
-        smeared_track.covMatrix[8] = Cov[3][2] / (scale3 * scale2);
-        smeared_track.covMatrix[9] = Cov[3][3] / (scale3 * scale3);
-        smeared_track.covMatrix[10] = Cov[4][0] / (scale4 * scale0);
-        smeared_track.covMatrix[11] = Cov[4][1] / (scale4 * scale1);
-        smeared_track.covMatrix[12] = Cov[4][2] / (scale4 * scale2);
-        smeared_track.covMatrix[13] = Cov[4][3] / (scale4 * scale3);
-        smeared_track.covMatrix[14] = Cov[4][4] / (scale4 * scale4);
+        smeared_track.covMatrix = covMatrix_edm4hep ;
+
 
         if (m_debug)
         {
           std::cout << std::endl
                     << "Original track " << track.D0 << " " << track.phi << " " << track.omega << " " << track.Z0 << " " << track.tanLambda << std::endl;
           std::cout << "Smeared track " << smeared_track.D0 << " " << smeared_track.phi << " " << smeared_track.omega << " " << smeared_track.Z0 << " " << smeared_track.tanLambda << std::endl;
-          std::cout << "MC particle " << mcTrackParam[0] / scale0 << " " << mcTrackParam[1] / scale1 << " " << mcTrackParam[2] / scale2 << " " << mcTrackParam[3] / scale3 << " " << mcTrackParam[4] / scale4 << std::endl;
+          std::cout << "MC particle " << mcTrackParam_edm4hep[0] << " " <<  mcTrackParam_edm4hep[1]  << " " <<  mcTrackParam_edm4hep[2]  << " " << mcTrackParam_edm4hep[3]  << " " << mcTrackParam_edm4hep[4]  << std::endl;
           for (int j = 0; j < 15; j++)
             std::cout << "smeared cov matrix(" << j << "): " << smeared_track.covMatrix[j] << ", scale factor: " << smeared_track.covMatrix[j] / track.covMatrix[j] << std::endl;
         }
@@ -215,16 +198,13 @@ namespace FCCAnalyses
 
         // the MC-truth track parameters
         edm4hep::TrackState mcTrack;
-        TVectorD mcTrackParam = TrackParamFromMC_DelphesConv(MCpart);
-        // put the into an edm4hep TrackState :
-        double scale0 = 1e-3;      // convert mm to m
-        double scale2 = 0.5 * 1e3; // C = rho/2, convert from mm-1 to m-1
-        double scale3 = 1e-3;      // convert mm to m
-        scale2 = -scale2;          // sign of omega
-        mcTrack.D0 = mcTrackParam[0] / scale0;
+        TVectorD mcTrackParam_delphes = TrackParamFromMC_DelphesConv(MCpart);    // delphes convention, units = m
+        TVectorD mcTrackParam = VertexingUtils::Delphes2Edm4hep_TrackParam( mcTrackParam_delphes, false);    // edm4hep convention 
+
+        mcTrack.D0 = mcTrackParam[0] ;
         mcTrack.phi = mcTrackParam[1];
-        mcTrack.omega = mcTrackParam[2] / scale2;
-        mcTrack.Z0 = mcTrackParam[3] / scale3;
+        mcTrack.omega = mcTrackParam[2] ;
+        mcTrack.Z0 = mcTrackParam[3] ;
         mcTrack.tanLambda = mcTrackParam[4];
 
         result.push_back(mcTrack);
