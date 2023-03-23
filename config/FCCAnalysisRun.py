@@ -487,9 +487,9 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
 #__________________________________________________________
 def addeosType(fileName):
     sfileName=fileName.split('/')
-    if sfileName[1]=='experiment':
+    if sfileName[2]=='experiment':
         fileName='root://eospublic.cern.ch/'+fileName
-    elif sfileName[1]=='user' or sfileName[1].contains('home-'):
+    elif sfileName[2]=='user' or sfileName[2].contains('home-'):
         fileName='root://eosuser.cern.ch/'+fileName
     else:
         print('unknown eos type, please check with developers as it might not run with best performances')
@@ -504,7 +504,7 @@ def runLocal(rdfModule, fileList, args):
     nevents_local = 0
     for fileName in fileList:
 
-        if fileName.split('/')[0]=='eos':
+        if fileName.split('/')[1]=='eos':
             fileName=addeosType(fileName)
 
         fileListRoot.push_back(fileName)
