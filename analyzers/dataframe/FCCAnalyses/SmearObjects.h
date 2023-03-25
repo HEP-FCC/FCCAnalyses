@@ -10,7 +10,8 @@
 #include <TMath.h>
 #include "ROOT/RVec.hxx"
 #include "edm4hep/MCParticleData.h"
-
+#include "edm4hep/TrackData.h"
+#include "edm4hep/TrackState.h"
 #include "FCCAnalyses/ReconstructedParticle2Track.h"
 
 namespace FCCAnalyses
@@ -44,6 +45,38 @@ namespace FCCAnalyses
 
     /// generates random values for a vector, given the covariance matrix of its components, using a Choleski decomposition. Code from Franco Bedeschi
     TVectorD CovSmear(TVectorD x, TMatrixDSym C, TRandom *ran, bool debug);
+
+    /// generates new track dNdx, by rescaling the poisson error of the cluster
+    /// count
+    struct SmearedTracksdNdx {
+      bool m_debug;
+      TRandom m_random;
+      float m_scale;
+      SmearedTracksdNdx(float m_scale, bool debug);
+      ROOT::VecOps::RVec<edm4hep::Quantity>
+      operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+                    &allRecoParticles,
+                const ROOT::VecOps::RVec<edm4hep::Quantity> &dNdx,
+                const ROOT::VecOps::RVec<float> &length,
+                const ROOT::VecOps::RVec<int> &RP2MC_indices,
+                const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);
+    };
+
+    /// generates new tracker hits, by rescaling the timing measurement
+    struct SmearedTracksTOF {
+      bool m_debug;
+      TRandom m_random;
+      float m_scale;
+      SmearedTracksTOF(float m_scale, bool debug);
+      ROOT::VecOps::RVec<edm4hep::TrackerHitData>
+      operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+                    &allRecoParticles,
+                const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits,
+                const ROOT::VecOps::RVec<float> &length,
+                const ROOT::VecOps::RVec<int> &RP2MC_indices,
+                const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);
+    };
+
 
     /// generates new reco particles, smeared by given parameters
     struct SmearedReconstructedParticle
