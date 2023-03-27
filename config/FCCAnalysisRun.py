@@ -420,7 +420,7 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
 
         subprocess.getstatusoutput('chmod 777 %s'%(frunname))
         frun.write('#!/bin/bash\n')
-        frun.write('source ${LOCAL_DIR}/setup.sh\n')
+        frun.write('source ' + localDir + '/setup.sh\n')
 
         #add userBatchConfig if any
         if userBatchConfig!="":
@@ -435,9 +435,9 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
         frun.write('cd job{}_chunk{}\n'.format(process,ch))
 
         if not os.path.isabs(outputDir):
-            frun.write('$LOCAL_DIR/bin/fccanalysis run {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
+            frun.write(localDir + '/bin/fccanalysis run {} --batch --output {}chunk{}.root --files-list '.format(analysisFile, outputDir, ch))
         else:
-            frun.write('$LOCAL_DIR/bin/fccanalysis run {} --batch --output {}{}/chunk{}.root --files-list '.format(analysisFile, outputDir, process,ch))
+            frun.write(localDir + '/bin/fccanalysis run {} --batch --output {}{}/chunk{}.root --files-list '.format(analysisFile, outputDir, process,ch))
 
         for ff in range(len(chunkList[ch])):
             frun.write(' %s'%(chunkList[ch][ff]))
@@ -469,7 +469,7 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
     frun_condor.write('Log              = {}/condor_job.{}.$(ClusterId).$(ProcId).log\n'.format(logDir,process))
     frun_condor.write('Output           = {}/condor_job.{}.$(ClusterId).$(ProcId).out\n'.format(logDir,process))
     frun_condor.write('Error            = {}/condor_job.{}.$(ClusterId).$(ProcId).error\n'.format(logDir,process))
-    frun_condor.write('getenv           = True\n')
+    frun_condor.write('getenv           = False\n')
     frun_condor.write('environment      = "LS_SUBCWD={}"\n'.format(logDir)) # not sure
     frun_condor.write('requirements     = ( (OpSysAndVer =?= "CentOS7") && (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n')
     frun_condor.write('on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n')
