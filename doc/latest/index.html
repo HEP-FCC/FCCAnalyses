@@ -108,7 +108,10 @@ RootDataFrame based</h1>
 <p >ROOT dataframe documentation is available <a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html">here</a>.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Getting started</h1>
-<p >In order to use the FCC analysers within ROOT dataframe, a dictionary needs to be built and put into <code>LD_LIBRARY_PATH</code> (this happens in <code>setup.sh</code>). The following needs to be done when running local code and for developers.</p>
+<p >In order to use the FCC analyzers within ROOT RDataFrame, a dictionary needs to be built and put into <code>LD_LIBRARY_PATH</code>. In order to build and load <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> with default options one needs to run following two commands:</p>
+<div class="fragment"><div class="line">source ./setup.sh</div>
+<div class="line">fccanalysis build</div>
+</div><!-- fragment --><p >The <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> is a CMake based project and any customizations can be provided in classic CMake style, the following commands are equivalent to default version of <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a>:</p>
 <div class="fragment"><div class="line">source ./setup.sh</div>
 <div class="line">mkdir build install</div>
 <div class="line">cd build</div>
@@ -117,9 +120,12 @@ Getting started</h1>
 <div class="line">cd ..</div>
 </div><!-- fragment --><blockquote class="doxtable">
 <p >&zwj; Each time changes are made in the C++ code, for example in <code>analyzers/dataframe/</code> please do not forget to re-compile :)</p>
-<p ></p>
+<p >To cleanly recompile the default version of <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> one can use <code>fccanalysis build --clean-build</code>. </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<p>In order to provide the possibility to keep developing an analysis with well defined Key4hep stack, the sub-command <code>fccanalysis pin</code> is provided. One can pin his/her analysis with </p><div class="fragment"><div class="line">source setup.sh</div>
+<div class="line">fccanalysis pin</div>
+</div><!-- fragment --><p >To remove the pin run </p><div class="fragment"><div class="line">fccanalysis pin --clear</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 Generalities</h1>
 <p >Analyses in the <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> framework usually follow standardized workflow, which consists of multiple files inside a single directory. Individual files denote steps in the analysis and have the following meaning:</p>
 <ol type="1">
@@ -164,13 +170,14 @@ Contributing</h1>
 <h2><a class="anchor" id="autotoc_md12"></a>
 Code formating</h2>
 <p >The preferred style of the C++ code in the <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> is LLVM which is checked by CI job.</p>
-<p >Currently <code>clang-format</code> is not available in the Key4hep stack, but one way to obtain a recent version of it is through downloading of the <a href="https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance">Key4hep Spack instance</a>. </p>
+<p >Currently <code>clang-format</code> is not available in the Key4hep stack, but one can obtain a suitable version of it from CVMFS thanks to LCG: </p><div class="fragment"><div class="line">source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh</div>
+</div><!-- fragment --><p> Another way to obtain a recent version of <code>clang-format</code> is through downloading <a href="https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance">Key4hep Spack instance</a>. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 27 2023 17:39:01 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 27 2023 17:52:07 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
