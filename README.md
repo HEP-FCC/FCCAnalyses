@@ -57,9 +57,9 @@ source ./setup.sh
 fccanalysis build
 ```
 
-The FCCAnalyses is CMake based project and any customizations can be provided in
-classic CMake style, following commands are equivalent to default version of
-FCCAnalyses:
+The FCCAnalyses is a CMake based project and any customizations can be provided
+in classic CMake style, the following commands are equivalent to default version
+of FCCAnalyses:
 
 ```shell
 source ./setup.sh
@@ -74,12 +74,12 @@ cd ..
 > Each time changes are made in the C++ code, for example in
 > `analyzers/dataframe/` please do not forget to re-compile :)
 >
-> To cleanly recompile default version of FCCAnalyses one can use
+> To cleanly recompile the default version of FCCAnalyses one can use
 > `fccanalysis build --clean-build`.
 
-In order to provide possibility to keep developing an analysis with well defined
-Key4hep stack, sub-command `fccanalysis pin` is provided. One can pin their
-analysis with
+In order to provide the possibility to keep developing an analysis with well
+defined Key4hep stack, the sub-command `fccanalysis pin` is provided. One can
+pin his/her analysis with
 ```
 source setup.sh
 fccanalysis pin
@@ -231,9 +231,9 @@ The preferred style of the C++ code in the FCCAnalyses is LLVM which is checked
 by CI job.
 
 Currently `clang-format` is not available in the Key4hep stack, but one can
-obtain suitable version of it from CVMFS thanks to LCG:
+obtain a suitable version of it from CVMFS thanks to LCG:
 ```
 source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh
 ```
-Other way to obtain a recent version of `clang-format` is through downloading of
-the [Key4hep Spack instance](https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance).
+Another way to obtain a recent version of `clang-format` is through downloading
+[Key4hep Spack instance](https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance).
