@@ -6,8 +6,11 @@
 #include <vector>
 
 #include "ROOT/RVec.hxx"
+#include "edm4hep/Quantity.h"
 #include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/TrackData.h"
 #include "edm4hep/TrackState.h"
+#include "edm4hep/TrackerHitData.h"
 #include <TVectorD.h>
 #include <TVector3.h>
 #include <TLorentzVector.h>
