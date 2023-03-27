@@ -19,11 +19,19 @@
 
 #include "fastjet/JetDefinition.hh"
 
+
 /** Vertexing utilities
 */
 namespace FCCAnalyses{
 
 namespace VertexingUtils{
+
+  /// from delphes: returns track state parameters (delphes convention) for a given vertex (x), momentum (p) and charge
+  TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q);
+
+  /// from delphes: returns the momentum corresponding to a given track state
+  TVector3 ParToP(TVectorD Par);
+
 
   /// Structure to keep useful track information that is related to the vertex
   struct FCCAnalysesVertex{
@@ -285,13 +293,29 @@ namespace VertexingUtils{
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<TVector3>> get_position_SV( ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices ); 
   // --- for get_SV_jets --- //
 
- // --- Internal methods needed by the code of  Franco B :
   float get_trackMom( edm4hep::TrackState & atrack );
-  TVectorD get_trackParam( edm4hep::TrackState & atrack) ;
-  TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack) ;
+
+
+// --- Conversion methods between the Delphes and edm4hep conventions
+
+/// convert track parameters, from edm4hep to delphes conventions 
+  TVectorD Edm4hep2Delphes_TrackParam( const TVectorD& param, bool Units_mm );
+/// convert track parameters, from delphes to edm4hep conventions
+  TVectorD Delphes2Edm4hep_TrackParam( const TVectorD& param, bool Units_mm );
+/// convert track covariance matrix, from edm4hep to delphes conventions
+  TMatrixDSym  Edm4hep2Delphes_TrackCovMatrix( const std::array<float, 21>&  covMatrix, bool Units_mm );
+/// convert track covariance matrix, from delphes to edm4hep conventions
+  std::array<float, 21> Delphes2Edm4hep_TrackCovMatrix( const TMatrixDSym& cov, bool Units_mm ) ;
+
+
+ /// --- Internal methods needed by the code of  Franco B:
+  TVectorD get_trackParam( edm4hep::TrackState & atrack, bool Units_mm = false) ;
+  TMatrixDSym get_trackCov( edm4hep::TrackState &  atrack, bool Units_mm = false) ;
 
   TVectorD ParToACTS(TVectorD Par);
   TMatrixDSym CovToACTS(TMatrixDSym Cov,TVectorD Par);
+
+
 
 }//end NS VertexingUtils
 

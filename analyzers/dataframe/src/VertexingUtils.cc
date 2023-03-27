@@ -1,9 +1,25 @@
 ﻿#include "FCCAnalyses/VertexingUtils.h"
 #include "FCCAnalyses/VertexFitterSimple.h"
 
+#include "TrkUtil.h"    // from delphes
+
 namespace FCCAnalyses{
 
 namespace VertexingUtils{
+
+
+TVector3 ParToP(TVectorD Par){
+  double fB = 2;  // 2 Tesla
+  TrkUtil tu;
+  return tu.ParToP( Par, fB );
+}
+
+TVectorD XPtoPar(TVector3 x, TVector3 p, Double_t Q){
+  double fB = 2;  // 2 Tesla
+  TrkUtil tu;
+  return tu.XPtoPar( x, p, Q, fB);
+}
+
 
 //
 // Selection of particles based on the d0 / z0 significances of the associated track
@@ -91,58 +107,75 @@ bool compare_Tracks( const edm4hep::TrackState& tr1, const edm4hep::TrackState& 
   
 
 
-TVectorD
-get_trackParam( edm4hep::TrackState & atrack) {
-    double d0 =atrack.D0 ;
-    double phi0 = atrack.phi ;
-    double omega = atrack.omega ;
-    double z0 = atrack.Z0 ;
-    double tanlambda = atrack.tanLambda ;
-    TVectorD res(5);
+// ----------------------------------------------------------------------------------------
 
-    double scale0 = 1e-3;   //convert mm to m
+// --- Conversion methods between the Delphes and edm4hep conventions
+
+
+TVectorD Edm4hep2Delphes_TrackParam( const TVectorD& param, bool Units_mm ) {
+
+    double conv=1e-3;       //convert mm to m
+    if ( Units_mm ) conv = 1. ;
+
+    double scale0 = conv;   //convert mm to m if needed
     double scale1 = 1;
-    double scale2 = 0.5*1e3;  // C = rho/2, convert from mm-1 to m-1
-    double scale3 = 1e-3 ;  //convert mm to m
+    double scale2 = 0.5 / conv ;   // C = rho/2, convert from mm-1 to m-1
+    double scale3 = conv  ;  //convert mm to m
     double scale4 = 1.;
+    scale2 = -scale2 ;   // sign of omega
 
-  scale2 = -scale2 ;   // sign of omega
+    TVectorD result(5);
+    result[0] = param[0] * scale0 ;
+    result[1] = param[1] * scale1 ;
+    result[2] = param[2] * scale2 ;
+    result[3] = param[3] * scale3 ;
+    result[4] = param[4] * scale4 ;
 
-    res[0] = d0 * scale0;
-    res[1] = phi0 * scale1 ;
-    res[2] = omega * scale2 ;
-    res[3] = z0 * scale3 ;
-    res[4] = tanlambda * scale4 ;
-    return res;
-}
-
-float get_trackMom( edm4hep::TrackState & atrack ) {
-  double fB = 2;  // 2 Tesla
-  
-  float C    = -0.5*1e3 * atrack.omega;
-  float phi0 = atrack.phi;
-  float ct   = atrack.tanLambda;
-  //
-  float pt = fB*0.2998 / TMath::Abs(2 * C);
-  TVector3 p(pt*TMath::Cos(phi0), pt*TMath::Sin(phi0), pt*ct);
-  float result = p.Mag();
   return result;
+
 }
 
-TMatrixDSym
-get_trackCov( edm4hep::TrackState &  atrack) {
-  auto covMatrix = atrack.covMatrix;
+TVectorD Delphes2Edm4hep_TrackParam( const TVectorD& param, bool Units_mm ) {
+
+    double conv=1e-3;       //convert mm to m
+    if ( Units_mm ) conv = 1. ;
+
+    double scale0 = conv;   //convert mm to m if needed
+    double scale1 = 1;
+    double scale2 = 0.5 / conv ;   // C = rho/2, convert from mm-1 to m-1
+    double scale3 = conv  ;  //convert mm to m
+    double scale4 = 1.;
+    scale2 = -scale2 ;   // sign of omega
+
+    TVectorD result(5);
+    result[0] = param[0] / scale0 ;
+    result[1] = param[1] / scale1 ;
+    result[2] = param[2] / scale2 ;
+    result[3] = param[3] / scale3 ;
+    result[4] = param[4] / scale4 ;
+
+  return result;
+
+}
+
+
+TMatrixDSym  Edm4hep2Delphes_TrackCovMatrix( const std::array<float, 21>&  covMatrix, bool Units_mm ) {
+
+// careful: since summer 2022, the covariance matrix in edm4hep is an array of 21 floats because
+// the time has been added as a 6th track parameter.
+// But Delphes (and k4marlinWrapper) samples still fill it as an array of 15 floats.
+
+    double conv=1e-3;       //convert mm to m
+    if ( Units_mm ) conv = 1. ;
+
+    double scale0 = conv;   //convert mm to m if needed
+    double scale1 = 1;
+    double scale2 = 0.5 / conv ;   // C = rho/2, convert from mm-1 to m-1
+    double scale3 = conv  ;  //convert mm to m
+    double scale4 = 1.;
+    scale2 = -scale2 ;   // sign of omega
+
   TMatrixDSym covM(5);
-
-  double scale0 = 1e-3;
-  double scale1 = 1.;
-  double scale2 = 0.5*1e3;
-  double scale3 = 1e-3 ;
-  double scale4 = 1.;
-
-  scale2 = -scale2 ;   // sign of omega
-
-  // covMatrix = lower-triang;e
 
   covM[0][0] = covMatrix[0] *scale0 * scale0;
 
@@ -178,7 +211,97 @@ get_trackCov( edm4hep::TrackState &  atrack) {
   covM[2][4] = covM[4][2];
   covM[3][4] = covM[4][3];
 
+  return covM ;
+
+}
+
+
+std::array<float, 21> Delphes2Edm4hep_TrackCovMatrix( const TMatrixDSym& cov, bool Units_mm ) {
+
+// careful: since summer 2022, the covariance matrix in edm4hep is an array of 21 floats because
+// the time has been added as a 6th track parameter.
+// But Delphes (and k4marlinWrapper) samples still fill it as an array of 15 floats.
+
+    double conv=1e-3;       //convert mm to m
+    if ( Units_mm ) conv = 1. ;
+
+    double scale0 = conv;   //convert mm to m if needed
+    double scale1 = 1;
+    double scale2 = 0.5 / conv ;   // C = rho/2, convert from mm-1 to m-1
+    double scale3 = conv  ;  //convert mm to m
+    double scale4 = 1.;
+    scale2 = -scale2 ;   // sign of omega
+
+    std::array<float, 21> covMatrix;
+    covMatrix[0]  = cov[0][0] / ( scale0 * scale0) ;
+    covMatrix[1]  = cov[1][0] / ( scale1 * scale0 );
+    covMatrix[2]  = cov[1][1] / ( scale1 * scale1 );
+    covMatrix[3]  = cov[2][0] / ( scale0 * scale2 );
+    covMatrix[4]  = cov[2][1] / ( scale1 * scale2 );
+    covMatrix[5]  = cov[2][2] / ( scale2 * scale2 ) ;
+    covMatrix[6]  = cov[3][0] / ( scale3 * scale0 );
+    covMatrix[7]  = cov[3][1] / ( scale3 * scale1 );
+    covMatrix[8]  = cov[3][2] / ( scale3 * scale2 );
+    covMatrix[9]  = cov[3][3] / ( scale3 * scale3 );
+    covMatrix[10]  = cov[4][0] / ( scale4 * scale0 );
+    covMatrix[11]  = cov[4][1] / ( scale4 * scale1 );
+    covMatrix[12]  = cov[4][2] / ( scale4 * scale2 );
+    covMatrix[13]  = cov[4][3] / ( scale4 * scale3 );
+    covMatrix[14]  = cov[4][4] / ( scale4 * scale4 );
+
+    for (int i=15; i < 21; i++) {
+      covMatrix[i] = 0.;
+    }
+
+   return covMatrix;
+}
+
+
+
+
+TVectorD
+get_trackParam( edm4hep::TrackState & atrack, bool Units_mm ) {
+    double d0 =atrack.D0 ;
+    double phi0 = atrack.phi ;
+    double omega = atrack.omega ;
+    double z0 = atrack.Z0 ;
+    double tanlambda = atrack.tanLambda ;
+    TVectorD param(5);
+    param[0] = d0;
+    param[1] = phi0 ;
+    param[2] = omega;
+    param[3] = z0;
+    param[4] = tanlambda ;
+    TVectorD res = Edm4hep2Delphes_TrackParam( param, Units_mm ); 
+
+    return res;
+}
+
+
+TMatrixDSym
+get_trackCov( edm4hep::TrackState &  atrack, bool Units_mm ) {
+  auto covMatrix = atrack.covMatrix;
+
+ TMatrixDSym covM = Edm4hep2Delphes_TrackCovMatrix( covMatrix, Units_mm );
+
   return covM;
+}
+
+
+// ----------------------------------------------------------------------------------------
+
+
+float get_trackMom( edm4hep::TrackState & atrack ) {
+  double fB = 2;  // 2 Tesla
+
+  float C    = -0.5*1e3 * atrack.omega;
+  float phi0 = atrack.phi;
+  float ct   = atrack.tanLambda;
+  //
+      float pt = fB*0.2998 / TMath::Abs(2 * C);
+  TVector3 p(pt*TMath::Cos(phi0), pt*TMath::Sin(phi0), pt*ct);
+  float result = p.Mag();
+  return result;
 }
 
 
@@ -464,7 +587,7 @@ double get_PV2vtx_angle( ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   TVector3 p_sum;
   for(edm4hep::TrackState tr : tracks) {
     TVectorD ipar = get_trackParam(tr);
-    TVector3 ip   = VertexFitterSimple::ParToP(ipar);
+    TVector3 ip   = ParToP(ipar);
     p_sum += ip;
   }
   
@@ -489,7 +612,7 @@ double get_trackE( edm4hep::TrackState track ) {
   const double m_pi = 0.13957039;
   
   TVectorD par = get_trackParam(track);
-  TVector3 p   = VertexFitterSimple::ParToP(par);
+  TVector3 p   = ParToP(par);
   TLorentzVector p4;
   p4.SetXYZM(p[0], p[1], p[2], m_pi);
 
@@ -1248,6 +1371,8 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_invM_V0( ROOT::VecOps::RVec<d
   }
   return result;
 }
+
+
 
 }//end NS VertexingUtils
 

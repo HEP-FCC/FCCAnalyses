@@ -2,7 +2,6 @@
 
 #include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/VertexingUtils.h"
-
 #include "TDecompChol.h"
 
 #include <iostream>
@@ -21,7 +20,7 @@ namespace FCCAnalyses
       TVector3 p(aMCParticle.momentum.x, aMCParticle.momentum.y, aMCParticle.momentum.z);
       TVector3 x(1e-3 * aMCParticle.vertex.x, 1e-3 * aMCParticle.vertex.y, 1e-3 * aMCParticle.vertex.z); // mm to m
       float Q = aMCParticle.charge;
-      TVectorD param = VertexFitterSimple::XPtoPar(x, p, Q); // convention Franco
+      TVectorD param = VertexingUtils::XPtoPar(x, p, Q); // convention Franco
 
       return param;
     }
@@ -93,6 +92,8 @@ namespace FCCAnalyses
 
         // the MC-truth track parameters, in Delphes's comvention
         TVectorD mcTrackParam = TrackParamFromMC_DelphesConv(MCpart);
+        // and in edm4hep convention
+        TVectorD mcTrackParam_edm4hep = VertexingUtils::Delphes2Edm4hep_TrackParam( mcTrackParam, false );
 
         // the covariance matrix of the track, in Delphes's convention
         TMatrixDSym Cov = VertexingUtils::get_trackCov(track);
@@ -116,53 +117,34 @@ namespace FCCAnalyses
         //}
 
         // generate a new track state (in Delphes's convention)
-        TVectorD smeared_param = CovSmear(mcTrackParam, Cov, &m_random, m_debug);
+        TVectorD smeared_param_delphes = CovSmear(mcTrackParam, Cov, &m_random, m_debug);
 
-        if ( smeared_param == zero )  {   // Cholesky decomposition failed
+        if ( smeared_param_delphes == zero )  {   // Cholesky decomposition failed
             result[itrack] = smeared_track;
             continue;
         }
 
         // back to the edm4hep conventions..
+        TVectorD smeared_param = VertexingUtils::Delphes2Edm4hep_TrackParam( smeared_param_delphes, false) ;
 
-        double scale0 = 1e-3; // convert mm to m
-        double scale1 = 1;
-        double scale2 = 0.5 * 1e3; // C = rho/2, convert from mm-1 to m-1
-        double scale3 = 1e-3;      // convert mm to m
-        double scale4 = 1.;
-        scale2 = -scale2; // sign of omega
-
-        smeared_track.D0 = smeared_param[0] / scale0;
-        smeared_track.phi = smeared_param[1] / scale1;
-        smeared_track.omega = smeared_param[2] / scale2;
-        smeared_track.Z0 = smeared_param[3] / scale3;
-        smeared_track.tanLambda = smeared_param[4] / scale4;
+        smeared_track.D0 = smeared_param[0] ;
+        smeared_track.phi = smeared_param[1] ;
+        smeared_track.omega = smeared_param[2] ;
+        smeared_track.Z0 = smeared_param[3] ;
+        smeared_track.tanLambda = smeared_param[4] ;
 
         // transform rescaled cov matrix from Delphes convention to EDM4hep convention
-        smeared_track.covMatrix = track.covMatrix;
+        std::array<float, 21> covMatrix_edm4hep = VertexingUtils::Delphes2Edm4hep_TrackCovMatrix( Cov, false );
 
-        smeared_track.covMatrix[0] = Cov[0][0] / (scale0 * scale0);
-        smeared_track.covMatrix[1] = Cov[1][0] / (scale1 * scale0);
-        smeared_track.covMatrix[2] = Cov[1][1] / (scale1 * scale1);
-        smeared_track.covMatrix[3] = Cov[2][0] / (scale2 * scale0);
-        smeared_track.covMatrix[4] = Cov[2][1] / (scale2 * scale1);
-        smeared_track.covMatrix[5] = Cov[2][2] / (scale2 * scale2);
-        smeared_track.covMatrix[6] = Cov[3][0] / (scale3 * scale0);
-        smeared_track.covMatrix[7] = Cov[3][1] / (scale3 * scale1);
-        smeared_track.covMatrix[8] = Cov[3][2] / (scale3 * scale2);
-        smeared_track.covMatrix[9] = Cov[3][3] / (scale3 * scale3);
-        smeared_track.covMatrix[10] = Cov[4][0] / (scale4 * scale0);
-        smeared_track.covMatrix[11] = Cov[4][1] / (scale4 * scale1);
-        smeared_track.covMatrix[12] = Cov[4][2] / (scale4 * scale2);
-        smeared_track.covMatrix[13] = Cov[4][3] / (scale4 * scale3);
-        smeared_track.covMatrix[14] = Cov[4][4] / (scale4 * scale4);
+        smeared_track.covMatrix = covMatrix_edm4hep ;
+
 
         if (m_debug)
         {
           std::cout << std::endl
                     << "Original track " << track.D0 << " " << track.phi << " " << track.omega << " " << track.Z0 << " " << track.tanLambda << std::endl;
           std::cout << "Smeared track " << smeared_track.D0 << " " << smeared_track.phi << " " << smeared_track.omega << " " << smeared_track.Z0 << " " << smeared_track.tanLambda << std::endl;
-          std::cout << "MC particle " << mcTrackParam[0] / scale0 << " " << mcTrackParam[1] / scale1 << " " << mcTrackParam[2] / scale2 << " " << mcTrackParam[3] / scale3 << " " << mcTrackParam[4] / scale4 << std::endl;
+          std::cout << "MC particle " << mcTrackParam_edm4hep[0] << " " <<  mcTrackParam_edm4hep[1]  << " " <<  mcTrackParam_edm4hep[2]  << " " << mcTrackParam_edm4hep[3]  << " " << mcTrackParam_edm4hep[4]  << std::endl;
           for (int j = 0; j < 15; j++)
             std::cout << "smeared cov matrix(" << j << "): " << smeared_track.covMatrix[j] << ", scale factor: " << smeared_track.covMatrix[j] / track.covMatrix[j] << std::endl;
         }
@@ -215,16 +197,13 @@ namespace FCCAnalyses
 
         // the MC-truth track parameters
         edm4hep::TrackState mcTrack;
-        TVectorD mcTrackParam = TrackParamFromMC_DelphesConv(MCpart);
-        // put the into an edm4hep TrackState :
-        double scale0 = 1e-3;      // convert mm to m
-        double scale2 = 0.5 * 1e3; // C = rho/2, convert from mm-1 to m-1
-        double scale3 = 1e-3;      // convert mm to m
-        scale2 = -scale2;          // sign of omega
-        mcTrack.D0 = mcTrackParam[0] / scale0;
+        TVectorD mcTrackParam_delphes = TrackParamFromMC_DelphesConv(MCpart);    // delphes convention, units = m
+        TVectorD mcTrackParam = VertexingUtils::Delphes2Edm4hep_TrackParam( mcTrackParam_delphes, false);    // edm4hep convention 
+
+        mcTrack.D0 = mcTrackParam[0] ;
         mcTrack.phi = mcTrackParam[1];
-        mcTrack.omega = mcTrackParam[2] / scale2;
-        mcTrack.Z0 = mcTrackParam[3] / scale3;
+        mcTrack.omega = mcTrackParam[2] ;
+        mcTrack.Z0 = mcTrackParam[3] ;
         mcTrack.tanLambda = mcTrackParam[4];
 
         result.push_back(mcTrack);
@@ -295,6 +274,195 @@ namespace FCCAnalyses
       //
       return xOut;
     }
+
+    // -------------------------------------------------------------------------------------------
+
+    SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false) {
+
+      // rescale resolution by this factor
+      m_scale = scale;
+
+      // debug flag
+      m_debug = debug;
+    }
+
+    ROOT::VecOps::RVec<edm4hep::Quantity> SmearedTracksdNdx::operator()(
+        const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+            &allRecoParticles,
+        const ROOT::VecOps::RVec<edm4hep::Quantity> &dNdx,
+        const ROOT::VecOps::RVec<float> &length,
+        const ROOT::VecOps::RVec<int> &RP2MC_indices,
+        const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles) {
+
+      // returns a vector of dNdx that is parallel to the collection of full
+      // tracks (alltracks), i.e. same number of entries, same order. The method
+      // retrieve the MC particle that is associated to a track, and builds a "track
+      // state" out of the MC particle and regenerates a new value of the dNdx
+
+      ROOT::VecOps::RVec<edm4hep::Quantity> result;
+      edm4hep::Quantity dummy;
+
+      int ntracks = dNdx.size();
+      result.resize(ntracks);
+
+      // for dNdx calculation
+      TVector3 mc_mom;
+      TrkUtil tu;
+
+      for (int itrack = 0; itrack < ntracks; itrack++) {
+        edm4hep::Quantity dndx = dNdx[itrack];
+        edm4hep::Quantity smeared_dndx = dndx;
+
+        // find the corresponding MC particle
+        int MCindex = -1;
+        for (int ireco = 0; ireco < allRecoParticles.size(); ireco++) {
+          edm4hep::ReconstructedParticleData rp = allRecoParticles[ireco];
+          int track_index = rp.tracks_begin;
+          if (track_index == itrack) {
+            MCindex = RP2MC_indices[ireco];
+            break;
+          }
+        } // end loop on RPs
+
+        if (MCindex < 0 ||
+            MCindex >=
+                mcParticles
+                    .size()) { // in principle, this should not happen in delphes,
+          // each track should be matched to a MC particle.
+          result[itrack] = smeared_dndx;
+          continue;
+        }
+
+        edm4hep::MCParticleData mc_part = mcParticles[MCindex];
+
+        // mom and mass evaluated on gen particles
+        mc_mom.SetXYZ(mc_part.momentum.x, mc_part.momentum.y, mc_part.momentum.z);
+
+        float bg = mc_mom.Mag() / mc_part.mass; // beta * gamma
+        float muClu =
+            tu.Nclusters(bg, 0) * length[itrack]; // avg. number of clusters
+        float Ncl = m_random.Gaus(
+            muClu,
+            m_scale * std::sqrt(muClu)); // assume gaussian for large N Poisson
+
+        result[itrack].type = 0;
+        result[itrack].value = Ncl / length[itrack];
+
+        if (m_debug) {
+          std::cout << std::endl
+                    << "requested smearing dNdx factor: " << m_scale << std::endl
+                    << "gen part (PID, p): " << mc_part.PDG << " " << mc_mom.Mag()
+                    << std::endl
+                    << "original dNdx: " << dNdx[itrack].value << std::endl;
+          std::cout << "smeared dNdx : " << result[itrack].value << std::endl;
+        }
+
+      } // end loop on tracks
+
+      return result;
+    }
+
+    // -------------------------------------------------------------------------------------------
+
+    SmearedTracksTOF::SmearedTracksTOF(float scale, bool debug = false) {
+
+      // rescale resolution by this factor
+      m_scale = scale;
+
+      // debug flag
+      m_debug = debug;
+    }
+
+    ROOT::VecOps::RVec<edm4hep::TrackerHitData> SmearedTracksTOF::operator()(
+        const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+            &allRecoParticles,
+        const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits,
+        const ROOT::VecOps::RVec<float> &length,
+        const ROOT::VecOps::RVec<int> &RP2MC_indices,
+        const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles) {
+      // returns a vector of dNdx that is parallel to the collection of full
+      // tracks (alltracks), i.e. same number of entries, same order. The method
+      // retrieve the MC particle that is associated to a track, and builds a "track
+      // state" out of the MC particle and regenerates a new value of the dNdx
+
+      ROOT::VecOps::RVec<edm4hep::TrackerHitData> result;
+      edm4hep::TrackerHitData dummy;
+
+      int ntracks = length.size();
+      int nhits = trackerhits.size(); // 3x size of tracks since 3 hits per track
+
+      result.resize(nhits);
+
+      TLorentzVector gen_p4;
+
+      float c_light = 2.99792458e+8;
+      float mm_to_sec = 1e-03 / c_light;
+
+      for (int itrack = 0; itrack < ntracks; itrack++) {
+        edm4hep::TrackerHitData thits_0 = trackerhits[itrack]; // at IP
+        edm4hep::TrackerHitData thits_1 =
+            trackerhits[itrack + 1]; // at 1st pixel layer
+        edm4hep::TrackerHitData thits_2 = trackerhits[itrack + 2]; // at calo
+
+        edm4hep::TrackerHitData smeared_thits_0 = thits_0;
+        edm4hep::TrackerHitData smeared_thits_1 = thits_1;
+        edm4hep::TrackerHitData smeared_thits_2 = thits_2;
+
+        // find the corresponding MC particle
+        int MCindex = -1;
+        for (int ireco = 0; ireco < allRecoParticles.size(); ireco++) {
+          edm4hep::ReconstructedParticleData rp = allRecoParticles[ireco];
+          int track_index = rp.tracks_begin;
+          if (track_index == itrack) {
+            MCindex = RP2MC_indices[ireco];
+            break;
+          }
+        } // end loop on RPs
+
+        if (MCindex < 0 ||
+            MCindex >=
+                mcParticles
+                    .size()) { // in principle, this should not happen in delphes,
+          // each track should be matched to a MC particle.
+          result[itrack] = smeared_thits_0;
+          result[itrack + 1] = smeared_thits_1;
+          result[itrack + 2] = smeared_thits_2;
+          continue;
+        }
+
+        edm4hep::MCParticleData mc_part = mcParticles[MCindex];
+
+        gen_p4.SetXYZM(mc_part.momentum.x, mc_part.momentum.y, mc_part.momentum.z,
+                      mc_part.mass);
+
+        // everything in second
+        float mc_tin = mc_part.time * mm_to_sec;
+        float mc_tof = length[itrack] / gen_p4.Beta() * mm_to_sec;
+        float mc_tout = mc_tin + mc_tof;
+        float reco_tout = thits_2.time;
+        float smeared_tout = mc_tout + m_scale * (reco_tout - mc_tout);
+
+        smeared_thits_2.time = smeared_tout;
+
+        result[itrack] = smeared_thits_0;
+        result[itrack + 1] = smeared_thits_1;
+        result[itrack + 2] = smeared_thits_2;
+
+        if (m_debug) {
+          std::cout << std::endl
+                    << "requested smearing tof factor: " << m_scale << std::endl
+                    << "gen part (PID, beta, t_in): " << mc_part.PDG << " "
+                    << gen_p4.Beta() << " " << mc_tin << std::endl
+                    << "gen t_out: " << mc_tout << std::endl;
+          std::cout << "reco t_out : " << reco_tout << std::endl;
+          std::cout << "smeared t_out : " << smeared_tout << std::endl;
+        }
+
+      } // end loop on tracks
+
+      return result;
+    }
+
 
     // -------------------------------------------------------------------------------------------
 
