@@ -48,9 +48,18 @@ ROOT dataframe documentation is available
 
 ## Getting started
 
-In order to use the FCC analysers within ROOT dataframe, a dictionary needs to
-be built and put into `LD_LIBRARY_PATH` (this happens in `setup.sh`). The
-following needs to be done when running local code and for developers.
+In order to use the FCC analyzers within ROOT RDataFrame, a dictionary needs to
+be built and put into `LD_LIBRARY_PATH`. In order to build and load FCCAnalyses
+with default options one needs to run following two commands:
+
+```shell
+source ./setup.sh
+fccanalysis build
+```
+
+The FCCAnalyses is a CMake based project and any customizations can be provided
+in classic CMake style, the following commands are equivalent to default version
+of FCCAnalyses:
 
 ```shell
 source ./setup.sh
@@ -65,6 +74,21 @@ cd ..
 > Each time changes are made in the C++ code, for example in
 > `analyzers/dataframe/` please do not forget to re-compile :)
 >
+> To cleanly recompile the default version of FCCAnalyses one can use
+> `fccanalysis build --clean-build`.
+
+In order to provide the possibility to keep developing an analysis with well
+defined Key4hep stack, the sub-command `fccanalysis pin` is provided. One can
+pin his/her analysis with
+```
+source setup.sh
+fccanalysis pin
+```
+
+To remove the pin run
+```
+fccanalysis pin --clear
+```
 
 
 ## Generalities
@@ -206,6 +230,10 @@ In an attempt to ease the development of new physics case studies, such as for t
 The preferred style of the C++ code in the FCCAnalyses is LLVM which is checked
 by CI job.
 
-Currently `clang-format` is not available in the Key4hep stack, but one way to
-obtain a recent version of it is through downloading of the
+Currently `clang-format` is not available in the Key4hep stack, but one can
+obtain a suitable version of it from CVMFS thanks to LCG:
+```
+source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh
+```
+Another way to obtain a recent version of `clang-format` is through downloading
 [Key4hep Spack instance](https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance).
