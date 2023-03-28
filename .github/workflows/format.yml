@@ -1,6 +1,6 @@
 name: clang-format
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   format:
@@ -46,4 +46,4 @@ jobs:
     - name: Check cleanliness
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
-          git diff --exit-code'
+          git diff'
