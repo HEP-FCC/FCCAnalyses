@@ -14,7 +14,7 @@ include(CTest)
 #--- options ------------------------------------------------------------------
 
 
-set(WITH_ACTS OFF CACHE STRING "Build analyzers that need Acts")
+set(WITH_ACTS AUTO CACHE STRING "Build analyzers that need Acts")
 set_property(CACHE WITH_ACTS PROPERTY STRINGS AUTO ON OFF)
 
 set(WITH_DD4HEP AUTO CACHE STRING "Build analyzers that need DD4hep")
