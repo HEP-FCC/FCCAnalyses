@@ -376,6 +376,7 @@ namespace FCCAnalyses
     ROOT::VecOps::RVec<edm4hep::TrackerHitData> SmearedTracksTOF::operator()(
         const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
             &allRecoParticles,
+        const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata,
         const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits,
         const ROOT::VecOps::RVec<float> &length,
         const ROOT::VecOps::RVec<int> &RP2MC_indices,
@@ -390,7 +391,6 @@ namespace FCCAnalyses
 
       int ntracks = length.size();
       int nhits = trackerhits.size(); // 3x size of tracks since 3 hits per track
-
       result.resize(nhits);
 
       TLorentzVector gen_p4;
@@ -398,15 +398,18 @@ namespace FCCAnalyses
       float c_light = 2.99792458e+8;
       float mm_to_sec = 1e-03 / c_light;
 
-      for (int itrack = 0; itrack < ntracks; itrack++) {
-        edm4hep::TrackerHitData thits_0 = trackerhits[itrack]; // at IP
-        edm4hep::TrackerHitData thits_1 =
-            trackerhits[itrack + 1]; // at 1st pixel layer
-        edm4hep::TrackerHitData thits_2 = trackerhits[itrack + 2]; // at calo
+      edm4hep::TrackerHitData thits_0, thits_1, thits_2;
+      edm4hep::TrackerHitData smeared_thits_0, smeared_thits_1, smeared_thits_2;
 
-        edm4hep::TrackerHitData smeared_thits_0 = thits_0;
-        edm4hep::TrackerHitData smeared_thits_1 = thits_1;
-        edm4hep::TrackerHitData smeared_thits_2 = thits_2;
+      for (int itrack = 0; itrack < ntracks; itrack++) {
+
+        int idx_tin = trackdata.at(itrack).trackerHits_begin;  // at IP
+        int idx_tpix = trackdata.at(itrack).trackerHits_begin + 1; // at 1st pixel layer
+        int idx_tout = trackdata.at(itrack).trackerHits_end - 1;  // at calo
+
+        smeared_thits_0 = trackerhits.at(idx_tin);
+        smeared_thits_1 = trackerhits.at(idx_tpix);
+        smeared_thits_2 = trackerhits.at(idx_tout);
 
         // find the corresponding MC particle
         int MCindex = -1;
@@ -424,9 +427,9 @@ namespace FCCAnalyses
                 mcParticles
                     .size()) { // in principle, this should not happen in delphes,
           // each track should be matched to a MC particle.
-          result[itrack] = smeared_thits_0;
-          result[itrack + 1] = smeared_thits_1;
-          result[itrack + 2] = smeared_thits_2;
+          result[idx_tin] = smeared_thits_0;
+          result[idx_tpix] = smeared_thits_1;
+          result[idx_tout] = smeared_thits_2;
           continue;
         }
 
@@ -439,23 +442,25 @@ namespace FCCAnalyses
         float mc_tin = mc_part.time * mm_to_sec;
         float mc_tof = length[itrack] / gen_p4.Beta() * mm_to_sec;
         float mc_tout = mc_tin + mc_tof;
-        float reco_tout = thits_2.time;
+        float reco_tout = trackerhits.at(idx_tout).time;
         float smeared_tout = mc_tout + m_scale * (reco_tout - mc_tout);
 
         smeared_thits_2.time = smeared_tout;
 
-        result[itrack] = smeared_thits_0;
-        result[itrack + 1] = smeared_thits_1;
-        result[itrack + 2] = smeared_thits_2;
+        result[idx_tin] = smeared_thits_0;
+        result[idx_tpix] = smeared_thits_1;
+        result[idx_tout] = smeared_thits_2;
 
         if (m_debug) {
           std::cout << std::endl
                     << "requested smearing tof factor: " << m_scale << std::endl
-                    << "gen part (PID, beta, t_in): " << mc_part.PDG << " "
-                    << gen_p4.Beta() << " " << mc_tin << std::endl
-                    << "gen t_out: " << mc_tout << std::endl;
-          std::cout << "reco t_out : " << reco_tout << std::endl;
-          std::cout << "smeared t_out : " << smeared_tout << std::endl;
+                    << "gen part (PID, p , beta, t_in, L): " << mc_part.PDG << " "
+                    << gen_p4.P()<< " " <<gen_p4.Beta() << " " << mc_tin * 1e12 << " "
+                    << length[itrack] << std::endl
+                    << "gen t_out (ps): " << mc_tout * 1e12 << std::endl;
+          std::cout << "reco t_out (ps) : " << reco_tout * 1e12 << std::endl;
+          std::cout << "smeared t_out (ps) : " << smeared_tout * 1e12
+                    << std::endl;
         }
 
       } // end loop on tracks

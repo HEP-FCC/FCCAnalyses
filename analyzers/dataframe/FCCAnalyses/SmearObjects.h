@@ -10,8 +10,6 @@
 #include <TMath.h>
 #include "ROOT/RVec.hxx"
 #include "edm4hep/MCParticleData.h"
-#include "edm4hep/TrackData.h"
-#include "edm4hep/TrackState.h"
 #include "FCCAnalyses/ReconstructedParticle2Track.h"
 
 namespace FCCAnalyses
@@ -71,6 +69,7 @@ namespace FCCAnalyses
       ROOT::VecOps::RVec<edm4hep::TrackerHitData>
       operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
                     &allRecoParticles,
+                const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata,
                 const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits,
                 const ROOT::VecOps::RVec<float> &length,
                 const ROOT::VecOps::RVec<int> &RP2MC_indices,
