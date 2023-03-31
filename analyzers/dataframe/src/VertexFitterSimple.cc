@@ -1,4 +1,4 @@
-﻿#include "FCCAnalyses/VertexFitterSimple.h"
+#include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/MCParticle.h"
 
 #include <iostream>
@@ -13,15 +13,16 @@ namespace FCCAnalyses{
 namespace VertexFitterSimple{
 
 
-// ---------------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 
-VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
-								     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-								     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
-								     bool BeamSpotConstraint,
-								     double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
-                                                                     double bsc_x, double bsc_y, double bsc_z )  {
+VertexingUtils::FCCAnalysesVertex  VertexFitter(
+    int Primary,
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+    ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
+    bool BeamSpotConstraint,
+    double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz,
+    double bsc_x, double bsc_y, double bsc_z)  {
 
 
 
@@ -36,9 +37,11 @@ VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
   // and run the vertex fitter
 
   //FCCAnalysesVertex thevertex = VertexFitter_Tk( Primary, tracks, thetracks) ;
-  thevertex = VertexFitter_Tk( Primary, tracks,
-                               thetracks,
-			       BeamSpotConstraint, bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z );
+  thevertex = VertexFitter_Tk(Primary, tracks,
+                              thetracks,
+                              BeamSpotConstraint,
+                              bsc_sigmax, bsc_sigmay, bsc_sigmaz,
+                              bsc_x, bsc_y, bsc_z);
 
   //fill the indices of the tracks
   ROOT::VecOps::RVec<int> reco_ind;

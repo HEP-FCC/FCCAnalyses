@@ -1,4 +1,4 @@
-﻿#include "FCCAnalyses/VertexingUtils.h"
+#include "FCCAnalyses/VertexingUtils.h"
 #include "FCCAnalyses/VertexFitterSimple.h"
 
 #include "TrkUtil.h"    // from delphes
