@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680267383006,
+  "lastUpdate": 1680267384673,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -20070,6 +20070,60 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "brieuc.francois@cern.ch",
+            "name": "Brieuc Francois",
+            "username": "BrieucF"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dfe033ef503f7507bee3cea8c6eabb85d0f4ff6c",
+          "message": "Merge pull request #267 from kjvbrt/bom\n\nConverting dos text files into unix text files",
+          "timestamp": "2023-03-31T14:46:17+02:00",
+          "tree_id": "7a2e9998e347150ec42608837041a5917be60b6a",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/dfe033ef503f7507bee3cea8c6eabb85d0f4ff6c"
+        },
+        "date": 1680267384156,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/weaver/analysis_inference.py",
+            "value": 2.5593140119944047,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.145168991629376,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 8.276508649429703,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.112896371428224,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 7.878066586099834,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.040159495183965,
+            "unit": "Evt/s"
           }
         ]
       }
