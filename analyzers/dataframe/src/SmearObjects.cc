@@ -198,7 +198,7 @@ namespace FCCAnalyses
         // the MC-truth track parameters
         edm4hep::TrackState mcTrack;
         TVectorD mcTrackParam_delphes = TrackParamFromMC_DelphesConv(MCpart);    // delphes convention, units = m
-        TVectorD mcTrackParam = VertexingUtils::Delphes2Edm4hep_TrackParam( mcTrackParam_delphes, false);    // edm4hep convention 
+        TVectorD mcTrackParam = VertexingUtils::Delphes2Edm4hep_TrackParam( mcTrackParam_delphes, false);    // edm4hep convention
 
         mcTrack.D0 = mcTrackParam[0] ;
         mcTrack.phi = mcTrackParam[1];
@@ -341,9 +341,9 @@ namespace FCCAnalyses
         float bg = mc_mom.Mag() / mc_part.mass; // beta * gamma
         float muClu =
             tu.Nclusters(bg, 0) * length[itrack]; // avg. number of clusters
-        float Ncl = m_random.Gaus(
-            muClu,
-            m_scale * std::sqrt(muClu)); // assume gaussian for large N Poisson
+
+				float Ncl = dndx.value * length[itrack];
+				Ncl =  std::max(muClu + m_scale * (Ncl - muClu), float(0.));
 
         result[itrack].type = 0;
         result[itrack].value = Ncl / length[itrack];
