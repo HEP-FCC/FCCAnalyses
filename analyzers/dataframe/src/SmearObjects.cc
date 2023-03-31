@@ -541,15 +541,17 @@ namespace FCCAnalyses
 					if (m_mode == 0)
           {
             // rescale existing smearing of the energy
-            smeared_part.energy = gen_p4.E() + m_scale * (reco_p4.E() - gen_p4.E());
+            smeared_part.energy = std::max(gen_p4.E() + m_scale * (reco_p4.E() - gen_p4.E()), reco_p4.M());
 
             // recompute momentum magnitude
-            smeared_p = (smeared_part.energy - reco_p4.M()) > 0 ? std::sqrt(smeared_part.energy * smeared_part.energy - reco_p4.M() * reco_p4.M()) : smeared_part.energy;
+            smeared_p = std::sqrt(smeared_part.energy * smeared_part.energy - reco_p4.M() * reco_p4.M());
 
-						// recompute mom x, y, z using original reco particle direction
-						smeared_part.momentum.x = smeared_p * std::sin(reco_p4.Theta()) * std::cos(reco_p4.Phi());
-						smeared_part.momentum.y = smeared_p * std::sin(reco_p4.Theta()) * std::sin(reco_p4.Phi());
-						smeared_part.momentum.z = smeared_p * std::cos(reco_p4.Theta());
+            // recompute mom x, y, z using original reco particle direction
+            smeared_part.momentum.x =
+                smeared_p * std::sin(reco_p4.Theta()) * std::cos(reco_p4.Phi());
+            smeared_part.momentum.y =
+                smeared_p * std::sin(reco_p4.Theta()) * std::sin(reco_p4.Phi());
+            smeared_part.momentum.z = smeared_p * std::cos(reco_p4.Theta());
 
             smeared_p4.SetXYZM(smeared_part.momentum.x, smeared_part.momentum.y, smeared_part.momentum.z, smeared_part.mass);
           }
@@ -558,7 +560,7 @@ namespace FCCAnalyses
           else if (m_mode == 1)
           {
             // rescale existing momentum smearing
-            smeared_p = gen_p4.P() + m_scale * (reco_p4.P() - gen_p4.P());
+            smeared_p = std::max(float(gen_p4.P() + m_scale * (reco_p4.P() - gen_p4.P())), float(0.));
 
             // recompute energy
             smeared_part.energy = std::sqrt(smeared_p * smeared_p + reco_p4.M() * reco_p4.M());
