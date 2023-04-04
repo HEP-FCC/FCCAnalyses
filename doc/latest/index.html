@@ -171,13 +171,14 @@ Contributing</h1>
 Code formating</h2>
 <p >The preferred style of the C++ code in the <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> is LLVM which is checked by CI job.</p>
 <p >Currently <code>clang-format</code> is not available in the Key4hep stack, but one can obtain a suitable version of it from CVMFS thanks to LCG: </p><div class="fragment"><div class="line">source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh</div>
-</div><!-- fragment --><p> Another way to obtain a recent version of <code>clang-format</code> is through downloading <a href="https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance">Key4hep Spack instance</a>. </p>
+</div><!-- fragment --><p >Then to apply formatting to a given file: </p><div class="fragment"><div class="line">clang-format -i -style=file /path/to/file.cpp</div>
+</div><!-- fragment --><p >Another way to obtain a recent version of <code>clang-format</code> is through downloading <a href="https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance">Key4hep Spack instance</a>. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 31 2023 14:50:26 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 4 2023 10:36:39 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.3
 </small></address>
