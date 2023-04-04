@@ -135,14 +135,14 @@ class RDFanalysis:
         ## produce smeared collections
 
         ### run same sequences but with smeared collection
-        scale_factors = [0.5, 1.0, 2.0]
-        collections_ip = deepcopy(collections)
-        collections_res = deepcopy(collections)
+        scale_factors = [1.0, 2.0, 5.0, 10.0]
 
-
-        ## 1. do Impact parameter smearing first
+        
         for sf in scale_factors:
+        
+            ## 1. do Impact parameter smearing first
 
+            collections_ip = deepcopy(collections)
             ip_tag = "ip{}".format(sf).replace(".", "p")
             collections_ip["TrackState"] = "TrackState_{}".format(ip_tag)
 
@@ -160,9 +160,9 @@ class RDFanalysis:
             df = jet_sequence(df, collections_ip, output_branches, ip_tag)
 
 
-        ## 2. do Neutral Hadron energy smearing
-        for sf in scale_factors:
+            ## 2. do Neutral Hadron energy smearing
 
+            collections_res = deepcopy(collections)
             res_tag = "res{}".format(sf).replace(".", "p")
             collections_res["PFParticles"] = "ReconstructedParticles_{}".format(res_tag)
 
@@ -178,6 +178,49 @@ class RDFanalysis:
 
             ## run full sequence with energy nh smeared
             df = jet_sequence(df, collections_res, output_branches, res_tag)
+
+            ## 3. do dNdx smearing
+
+            collections_dndx = deepcopy(collections)
+            dndx_tag = "dndx{}".format(sf).replace(".", "p")
+            collections_dndx["dNdx"] = "dNdx_{}".format(dndx_tag)
+
+            df = df.Define(
+                collections_dndx["dNdx"],
+                ROOT.SmearObjects.SmearedTracksdNdx(sf, False),
+                [
+                    collections["PFParticles"],
+                    collections["dNdx"],
+                    collections["PathLength"],
+                    "reco_mc_index",
+                    collections["GenParticles"],
+                ],
+            )
+
+            ## run full sequence with energy nh smeared
+            df = jet_sequence(df, collections_dndx, output_branches, dndx_tag)
+
+
+            ## 4. do tof smearing
+            collections_tof = deepcopy(collections)
+            tof_tag = "tof{}".format(sf).replace(".", "p")
+            collections_tof["TrackerHits"] = "tof_{}".format(tof_tag)
+
+            df = df.Define(
+                collections_tof["TrackerHits"],
+                ROOT.SmearObjects.SmearedTracksTOF(sf, False),
+                [
+                    collections["PFParticles"],
+                    collections["PFTracks"],
+                    collections["TrackerHits"],
+                    collections["PathLength"],
+                    "reco_mc_index",
+                    collections["GenParticles"],
+                ],
+            )
+
+            ## run full sequence with energy nh smeared
+            df = jet_sequence(df, collections_tof, output_branches, tof_tag)
 
         return df
 
