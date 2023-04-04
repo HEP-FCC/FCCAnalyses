@@ -235,5 +235,11 @@ obtain a suitable version of it from CVMFS thanks to LCG:
 ```
 source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh
 ```
+
+Then to apply formatting to a given file:
+```
+clang-format -i -style=file /path/to/file.cpp
+```
+
 Another way to obtain a recent version of `clang-format` is through downloading
 [Key4hep Spack instance](https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance).
