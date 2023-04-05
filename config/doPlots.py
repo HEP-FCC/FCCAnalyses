@@ -87,7 +87,7 @@ def mapHistos(var, label, sel, param, rebin):
     for b in hbackgrounds:
         if len(hbackgrounds[b])==0:
             hbackgrounds=removekey(hbackgrounds,b)
-        
+
     return hsignal,hbackgrounds
 
 #__________________________________________________________
