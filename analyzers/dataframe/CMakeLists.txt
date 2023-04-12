@@ -1,9 +1,3 @@
-
-
-# workaround for ROOT not properly exporting the VDT includes
-find_package(Vdt)
-
-
 message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
 message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
 message(STATUS "includes-------------------------- dataframe delphes: ${DELPHES_INCLUDE_DIR}")
@@ -49,7 +43,6 @@ target_include_directories(FCCAnalyses  PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                            $<INSTALL_INTERFACE:include>
-                           ${VDT_INCLUDE_DIR}
                            ${DELPHES_INCLUDE_DIR}
                            ${DELPHES_EXTERNALS_INCLUDE_DIR}
                            ${DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR}
