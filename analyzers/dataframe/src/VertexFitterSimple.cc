@@ -308,8 +308,8 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   // memory cleanup :
   for (Int_t i = 0; i < Ntr; i++) {
-     delete trkPar[i];
-     delete trkCov[i];
+    delete trkPar[i];
+    delete trkCov[i];
   }
   delete[] trkPar;
   delete[] trkCov;
