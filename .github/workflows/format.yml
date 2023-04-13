@@ -13,21 +13,6 @@ jobs:
     - name: Start container
       run: |
         docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest /bin/bash
-    - name: Setup Spack
-      run: |
-        docker exec CI_container /bin/bash -c 'mkdir Spack
-          cd Spack
-          git clone https://github.com/key4hep/spack
-          git clone https://github.com/key4hep/key4hep-spack'
-    - name: Setup LLVM
-      run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package
-          source ../Spack/spack/share/spack/setup-env.sh
-          source ../Spack/key4hep-spack/environments/key4hep-release-user/setup_clingo_centos7.sh
-          spack env activate ../Spack/key4hep-spack/environments/key4hep-release-user
-          spack add llvm
-          spack concretize -f'
-          # spack install'
     - name: Add upstream
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
@@ -36,10 +21,7 @@ jobs:
     - name: Run formatter
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
-          source ../Spack/spack/share/spack/setup-env.sh
-          source ../Spack/key4hep-spack/environments/key4hep-release-user/setup_clingo_centos7.sh
-          spack env activate ../Spack/key4hep-spack/environments/key4hep-release-user
-          spack load llvm
+          source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh
           git clang-format --style=file $(git merge-base upstream/master HEAD)'
     - name: Check cleanliness
       run: |
