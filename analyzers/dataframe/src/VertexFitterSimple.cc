@@ -206,6 +206,14 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   TheVertex.final_track_phases = final_track_phases;
   TheVertex.reco_chi2 = reco_chi2;
 
+  // memory cleanup
+  for (Int_t i = 0; i < Ntr; i++) {
+    delete trkPar[i];
+    delete trkCov[i];
+  }
+  delete[] trkPar;
+  delete[] trkCov;
+
   return TheVertex;
 }
 
@@ -297,6 +305,14 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
       }
     }
   } // end while
+
+  // memory cleanup :
+  for (Int_t i = 0; i < Ntr; i++) {
+    delete trkPar[i];
+    delete trkCov[i];
+  }
+  delete[] trkPar;
+  delete[] trkCov;
 
   return seltracks;
 }
