@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681456933692,
+  "lastUpdate": 1681456936061,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -20670,6 +20670,60 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "brieuc.francois@cern.ch",
+            "name": "Brieuc Francois",
+            "username": "BrieucF"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e34711a02ad3d7fad2a36203af8b66213be1303",
+          "message": "Merge pull request #272 from kjvbrt/clanglcg\n\nUsing clang from LCG stack",
+          "timestamp": "2023-04-14T09:04:39+02:00",
+          "tree_id": "954eab32ddbe4947bf04d0589d18d517088e0752",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/5e34711a02ad3d7fad2a36203af8b66213be1303"
+        },
+        "date": 1681456935161,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/weaver/analysis_inference.py",
+            "value": 1.7093209410651495,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 8.410108610865851,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 8.029963799625992,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 5.88054061104371,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 7.494319006784886,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.0132613185901995,
+            "unit": "Evt/s"
           }
         ]
       }
