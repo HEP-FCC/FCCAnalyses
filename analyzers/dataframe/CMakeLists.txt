@@ -19,9 +19,6 @@ include_directories(${DELPHES_INCLUDE_DIR}
 file(GLOB sources src/*.cc)
 file(GLOB headers RELATIVE ${CMAKE_CURRENT_LIST_DIR} FCCAnalyses/*.h)
 
-message(STATUS "includes headers ${headers}")
-message(STATUS "includes sources ${sources}")
-
 list(FILTER headers EXCLUDE REGEX "LinkDef.h")
 if(NOT WITH_DD4HEP)
   list(FILTER headers EXCLUDE REGEX "CaloNtupleizer.h")
@@ -30,6 +27,8 @@ endif()
 if(NOT WITH_ONNX)
   list(FILTER headers EXCLUDE REGEX "JetFlavourUtils.h")
   list(FILTER sources EXCLUDE REGEX "JetFlavourUtils.cc")
+  list(FILTER headers EXCLUDE REGEX "WeaverUtils.h")
+  list(FILTER sources EXCLUDE REGEX "WeaverUtils.cc")
 endif()
 
 if(NOT WITH_ACTS)
@@ -39,6 +38,8 @@ if(NOT WITH_ACTS)
   list(FILTER sources EXCLUDE REGEX "VertexFinderActs.cc")
 endif()
 
+message(STATUS "includes headers ${headers}")
+message(STATUS "includes sources ${sources}")
 
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")

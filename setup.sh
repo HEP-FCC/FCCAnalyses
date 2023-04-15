@@ -21,8 +21,12 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   export CMAKE_PREFIX_PATH=${LOCAL_DIR}/install:${CMAKE_PREFIX_PATH}
   export ROOT_INCLUDE_PATH=${LOCAL_DIR}/install/include:${ROOT_INCLUDE_PATH}
 
-  export ONNXRUNTIME_ROOT_DIR=`python -c "import onnxruntime; print(onnxruntime.__path__[0]+'/../../../..')"`
-  export LD_LIBRARY_PATH=$ONNXRUNTIME_ROOT_DIR/lib:$LD_LIBRARY_PATH
+  export ONNXRUNTIME_ROOT_DIR=`python -c "import onnxruntime; print(onnxruntime.__path__[0]+'/../../../..')" 2> /dev/null`
+  if [ -z "${ONNXRUNTIME_ROOT_DIR}" ]; then
+    echo "WARNING: ONNX Runtime not found! Related analyzers won't be build..."
+  else
+    export LD_LIBRARY_PATH=${ONNXRUNTIME_ROOT_DIR}/lib:${LD_LIBRARY_PATH}
+  fi
 else
   echo "ERROR: This script is meant to be sourced!"
 fi

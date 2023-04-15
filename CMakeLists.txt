@@ -90,6 +90,17 @@ if(WITH_DD4HEP)
   endif()
 endif()
 
+if(WITH_ONNX)
+  find_package(ONNXRuntime)
+  if(ONNXRuntime_FOUND)
+
+  elseif(WITH_ONNX STREQUAL AUTO)
+    message(WARNING "ONNXRuntime not found. Skipping ONNX-dependent analyzers.")
+    set(WITH_ONNX OFF)
+  else()
+    message(FATAL_ERROR "Failed to locate ONNXRuntime!")
+  endif()
+endif()
 
 if(WITH_ONNX AND BUILD_TESTING) # currently these files are only needed by ONNX-parts
 # Grab the test files into a cached directory
