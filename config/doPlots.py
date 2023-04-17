@@ -17,7 +17,7 @@ def sortedDictValues(dic):
     keys = sorted(dic)
     return [dic[key] for key in keys]
 
-def formatStatUncHist(hists, name, hstyle=3004):
+def formatStatUncHist(hists, name, hstyle=3254):
     hTot = hists[0].Clone(name + "_unc")
     for h in hists[1:]:
         hTot.Add(h)
@@ -306,7 +306,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         hStackSig.Draw("hist nostack")
         if plotStatUnc:
             for sHist in hStackSig.GetHists():
-                hUnc_sig = formatStatUncHist([sHist], "sig", 3005) # sigs uncertainty
+                hUnc_sig = formatStatUncHist([sHist], "sig", 3245) # sigs uncertainty
                 hUnc_sig.Draw("E2 SAME")
         hStackSig.GetXaxis().SetTitle(xlabel)
         hStackSig.GetYaxis().SetTitle(ylabel)
@@ -382,7 +382,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
             hStackSig.Draw("hist nostack")  
         if plotStatUnc:
             for sHist in hStackSig.GetHists():
-                hUnc_sig = formatStatUncHist([sHist], "sig", 3005) # sigs uncertainty
+                hUnc_sig = formatStatUncHist([sHist], "sig", 3245) # sigs uncertainty
                 hUnc_sig.Draw("E2 SAME")
 
     legend.Draw()
