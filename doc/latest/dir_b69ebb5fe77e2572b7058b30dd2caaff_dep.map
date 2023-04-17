@@ -1,7 +1,7 @@
 <map id="analyzers/dataframe/case&#45;studies" name="analyzers/dataframe/case&#45;studies">
-<area shape="rect" id="node2" href="dir_f8e9a60acf5a67ab8f9e073a7b595250.html" title="include" alt="" coords="37,159,109,207"/>
-<area shape="rect" id="node3" href="dir_f0731bc6e83d18879b7860d9ab3e4496.html" title="src" alt="" coords="37,63,109,111"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000013_000007.html" title="2" alt="" coords="77,133,86,148"/>
-<area shape="rect" id="clust2" href="dir_b69ebb5fe77e2572b7058b30dd2caaff.html" alt="" coords="27,52,248,217"/>
-<area shape="rect" id="clust1" href="dir_80d0d0eb77b8b32422d353741e959c30.html" title="dataframe" alt="" coords="16,16,259,228"/>
+<area shape="rect" id="node2" href="dir_f8e9a60acf5a67ab8f9e073a7b595250.html" title="include" alt="" coords="37,138,107,163"/>
+<area shape="rect" id="node3" href="dir_f0731bc6e83d18879b7860d9ab3e4496.html" title="src" alt="" coords="38,63,79,89"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000013_000007.html" title="2" alt="" coords="70,111,80,126"/>
+<area shape="rect" id="clust2" href="dir_b69ebb5fe77e2572b7058b30dd2caaff.html" alt="" coords="27,52,219,175"/>
+<area shape="rect" id="clust1" href="dir_80d0d0eb77b8b32422d353741e959c30.html" title="dataframe" alt="" coords="16,16,229,185"/>
 </map>

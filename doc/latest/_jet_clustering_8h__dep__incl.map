@@ -1,10 +1,10 @@
 <map id="addons/FastJet/JetClustering.h" name="addons/FastJet/JetClustering.h">
-<area shape="rect" id="node1" title=" " alt="" coords="330,5,544,32"/>
-<area shape="rect" id="node2" href="$_jet_clustering_8cc.html" title=" " alt="" coords="368,185,507,226"/>
-<area shape="rect" id="node3" href="$_algorithms_8h.html" title=" " alt="" coords="167,87,364,129"/>
-<area shape="rect" id="node6" href="$_jet_clustering_utils_8h.html" title=" " alt="" coords="503,80,700,136"/>
-<area shape="rect" id="node4" href="$_algorithms_8cc.html" title=" " alt="" coords="187,185,344,226"/>
-<area shape="rect" id="node5" href="$my_utils_8cc.html" title=" " alt="" coords="5,185,163,226"/>
-<area shape="rect" id="node7" href="$_jet_clustering_utils_8cc.html" title=" " alt="" coords="751,185,931,226"/>
-<area shape="rect" id="node8" href="$_jet_constituents_utils_8cc.html" title=" " alt="" coords="531,185,727,226"/>
+<area shape="rect" id="node1" title=" " alt="" coords="330,6,544,31"/>
+<area shape="rect" id="node2" href="$_jet_clustering_8cc.html" title=" " alt="" coords="368,184,507,224"/>
+<area shape="rect" id="node3" href="$_algorithms_8h.html" title=" " alt="" coords="167,88,364,128"/>
+<area shape="rect" id="node6" href="$_jet_clustering_utils_8h.html" title=" " alt="" coords="503,81,700,135"/>
+<area shape="rect" id="node4" href="$_algorithms_8cc.html" title=" " alt="" coords="187,184,344,224"/>
+<area shape="rect" id="node5" href="$my_utils_8cc.html" title=" " alt="" coords="5,184,163,224"/>
+<area shape="rect" id="node7" href="$_jet_clustering_utils_8cc.html" title=" " alt="" coords="751,184,931,224"/>
+<area shape="rect" id="node8" href="$_jet_constituents_utils_8cc.html" title=" " alt="" coords="531,184,727,224"/>
 </map>

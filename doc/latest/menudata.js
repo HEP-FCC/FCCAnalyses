@@ -24,7 +24,7 @@
 */
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
-{text:"Key4HEP Home Page",url:"https://cern.ch/key4hep"},
+{text:"Key4HEP Home Page",url:"^https://cern.ch/key4hep"},
 {text:"Contribution Guide",url:"md_doc_contributing.html"},
 {text:"Namespaces",url:"namespaces.html",children:[
 {text:"Namespace List",url:"namespaces.html"},

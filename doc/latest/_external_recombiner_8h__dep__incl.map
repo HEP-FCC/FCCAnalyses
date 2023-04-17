@@ -1,5 +1,5 @@
 <map id="addons/FastJet/ExternalRecombiner.h" name="addons/FastJet/ExternalRecombiner.h">
-<area shape="rect" id="node1" title=" " alt="" coords="51,5,313,32"/>
-<area shape="rect" id="node2" href="$_external_recombiner_8cc.html" title=" " alt="" coords="5,81,179,122"/>
-<area shape="rect" id="node3" href="$_jet_clustering_8cc.html" title=" " alt="" coords="204,81,343,122"/>
+<area shape="rect" id="node1" title=" " alt="" coords="51,6,313,31"/>
+<area shape="rect" id="node2" href="$_external_recombiner_8cc.html" title=" " alt="" coords="5,80,179,120"/>
+<area shape="rect" id="node3" href="$_jet_clustering_8cc.html" title=" " alt="" coords="204,80,343,120"/>
 </map>

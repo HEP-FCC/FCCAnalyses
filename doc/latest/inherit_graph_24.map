@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$struct_f_c_c_analyses_1_1_m_c_particle_1_1get__indices.html" title="return a list of indices that correspond to a given MC decay. The list contains the index of the moth..." alt="" coords="6,5,189,46"/>
-<area shape="rect" id="node2" href="$struct_f_c_c_analyses_1_1_m_c_particle_1_1get__indices___exclusive_decay.html" title="A shorthand for get_indices, with m_chargeConjugateDaughters=false, inclusiveDecay=false." alt="" coords="238,5,453,46"/>
+<area shape="rect" id="node1" href="$struct_f_c_c_analyses_1_1_m_c_particle_1_1get__indices.html" title="return a list of indices that correspond to a given MC decay. The list contains the index of the moth..." alt="" coords="6,5,189,45"/>
+<area shape="rect" id="node2" href="$struct_f_c_c_analyses_1_1_m_c_particle_1_1get__indices___exclusive_decay.html" title="A shorthand for get_indices, with m_chargeConjugateDaughters=false, inclusiveDecay=false." alt="" coords="238,5,453,45"/>
 </map>

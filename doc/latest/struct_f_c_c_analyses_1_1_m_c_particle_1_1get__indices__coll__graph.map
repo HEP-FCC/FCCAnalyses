@@ -1,4 +1,4 @@
 <map id="FCCAnalyses::MCParticle::get_indices" name="FCCAnalyses::MCParticle::get_indices">
-<area shape="rect" id="node1" title="return a list of indices that correspond to a given MC decay. The list contains the index of the moth..." alt="" coords="5,97,187,138"/>
-<area shape="rect" id="node2" title=" " alt="" coords="27,5,165,32"/>
+<area shape="rect" id="node1" title="return a list of indices that correspond to a given MC decay. The list contains the index of the moth..." alt="" coords="5,96,187,136"/>
+<area shape="rect" id="node2" title=" " alt="" coords="27,6,165,31"/>
 </map>
