@@ -92,8 +92,6 @@ The collectionID of Muon#0 is the collection number 7 (in the example file used 
 Indeed, the Muon collection itself contains nothing (see screenshot below): all the information is contained in the ReconstructedParticles. The Muon collection,
 together with Muon#0, just provides a convenient way to access, among the ReconstructedParticles, those that were identified as muons.
 
-
-
 <img src="figs/browser_Muon0.png" alt="drawing" width="480"/>
 
 The same holds for the Electron and Photon collections. On the other hand, the MissingET collection is already a ReconstructedParticle, as can be seen
