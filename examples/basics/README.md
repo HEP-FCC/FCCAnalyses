@@ -60,11 +60,11 @@ As shown in the screenshot above, there are two types of branches:
     - NB: "Particle" denotes the collection of Monte-Carlo particles. "Muon" contains the isolated muons, while "AllMuon" contains all muons, isolated or not.
   - Branches with a pound in their name:  Each of the object collections listed above, e.g. "Collection", has up to six associated collections of references, 
     i.e. indices that point to another or to the same object collection. They are labeled Collection#i, with i = 0 ... 5. For example, the Muon collection has one single
-    associated collection of references, Muon#0. 
-    - NB2: With `winter2023` samples, the `CollectionID`s are different. The correct list can be obtained using `get_CollectionIDs.py`, e.g.:
+    associated collection of references, Muon#0.
+    - NB2: With `winter2023` samples, the `CollectionID`s are different. The correct list can be obtained using `podio-dump` or `collInfo` script from [AuxTools](https://github.com/HEP-FCC/AuxTools), e.g.:
 
 ```
-python get_CollectionIDs.py --input /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/p8_ee_ZZ_ecm240/events_051628351.root
+./collInfo -i /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/p8_ee_ZZ_ecm240/events_051628351.root
 
 ID  ->  Collection
 ==================
