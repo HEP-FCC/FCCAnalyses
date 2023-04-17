@@ -56,11 +56,36 @@ root[0] TBrowser b
 
 As shown in the screenshot above, there are two types of branches:
 
-  - Branches without a pound (#) in their name:  Electron (1), Muon (2), AllMuon (3), EFlowNeutralHadron (4), Particle (5), Photon (6), ReconstructedParticles (7), EFlowPhoton (8), MCRecoAssociations (9), MissingET (10), ParticleIDs (11), Jet (12), EFlowTrack (13), EFlowTrack\_1 (14). They refer to collections of objects.
+  - Branches without a pound (#) in their name refer to collections of objects:  Electron (1), Muon (2), AllMuon (3), EFlowNeutralHadron (4), Particle (5), Photon (6), ReconstructedParticles (7), EFlowPhoton (8), MCRecoAssociations (9), MissingET (10), ParticleIDs (11), Jet (12), EFlowTrack (13), EFlowTrack\_1 (14). 
     - NB: "Particle" denotes the collection of Monte-Carlo particles. "Muon" contains the isolated muons, while "AllMuon" contains all muons, isolated or not.
   - Branches with a pound in their name:  Each of the object collections listed above, e.g. "Collection", has up to six associated collections of references, 
     i.e. indices that point to another or to the same object collection. They are labeled Collection#i, with i = 0 ... 5. For example, the Muon collection has one single
-    associated collection of references, Muon#0. 
+    associated collection of references, Muon#0.
+    - NB2: With `winter2023` samples, the `CollectionID`s are different. The correct list can be obtained using `podio-dump` or `collInfo` script from [AuxTools](https://github.com/HEP-FCC/AuxTools), e.g.:
+
+```
+./collInfo -i /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/p8_ee_ZZ_ecm240/events_051628351.root
+
+ID  ->  Collection
+==================
+1  -> MissingET
+2  -> MCRecoAssociations
+3  -> ParticleIDs
+4  -> magFieldBz
+5  -> TrackerHits
+6  -> EFlowTrack
+7  -> CalorimeterHits
+8  -> Particle
+9  -> Photon
+10 -> EFlowTrack_L
+11 -> Electron
+12 -> EFlowPhoton
+13 -> EFlowNeutralHadron
+14 -> Jet
+15 -> ReconstructedParticles
+16 -> Muon
+==================
+```
 
 To figure out which collection is pointed to by Muon#0 (or by any other collection of references), one can look at the value of Muon#0.collectionID (see screenshot below). 
 The collectionID of Muon#0 is the collection number 7 (in the example file used here), which, in the list of "object collections" above, corresponds to the collection of ReconstructedParticles. 
