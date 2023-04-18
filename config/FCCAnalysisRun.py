@@ -354,6 +354,9 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
         else:
             ncpus = getElement(rdfModule, "nCPUS")
 
+        if ncpus < 0: # use all available threads
+            ROOT.EnableImplicitMT()
+            ncpus = ROOT.GetThreadPoolSize()
         ROOT.ROOT.EnableImplicitMT(ncpus)
 
     ROOT.EnableThreadSafety()
@@ -1004,6 +1007,173 @@ def runFinal(rdfModule):
     print  ('===================================================================')
 
 
+def runHistmaker(args, rdfModule, analysisFile):
+    # for convenience and compatibility with user code
+    ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
+    geometryFile = getElement(rdfModule, "geometryFile")
+    readoutName  = getElement(rdfModule, "readoutName")
+    if geometryFile!="" and readoutName!="":
+        ROOT.CaloNtupleizer.loadGeometry(geometryFile, readoutName)
+
+    # set multithreading
+    ncpus = 1
+    if isinstance(args.ncpus, int) and args.ncpus >= 1:
+        ncpus = args.ncpus
+    else:
+        ncpus = getElement(rdfModule, "nCPUS")
+    if ncpus < 0: # use all available threads
+        ROOT.EnableImplicitMT()
+        ncpus = ROOT.GetThreadPoolSize()
+    ROOT.ROOT.EnableImplicitMT(ncpus)
+    ROOT.EnableThreadSafety()
+
+    # include custom header files
+    includePaths = getElement(rdfModule, "includePaths")
+    if includePaths:
+        ROOT.gInterpreter.ProcessLine(".O3")
+        basepath = os.path.dirname(os.path.abspath(analysisFile))+"/"
+        for path in includePaths:
+            print(f"----> Info: Loading {path}...")
+            ROOT.gInterpreter.Declare(f'#include "{basepath}/{path}"')
+
+    # load process dictionary
+    procFile = getElement(rdfModule,"procDict")
+    procDict = None
+    if 'https://fcc-physics-events.web.cern.ch' in procFile:
+        print ('----> getting process dictionary from the web')
+        import urllib.request
+        req = urllib.request.urlopen(procFile).read()
+        procDict = json.loads(req.decode('utf-8'))
+
+    else:
+        procFile = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + procFile
+        if not os.path.isfile(procFile):
+            print ('----> No procDict found: ==={}===, exit'.format(procFile))
+            sys.exit(3)
+        with open(procFile, 'r') as f:
+            procDict=json.load(f)
+
+    # check if analyses plugins need to be loaded before anything
+    # still in use?
+    analysesList = getElement(rdfModule, "analysesList")
+    if analysesList and len(analysesList) > 0:
+        _ana = []
+        for analysis in analysesList:
+            print(f'----> Load cxx analyzers from {analysis}...')
+            if analysis.startswith('libFCCAnalysis_'):
+                ROOT.gSystem.Load(analysis)
+            else:
+                ROOT.gSystem.Load(f'libFCCAnalysis_{analysis}')
+            if not hasattr(ROOT, analysis):
+                print(f'----> ERROR: analysis "{analysis}" not properly loaded. Exit')
+                sys.exit(4)
+            _ana.append(getattr(ROOT, analysis).dictionary)
+
+    # check if outputDir exist and if not create it
+    outputDir = getElement(rdfModule,"outputDir")
+    if not os.path.exists(outputDir) and outputDir!='':
+        os.system("mkdir -p {}".format(outputDir))
+
+    # check if the process list is specified, and create graphs for them
+    processList = getElement(rdfModule,"processList")
+    graph_function = getattr(rdfModule, "build_graph")
+    results = []
+    hweights = []
+    evtcounts = []
+    chains = []
+
+    for process in processList:
+        if 'input' in processList[process]:
+            fileList, eventList = [], []
+            flist=glob.glob(processList[process]['input']+"/*.root")
+            for f in flist:
+                fileList.append(f)
+                eventList.append(getEntries(f))
+        else:
+            fileList, eventList = getProcessInfo(process, getElement(rdfModule,"prodTag"), getElement(rdfModule, "inputDir"))
+        if len(fileList)==0:
+            print('----> ERROR: No files to process. Exit')
+            sys.exit(3)
+
+        processDict={}
+        fraction = 1
+        output = process
+        chunks = 1
+        try:
+            processDict=processList[process]
+            if getElementDict(processList[process], 'fraction') != None: fraction = getElementDict(processList[process], 'fraction')
+            if getElementDict(processList[process], 'output')   != None: output   = getElementDict(processList[process], 'output')
+            if getElementDict(processList[process], 'chunks')   != None: chunks   = getElementDict(processList[process], 'chunks')
+
+        except TypeError:
+            print ('----> no values set for process {} will use default values'.format(process))
+
+        if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
+        print ('----> Running process {} with fraction={}, nfiles={}, output={}, chunks={}'.format(process, fraction, len(fileList), output, chunks))
+
+        chain = ROOT.TChain("events")
+        for fpath in fileList:
+            chain.Add(fpath)
+        chains.append(chain)
+
+        df = ROOT.ROOT.RDataFrame(chain)
+        evtcount = df.Count()
+        res, hweight = graph_function(df, process)
+        results.append(res)
+        hweights.append(hweight)
+        evtcounts.append(evtcount)
+
+    print("Begin event loop")
+    start_time = time.time()
+    ROOT.ROOT.RDF.RunGraphs(evtcounts)
+    print("Done event loop")
+    elapsed_time = time.time() - start_time
+
+    print("Write output files")
+    doScale = getElement(rdfModule,"doScale", True)
+    intLumi = getElement(rdfModule,"intLumi", True)
+    nevents_tot = 0
+    for process, res, hweight, evtcount in zip(processList, results, hweights, evtcounts):
+        print(process)
+        fOut = ROOT.TFile(f"{outputDir}/{process}.root", "RECREATE")
+        histsToWrite = {}
+        for r in res:
+            hist = r.GetValue()
+            hName = hist.GetName()
+            if hist.GetName() in histsToWrite: # merge histograms in case histogram exists
+                histsToWrite[hName].Add(hist)
+            else:
+                histsToWrite[hName] = hist
+
+        for hist in histsToWrite.values():
+            if doScale:
+                if 'input' in processList[process]:
+                    crossSection = processList[process]['crossSection'] if 'crossSection' in processList[process] else 1.
+                    kfactor = processList[process]['kfactor'] if 'kfactor' in processList[process] else 1.
+                    matchingEfficiency = processList[process]['matchingEfficiency'] if 'matchingEfficiency' in processList[process] else 1.
+                    scale = crossSection*kfactor*matchingEfficiency
+                else:
+                    if not process in procDict:
+                        scale = 1
+                        print(f"WARNING: cannot find {process} in prodDict, skipping normalization.")
+                    else:
+                        scale = procDict[process]["crossSection"]*procDict[process]["kfactor"]*procDict[process]["matchingEfficiency"]
+                hist.Scale(scale*intLumi/evtcount.GetValue())
+            hist.Write()
+
+        p = ROOT.TParameter(float)("eventsProcessed", evtcount.GetValue())
+        p.Write()
+        p = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
+        p.Write()
+        nevents_tot += evtcount.GetValue()
+
+    print  ("==============================SUMMARY==============================")
+    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
+    print  ("Events Processed/Second  :  ",int(nevents_tot/elapsed_time))
+    print  ("Total Events Processed   :  ",int(nevents_tot))
+    print  ("===================================================================")
+
+
 #__________________________________________________________
 def runPlots(analysisFile):
     import config.doPlots as dp
@@ -1096,6 +1266,14 @@ def run(mainparser, subparser=None):
         elif args.command == "final":
             try:
                 runFinal(rdfModule)
+            except Exception as excp:
+                print('----> Error: During the execution of the final stage file:')
+                print('      ' + analysisFile)
+                print('      exception occurred:')
+                print(excp)
+        elif args.command == "histmaker":
+            try:
+                runHistmaker(args, rdfModule, analysisFile)
             except Exception as excp:
                 print('----> Error: During the execution of the final stage file:')
                 print('      ' + analysisFile)

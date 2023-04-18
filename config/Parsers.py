@@ -58,6 +58,12 @@ def setup_run_parser_final(parser):
     publicOptions.add_argument("pathToAnalysisScript", help="path to analysis_final script")
     publicOptions.add_argument("--eloglevel", help="Specify the RDataFrame ELogLevel", type=str, default="kUnset", choices = ['kUnset','kFatal','kError','kWarning','kInfo','kDebug'])
 
+def setup_run_parser_histm(parser):
+    publicOptions = parser.add_argument_group('User final options')
+    publicOptions.add_argument("pathToAnalysisScript", help="path to analysis_final script")
+    publicOptions.add_argument("--ncpus", help="Set number of threads", type=int)
+    publicOptions.add_argument("--eloglevel", help="Specify the RDataFrame ELogLevel", type=str, default="kUnset", choices = ['kUnset','kFatal','kError','kWarning','kInfo','kDebug'])
+
 def setup_run_parser_plots(parser):
     publicOptions = parser.add_argument_group('User plots options')
     publicOptions.add_argument("pathToAnalysisScript", help="path to analysis_plots script")
