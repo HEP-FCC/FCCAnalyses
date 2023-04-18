@@ -17,8 +17,18 @@ def sortedDictValues(dic):
     keys = sorted(dic)
     return [dic[key] for key in keys]
 
+def formatStatUncHist(hists, name, hstyle=3254):
+    hTot = hists[0].Clone(name + "_unc")
+    for h in hists[1:]:
+        hTot.Add(h)
+    hTot.SetFillColor(ROOT.kBlack)
+    hTot.SetMarkerSize(0)
+    hTot.SetLineWidth(0)
+    hTot.SetFillStyle(hstyle)    
+    return hTot
+
 #__________________________________________________________
-def mapHistos(var, label, sel, param):
+def mapHistos(var, label, sel, param, rebin):
     print ('run plots for var:{}     label:{}     selection:{}'.format(var,label,sel))
     signal=param.plots[label]['signal']
     backgrounds=param.plots[label]['backgrounds']
@@ -42,6 +52,7 @@ def mapHistos(var, label, sel, param):
                     param.scaleSig=scaleSig
                 print ('scaleSig ',scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
+                hh.Rebin(rebin)
 
                 if len(hsignal[s])==0:
                     hsignal[s].append(hh)
@@ -62,6 +73,7 @@ def mapHistos(var, label, sel, param):
                 h=tf.Get(var)
                 hh = copy.deepcopy(h)
                 hh.Scale(param.intLumi)
+                hh.Rebin(rebin)
                 if len(hbackgrounds[b])==0:
                     hbackgrounds[b].append(hh)
                 else:
@@ -79,7 +91,7 @@ def mapHistos(var, label, sel, param):
     return hsignal,hbackgrounds
 
 #__________________________________________________________
-def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg):
+def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
 
     ###Below are settings for separate signal and background legends
     if(splitLeg):
@@ -164,22 +176,22 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg):
         param.scaleSig=scaleSig
 
     if 'AAAyields' in var:
-        drawStack(var, 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields)
+        drawStack(var, 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         return
 
     if 'stack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields)
+            drawStack(var+"_stack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'log' in param.yaxis:
-            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields)
+            drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
 
     if 'nostack' in param.stacksig:
         if 'lin' in param.yaxis:
-            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , False , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields)
+            drawStack(var+"_nostack_lin", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, False , False , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'log' in param.yaxis:
-            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , False , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields)
+            drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , False , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
             print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
     if 'stack' not in param.stacksig and 'nostack' not in param.stacksig:
@@ -187,7 +199,7 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg):
 
 
 #_____________________________________________________________________________________________________________
-def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, legend2=None, yields=None):
+def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, legend2=None, yields=None, plotStatUnc=False):
 
     canvas = ROOT.TCanvas(name, name, 600, 600)
     canvas.SetLogy(logY)
@@ -264,6 +276,10 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
 
         if not stacksig:
             hStack.Draw("hist")
+            if plotStatUnc:
+                hUnc_bkg = formatStatUncHist(hStack.GetHists(), "bkg_only") # bkg-only uncertainty
+                hUnc_bkg.Draw("E2 SAME")
+            
 
     # define stacked signal histo
     hStackSig = ROOT.THStack("hstacksig","")
@@ -279,11 +295,19 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
 
     if stacksig:
         hStack.Draw("hist")
+        if plotStatUnc:
+            hUnc_sig_bkg = formatStatUncHist(hStack.GetHists(), "sig_bkg") # sig+bkg uncertainty
+            hUnc_sig_bkg.Draw("E2 SAME")
+        
 
     xlabel = histos[0].GetXaxis().GetTitle()
 
     if (not stacksig) and nbkg==0:
         hStackSig.Draw("hist nostack")
+        if plotStatUnc:
+            for sHist in hStackSig.GetHists():
+                hUnc_sig = formatStatUncHist([sHist], "sig", 3245) # sigs uncertainty
+                hUnc_sig.Draw("E2 SAME")
         hStackSig.GetXaxis().SetTitle(xlabel)
         hStackSig.GetYaxis().SetTitle(ylabel)
 
@@ -355,7 +379,11 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         if 'AAAyields' not in name and nbkg>0:
             hStackSig.Draw("same hist nostack")
         else:
-            hStackSig.Draw("hist nostack")
+            hStackSig.Draw("hist nostack")  
+        if plotStatUnc:
+            for sHist in hStackSig.GetHists():
+                hUnc_sig = formatStatUncHist([sHist], "sig", 3245) # sigs uncertainty
+                hUnc_sig.Draw("E2 SAME")
 
     legend.Draw()
     if legend2 != None:
@@ -513,12 +541,17 @@ def run(paramFile):
         splitLeg = param.splitLeg
     else:
         splitLeg = False
+        
+    if hasattr(param, "plotStatUnc"):
+        plotStatUnc = param.plotStatUnc
+    else:
+        plotStatUnc = False
 
     counter=0
-    for var in param.variables:
+    for iVar,var in enumerate(param.variables):
         for label, sels in param.selections.items():
             for sel in sels:
-                hsignal,hbackgrounds=mapHistos(var,label,sel, param)
-                runPlots(var+"_"+label,sel,param,hsignal,hbackgrounds,param.extralabel[sel],splitLeg)
-                if counter==0: runPlots("AAAyields_"+label,sel,param,hsignal,hbackgrounds,param.extralabel[sel],splitLeg)
+                hsignal,hbackgrounds=mapHistos(var,label,sel, param, rebin=param.rebin[iVar] if hasattr(param, "rebin") and len(param.rebin) == len(param.variables) else 1)
+                runPlots(var+"_"+label,sel,param,hsignal,hbackgrounds,param.extralabel[sel],splitLeg,plotStatUnc)
+                if counter==0: runPlots("AAAyields_"+label,sel,param,hsignal,hbackgrounds,param.extralabel[sel],splitLeg,plotStatUnc)
         counter+=1
