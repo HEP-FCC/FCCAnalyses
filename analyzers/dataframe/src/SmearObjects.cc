@@ -457,7 +457,7 @@ ROOT::VecOps::RVec<edm4hep::TrackerHitData> SmearedTracksTOF::operator()(
                    mc_part.mass);
 
     // everything in second
-    float mc_tin = mc_part.time * mm_to_sec;
+    float mc_tin = mc_part.time; // MC time is already in seconds
     float mc_tof = length[itrack] / gen_p4.Beta() * mm_to_sec;
     float mc_tout = mc_tin + mc_tof;
     float reco_tout = trackerhits.at(idx_tout).time;
