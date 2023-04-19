@@ -4,9 +4,9 @@ processList = {
     'p8_ee_ZZ_ecm240':{'fraction':1},
     'p8_ee_WW_ecm240':{'fraction':1}, 
     'wzp6_ee_mumuH_ecm240':{'fraction':1},
-    #'p8_ee_WW_ecm240':{'fraction':1, 'input': 'localSamples/p8_ee_WW_ecm240/', 'xsec': 16.4385},
-    #'p8_ee_ZZ_ecm240':{'fraction':1, 'input': 'localSamples/p8_ee_ZZ_ecm240/', 'xsec': 1.35899},
-    #'p8_ee_ZH_ecm240':{'fraction':1, 'input': 'localSamples/p8_ee_ZH_ecm240/', 'xsec': 0.201868},
+    #'p8_ee_WW_ecm240':{'fraction':1, 'input': 'localSamples/p8_ee_WW_ecm240/', 'crossSection': 16.4385},
+    #'p8_ee_ZZ_ecm240':{'fraction':1, 'input': 'localSamples/p8_ee_ZZ_ecm240/', 'crossSection': 1.35899},
+    #'p8_ee_ZH_ecm240':{'fraction':1, 'input': 'localSamples/p8_ee_ZH_ecm240/', 'crossSection': 0.201868},
 }
 
 # Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics (mandatory)
