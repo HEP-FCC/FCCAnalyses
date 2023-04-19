@@ -10,11 +10,11 @@ files and producing the plots.
 >
 > To have access to the FCC samples, you need to be subscribed to one of the
 > following e-groups (with owner approval) `fcc-eos-read-xx` with `xx=ee,hh,eh`.
-> For the time being, the configuration files are accessible on `fccsw` public
-> AFS. This is not optimal and will be changed in the future with migration to DIRAC, thus you are
-> also kindly asked to contact `emmanuel.perez@cern.ch`, `gerardo.ganis@cern.ch`, `clement.helsens@cern.ch` and request access to
-> `/afs/cern.ch/work/f/fccsw/public/FCCDicts/`.
->
+> The configuration files are accessible at `/afs/cern.ch/work/f/fccsw/public/FCCDicts/` with a mirror at `/cvmfs/fcc.cern.ch/FCCDicts/`.
+> For accessing/reading information about existing datasets you do not need special rights.
+> However, if you need new datasets, you are invited to contact `emmanuel.perez@cern.ch`, `gerardo.ganis@cern.ch` or `juraj.smiesko@cern.ch`
+> who will explian the procedure, including granting the required access, where relevant.
+> 
 
 Detailed code documentation can be found
 [here](http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html).
@@ -31,6 +31,8 @@ Detailed code documentation can be found
     * [Pre-selection](#pre-selection)
     * [Final selection](#final-selection)
     * [Plotting](#plotting)
+  * [Contributing](#contributing)
+    * [Formating](#code-formating)
 
 
 ## RootDataFrame based
@@ -46,9 +48,18 @@ ROOT dataframe documentation is available
 
 ## Getting started
 
-In order to use the FCC analysers within ROOT dataframe, a dictionary needs to
-be built and put into `LD_LIBRARY_PATH` (this happens in `setup.sh`). The
-following needs to be done when running local code and for developers.
+In order to use the FCC analyzers within ROOT RDataFrame, a dictionary needs to
+be built and put into `LD_LIBRARY_PATH`. In order to build and load FCCAnalyses
+with default options one needs to run following two commands:
+
+```shell
+source ./setup.sh
+fccanalysis build
+```
+
+The FCCAnalyses is a CMake based project and any customizations can be provided
+in classic CMake style, the following commands are equivalent to default version
+of FCCAnalyses:
 
 ```shell
 source ./setup.sh
@@ -63,6 +74,21 @@ cd ..
 > Each time changes are made in the C++ code, for example in
 > `analyzers/dataframe/` please do not forget to re-compile :)
 >
+> To cleanly recompile the default version of FCCAnalyses one can use
+> `fccanalysis build --clean-build`.
+
+In order to provide the possibility to keep developing an analysis with well
+defined Key4hep stack, the sub-command `fccanalysis pin` is provided. One can
+pin his/her analysis with
+```
+source setup.sh
+fccanalysis pin
+```
+
+To remove the pin run
+```
+fccanalysis pin --clear
+```
 
 
 ## Generalities
@@ -120,7 +146,7 @@ where `p8_ee_ZH_ecm240` should match an existing sample in the database,
 of output files) and `output` in case you need to change the name of the output
 file (please note that then the sample will not be matched in the database for
 `finalSel.py` histograms normalisation). The other parameters are explained in
-[the example file](https://github.com/HEP-FCC/FCCAnalyses/tree/master/example/FCCee/higgs/mH-recoil/analysis_stage1.py).
+[the example file](https://github.com/HEP-FCC/FCCAnalyses/blob/master/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py).
 
 To run the pre-selection stage of the example analysis run:
 
@@ -195,3 +221,25 @@ Resulting plots will be located the `outdir` defined in the analysis file.
 
 In an attempt to ease the development of new physics case studies, such as for the [FCCee physics performance](https://github.com/HEP-FCC/FCCeePhysicsPerformance) cases, a new experimental analysis package creation tool is introduced.
 [See here](case-studies/README.md) for more details.
+
+
+## Contributing
+
+### Code formating
+
+The preferred style of the C++ code in the FCCAnalyses is LLVM which is checked
+by CI job.
+
+Currently `clang-format` is not available in the Key4hep stack, but one can
+obtain a suitable version of it from CVMFS thanks to LCG:
+```
+source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh
+```
+
+Then to apply formatting to a given file:
+```
+clang-format -i -style=file /path/to/file.cpp
+```
+
+Another way to obtain a recent version of `clang-format` is through downloading
+[Key4hep Spack instance](https://key4hep.github.io/key4hep-doc/spack-build-instructions-for-librarians/spack-setup.html#downloading-a-spack-instance).

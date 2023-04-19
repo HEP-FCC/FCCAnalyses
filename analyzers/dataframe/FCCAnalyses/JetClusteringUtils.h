@@ -78,11 +78,22 @@ namespace FCCAnalyses {
     /** Get jet eta. Details. */
     ROOT::VecOps::RVec<float> get_eta(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
 
-    /** Get jet phi. Details. */
+    /** Get jet phi. Details (range [0,2*pi]). */
     ROOT::VecOps::RVec<float> get_phi(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+    /** Get jet phi. Details (range [-pi,pi]). */
+    ROOT::VecOps::RVec<float> get_phi_std(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
 
     /** Get jet theta. Details. */
     ROOT::VecOps::RVec<float> get_theta(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+    ///Select clustered jets with transverse momentum greader than a minimum value [GeV]
+    struct sel_pt {
+      sel_pt(float arg_min_pt);
+      float m_min_pt = 1.; //> transverse momentum threshold [GeV]
+      ROOT::VecOps::RVec<fastjet::PseudoJet>  operator() (ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+    };
 
     ///Internal methods
     JetClustering::FCCAnalysesJet initialise_FCCAnalysesJet();
@@ -98,6 +109,19 @@ namespace FCCAnalyses {
     fastjet::RecombinationScheme recomb_scheme(int recombination);
 
     std::vector<float> exclusive_dmerge(fastjet::ClusterSequence& cs, int do_dmarge_max);
+
+    // build the resonance from 2 <fastjet::PseudoJet> objects. Keep the closest to the mass given as input
+    struct resonanceBuilder {
+      float m_resonance_mass;
+      resonanceBuilder(float arg_resonance_mass);
+      ROOT::VecOps::RVec<fastjet::PseudoJet> operator()(ROOT::VecOps::RVec<fastjet::PseudoJet> legs);
+    };
+
+		struct recoilBuilder {
+      recoilBuilder(float arg_sqrts);
+      float m_sqrts = 240.0;
+      double operator() (ROOT::VecOps::RVec<fastjet::PseudoJet> in);
+    };
 
     ///@}
 

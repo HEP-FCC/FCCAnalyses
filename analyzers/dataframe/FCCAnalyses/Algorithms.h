@@ -6,6 +6,8 @@
 
 #include "edm4hep/ReconstructedParticleData.h"
 
+#include "FastJet/JetClustering.h"
+
 //#include "TFitter.h"
 #include "Math/Minimizer.h"
 #include "ROOT/RVec.hxx"
@@ -188,6 +190,20 @@ namespace Algorithms{
 
   /// Get the invariant mass from a list of reconstructed particles
   float getMass(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> & in);
+
+  /// make "jets" by splitting the events into two hemisphere transverse to the thrust axis. 
+  struct jets_TwoHemispheres {
+      int m_sorted=0;		///< pT ordering=0, E ordering=1
+      int m_recombination = 0;	///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
+      jets_TwoHemispheres( int arg_sorted, int arg_recombination ) ; 
+      JetClustering::FCCAnalysesJet operator() (
+                                        const ROOT::VecOps::RVec<float> & RP_px,
+                                        const ROOT::VecOps::RVec<float> & RP_py,
+                                        const ROOT::VecOps::RVec<float> & RP_pz,
+                                        const ROOT::VecOps::RVec<float> & RP_e,
+                                        const ROOT::VecOps::RVec<float> & RP_costheta ) ;
+  } ;
+  
 
   ///@}
 

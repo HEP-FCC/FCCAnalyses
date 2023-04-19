@@ -50,21 +50,6 @@ namespace myUtils{
   };
 
 
-  struct build_composite_vertex {
-    build_composite_vertex(int arg_n, int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, bool arg_cc, bool arg_filterPV);
-    int m_n=3;
-    int m_charge=0;
-    float m_masslow=0.05;
-    float m_masshigh=0.05;
-    float m_p=1.;
-    bool m_cc=true;
-    bool m_filterPV=true;
-
-    ROOT::VecOps::RVec<FCCAnalysesComposite> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
-							 ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-							 ROOT::VecOps::RVec<int> in,
-							 ROOT::VecOps::RVec<int> pvindex);
-  };
 
   struct build_tau23pi {
     build_tau23pi( float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho);
@@ -78,21 +63,6 @@ namespace myUtils{
   };
 
 
-  struct build_tau23pi_vertexing {
-    build_tau23pi_vertexing(int arg_charge, float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_cc, bool arg_filterPV, bool arg_rho);
-    int m_charge=1;
-    float m_masslow=0.05;
-    float m_masshigh=3.0;
-    float m_p=1.;
-    float m_angle=1.;
-    bool m_cc=true;
-    bool m_filterPV=true;
-    bool m_rho = true;
-    ROOT::VecOps::RVec<FCCAnalysesComposite> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
-							 ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-							 ROOT::VecOps::RVec<int> in,
-							 ROOT::VecOps::RVec<int> pvindex);
-  };
 
   struct sel_PV {
     sel_PV(bool arg_closest);
@@ -369,11 +339,6 @@ namespace myUtils{
 									 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
 
 
-  ROOT::VecOps::RVec<float> awkwardtest(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
-					ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-					ROOT::VecOps::RVec<int> recind,
-					ROOT::VecOps::RVec<int> mcind,
-					ROOT::VecOps::RVec<edm4hep::MCParticleData> mc);
 
   float build_invmass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 		      ROOT::VecOps::RVec<int> index);

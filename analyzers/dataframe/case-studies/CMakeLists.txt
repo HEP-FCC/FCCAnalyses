@@ -13,11 +13,9 @@ include_directories(${EDM4HEP_INCLUDE_DIRS}
                     ${podio_INCLUDE_DIR}
                     ${FASTJET_INCLUDE_DIR}
                     ${acts_INCLUDE_DIR}
-                    ${AWKWARD_INCLUDE}
                     ${VDT_INCLUDE_DIR}
                     )
 
-message(STATUS "includes-------------------------- dataframe awkward: ${AWKWARD_INCLUDE}")
 message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
 message(STATUS "includes-------------------------- dataframe podio  : ${podio_INCLUDE_DIR}")
 message(STATUS "includes-------------------------- dataframe fastjet: ${FASTJET_INCLUDE_DIRS}")
@@ -39,7 +37,6 @@ target_include_directories(FCCAnalysesCS  PUBLIC
                            ${FCCEDM_INCLUDE_DIRS}
                            ${FASTJET_INCLUDE_DIR}
                            ${acts_INCLUDE_DIR}
-                           ${AWKWARD_INCLUDE}
                            )
 
 target_link_libraries(FCCAnalysesCS
@@ -54,10 +51,6 @@ target_link_libraries(FCCAnalysesCS
                       ${FASTJET_LIBRARIES}
                       ${acts_LIBRARY}
                       ActsCore
-                      #${AWKWARD_LIBRARIES}
-                      ${LIBAWKWARD}
-                      ${CPU-KERNELS}
-                      ${LIBDL}
                       )
 
 

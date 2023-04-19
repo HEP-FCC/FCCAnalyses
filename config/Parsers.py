@@ -7,6 +7,32 @@ def setup_init_parser(parser):
     publicOptions.add_argument('--standalone', action='store_true', help="also add CMake directive to build standalone package", default=False)
     publicOptions.add_argument('--output-dir', help='output directory where the analysis package will be written')
 
+def setup_build_parser(parser):
+    publicOptions = parser.add_argument_group('User build options')
+    publicOptions.add_argument('--clean-build',
+                               action='store_true',
+                               default=False,
+                               help='do a clean build')
+    publicOptions.add_argument('--build-threads',
+                               type=int,
+                               default=1,
+                               help='bumber of threads when building (equivalen to `make -j`)')
+
+def setup_pin_parser(parser):
+    publicOptions = parser.add_argument_group('User pin options')
+    publicOptions.add_argument('-c', '--clear',
+                               action='store_true',
+                               default=False,
+                               help='clear analysis pin')
+    publicOptions.add_argument('-f', '--force',
+                               action='store_true',
+                               default=False,
+                               help='force recreate analysis pin')
+    publicOptions.add_argument('-s', '--show',
+                               action='store_true',
+                               default=False,
+                               help='show pinned stack')
+
 def setup_run_parser(parser):
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument("pathToAnalysisScript", help="path to analysis script")

@@ -14,7 +14,7 @@ include(CTest)
 #--- options ------------------------------------------------------------------
 
 
-set(WITH_ACTS AUTO CACHE STRING "Build analyzers that need Acts")
+set(WITH_ACTS OFF CACHE STRING "Build analyzers that need Acts")
 set_property(CACHE WITH_ACTS PROPERTY STRINGS AUTO ON OFF)
 
 set(WITH_DD4HEP AUTO CACHE STRING "Build analyzers that need DD4hep")
@@ -62,6 +62,8 @@ find_package(podio)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 find_package(FastJet)
 
+find_package( Delphes REQUIRED )
+
 
 if(WITH_ACTS)
   find_package( Acts COMPONENTS Core )
@@ -88,6 +90,17 @@ if(WITH_DD4HEP)
   endif()
 endif()
 
+if(WITH_ONNX)
+  find_package(ONNXRuntime)
+  if(ONNXRuntime_FOUND)
+
+  elseif(WITH_ONNX STREQUAL AUTO)
+    message(WARNING "ONNXRuntime not found. Skipping ONNX-dependent analyzers.")
+    set(WITH_ONNX OFF)
+  else()
+    message(FATAL_ERROR "Failed to locate ONNXRuntime!")
+  endif()
+endif()
 
 if(WITH_ONNX AND BUILD_TESTING) # currently these files are only needed by ONNX-parts
 # Grab the test files into a cached directory
@@ -122,22 +135,6 @@ file(GLOB _run_python_files config/*.py)
 install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
 install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
 
-#--- Awkward setup ------------------------------------------------------------
-
-execute_process(COMMAND python -m awkward.config --incdir OUTPUT_VARIABLE _AWKWARD_INCLUDE OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(AWKWARD_INCLUDE ${_AWKWARD_INCLUDE})
-execute_process(COMMAND python -m awkward.config --libdir OUTPUT_VARIABLE _AWKWARD_LIBRARIES OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(AWKWARD_LIBRARIES ${_AWKWARD_LIBRARIES})
-
-include_directories(BEFORE "${AWKWARD_INCLUDE}")
-
-find_library(CPU-KERNELS awkward-cpu-kernels REQUIRED HINTS ${AWKWARD_LIBRARIES})
-find_library(LIBAWKWARD awkward REQUIRED HINTS ${AWKWARD_LIBRARIES})
-find_library(LIBDL dl REQUIRED)
-
-message(STATUS "Libraries: ${CPU-KERNELS} ${LIBAWKWARD} ${LIBDL}")
-message(STATUS "includes--------------------- main: ${AWKWARD_INCLUDE}")
-message(STATUS "Library---------------------- main: ${AWKWARD_LIBRARIES}")
 
 #--- Descend into subdirectories ----------------------------------------------
 

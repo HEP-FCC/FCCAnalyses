@@ -11,8 +11,10 @@ formats        = ['png','pdf']
 yaxis          = ['lin','log']
 stacksig       = ['stack','nostack']
 outdir         = 'outputs/FCCee/higgs/mH-recoil/mumu/plots/'
+plotStatUnc    = True
 
 variables = ['mz','mz_zoom','leptonic_recoil_m','leptonic_recoil_m_zoom','leptonic_recoil_m_zoom2']
+rebin = [1, 1, 1, 1, 2] # uniform rebin per variable (optional)
 
 ###Dictonnary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
 selections = {}

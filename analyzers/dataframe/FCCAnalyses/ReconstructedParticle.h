@@ -42,6 +42,13 @@ namespace ReconstructedParticle{
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
+  /// select ReconstructedParticles with absolute pseudorapidity less than a maximum absolute value
+  struct sel_eta {
+    sel_eta(float arg_min_eta);
+    float m_min_eta = 2.5; //> pseudorapidity threshold
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+  };
+
   /// select ReconstructedParticles with momentum greater than a minimum value [GeV]
   struct sel_p {
     sel_p(float arg_min_p, float arg_max_p = 1e10);
@@ -125,6 +132,9 @@ namespace ReconstructedParticle{
 
   /// return the TlorentzVector of the one input ReconstructedParticle
   TLorentzVector get_tlv(edm4hep::ReconstructedParticleData in);
+
+	/// return visible 4-momentum vector
+  TLorentzVector get_P4vis(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// concatenate both input vectors and return the resulting vector
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
