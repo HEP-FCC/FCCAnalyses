@@ -614,6 +614,16 @@ def runStages(args, rdfModule, preprocess, analysisFile):
                 sys.exit(4)
             _ana.append(getattr(ROOT, analysis).dictionary)
 
+    # include custom header files
+    includePaths = getElement(rdfModule, "includePaths")
+    if includePaths:
+        ROOT.gInterpreter.ProcessLine(".O3")
+        basepath = os.path.dirname(os.path.abspath(analysisFile))+"/"
+        for path in includePaths:
+            print(f"----> Info: Loading {path}...")
+            ROOT.gInterpreter.Declare(f'#include "{basepath}/{path}"')
+
+
     #check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
