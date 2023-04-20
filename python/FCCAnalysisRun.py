@@ -91,27 +91,6 @@ def SubmitToCondor(cmd,nbtrials):
         if i==nbtrials-1:
             print ("failed sumbmitting after: "+str(nbtrials)+" trials, stop trying to submit")
             return 0
-
-#__________________________________________________________
-def runPreprocess(df):
-    mom_abbrevs = {
-    'ReconstructedParticles.momentum.x': 'RP_px',
-    'ReconstructedParticles.momentum.y': 'RP_py',
-    'ReconstructedParticles.momentum.z': 'RP_pz'
-}
-
-    for branch, abbrev in mom_abbrevs.items():
-        df.Alias(f'{abbrev}', f'{branch}')
-
-    cols = ROOT.vector('string')()
-    cols.push_back("RP_px")
-    cols.push_back("RP_py")
-    cols.push_back("RP_pz")
-    d1 = df.Display(cols)
-    d1.Print()
-    sys.exit(3)
-    return df
-
 #__________________________________________________________
 def initialize(args, rdfModule, analysisFile):
 
@@ -134,6 +113,7 @@ def initialize(args, rdfModule, analysisFile):
             ncpus = ROOT.GetThreadPoolSize()
         ROOT.ROOT.EnableImplicitMT(ncpus)
     ROOT.EnableThreadSafety()
+
     if ROOT.IsImplicitMTEnabled():
         print(f'----> Info: Multithreading enabled. Running over '
               f'{ROOT.GetThreadPoolSize()} threads')
@@ -181,15 +161,25 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
 
     #print("----> Init done, about to run {} events on {} CPUs".format(nevt, ncpus))
 
-    df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
+    try:
+        df = ROOT.RDataFrame("events", inputlist)
 
-    branchList = getElement(rdfModule.RDFanalysis, "output")()
-    branchListVec = ROOT.vector('string')()
-    for branchName in branchList:
-        branchListVec.push_back(branchName)
+        df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
 
-    df2.Snapshot("events", outFile, branchListVec)
+        branch_list = ROOT.vector('string')()
+        blist = getElement(rdfModule.RDFanalysis, "output")()
+        for bname in blist:
+            branch_list.push_back(bname)
+
+        df2.Snapshot("events", outFile, branch_list)
+    except Exception as excp:
+        print('----> Error: During the execution of the stage exception occurred:')
+        print(excp)
+
+        sys.exit(3)
+
     return df2.Count()
+
 
 #__________________________________________________________
 def sendToBatch(rdfModule, chunkList, process, analysisFile):
@@ -690,7 +680,11 @@ def runFinal(rdfModule):
             if doTree:
                 opts = ROOT.RDF.RSnapshotOptions()
                 opts.fLazy = True
-                snapshot_tdf = df_cut.Snapshot("events", fout, "", opts)
+                try:
+                    snapshot_tdf = df_cut.Snapshot("events", fout, "", opts)
+                except Exception as excp:
+                    print('----> Error: During the execution of the final stage exception occurred:')
+
                 # Needed to avoid python garbage collector messing around with the snapshot
                 tdf_list.append(snapshot_tdf)
 
@@ -1028,32 +1022,22 @@ def run(mainparser, subparser=None):
 
     if hasattr(args, 'command'):
         if args.command == "run":
-            try:
-                if hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
-                    runHistmaker(args, rdfModule, analysisFile)
-                else:
-                    runStages(args, rdfModule, args.preprocess, analysisFile)
-            except Exception as excp:
-                print('----> Error: During the execution of the stage file:')
-                print('      ' + analysisFile)
-                print('      exception occurred:')
-                print(excp)
+            if hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
+                print('----> Error: Analysis file does not contain required objects!')
+                print('             Provide either "RDFanalysis" class or "build_graph" function.')
+                sys.exit(3)
+            if hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
+                runHistmaker(args, rdfModule, analysisFile)
+            if not hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
+                runStages(args, rdfModule, args.preprocess, analysisFile)
+            else:
+                print('----> Error: Analysis file does not contain required objects!')
+                print('             Provide either "RDFanalysis" class or "build_graph" function.')
+                sys.exit(3)
         elif args.command == "final":
-            try:
-                runFinal(rdfModule)
-            except Exception as excp:
-                print('----> Error: During the execution of the final stage file:')
-                print('      ' + analysisFile)
-                print('      exception occurred:')
-                print(excp)
+            runFinal(rdfModule)
         elif args.command == "plots":
-            try:
-                runPlots(analysisFile)
-            except Exception as excp:
-                print('----> Error: During the execution of the plots file:')
-                print('      ' + analysisFile)
-                print('      exception occurred:')
-                print(excp)
+            runPlots(analysisFile)
         return
 
     print('----> Info: Running the old way...')
