@@ -98,7 +98,6 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
     print (f'get histograms for {hName}')
     signal=param.procs['signal']
     backgrounds=param.procs['backgrounds']
-    intLumiScale = param.intLumi if param.intLumi > 0 else 1
     scaleSig = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
 
     hsignal = {}
@@ -113,7 +112,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
                 h=tf.Get(hName)
                 hh = copy.deepcopy(h)
                 print ('scaleSig ',scaleSig)
-                hh.Scale(intLumiScale*scaleSig)
+                hh.Scale(param.intLumi*scaleSig)
                 hh.Rebin(rebin)
                 if len(hsignal[s])==0:
                     hsignal[s].append(hh)
@@ -133,7 +132,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
                 tf=ROOT.TFile(fin)
                 h=tf.Get(hName)
                 hh = copy.deepcopy(h)
-                hh.Scale(intLumiScale)
+                hh.Scale(param.intLumi)
                 hh.Rebin(rebin)
                 if len(hbackgrounds[b])==0:
                     hbackgrounds[b].append(hh)
@@ -214,14 +213,18 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         colors.append(param.colors[b])
 
     intLumiab = param.intLumi/1e+06
-
+    intLumi = "L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    if hasattr(param, "intLumiLabel"):
+        intLumi = getattr(param, "intLumiLabel")
 
     lt = "FCCAnalyses: FCC-hh Simulation (Delphes)"
-    rt = "#sqrt{{s}} = {:.1f} TeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    rt = "#sqrt{{s}} = {:.1f} TeV,   L = {}".format(param.energy,intLumi)
 
     if 'ee' in param.collider:
         lt = "FCCAnalyses: FCC-ee Simulation (Delphes)"
-        rt = "#sqrt{{s}} = {:.1f} GeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+        rt = "#sqrt{{s}} = {:.1f} GeV,   {}".format(param.energy,intLumi)
+
+    
 
     customLabel=""
     try:
@@ -333,8 +336,6 @@ def runPlotsHistmaker(hName, param, plotCfg):
         histos.append(hbackgrounds[b][0])
         colors.append(param.colors[b])
 
-    intLumiab = abs(param.intLumi)/1e+06
-
     xtitle = plotCfg['xtitle'] if 'xtitle' in plotCfg else ""
     ytitle = plotCfg['ytitle'] if 'ytitle' in plotCfg else "Events"
     xmin = plotCfg['xmin'] if 'xmin' in plotCfg else -1
@@ -345,13 +346,19 @@ def runPlotsHistmaker(hName, param, plotCfg):
     logy = plotCfg['logy'] if 'logy' in plotCfg else False
     extralab = plotCfg['extralab'] if 'extralab' in plotCfg else ""
     scaleSig = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
+    
+
+    intLumiab = param.intLumi/1e+06
+    intLumi = "L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    if hasattr(param, "intLumiLabel"):
+        intLumi = getattr(param, "intLumiLabel")
 
     lt = "FCCAnalyses: FCC-hh Simulation (Delphes)"
-    rt = "#sqrt{{s}} = {:.1f} TeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    rt = "#sqrt{{s}} = {:.1f} TeV,   L = {}".format(param.energy,intLumi)
 
     if 'ee' in param.collider:
         lt = "FCCAnalyses: FCC-ee Simulation (Delphes)"
-        rt = "#sqrt{{s}} = {:.1f} GeV,   L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+        rt = "#sqrt{{s}} = {:.1f} GeV,   {}".format(param.energy,intLumi)
 
     customLabel=""
     try:
