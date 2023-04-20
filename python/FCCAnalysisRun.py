@@ -24,6 +24,35 @@ def getElementDict(d, element):
 #        print (element, "does not exist using default value")
         return None
 
+
+#__________________________________________________________
+def get_entries(infilepath):
+    '''
+    Get number of original entries and number of actual entries in the file
+    '''
+    infile = ROOT.TFile.Open(infilepath)
+    infile.cd()
+
+    processEvents = 0
+    try:
+        processEvents = infile.Get('eventsProcessed').GetVal()
+    except AttributeError:
+        print('----> Warning: Input file is missing information about '
+              'original number of events!')
+
+    eventsTTree = 0
+    try:
+        eventsTTree = infile.Get("events").GetEntries()
+    except AttributeError:
+        print('----> Error: Input file is missing events TTree! Aborting...')
+        infile.Close()
+        sys.exit(3)
+
+    infile.Close()
+
+    return processEvents, eventsTTree
+
+
 #__________________________________________________________
 def getsubfileList(fileList, eventList, fraction):
     nevts=sum(eventList)
@@ -552,68 +581,49 @@ def runFinal(rdfModule):
         else:
             cutNames = [cut for cut in cutList]
 
-        cutNames.insert(0,' ')
+        cutNames.insert(0, ' ')
         saveTab.append(cutNames)
         efficiencyList.append(cutNames)
 
-    for pr in getElement(rdfModule,"processList", True):
-        processEvents[pr]=0
-        eventsTTree[pr]=0
+    for process_id in getElement(rdfModule, "processList", True):
+        processEvents[process_id] = 0
+        eventsTTree[process_id] = 0
 
         fileListRoot = ROOT.vector('string')()
-        fin  = inputDir+pr+'.root' #input file
-        if not os.path.isfile(fin):
-            print ('----> file ',fin,'  does not exist. Try if it is a directory as it was processed with batch')
+        infilepath = inputDir + process_id + '.root' #input file
+        if not os.path.isfile(infilepath):
+            print('----> File ', infilepath, '  does not exist. Try if it is a directory as it was processed with batch')
         else:
-            print ('----> open file ',fin)
-            tfin = ROOT.TFile.Open(fin)
-            tfin.cd()
-            found=False
-            for key in tfin.GetListOfKeys():
-                if 'eventsProcessed' == key.GetName():
-                    events = tfin.eventsProcessed.GetVal()
-                    processEvents[pr]=events
-                    found=True
-            if not found:
-                processEvents[pr]=1
-            tt=tfin.Get("events")
-            eventsTTree[pr]+=tt.GetEntries()
+            print('----> Open file ', infilepath)
+            processEvents[process_id], eventsTTree[process_id] = get_entries(infilepath)
+            fileListRoot.push_back(infilepath)
 
-            tfin.Close()
-            fileListRoot.push_back(fin)
+        indirpath = inputDir + process_id
+        if os.path.isdir(indirpath):
+            print('----> Open directory ' + indirpath)
+            flist = glob.glob(indirpath + '/chunk*.root')
+            for filepath in flist:
+                print('        ' + filepath)
+                processEvents[process_id], eventsTTree[process_id] = get_entries(filepath)
+                fileListRoot.push_back(filepath)
+        processList[process_id] = fileListRoot
 
-        if os.path.isdir(inputDir+pr):
-            print ('----> open directory ',fin)
-            flist=glob.glob(inputDir+pr+"/chunk*.root")
-            for f in flist:
-                tfin = ROOT.TFile.Open(f)
-                print ('  ----> ',f)
-                tfin.cd()
-                found=False
-                for key in tfin.GetListOfKeys():
-                    if 'eventsProcessed' == key.GetName():
-                        events = tfin.eventsProcessed.GetVal()
-                        processEvents[pr]+=events
-                        found=True
-                if not found:
-                    processEvents[pr]=1
+    print('----> Processed events: {}'.format(processEvents))
+    print('----> Events in ttree:  {}'.format(eventsTTree))
 
-                tt=tfin.Get("events")
-                eventsTTree[pr]+=tt.GetEntries()
-                tfin.Close()
-                fileListRoot.push_back(f)
-        processList[pr]=fileListRoot
+    histoList = getElement(rdfModule, "histoList", True)
+    doScale = getElement(rdfModule, "doScale", True)
+    intLumi = getElement(rdfModule, "intLumi", True)
 
-    print('processed events ',processEvents)
-    print('events in ttree  ',eventsTTree)
+    doTree = getElement(rdfModule, "doTree", True)
+    for pr in getElement(rdfModule, "processList", True):
+        print ('\n----> Running over process: ', pr)
 
-    histoList = getElement(rdfModule,"histoList", True)
-    doScale = getElement(rdfModule,"doScale", True)
-    intLumi = getElement(rdfModule,"intLumi", True)
-
-    doTree = getElement(rdfModule,"doTree", True)
-    for pr in getElement(rdfModule,"processList", True):
-        print ('\n---->  Running over process : ',pr)
+        if processEvents[pr] == 0:
+            print('----> Error: Can\'t scale histograms, the number of '
+                  'processed events for the process {} seems to be '
+                  'zero!'.format(pr))
+            sys.exit(3)
 
         RDF = ROOT.ROOT.RDataFrame
         df  = RDF("events", processList[pr])
