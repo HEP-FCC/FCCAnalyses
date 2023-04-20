@@ -505,6 +505,7 @@ def runLocal(rdfModule, fileList, args):
     fileListRoot = ROOT.vector('string')()
     nevents_meta = 0
     nevents_local = 0
+    print(fileList)
     for fileName in fileList:
 
         if fileName.split('/')[1]=='eos':
@@ -1026,6 +1027,7 @@ def runHistmaker(args, rdfModule, analysisFile):
         ncpus = ROOT.GetThreadPoolSize()
     ROOT.ROOT.EnableImplicitMT(ncpus)
     ROOT.EnableThreadSafety()
+    print (f'----> run over {ROOT.GetThreadPoolSize()} threads')
 
     # include custom header files
     includePaths = getElement(rdfModule, "includePaths")
@@ -1134,7 +1136,7 @@ def runHistmaker(args, rdfModule, analysisFile):
     intLumi = getElement(rdfModule,"intLumi", True)
     nevents_tot = 0
     for process, res, hweight, evtcount in zip(processList, results, hweights, evtcounts):
-        print(process)
+        print(f"Write process {process}, nevents processed {evtcount.GetValue()}")
         fOut = ROOT.TFile(f"{outputDir}/{process}.root", "RECREATE")
         histsToWrite = {}
         for r in res:
