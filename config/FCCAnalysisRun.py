@@ -9,6 +9,7 @@ import importlib.util
 from array import array
 from config.common_defaults import deffccdicts
 import datetime
+import numpy as np
 
 DATE = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
 
@@ -118,14 +119,14 @@ def getElement(rdfModule, element, isFinal=False):
 
         elif element=='doScale':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
-                return {}
+                print('The variable <{}> is optional in the final step/histmaker. By default no scaling is applied.'.format(element))
+                return False
             else: print('The option <{}> is not available in presel analysis'.format(element))
 
         elif element=='intLumi':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file, return empty dictionary. However, if you set doScale, then it is mandatory!'.format(element))
-                return {}
+                print('The variable <{}> is optional in the final step/histmaker. Use the default value of 1'.format(element))
+                return 1.
             else: print('The option <{}> is not available in presel analysis'.format(element))
 
         elif element=='saveTabular':
@@ -253,19 +254,7 @@ def getsubfileList(fileList, eventList, fraction):
 
 #__________________________________________________________
 def getchunkList(fileList, chunks):
-    chunklist=[]
-    if chunks>len(fileList):chunks=len(fileList)
-    nfilesperchunk=int(len(fileList)/chunks)
-    for ch in range(chunks):
-        filecount=0
-        listtmp=[]
-        for fileName in fileList:
-            if (filecount>=ch*nfilesperchunk and filecount<(ch+1)*nfilesperchunk) or (filecount>=ch*nfilesperchunk and ch==chunks-1):
-                listtmp.append(fileName)
-            filecount+=1
-
-        chunklist.append(listtmp)
-    return chunklist
+    return list(np.array_split(fileList, chunks))
 
 
 #__________________________________________________________
@@ -339,24 +328,57 @@ def runPreprocess(df):
     return df
 
 #__________________________________________________________
-def runRDF(rdfModule, inputlist, outFile, nevt, args):
+def initialize(args, rdfModule, analysisFile):
+
     # for convenience and compatibility with user code
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
     geometryFile = getElement(rdfModule, "geometryFile")
     readoutName  = getElement(rdfModule, "readoutName")
     if geometryFile!="" and readoutName!="":
         ROOT.CaloNtupleizer.loadGeometry(geometryFile, readoutName)
+
+    # set multithreading (no MT if number of events is specified)
     ncpus = 1
-    # cannot use MT with Range()
     if args.nevents < 0:
         if isinstance(args.ncpus, int) and args.ncpus >= 1:
             ncpus = args.ncpus
         else:
             ncpus = getElement(rdfModule, "nCPUS")
-
+        if ncpus < 0: # use all available threads
+            ROOT.EnableImplicitMT()
+            ncpus = ROOT.GetThreadPoolSize()
         ROOT.ROOT.EnableImplicitMT(ncpus)
-
     ROOT.EnableThreadSafety()
+    print (f'----> Info: Run over {ROOT.GetThreadPoolSize()} threads')
+    
+    # custom header files
+    includePaths = getElement(rdfModule, "includePaths")
+    if includePaths:
+        ROOT.gInterpreter.ProcessLine(".O3")
+        basepath = os.path.dirname(os.path.abspath(analysisFile))+"/"
+        for path in includePaths:
+            print(f"----> Info: Loading {path}...")
+            ROOT.gInterpreter.Declare(f'#include "{basepath}/{path}"')
+
+    # check if analyses plugins need to be loaded before anything
+    # still in use?
+    analysesList = getElement(rdfModule, "analysesList")
+    if analysesList and len(analysesList) > 0:
+        _ana = []
+        for analysis in analysesList:
+            print(f'----> Info: Load cxx analyzers from {analysis}...')
+            if analysis.startswith('libFCCAnalysis_'):
+                ROOT.gSystem.Load(analysis)
+            else:
+                ROOT.gSystem.Load(f'libFCCAnalysis_{analysis}')
+            if not hasattr(ROOT, analysis):
+                print(f'----> ERROR: analysis "{analysis}" not properly loaded. Exit')
+                sys.exit(4)
+            _ana.append(getattr(ROOT, analysis).dictionary)
+
+#__________________________________________________________
+def runRDF(rdfModule, inputlist, outFile, nevt, args):
+
     df = ROOT.RDataFrame("events", inputlist)
 
     # limit number of events processed
@@ -367,7 +389,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
     if preprocess:
         df2 = runPreprocess(df)
 
-    print("----> Init done, about to run {} events on {} CPUs".format(nevt, ncpus))
+    #print("----> Init done, about to run {} events on {} CPUs".format(nevt, ncpus))
 
     df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
 
@@ -377,7 +399,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
         branchListVec.push_back(branchName)
 
     df2.Snapshot("events", outFile, branchListVec)
-
+    return df2.Count()
 
 #__________________________________________________________
 def sendToBatch(rdfModule, chunkList, process, analysisFile):
@@ -489,7 +511,7 @@ def addeosType(fileName):
     sfileName=fileName.split('/')
     if sfileName[2]=='experiment':
         fileName='root://eospublic.cern.ch/'+fileName
-    elif sfileName[2]=='user' or sfileName[2].contains('home-'):
+    elif sfileName[2]=='user' or 'home-' in sfileName[2]:
         fileName='root://eosuser.cern.ch/'+fileName
     else:
         print('unknown eos type, please check with developers as it might not run with best performances')
@@ -500,11 +522,12 @@ def runLocal(rdfModule, fileList, args):
     #Create list of files to be Processed
     print ("----> Create dataframe object from files: ", )
     fileListRoot = ROOT.vector('string')()
-    nevents_meta = 0
-    nevents_local = 0
+    nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
+    nevents_local = 0 # the amount of events in the input file(s)
     for fileName in fileList:
 
-        if fileName.split('/')[1]=='eos':
+        fsplit = fileName.split('/')
+        if len(fsplit) > 1 and fsplit[1]=='eos':
             fileName=addeosType(fileName)
 
         fileListRoot.push_back(fileName)
@@ -529,17 +552,16 @@ def runLocal(rdfModule, fileList, args):
         outFile+=args.output
     else:
         outFile=args.output
-    start_time = time.time()
+    
     #run RDF
-    runRDF(rdfModule, fileListRoot, outFile, nevents_local, args)
+    start_time = time.time()
+    outn = runRDF(rdfModule, fileListRoot, outFile, nevents_local, args)
+    outn = outn.GetValue()
 
-    outf = ROOT.TFile( outFile, "update" )
+    outf = ROOT.TFile(outFile, "update")
     outt = outf.Get("events")
-    outn = outt.GetEntries()
-    n = array( "i", [ 0 ] )
-    n[0]=nevents_local
-    if nevents_meta>nevents_local:n[0]=nevents_meta
-    p = ROOT.TParameter(int)( "eventsProcessed", n[0])
+
+    p = ROOT.TParameter(int)( "eventsProcessed", nevents_meta if nevents_meta!= 0 else nevents_local)
     p.Write()
 
 #    if args.test:
@@ -596,20 +618,9 @@ def runLocal(rdfModule, fileList, args):
 
 #__________________________________________________________
 def runStages(args, rdfModule, preprocess, analysisFile):
-    # check if analyses plugins need to be loaded before anything
-    analysesList = getElement(rdfModule, "analysesList")
-    if analysesList and len(analysesList) > 0:
-        _ana = []
-        for analysis in analysesList:
-            print(f'----> Load cxx analyzers from {analysis}...')
-            if analysis.startswith('libFCCAnalysis_'):
-                ROOT.gSystem.Load(analysis)
-            else:
-                ROOT.gSystem.Load(f'libFCCAnalysis_{analysis}')
-            if not hasattr(ROOT, analysis):
-                print(f'----> ERROR: analysis "{analysis}" not properly loaded. Exit')
-                sys.exit(4)
-            _ana.append(getattr(ROOT, analysis).dictionary)
+
+    # set ncpus, load header files, custom dicts, ...
+    initialize(args, rdfModule, analysisFile)
 
     #check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
@@ -663,7 +674,7 @@ def runStages(args, rdfModule, preprocess, analysisFile):
         except TypeError:
             print ('----> no values set for process {} will use default values'.format(process))
 
-        print ('----> Running process {} with fraction={}, output={}, chunks={}'.format(process, fraction, output, chunks))
+        print ('----> Info: Add process {} with fraction={}, nfiles={}, output={}, chunks={}'.format(process, fraction, len(fileList), output, chunks))
 
         if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
         chunkList=[fileList]
@@ -1004,6 +1015,162 @@ def runFinal(rdfModule):
     print  ('===================================================================')
 
 
+def runHistmaker(args, rdfModule, analysisFile):
+
+    # set ncpus, load header files, custom dicts, ...
+    initialize(args, rdfModule, analysisFile)
+
+    # load process dictionary
+    procFile = getElement(rdfModule,"procDict")
+    procDict = None
+    if 'https://fcc-physics-events.web.cern.ch' in procFile:
+        print ('----> getting process dictionary from the web')
+        import urllib.request
+        req = urllib.request.urlopen(procFile).read()
+        procDict = json.loads(req.decode('utf-8'))
+    else:
+        procFile = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + procFile
+        if not os.path.isfile(procFile):
+            print ('----> No procDict found: ==={}===, exit'.format(procFile))
+            sys.exit(3)
+        with open(procFile, 'r') as f:
+            procDict=json.load(f)
+
+    # check if outputDir exist and if not create it
+    outputDir = getElement(rdfModule,"outputDir")
+    if not os.path.exists(outputDir) and outputDir!='':
+        os.system("mkdir -p {}".format(outputDir))
+        
+    doScale = getElement(rdfModule,"doScale", True)
+    intLumi = getElement(rdfModule,"intLumi", True)
+
+    # check if the process list is specified, and create graphs for them
+    processList = getElement(rdfModule,"processList")
+    graph_function = getattr(rdfModule, "build_graph")
+    results = [] # all the histograms
+    hweights = [] # all the weights
+    evtcounts = [] # event count of the input file
+    eventsProcessedDict = {} # number of events processed per process, in a potential previous step
+
+    for process in processList:
+        fileList, eventList = getProcessInfo(process, getElement(rdfModule,"prodTag"), getElement(rdfModule, "inputDir"))
+        if len(fileList)==0:
+            print('----> ERROR: No files to process. Exit')
+            sys.exit(3)
+            
+        # get the number of events processed, in a potential previous step
+        fileListRoot = ROOT.vector('string')()
+        nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
+        for fileName in fileList:
+            fsplit = fileName.split('/')
+            if len(fsplit) > 1 and fsplit[1]=='eos':
+                fileName=addeosType(fileName)
+            fileListRoot.push_back(fileName)
+            tf=ROOT.TFile.Open(str(fileName),"READ")
+            tf.cd()
+            for key in tf.GetListOfKeys():
+                if 'eventsProcessed' == key.GetName():
+                    nevents_meta += tf.eventsProcessed.GetVal()
+                    break
+        eventsProcessedDict[process] = nevents_meta
+
+        processDict={}
+        fraction = 1
+        output = process
+        chunks = 1
+        try:
+            processDict=processList[process]
+            if getElementDict(processList[process], 'fraction') != None: fraction = getElementDict(processList[process], 'fraction')
+            if getElementDict(processList[process], 'output')   != None: output   = getElementDict(processList[process], 'output')
+            if getElementDict(processList[process], 'chunks')   != None: chunks   = getElementDict(processList[process], 'chunks')
+
+        except TypeError:
+            print ('----> no values set for process {} will use default values'.format(process))
+
+        if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
+        print ('----> Info: Add process {} with fraction={}, nfiles={}, output={}, chunks={}'.format(process, fraction, len(fileList), output, chunks))
+
+        df = ROOT.ROOT.RDataFrame("events", fileListRoot)
+        evtcount = df.Count()
+        res, hweight = graph_function(df, process)
+        results.append(res)
+        hweights.append(hweight)
+        evtcounts.append(evtcount)
+
+    print('----> Info: Begin event loop')
+    start_time = time.time()
+    ROOT.ROOT.RDF.RunGraphs(evtcounts)
+    print('----> Info: Done event loop')
+    elapsed_time = time.time() - start_time
+
+    print('----> Info: Write output files')
+    nevents_tot = 0
+    for process, res, hweight, evtcount in zip(processList, results, hweights, evtcounts):
+        print(f"----> Info: Write process {process}, nevents processed {evtcount.GetValue()}")
+        fOut = ROOT.TFile(f"{outputDir}/{process}.root", "RECREATE")
+        
+        # get the cross-sections etc. First try locally, then the procDict
+        if 'crossSection' in processList[process]:
+            crossSection = processList[process]['crossSection']
+        elif process in procDict and 'crossSection' in procDict[process]:
+            crossSection = procDict[process]['crossSection']
+        else:
+            print(f"WARNING: cannot find crossSection for {process} in processList or procDict, use default value of 1")
+            crossSection = 1
+
+        if 'kfactor' in processList[process]:
+            kfactor = processList[process]['kfactor']
+        elif process in procDict and 'kfactor' in procDict[process]:
+            kfactor = procDict[process]['kfactor']
+        else:
+            kfactor = 1
+            
+        if 'matchingEfficiency' in processList[process]:
+            matchingEfficiency = processList[process]['matchingEfficiency']
+        elif process in procDict and 'matchingEfficiency' in procDict[process]:
+            matchingEfficiency = procDict[process]['matchingEfficiency']
+        else:
+            matchingEfficiency = 1    
+        
+        eventsProcessed = eventsProcessedDict[process] if eventsProcessedDict[process] != 0 else evtcount.GetValue()
+        scale = crossSection*kfactor*matchingEfficiency/eventsProcessed
+        
+        histsToWrite = {}
+        for r in res:
+            hist = r.GetValue()
+            hName = hist.GetName()
+            if hist.GetName() in histsToWrite: # merge histograms in case histogram exists
+                histsToWrite[hName].Add(hist)
+            else:
+                histsToWrite[hName] = hist
+
+        for hist in histsToWrite.values():
+            if doScale:
+                hist.Scale(scale*intLumi)
+            hist.Write()
+
+        # write all meta info to the output file
+        p = ROOT.TParameter(int)("eventsProcessed", eventsProcessed)
+        p.Write()
+        p = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
+        p.Write()
+        p = ROOT.TParameter(float)("intLumi", intLumi)
+        p.Write()
+        p = ROOT.TParameter(float)("crossSection", crossSection)
+        p.Write()
+        p = ROOT.TParameter(float)("kfactor", kfactor)
+        p.Write()
+        p = ROOT.TParameter(float)("matchingEfficiency", matchingEfficiency)
+        p.Write()
+        nevents_tot += evtcount.GetValue()
+
+    print  ("==============================SUMMARY==============================")
+    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
+    print  ("Events Processed/Second  :  ",int(nevents_tot/elapsed_time))
+    print  ("Total Events Processed   :  ",int(nevents_tot))
+    print  ("===================================================================")
+
+
 #__________________________________________________________
 def runPlots(analysisFile):
     import config.doPlots as dp
@@ -1087,7 +1254,10 @@ def run(mainparser, subparser=None):
     if hasattr(args, 'command'):
         if args.command == "run":
             try:
-                runStages(args, rdfModule, args.preprocess, analysisFile)
+                if hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
+                    runHistmaker(args, rdfModule, analysisFile)
+                else:
+                    runStages(args, rdfModule, args.preprocess, analysisFile)
             except Exception as excp:
                 print('----> Error: During the execution of the stage file:')
                 print('      ' + analysisFile)
