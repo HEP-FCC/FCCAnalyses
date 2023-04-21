@@ -1253,7 +1253,7 @@ def run(mainparser, subparser=None):
     if hasattr(args, 'command'):
         if args.command == "run":
             try:
-                if getattr(rdfModule, "build_graph", False):
+                if hasattr(rdfModule, "build_graph"):
                     runHistmaker(args, rdfModule, analysisFile)
                 else:
                     runStages(args, rdfModule, args.preprocess, analysisFile)
