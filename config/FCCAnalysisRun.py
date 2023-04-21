@@ -337,16 +337,17 @@ def initialize(args, rdfModule, analysisFile):
     if geometryFile!="" and readoutName!="":
         ROOT.CaloNtupleizer.loadGeometry(geometryFile, readoutName)
 
-    # set multithreading
+    # set multithreading (no MT if number of events is specified)
     ncpus = 1
-    if isinstance(args.ncpus, int) and args.ncpus >= 1:
-        ncpus = args.ncpus
-    else:
-        ncpus = getElement(rdfModule, "nCPUS")
-    if ncpus < 0: # use all available threads
-        ROOT.EnableImplicitMT()
-        ncpus = ROOT.GetThreadPoolSize()
-    ROOT.ROOT.EnableImplicitMT(ncpus)
+    if args.nevents < 0:
+        if isinstance(args.ncpus, int) and args.ncpus >= 1:
+            ncpus = args.ncpus
+        else:
+            ncpus = getElement(rdfModule, "nCPUS")
+        if ncpus < 0: # use all available threads
+            ROOT.EnableImplicitMT()
+            ncpus = ROOT.GetThreadPoolSize()
+        ROOT.ROOT.EnableImplicitMT(ncpus)
     ROOT.EnableThreadSafety()
     print (f'----> Info: Run over {ROOT.GetThreadPoolSize()} threads')
     
