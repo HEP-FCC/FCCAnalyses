@@ -527,7 +527,7 @@ def runLocal(rdfModule, fileList, args):
     for fileName in fileList:
 
         fsplit = fileName.split('/')
-        if len(fsplit) > 0 and fsplit[1]=='eos':
+        if len(fsplit) > 1 and fsplit[1]=='eos':
             fileName=addeosType(fileName)
 
         fileListRoot.push_back(fileName)
@@ -1063,7 +1063,7 @@ def runHistmaker(args, rdfModule, analysisFile):
         nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
         for fileName in fileList:
             fsplit = fileName.split('/')
-            if len(fsplit) > 0 and fsplit[1]=='eos':
+            if len(fsplit) > 1 and fsplit[1]=='eos':
                 fileName=addeosType(fileName)
             fileListRoot.push_back(fileName)
             tf=ROOT.TFile.Open(str(fileName),"READ")
@@ -1254,7 +1254,7 @@ def run(mainparser, subparser=None):
     if hasattr(args, 'command'):
         if args.command == "run":
             try:
-                if hasattr(rdfModule, "build_graph"):
+                if hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
                     runHistmaker(args, rdfModule, analysisFile)
                 else:
                     runStages(args, rdfModule, args.preprocess, analysisFile)
