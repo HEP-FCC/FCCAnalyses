@@ -346,7 +346,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
     logy = plotCfg['logy'] if 'logy' in plotCfg else False
     extralab = plotCfg['extralab'] if 'extralab' in plotCfg else ""
     scaleSig = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
-    
+
 
     intLumiab = param.intLumi/1e+06
     intLumi = "L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
@@ -539,6 +539,8 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     if ymin != -1 and ymax != -1:
         hStack.SetMinimum(ymin)
         hStack.SetMaximum(ymax)
+        hStackSig.SetMinimum(ymin)
+        hStackSig.SetMaximum(ymax)
 
     if(nbkg>0):
         escape_scale_Xaxis=True
