@@ -483,7 +483,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         if plotStatUnc:
             hUnc_sig_bkg = formatStatUncHist(hStack.GetHists(), "sig_bkg") # sig+bkg uncertainty
             hUnc_sig_bkg.Draw("E2 SAME")
-        
+
     xlabel = xtitle
     if xlabel == "":
         xlabel = histos[0].GetXaxis().GetTitle()
@@ -537,10 +537,15 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
             hStack.SetMinimum(0.)
 
     if ymin != -1 and ymax != -1:
-        hStack.SetMinimum(ymin)
-        hStack.SetMaximum(ymax)
-        hStackSig.SetMinimum(ymin)
-        hStackSig.SetMaximum(ymax)
+        if ymin <=0 and logY:
+            print('----> Error: Log scale can\'t start at: {}'.format(ymin))
+            sys.exit(3)
+        if stacksig:
+            hStack.SetMinimum(ymin)
+            hStack.SetMaximum(ymax)
+        else:
+            hStackSig.SetMinimum(ymin)
+            hStackSig.SetMaximum(ymax)
 
     if(nbkg>0):
         escape_scale_Xaxis=True
@@ -575,7 +580,10 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
             hStack.GetXaxis().SetLimits(int(lowX),int(highX))
 
     if xmin != -1 and xmax != -1:
-        hStack.GetXaxis().SetLimits(xmin,xmax)
+        if stacksig:
+            hStack.GetXaxis().SetLimits(xmin, xmax)
+        else:
+            hStackSig.GetXaxis().SetLimits(xmin, xmax)
 
     if not stacksig:
         if 'AAAyields' not in name and nbkg>0:
