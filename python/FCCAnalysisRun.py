@@ -1026,9 +1026,9 @@ def run(mainparser, subparser=None):
                 print('----> Error: Analysis file ambiguous!')
                 print('             Both "RDFanalysis" class and "build_graph" function defined.')
                 sys.exit(3)
-            if hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
+            elif hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
                 runHistmaker(args, rdfModule, analysisFile)
-            if not hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
+            elif not hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
                 runStages(args, rdfModule, args.preprocess, analysisFile)
             else:
                 print('----> Error: Analysis file does not contain required objects!')
