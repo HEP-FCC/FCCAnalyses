@@ -1023,8 +1023,8 @@ def run(mainparser, subparser=None):
     if hasattr(args, 'command'):
         if args.command == "run":
             if hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
-                print('----> Error: Analysis file does not contain required objects!')
-                print('             Provide either "RDFanalysis" class or "build_graph" function.')
+                print('----> Error: Analysis file ambiguous!')
+                print('             Both "RDFanalysis" class and "build_graph" function defined.')
                 sys.exit(3)
             if hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
                 runHistmaker(args, rdfModule, analysisFile)
