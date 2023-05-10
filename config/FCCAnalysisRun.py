@@ -221,18 +221,17 @@ def getEntries(f):
 #__________________________________________________________
 def getProcessInfoYaml(process, prodTag):
     doc = None
-    if prodTag[-1]!="/":prodTag+="/"
-    yamlfile=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '')+"yaml/"+prodTag+process+'/merge.yaml'
+    yamlfile = os.path.join(deffccdicts, 'yaml', prodTag, process, 'merge.yaml')
     with open(yamlfile) as ftmp:
         try:
             doc = yaml.load(ftmp, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
             print(exc)
         except IOError as exc:
-            print ("I/O error({0}): {1}".format(exc.errno, exc.strerror))
-            print ("outfile ",outfile)
+            print("I/O error({0}): {1}".format(exc.errno, exc.strerror))
+            print("outfile ", outfile)
         finally:
-            print ('----> yaml file {} succesfully opened'.format(yamlfile))
+            print('----> yaml file {} succesfully opened'.format(yamlfile))
 
     filelist  = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]
@@ -726,32 +725,53 @@ def testfile(f):
         return False
     return True
 
+
+def get_proc_dict(proc_dict_location):
+    if '://fcc-physics-events.web.cern.ch' in proc_dict_location:
+        print('----> Info: Getting process dictionary from the web:')
+        print('            {}'.format(proc_dict_location))
+        import urllib.request
+        req = urllib.request.urlopen(proc_dict_location).read()
+        try:
+            proc_dict = json.loads(req.decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            print('----> Error: Failed to parse process dictionary correctly!')
+            print('             Aborting...')
+            sys.exit(3)
+    else:
+        proc_dict_path = os.path.join(deffccdicts, proc_dict_location)
+        print('----> Info: Loading process dictionary from:')
+        print('            {}'.format(proc_dict_path))
+        if not os.path.isfile(proc_dict_path):
+            print('----> Error: No process dictionary found! Aborting...')
+            sys.exit(3)
+        with open(proc_dict_path, 'r') as infile:
+            try:
+                proc_dict = json.load(infile)
+            except json.decoder.JSONDecodeError:
+                print('----> Error: Failed to parse process dictionary '
+                      'correctly!')
+                print('             Aborting...')
+                sys.exit(3)
+
+    return proc_dict
+
+
 #__________________________________________________________
 def runFinal(rdfModule):
+    proc_dict_location = getElement(rdfModule, "procDict", True)
+    if not proc_dict_location:
+        print('----> Error: Location of the procDict not provided. Aborting...')
+        sys.exit(3)
 
-    procFile = getElement(rdfModule,"procDict", True)
-    procDict = None
-    if 'https://fcc-physics-events.web.cern.ch' in procFile:
-        print ('----> getting process dictionary from the web')
-        import urllib.request
-        req = urllib.request.urlopen(procFile).read()
-        procDict = json.loads(req.decode('utf-8'))
+    procDict = get_proc_dict(proc_dict_location)
 
-    else:
-        procFile = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + procFile
-        if not os.path.isfile(procFile):
-            print ('----> No procDict found: ==={}===, exit'.format(procFile))
-            sys.exit(3)
-        with open(procFile, 'r') as f:
-            procDict=json.load(f)
-
-
-    procDictAdd = getElement(rdfModule,"procDictAdd", True)
+    procDictAdd = getElement(rdfModule, "procDictAdd", True)
     for procAdd in procDictAdd:
         if getElementDict(procDict, procAdd) == None:
             procDict[procAdd] = procDictAdd[procAdd]
 
-    ROOT.ROOT.EnableImplicitMT(getElement(rdfModule,"nCPUS", True))
+    ROOT.ROOT.EnableImplicitMT(getElement(rdfModule, "nCPUS", True))
 
     nevents_real=0
     start_time = time.time()
@@ -763,8 +783,13 @@ def runFinal(rdfModule):
     efficiencyList=[]
 
     inputDir = getElement(rdfModule,"inputDir", True)
-    if inputDir!="":
-        if inputDir[-1]!="/":inputDir+="/"
+    if not inputDir:
+        print('----> Error: The inputDir variable is mandatory for the final '
+              'stage of the analysis!')
+        print('             Aborting...')
+        sys.exit(3)
+
+    if inputDir[-1]!="/":inputDir+="/"
 
     outputDir = getElement(rdfModule,"outputDir", True)
     if outputDir!="":
@@ -1021,26 +1046,16 @@ def runHistmaker(args, rdfModule, analysisFile):
     initialize(args, rdfModule, analysisFile)
 
     # load process dictionary
-    procFile = getElement(rdfModule,"procDict")
-    procDict = None
-    if 'https://fcc-physics-events.web.cern.ch' in procFile:
-        print ('----> getting process dictionary from the web')
-        import urllib.request
-        req = urllib.request.urlopen(procFile).read()
-        procDict = json.loads(req.decode('utf-8'))
-    else:
-        procFile = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + procFile
-        if not os.path.isfile(procFile):
-            print ('----> No procDict found: ==={}===, exit'.format(procFile))
-            sys.exit(3)
-        with open(procFile, 'r') as f:
-            procDict=json.load(f)
+    proc_dict_location = getElement(rdfModule, "procDict", True)
+    if not proc_dict_location:
+        print('----> Error: Location of the procDict not provided. Aborting...')
+        sys.exit(3)
 
     # check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
         os.system("mkdir -p {}".format(outputDir))
-        
+
     doScale = getElement(rdfModule,"doScale", True)
     intLumi = getElement(rdfModule,"intLumi", True)
 
