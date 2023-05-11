@@ -7,151 +7,13 @@ import json
 import subprocess
 import importlib.util
 from array import array
-from config.common_defaults import deffccdicts
 import datetime
 import numpy as np
 
+from anafile import getElement
+from process import getProcessInfo, get_process_dict
+
 DATE = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-
-#__________________________________________________________
-def getElement(rdfModule, element, isFinal=False):
-    try:
-        return getattr(rdfModule, element)
-    except AttributeError:
-
-        #return default values or crash if mandatory
-        if element=='processList':
-            print('The variable <{}> is mandatory in your analysis.py file, will exit'.format(element))
-            sys.exit(3)
-
-        elif element=='analysers':
-            print('The function <{}> is mandatory in your analysis.py file, will exit'.format(element))
-            if isFinal: print('The function <{}> is not part of final analysis'.format(element))
-            sys.exit(3)
-
-        elif element=='output':
-            print('The function <{}> is mandatory in your analysis.py file, will exit'.format(element))
-            if isFinal: print('The function <{}> is not part of final analysis'.format(element))
-            sys.exit(3)
-
-        elif element=='analysisName':
-            print('The variable <analysisName> is optional in your analysis.py file, return default value ""')
-            return ""
-
-        elif element=='nCPUS':
-            print('The variable <{}> is optional in your analysis.py file, return default value 4'.format(element))
-            return 4
-
-        elif element=='runBatch':
-            print('The variable <{}> is optional in your analysis.py file, return default value False'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return False
-
-        elif element=='outputDir':
-            print('The variable <{}> is optional in your analysis.py file, return default value running dir'.format(element))
-            return ""
-
-        elif element=='batchQueue':
-            print('The variable <{}> is optional in your analysis.py file, return default value workday'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return "workday"
-
-        elif element=='compGroup':
-             print('The variable <{}> is optional in your analysis.py file, return default value group_u_FCC.local_gen'.format(element))
-             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-             return "group_u_FCC.local_gen"
-
-        elif element=='outputDirEos':
-            print('The variable <{}> is optional in your analysis.py file, return default empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
-
-        elif element=='eosType':
-            print('The variable <{}> is optional in your analysis.py file, return default eospublic'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return "eospublic"
-
-        elif element=='userBatchConfig':
-            print('The variable <{}> is optional in your analysis.py file, return default empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
-
-        elif element=='testFile':
-            print('The variable <{}> is optional in your analysis.py file, return default file'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return "root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root"
-
-        elif element=='procDict':
-            if isFinal:
-                print('The variable <{}> is mandatory in your analysis_final.py file, exit'.format(element))
-                sys.exit(3)
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='cutList':
-            if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file, return empty dictonary'.format(element))
-                return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='defineList':
-            if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file, return empty dictonary'.format(element))
-                return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='histoList':
-            if isFinal:
-                print('The variable <{}> is mandatory in your analysis_final.py file, exit'.format(element))
-                sys.exit(3)
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='doTree':
-            if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return default value False'.format(element))
-                return False
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='procDictAdd':
-            if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
-                return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='doScale':
-            if isFinal:
-                print('The variable <{}> is optional in the final step/histmaker. By default no scaling is applied.'.format(element))
-                return False
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='intLumi':
-            if isFinal:
-                print('The variable <{}> is optional in the final step/histmaker. Use the default value of 1'.format(element))
-                return 1.
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='saveTabular':
-            if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
-                return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='cutLabels':
-            if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
-                return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
-
-        elif element=='geometryFile':
-            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
-
-        elif element=='readoutName':
-            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
-
-        return None
 
 #__________________________________________________________
 def getElementDict(d, element):
@@ -163,53 +25,6 @@ def getElementDict(d, element):
         return None
 
 #__________________________________________________________
-def getProcessInfo(process, prodTag, inputDir):
-    if prodTag==None and inputDir==None:
-        print('The variable <prodTag> or <inputDir> is mandatory your analysis.py file, will exit')
-        sys.exit(3)
-    elif prodTag!=None and inputDir!=None:
-        print('The variable <prodTag> and <inputDir> can not be set both at the same time in your analysis.py file, will exit')
-        sys.exit(3)
-
-    if prodTag!=None:
-        return getProcessInfoYaml(process, prodTag)
-    elif inputDir!=None:
-        return getProcessInfoFiles(process, inputDir)
-    else:
-        print('problem, why are you here???, exit')
-        sys.exist(3)
-
-#__________________________________________________________
-def getProcessInfoFiles(process, inputDir):
-    filelist=[]
-    eventlist=[]
-    filetest='{}/{}.root'.format(inputDir, process)
-    dirtest='{}/{}'.format(inputDir, process)
-
-    if os.path.isfile(filetest) and os.path.isdir(dirtest):
-        print ("----> For process {} both a file {} and a directory {} exist".format(process,filetest,dirtest))
-        print ("----> Exactly one should be used, please check. Exit")
-        sys.exit(3)
-
-    if not os.path.isfile(filetest) and not os.path.isdir(dirtest):
-        print ("----> For process {} neither a file {} nor a directory {} exist".format(process,filetest,dirtest))
-        print ("----> Exactly one should be used, please check. Exit")
-        sys.exit(3)
-
-    if os.path.isfile(filetest):
-        filelist.append(filetest)
-        eventlist.append(getEntries(filetest))
-
-    if os.path.isdir(dirtest):
-        flist=glob.glob(dirtest+"/*.root")
-        for f in flist:
-            filelist.append(f)
-            eventlist.append(getEntries(f))
-
-
-    return filelist, eventlist
-
-#__________________________________________________________
 def getEntries(f):
     tf=ROOT.TFile.Open(f,"READ")
     tf.cd()
@@ -217,26 +32,6 @@ def getEntries(f):
     nevents=tt.GetEntries()
     tf.Close()
     return nevents
-
-#__________________________________________________________
-def getProcessInfoYaml(process, prodTag):
-    doc = None
-    yamlfile = os.path.join(deffccdicts, 'yaml', prodTag, process, 'merge.yaml')
-    with open(yamlfile) as ftmp:
-        try:
-            doc = yaml.load(ftmp, Loader=yaml.FullLoader)
-        except yaml.YAMLError as exc:
-            print(exc)
-        except IOError as exc:
-            print("I/O error({0}): {1}".format(exc.errno, exc.strerror))
-            print("outfile ", outfile)
-        finally:
-            print('----> yaml file {} succesfully opened'.format(yamlfile))
-
-    filelist  = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
-    eventlist = [f[1] for f in doc['merge']['outfiles']]
-    return filelist,eventlist
-
 
 #__________________________________________________________
 def getsubfileList(fileList, eventList, fraction):
@@ -726,37 +521,6 @@ def testfile(f):
     return True
 
 
-def get_proc_dict(proc_dict_location):
-    if '://fcc-physics-events.web.cern.ch' in proc_dict_location:
-        print('----> Info: Getting process dictionary from the web:')
-        print('            {}'.format(proc_dict_location))
-        import urllib.request
-        req = urllib.request.urlopen(proc_dict_location).read()
-        try:
-            proc_dict = json.loads(req.decode('utf-8'))
-        except json.decoder.JSONDecodeError:
-            print('----> Error: Failed to parse process dictionary correctly!')
-            print('             Aborting...')
-            sys.exit(3)
-    else:
-        proc_dict_path = os.path.join(deffccdicts, proc_dict_location)
-        print('----> Info: Loading process dictionary from:')
-        print('            {}'.format(proc_dict_path))
-        if not os.path.isfile(proc_dict_path):
-            print('----> Error: No process dictionary found! Aborting...')
-            sys.exit(3)
-        with open(proc_dict_path, 'r') as infile:
-            try:
-                proc_dict = json.load(infile)
-            except json.decoder.JSONDecodeError:
-                print('----> Error: Failed to parse process dictionary '
-                      'correctly!')
-                print('             Aborting...')
-                sys.exit(3)
-
-    return proc_dict
-
-
 #__________________________________________________________
 def runFinal(rdfModule):
     proc_dict_location = getElement(rdfModule, "procDict", True)
@@ -764,7 +528,7 @@ def runFinal(rdfModule):
         print('----> Error: Location of the procDict not provided. Aborting...')
         sys.exit(3)
 
-    procDict = get_proc_dict(proc_dict_location)
+    procDict = get_process_dict(proc_dict_location)
 
     procDictAdd = getElement(rdfModule, "procDictAdd", True)
     for procAdd in procDictAdd:
@@ -1188,7 +952,7 @@ def runHistmaker(args, rdfModule, analysisFile):
 
 #__________________________________________________________
 def runPlots(analysisFile):
-    import config.doPlots as dp
+    import doPlots as dp
     dp.run(analysisFile)
 
 #__________________________________________________________
@@ -1261,7 +1025,7 @@ def run(mainparser, subparser=None):
     #load the analysis
     analysisFile = os.path.abspath(analysisFile)
     print('----> Info: Loading analysis file:')
-    print('      ' + analysisFile)
+    print('            ' + analysisFile)
     rdfSpec   = importlib.util.spec_from_file_location("rdfanalysis", analysisFile)
     rdfModule = importlib.util.module_from_spec(rdfSpec)
     rdfSpec.loader.exec_module(rdfModule)

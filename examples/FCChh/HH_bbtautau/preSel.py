@@ -1,8 +1,8 @@
-from common_defaults import deffccdicts
- #python FCChhAnalyses/FCChh/ttHH/dataframe/preSel.py 
+#python FCChhAnalyses/FCChh/ttHH/dataframe/preSel.py
+from process import get_process_dict_dirs
 import os
 
-basedir=os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "yaml/FCC/fcc_v04/"
+basedir = os.path.join(get_process_dict_dirs()[0] + "yaml/FCC/fcc_v04/"
 outdir="FCChh/HH_bbtautau/"
 NUM_CPUS = 20
 process_list=['pwp8_pp_hh_lambda100_5f_hhbbaa',

@@ -1,5 +1,3 @@
-from common_defaults import deffccdicts
-
 #python FCChhAnalyses/FCChh/ttHH/dataframe/finalSel.py 
 import sys, os
 import ROOT
@@ -8,7 +6,7 @@ import ROOT
 baseDir  = "FCChh/HH_bbtautau/"
 
 ###Link to the dictonary that contains all the cross section informations etc...
-procDict = os.path.join(os.getenv('FCCDICTSDIR', deffccdicts), '') + "FCC_procDict_fcc_v04.json"
+procDict = 'FCC_procDict_fcc_v04.json'
 
 process_list=['pwp8_pp_hh_lambda100_5f_hhbbaa',
               'mgp8_pp_bbtata_QED',

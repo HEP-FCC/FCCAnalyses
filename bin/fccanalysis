@@ -12,7 +12,7 @@ def main():
     parser_run_final = subparsers.add_parser('final', help="run a RDataFrame based FCC analysis final configuration")
     parser_run_plots = subparsers.add_parser('plots', help="run a RDataFrame based FCC analysis plot configuration")
 
-    import config.Parsers as fccpars
+    import Parsers as fccpars
     fccpars.setup_init_parser(parser_init)
     fccpars.setup_build_parser(parser_build)
     fccpars.setup_pin_parser(parser_pin)
@@ -23,16 +23,16 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'init':
-        from config.FCCAnalysisSetup import setup
+        from FCCAnalysisSetup import setup
         setup(parser)
     elif args.command == 'build':
-        from config.build_analysis import build_analysis
+        from build_analysis import build_analysis
         build_analysis(parser)
     elif args.command == 'pin':
-        from config.pin_analysis import PinAnalysis
+        from pin_analysis import PinAnalysis
         PinAnalysis(parser)
     else:
-        from config.FCCAnalysisRun import run
+        from FCCAnalysisRun import run
         run(parser)
 
 

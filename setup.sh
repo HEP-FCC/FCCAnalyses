@@ -16,7 +16,7 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   fi
 
   echo "----> Info: Setting up environment variables..."
-  export PYTHONPATH=${LOCAL_DIR}:${PYTHONPATH}
+  export PYTHONPATH=${LOCAL_DIR}/python:${PYTHONPATH}
   export PYTHONPATH=${LOCAL_DIR}/install/python:${PYTHONPATH}
   export PATH=${LOCAL_DIR}/bin:${PATH}
   export PATH=${LOCAL_DIR}/install/bin:${PATH}
@@ -30,6 +30,8 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   else
     export LD_LIBRARY_PATH=${ONNXRUNTIME_ROOT_DIR}/lib:${LD_LIBRARY_PATH}
   fi
+
+  export FCCDICTSDIR=/cvmfs/fcc.cern.ch/FCCDicts:${FCCDICTSDIR}
 else
   echo "----> Error: This script is meant to be sourced!"
 fi
