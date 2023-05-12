@@ -1,13 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
 body {
-  box-sizing: border-box;
   min-width: 200px;
   max-width: 980px;
   margin: 0 auto;
   padding: 45px;
+  font-family: 'Space Mono', monospace;
+  color: black;
+
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #0d1117;
-  }
+header {
+  text-align: center;
+}
+
+header .brand {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+header img {
+  vertical-align: middle;
+}
+
+header a {
+  color: black;
+  text-decoration: none;
+}
+
+article a {
+  /* Taken from:
+   * https://twiki.cern.ch/twiki/bin/view/FCC/LogoDesign
+   */
+  color: #807fff;
+  text-decoration: none;
 }
