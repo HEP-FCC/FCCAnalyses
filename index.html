@@ -5,27 +5,58 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
     <title>FCCAnalyses</title>
-    <meta name="color-scheme" content="light dark">
-    <link rel="stylesheet" href="css/github-markdown.css">
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="Common analysis framework for the Future Circular Collider">
+    <meta name="author" content="CERN">
+
+    <meta property="og:site_name"   content="FCCAnalyses" />
+    <meta property="og:title"       content="FCCAnalyses" />
+    <meta property="og:description" content="Common analysis framework for the Future Circular Collider" />
+    <meta property="og:image"       content="/img/logo.png" />
+    <meta property="og:url"         content="https://hep-fcc.github.io/FCCAnalyses/" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:locale"      content="en_US" />
+
+    <link rel="stylesheet" href="/css/style.css">
   </head>
 
   <body>
-    <!-- script> 
-      var url= "http://hep-fcc.github.io/FCCAnalyses/doc/latest/index.html"; 
-      window.location = url; 
-    </script -->
-    <article class="markdown-body">
-      <h1>FCCAnalyses</h1>
+    <header>
+      <div class="brand">
+        <img width="7%" src="/img/FCC-Circle_Main_RGB_Black.png">
+        <a href="/">FCCAnalyses</a>
+      </div>
       <p><em>Common analysis framework for the Future Circular Collider</em></p>
+      <hr>
+    </header>
 
-      <h2>Signpost</h2>
+    <article>
+      <h1>About</h1>
+
+      <p>
+        The framework is used for the majority of the FCC related analyses, non
+        definitive list can be found at
+        <a href="https://hep-fcc.github.io/FCCeePhysicsPerformance/">FCCee Physics Performance</a>.
+
+        Individual analyses are designed to use the
+        <a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html">ROOT RDataFrame</a>
+        as the main event processor and the analyses input files contain
+        physics objects in <a href="https://edm4hep.web.cern.ch/">EDM4hep</a>
+        format.
+      </p>
+
+      <h2>Documentation</h2>
 
       <ul>
         <li><a href="doc/latest/index.html">Code Reference (Doxygen)</a></li>
+        <li><a href="man/index.html">Manual pages</a></li>
+        <li><a href="https://hep-fcc.github.io/fcc-tutorials/">FCC Tutorials</a></li>
+      </ul>
+
+      <h2>Other links</h2>
+
+      <ul>
         <li><a href="dev/bench/index.html">Benchmarks</a></li>
         <li><a href="https://github.com/HEP-FCC/FCCAnalyses">Repository</a></li>
-        <li><a href="https://hep-fcc.github.io/fcc-tutorials/">FCC Tutorials</a></li>
       </ul>
 
     </article>

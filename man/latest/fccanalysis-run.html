@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Manpage for fccanalysis
+   Contact fcc-experiments-sw-dev@cern.ch to correct errors or typos.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="/css/mandoc.css" type="text/css" media="all"/>
+  <title>FCCANALYSIS-RUN(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">FCCANALYSIS-RUN(1)</td>
+    <td class="head-vol">fccanalysis-run man page</td>
+    <td class="head-rtitle">FCCANALYSIS-RUN(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+fccanalysis-run - run FCC analysis
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+<i>fccanalysis run</i> [-h | --help] [--files-list FILES_LIST [FILES_LIST ...]]
+                [--output OUTPUT] [--nevents NEVENTS] [--test] [--bench]
+                [--ncpus NCPUS] [--preprocess] [--validate] [--rerunfailed]
+                [--jobdir JOBDIR] [--eloglevel {kUnset,kFatal,kError,kWarning,kInfo,kDebug}]
+                [--batch] &lt;analysis-file&gt;
+</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<i>fccanalysis-run</i> will run analysis provided in the analysis file. The
+  analysis itself can be divided into several stages if desired. For all those
+  stages <i>fccanalysis-run</i> is used.
+<p class="Pp">When using <i>fccanalysis-run</i> the analysis is running in the
+    managed mode, where the RDataFrame provided is steered by the framework and
+    users can control some aspects of the running with additional global
+    attributes, see <b>fccanalysis-file</b>(8).</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+&lt;analysis-file&gt;
+<div class="Bd-indent">Path to analysis file.</div>
+<p class="Pp">--help</p>
+<div class="Bd-indent">Prints short help message and exits.</div>
+<p class="Pp">--files-list FILES_LIST [FILES_LIST ...]</p>
+<div class="Bd-indent">Specify input file to bypass the processList.</div>
+<p class="Pp">--output OUTPUT</p>
+<div class="Bd-indent">Specify output file name to bypass the processList and or
+  outputList, default <i>output.root</i>.</div>
+<p class="Pp">--nevents NEVENTS</p>
+<div class="Bd-indent">Specify max number of events to process.</div>
+<p class="Pp">--test</p>
+<div class="Bd-indent">Run over the test file.</div>
+<p class="Pp">--bench</p>
+<div class="Bd-indent">Output benchmark results to a JSON file.</div>
+<p class="Pp">--ncpus NCPUS</p>
+<div class="Bd-indent">Set number of threads.</div>
+<p class="Pp">--preprocess</p>
+<div class="Bd-indent">Run preprocessing.</div>
+<p class="Pp">--validate</p>
+<div class="Bd-indent">Validate a given production.</div>
+<p class="Pp">--rerunfailed</p>
+<div class="Bd-indent">Rerun failed jobs.</div>
+<p class="Pp">--jobdir JOBDIR</p>
+<div class="Bd-indent">Specify the batch job directory.</div>
+<p class="Pp">--eloglevel {kUnset,kFatal,kError,kWarning,kInfo,kDebug}</p>
+<div class="Bd-indent">Specify the RDataFrame ELogLevel.</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ENVIRONMENT_VARIABLES"><a class="permalink" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT
+  VARIABLES</a></h1>
+<b>FCCDICTSDIR</b>
+<div class="Bd-indent">Controls search path for the process dictionaries. The
+  default value is <i>/cvmfs/fcc.cern.ch/FCCDicts/</i>.</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+fccanalysis(1), fccanalysis-file(7)
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+Many
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+There are many contributors to the FCCAnalyses framework, but the principal
+  authors are:
+<br/>
+<div class="Bd-indent">Clement Helsens
+<br/>
+Valentin Volk
+<br/>
+Gerardo Ganis</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FCCANALYSES"><a class="permalink" href="#FCCANALYSES">FCCANALYSES</a></h1>
+Part of the FCCAnalyses framework.
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LINKS"><a class="permalink" href="#LINKS">LINKS</a></h1>
+1. FCCAnalyses webpage
+<div class="Bd-indent">https://hep-fcc.github.io/FCCAnalyses/</div>
+<p class="Pp">2. FCCAnalysises GitHub repository</p>
+<div class="Bd-indent">https://github.com/HEP-FCC/FCCAnalyses/</div>
+<p class="Pp">3. FCCSW Forum</p>
+<div class="Bd-indent">https://fccsw-forum.web.cern.ch/</div>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">12 May 2023</td>
+    <td class="foot-os">0.6.0</td>
+  </tr>
+</table>
+</body>
+</html>
