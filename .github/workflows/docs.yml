@@ -5,8 +5,6 @@ on: [push]
 jobs:
   docs:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
     - uses: actions/checkout@v2
     - uses: cvmfs-contrib/github-action-cvmfs@v2
@@ -28,3 +26,19 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./build/doxygen/html
         destination_dir: doc/latest
+  man:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install mandoc
+      run: |
+        sudo apt-get install -y mandoc
+    - name: Compile HTML pages
+      run: |
+        ./github/scripts/man2html.sh
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./man/html
+        destination_dir: man/latest
