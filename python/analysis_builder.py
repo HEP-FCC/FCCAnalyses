@@ -45,7 +45,7 @@ def setup_analysis(package: str,
             print(f'Warning: FCCAnalysis package "{package}" already exists.')
             pass
     try:
-        tmpl_dir = os.path.join(fccanalyses_path, 'config/templates')
+        tmpl_dir = os.path.join(fccanalyses_path, 'templates')
         with open(f'{path}/src/classes.h', 'w') as f:
             f.write(replace_all(open(f'{tmpl_dir}/classes.h', 'r').read(), replacement_dict))
         with open(f'{path}/src/classes_def.xml', 'w') as f:

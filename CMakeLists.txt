@@ -131,9 +131,8 @@ file(COPY bin/fccanalysis
 install(PROGRAMS bin/fccanalysis DESTINATION bin)
 
 
-file(GLOB _run_python_files config/*.py)
-install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
-install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
+file(GLOB _run_python_files python/*.py)
+install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 
 
 #--- Descend into subdirectories ----------------------------------------------
