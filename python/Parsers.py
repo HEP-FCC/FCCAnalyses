@@ -9,14 +9,14 @@ def setup_init_parser(parser):
 
 def setup_build_parser(parser):
     publicOptions = parser.add_argument_group('User build options')
-    publicOptions.add_argument('--clean-build',
+    publicOptions.add_argument('-c', '--clean-build',
                                action='store_true',
                                default=False,
                                help='do a clean build')
-    publicOptions.add_argument('--build-threads',
+    publicOptions.add_argument('-j','--build-threads',
                                type=int,
                                default=1,
-                               help='bumber of threads when building (equivalen to `make -j`)')
+                               help='bumber of threads when building (equivalent to `make -j`)')
 
 def setup_pin_parser(parser):
     publicOptions = parser.add_argument_group('User pin options')
