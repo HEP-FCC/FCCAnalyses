@@ -143,8 +143,13 @@ def initialize(args, rdfModule, analysisFile):
             ncpus = ROOT.GetThreadPoolSize()
         ROOT.ROOT.EnableImplicitMT(ncpus)
     ROOT.EnableThreadSafety()
-    print (f'----> Info: Run over {ROOT.GetThreadPoolSize()} threads')
-    
+    if ROOT.IsImplicitMTEnabled():
+        print(f'----> Info: Multithreading enabled. Running over '
+              f'{ROOT.GetThreadPoolSize()} threads')
+    else:
+        print('----> Info: No multithreading enabled. Running in single '
+              'thread...')
+
     # custom header files
     includePaths = getElement(rdfModule, "includePaths")
     if includePaths:
