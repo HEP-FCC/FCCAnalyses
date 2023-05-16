@@ -6,6 +6,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="/css/mandoc.css" type="text/css" media="all"/>
   <title>FCCANALYSIS-RUN(1)</title>
 </head>
@@ -20,24 +21,26 @@
 <div class="manual-text">
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-fccanalysis-run - run FCC analysis
+<p class="Pp">fccanalysis-run - run FCC analysis</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>fccanalysis run</i> [-h | --help] [--files-list FILES_LIST [FILES_LIST ...]]
+<pre><i>fccanalysis run</i> [-h | --help] [--files-list FILES_LIST [FILES_LIST ...]]
+<br/>
                 [--output OUTPUT] [--nevents NEVENTS] [--test] [--bench]
+<br/>
                 [--ncpus NCPUS] [--preprocess] [--validate] [--rerunfailed]
+<br/>
                 [--jobdir JOBDIR] [--eloglevel {kUnset,kFatal,kError,kWarning,kInfo,kDebug}]
-                [--batch] &lt;analysis-file&gt;
-</pre>
+<br/>
+                [--batch] &lt;analysis-file&gt;</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<i>fccanalysis-run</i> will run analysis provided in the analysis file. The
-  analysis itself can be divided into several stages if desired. For all those
-  stages <i>fccanalysis-run</i> is used.
+<p class="Pp"><i>fccanalysis-run</i> will run analysis provided in the analysis
+    file. The analysis itself can be divided into several stages if desired. For
+    all those stages <i>fccanalysis-run</i> is used.</p>
 <p class="Pp">When using <i>fccanalysis-run</i> the analysis is running in the
     managed mode, where the RDataFrame provided is steered by the framework and
     users can control some aspects of the running with additional global
@@ -45,7 +48,7 @@ fccanalysis-run - run FCC analysis
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
-&lt;analysis-file&gt;
+<p class="Pp">&lt;analysis-file&gt;</p>
 <div class="Bd-indent">Path to analysis file.</div>
 <p class="Pp">--help</p>
 <div class="Bd-indent">Prints short help message and exits.</div>
@@ -76,24 +79,25 @@ fccanalysis-run - run FCC analysis
 <section class="Sh">
 <h1 class="Sh" id="ENVIRONMENT_VARIABLES"><a class="permalink" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT
   VARIABLES</a></h1>
-<b>FCCDICTSDIR</b>
+<p class="Pp"><b>FCCDICTSDIR</b></p>
 <div class="Bd-indent">Controls search path for the process dictionaries. The
   default value is <i>/cvmfs/fcc.cern.ch/FCCDicts/</i>.</div>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-fccanalysis(1), fccanalysis-file(7)
+<p class="Pp">fccanalysis(1), fccanalysis-file(7)</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
-Many
+<p class="Pp">Many</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-There are many contributors to the FCCAnalyses framework, but the principal
-  authors are:
-<br/>
+<p class="Pp">There are many contributors to the FCCAnalyses framework, but the
+    principal authors are:
+  <br/>
+</p>
 <div class="Bd-indent">Clement Helsens
 <br/>
 Valentin Volk
@@ -102,11 +106,11 @@ Gerardo Ganis</div>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="FCCANALYSES"><a class="permalink" href="#FCCANALYSES">FCCANALYSES</a></h1>
-Part of the FCCAnalyses framework.
+<p class="Pp">Part of the FCCAnalyses framework.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LINKS"><a class="permalink" href="#LINKS">LINKS</a></h1>
-1. FCCAnalyses webpage
+<p class="Pp">1. FCCAnalyses webpage</p>
 <div class="Bd-indent">https://hep-fcc.github.io/FCCAnalyses/</div>
 <p class="Pp">2. FCCAnalysises GitHub repository</p>
 <div class="Bd-indent">https://github.com/HEP-FCC/FCCAnalyses/</div>
