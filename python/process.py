@@ -6,6 +6,17 @@ import os
 import sys
 import json
 import yaml
+import glob
+import ROOT
+
+
+def getEntries(f):
+    tf=ROOT.TFile.Open(f,"READ")
+    tf.cd()
+    tt=tf.Get("events")
+    nevents=tt.GetEntries()
+    tf.Close()
+    return nevents
 
 
 def getProcessInfo(process, prodTag, inputDir):

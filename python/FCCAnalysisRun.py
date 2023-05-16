@@ -25,15 +25,6 @@ def getElementDict(d, element):
         return None
 
 #__________________________________________________________
-def getEntries(f):
-    tf=ROOT.TFile.Open(f,"READ")
-    tf.cd()
-    tt=tf.Get("events")
-    nevents=tt.GetEntries()
-    tf.Close()
-    return nevents
-
-#__________________________________________________________
 def getsubfileList(fileList, eventList, fraction):
     nevts=sum(eventList)
     nevts_target=nevts*fraction
