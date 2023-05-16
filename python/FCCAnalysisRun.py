@@ -148,22 +148,13 @@ def initialize(args, rdfModule, analysisFile):
 
 #__________________________________________________________
 def runRDF(rdfModule, inputlist, outFile, nevt, args):
-
     df = ROOT.RDataFrame("events", inputlist)
 
     # limit number of events processed
     if args.nevents > 0:
-      df = df.Range(0, args.nevents)
-
-    preprocess=False
-    if preprocess:
-        df2 = runPreprocess(df)
-
-    #print("----> Init done, about to run {} events on {} CPUs".format(nevt, ncpus))
+        df = df.Range(0, args.nevents)
 
     try:
-        df = ROOT.RDataFrame("events", inputlist)
-
         df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
 
         branch_list = ROOT.vector('string')()
@@ -173,7 +164,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
 
         df2.Snapshot("events", outFile, branch_list)
     except Exception as excp:
-        print('----> Error: During the execution of the stage exception occurred:')
+        print('----> Error: During the execution of the analysis file exception occurred:')
         print(excp)
 
         sys.exit(3)
