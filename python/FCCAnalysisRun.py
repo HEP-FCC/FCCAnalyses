@@ -24,6 +24,35 @@ def getElementDict(d, element):
 #        print (element, "does not exist using default value")
         return None
 
+
+#__________________________________________________________
+def get_entries(infilepath):
+    '''
+    Get number of original entries and number of actual entries in the file
+    '''
+    infile = ROOT.TFile.Open(infilepath)
+    infile.cd()
+
+    processEvents = 0
+    try:
+        processEvents = infile.Get('eventsProcessed').GetVal()
+    except AttributeError:
+        print('----> Warning: Input file is missing information about '
+              'original number of events!')
+
+    eventsTTree = 0
+    try:
+        eventsTTree = infile.Get("events").GetEntries()
+    except AttributeError:
+        print('----> Error: Input file is missing events TTree! Aborting...')
+        infile.Close()
+        sys.exit(3)
+
+    infile.Close()
+
+    return processEvents, eventsTTree
+
+
 #__________________________________________________________
 def getsubfileList(fileList, eventList, fraction):
     nevts=sum(eventList)
@@ -277,93 +306,91 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
     print ('----> batch command  : ',cmdBatch)
     job=SubmitToCondor(cmdBatch,10)
 
-#__________________________________________________________
-def addeosType(fileName):
-    sfileName=fileName.split('/')
-    if sfileName[2]=='experiment':
-        fileName='root://eospublic.cern.ch/'+fileName
-    elif sfileName[2]=='user' or 'home-' in sfileName[2]:
-        fileName='root://eosuser.cern.ch/'+fileName
-    else:
-        print('unknown eos type, please check with developers as it might not run with best performances')
-    return fileName
 
 #__________________________________________________________
-def runLocal(rdfModule, fileList, args):
-    #Create list of files to be Processed
-    print ("----> Create dataframe object from files: ", )
-    fileListRoot = ROOT.vector('string')()
-    nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
-    nevents_local = 0 # the amount of events in the input file(s)
-    for fileName in fileList:
+def apply_filepath_rewrites(filepath):
+    '''
+    Apply path rewrites if applicable.
+    '''
 
-        fsplit = fileName.split('/')
-        if len(fsplit) > 1 and fsplit[1]=='eos':
-            fileName=addeosType(fileName)
+    splitpath = filepath.split('/')
+    if len(splitpath) > 1 and splitpath[1] == 'eos':
+        if splitpath[2] == 'experiment':
+            filepath = 'root://eospublic.cern.ch/' + filepath
+        elif splitpath[2] == 'user' or 'home-' in splitpath[2]:
+            filepath = 'root://eosuser.cern.ch/' + filepath
+        else:
+            print('----> Warning: Unknown EOS path type!')
+            print('      Please check with the developers as this might impact performance of the analysis.')
+    return filepath
 
-        fileListRoot.push_back(fileName)
-        print ("   ",fileName)
-        tf=ROOT.TFile.Open(str(fileName),"READ")
-        tf.cd()
-        for key in tf.GetListOfKeys():
-            if 'eventsProcessed' == key.GetName():
-                nevents_meta += tf.eventsProcessed.GetVal()
-                break
-        tt=tf.Get("events")
-        nevents_local+=tt.GetEntries()
 
-    # adjust number of events in case --nevents was specified
-    if args.nevents > 0:
-      nevents_local = args.nevents
-    print ("----> nevents original={}  local={}".format(nevents_meta,nevents_local))
-    outFile = getElement(rdfModule,"outputDir")
-    if outFile!="" and outFile[-1]!="/": outFile+="/"
+#__________________________________________________________
+def runLocal(rdfModule, infile_list, args):
+    # Create list of files to be processed
+    print ('----> Creating dataframe object from files: ', )
+    file_list = ROOT.vector('string')()
+    nevents_orig = 0   # Amount of events processed in previous stage (= 0 if it is the first stage)
+    nevents_local = 0  # The amount of events in the input file(s)
+    for filepath in infile_list:
 
-    if args.batch == False:
-        outFile+=args.output
+        filepath = apply_filepath_rewrites(filepath)
+
+        file_list.push_back(filepath)
+        print('      ', filepath)
+        infile = ROOT.TFile.Open(filepath, 'READ')
+        try:
+            nevents_orig += infile.Get('eventsProcessed').GetVal()
+        except AttributeError:
+            pass
+
+        try:
+            nevents_local += infile.Get("events").GetEntries()
+        except AttributeError:
+            print('----> Error: Input file:')
+            print('             ' + filepath)
+            print('             is missing events TTree! Aborting...')
+            infile.Close()
+            sys.exit(3)
+
+    # Adjust number of events in case --nevents was specified
+    if args.nevents > 0 and args.nevents < nevents_local:
+        nevents_local = args.nevents
+
+    print('----> Info: Number of events: original={}    '
+          'local={}'.format(nevents_orig, nevents_local))
+
+    outfilepath = getElement(rdfModule, "outputDir")
+    if not args.batch:
+        outfilepath += '/' + args.output
     else:
-        outFile=args.output
-    
-    #run RDF
+        outfilepath = args.output
+
+    #Run RDF
     start_time = time.time()
-    outn = runRDF(rdfModule, fileListRoot, outFile, nevents_local, args)
+    outn = runRDF(rdfModule, file_list, outfilepath, nevents_local, args)
     outn = outn.GetValue()
 
-    outf = ROOT.TFile(outFile, "update")
-    outt = outf.Get("events")
-
-    p = ROOT.TParameter(int)( "eventsProcessed", nevents_meta if nevents_meta!= 0 else nevents_local)
-    p.Write()
-
-#    if args.test:
-#        outf2 = ROOT.TFile(fileListRoot[0])
-#        outt2_1 = outf2.Get("metadata")
-#        outt2_2 = outf2.Get("run_metadata")
-#        outt2_3 = outf2.Get("evt_metadata")
-#        outt2_4 = outf2.Get("col_metadata")
-#        outf.cd()
-#        outt2_1.Write()
-#        outt2_2.Write()
-#        outt2_3.Write()
-#        outt2_4.Write()
-
-    outf.Write()
-    outf.Close()
+    outfile = ROOT.TFile(outfilepath, 'update')
+    param = ROOT.TParameter(int)('eventsProcessed',
+                                 nevents_orig if nevents_orig != 0 else nevents_local)
+    param.Write()
+    outfile.Write()
+    outfile.Close()
 
     elapsed_time = time.time() - start_time
-    print  ("==============================SUMMARY==============================")
-    print  ("Elapsed time (H:M:S)     :  ",time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-    print  ("Events Processed/Second  :  ",int(nevents_local/elapsed_time))
-    print  ("Total Events Processed   :  ",int(nevents_local))
-    if (nevents_local>0): print  ("Reduction factor local   :  ",outn/nevents_local)
-    if (nevents_meta>0):  print  ("Reduction factor total   :  ",outn/nevents_meta)
-    print  ("===================================================================")
-    print  (" ")
-    print  (" ")
+    print('============================= SUMMARY =============================')
+    print('Elapsed time (H:M:S):    ', time.strftime('%H:%M:%S', time.gmtime(elapsed_time)))
+    print('Events processed/second: ', int(nevents_local/elapsed_time))
+    print('Total events processed:  ', int(nevents_local))
+    print('No. result events:       ', int(outn))
+    if nevents_local > 0:
+        print('Reduction factor local:  ', outn/nevents_local)
+    if nevents_orig > 0:
+        print('Reduction factor total:  ', outn/nevents_orig)
+    print('===================================================================\n\n')
 
     if args.bench:
-        import json
-
         analysis_name = getElement(rdfModule, 'analysisName')
         if not analysis_name:
             analysis_name = args.pathToAnalysisScript
@@ -552,68 +579,49 @@ def runFinal(rdfModule):
         else:
             cutNames = [cut for cut in cutList]
 
-        cutNames.insert(0,' ')
+        cutNames.insert(0, ' ')
         saveTab.append(cutNames)
         efficiencyList.append(cutNames)
 
-    for pr in getElement(rdfModule,"processList", True):
-        processEvents[pr]=0
-        eventsTTree[pr]=0
+    for process_id in getElement(rdfModule, "processList", True):
+        processEvents[process_id] = 0
+        eventsTTree[process_id] = 0
 
         fileListRoot = ROOT.vector('string')()
-        fin  = inputDir+pr+'.root' #input file
-        if not os.path.isfile(fin):
-            print ('----> file ',fin,'  does not exist. Try if it is a directory as it was processed with batch')
+        infilepath = inputDir + process_id + '.root' #input file
+        if not os.path.isfile(infilepath):
+            print('----> File ', infilepath, '  does not exist. Try if it is a directory as it was processed with batch')
         else:
-            print ('----> open file ',fin)
-            tfin = ROOT.TFile.Open(fin)
-            tfin.cd()
-            found=False
-            for key in tfin.GetListOfKeys():
-                if 'eventsProcessed' == key.GetName():
-                    events = tfin.eventsProcessed.GetVal()
-                    processEvents[pr]=events
-                    found=True
-            if not found:
-                processEvents[pr]=1
-            tt=tfin.Get("events")
-            eventsTTree[pr]+=tt.GetEntries()
+            print('----> Open file ', infilepath)
+            processEvents[process_id], eventsTTree[process_id] = get_entries(infilepath)
+            fileListRoot.push_back(infilepath)
 
-            tfin.Close()
-            fileListRoot.push_back(fin)
+        indirpath = inputDir + process_id
+        if os.path.isdir(indirpath):
+            print('----> Open directory ' + indirpath)
+            flist = glob.glob(indirpath + '/chunk*.root')
+            for filepath in flist:
+                print('        ' + filepath)
+                processEvents[process_id], eventsTTree[process_id] = get_entries(filepath)
+                fileListRoot.push_back(filepath)
+        processList[process_id] = fileListRoot
 
-        if os.path.isdir(inputDir+pr):
-            print ('----> open directory ',fin)
-            flist=glob.glob(inputDir+pr+"/chunk*.root")
-            for f in flist:
-                tfin = ROOT.TFile.Open(f)
-                print ('  ----> ',f)
-                tfin.cd()
-                found=False
-                for key in tfin.GetListOfKeys():
-                    if 'eventsProcessed' == key.GetName():
-                        events = tfin.eventsProcessed.GetVal()
-                        processEvents[pr]+=events
-                        found=True
-                if not found:
-                    processEvents[pr]=1
+    print('----> Processed events: {}'.format(processEvents))
+    print('----> Events in ttree:  {}'.format(eventsTTree))
 
-                tt=tfin.Get("events")
-                eventsTTree[pr]+=tt.GetEntries()
-                tfin.Close()
-                fileListRoot.push_back(f)
-        processList[pr]=fileListRoot
+    histoList = getElement(rdfModule, "histoList", True)
+    doScale = getElement(rdfModule, "doScale", True)
+    intLumi = getElement(rdfModule, "intLumi", True)
 
-    print('processed events ',processEvents)
-    print('events in ttree  ',eventsTTree)
+    doTree = getElement(rdfModule, "doTree", True)
+    for pr in getElement(rdfModule, "processList", True):
+        print ('\n----> Running over process: ', pr)
 
-    histoList = getElement(rdfModule,"histoList", True)
-    doScale = getElement(rdfModule,"doScale", True)
-    intLumi = getElement(rdfModule,"intLumi", True)
-
-    doTree = getElement(rdfModule,"doTree", True)
-    for pr in getElement(rdfModule,"processList", True):
-        print ('\n---->  Running over process : ',pr)
+        if processEvents[pr] == 0:
+            print('----> Error: Can\'t scale histograms, the number of '
+                  'processed events for the process {} seems to be '
+                  'zero!'.format(pr))
+            sys.exit(3)
 
         RDF = ROOT.ROOT.RDataFrame
         df  = RDF("events", processList[pr])
