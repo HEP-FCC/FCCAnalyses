@@ -62,7 +62,27 @@
 <div class="Bd-indent">Provides information where to find input files. There are
   several way how to find the information, one of them uses YAML file which is
   being searched for in the subfolders of $FCCDICTSDIR.</div>
+<p class="Pp"><b>processList</b></p>
+<div class="Bd-indent">Dictionary of process samples to be run over. Each
+  process can have several parameters:
+<br/>
+<i>fraction</i>
+<div class="Bd-indent">The analysis will run over reduced number of input files
+  roughly corresponding to the fraction of total events specified.
+<br/>
+Default value: 1 (full process sample)</div>
+<i>output</i>
+<div class="Bd-indent">Specifies the stem for the output file(s). The stem will
+  be used to create output directory if there is more than one chunk or as a
+  filename if there is only one.
+<br/>
+Default value: output.root</div>
+<i>chunks</i>
+<div class="Bd-indent">The analysis RDataFrame can be split into several chunks.
+<br/>
+Default value: 1</div>
 <p class="Pp">This section is under construction. You are invited to help :)</p>
+</div>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
@@ -101,8 +121,8 @@ Gerardo Ganis</div>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">12 May 2023</td>
-    <td class="foot-os">0.6.0</td>
+    <td class="foot-date">24 May 2023</td>
+    <td class="foot-os">0.7.0</td>
   </tr>
 </table>
 </body>
