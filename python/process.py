@@ -97,8 +97,8 @@ def getProcessInfoYaml(process, prodTag):
             print("----> Error: I/O error({0}): {1}".format(exc.errno, exc.strerror))
             print("             yamlfile: ", yamlfilepath)
         finally:
-            print('----> Info: yaml file "{}" successfully '
-                  'opened'.format(yamlfilepath))
+            print('----> Info: YAML file with process information successfully loaded:')
+            print('            {}'.format(yamlfilepath))
 
     filelist = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]

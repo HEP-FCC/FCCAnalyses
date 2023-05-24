@@ -31,6 +31,9 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
     export LD_LIBRARY_PATH=${ONNXRUNTIME_ROOT_DIR}/lib:${LD_LIBRARY_PATH}
   fi
 
+  export MANPATH=${LOCAL_DIR}/man:${MANPATH}
+  export MANPATH=${LOCAL_DIR}/install/share/man:${MANPATH}
+
   export FCCDICTSDIR=/cvmfs/fcc.cern.ch/FCCDicts:${FCCDICTSDIR}
 else
   echo "----> Error: This script is meant to be sourced!"

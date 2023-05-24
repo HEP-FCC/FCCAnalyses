@@ -1,3 +1,5 @@
+import argparse
+
 def setup_init_parser(parser):
     publicOptions = parser.add_argument_group('User options')
     publicOptions.add_argument('package', help='name of the analysis package to be built')
@@ -34,30 +36,57 @@ def setup_pin_parser(parser):
                                help='show pinned stack')
 
 def setup_run_parser(parser):
-    publicOptions = parser.add_argument_group('User options')
-    publicOptions.add_argument("pathToAnalysisScript", help="path to analysis script")
-    publicOptions.add_argument("--files-list", help="Specify input file to bypass the processList", default=[], nargs='+')
-    publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
-    publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
-    publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
-    publicOptions.add_argument('--bench', action='store_true', help='Output benchmark results to a JSON file', default=False)
-    publicOptions.add_argument("--ncpus", help="Set number of threads", type=int)
-    #publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
-    #publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
-    publicOptions.add_argument("--preprocess", action='store_true', help="Run preprocessing", default=False)
-    publicOptions.add_argument("--validate", action='store_true', help="Validate a given production", default=False)
-    publicOptions.add_argument("--rerunfailed", action='store_true', help="Rerun failed jobs", default=False)
-    publicOptions.add_argument("--jobdir", help="Specify the batch job directory", type=str, default="output.root")
-    publicOptions.add_argument("--eloglevel", help="Specify the RDataFrame ELogLevel", type=str, default="kUnset", choices = ['kUnset','kFatal','kError','kWarning','kInfo','kDebug'])
+    '''
+    Define command line arguments for the run subcommand.
+    '''
+    parser.add_argument('anafile_path',
+                        help='path to analysis file')
+    parser.add_argument('--files-list', default=[], nargs='+',
+                        help='specify input file to bypass the processList')
+    parser.add_argument('--output', type=str, default='output.root',
+                        help='specify output file name to bypass the processList and or outputList')
+    parser.add_argument('--nevents', type=int, default=-1,
+                        help='specify max number of events to process')
+    parser.add_argument('--test', action='store_true', default=False,
+                        help='run over the test file')
+    parser.add_argument('--bench', action='store_true', default=False,
+                        help='output benchmark results to a JSON file')
+    parser.add_argument('--ncpus', type=int, default=-1,
+                        help='set number of threads')
+    parser.add_argument('--final', action='store_true', default=False,
+                        help='run final analysis (produces final histograms and trees)')
+    parser.add_argument('--plots', action='store_true', default=False,
+                        help='run analysis plots')
+    parser.add_argument('--preprocess', action='store_true', default=False,
+                        help='run preprocessing')
+    parser.add_argument('--validate', action='store_true', default=False,
+                        help='validate a given production')
+    parser.add_argument('--rerunfailed', action='store_true', default=False,
+                        help='rerun failed jobs')
+    parser.add_argument('--jobdir', type=str, default='output.root',
+                        help='specify the batch job directory')
+    parser.add_argument('--eloglevel', type=str, default='kUnset',
+                        choices=['kUnset', 'kFatal', 'kError', 'kWarning', 'kInfo', 'kDebug'],
+                        help='specify the RDataFrame ELogLevel')
 
-    internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
-    internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
+    # Internal argument, not to be used by the users
+    parser.add_argument('--batch', action='store_true', default=False,
+                        help=argparse.SUPPRESS)
+
 
 def setup_run_parser_final(parser):
-    publicOptions = parser.add_argument_group('User final options')
-    publicOptions.add_argument("pathToAnalysisScript", help="path to analysis_final script")
-    publicOptions.add_argument("--eloglevel", help="Specify the RDataFrame ELogLevel", type=str, default="kUnset", choices = ['kUnset','kFatal','kError','kWarning','kInfo','kDebug'])
+    '''
+    Define command line arguments for the final subcommand.
+    '''
+    parser.add_argument('anafile_path',
+                        help='path to analysis_final script')
+    parser.add_argument('--eloglevel', type=str, default='kUnset',
+                        choices=['kUnset', 'kFatal', 'kError', 'kWarning', 'kInfo', 'kDebug'],
+                        help='Specify the RDataFrame ELogLevel')
+
 
 def setup_run_parser_plots(parser):
-    publicOptions = parser.add_argument_group('User plots options')
-    publicOptions.add_argument("pathToAnalysisScript", help="path to analysis_plots script")
+    '''
+    Define command line arguments for the plots subcommand.
+    '''
+    parser.add_argument('anafile_path', help="path to analysis_plots script")
