@@ -10,20 +10,10 @@ from array import array
 import datetime
 import numpy as np
 
-from anafile import getElement
+from anafile import getElement, getElementDict
 from process import getProcessInfo, get_process_dict
 
 DATE = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-
-#__________________________________________________________
-def getElementDict(d, element):
-    try:
-        value=d[element]
-        return value
-    except KeyError:
-#        print (element, "does not exist using default value")
-        return None
-
 
 #__________________________________________________________
 def get_entries(infilepath):
@@ -54,21 +44,38 @@ def get_entries(infilepath):
 
 
 #__________________________________________________________
-def getsubfileList(fileList, eventList, fraction):
-    nevts=sum(eventList)
-    nevts_target=nevts*fraction
-    nevts_real=0
-    tmplist=[]
-    for ev in range(len(eventList)):
-        if nevts_real>=nevts_target:break
-        nevts_real+=eventList[ev]
-        tmplist.append(fileList[ev])
-    return tmplist
+def getsubfileList(in_file_list, event_list, fraction):
+    nevts_total = sum(event_list)
+    nevts_target = int(nevts_total * fraction)
+
+    if nevts_target <= 0:
+        print(f'----> Error: The reduction fraction {fraction} too stringent, no events left!')
+        print('             Aborting...')
+        sys.exit(3)
+
+    nevts_real = 0
+    out_file_list = []
+    for i in range(len(event_list)):
+        if nevts_real >= nevts_target:
+            break
+        nevts_real += event_list[i]
+        out_file_list.append(in_file_list[i])
+
+    print(f'----> Info: Reducing the input file list by fraction "{fraction}" of total events:')
+    print(f'             - total number of events: {nevts_total:,}')
+    print(f'             - targeted number of events: {nevts_target:,}')
+    print(f'             - number of events in the resulting file list: {nevts_real:,}')
+    print('             - number of files after reduction: {}'.format(len(out_file_list)))
+
+    return out_file_list
 
 
 #__________________________________________________________
 def getchunkList(fileList, chunks):
-    return list(np.array_split(fileList, chunks))
+    chunk_list = list(np.array_split(fileList, chunks))
+    chunk_list = [chunk for chunk in chunk_list if chunk.size > 0]
+
+    return chunk_list
 
 
 #__________________________________________________________
@@ -328,7 +335,7 @@ def apply_filepath_rewrites(filepath):
 #__________________________________________________________
 def runLocal(rdfModule, infile_list, args):
     # Create list of files to be processed
-    print ('----> Creating dataframe object from files: ', )
+    print ('----> Info: Creating dataframe object from files: ', )
     file_list = ROOT.vector('string')()
     nevents_orig = 0   # Amount of events processed in previous stage (= 0 if it is the first stage)
     nevents_local = 0  # The amount of events in the input file(s)
@@ -337,7 +344,7 @@ def runLocal(rdfModule, infile_list, args):
         filepath = apply_filepath_rewrites(filepath)
 
         file_list.push_back(filepath)
-        print('      ', filepath)
+        print(f'             - {filepath}')
         infile = ROOT.TFile.Open(filepath, 'READ')
         try:
             nevents_orig += infile.Get('eventsProcessed').GetVal()
@@ -357,8 +364,12 @@ def runLocal(rdfModule, infile_list, args):
     if args.nevents > 0 and args.nevents < nevents_local:
         nevents_local = args.nevents
 
-    print('----> Info: Number of events: original={}    '
-          'local={}'.format(nevents_orig, nevents_local))
+    if nevents_orig > 0:
+        print('----> Info: Number of events:')
+        print(f'             - original: {nevents_orig}')
+        print(f'             - local:    {nevents_local}')
+    else:
+        print(f'----> Info: Number of local events: {nevents_local}')
 
     outfilepath = getElement(rdfModule, "outputDir")
     if not args.batch:
@@ -393,7 +404,7 @@ def runLocal(rdfModule, infile_list, args):
     if args.bench:
         analysis_name = getElement(rdfModule, 'analysisName')
         if not analysis_name:
-            analysis_name = args.pathToAnalysisScript
+            analysis_name = args.anafile_path
 
         bench_time = {}
         bench_time['name'] = 'Time spent running the analysis: '
@@ -401,7 +412,7 @@ def runLocal(rdfModule, infile_list, args):
         bench_time['unit'] = 'Seconds'
         bench_time['value'] = elapsed_time
         bench_time['range'] = 10
-        bench_time['extra'] = 'Analysis path: ' + args.pathToAnalysisScript
+        bench_time['extra'] = 'Analysis path: ' + args.anafile_path
         saveBenchmark('benchmarks_smaller_better.json', bench_time)
 
         bench_evt_per_sec = {}
@@ -410,97 +421,121 @@ def runLocal(rdfModule, infile_list, args):
         bench_evt_per_sec['unit'] = 'Evt/s'
         bench_evt_per_sec['value'] = nevents_local / elapsed_time
         bench_time['range'] = 1000
-        bench_time['extra'] = 'Analysis path: ' + args.pathToAnalysisScript
+        bench_time['extra'] = 'Analysis path: ' + args.anafile_path
         saveBenchmark('benchmarks_bigger_better.json', bench_evt_per_sec)
 
 
 #__________________________________________________________
 def runStages(args, rdfModule, preprocess, analysisFile):
+    '''
+    Run regular stage.
+    '''
 
-    # set ncpus, load header files, custom dicts, ...
+    # Set ncpus, load header files, custom dicts, ...
     initialize(args, rdfModule, analysisFile)
 
-    #check if outputDir exist and if not create it
-    outputDir = getElement(rdfModule,"outputDir")
-    if not os.path.exists(outputDir) and outputDir!='':
+    # Check if outputDir exist and if not create it
+    outputDir = getElement(rdfModule, "outputDir")
+    if not os.path.exists(outputDir) and outputDir:
         os.system("mkdir -p {}".format(outputDir))
 
-    #check if outputDir exist and if not create it
+    # Check if outputDir exist and if not create it
     outputDirEos = getElement(rdfModule,"outputDirEos")
-    if not os.path.exists(outputDirEos) and outputDirEos!='':
+    if not os.path.exists(outputDirEos) and outputDirEos:
         os.system("mkdir -p {}".format(outputDirEos))
 
-    #check if test mode is specified, and if so run the analysis on it (this will exit after)
+    # Check if test mode is specified, and if so run the analysis on it (this
+    # will exit after)
     if args.test:
-        print("----> Running test file mode")
-        path, filename = os.path.split(args.output)
-        if path!='': os.system("mkdir -p {}".format(path))
-        testFile = getElement(rdfModule,"testFile")
-        runLocal(rdfModule, [testFile], args)
+        print('----> Info: Running over test file...')
+        testfile_path = getElement(rdfModule, "testFile")
+        directory, _ = os.path.split(args.output)
+        if directory:
+            os.system("mkdir -p {}".format(directory))
+        runLocal(rdfModule, [testfile_path], args)
         sys.exit(0)
 
-    #check if files are specified, and if so run the analysis on it/them (this will exit after)
-    if len(args.files_list)>0:
-        print("----> Running with user defined list of files (either locally or from batch)")
-        path, filename = os.path.split(args.output)
-        if path!='': os.system("mkdir -p {}".format(path))
+    # Check if files are specified, and if so run the analysis on it/them (this
+    # will exit after)
+    if len(args.files_list) > 0:
+        print('----> Info: Running over files provided in command line argument...')
+        directory, _ = os.path.split(args.output)
+        if directory:
+            os.system("mkdir -p {}".format(directory))
         runLocal(rdfModule, args.files_list, args)
         sys.exit(0)
 
-    #check if batch mode and set start and end file from original list
-    runBatch = getElement(rdfModule,"runBatch")
+    # Check if batch mode and set start and end file from original list
+    run_batch = getElement(rdfModule, "runBatch")
 
     #check if the process list is specified
-    processList = getElement(rdfModule,"processList")
+    process_list = getElement(rdfModule, "processList")
 
-    for process in processList:
-        fileList, eventList = getProcessInfo(process, getElement(rdfModule,"prodTag"), getElement(rdfModule, "inputDir"))
-        if len(fileList)==0:
-            print('----> ERROR: No files to process. Exit')
+    for process_name in process_list:
+        file_list, event_list = getProcessInfo(process_name,
+                                               getElement(rdfModule, "prodTag"),
+                                               getElement(rdfModule, "inputDir"))
+
+        if len(file_list) <= 0:
+            print('----> Error: No files to process!')
+            print('             Aborting...')
             sys.exit(3)
 
-        processDict={}
+        # Determine the fraction of the input to be processed
         fraction = 1
-        output = process
+        if getElementDict(process_list[process_name], 'fraction'):
+            fraction = getElementDict(process_list[process_name], 'fraction')
+        # Put together output path
+        output_stem = process_name
+        if getElementDict(process_list[process_name], 'output'):
+            output_stem = getElementDict(process_list[process_name], 'output')
+        # Determine the number of chunks the output will be split into
         chunks = 1
-        try:
-            processDict=processList[process]
-            if getElementDict(processList[process], 'fraction') != None: fraction = getElementDict(processList[process], 'fraction')
-            if getElementDict(processList[process], 'output')   != None: output   = getElementDict(processList[process], 'output')
-            if getElementDict(processList[process], 'chunks')   != None: chunks   = getElementDict(processList[process], 'chunks')
+        if getElementDict(process_list[process_name], 'chunks'):
+            chunks = getElementDict(process_list[process_name], 'chunks')
 
-        except TypeError:
-            print ('----> no values set for process {} will use default values'.format(process))
+        print('----> Info: Adding process "{}" with:'.format(process_name))
+        if fraction < 1:
+            print('             - fraction:         {}'.format(fraction))
+        print('             - number of files:  {}'.format(len(file_list)))
+        print('             - output stem:      {}'.format(output_stem))
+        if chunks > 1:
+            print('             - number of chunks: {}'.format(chunks))
 
-        print ('----> Info: Add process {} with fraction={}, nfiles={}, output={}, chunks={}'.format(process, fraction, len(fileList), output, chunks))
+        if fraction < 1:
+            file_list = getsubfileList(file_list, event_list, fraction)
 
-        if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
-        chunkList=[fileList]
-        if chunks>1: chunkList = getchunkList(fileList, chunks)
+        chunk_list = [file_list]
+        if chunks > 1:
+            chunk_list = getchunkList(file_list, chunks)
+        print('----> Info: Number of the output files: {}'.format(len(chunk_list)))
 
-        #create dir if more than 1 chunk
-        if chunks>1:
-            outputdir=outputDir+"/"+output
+        # Create directory if more than 1 chunk
+        if chunks > 1:
+            output_directory = os.path.join(outputDir, output_stem)
 
-            if not os.path.exists(outputdir) and outputDir!='':
-                os.system("mkdir -p {}".format(outputdir))
+            if not os.path.exists(output_directory):
+                os.system("mkdir -p {}".format(output_directory))
 
-        for ch in range(len(chunkList)):
-            outputchunk=''
-            if len(chunkList)>1: outputchunk="/{}/chunk{}.root".format(output,ch)
-            else:                outputchunk="{}.root".format(output)
-            #run locally
-            if runBatch == False:
-                print ('----> Running Locally')
-                args.output = outputchunk
-                runLocal(rdfModule, chunkList[ch], args)
+        if run_batch:
+            # Sending to the batch system
+            print('----> Info: Running on the batch...')
+            if len(chunk_list) == 1:
+                print('----> \033[4m\033[1m\033[91mWarning: Running on batch '
+                      'with only one chunk might not be optimal\033[0m')
 
-            #run on batch
-        if runBatch == True:
-            print ('----> Running on Batch')
-            if len(chunkList)==1:
-                print ('----> \033[4m\033[1m\033[91mWARNING Running on batch with only one chunk might not be optimal\033[0m')
-            sendToBatch(rdfModule, chunkList, process, analysisFile)
+            sendToBatch(rdfModule, chunk_list, process_name, analysisFile)
+
+        else:
+            # Running locally
+            print('----> Running locally...')
+            if len(chunk_list) == 1:
+                args.output = '{}.root'.format(output_stem)
+                runLocal(rdfModule, chunk_list[0], args)
+            else:
+                for index, chunk in enumerate(chunk_list):
+                    args.output = '/{}/chunk{}.root'.format(output_stem, index)
+                    runLocal(rdfModule, chunk, args)
 
 
 #__________________________________________________________
@@ -825,7 +860,7 @@ def runHistmaker(args, rdfModule, analysisFile):
         if len(fileList)==0:
             print('----> ERROR: No files to process. Exit')
             sys.exit(3)
-            
+
         # get the number of events processed, in a potential previous step
         fileListRoot = ROOT.vector('string')()
         nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
@@ -876,7 +911,7 @@ def runHistmaker(args, rdfModule, analysisFile):
     for process, res, hweight, evtcount in zip(processList, results, hweights, evtcounts):
         print(f"----> Info: Write process {process}, nevents processed {evtcount.GetValue()}")
         fOut = ROOT.TFile(f"{outputDir}/{process}.root", "RECREATE")
-        
+
         # get the cross-sections etc. First try locally, then the procDict
         if 'crossSection' in processList[process]:
             crossSection = processList[process]['crossSection']
@@ -892,17 +927,17 @@ def runHistmaker(args, rdfModule, analysisFile):
             kfactor = procDict[process]['kfactor']
         else:
             kfactor = 1
-            
+
         if 'matchingEfficiency' in processList[process]:
             matchingEfficiency = processList[process]['matchingEfficiency']
         elif process in procDict and 'matchingEfficiency' in procDict[process]:
             matchingEfficiency = procDict[process]['matchingEfficiency']
         else:
-            matchingEfficiency = 1    
-        
+            matchingEfficiency = 1
+
         eventsProcessed = eventsProcessedDict[process] if eventsProcessedDict[process] != 0 else evtcount.GetValue()
         scale = crossSection*kfactor*matchingEfficiency/eventsProcessed
-        
+
         histsToWrite = {}
         for r in res:
             hist = r.GetValue()
@@ -962,7 +997,7 @@ def runValidate(jobdir):
 #__________________________________________________________
 def setup_run_parser(parser):
     publicOptions = parser.add_argument_group('User options')
-    publicOptions.add_argument("pathToAnalysisScript", help="path to analysis script")
+    publicOptions.add_argument('anafile_path', help="path to analysis script")
     publicOptions.add_argument("--files-list", help="Specify input file to bypass the processList", default=[], nargs='+')
     publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
     publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
@@ -994,7 +1029,7 @@ def run(mainparser, subparser=None):
         setup_run_parser(subparser)
     args, _ = mainparser.parse_known_args()
     #check that the analysis file exists
-    analysisFile = args.pathToAnalysisScript
+    analysisFile = args.anafile_path
     if not os.path.isfile(analysisFile):
         print("Script ", analysisFile, " does not exist")
         print("specify a valid analysis script in the command line arguments")

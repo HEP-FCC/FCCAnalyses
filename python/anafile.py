@@ -3,6 +3,8 @@ Handle the attributes from the analysis file.
 Used only in managed mode.
 '''
 
+import sys
+
 def getElement(rdfModule, element, isFinal=False):
     '''
     Pick up the attribute from the analysis file.
@@ -12,8 +14,9 @@ def getElement(rdfModule, element, isFinal=False):
     except AttributeError:
 
         #return default values or crash if mandatory
-        if element=='processList':
-            print('The variable <{}> is mandatory in your analysis.py file, will exit'.format(element))
+        if element == 'processList':
+            print('----> Error: The variable <{}> is mandatory in your analysis file!'.format(element))
+            print('             Aborting...')
             sys.exit(3)
 
         elif element=='analysers':
@@ -35,7 +38,8 @@ def getElement(rdfModule, element, isFinal=False):
             return 4
 
         elif element=='runBatch':
-            print('The variable <{}> is optional in your analysis.py file, return default value False'.format(element))
+            print('----> Info: The variable <{}> is optional in your analysis file.'.format(element))
+            print('            Returning default value: False')
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return False
 
@@ -143,4 +147,14 @@ def getElement(rdfModule, element, isFinal=False):
             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
             return ""
 
+        return None
+
+
+#__________________________________________________________
+def getElementDict(d, element):
+    try:
+        value=d[element]
+        return value
+    except KeyError:
+#        print (element, "does not exist using default value")
         return None
