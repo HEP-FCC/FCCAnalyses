@@ -18,7 +18,7 @@ def setup_build_parser(parser):
     publicOptions.add_argument('-j','--build-threads',
                                type=int,
                                default=1,
-                               help='bumber of threads when building (equivalent to `make -j`)')
+                               help='number of threads when building (equivalent to `make -j`)')
 
 def setup_pin_parser(parser):
     publicOptions = parser.add_argument_group('User pin options')

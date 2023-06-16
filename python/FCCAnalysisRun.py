@@ -371,15 +371,20 @@ def runLocal(rdfModule, infile_list, args):
     else:
         print(f'----> Info: Number of local events: {nevents_local}')
 
-    outfilepath = getElement(rdfModule, "outputDir")
+    output_dir = getElement(rdfModule, "outputDir")
     if not args.batch:
-        outfilepath += '/' + args.output
+        print(os.path.isabs(args.output))
+        if os.path.isabs(args.output):
+            print('----> Warning: Provided output path is absolute, "outputDir" from analysis script will be ignored!')
+        outfile_path = os.path.join(output_dir, args.output)
     else:
-        outfilepath = args.output
+        outfile_path = args.output
+    print('----> Info: Output file path:')
+    print('            ' + outfile_path)
 
     #Run RDF
     start_time = time.time()
-    outn = runRDF(rdfModule, file_list, outfilepath, nevents_local, args)
+    outn = runRDF(rdfModule, file_list, outfile_path, nevents_local, args)
     outn = outn.GetValue()
 
     outfile = ROOT.TFile(outfilepath, 'update')
