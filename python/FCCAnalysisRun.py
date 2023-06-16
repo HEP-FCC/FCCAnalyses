@@ -387,7 +387,7 @@ def runLocal(rdfModule, infile_list, args):
     outn = runRDF(rdfModule, file_list, outfile_path, nevents_local, args)
     outn = outn.GetValue()
 
-    outfile = ROOT.TFile(outfilepath, 'update')
+    outfile = ROOT.TFile(outfile_path, 'update')
     param = ROOT.TParameter(int)('eventsProcessed',
                                  nevents_orig if nevents_orig != 0 else nevents_local)
     param.Write()
