@@ -539,7 +539,7 @@ def runStages(args, rdfModule, preprocess, analysisFile):
                 runLocal(rdfModule, chunk_list[0], args)
             else:
                 for index, chunk in enumerate(chunk_list):
-                    args.output = '/{}/chunk{}.root'.format(output_stem, index)
+                    args.output = '{}/chunk{}.root'.format(output_stem, index)
                     runLocal(rdfModule, chunk, args)
 
 
