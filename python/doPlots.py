@@ -44,9 +44,9 @@ def mapHistos(var, label, sel, param, rebin):
             if not os.path.isfile(fin):
                 print ('file {} does not exist, skip'.format(fin))
             else:
-                tf=ROOT.TFile(fin)
-                h=tf.Get(var)
-                hh = copy.deepcopy(h)
+                with ROOT.TFile(fin, 'READ') as tf:
+                    hh = tf.Get(var)
+                    hh.SetDirectory(ROOT.nullptr)
                 scaleSig=1.
                 try:
                     scaleSig=param.scaleSig
@@ -72,9 +72,9 @@ def mapHistos(var, label, sel, param, rebin):
             if not os.path.isfile(fin):
                 print ('file {} does not exist, skip'.format(fin))
             else:
-                tf=ROOT.TFile(fin)
-                h=tf.Get(var)
-                hh = copy.deepcopy(h)
+                with ROOT.TFile(fin, 'READ') as tf:
+                    hh = tf.Get(var)
+                    hh.SetDirectory(ROOT.nullptr)
                 hh.Scale(param.intLumi)
                 hh.Rebin(rebin)
                 if len(hbackgrounds[b])==0:
@@ -110,9 +110,9 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
             if not os.path.isfile(fin):
                 print ('file {} does not exist, skip'.format(fin))
             else:
-                tf=ROOT.TFile(fin)
-                h=tf.Get(hName)
-                hh = copy.deepcopy(h)
+                with ROOT.TFile(fin, 'READ') as tf:
+                    hh = tf.Get(hName)
+                    hh.SetDirectory(ROOT.nullptr)
                 print ('scaleSig ',scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
                 hh.Rebin(rebin)
@@ -131,9 +131,9 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
             if not os.path.isfile(fin):
                 print ('file {} does not exist, skip'.format(fin))
             else:
-                tf=ROOT.TFile(fin)
-                h=tf.Get(hName)
-                hh = copy.deepcopy(h)
+                with ROOT.TFile(fin, 'READ') as tf:
+                    hh = tf.Get(hName)
+                    hh.SetDirectory(ROOT.nullptr)
                 hh.Scale(param.intLumi)
                 hh.Rebin(rebin)
                 if len(hbackgrounds[b])==0:

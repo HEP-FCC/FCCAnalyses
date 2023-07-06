@@ -20,25 +20,20 @@ def get_entries(infilepath):
     '''
     Get number of original entries and number of actual entries in the file
     '''
-    infile = ROOT.TFile.Open(infilepath)
-    infile.cd()
+    with ROOT.TFile(infilepath, 'READ') as infile:
+        processEvents = 0
+        try:
+            processEvents = infile.Get('eventsProcessed').GetVal()
+        except AttributeError:
+            print('----> Warning: Input file is missing information about '
+                  'original number of events!')
 
-    processEvents = 0
-    try:
-        processEvents = infile.Get('eventsProcessed').GetVal()
-    except AttributeError:
-        print('----> Warning: Input file is missing information about '
-              'original number of events!')
-
-    eventsTTree = 0
-    try:
-        eventsTTree = infile.Get("events").GetEntries()
-    except AttributeError:
-        print('----> Error: Input file is missing events TTree! Aborting...')
-        infile.Close()
-        sys.exit(3)
-
-    infile.Close()
+        eventsTTree = 0
+        try:
+            eventsTTree = infile.Get("events").GetEntries()
+        except AttributeError:
+            print('----> Error: Input file is missing events TTree! Aborting...')
+            sys.exit(3)
 
     return processEvents, eventsTTree
 
@@ -369,6 +364,7 @@ def runLocal(rdfModule, infile_list, args):
             print('             is missing events TTree! Aborting...')
             infile.Close()
             sys.exit(3)
+        infile.Close()
 
     # Adjust number of events in case --nevents was specified
     if args.nevents > 0 and args.nevents < nevents_local:
@@ -397,12 +393,12 @@ def runLocal(rdfModule, infile_list, args):
     outn = runRDF(rdfModule, file_list, outfile_path, nevents_local, args)
     outn = outn.GetValue()
 
-    outfile = ROOT.TFile(outfile_path, 'update')
-    param = ROOT.TParameter(int)('eventsProcessed',
-                                 nevents_orig if nevents_orig != 0 else nevents_local)
-    param.Write()
-    outfile.Write()
-    outfile.Close()
+    with ROOT.TFile(outfile_path, 'UPDATE') as outfile:
+        param = ROOT.TParameter(int)(
+                'eventsProcessed',
+                nevents_orig if nevents_orig != 0 else nevents_local
+        )
+        param.Write()
 
     elapsed_time = time.time() - start_time
     print('============================= SUMMARY =============================')
@@ -554,24 +550,23 @@ def runStages(args, rdfModule, preprocess, analysisFile):
 
 
 #__________________________________________________________
-def testfile(f):
-    tf=ROOT.TFile.Open(f)
-    tt=None
-    try :
-        tt=tf.Get("events")
-        if tt==None:
-            print ('file does not contains events, selection was too tight, will skip: ',f)
+def testfile(infile_path):
+    with ROOT.TFile(infile_path, 'READ') as infile:
+        try :
+            events_tree = infile.Get("events")
+            if events_tree == None:
+                print('file does not contains events, selection was too tight, will skip: ',f)
+                return False
+        except IOError as e:
+            print ("I/O error({0}): {1}".format(e.errno, e.strerror))
             return False
-    except IOError as e:
-        print ("I/O error({0}): {1}".format(e.errno, e.strerror))
-        return False
-    except ValueError:
-        print ("Could read the file")
-        return False
-    except:
-        print ("Unexpected error:", sys.exc_info()[0])
-        print ('file ===%s=== must be deleted'%f)
-        return False
+        except ValueError:
+            print ("Could read the file")
+            return False
+        except:
+            print ("Unexpected error:", sys.exc_info()[0])
+            print ('file ===%s=== must be deleted'%f)
+            return False
     return True
 
 
@@ -789,15 +784,14 @@ def runFinal(rdfModule):
         print ('----> Saving outputs')
         for i, cut in enumerate(cutList):
             fhisto = outputDir+pr+'_'+cut+'_histo.root' #output file for histograms
-            tf    = ROOT.TFile.Open(fhisto,'RECREATE')
-            for h in histos_list[i]:
-                try :
-                    h.Scale(1.*procDict[pr]["crossSection"]*procDict[pr]["kfactor"]*procDict[pr]["matchingEfficiency"]/processEvents[pr])
-                except KeyError:
-                    print ('----> No value defined for process {} in dictionary'.format(pr))
-                    if h.Integral(0,-1)>0:h.Scale(1./h.Integral(0,-1))
-                h.Write()
-            tf.Close()
+            with ROOT.TFile(fhisto, 'RECREATE') as histo_file:
+                for h in histos_list[i]:
+                    try :
+                        h.Scale(1.*procDict[pr]["crossSection"]*procDict[pr]["kfactor"]*procDict[pr]["matchingEfficiency"]/processEvents[pr])
+                    except KeyError:
+                        print ('----> No value defined for process {} in dictionary'.format(pr))
+                        if h.Integral(0,-1)>0:h.Scale(1./h.Integral(0,-1))
+                    h.Write()
 
             if doTree:
                 # test that the snapshot worked well
@@ -926,61 +920,60 @@ def runHistmaker(args, rdfModule, analysisFile):
     nevents_tot = 0
     for process, res, hweight, evtcount in zip(processList, results, hweights, evtcounts):
         print(f"----> Info: Write process {process}, nevents processed {evtcount.GetValue()}")
-        fOut = ROOT.TFile(f"{outputDir}/{process}.root", "RECREATE")
-
-        # get the cross-sections etc. First try locally, then the procDict
-        if 'crossSection' in processList[process]:
-            crossSection = processList[process]['crossSection']
-        elif process in procDict and 'crossSection' in procDict[process]:
-            crossSection = procDict[process]['crossSection']
-        else:
-            print(f"WARNING: cannot find crossSection for {process} in processList or procDict, use default value of 1")
-            crossSection = 1
-
-        if 'kfactor' in processList[process]:
-            kfactor = processList[process]['kfactor']
-        elif process in procDict and 'kfactor' in procDict[process]:
-            kfactor = procDict[process]['kfactor']
-        else:
-            kfactor = 1
-
-        if 'matchingEfficiency' in processList[process]:
-            matchingEfficiency = processList[process]['matchingEfficiency']
-        elif process in procDict and 'matchingEfficiency' in procDict[process]:
-            matchingEfficiency = procDict[process]['matchingEfficiency']
-        else:
-            matchingEfficiency = 1
-
-        eventsProcessed = eventsProcessedDict[process] if eventsProcessedDict[process] != 0 else evtcount.GetValue()
-        scale = crossSection*kfactor*matchingEfficiency/eventsProcessed
-
-        histsToWrite = {}
-        for r in res:
-            hist = r.GetValue()
-            hName = hist.GetName()
-            if hist.GetName() in histsToWrite: # merge histograms in case histogram exists
-                histsToWrite[hName].Add(hist)
+        with ROOT.TFile(f"{outputDir}/{process}.root", "RECREATE") as outfile:
+            # get the cross-sections etc. First try locally, then the procDict
+            if 'crossSection' in processList[process]:
+                crossSection = processList[process]['crossSection']
+            elif process in procDict and 'crossSection' in procDict[process]:
+                crossSection = procDict[process]['crossSection']
             else:
-                histsToWrite[hName] = hist
+                print(f"WARNING: cannot find crossSection for {process} in processList or procDict, use default value of 1")
+                crossSection = 1
 
-        for hist in histsToWrite.values():
-            if doScale:
-                hist.Scale(scale*intLumi)
-            hist.Write()
+            if 'kfactor' in processList[process]:
+                kfactor = processList[process]['kfactor']
+            elif process in procDict and 'kfactor' in procDict[process]:
+                kfactor = procDict[process]['kfactor']
+            else:
+                kfactor = 1
 
-        # write all meta info to the output file
-        p = ROOT.TParameter(int)("eventsProcessed", eventsProcessed)
-        p.Write()
-        p = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
-        p.Write()
-        p = ROOT.TParameter(float)("intLumi", intLumi)
-        p.Write()
-        p = ROOT.TParameter(float)("crossSection", crossSection)
-        p.Write()
-        p = ROOT.TParameter(float)("kfactor", kfactor)
-        p.Write()
-        p = ROOT.TParameter(float)("matchingEfficiency", matchingEfficiency)
-        p.Write()
+            if 'matchingEfficiency' in processList[process]:
+                matchingEfficiency = processList[process]['matchingEfficiency']
+            elif process in procDict and 'matchingEfficiency' in procDict[process]:
+                matchingEfficiency = procDict[process]['matchingEfficiency']
+            else:
+                matchingEfficiency = 1
+
+            eventsProcessed = eventsProcessedDict[process] if eventsProcessedDict[process] != 0 else evtcount.GetValue()
+            scale = crossSection*kfactor*matchingEfficiency/eventsProcessed
+
+            histsToWrite = {}
+            for r in res:
+                hist = r.GetValue()
+                hName = hist.GetName()
+                if hist.GetName() in histsToWrite: # merge histograms in case histogram exists
+                    histsToWrite[hName].Add(hist)
+                else:
+                    histsToWrite[hName] = hist
+
+            for hist in histsToWrite.values():
+                if doScale:
+                    hist.Scale(scale*intLumi)
+                hist.Write()
+
+            # write all meta info to the output file
+            p = ROOT.TParameter(int)("eventsProcessed", eventsProcessed)
+            p.Write()
+            p = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
+            p.Write()
+            p = ROOT.TParameter(float)("intLumi", intLumi)
+            p.Write()
+            p = ROOT.TParameter(float)("crossSection", crossSection)
+            p.Write()
+            p = ROOT.TParameter(float)("kfactor", kfactor)
+            p.Write()
+            p = ROOT.TParameter(float)("matchingEfficiency", matchingEfficiency)
+            p.Write()
         nevents_tot += evtcount.GetValue()
 
     print  ("==============================SUMMARY==============================")

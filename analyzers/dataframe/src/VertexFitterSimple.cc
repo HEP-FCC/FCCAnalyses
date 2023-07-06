@@ -3,9 +3,6 @@
 
 #include <iostream>
 
-#include "TFile.h"
-#include "TString.h"
-
 //#include "TrkUtil.h"    // from delphes
 
 namespace FCCAnalyses {

@@ -10,12 +10,11 @@ import glob
 import ROOT
 
 
-def getEntries(f):
-    tf=ROOT.TFile.Open(f,"READ")
-    tf.cd()
-    tt=tf.Get("events")
-    nevents=tt.GetEntries()
-    tf.Close()
+def getEntries(infilepath):
+    with ROOT.TFile(infilepath, 'READ') as infile:
+        tt = infile.Get("events")
+        nevents = infile.GetEntries()
+
     return nevents
 
 
