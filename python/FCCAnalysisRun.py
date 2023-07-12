@@ -844,6 +844,8 @@ def runHistmaker(args, rdfModule, analysisFile):
         print('----> Error: Location of the procDict not provided. Aborting...')
         sys.exit(3)
 
+    procDict = get_process_dict(proc_dict_location) 
+
     # check if outputDir exist and if not create it
     outputDir = getElement(rdfModule,"outputDir")
     if not os.path.exists(outputDir) and outputDir!='':
