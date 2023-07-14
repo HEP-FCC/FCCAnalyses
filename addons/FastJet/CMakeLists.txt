@@ -18,3 +18,6 @@ install(FILES
    ${CMAKE_CURRENT_LIST_DIR}/JetClustering.h
    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/FastJet
    )
+
+file(GLOB _addon_python_files python/*.py)
+install(FILES ${_addon_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/addons/FastJet)
