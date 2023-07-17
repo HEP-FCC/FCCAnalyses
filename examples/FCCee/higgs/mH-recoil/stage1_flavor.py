@@ -52,8 +52,8 @@ def get_file_path(url, filename):
 weaver_preproc = get_file_path(url_preproc, local_preproc)
 weaver_model = get_file_path(url_model, local_model)
 
-from addons.ONNXRuntime.python.jetFlavourHelper import JetFlavourHelper
-from addons.FastJet.python.jetClusteringHelper import (
+from addons.ONNXRuntime.jetFlavourHelper import JetFlavourHelper
+from addons.FastJet.jetClusteringHelper import (
     ExclusiveJetClusteringHelper,
 )
 

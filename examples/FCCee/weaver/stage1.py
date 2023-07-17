@@ -4,8 +4,8 @@ from examples.FCCee.weaver.config import (
     variables_event,
 )
 
-from addons.ONNXRuntime.python.jetFlavourHelper import JetFlavourHelper
-from addons.FastJet.python.jetClusteringHelper import ExclusiveJetClusteringHelper
+from addons.ONNXRuntime.jetFlavourHelper import JetFlavourHelper
+from addons.FastJet.jetClusteringHelper import ExclusiveJetClusteringHelper
 
 jetFlavourHelper = None
 jetClusteringHelper = None
