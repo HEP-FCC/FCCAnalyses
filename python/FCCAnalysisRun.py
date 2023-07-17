@@ -642,7 +642,9 @@ def runFinal(rdfModule):
             flist = glob.glob(indirpath + '/chunk*.root')
             for filepath in flist:
                 print('        ' + filepath)
-                processEvents[process_id], eventsTTree[process_id] = get_entries(filepath)
+                chunkProcessEvents, chunkEventsTTree = get_entries(filepath)
+                processEvents[process_id] += chunkProcessEvents                                     
+                eventsTTree[process_id] += chunkEventsTTree
                 fileListRoot.push_back(filepath)
         processList[process_id] = fileListRoot
 
