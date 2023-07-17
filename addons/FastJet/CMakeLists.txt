@@ -11,6 +11,12 @@ fccanalyses_addon_build(FastJet
                                  ROOT::MathCore
                         INSTALL_COMPONENT fastjet)
 
+add_custom_command(TARGET FastJet POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                   ${CMAKE_CURRENT_SOURCE_DIR}/python/*
+                   ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 
 install(FILES
    ${CMAKE_CURRENT_LIST_DIR}/ExternalRecombiner.h

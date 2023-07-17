@@ -24,6 +24,12 @@ fccanalyses_addon_build(ONNXRuntime
                         EXT_LIBS ROOT::ROOTVecOps ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json
                         INSTALL_COMPONENT onnxruntime)
 
+add_custom_command(TARGET ONNXRuntime POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                   ${CMAKE_CURRENT_SOURCE_DIR}/python/*
+                   ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 if(BUILD_TESTING)
   find_catch_instance()
   if(Catch2_FOUND)
