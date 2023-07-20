@@ -16,6 +16,7 @@ find_dependency(EDM4HEP REQUIRED)
 find_dependency(podio)
 find_dependency(Acts)
 find_dependency(ROOT COMPONENTS ROOTDataFrame)
+find_dependency(DD4hep)
 
 
 
