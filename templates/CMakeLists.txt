@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.16.9)
 project(__pkgname__ CXX)
 set(lib_name "FCCAnalysis___pkgname__")
-find_package(ROOT COMPONENTS ROOTVecOps ROOTDataFrame REQUIRED)
-find_package(EDM4HEP REQUIRED)
+find_package(FCCAnalyses)
 #--- Set a better default for installation directory---------------------------
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "__fccpath__/install" CACHE PATH "default install path" FORCE)
@@ -22,15 +21,9 @@ reflex_generate_dictionary(lib${lib_name} ${headers} ${classes}
 #--- build the analysis library (linked against FCCAnalyses)
 add_library(${lib_name} SHARED ${sources} ${headers} lib${lib_name}.cxx)
 target_include_directories(${lib_name} PUBLIC include
-                                              ${FCCANALYSES_DIR}
-                                              ${FCCANALYSES_DIR}/addons
-                                              ${FCCANALYSES_DIR}/analyzers/dataframe
-                                              $<INSTALL_INTERFACE:include>)
-target_link_directories(${lib_name} PUBLIC ${FCCANALYSES_DIR}
-                                           ${FCCANALYSES_DIR}/install/lib)
-target_link_libraries(${lib_name} PUBLIC FCCAnalyses
-                                         EDM4HEP::edm4hep EDM4HEP::edm4hepDict
-                                         ROOT::ROOTVecOps)
+                                              $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(${lib_name} PUBLIC FCCAnalyses::FCCAnalyses)
 set_target_properties(${lib_name} PROPERTIES PUBLIC_HEADER "${headers}")
 install(TARGETS ${lib_name}
         RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" COMPONENT bin
