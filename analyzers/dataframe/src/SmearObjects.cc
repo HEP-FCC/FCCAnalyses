@@ -562,7 +562,8 @@ SmearedReconstructedParticle::operator()(
       if (m_mode == 0) {
         // rescale existing smearing of the energy
         smeared_part.energy = std::max(
-            gen_p4.E() + m_scale * (reco_p4.E() - gen_p4.E()), reco_p4.M());
+            gen_p4.E() + m_scale * (reco_p4.E() - gen_p4.E()),
+            reco_p4.M()+0.001); // offset the energy to mass + 1MeV at the minimum to ensure a valid p
 
         // recompute momentum magnitude
         smeared_p = std::sqrt(smeared_part.energy * smeared_part.energy -

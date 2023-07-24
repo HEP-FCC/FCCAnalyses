@@ -131,10 +131,14 @@ file(COPY bin/fccanalysis
 install(PROGRAMS bin/fccanalysis DESTINATION bin)
 
 
-file(GLOB _run_python_files config/*.py)
-install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
-install(FILES config/doPlots.py PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ DESTINATION ${CMAKE_INSTALL_PREFIX}/python/config)
+file(GLOB _run_python_files python/*.py)
+install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
 
+
+file(GLOB _man_files_1 man/man1/*.1)
+install(FILES ${_man_files_1} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+file(GLOB _man_files_7 man/man7/*.7)
+install(FILES ${_man_files_7} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man7)
 
 #--- Descend into subdirectories ----------------------------------------------
 

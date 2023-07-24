@@ -31,20 +31,6 @@ endmacro()
 
 function(add_integration_test _testname)
   #FIXME make this call 'add_generic_test'
-  add_test(NAME ${_testname}
-          COMMAND python config/FCCAnalysisRun.py ${_testname} --test --nevents 100 --bench
-          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-          )
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
-    LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
-    PYTHONPATH=${CMAKE_SOURCE_DIR}:$ENV{PYTHONPATH}
-    ROOT_INCLUDE_PATH=${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
-    TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
-    )
-endfunction()
-
-function(add_integration_test_2 _testname)
-  #FIXME make this call 'add_generic_test'
   add_test(NAME fccanalysisrun_${_testname}
           # todo: figure out how to make ctest pick fccanalysis up from PATH
           COMMAND ${CMAKE_SOURCE_DIR}/bin/fccanalysis run ${_testname} --test --nevents 100 --bench
@@ -52,7 +38,7 @@ function(add_integration_test_2 _testname)
           )
   set_property(TEST fccanalysisrun_${_testname} APPEND PROPERTY ENVIRONMENT
     LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
-    PYTHONPATH=${CMAKE_SOURCE_DIR}:$ENV{PYTHONPATH}
+    PYTHONPATH=${CMAKE_SOURCE_DIR}/python:$ENV{PYTHONPATH}
     PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
     ROOT_INCLUDE_PATH=${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
     TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
@@ -66,7 +52,7 @@ function(add_generic_test _testname _testcmd)
   set_property(TEST ${_testname}
                APPEND PROPERTY ENVIRONMENT
                LD_LIBRARY_PATH=${INSTALL_LIB_DIR}:${CMAKE_BINARY_DIR}/analyzers/dataframe:${CMAKE_BINARY_DIR}/case-studies:$ENV{LD_LIBRARY_PATH}
-               PYTHONPATH=${CMAKE_SOURCE_DIR}:$ENV{PYTHONPATH}
+               PYTHONPATH=${CMAKE_SOURCE_DIR}/python:$ENV{PYTHONPATH}
                PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
                ROOT_INCLUDE_PATH=${INSTALL_LIB_DIR}:${CMAKE_SOURCE_DIR}/analyzers/dataframe:${CMAKE_BINARY_DIR}/case-studies:$ENV{ROOT_INCLUDE_PATH}
                TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR})

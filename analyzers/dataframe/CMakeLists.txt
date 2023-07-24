@@ -59,7 +59,7 @@ message(STATUS " ====== DELPHES LIBRARY = " ${DELPHES_LIBRARY} )
 message(STATUS " ====== DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR = " ${DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR} )
 
 
-target_link_libraries(FCCAnalyses
+target_link_libraries(FCCAnalyses PUBLIC
                       ROOT::Physics
                       ROOT::MathCore
                       ROOT::ROOTVecOps
@@ -73,11 +73,11 @@ target_link_libraries(FCCAnalyses
                       )
 
 if(WITH_DD4HEP)
-  target_link_libraries(FCCAnalyses DD4hep::DDCore)
+  target_link_libraries(FCCAnalyses PUBLIC DD4hep::DDCore)
 endif()
 
 if(WITH_ACTS)
-  target_link_libraries(FCCAnalyses ActsCore)
+  target_link_libraries(FCCAnalyses PUBLIC ActsCore)
 endif()
 
 set_target_properties(FCCAnalyses PROPERTIES

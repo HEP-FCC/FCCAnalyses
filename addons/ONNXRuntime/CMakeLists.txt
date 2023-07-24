@@ -42,3 +42,6 @@ if(BUILD_TESTING)
   # add all integration tests
   add_integration_test("examples/FCCee/weaver/analysis_inference.py")
 endif()
+
+file(GLOB _addon_python_files python/*.py)
+install(FILES ${_addon_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python/addons/ONNXRuntime)

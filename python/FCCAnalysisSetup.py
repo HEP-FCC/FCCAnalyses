@@ -1,6 +1,6 @@
 #__________________________________________________________
 def setup(mainparser):
-    from config.analysis_builder import setup_analysis
+    from analysis_builder import setup_analysis
 
     args, _ = mainparser.parse_known_args()
     if args.command == 'init':
