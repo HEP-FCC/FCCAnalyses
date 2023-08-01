@@ -874,9 +874,7 @@ def runHistmaker(args, rdfModule, analysisFile):
         fileListRoot = ROOT.vector('string')()
         nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
         for fileName in fileList:
-            fsplit = fileName.split('/')
-            if len(fsplit) > 1 and fsplit[1]=='eos':
-                fileName=addeosType(fileName)
+            fileName = apply_filepath_rewrites(fileName)
             fileListRoot.push_back(fileName)
             tf=ROOT.TFile.Open(str(fileName),"READ")
             tf.cd()
