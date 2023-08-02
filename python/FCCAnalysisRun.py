@@ -319,16 +319,26 @@ def apply_filepath_rewrites(filepath):
     '''
     Apply path rewrites if applicable.
     '''
+    # Stripping leading and trailing white spaces
+    filepath_stripped = filepath.strip()
+    # Stripping leading and trailing slashes
+    filepath_stripped = filepath_stripped.strip('/')
 
-    splitpath = filepath.split('/')
-    if len(splitpath) > 1 and splitpath[1] == 'eos':
-        if splitpath[2] == 'experiment':
-            filepath = 'root://eospublic.cern.ch/' + filepath
-        elif splitpath[2] == 'user' or 'home-' in splitpath[2]:
-            filepath = 'root://eosuser.cern.ch/' + filepath
+    # Splitting the path along slashes
+    filepath_splitted = filepath_stripped.split('/')
+
+    if len(filepath_splitted) > 1 and filepath_splitted[0] == 'eos':
+        if filepath_splitted[1] == 'experiment':
+            filepath = 'root://eospublic.cern.ch//' + filepath_stripped
+        elif filepath_splitted[1] == 'user':
+            filepath = 'root://eosuser.cern.ch//' + filepath_stripped
+        elif 'home-' in filepath_splitted[1]:
+            filepath = 'root://eosuser.cern.ch//eos/user/' + \
+                       filepath_stripped.replace('eos/home-', '')
         else:
             print('----> Warning: Unknown EOS path type!')
-            print('      Please check with the developers as this might impact performance of the analysis.')
+            print('      Please check with the developers as this might '
+                  'impact performance of the analysis.')
     return filepath
 
 
@@ -533,7 +543,7 @@ def runStages(args, rdfModule, preprocess, analysisFile):
 
         else:
             # Running locally
-            print('----> Running locally...')
+            print('----> Info: Running locally...')
             if len(chunk_list) == 1:
                 args.output = '{}.root'.format(output_stem)
                 runLocal(rdfModule, chunk_list[0], args)
