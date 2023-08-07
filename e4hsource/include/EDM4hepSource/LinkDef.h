@@ -11,5 +11,6 @@
 
 // Source
 #pragma link C++ class FCCAnalyses::EDM4hepSource;
+#pragma link C++ function FCCAnalyses::FromEDM4hep;
 
 #endif

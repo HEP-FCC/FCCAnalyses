@@ -15,8 +15,8 @@ LOGGER = logging.getLogger('FCCAnalyses.build')
 
 def run_subprocess(command: str, run_dir: str) -> None:
     '''
-    Run subprocess in specified directory.
-    Check only the return value, otherwise keep the subprocess connected to
+    Run sub-process in specified directory.
+    Check only the return value, otherwise keep the sub-process connected to
     stdin/stout/stderr.
     '''
     try:
@@ -25,6 +25,7 @@ def run_subprocess(command: str, run_dir: str) -> None:
 
             if status != 0:
                 LOGGER.error('Error encountered!\nAborting...')
+                os.system('hash -d fccanalysis')
                 sys.exit(3)
 
     except KeyboardInterrupt:
@@ -46,7 +47,7 @@ def build_analysis(mainparser) -> None:
     local_dir = os.environ.get('LOCAL_DIR')
     build_path = pathlib.Path(local_dir + '/build')
     install_path = pathlib.Path(local_dir + '/install')
-    cmake_args = ['-DCMAKE_INSTALL_PREFIX=../install']
+    cmake_args: list[str] = ['-DCMAKE_INSTALL_PREFIX=../install']
 
     LOGGER.info('Building analysis located in:\n%s', local_dir)
 
