@@ -2,17 +2,20 @@
 #define EDM4HEP_SOURCE_H__
 
 // STL
+#include <podio/ROOTLegacyReader.h>
 #include <vector>
 #include <string>
 #include <functional>
 #include <mutex>
 
 // ROOT
+#include <ROOT/RDataFrame.hxx>
 #include <ROOT/RDataSource.hxx>
 
 // Podio
 #include <podio/Frame.h>
 #include <podio/ROOTFrameReader.h>
+#include <podio/ROOTLegacyReader.h>
 #include <podio/CollectionBase.h>
 
 bool loadEDM4hepSource();
@@ -22,7 +25,9 @@ namespace FCCAnalyses {
 
   class EDM4hepSource final : public ROOT::RDF::RDataSource {
     public:
-      EDM4hepSource(std::string_view fileName, int nEvents = -1);
+      EDM4hepSource(const std::string& filePath, int nEvents = -1);
+      EDM4hepSource(const std::vector<std::string>& filePathList,
+                    int nEvents = -1);
 
       void SetNSlots(unsigned int nSlots);
 
@@ -57,7 +62,7 @@ namespace FCCAnalyses {
       /// Number of slots/threads
       unsigned int m_nSlots;
       /// Input filename
-      std::string m_fileName;
+      std::vector<std::string> m_filePathList;
       /// Total number of events
       unsigned int m_nEvents;
       /// Ranges of events available to be processed
@@ -74,8 +79,16 @@ namespace FCCAnalyses {
       std::vector<unsigned int> m_activeCollections;
       /// Root podio reader
       std::map<int, podio::ROOTFrameReader> m_podioReaders;
+      /// Legacy Root podio reader
+      std::map<int, podio::ROOTLegacyReader> m_podioLegacyReaders;
       /// Podio frames
       std::map<int, podio::Frame> m_frames;
+      /// Legacy Podio reader
+      bool m_useLegacyReaders;
+      /// Setup input
+      void SetupInput(int nEvents);
+
+      std::map<int, std::mutex> m_mutex;
   };
 
 
@@ -91,6 +104,8 @@ namespace FCCAnalyses {
 
     return readers;
   }
+
+  ROOT::RDataFrame FromEDM4hep(const std::vector<std::string>& filePathList);
 }
 
 #endif /* EDM4HEP_SOURCE_H__ */

@@ -25,6 +25,7 @@ def run_subprocess(command: str, run_dir: str):
 
             if status != 0:
                 LOGGER.error('Error encountered!\nAborting...')
+                os.system('hash -d fccanalysis')
                 sys.exit(3)
 
     except KeyboardInterrupt:
@@ -60,7 +61,8 @@ def build_analysis(mainparser):
         LOGGER.info('Creating build directory...')
         os.makedirs(build_path)
 
-        run_subprocess(['cmake', '-DCMAKE_INSTALL_PREFIX=../install', '..'],
+        run_subprocess(['cmake', '-DCMAKE_INSTALL_PREFIX=../install',
+                        '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '..'],
                        local_dir + '/build')
 
     if not install_path.is_dir():
