@@ -1,4 +1,4 @@
-#include "EDM4hepSource/EDM4hepSource.hxx"
+#include "EDM4hepSource/EDM4hepLegacySource.hxx"
 
 // STL
 #include <cstddef>
@@ -6,6 +6,7 @@
 #include <iostream>
 #include <filesystem>
 #include <exception>
+#include <memory>
 
 // ROOT
 #include <TFile.h>
@@ -13,98 +14,83 @@
 #include <podio/ROOTFrameReader.h>
 #include <podio/ROOTLegacyReader.h>
 
-bool loadEDM4hepSource() {
+bool loadEDM4hepLegacySource() {
   return true;
 }
 
 namespace FCCAnalyses {
   /**
-   * \brief Construct the EDM4hepSource from the provided file.
+   * \brief Construct the EDM4hepLegacySource from the provided file.
    */
-  EDM4hepSource::EDM4hepSource(const std::string& filePath,
+  EDM4hepLegacySource::EDM4hepLegacySource(const std::string& filePath,
                                int nEvents) : m_nSlots{1} {
     m_filePathList.emplace_back(filePath);
     SetupInput(nEvents);
   }
 
   /**
-   * \brief Construct the EDM4hepSource from the provided file list.
+   * \brief Construct the EDM4hepLegacySource from the provided file list.
    */
-  EDM4hepSource::EDM4hepSource(const std::vector<std::string>& filePathList,
+  EDM4hepLegacySource::EDM4hepLegacySource(const std::vector<std::string>& filePathList,
                                int nEvents) : m_nSlots{1},
                                               m_filePathList{filePathList} {
     SetupInput(nEvents);
   }
 
   /**
-   * \brief Setup input for the EDM4hepSource.
+   * \brief Setup input for the EDM4hepLegacySource.
    */
-  void EDM4hepSource::SetupInput(int nEvents) {
-    std::cout << "EDM4hepSource: Constructing the source ..." << std::endl;
+  void EDM4hepLegacySource::SetupInput(int nEvents) {
+    std::cout << "EDM4hepLegacySource: Constructing the source ..." << std::endl;
 
     if (m_filePathList.empty()) {
-      throw std::runtime_error("EDM4hepSource: No input files provided!");
+      throw std::runtime_error("EDM4hepLegacySource: No input files provided!");
     }
 
     for (const auto& filePath : m_filePathList) {
       // Check if file exists
       if (!std::filesystem::exists(filePath)) {
-        throw std::runtime_error("EDM4hepSource: Provided file \"" + filePath
+        throw std::runtime_error("EDM4hepLegacySource: Provided file \"" + filePath
                                  + "\" does not exist!");
       }
 
       // Check if the provided file contains required metadata
       TFile infile = TFile(filePath.data(), "READ");
-      auto metadata = infile.Get("podio_metadata");
       auto legacyMetadata = infile.Get("metadata");
       infile.Close();
-      if (!metadata && !legacyMetadata) {
+      if (!legacyMetadata) {
         throw std::runtime_error(
-            "EDM4hepSource: Provided file is missing podio metadata!");
-      }
-      if (legacyMetadata) {
-        m_useLegacyReaders = true;
-      }
-      if (metadata && m_useLegacyReaders) {
-        throw std::runtime_error(
-            "EDM4hepSource: Provided filelist contains mixture of legacy and "
-            "frame EDM4hep files!");
+            "EDM4hepLegacySource: Provided file is missing legacy podio "
+            "metadata!");
       }
     }
 
     // Create probing frame
     podio::Frame frame;
     unsigned int nEventsInFiles = 0;
-    if (m_useLegacyReaders) {
-      std::cout << "EDM4hepSource: Reading EDM4hep files in legacy mode..."
-                << std::endl;
-      podio::ROOTLegacyReader podioLegacyReader;
-      podioLegacyReader.openFiles(m_filePathList);
-      nEventsInFiles = podioLegacyReader.getEntries("events");
-      frame = podio::Frame(podioLegacyReader.readEntry("events", 0));
-    } else {
-      podio::ROOTFrameReader podioReader;
-      podioReader.openFiles(m_filePathList);
-      nEventsInFiles = podioReader.getEntries("events");
-      frame = podio::Frame(podioReader.readEntry("events", 0));
-    }
+    std::cout << "EDM4hepLegacySource: Reading EDM4hep files in legacy mode..."
+              << std::endl;
+    podio::ROOTLegacyReader podioLegacyReader;
+    podioLegacyReader.openFiles(m_filePathList);
+    nEventsInFiles = podioLegacyReader.getEntries("events");
+    frame = podio::Frame(podioLegacyReader.readEntry("events", 0));
 
     // Determine over how many events to run
     if (nEventsInFiles > 0) {
-      std::cout << "EDM4hepSource: Found " << nEventsInFiles
+      std::cout << "EDM4hepLegacySource: Found " << nEventsInFiles
                 << " events in files: \n";
       for (const auto& filePath : m_filePathList) {
         std::cout << "               - " << filePath << "\n";
       }
     } else {
-      throw std::runtime_error("EDM4hepSource: No events found!");
+      throw std::runtime_error("EDM4hepLegacySource: No events found!");
     }
 
     if (nEvents < 0) {
       m_nEvents = nEventsInFiles;
     } else if (nEvents == 0) {
       throw std::runtime_error(
-          "EDM4hepSource: Requested to run over zero events!");
+          "EDM4hepLegacySource: Requested to run over zero events!");
     } else {
       m_nEvents = nEvents;
     }
@@ -112,12 +98,12 @@ namespace FCCAnalyses {
       m_nEvents = nEventsInFiles;
     }
 
-    std::cout << "EDM4hepSource: Running over " << m_nEvents << " events."
+    std::cout << "EDM4hepLegacySource: Running over " << m_nEvents << " events."
               << std::endl;
 
     // Get collections stored in the files
     std::vector<std::string> collNames = frame.getAvailableCollections();
-    std::cout << "EDM4hepSource: Found following collections:\n";
+    std::cout << "EDM4hepLegacySource: Found following collections:\n";
     for (auto& collName: collNames) {
       const podio::CollectionBase* coll = frame.get(collName);
       if (coll->isValid()) {
@@ -130,15 +116,15 @@ namespace FCCAnalyses {
 
 
   /**
-   * \brief Inform the EDM4hepSource of the desired level of parallelism.
+   * \brief Inform the EDM4hepLegacySource of the desired level of parallelism.
    */
   void
-  EDM4hepSource::SetNSlots(unsigned int nSlots) {
-    std::cout << "EDM4hepSource: Setting num. of slots to: " << nSlots << std::endl;
+  EDM4hepLegacySource::SetNSlots(unsigned int nSlots) {
+    std::cout << "EDM4hepLegacySource: Setting num. of slots to: " << nSlots << std::endl;
     m_nSlots = nSlots;
 
     if (m_nSlots > m_nEvents) {
-      throw std::runtime_error("EDM4hepSource: Number of events too small!");
+      throw std::runtime_error("EDM4hepLegacySource: Number of events too small!");
     }
 
     int eventsPerSlot = m_nEvents / m_nSlots;
@@ -154,14 +140,8 @@ namespace FCCAnalyses {
       std::vector<const podio::CollectionBase*>(m_nSlots, nullptr));
 
     // Initialize podio readers
-    if (m_useLegacyReaders) {
-      for (size_t i = 0; i < m_nSlots; ++i) {
-        m_podioLegacyReaders[i].openFiles(m_filePathList);
-      }
-    } else {
-      for (size_t i = 0; i < m_nSlots; ++i) {
-        m_podioReaders[i].openFiles(m_filePathList);
-      }
+    for (size_t i = 0; i < m_nSlots; ++i) {
+      m_podioReaders[i].openFiles(m_filePathList);
     }
   }
 
@@ -170,19 +150,19 @@ namespace FCCAnalyses {
    * \brief Inform RDataSource that an event-loop is about to start.
    */
   void
-  EDM4hepSource::Initialize() {
-    std::cout << "EDM4hepSource: Initializing the source ..." << std::endl;
+  EDM4hepLegacySource::Initialize() {
+    std::cout << "EDM4hepLegacySource: Initializing the source ..." << std::endl;
 
   }
 
 
   /**
-   * \brief Retrieve from EDM4hepSource a set of ranges of entries that can be
+   * \brief Retrieve from EDM4hepLegacySource a set of ranges of entries that can be
    *        processed concurrently.
    */
   std::vector<std::pair<ULong64_t, ULong64_t>>
-  EDM4hepSource::GetEntryRanges() {
-    std::cout << "EDM4hepSource: Getting entry ranges ..." << std::endl;
+  EDM4hepLegacySource::GetEntryRanges() {
+    std::cout << "EDM4hepLegacySource: Getting entry ranges ..." << std::endl;
 
     std::vector<std::pair<ULong64_t, ULong64_t>> rangesToBeProcessed;
     for (auto& range: m_rangesAvailable) {
@@ -203,7 +183,7 @@ namespace FCCAnalyses {
     }
 
 
-    std::cout << "EDM4hepSource: Ranges to be processed:\n";
+    std::cout << "EDM4hepLegacySource: Ranges to be processed:\n";
     for (auto& range: rangesToBeProcessed) {
       std::cout << "               {" << range.first << ", " << range.second
                 << "}\n";
@@ -211,13 +191,13 @@ namespace FCCAnalyses {
 
     if (m_rangesAvailable.size() > 0) {
 
-      std::cout << "EDM4hepSource: Ranges remaining:\n";
+      std::cout << "EDM4hepLegacySource: Ranges remaining:\n";
       for (auto& range: m_rangesAvailable) {
         std::cout << "               {" << range.first << ", " << range.second
                   << "}\n";
       }
     } else {
-      std::cout << "EDM4hepSource: No more remaining ranges.\n";
+      std::cout << "EDM4hepLegacySource: No more remaining ranges.\n";
     }
 
     return rangesToBeProcessed;
@@ -225,64 +205,54 @@ namespace FCCAnalyses {
 
 
   /**
-   * \brief Inform EDM4hepSource that a certain thread is about to start working
+   * \brief Inform EDM4hepLegacySource that a certain thread is about to start working
    *        on a certain range of entries.
    */
   void
-  EDM4hepSource::InitSlot(unsigned int slot, ULong64_t firstEntry) {
-    std::cout << "EDM4hepSource: Initializing slot: " << slot
+  EDM4hepLegacySource::InitSlot(unsigned int slot, ULong64_t firstEntry) {
+    std::cout << "EDM4hepLegacySource: Initializing slot: " << slot
               << " with first entry " << firstEntry << std::endl;
   }
 
 
   /**
-   * \brief Inform EDM4hepSource that a certain thread is about to start working
+   * \brief Inform EDM4hepLegacySource that a certain thread is about to start working
    *        on a certain entry.
    */
   bool
-  EDM4hepSource::SetEntry(unsigned int slot, ULong64_t entry) {
-    std::cout << "EDM4hepSource: In slot: " << slot << ", setting entry: "
+  EDM4hepLegacySource::SetEntry(unsigned int slot, ULong64_t entry) {
+    std::cout << "EDM4hepLegacySource: In slot: " << slot << ", setting entry: "
               << entry << std::endl;
+    m_frames_mutex.lock();
+    m_frames[slot] = podio::Frame(
+        m_podioReaders[slot].readEntry("events", entry)
+    );
+    m_frames_mutex.unlock();
 
-    if (m_useLegacyReaders) {
-      m_frames[slot] = podio::Frame(
-          m_podioLegacyReaders[slot].readEntry("events", entry)
-      );
-      std::cout << "Slot: " << slot << std::endl;
-      std::cout << "Readers size: " << m_podioLegacyReaders.size() << std::endl;
-      std::cout << "Reader address: " << &m_podioLegacyReaders[slot] << std::endl;
-      std::cout << "Frames size: " << m_frames.size() << std::endl;
-      std::cout << "Frames:\n";
-      for (const auto& frame: m_frames) {
-        std::cout << frame.first << ", " << &frame.second << "\n";
-      }
-      std::cout << "Frame address: " << &m_frames[slot] << std::endl;
-    } else {
-      m_frames[slot] = podio::Frame(
-          m_podioReaders[slot].readEntry("events", entry)
-      );
-    }
+    m_frames_mutex.lock_shared();
     for (auto& collectionIndex: m_activeCollections) {
-      m_Collections[collectionIndex][slot] = m_frames[slot].get(m_columnNames.at(collectionIndex));
-      std::cout << "CollName: " << m_columnNames.at(collectionIndex) << "\n";
-      std::cout << "Address: " << m_Collections[collectionIndex][slot] << "\n";
-      std::cout << "Coll size: " << m_Collections[collectionIndex][slot]->size() << "\n";
-      if (m_Collections[collectionIndex][slot]->isValid()) {
-        std::cout << "Collection valid\n";
-      }
+      m_Collections[collectionIndex][slot] =
+        m_frames[slot].get(m_columnNames.at(collectionIndex));
+      // std::cout << "CollName: " << m_columnNames.at(collectionIndex) << "\n";
+      // std::cout << "Address: " << m_Collections[collectionIndex][slot] << "\n";
+      // std::cout << "Coll size: " << m_Collections[collectionIndex][slot]->size() << "\n";
+      // if (m_Collections[collectionIndex][slot]->isValid()) {
+      //   std::cout << "Collection valid\n";
+      // }
     }
+    m_frames_mutex.unlock_shared();
 
     return true;
   }
 
 
   /**
-   * \brief Inform EDM4hepSource that a certain thread finished working on a
+   * \brief Inform EDM4hepLegacySource that a certain thread finished working on a
    *        certain range of entries.
    */
   void
-  EDM4hepSource::FinalizeSlot(unsigned int slot) {
-    std::cout << "EDM4hepSource: Finalizing slot: " << slot << std::endl;
+  EDM4hepLegacySource::FinalizeSlot(unsigned int slot) {
+    std::cout << "EDM4hepLegacySource: Finalizing slot: " << slot << std::endl;
   }
 
 
@@ -290,8 +260,8 @@ namespace FCCAnalyses {
    * \brief Inform RDataSource that an event-loop finished.
    */
   void
-  EDM4hepSource::Finalize() {
-    std::cout << "EDM4hepSource: Finalizing ..." << std::endl;
+  EDM4hepLegacySource::Finalize() {
+    std::cout << "EDM4hepLegacySource: Finalizing ..." << std::endl;
   }
 
 
@@ -300,23 +270,23 @@ namespace FCCAnalyses {
    *        per slot 
    */
   Record_t
-  EDM4hepSource::GetColumnReadersImpl(std::string_view columnName,
+  EDM4hepLegacySource::GetColumnReadersImpl(std::string_view columnName,
                                       const std::type_info& typeInfo) {
-    std::cout << "EDM4hepSource: Getting column reader implementation for column:\n"
+    std::cout << "EDM4hepLegacySource: Getting column reader implementation for column:\n"
               << "               " << columnName
               << "\n               with type: " << typeInfo.name() << std::endl;
 
     auto itr = std::find(m_columnNames.begin(), m_columnNames.end(),
                          columnName);
     if (itr == m_columnNames.end()) {
-      std::string errMsg = "EDM4hepSource: Can't find requested column \"";
+      std::string errMsg = "EDM4hepLegacySource: Can't find requested column \"";
       errMsg += columnName;
       errMsg += "\"!";
       throw std::runtime_error(errMsg);
     }
     auto columnIndex = std::distance(m_columnNames.begin(), itr);
     m_activeCollections.emplace_back(columnIndex);
-    std::cout << "EDM4hepSource: Active collections so far:\n"
+    std::cout << "EDM4hepLegacySource: Active collections so far:\n"
               << "               ";
     for (auto& i: m_activeCollections) {
       std::cout << i << ", ";
@@ -341,8 +311,8 @@ namespace FCCAnalyses {
    * \brief Returns a reference to the collection of the dataset's column names 
    */
   const std::vector<std::string>&
-  EDM4hepSource::GetColumnNames() const {
-    std::cout << "EDM4hepSource: Looking for column names" << std::endl;
+  EDM4hepLegacySource::GetColumnNames() const {
+    std::cout << "EDM4hepLegacySource: Looking for column names" << std::endl;
 
     return m_columnNames;
   }
@@ -351,8 +321,8 @@ namespace FCCAnalyses {
    * \brief Checks if the dataset has a certain column.
    */
   bool
-  EDM4hepSource::HasColumn(std::string_view columnName) const {
-    std::cout << "EDM4hepSource: Looking for column: " << columnName
+  EDM4hepLegacySource::HasColumn(std::string_view columnName) const {
+    std::cout << "EDM4hepLegacySource: Looking for column: " << columnName
               << std::endl;
 
     if (std::find(m_columnNames.begin(),
@@ -369,15 +339,15 @@ namespace FCCAnalyses {
    * \brief Type of a column as a string. Required for JITting.
    */
   std::string
-  EDM4hepSource::GetTypeName(std::string_view columnName) const {
-    std::cout << "EDM4hepSource: Looking for type name of column: "
+  EDM4hepLegacySource::GetTypeName(std::string_view columnName) const {
+    std::cout << "EDM4hepLegacySource: Looking for type name of column: "
               << columnName << std::endl;
 
     auto itr = std::find(m_columnNames.begin(), m_columnNames.end(),
                          columnName);
     if (itr != m_columnNames.end()) {
       auto i = std::distance(m_columnNames.begin(), itr);
-      std::cout << "EDM4hepSource: Found type name: "
+      std::cout << "EDM4hepLegacySource: Found type name: "
                 << m_columnTypes.at(i) << std::endl;
 
       return m_columnTypes.at(i) + "Collection";
@@ -386,8 +356,9 @@ namespace FCCAnalyses {
     return "float";
   }
 
-  ROOT::RDataFrame FromEDM4hep(const std::vector<std::string>& filePathList) {
-    ROOT::RDataFrame rdf(std::make_unique<EDM4hepSource>(filePathList));
+  ROOT::RDataFrame
+  FromEDM4hepLegacy(const std::vector<std::string>& filePathList) {
+    ROOT::RDataFrame rdf(std::make_unique<EDM4hepLegacySource>(filePathList));
 
     return rdf;
   }
