@@ -27,7 +27,7 @@ outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
 #compGroup = "group_u_FCC.local_gen"
 
 #Optional test file
-testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+testFile ="/eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
