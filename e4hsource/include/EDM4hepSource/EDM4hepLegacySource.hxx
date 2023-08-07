@@ -1,11 +1,11 @@
-#ifndef EDM4HEP_SOURCE_H__
-#define EDM4HEP_SOURCE_H__
+#ifndef EDM4HEP_LEGACY_SOURCE_H__
+#define EDM4HEP_LEGACY_SOURCE_H__
 
 // STL
-#include <podio/ROOTLegacyReader.h>
 #include <vector>
 #include <string>
 #include <functional>
+#include <shared_mutex>
 
 // ROOT
 #include <ROOT/RDataFrame.hxx>
@@ -13,20 +13,19 @@
 
 // Podio
 #include <podio/Frame.h>
-#include <podio/ROOTFrameReader.h>
 #include <podio/ROOTLegacyReader.h>
 #include <podio/CollectionBase.h>
 
-bool loadEDM4hepSource();
+bool loadEDM4hepLegacySource();
 
 namespace FCCAnalyses {
   using Record_t = std::vector<void*>;
 
-  class EDM4hepSource final : public ROOT::RDF::RDataSource {
+  class EDM4hepLegacySource final : public ROOT::RDF::RDataSource {
     public:
-      EDM4hepSource(const std::string& filePath, int nEvents = -1);
-      EDM4hepSource(const std::vector<std::string>& filePathList,
-                    int nEvents = -1);
+      EDM4hepLegacySource(const std::string& filePath, int nEvents = -1);
+      EDM4hepLegacySource(const std::vector<std::string>& filePathList,
+                          int nEvents = -1);
 
       void SetNSlots(unsigned int nSlots);
 
@@ -76,33 +75,33 @@ namespace FCCAnalyses {
       std::vector<std::vector<const podio::CollectionBase*>> m_Collections;
       /// Active collections
       std::vector<unsigned int> m_activeCollections;
-      /// Root podio reader
-      std::map<int, podio::ROOTFrameReader> m_podioReaders;
-      /// Legacy Root podio reader
-      std::map<int, podio::ROOTLegacyReader> m_podioLegacyReaders;
+      /// Root legacy podio reader
+      std::map<int, podio::ROOTLegacyReader> m_podioReaders;
       /// Podio frames
       std::map<int, podio::Frame> m_frames;
-      /// Legacy Podio reader
-      bool m_useLegacyReaders;
+      /// Mutex to protect frame map
+      mutable std::shared_mutex m_frames_mutex;
       /// Setup input
       void SetupInput(int nEvents);
   };
 
 
   /**
-   * \brief Retrieve from EDM4hepSource per-thread readers for the desired columns.
+   * \brief Retrieve from EDM4hepLegacySource per-thread readers for the
+   *        desired columns.
    */
   template<typename T>
   std::vector<T**>
-  EDM4hepSource::GetColumnReaders(std::string_view columnName) {
-    std::cout << "EDM4hepSource: Getting column readers for column: " << columnName << std::endl;
+  EDM4hepLegacySource::GetColumnReaders(std::string_view columnName) {
+    std::cout << "EDM4hepLegacySource: Getting column readers for column: "
+              << columnName << std::endl;
 
     std::vector<T**> readers;
 
     return readers;
   }
 
-  ROOT::RDataFrame FromEDM4hep(const std::vector<std::string>& filePathList);
+  ROOT::RDataFrame FromEDM4hepLegacy(const std::vector<std::string>& filePathList);
 }
 
-#endif /* EDM4HEP_SOURCE_H__ */
+#endif /* EDM4HEP_LEGACY_SOURCE_H__ */
