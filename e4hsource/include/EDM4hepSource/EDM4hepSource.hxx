@@ -2,7 +2,7 @@
 #define EDM4HEP_SOURCE_H__
 
 // STL
-#include <podio/ROOTLegacyReader.h>
+#include <memory>
 #include <vector>
 #include <string>
 #include <functional>
@@ -14,7 +14,6 @@
 // Podio
 #include <podio/Frame.h>
 #include <podio/ROOTFrameReader.h>
-#include <podio/ROOTLegacyReader.h>
 #include <podio/CollectionBase.h>
 
 bool loadEDM4hepSource();
@@ -76,26 +75,24 @@ namespace FCCAnalyses {
       std::vector<std::vector<const podio::CollectionBase*>> m_Collections;
       /// Active collections
       std::vector<unsigned int> m_activeCollections;
-      /// Root podio reader
-      std::map<int, podio::ROOTFrameReader> m_podioReaders;
-      /// Legacy Root podio reader
-      std::map<int, podio::ROOTLegacyReader> m_podioLegacyReaders;
+      /// Root podio readers
+      std::vector<std::unique_ptr<podio::ROOTFrameReader>> m_podioReaders;
       /// Podio frames
-      std::map<int, podio::Frame> m_frames;
-      /// Legacy Podio reader
-      bool m_useLegacyReaders;
+      std::vector<std::unique_ptr<podio::Frame>> m_frames;
       /// Setup input
       void SetupInput(int nEvents);
   };
 
 
   /**
-   * \brief Retrieve from EDM4hepSource per-thread readers for the desired columns.
+   * \brief Retrieve from EDM4hepSource per-thread readers for the
+   *        desired columns.
    */
   template<typename T>
   std::vector<T**>
   EDM4hepSource::GetColumnReaders(std::string_view columnName) {
-    std::cout << "EDM4hepSource: Getting column readers for column: " << columnName << std::endl;
+    std::cout << "EDM4hepSource: Getting column readers for column: "
+              << columnName << std::endl;
 
     std::vector<T**> readers;
 
