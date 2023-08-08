@@ -43,10 +43,6 @@ namespace FCCAnalyses {
     getD0 (const edm4hep::TrackCollection& inColl) {
       ROOT::VecOps::RVec<std::size_t> result;
       for (const auto& track: inColl) {
-        if (track.getTrackStates().size() > 1) {
-          std::cout << "Track with more than one state encountered!"
-                    << std::endl;
-        }
         for (const auto& trackState: track.getTrackStates()) {
           result.push_back(trackState.D0);
           break;

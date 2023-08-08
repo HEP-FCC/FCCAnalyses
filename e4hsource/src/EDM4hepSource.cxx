@@ -6,6 +6,7 @@
 #include <iostream>
 #include <filesystem>
 #include <exception>
+#include <memory>
 
 // ROOT
 #include <TFile.h>
@@ -56,38 +57,20 @@ namespace FCCAnalyses {
       // Check if the provided file contains required metadata
       TFile infile = TFile(filePath.data(), "READ");
       auto metadata = infile.Get("podio_metadata");
-      auto legacyMetadata = infile.Get("metadata");
       infile.Close();
-      if (!metadata && !legacyMetadata) {
+      if (!metadata) {
         throw std::runtime_error(
             "EDM4hepSource: Provided file is missing podio metadata!");
-      }
-      if (legacyMetadata) {
-        m_useLegacyReaders = true;
-      }
-      if (metadata && m_useLegacyReaders) {
-        throw std::runtime_error(
-            "EDM4hepSource: Provided filelist contains mixture of legacy and "
-            "frame EDM4hep files!");
       }
     }
 
     // Create probing frame
     podio::Frame frame;
     unsigned int nEventsInFiles = 0;
-    if (m_useLegacyReaders) {
-      std::cout << "EDM4hepSource: Reading EDM4hep files in legacy mode..."
-                << std::endl;
-      podio::ROOTLegacyReader podioLegacyReader;
-      podioLegacyReader.openFiles(m_filePathList);
-      nEventsInFiles = podioLegacyReader.getEntries("events");
-      frame = podio::Frame(podioLegacyReader.readEntry("events", 0));
-    } else {
-      podio::ROOTFrameReader podioReader;
-      podioReader.openFiles(m_filePathList);
-      nEventsInFiles = podioReader.getEntries("events");
-      frame = podio::Frame(podioReader.readEntry("events", 0));
-    }
+    podio::ROOTFrameReader podioReader;
+    podioReader.openFiles(m_filePathList);
+    nEventsInFiles = podioReader.getEntries("events");
+    frame = podio::Frame(podioReader.readEntry("events", 0));
 
     // Determine over how many events to run
     if (nEventsInFiles > 0) {
@@ -143,25 +126,29 @@ namespace FCCAnalyses {
 
     int eventsPerSlot = m_nEvents / m_nSlots;
     for (size_t i = 0; i < (m_nSlots - 1); ++i) {
-      m_rangesAll.emplace_back(eventsPerSlot * i, eventsPerSlot * (i + 1) - 1);
+      m_rangesAll.emplace_back(eventsPerSlot * i, eventsPerSlot * (i + 1));
     }
     m_rangesAll.emplace_back(eventsPerSlot * (m_nSlots - 1), m_nEvents);
     m_rangesAvailable = m_rangesAll;
 
-    // Initialize the entire set of addresses
+    // Initialize set of addresses needed
     m_Collections.resize(
-      m_columnNames.size(),
-      std::vector<const podio::CollectionBase*>(m_nSlots, nullptr));
+        m_columnNames.size(),
+        std::vector<const podio::CollectionBase*>(m_nSlots, nullptr));
 
     // Initialize podio readers
-    if (m_useLegacyReaders) {
-      for (size_t i = 0; i < m_nSlots; ++i) {
-        m_podioLegacyReaders[i].openFiles(m_filePathList);
-      }
-    } else {
-      for (size_t i = 0; i < m_nSlots; ++i) {
-        m_podioReaders[i].openFiles(m_filePathList);
-      }
+    for (size_t i = 0; i < m_nSlots; ++i) {
+      m_podioReaders.emplace_back(std::make_unique<podio::ROOTFrameReader>());
+    }
+
+    for (size_t i = 0; i < m_nSlots; ++i) {
+      m_podioReaders[i]->openFiles(m_filePathList);
+    }
+
+    for (size_t i = 0; i < m_nSlots; ++i) {
+      m_frames.emplace_back(
+          std::make_unique<podio::Frame>(
+              podio::Frame(m_podioReaders[i]->readEntry("events", 0))));
     }
   }
 
@@ -244,26 +231,12 @@ namespace FCCAnalyses {
     std::cout << "EDM4hepSource: In slot: " << slot << ", setting entry: "
               << entry << std::endl;
 
-    if (m_useLegacyReaders) {
-      m_frames[slot] = podio::Frame(
-          m_podioLegacyReaders[slot].readEntry("events", entry)
-      );
-      std::cout << "Slot: " << slot << std::endl;
-      std::cout << "Readers size: " << m_podioLegacyReaders.size() << std::endl;
-      std::cout << "Reader address: " << &m_podioLegacyReaders[slot] << std::endl;
-      std::cout << "Frames size: " << m_frames.size() << std::endl;
-      std::cout << "Frames:\n";
-      for (const auto& frame: m_frames) {
-        std::cout << frame.first << ", " << &frame.second << "\n";
-      }
-      std::cout << "Frame address: " << &m_frames[slot] << std::endl;
-    } else {
-      m_frames[slot] = podio::Frame(
-          m_podioReaders[slot].readEntry("events", entry)
-      );
-    }
+    m_frames[slot] = std::make_unique<podio::Frame>(
+        podio::Frame(m_podioReaders[slot]->readEntry("events", entry)));
+
     for (auto& collectionIndex: m_activeCollections) {
-      m_Collections[collectionIndex][slot] = m_frames[slot].get(m_columnNames.at(collectionIndex));
+      m_Collections[collectionIndex][slot] =
+          m_frames[slot]->get(m_columnNames.at(collectionIndex));
       std::cout << "CollName: " << m_columnNames.at(collectionIndex) << "\n";
       std::cout << "Address: " << m_Collections[collectionIndex][slot] << "\n";
       std::cout << "Coll size: " << m_Collections[collectionIndex][slot]->size() << "\n";
@@ -283,6 +256,16 @@ namespace FCCAnalyses {
   void
   EDM4hepSource::FinalizeSlot(unsigned int slot) {
     std::cout << "EDM4hepSource: Finalizing slot: " << slot << std::endl;
+    // std::cout << "Reader: " << &m_podioReaderRefs[slot].get() << std::endl;
+
+    // for (auto& collectionIndex: m_activeCollections) {
+    //   std::cout << "CollName: " << m_columnNames.at(collectionIndex) << "\n";
+    //   std::cout << "Address: " << m_Collections[collectionIndex][slot] << "\n";
+    //   if (m_Collections[collectionIndex][slot]->isValid()) {
+    //     std::cout << "Collection valid\n";
+    //   }
+    //   std::cout << "Coll size: " << m_Collections[collectionIndex][slot]->size() << "\n";
+    // }
   }
 
 
@@ -386,7 +369,8 @@ namespace FCCAnalyses {
     return "float";
   }
 
-  ROOT::RDataFrame FromEDM4hep(const std::vector<std::string>& filePathList) {
+  ROOT::RDataFrame
+  FromEDM4hep(const std::vector<std::string>& filePathList) {
     ROOT::RDataFrame rdf(std::make_unique<EDM4hepSource>(filePathList));
 
     return rdf;

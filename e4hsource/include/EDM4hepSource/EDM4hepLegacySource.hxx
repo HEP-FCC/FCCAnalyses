@@ -2,10 +2,11 @@
 #define EDM4HEP_LEGACY_SOURCE_H__
 
 // STL
+#include <memory>
 #include <vector>
 #include <string>
 #include <functional>
-#include <shared_mutex>
+#include <mutex>
 
 // ROOT
 #include <ROOT/RDataFrame.hxx>
@@ -75,12 +76,12 @@ namespace FCCAnalyses {
       std::vector<std::vector<const podio::CollectionBase*>> m_Collections;
       /// Active collections
       std::vector<unsigned int> m_activeCollections;
-      /// Root legacy podio reader
-      std::map<int, podio::ROOTLegacyReader> m_podioReaders;
+      /// Root legacy podio readers
+      std::vector<std::unique_ptr<podio::ROOTLegacyReader>> m_podioReaders;
       /// Podio frames
-      std::map<int, podio::Frame> m_frames;
-      /// Mutex to protect frame map
-      mutable std::shared_mutex m_frames_mutex;
+      std::vector<std::unique_ptr<podio::Frame>> m_frames;
+      /// Mutex to protect frame
+      std::mutex m_frames_mutex;
       /// Setup input
       void SetupInput(int nEvents);
   };
