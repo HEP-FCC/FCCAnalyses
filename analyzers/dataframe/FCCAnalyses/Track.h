@@ -14,9 +14,9 @@ namespace FCCAnalyses {
     /**
      * \brief Analyzer to select tracks associated with a specified PDG ID.
      *
-     * \param pdgID Desired PDG ID.
-     * \param chargeConjugateAllowed Whether to allow also charge conjugate
-     *        PDG ID. Default value false --- charge cojugate not allowed.
+     * \param pdgID  Desired PDG ID.
+     * \param chargeConjugateAllowed  Whether to allow also charge conjugate
+     *        PDG ID. Default value false --- charge conjugate not allowed.
      */
     struct selPDG {
       selPDG(const int pdgID, const bool chargeConjugateAllowed = false);

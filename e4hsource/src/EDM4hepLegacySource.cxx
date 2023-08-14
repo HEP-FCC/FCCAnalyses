@@ -60,9 +60,11 @@ namespace FCCAnalyses {
       auto legacyMetadata = infile.Get("metadata");
       infile.Close();
       if (!legacyMetadata) {
-        throw std::runtime_error(
-            "EDM4hepLegacySource: Provided file is missing legacy podio "
-            "metadata!");
+        std::string errMsg = "EDM4hepLegacySource: ";
+        errMsg += "Provided file is missing podio metadata!\n";
+        errMsg += "                   ";
+        errMsg += filePath.data();
+        throw std::runtime_error(errMsg);
       }
     }
 
@@ -72,10 +74,6 @@ namespace FCCAnalyses {
     // std::cout << "EDM4hepLegacySource: Reading EDM4hep files in legacy mode..."
     //           << std::endl;
     podio::ROOTLegacyReader podioLegacyReader;
-
-    std::vector<std::unique_ptr<podio::ROOTLegacyReader>> readers;
-    readers.emplace_back(std::make_unique<podio::ROOTLegacyReader>());
-
 
     podioLegacyReader.openFiles(m_filePathList);
     nEventsInFiles = podioLegacyReader.getEntries("events");

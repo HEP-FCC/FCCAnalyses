@@ -2,12 +2,18 @@
 #ifndef  RECONSTRUCTEDPARTICLE_ANALYZERS_H
 #define  RECONSTRUCTEDPARTICLE_ANALYZERS_H
 
+// STL
 #include <cmath>
 #include <vector>
 
+// ROOT
 #include "TLorentzVector.h"
 #include "ROOT/RVec.hxx"
+
+// EDM4hep
 #include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/ReconstructedParticleCollection.h"
+#include "edm4hep/MCRecoParticleAssociationCollection.h"
 #include "edm4hep/ParticleIDData.h"
 
 namespace FCCAnalyses{
@@ -98,6 +104,21 @@ namespace ReconstructedParticle{
   };
 
 
+  /**
+   * \brief Analyzer to select reconstructed particles associated with a
+   *        specified PDG ID.
+   *
+   * \param pdgID  Desired PDG ID.
+   * \param chargeConjugateAllowed  Whether to allow also charge conjugate
+   *        PDG ID. Default value false --- charge conjugate not allowed.
+   */
+  struct selPDG {
+    selPDG(const int pdgID, const bool chargeConjugateAllowed = false);
+    const int m_pdg;
+    const bool m_chargeConjugateAllowed;
+    edm4hep::ReconstructedParticleCollection operator() (
+        const edm4hep::MCRecoParticleAssociationCollection& inAssocColl);
+  };
 
 
   /// return reconstructed particles
@@ -105,6 +126,10 @@ namespace ReconstructedParticle{
 
   /// return the transverse momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+
+  /// return the transverse momenta of the input ReconstructedParticles
+  ROOT::VecOps::RVec<float>
+  getPt(const edm4hep::ReconstructedParticleCollection& inParticles);
 
   /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
