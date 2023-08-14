@@ -116,6 +116,33 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_charge::operator() (
 }
 
 
+selPDG::selPDG(const int pdg, const bool chargeConjugateAllowed) :
+    m_pdg(pdg), m_chargeConjugateAllowed(chargeConjugateAllowed) {};
+
+edm4hep::ReconstructedParticleCollection selPDG::operator() (
+    const edm4hep::MCRecoParticleAssociationCollection& inAssocColl) {
+  edm4hep::ReconstructedParticleCollection result;
+  result.setSubsetCollection();
+
+  for (const auto& assoc: inAssocColl) {
+    const auto& particle = assoc.getSim();
+    if (m_chargeConjugateAllowed) {
+      if (std::abs(particle.getPDG() ) == std::abs(m_pdg)) {
+        result.push_back(assoc.getRec());
+      }
+    }
+    else {
+      if (particle.getPDG() == m_pdg) {
+        result.push_back(assoc.getRec());
+      }
+    }
+  }
+
+  return result;
+}
+
+
+
 
 resonanceBuilder::resonanceBuilder(float arg_resonance_mass) {m_resonance_mass = arg_resonance_mass;}
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> resonanceBuilder::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs) {
@@ -245,6 +272,20 @@ ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedPartic
  }
  return result;
 }
+
+
+ROOT::VecOps::RVec<float>
+getPt(const edm4hep::ReconstructedParticleCollection& inParticles) {
+ ROOT::VecOps::RVec<float> result;
+
+ for (const auto& particle: inParticles) {
+   result.push_back(std::sqrt(std::pow(particle.getMomentum().x, 2) +
+                              std::pow(particle.getMomentum().y, 2)));
+ }
+
+ return result;
+}
+
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y) {
   //to be keept as ROOT::VecOps::RVec
