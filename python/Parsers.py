@@ -15,10 +15,31 @@ def setup_build_parser(parser):
                                action='store_true',
                                default=False,
                                help='do a clean build')
-    publicOptions.add_argument('-j','--build-threads',
-                               type=int,
-                               default=1,
-                               help='number of threads when building (equivalent to `make -j`)')
+    publicOptions.add_argument(
+        '-j', '--build-threads',
+        type=int,
+        default=1,
+        help='number of threads when building (equivalent to `make -j`)'
+    )
+
+
+def setup_test_parser(parser):
+    '''
+    Adds test options
+    '''
+    test_args = parser.add_argument_group('Test options')
+    test_args.add_argument(
+        '-R', '--tests-regex',
+        type=str,
+        help='Run tests matching regular expression (e.g. run only unit tests '
+             'with "^UT")'
+    )
+    test_args.add_argument(
+        '-E', '--exclude-regex',
+        type=str,
+        help='Exclude tests matching regular expression'
+    )
+
 
 def setup_pin_parser(parser):
     publicOptions = parser.add_argument_group('User pin options')
@@ -34,6 +55,7 @@ def setup_pin_parser(parser):
                                action='store_true',
                                default=False,
                                help='show pinned stack')
+
 
 def setup_run_parser(parser):
     '''
