@@ -1,4 +1,4 @@
-add_library(e4hsource SHARED src/EDM4hepSource.cxx)
+add_library(e4hsource SHARED src/EDM4hepDataSource.cxx)
 target_include_directories(e4hsource PUBLIC include)
 target_link_libraries(e4hsource PUBLIC ROOT::RIO
                                        ROOT::ROOTDataFrame
@@ -7,10 +7,10 @@ target_link_libraries(e4hsource PUBLIC ROOT::RIO
                                        EDM4HEP::edm4hepDict
 )
 
-ROOT_GENERATE_DICTIONARY(G__FCCAnalyses_EDM4hepSource
-                         include/EDM4hepSource/EDM4hepSource.hxx
+ROOT_GENERATE_DICTIONARY(G__FCCAnalyses_EDM4hepDataSource
+                         include/EDM4hepDataSource/EDM4hepDataSource.hxx
                          MODULE e4hsource
-                         LINKDEF include/EDM4hepSource/LinkDef.h
+                         LINKDEF include/EDM4hepDataSource/LinkDef.h
 )
 
 install(TARGETS e4hsource
@@ -38,9 +38,9 @@ target_link_libraries(e4hlegacysource PUBLIC ROOT::RIO
 )
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses_EDM4hepLegacySource
-                         include/EDM4hepSource/EDM4hepLegacySource.hxx
+                         include/EDM4hepDataSource/EDM4hepLegacySource.hxx
                          MODULE e4hlegacysource
-                         LINKDEF include/EDM4hepSource/Legacy_LinkDef.h
+                         LINKDEF include/EDM4hepDataSource/Legacy_LinkDef.h
 )
 
 install(TARGETS e4hlegacysource
