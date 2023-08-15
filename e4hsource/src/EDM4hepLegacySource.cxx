@@ -1,4 +1,4 @@
-#include "EDM4hepSource/EDM4hepLegacySource.hxx"
+#include "EDM4hepDataSource/EDM4hepLegacySource.hxx"
 
 // STL
 #include <cstddef>
