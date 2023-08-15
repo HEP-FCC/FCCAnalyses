@@ -1,5 +1,5 @@
-#ifndef EDM4HEP_SOURCE_H__
-#define EDM4HEP_SOURCE_H__
+#ifndef EDM4HEP_DATASOURCE_H__
+#define EDM4HEP_DATASOURCE_H__
 
 // STL
 #include <memory>
@@ -16,16 +16,16 @@
 #include <podio/ROOTFrameReader.h>
 #include <podio/CollectionBase.h>
 
-bool loadEDM4hepSource();
+bool loadEDM4hepDataSource();
 
 namespace FCCAnalyses {
   using Record_t = std::vector<void*>;
 
-  class EDM4hepSource final : public ROOT::RDF::RDataSource {
+  class EDM4hepDataSource final : public ROOT::RDF::RDataSource {
     public:
-      EDM4hepSource(const std::string& filePath, int nEvents = -1);
-      EDM4hepSource(const std::vector<std::string>& filePathList,
-                    int nEvents = -1);
+      EDM4hepDataSource(const std::string& filePath, int nEvents = -1);
+      EDM4hepDataSource(const std::vector<std::string>& filePathList,
+                        int nEvents = -1);
 
       void SetNSlots(unsigned int nSlots);
 
@@ -85,13 +85,13 @@ namespace FCCAnalyses {
 
 
   /**
-   * \brief Retrieve from EDM4hepSource per-thread readers for the
+   * \brief Retrieve from EDM4hepDataSource per-thread readers for the
    *        desired columns.
    */
   template<typename T>
   std::vector<T**>
-  EDM4hepSource::GetColumnReaders(std::string_view columnName) {
-    std::cout << "EDM4hepSource: Getting column readers for column: "
+  EDM4hepDataSource::GetColumnReaders(std::string_view columnName) {
+    std::cout << "EDM4hepDataSource: Getting column readers for column: "
               << columnName << std::endl;
 
     std::vector<T**> readers;
@@ -102,4 +102,4 @@ namespace FCCAnalyses {
   ROOT::RDataFrame FromEDM4hep(const std::vector<std::string>& filePathList);
 }
 
-#endif /* EDM4HEP_SOURCE_H__ */
+#endif /* EDM4HEP_DATASOURCE_H__ */
