@@ -159,6 +159,7 @@ def get_process_dict_dirs():
         print('----> Error: Evironment variable FCCDICTSDIR not defined.')
         print('             Was the setup.sh file sourced properly?')
         print('             Aborting...')
+        sys.exit(3)
     dirs = dirs.split(':')
     dirs = [d for d in dirs if d]
 
