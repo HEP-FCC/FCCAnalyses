@@ -140,6 +140,9 @@ install(FILES ${_man_files_1} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1
 file(GLOB _man_files_7 man/man7/*.7)
 install(FILES ${_man_files_7} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man7)
 
+
+install(DIRECTORY examples DESTINATION ${CMAKE_INSTALL_PREFIX}/share/examples)
+
 #--- Descend into subdirectories ----------------------------------------------
 
 set(ADDONS_LIBRARIES CACHE STRING "List of external libraries the RDF utilities will be linked against")
