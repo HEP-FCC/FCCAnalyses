@@ -43,7 +43,7 @@ namespace ReconstructedParticle{
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
-  /// select ReconstructedParticles by type absolut value
+  /// select ReconstructedParticles by type absolute value
   /// Note: type might not correspond to PDG ID
   struct sel_absType {
     sel_absType(const int type);
