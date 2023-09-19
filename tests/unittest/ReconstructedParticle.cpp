@@ -4,7 +4,6 @@
 #include "catch2/catch_test_macros.hpp"
 #include <catch2/catch_approx.hpp>
 
-
 TEST_CASE("sel_type", "[ReconstructedParticle]") {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> pVec;
   edm4hep::ReconstructedParticleData p1;
@@ -24,7 +23,6 @@ TEST_CASE("sel_type", "[ReconstructedParticle]") {
   REQUIRE(res.size() == 1);
   REQUIRE(res[0].type == 11);
 }
-
 
 TEST_CASE("sel_absType", "[ReconstructedParticle]") {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> pVec;
@@ -46,7 +44,6 @@ TEST_CASE("sel_absType", "[ReconstructedParticle]") {
   REQUIRE(res[0].type == 11);
   REQUIRE(res[1].type == -11);
 }
-
 
 TEST_CASE("sel_absType__neg_type", "[ReconstructedParticle]") {
   REQUIRE_THROWS_AS(FCCAnalyses::ReconstructedParticle::sel_absType(-17),

@@ -40,7 +40,8 @@ namespace ReconstructedParticle{
   struct sel_type {
     sel_type(const int type);
     const int m_type;
-    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+    operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
   /// select ReconstructedParticles by type absolute value
@@ -48,7 +49,8 @@ namespace ReconstructedParticle{
   struct sel_absType {
     sel_absType(const int type);
     const int m_type;
-    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+    operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
   /// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
