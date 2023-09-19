@@ -4,7 +4,11 @@ find_catch_instance()
 # list of labels that we want to ignore
 set(filter_tests "")
 
-add_executable(unittest unittest.cpp myutils.cpp algorithms.cpp)
+add_executable(unittest unittest.cpp
+                        myutils.cpp
+                        algorithms.cpp
+                        ReconstructedParticle.cpp
+)
 target_link_libraries(unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain)
 target_include_directories(unittest PUBLIC ${VDT_INCLUDE_DIR})
 target_compile_definitions(unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")

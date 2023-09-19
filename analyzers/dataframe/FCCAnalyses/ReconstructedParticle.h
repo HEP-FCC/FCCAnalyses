@@ -35,6 +35,24 @@ namespace ReconstructedParticle{
     float operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) ;
   };
 
+  /// select ReconstructedParticles by type
+  /// Note: type might not correspond to PDG ID
+  struct sel_type {
+    sel_type(const int type);
+    const int m_type;
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+    operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+  };
+
+  /// select ReconstructedParticles by type absolute value
+  /// Note: type might not correspond to PDG ID
+  struct sel_absType {
+    sel_absType(const int type);
+    const int m_type;
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+    operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+  };
+
   /// select ReconstructedParticles with transverse momentum greater than a minimum value [GeV]
   struct sel_pt {
     sel_pt(float arg_min_pt);
