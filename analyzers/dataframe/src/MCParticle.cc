@@ -594,6 +594,7 @@ ROOT::VecOps::RVec<int>  get_indices_MotherByIndex ( int imother,
 	// careful, there can be several particles with the same PDG !
 	if (std::find(found.begin(), found.end(), idx_d) == found.end())  {  // idx_d has NOT already been "used"
 	  found.push_back( idx_d );
+          break;
 	}
       }
     }
