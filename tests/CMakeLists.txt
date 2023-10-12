@@ -8,6 +8,8 @@ add_integration_test("examples/FCCee/test/jet_constituents.py")
 add_integration_test("examples/FCCee/vertex_lcfiplus/analysis_V0.py")
 add_integration_test("e4hsource/test/histmaker_source.py")
 add_integration_test("e4hsource/test/stages_source.py")
+add_standalone_test("e4hsource/test/standalone.py")
+add_standalone_test("e4hsource/test/standalone_legacy.py")
 
 add_standalone_test("examples/FCCee/fullSim/caloNtupleizer/analysis.py")
 
