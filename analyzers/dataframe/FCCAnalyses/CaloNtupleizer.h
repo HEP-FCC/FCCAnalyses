@@ -33,6 +33,8 @@ private:
 
 
 // SIM calo hits (single cells)
+ROOT::VecOps::RVec<float> getSimCellID (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
+ROOT::VecOps::RVec<float> getSimCaloHit_r (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getSimCaloHit_x (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getSimCaloHit_y (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getSimCaloHit_z (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
