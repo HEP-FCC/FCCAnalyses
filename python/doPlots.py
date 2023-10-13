@@ -1,16 +1,25 @@
 #!/usr/bin/env python
-import sys, os
+'''
+Create plots out of the histograms produced in previous stages
+'''
+import sys
+import os
 import os.path
 import ntpath
 import importlib
-import ROOT
 import copy
 import re
+import logging
+import ROOT
 
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptTitle(0)
-#__________________________________________________________
+
+
+LOGGER = logging.getLogger('FCCAnalyses.plot')
+
+# __________________________________________________________
 def removekey(d, key):
     r = dict(d)
     del r[key]
@@ -32,7 +41,8 @@ def formatStatUncHist(hists, name, hstyle=3254):
 
 #__________________________________________________________
 def mapHistos(var, label, sel, param, rebin):
-    print ('run plots for var:{}     label:{}     selection:{}'.format(var,label,sel))
+    LOGGER.info('Run plots for var:%s     label:%s     selection:%s',
+                var, label, sel)
     signal=param.plots[label]['signal']
     backgrounds=param.plots[label]['backgrounds']
 
@@ -42,7 +52,7 @@ def mapHistos(var, label, sel, param, rebin):
         for f in signal[s]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -51,9 +61,9 @@ def mapHistos(var, label, sel, param, rebin):
                 try:
                     scaleSig=param.scaleSig
                 except AttributeError:
-                    print ('no scale signal, using 1')
+                    LOGGER.info('No scale signal, using 1.')
                     param.scaleSig=scaleSig
-                print ('scaleSig ',scaleSig)
+                LOGGER.info('ScaleSig: ', scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
                 hh.Rebin(rebin)
 
@@ -70,7 +80,7 @@ def mapHistos(var, label, sel, param, rebin):
         for f in backgrounds[b]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -97,7 +107,7 @@ def mapHistos(var, label, sel, param, rebin):
 #__________________________________________________________
 def mapHistosFromHistmaker(hName, param, plotCfg):
     rebin = plotCfg['rebin'] if 'rebin' in plotCfg else 1
-    print (f'get histograms for {hName}')
+    LOGGER('Get histograms for %s', hName)
     signal=param.procs['signal']
     backgrounds=param.procs['backgrounds']
     scaleSig = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
@@ -108,12 +118,12 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
         for f in signal[s]:
             fin=f"{param.inputDir}/{f}.root"
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(hName)
                 hh = copy.deepcopy(h)
-                print ('scaleSig ',scaleSig)
+                LOGGER.info('ScaleSig: ', scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
                 hh.Rebin(rebin)
                 if len(hsignal[s])==0:
@@ -129,7 +139,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
         for f in backgrounds[b]:
             fin=f"{param.inputDir}/{f}.root"
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(hName)
@@ -173,7 +183,7 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         try:
             legCoord=param.legendCoord
         except AttributeError:
-            print ('no legCoord, using default one...')
+            LOGGER.info('No legCoord, using default one...')
             legCoord=[0.68, 0.86-legsize, 0.96, 0.88]
         leg2 = None
 
@@ -232,13 +242,13 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
     try:
         customLabel=param.customLabel
     except AttributeError:
-        print ('no customLable, using nothing...')
+        LOGGER.info('No customLable, using nothing...')
 
     scaleSig=1.
     try:
         scaleSig=param.scaleSig
     except AttributeError:
-        print ('no scale signal, using 1')
+        LOGGER('No scale signal, using 1.')
         param.scaleSig=scaleSig
 
     if 'AAAyields' in var:
@@ -251,7 +261,8 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         if 'log' in param.yaxis:
             drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
-            print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
+            LOGGER.info('Unrecognised option in formats, should be '
+                        '[\'lin\',\'log\']')
 
     if 'nostack' in param.stacksig:
         if 'lin' in param.yaxis:
@@ -259,9 +270,11 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         if 'log' in param.yaxis:
             drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , False , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
-            print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
+            LOGGER.info('Unrecognised option in formats, should be '
+                        '[\'lin\',\'log\']')
     if 'stack' not in param.stacksig and 'nostack' not in param.stacksig:
-        print ('unrecognised option in stacksig, should be [\'stack\',\'nostack\']'.format(param.formats))
+        LOGGER.info('Unrecognised option in stacksig, should be '
+                    '[\'stack\',\'nostack\']')
 
 #__________________________________________________________
 def runPlotsHistmaker(hName, param, plotCfg):
@@ -297,7 +310,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
         try:
             legCoord=param.legendCoord
         except AttributeError:
-            print ('no legCoord, using default one...')
+            LOGGER.info('No legCoord, using default one...')
             legCoord=[0.68, 0.86-legsize, 0.96, 0.88]
         leg2 = None
 
@@ -366,7 +379,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
     try:
         customLabel=param.customLabel
     except AttributeError:
-        print ('no customLable, using nothing...')
+        LOGGER.info('No customLable, using nothing...')
 
 
 
@@ -517,11 +530,10 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     if ymax == -1:
         ymax = ymax_*1000. if logY else 1.4*ymax_
     if ymin <= 0 and logY:
-        print('----> Error: Log scale can\'t start at: {}'.format(ymin))
+        LOGGER.error('Log scale can\'t start at: %i', ymin)
         sys.exit(3)
     h_dummy.SetMaximum(ymax)
     h_dummy.SetMinimum(ymin)
-
 
     legend.Draw()
     if legend2 != None:
