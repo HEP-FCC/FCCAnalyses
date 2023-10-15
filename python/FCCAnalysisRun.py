@@ -873,27 +873,11 @@ def runHistmaker(args, rdfModule, analysisFile):
     hweights = [] # all the weights
     evtcounts = [] # event count of the input file
     eventsProcessedDict = {} # number of events processed per process, in a potential previous step
-
     for process in processList:
         fileList, eventList = getProcessInfo(process, getElement(rdfModule,"prodTag"), getElement(rdfModule, "inputDir"))
         if len(fileList)==0:
             print('----> ERROR: No files to process. Exit')
             sys.exit(3)
-
-        # get the number of events processed, in a potential previous step
-        fileListRoot = ROOT.vector('string')()
-        nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
-        for fileName in fileList:
-            fileName = apply_filepath_rewrites(fileName)
-            fileListRoot.push_back(fileName)
-            tf=ROOT.TFile.Open(str(fileName),"READ")
-            tf.cd()
-            for key in tf.GetListOfKeys():
-                if 'eventsProcessed' == key.GetName():
-                    nevents_meta += tf.eventsProcessed.GetVal()
-                    break
-        eventsProcessedDict[process] = nevents_meta
-
         processDict={}
         fraction = 1
         output = process
@@ -903,12 +887,27 @@ def runHistmaker(args, rdfModule, analysisFile):
             if getElementDict(processList[process], 'fraction') != None: fraction = getElementDict(processList[process], 'fraction')
             if getElementDict(processList[process], 'output')   != None: output   = getElementDict(processList[process], 'output')
             if getElementDict(processList[process], 'chunks')   != None: chunks   = getElementDict(processList[process], 'chunks')
-
         except TypeError:
             print ('----> no values set for process {} will use default values'.format(process))
+        if fraction < 1:fileList = getsubfileList(fileList, eventList, fraction)
 
-        if fraction<1:fileList = getsubfileList(fileList, eventList, fraction)
-        print ('----> Info: Add process {} with fraction={}, nfiles={}, output={}, chunks={}'.format(process, fraction, len(fileList), output, chunks))
+        # get the number of events processed, in a potential previous step
+        fileListRoot = ROOT.vector('string')()
+        nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
+        for fileName in fileList:
+            fileName = apply_filepath_rewrites(fileName)
+            fileListRoot.push_back(fileName)
+            if getElement(rdfModule,"prodTag") == None: # skip check for processed events in case of first stage
+                tf=ROOT.TFile.Open(str(fileName),"READ")
+                tf.cd()
+                for key in tf.GetListOfKeys():
+                    if 'eventsProcessed' == key.GetName():
+                        nevents_meta += tf.eventsProcessed.GetVal()
+                        break
+            if args.test:
+                break
+        eventsProcessedDict[process] = nevents_meta
+        print ('----> Info: Add process {} with fraction={}, nfiles={}, output={}, chunks={}'.format(process, fraction, len(fileListRoot), output, chunks))
 
         df = ROOT.ROOT.RDataFrame("events", fileListRoot)
         evtcount = df.Count()
