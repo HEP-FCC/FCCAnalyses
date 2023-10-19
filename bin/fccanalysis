@@ -31,12 +31,16 @@ class MultiLineFormatter(logging.Formatter):
 
 def main():
     parser = argparse.ArgumentParser(description='FCCAnalyses parser')
-    parser.add_argument('-v', '--verbose',
-                        action='store_true',
-                        help='make output more verbose')
-    parser.add_argument('--verbosity-level',
-                        type=str,
-                        help='Set verbosity level')
+    verbosity_argument_group = parser.add_mutually_exclusive_group()
+    verbosity_argument_group.add_argument('-v', '--verbose',
+                                          action='store_true',
+                                          help='make output verbose')
+    verbosity_argument_group.add_argument('-vv', '--more-verbose',
+                                          action='store_true',
+                                          help='make output more verbose')
+    verbosity_argument_group.add_argument('-vvv', '--most-verbose',
+                                          action='store_true',
+                                          help='make output most verbose')
 
     subparsers = parser.add_subparsers(help='types of running modes', dest='command')
     parser_init      = subparsers.add_parser('init', help="generate a RDataFrame based FCC analysis")
@@ -60,11 +64,7 @@ def main():
     args = parser.parse_args()
 
     verbosity_level = logging.INFO
-    if args.verbosity_level:
-        user_level = getattr(logging, args.verbosity_level.upper(), None)
-        if isinstance(user_level, int):
-            verbosity_level = user_level
-    if args.verbose:
+    if args.verbose or args.more_verbose or args.most_verbose:
         verbosity_level = logging.DEBUG
 
     logger = logging.getLogger('FCCAnalyses')
