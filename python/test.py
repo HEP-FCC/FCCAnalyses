@@ -5,6 +5,10 @@ The module runs tests of FCCAnalyses
 import os
 import sys
 import subprocess
+import logging
+
+
+LOGGER = logging.getLogger('FCCAnalyses.test')
 
 
 def run_subprocess(command, run_dir):
@@ -18,14 +22,14 @@ def run_subprocess(command, run_dir):
             status = proc.wait()
 
             if status != 0:
-                print('----> Error: One of the tests failed!')
+                LOGGER.error('One of the tests failed!')
                 sys.exit(int(status))
 
     except FileNotFoundError:
-        print('----> \"ctest\" not found!')
+        LOGGER.info('\"ctest\" not found!')
         sys.exit(3)
     except KeyboardInterrupt:
-        print('----> Aborting...')
+        LOGGER.info('Aborting...')
         sys.exit(0)
 
 
@@ -35,8 +39,8 @@ def test_fccanalyses(mainparser):
     '''
 
     if 'LOCAL_DIR' not in os.environ:
-        print('----> Error: FCCAnalyses environment not set up correctly!')
-        print('      Aborting...')
+        LOGGER.error('FCCAnalyses environment not set up '
+                     'correctly!\nAborting...')
         sys.exit(3)
 
     local_dir = os.environ.get('LOCAL_DIR')
@@ -54,5 +58,3 @@ def test_fccanalyses(mainparser):
         ctest_command.append(args.exclude_regex)
 
     run_subprocess(ctest_command, local_dir + '/build')
-
-    print(args)
