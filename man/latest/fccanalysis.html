@@ -25,7 +25,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre><i>fccanalysis</i> [-h | --help] &lt;command&gt; [&lt;args&gt;]</pre>
+<pre><i>fccanalysis</i> [-h] [-v | -vv | -vvv] &lt;command&gt; [&lt;args&gt;]</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -35,8 +35,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
-<p class="Pp">--help</p>
+<p class="Pp">-h, --help</p>
 <div class="Bd-indent">Prints short help message and exits.</div>
+<p class="Pp">-v, --verbose</p>
+<div class="Bd-indent">Makes output verbose. RDataFrame verbosity level is set
+  to ROOT.Experimental.ELogLevel.kInfo.</div>
+<p class="Pp">-vv, --more-verbose</p>
+<div class="Bd-indent">Makes output more verbose. RDataFrame verbosity level is
+  set to ROOT.Experimental.ELogLevel.kDebug.</div>
+<p class="Pp">-vvv, --most-verbose</p>
+<div class="Bd-indent">Makes output even more verbose. RDataFrame verbosity
+  level is set to ROOT.Experimental.ELogLevel.kDebug+10 --- outputs also
+  generated code.</div>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="COMMANDS"><a class="permalink" href="#COMMANDS">COMMANDS</a></h1>
@@ -93,7 +103,7 @@ Gerardo Ganis</div>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">24 May 2023</td>
+    <td class="foot-date">19 Oct 2023</td>
     <td class="foot-os">0.7.0</td>
   </tr>
 </table>
