@@ -7,6 +7,10 @@ import sys
 import subprocess
 import pathlib
 import shutil
+import logging
+
+
+LOGGER = logging.getLogger('FCCAnalyses.build')
 
 
 def run_subprocess(command, run_dir):
@@ -20,12 +24,11 @@ def run_subprocess(command, run_dir):
         status = proc.wait()
 
         if status != 0:
-            print('----> Error encountered!')
-            print('      Aborting...')
+            LOGGER.error('Error encountered!\nAborting...')
             sys.exit(3)
 
     except KeyboardInterrupt:
-        print('----> Aborting...')
+        LOGGER.error('Aborting...')
         sys.exit(0)
 
 
@@ -36,33 +39,32 @@ def build_analysis(mainparser):
     args, _ = mainparser.parse_known_args()
 
     if 'LOCAL_DIR' not in os.environ:
-        print('----> FCCAnalyses environment not set up correctly!')
-        print('      Aborting...')
+        LOGGER.error('FCCAnalyses environment not set up correctly!\n'
+                     'Aborting...')
         sys.exit(3)
 
     local_dir = os.environ.get('LOCAL_DIR')
     build_path = pathlib.Path(local_dir + '/build')
     install_path = pathlib.Path(local_dir + '/install')
 
-    print('----> Building analysis located in:')
-    print('      ' + local_dir)
+    LOGGER.info('Building analysis located in:\n%s', local_dir)
 
     if args.clean_build:
-        print('----> Clearing build and install directories...')
+        LOGGER.info('Clearing build and install directories...')
         if build_path.is_dir():
             shutil.rmtree(build_path)
         if install_path.is_dir():
             shutil.rmtree(install_path)
 
     if not build_path.is_dir():
-        print('----> Creating build directory...')
+        LOGGER.info('Creating build directory...')
         os.makedirs(build_path)
 
         run_subprocess(['cmake', '-DCMAKE_INSTALL_PREFIX=../install', '..'],
                        local_dir + '/build')
 
     if not install_path.is_dir():
-        print('----> Creating install directory...')
+        LOGGER.info('Creating install directory...')
         os.makedirs(install_path)
 
     run_subprocess(['make', '-j{}'.format(args.build_threads), 'install'],
