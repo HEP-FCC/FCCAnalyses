@@ -1,6 +1,9 @@
 # list of processes (mandatory)
 processList = {
-    'p8_ee_WW_ecm240': {'output': 'p8_ee_WW_ecm240_out'}
+    'p8_ee_WW_ecm240': {'output': 'p8_ee_WW_ecm240_out',
+                        'testfile': '/eos/experiment/fcc/ee/generation/'
+                                    'DelphesEvents/winter2023/IDEA/'
+                                    'p8_ee_WW_ecm240/events_192112516.root'}
 }
 
 # Production tag when running over EDM4Hep centrally produced events, this
@@ -23,9 +26,6 @@ bins_pt = (20, 0, 200)
 
 # How to read input files
 useDataSource = True
-
-testFile = '/eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/' \
-           'IDEA/p8_ee_WW_ecm240/events_192112516.root'
 
 # build_graph function that contains the analysis logic, cuts and histograms
 # (mandatory)
