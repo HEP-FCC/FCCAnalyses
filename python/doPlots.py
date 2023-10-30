@@ -225,7 +225,7 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         colors.append(param.colors[b])
 
     intLumiab = param.intLumi/1e+06
-    intLumi = "L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
     if hasattr(param, "intLumiLabel"):
         intLumi = getattr(param, "intLumiLabel")
 
@@ -364,7 +364,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
 
 
     intLumiab = param.intLumi/1e+06
-    intLumi = "L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
     if hasattr(param, "intLumiLabel"):
         intLumi = getattr(param, "intLumiLabel")
 
