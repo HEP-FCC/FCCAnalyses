@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.16.9)
 
 
-project(FCCAnalyses CXX)
+project(FCCAnalyses VERSION 0.7.0
+                    LANGUAGES CXX
+)
 
 #--- RPATH settings -----------------------------------------------------------
 

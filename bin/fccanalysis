@@ -30,7 +30,7 @@ class MultiLineFormatter(logging.Formatter):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='FCCAnalyses parser')
+    parser = argparse.ArgumentParser(description='FCCAnalyses v0.7.0')
     verbosity_argument_group = parser.add_mutually_exclusive_group()
     verbosity_argument_group.add_argument('-v', '--verbose',
                                           action='store_true',
