@@ -78,6 +78,7 @@ endif()
 
 if(WITH_ACTS)
   target_link_libraries(FCCAnalyses PUBLIC ActsCore)
+  target_compile_definitions(FCCAnalyses PRIVATE "ACTS_VERSION_MAJOR=${Acts_VERSION_MAJOR}")
 endif()
 
 set_target_properties(FCCAnalyses PROPERTIES
