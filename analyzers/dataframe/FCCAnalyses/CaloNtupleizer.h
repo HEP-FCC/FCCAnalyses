@@ -44,6 +44,7 @@ ROOT::VecOps::RVec<float> getSimCaloHit_theta (const ROOT::VecOps::RVec<edm4hep:
 ROOT::VecOps::RVec<float> getSimCaloHit_eta (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
 ROOT::VecOps::RVec<int> getSimCaloHit_etaBin (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
 ROOT::VecOps::RVec<int> getSimCaloHit_layer (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
+ROOT::VecOps::RVec<int> getSimCaloHit_depth (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in,const int decodingVal);
 ROOT::VecOps::RVec<float> getSimCaloHit_energy (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
 ROOT::VecOps::RVec<TVector3> getSimCaloHit_positionVector3 (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in);
 

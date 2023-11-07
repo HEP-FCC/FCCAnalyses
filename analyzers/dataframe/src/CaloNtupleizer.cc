@@ -132,6 +132,13 @@ ROOT::VecOps::RVec<float> getSimCaloHit_energy (const ROOT::VecOps::RVec<edm4hep
   return result;
 }
 
+ROOT::VecOps::RVec<int> getSimCaloHit_depth (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in,const int decodingVal){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    result.push_back(p.cellID >> decodingVal & (8-1) );
+  }
+  return result;
+}
 
 ROOT::VecOps::RVec<int> getSimCaloHit_layer (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
   ROOT::VecOps::RVec<int> result;

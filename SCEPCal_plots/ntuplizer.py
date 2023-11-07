@@ -19,14 +19,14 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-inputFilesName",  help = "name of the input rootfiles", type = str)
 parser.add_argument("-baseFolder",help = "folder for the rootfiles", type = str)
 args = parser.parse_args()
-
-
+NBITS = 27
 
 print('Create RDataFrame ...')
 df = ROOT.RDataFrame('events', args.baseFolder + "/" + args.inputFilesName)
 print('Apply selectors and define new branches ...')
 df = (df
               .Define('SimCaloHit_cellID', 'CaloNtupleizer::getSimCellID (SimCalorimeterHits)')
+              .Define('SimCaloHit_depth',  'CaloNtupleizer::getSimCaloHit_depth(SimCalorimeterHits, %i )'%NBITS)
               .Define('SimCaloHit_energy', 'CaloNtupleizer::getSimCaloHit_energy (SimCalorimeterHits)')
               .Define('SimCaloHit_r', 'CaloNtupleizer::getSimCaloHit_r(SimCalorimeterHits)')
               .Define('SimCaloHit_x', 'CaloNtupleizer::getSimCaloHit_x (SimCalorimeterHits)')
@@ -37,6 +37,7 @@ df = (df
 
 
               .Define('SimCaloHitC_cellID', 'CaloNtupleizer::getSimCellID (SimCalorimeterHitsCherenkov)')
+              .Define('SimCaloHitC_depth',   'CaloNtupleizer::getSimCaloHit_depth(SimCalorimeterHits, %i)'%NBITS)
               .Define('SimCaloHitC_energy', 'CaloNtupleizer::getSimCaloHit_energy (SimCalorimeterHitsCherenkov)')
               .Define('SimCaloHitC_r', 'CaloNtupleizer::getSimCaloHit_r (SimCalorimeterHitsCherenkov)')
               .Define('SimCaloHitC_x', 'CaloNtupleizer::getSimCaloHit_x (SimCalorimeterHitsCherenkov)')
@@ -45,6 +46,7 @@ df = (df
               .Define('SimCaloHitC_eta', 'CaloNtupleizer::getSimCaloHit_eta (SimCalorimeterHitsCherenkov)')
               .Define('SimCaloHitC_phi', 'CaloNtupleizer::getSimCaloHit_phi (SimCalorimeterHitsCherenkov)')
 
+              .Define('MCparticle_energy', 'MCParticle::get_e (GenParticles)')
               .Define('MCparticle_px', 'MCParticle::get_px (GenParticles)')
               .Define('MCparticle_py', 'MCParticle::get_py (GenParticles)')
               .Define('MCparticle_pz', 'MCParticle::get_pz (GenParticles)')
@@ -57,6 +59,7 @@ print(f'Writing snapshot to disk ... \t{outfilename}')
 df.Snapshot('events', outfilename,
              [
               'SimCaloHit_cellID', 
+              'SimCaloHit_depth', 
               'SimCaloHit_energy', 
               'SimCaloHit_r', 
               'SimCaloHit_x', 
@@ -66,6 +69,7 @@ df.Snapshot('events', outfilename,
               'SimCaloHit_phi', 
 
               'SimCaloHitC_cellID', 
+              'SimCaloHitC_depth', 
               'SimCaloHitC_energy', 
               'SimCaloHitC_r', 
               'SimCaloHitC_x', 
@@ -74,6 +78,7 @@ df.Snapshot('events', outfilename,
               'SimCaloHitC_eta', 
               'SimCaloHitC_phi',
            
+              'MCparticle_energy',
               'MCparticle_px',
               'MCparticle_py',
               'MCparticle_pz',
