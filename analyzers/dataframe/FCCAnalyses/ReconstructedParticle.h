@@ -121,6 +121,19 @@ namespace ReconstructedParticle{
   };
 
 
+  /**
+   * \brief Analyzer to select specified number of reconstructed particles
+   *
+   * \param size  Desired number of particles
+   */
+  struct selUpTo {
+    selUpTo(const size_t size);
+    const size_t m_size;
+    edm4hep::ReconstructedParticleCollection operator() (
+        const edm4hep::ReconstructedParticleCollection& inColl);
+  };
+
+
   /// return reconstructed particles
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
@@ -193,6 +206,10 @@ namespace ReconstructedParticle{
 
   /// get number of b-jets
   int getJet_ntags(ROOT::VecOps::RVec<bool> in);
+
+  /// reorder input ReconstructedParticles by pT
+  edm4hep::ReconstructedParticleCollection
+  sortByPt(const edm4hep::ReconstructedParticleCollection& inParticles);
 
 }//end NS ReconstructedParticle
 

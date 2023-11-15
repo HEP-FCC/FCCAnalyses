@@ -142,6 +142,22 @@ edm4hep::ReconstructedParticleCollection selPDG::operator() (
 }
 
 
+selUpTo::selUpTo(const size_t size) : m_size(size) {};
+
+edm4hep::ReconstructedParticleCollection selUpTo::operator() (
+    const edm4hep::ReconstructedParticleCollection& inColl) {
+  edm4hep::ReconstructedParticleCollection result;
+  result.setSubsetCollection();
+
+  for (const auto& particle: inColl) {
+    if (result.size() >= m_size) {
+      break;
+    }
+    result.push_back(particle);
+  }
+
+  return result;
+}
 
 
 resonanceBuilder::resonanceBuilder(float arg_resonance_mass) {m_resonance_mass = arg_resonance_mass;}
@@ -514,6 +530,34 @@ int getJet_ntags(ROOT::VecOps::RVec<bool> in) {
   for (size_t i = 0; i < in.size(); ++i)
     if (in.at(i))result+=1;
   return result;
+}
+
+
+edm4hep::ReconstructedParticleCollection
+sortByPt(const edm4hep::ReconstructedParticleCollection& inColl) {
+  edm4hep::ReconstructedParticleCollection outColl;
+  outColl.setSubsetCollection();
+
+  std::vector<edm4hep::ReconstructedParticle> rpVec;
+  for (const auto& particle: inColl) {
+    rpVec.emplace_back(particle);
+  }
+
+  auto pt = [] (const auto& particle) {
+    return std::sqrt(std::pow(particle.getMomentum().x, 2) +
+                     std::pow(particle.getMomentum().y, 2));
+  };
+
+  std::sort(rpVec.begin(), rpVec.end(),
+            [&pt](const auto& lhs, const auto& rhs) {
+              return pt(lhs) > pt(rhs);
+            });
+
+  for (const auto& particle: rpVec) {
+    outColl.push_back(particle);
+  }
+
+  return outColl;
 }
 
 }//end NS ReconstructedParticle
