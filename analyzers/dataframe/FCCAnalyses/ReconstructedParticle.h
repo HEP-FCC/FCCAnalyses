@@ -12,7 +12,6 @@
 
 // EDM4hep
 #include "edm4hep/ReconstructedParticleData.h"
-#include "edm4hep/ReconstructedParticleCollection.h"
 #include "edm4hep/MCRecoParticleAssociationCollection.h"
 #include "edm4hep/ParticleIDData.h"
 
@@ -131,6 +130,19 @@ namespace ReconstructedParticle{
     const size_t m_size;
     edm4hep::ReconstructedParticleCollection operator() (
         const edm4hep::ReconstructedParticleCollection& inColl);
+  };
+
+
+  /**
+   * \brief Analyzer to select reconstructed particles by generator status
+   *
+   * \param status  Desired generator status of the particles
+   */
+  struct sel_genStatus {
+    sel_genStatus(const int status);
+    const int m_status;
+    edm4hep::ReconstructedParticleCollection operator() (
+        const edm4hep::MCRecoParticleAssociationCollection& inAssocColl);
   };
 
 
