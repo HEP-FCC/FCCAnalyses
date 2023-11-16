@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+import logging
+
+LOGGER = logging.getLogger('FCCAnalyses.analysis_builder')
 
 def find_author():
     from subprocess import getoutput
@@ -42,8 +44,7 @@ def setup_analysis(package: str,
         try:
             os.mkdir(p)
         except FileExistsError:
-            print(f'Warning: FCCAnalysis package "{package}" already exists.')
-            pass
+            LOGGER.warning('FCCAnalysis package "%s" already exists.', package)
     try:
         tmpl_dir = os.path.join(fccanalyses_path, 'templates')
         with open(f'{path}/src/classes.h', 'w') as f:
@@ -60,5 +61,5 @@ def setup_analysis(package: str,
             with open(f'{path}/CMakeLists.txt', 'w') as f:
                 f.write(replace_all(open(f'{tmpl_dir}/CMakeLists.txt', 'r').read(), replacement_dict))
     except OSError as error:
-        print(f'FCCAnalysis package "{package}" creation error:')
-        print(error)
+        LOGGER.error('FCCAnalysis package "%s" creation error:\n%s',
+                     package, error)

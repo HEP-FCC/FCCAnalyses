@@ -1,14 +1,25 @@
 #!/usr/bin/env python
-import sys, os
+'''
+Create plots out of the histograms produced in previous stages
+'''
+import sys
+import os
 import os.path
 import ntpath
 import importlib
-import ROOT
 import copy
 import re
+import logging
+import ROOT
 
 ROOT.gROOT.SetBatch(True)
-#__________________________________________________________
+ROOT.gStyle.SetOptStat(0)
+ROOT.gStyle.SetOptTitle(0)
+
+
+LOGGER = logging.getLogger('FCCAnalyses.plot')
+
+# __________________________________________________________
 def removekey(d, key):
     r = dict(d)
     del r[key]
@@ -30,7 +41,8 @@ def formatStatUncHist(hists, name, hstyle=3254):
 
 #__________________________________________________________
 def mapHistos(var, label, sel, param, rebin):
-    print ('run plots for var:{}     label:{}     selection:{}'.format(var,label,sel))
+    LOGGER.info('Run plots for var:%s     label:%s     selection:%s',
+                var, label, sel)
     signal=param.plots[label]['signal']
     backgrounds=param.plots[label]['backgrounds']
 
@@ -40,7 +52,7 @@ def mapHistos(var, label, sel, param, rebin):
         for f in signal[s]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -49,9 +61,9 @@ def mapHistos(var, label, sel, param, rebin):
                 try:
                     scaleSig=param.scaleSig
                 except AttributeError:
-                    print ('no scale signal, using 1')
+                    LOGGER.info('No scale signal, using 1.')
                     param.scaleSig=scaleSig
-                print ('scaleSig ',scaleSig)
+                LOGGER.info('ScaleSig: ', scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
                 hh.Rebin(rebin)
 
@@ -68,7 +80,7 @@ def mapHistos(var, label, sel, param, rebin):
         for f in backgrounds[b]:
             fin=param.inputDir+f+'_'+sel+'_histo.root'
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(var)
@@ -95,7 +107,7 @@ def mapHistos(var, label, sel, param, rebin):
 #__________________________________________________________
 def mapHistosFromHistmaker(hName, param, plotCfg):
     rebin = plotCfg['rebin'] if 'rebin' in plotCfg else 1
-    print (f'get histograms for {hName}')
+    LOGGER('Get histograms for %s', hName)
     signal=param.procs['signal']
     backgrounds=param.procs['backgrounds']
     scaleSig = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
@@ -106,12 +118,12 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
         for f in signal[s]:
             fin=f"{param.inputDir}/{f}.root"
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(hName)
                 hh = copy.deepcopy(h)
-                print ('scaleSig ',scaleSig)
+                LOGGER.info('ScaleSig: ', scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
                 hh.Rebin(rebin)
                 if len(hsignal[s])==0:
@@ -127,7 +139,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
         for f in backgrounds[b]:
             fin=f"{param.inputDir}/{f}.root"
             if not os.path.isfile(fin):
-                print ('file {} does not exist, skip'.format(fin))
+                LOGGER.info('File %s does not exist!\nSkipping it...', fin)
             else:
                 tf=ROOT.TFile(fin)
                 h=tf.Get(hName)
@@ -171,7 +183,7 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         try:
             legCoord=param.legendCoord
         except AttributeError:
-            print ('no legCoord, using default one...')
+            LOGGER.info('No legCoord, using default one...')
             legCoord=[0.68, 0.86-legsize, 0.96, 0.88]
         leg2 = None
 
@@ -213,7 +225,7 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         colors.append(param.colors[b])
 
     intLumiab = param.intLumi/1e+06
-    intLumi = "L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
     if hasattr(param, "intLumiLabel"):
         intLumi = getattr(param, "intLumiLabel")
 
@@ -230,13 +242,13 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
     try:
         customLabel=param.customLabel
     except AttributeError:
-        print ('no customLable, using nothing...')
+        LOGGER.info('No customLable, using nothing...')
 
     scaleSig=1.
     try:
         scaleSig=param.scaleSig
     except AttributeError:
-        print ('no scale signal, using 1')
+        LOGGER('No scale signal, using 1.')
         param.scaleSig=scaleSig
 
     if 'AAAyields' in var:
@@ -249,7 +261,8 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         if 'log' in param.yaxis:
             drawStack(var+"_stack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , True , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
-            print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
+            LOGGER.info('Unrecognised option in formats, should be '
+                        '[\'lin\',\'log\']')
 
     if 'nostack' in param.stacksig:
         if 'lin' in param.yaxis:
@@ -257,9 +270,11 @@ def runPlots(var,sel,param,hsignal,hbackgrounds,extralab,splitLeg,plotStatUnc):
         if 'log' in param.yaxis:
             drawStack(var+"_nostack_log", 'events', leg, lt, rt, param.formats, param.outdir+"/"+sel, True , False , histos, colors, param.ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, leg2, yields, plotStatUnc)
         if 'lin' not in param.yaxis and 'log' not in param.yaxis:
-            print ('unrecognised option in formats, should be [\'lin\',\'log\']'.format(param.formats))
+            LOGGER.info('Unrecognised option in formats, should be '
+                        '[\'lin\',\'log\']')
     if 'stack' not in param.stacksig and 'nostack' not in param.stacksig:
-        print ('unrecognised option in stacksig, should be [\'stack\',\'nostack\']'.format(param.formats))
+        LOGGER.info('Unrecognised option in stacksig, should be '
+                    '[\'stack\',\'nostack\']')
 
 #__________________________________________________________
 def runPlotsHistmaker(hName, param, plotCfg):
@@ -295,7 +310,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
         try:
             legCoord=param.legendCoord
         except AttributeError:
-            print ('no legCoord, using default one...')
+            LOGGER.info('No legCoord, using default one...')
             legCoord=[0.68, 0.86-legsize, 0.96, 0.88]
         leg2 = None
 
@@ -349,7 +364,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
 
 
     intLumiab = param.intLumi/1e+06
-    intLumi = "L = {:.0f} ab^{{-1}}".format(param.energy,intLumiab)
+    intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
     if hasattr(param, "intLumiLabel"):
         intLumi = getattr(param, "intLumiLabel")
 
@@ -364,7 +379,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
     try:
         customLabel=param.customLabel
     except AttributeError:
-        print ('no customLable, using nothing...')
+        LOGGER.info('No customLable, using nothing...')
 
 
 
@@ -386,14 +401,12 @@ def runPlotsHistmaker(hName, param, plotCfg):
 #_____________________________________________________________________________________________________________
 def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, logY, stacksig, histos, colors, ana_tex, extralab, scaleSig, customLabel, nsig, nbkg, legend2=None, yields=None, plotStatUnc=False, xmin=-1, xmax=-1, ymin=-1, ymax=-1, xtitle="", ytitle=""):
 
-    canvas = ROOT.TCanvas(name, name, 600, 600)
+    canvas = ROOT.TCanvas(name, name, 800, 800)
     canvas.SetLogy(logY)
     canvas.SetTicks(1,1)
     canvas.SetLeftMargin(0.14)
     canvas.SetRightMargin(0.08)
 
-
-    # first retrieve maximum
     sumhistos = histos[0].Clone()
     iterh = iter(histos)
     next(iterh)
@@ -409,6 +422,21 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
         else:
             ylabel+=' / {:.2f} {}'.format(bwidth, unit)
 
+
+    nbins = 1 if not isinstance(xtitle, list) else len(xtitle)
+    h_dummy = ROOT.TH1D("h_dummy", "", nbins, 0, nbins)
+    if nbins == 1:
+        h_dummy.GetXaxis().SetTitle(histos[0].GetXaxis().GetTitle() if xtitle == "" else xtitle)
+        h_dummy.GetYaxis().SetTitleOffset(1.95)
+        h_dummy.GetXaxis().SetTitleOffset(1.2*h_dummy.GetXaxis().GetTitleOffset())
+    else: # for cutflow plots
+        for i,label in enumerate(xtitle): h_dummy.GetXaxis().SetBinLabel(i+1, label)
+        h_dummy.GetXaxis().LabelsOption("u")
+        h_dummy.GetXaxis().SetLabelSize(1.1*h_dummy.GetXaxis().GetLabelSize())
+        h_dummy.GetXaxis().SetLabelOffset(1.5*h_dummy.GetXaxis().GetLabelOffset())
+    h_dummy.GetYaxis().SetTitle(ylabel)
+
+
     for h in iterh:
       sumhistos.Add(h)
 
@@ -418,182 +446,94 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory, log
     if logY:
        canvas.SetLogy(1)
 
-    # define stacked histo
-    hStack    = ROOT.THStack("hstack","")
-    hStackBkg = ROOT.THStack("hstackbkg","")
+    # define stacked histo 
+    hStack = ROOT.THStack("hstack", "")
+    hStackBkg = ROOT.THStack("hstackbkg", "")
+    hStackSig = ROOT.THStack("hstacksig","")
     BgMCHistYieldsDic = {}
 
-    # first plot backgrounds
-    if(nbkg>0):
-        histos[nsig].SetLineWidth(0)
-        histos[nsig].SetLineColor(ROOT.kBlack)
-        histos[nsig].SetFillColor(colors[nsig])
-
-        #put histograms in a dictionary according to their yields
-        if histos[nsig].Integral()>0:
-            BgMCHistYieldsDic[histos[nsig].Integral()] = histos[nsig]
-        # for empty histograms, put them as having negative yields (so multiple ones don't overwrite each other in the dictionary)
+    # first plot backgrounds (sorted by the yields)
+    for i in range(nsig, nsig+nbkg):
+        h = histos[i]
+        h.SetLineWidth(1)
+        h.SetLineColor(ROOT.kBlack)
+        h.SetFillColor(colors[i])
+        if h.Integral() > 0:
+            BgMCHistYieldsDic[h.Integral()] = h
         else:
-            BgMCHistYieldsDic[-1*nbkg] = histos[nsig]
+            BgMCHistYieldsDic[-1*nbkg] = h
+    # sort stack by yields (smallest to largest)
+    BgMCHistYieldsDic = sortedDictValues(BgMCHistYieldsDic)
+    for h in BgMCHistYieldsDic:
+        hStack.Add(h)
+        hStackBkg.Add(h)
 
-        # now loop over other background (skipping first)
-        iterh = iter(histos)
-        for i in range(nsig):
-            next(iterh)
-        next(iterh)
+    # add the signal histograms
+    for i in range(nsig):
+        h = histos[i]
+        h.SetLineWidth(3)
+        h.SetLineColor(colors[i])
+        hStack.Add(h)
+        hStackSig.Add(h)
 
-        k = nsig+1
-        for h in iterh:
-            h.SetLineWidth(0)
-            h.SetLineColor(ROOT.kBlack)
-            h.SetFillColor(colors[k])
-            if h.Integral()>0:
-                BgMCHistYieldsDic[h.Integral()] = h
-            else:
-                BgMCHistYieldsDic[-1*nbkg] = h
-            k += 1
 
-        # sort stack by yields (smallest to largest)
-        BgMCHistYieldsDic = sortedDictValues(BgMCHistYieldsDic)
-        for h in BgMCHistYieldsDic:
-            hStack.Add(h)
-            hStackBkg.Add(h)
+    if xmin != -1 and xmax != -1:
+        h_dummy.GetXaxis().SetLimits(xmin, xmax)
 
-        if not stacksig:
-            hStack.Draw("hist")
-            if plotStatUnc:
-                hUnc_bkg = formatStatUncHist(hStack.GetHists(), "bkg_only") # bkg-only uncertainty
-                hUnc_bkg.Draw("E2 SAME")
-            
-
-    # define stacked signal histo
-    hStackSig = ROOT.THStack("hstacksig","")
-
-    # finally add signal on top
-    for l in range(nsig):
-      histos[l].SetLineWidth(3)
-      histos[l].SetLineColor(colors[l])
-      if stacksig:
-        hStack.Add(histos[l])
-      else:
-        hStackSig.Add(histos[l])
-
+    h_dummy.Draw("HIST")
     if stacksig:
-        hStack.Draw("hist")
+        hStack.Draw("HIST SAME")
         if plotStatUnc:
             hUnc_sig_bkg = formatStatUncHist(hStack.GetHists(), "sig_bkg") # sig+bkg uncertainty
             hUnc_sig_bkg.Draw("E2 SAME")
-
-    xlabel = xtitle
-    if xlabel == "":
-        xlabel = histos[0].GetXaxis().GetTitle()
-
-    if (not stacksig) and nbkg==0:
-        hStackSig.Draw("hist nostack")
+    else:
+        hStackBkg.Draw("HIST SAME")
+        hStackSig.Draw("HIST SAME NOSTACK")
         if plotStatUnc:
+            hUnc_bkg = formatStatUncHist(hStackBkg.GetHists(), "bkg_only") # bkg-only uncertainty
+            hUnc_bkg.Draw("E2 SAME")
             for sHist in hStackSig.GetHists():
                 hUnc_sig = formatStatUncHist([sHist], "sig", 3245) # sigs uncertainty
                 hUnc_sig.Draw("E2 SAME")
-        if not isinstance(xlabel, list): hStackSig.GetXaxis().SetTitle(xlabel)
-        hStackSig.GetYaxis().SetTitle(ylabel)
 
-        hStackSig.GetYaxis().SetTitleOffset(1.95)
-        hStackSig.GetXaxis().SetTitleOffset(1.40)
+    # x limits
+    if xmin == -1:
+        h_tmp = hStack.GetStack().Last()
+        xmin = h_tmp.GetBinLowEdge(1)
+    if xmax == -1:
+        h_tmp = hStack.GetStack().Last()
+        xmax = h_tmp.GetBinLowEdge(h_tmp.GetNbinsX()+1)
+    h_dummy.GetXaxis().SetLimits(xmin, xmax)
+
+    # y limits
+    def getMinMaxRange(hists, xmin, xmax):
+        hTot = hists[0].Clone(name + "_unc")
+        for h in hists[1:]: hTot.Add(h)
+        vals = []
+        for i in range(0, hTot.GetNbinsX()+1):
+            if hTot.GetBinLowEdge(i) > xmin or hTot.GetBinLowEdge(i+1) < xmax:
+                if hTot.GetBinContent(i) != 0:
+                    vals.append(hTot.GetBinContent(i))
+        if len(vals) == 0:
+            return 1e-5, 1
+        return min(vals), max(vals)
+
+    if stacksig:
+        ymin_, ymax_ = getMinMaxRange(hStack.GetHists(), xmin, xmax)
     else:
-        if not isinstance(xlabel, list): hStack.GetXaxis().SetTitle(xlabel)
-        hStack.GetYaxis().SetTitle(ylabel)
-
-        hStack.GetYaxis().SetTitleOffset(1.95)
-        hStack.GetXaxis().SetTitleOffset(1.40)
-
-    if isinstance(xlabel, list):
-        hStack.GetXaxis().SetLabelSize(1.1*hStack.GetXaxis().GetLabelSize())
-        hStack.GetXaxis().SetLabelOffset(1.5*hStack.GetXaxis().GetLabelOffset())
-        for i,label in enumerate(xlabel): hStack.GetXaxis().SetBinLabel(4+i*7+1, label) # check the weird binning for stack... doesn't follow the original hist bins
-        hStack.GetXaxis().LabelsOption("u")
-        print(hStack.GetHistogram().GetNbinsX())
-
-    lowY=0.
-    if logY:
-        highY=200.*maxh/ROOT.gPad.GetUymax()
-        threshold=0.5
-        if (not stacksig) and nbkg==0:
-            bin_width=hStackSig.GetXaxis().GetBinWidth(1)
-        else:
-            bin_width=hStack.GetXaxis().GetBinWidth(1)
-        lowY=threshold*bin_width
-        if (not stacksig) and nbkg==0:
-            hStackSig.SetMaximum(highY)
-            hStackSig.SetMinimum(lowY)
-        else:
-            hStack.SetMaximum(highY)
-            hStack.SetMinimum(lowY)
-    else:
-        if (not stacksig) and nbkg==0:
-            hStackSig.SetMaximum(1.3*maxh)
-            hStackSig.SetMinimum(0.)
-        else:
-            hStack.SetMaximum(1.3*maxh)
-            hStack.SetMinimum(0.)
-
-    if ymin != -1 and ymax != -1:
-        if ymin <=0 and logY:
-            print('----> Error: Log scale can\'t start at: {}'.format(ymin))
-            sys.exit(3)
-        if stacksig:
-            hStack.SetMinimum(ymin)
-            hStack.SetMaximum(ymax)
-        else:
-            hStackSig.SetMinimum(ymin)
-            hStackSig.SetMaximum(ymax)
-
-    if(nbkg>0):
-        escape_scale_Xaxis=True
-        hStacklast = hStack.GetStack().Last()
-        lowX_is0=True
-        lowX=hStacklast.GetBinCenter(1)-(hStacklast.GetBinWidth(1)/2.)
-        highX_ismax=False
-        highX=hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.)
-
-        if escape_scale_Xaxis==False:
-            for i_bin in range( 1, hStacklast.GetNbinsX()+1 ):
-                bkg_val=hStacklast.GetBinContent(i_bin)
-                sig_val=histos[0].GetBinContent(i_bin)
-                if bkg_val/maxh>0.1 and i_bin<15 and lowX_is0==True :
-                    lowX_is0=False
-                    lowX=hStacklast.GetBinCenter(i_bin)-(hStacklast.GetBinWidth(i_bin)/2.)
-
-            val_to_compare=bkg_val
-            if sig_val>bkg_val : val_to_compare=sig_val
-            if val_to_compare<lowY and i_bin>15 and highX_ismax==False:
-                highX_ismax=True
-                highX=hStacklast.GetBinCenter(i_bin)+(hStacklast.GetBinWidth(i_bin)/2.)
-                highX*=1.1
-            # protections
-            if lowX<hStacklast.GetBinCenter(1)-(hStacklast.GetBinWidth(1)/2.) :
-                lowX=hStacklast.GetBinCenter(1)-(hStacklast.GetBinWidth(1)/2.)
-            if highX>hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.) :
-                highX=hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.)
-            if lowX>=highX :
-                lowX=hStacklast.GetBinCenter(1)-(hStacklast.GetBinWidth(1)/2.)
-                highX=hStacklast.GetBinCenter(hStacklast.GetNbinsX())+(hStacklast.GetBinWidth(1)/2.)
-            hStack.GetXaxis().SetLimits(int(lowX),int(highX))
-
-    if xmin != -1 and xmax != -1:
-        if stacksig:
-            hStack.GetXaxis().SetLimits(xmin, xmax)
-        else:
-            hStackSig.GetXaxis().SetLimits(xmin, xmax)
-
-    if not stacksig:
-        if 'AAAyields' not in name and nbkg>0:
-            hStackSig.Draw("same hist nostack")
-        else:
-            hStackSig.Draw("hist nostack")  
-        if plotStatUnc:
-            for sHist in hStackSig.GetHists():
-                hUnc_sig = formatStatUncHist([sHist], "sig", 3245) # sigs uncertainty
-                hUnc_sig.Draw("E2 SAME")
+        yminSig, ymaxSig = getMinMaxRange(hStackSig.GetHists(), xmin, xmax)
+        yminBkg, ymaxBkg = getMinMaxRange(hStackBkg.GetHists(), xmin, xmax)
+        ymin_ = min(yminSig, yminBkg)
+        ymax_ = max(ymaxSig, ymaxBkg)
+    if ymin == -1:
+        ymin = ymin_*0.1 if logY else 0
+    if ymax == -1:
+        ymax = ymax_*1000. if logY else 1.4*ymax_
+    if ymin <= 0 and logY:
+        LOGGER.error('Log scale can\'t start at: %i', ymin)
+        sys.exit(3)
+    h_dummy.SetMaximum(ymax)
+    h_dummy.SetMinimum(ymin)
 
     legend.Draw()
     if legend2 != None:

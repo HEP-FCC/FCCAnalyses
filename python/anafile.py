@@ -1,9 +1,14 @@
 '''
-Handle the attributes from the analysis file.
+Handle the attributes from the analysis script.
 Used only in managed mode.
 '''
 
 import sys
+import logging
+
+
+LOGGER = logging.getLogger('FCCAnalyses.run')
+
 
 def getElement(rdfModule, element, isFinal=False):
     '''
@@ -13,148 +18,224 @@ def getElement(rdfModule, element, isFinal=False):
         return getattr(rdfModule, element)
     except AttributeError:
 
-        #return default values or crash if mandatory
+        # return default values or crash if mandatory
         if element == 'processList':
-            print('----> Error: The variable <{}> is mandatory in your analysis file!'.format(element))
-            print('             Aborting...')
+            LOGGER.error('The variable <%s> is mandatory in your analysis '
+                         'script!\nAborting...', element)
             sys.exit(3)
 
-        elif element=='analysers':
-            print('The function <{}> is mandatory in your analysis.py file, will exit'.format(element))
-            if isFinal: print('The function <{}> is not part of final analysis'.format(element))
+        elif element == 'analysers':
+            LOGGER.error('The function <%s> is mandatory in your analysis '
+                         'script!.\nAborting...', element)
+            if isFinal:
+                LOGGER.error('The function <%s> is not part of the final '
+                             'stage of the analysis!', element)
             sys.exit(3)
 
-        elif element=='output':
-            print('The function <{}> is mandatory in your analysis.py file, will exit'.format(element))
-            if isFinal: print('The function <{}> is not part of final analysis'.format(element))
+        elif element == 'output':
+            LOGGER.error('The function <%s> is mandatory in your analysis '
+                         'script.\nAborting...', element)
+            if isFinal:
+                LOGGER.error('The function <%s> is not part of the final '
+                             'stage of the analysis!', element)
             sys.exit(3)
 
-        elif element=='analysisName':
-            print('The variable <analysisName> is optional in your analysis.py file, return default value ""')
-            return ""
+        elif element == 'analysisName':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning empty string.', element)
+            return ''
 
-        elif element=='nCPUS':
-            print('The variable <{}> is optional in your analysis.py file, return default value 4'.format(element))
+        elif element == 'nCPUS':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning default value: 4', element)
             return 4
 
-        elif element=='runBatch':
-            print('----> Info: The variable <{}> is optional in your analysis file.'.format(element))
-            print('            Returning default value: False')
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
+        elif element == 'runBatch':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning default value: False')
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
             return False
 
-        elif element=='outputDir':
-            print('The variable <{}> is optional in your analysis.py file, return default value running dir'.format(element))
+        elif element == 'outputDir':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nOutput will be save to the current work '
+                         'directory.', element)
             return ""
 
-        elif element=='batchQueue':
-            print('The variable <{}> is optional in your analysis.py file, return default value workday'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return "workday"
-
-        elif element=='compGroup':
-             print('The variable <{}> is optional in your analysis.py file, return default value group_u_FCC.local_gen'.format(element))
-             if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-             return "group_u_FCC.local_gen"
-
-        elif element=='outputDirEos':
-            print('The variable <{}> is optional in your analysis.py file, return default empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
-
-        elif element=='eosType':
-            print('The variable <{}> is optional in your analysis.py file, return default eospublic'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return "eospublic"
-
-        elif element=='userBatchConfig':
-            print('The variable <{}> is optional in your analysis.py file, return default empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
-
-        elif element=='testFile':
-            print('The variable <{}> is optional in your analysis.py file, return default file'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return "root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root"
-
-        elif element=='procDict':
+        elif element == 'batchQueue':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning default value: "workday"',
+                         element)
             if isFinal:
-                print('The variable <{}> is mandatory in your analysis_final.py file, exit'.format(element))
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return 'workday'
+
+        elif element == 'compGroup':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning default value: '
+                         '"group_u_FCC.local_gen"', element)
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return 'group_u_FCC.local_gen'
+
+        elif element == 'outputDirEos':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning empty string.', element)
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return ''
+
+        elif element == 'eosType':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning default value: "eospublic"',
+                         element)
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return 'eospublic'
+
+        elif element == 'userBatchConfig':
+            LOGGER.debug('The variable <%s> is optional in your your analysis '
+                         'script.\nReturning empty string.', element)
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return ''
+
+        elif element == 'testFile':
+            test_file_path = 'root://eospublic.cern.ch//eos/experiment/fcc' \
+                             'ee/generation/DelphesEvents/spring2021/IDEA/' \
+                             'p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/' \
+                             'events_131527278.root'
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning default test file:\n\t%s',
+                         element, test_file_path)
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return test_file_path
+
+        elif element == 'procDict':
+            if isFinal:
+                LOGGER.error('The variable <%s> is mandatory in the final '
+                             'stage of the analysis.\nAborting...', element)
                 sys.exit(3)
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='cutList':
+        elif element == 'cutList':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file, return empty dictonary'.format(element))
+                LOGGER.debug('The variable <%s> is optional in your final '
+                             'analysis script.\nReturning empty dictionary.',
+                             element)
                 return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='defineList':
+        elif element == 'defineList':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file, return empty dictonary'.format(element))
+                LOGGER.debug('The variable <%s> is optional in your final '
+                             'analysis script.\nReturning empty dictionary.',
+                             element)
                 return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='histoList':
+        elif element == 'histoList':
             if isFinal:
-                print('The variable <{}> is mandatory in your analysis_final.py file, exit'.format(element))
+                LOGGER.error('The variable <%s> is mandatory in the final '
+                             'stage of the analysis.\nAborting...', element)
                 sys.exit(3)
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='doTree':
+        elif element == 'doTree':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return default value False'.format(element))
+                LOGGER.debug('The variable <%s> is optional in your final '
+                             'analysis script.\nReturning default value: '
+                             'False',
+                             element)
                 return False
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='procDictAdd':
+        elif element == 'procDictAdd':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
+                LOGGER.debug('The variable <%s> is optional in your final '
+                             'analysis script.\nReturning empty dictionary.',
+                             element)
                 return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='doScale':
+        elif element == 'doScale':
             if isFinal:
-                print('The variable <{}> is optional in the final step/histmaker. By default no scaling is applied.'.format(element))
+                LOGGER.debug('The variable <%s> is optional in the analysis '
+                             'final step/histmaker.\nBy default no scaling is '
+                             'applied.', element)
                 return False
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='intLumi':
+        elif element == 'intLumi':
             if isFinal:
-                print('The variable <{}> is optional in the final step/histmaker. Use the default value of 1'.format(element))
+                LOGGER.debug('The variable <%s> is optional in the analysis '
+                             'final step/histmaker.\nUsing the default value: '
+                             '1', element)
                 return 1.
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='saveTabular':
+        elif element == 'saveTabular':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
+                LOGGER.debug('The variable <%s> is optional in your final '
+                             'analysis script.\nReturning empty dictionary.',
+                             element)
                 return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='cutLabels':
+        elif element == 'cutLabels':
             if isFinal:
-                print('The variable <{}> is optional in your analysis_final.py file return empty dictionary'.format(element))
+                LOGGER.debug('The variable <%s> is optional in your final '
+                             'analysis script.\nReturning empty dictionary.',
+                             element)
                 return {}
-            else: print('The option <{}> is not available in presel analysis'.format(element))
+            LOGGER.debug('The option <%s> is not available in the presel. '
+                         'stages of the analysis', element)
 
-        elif element=='geometryFile':
-            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
+        elif element == 'geometryFile':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning empty string.', element)
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return ''
 
-        elif element=='readoutName':
-            print('The variable <{}> is optional in your analysis.py file, return default value empty string'.format(element))
-            if isFinal: print('The option <{}> is not available in final analysis'.format(element))
-            return ""
+        elif element == 'readoutName':
+            LOGGER.debug('The variable <%s> is optional in your analysis '
+                         'script.\nReturning empty string.', element)
+            if isFinal:
+                LOGGER.debug('The option <%s> is not available in the final '
+                             'stage of the analysis.', element)
+            return ''
 
         return None
 
 
-#__________________________________________________________
-def getElementDict(d, element):
+def getElementDict(_dict, element):
+    '''
+    Returns None if the key is not found in the dictionary.
+    '''
     try:
-        value=d[element]
+        value = _dict[element]
         return value
     except KeyError:
-#        print (element, "does not exist using default value")
+        LOGGER.debug('Element "%s" not present in the dictionary!',
+                     element)
         return None
