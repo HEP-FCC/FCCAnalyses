@@ -10,9 +10,6 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _fcc  = ROOT.dummyLoader
 ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 
-#to add layer info - not working
-#ROOT.CaloNtupleizer.loadGeometry('/afs/cern.ch/work/f/fcetorel/private/work2/SCEPCAL/Detector/SCEPCAL/compact/SCEPCAL.xml', 'SCEPCALreadout')
-
 #/afs/cern.ch/work/f/fcetorel/private/work2/SCEPCAL/SCEPCALsim/SCEPCALsimG4Components/test/data/
 
 parser = argparse.ArgumentParser()

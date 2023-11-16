@@ -26,12 +26,10 @@ parser.add_argument("--outFolder",   required=True, type=str, help="out folder f
 args = parser.parse_args()
 
 # input file should be flat ntupla from ntuplizer
-#outdir = "/eos/user/f/fcetorel/www/SCEPCal_Sim/test_plots/newCommitsChecks/"
-#inputfile = "flatNtupla_scepcal_100evs_newPull.root"
 outdir = args.outFolder
 inputfile = args.inputFile
 os.makedirs(outdir, exist_ok=True)
-os.system("cp /eos/user/f/fcetorel/www/index.php %s"%outdir)  
+#os.system("cp /eos/user/f/fcetorel/www/index.php %s"%outdir)  
 
 
 
@@ -60,9 +58,6 @@ d = d.Define("multiplicityS",  "SimCaloHit_energy.size()")\
 
 
 
-#float S_F = gRandom->Poisson(eneF*LO)/this_ene;
-#          float S_R = gRandom->Poisson(eneR*LO)/this_ene;          
-#          float S   = S_F+S_R;
 c = ROOT.TCanvas("c","",800,600)
 
 #Get the En from the file
@@ -91,10 +86,6 @@ myhistos2D["hScatterMultiplicity"] = d.Histo2D (("hScatterMultiplicity", ";S hit
 #myhistos2D.append(d.Histo2D (("hScatterCS", "", 1000, 0, 20, 1000, 0, 1000), "" , ""))
 myhistos2D["hTotEne_vs_eta"] = d.Histo2D (("hTotEne_vs_eta", ";#eta;Tot energy [GeV]", 100, -3.2, 3.2 , 1000, 0, pGunEnergy*1.25), "etaMaxHit" , "enetot")
 myhistos2D["hTotEne_vs_phi"] = d.Histo2D (("hTotEne_vs_phi", ";#Phi;Tot energy [GeV]", 100, -3.2, 3.2 , 1000, 0, pGunEnergy*1.25), "phiMaxHit" , "enetot" )
-
-myprofs = []
-#Define the profile
-#myprofs.append(d.Profile1D(("hEne_vs_eta", "hEne_vs_eta", 100, -10, 10), "", ""))
 
 ### Now drawing
 ROOT.gStyle.SetOptStat(1)
@@ -138,7 +129,7 @@ myhistos1D["hTotEne"].SetStats(0)
 
 ROOT.gStyle.SetOptStat(1)
 myhistos1D["hTotEne"].SetStats(1)
-myhistos1D["hTotEne"].GetXaxis().SetRangeUser(pGunEnergy*0.6,pGunEnergy*1.1)
+myhistos1D["hTotEne"].GetXaxis().SetRangeUser(pGunEnergy*0.7,pGunEnergy*1.1)
 myhistos1D["hTotEne"].Draw("")
 
 c.SetLogy(1)
@@ -153,7 +144,6 @@ ROOT.gStyle.SetOptStat(0)
 myhistos2D["hScatterMultiplicity"].SetStats(0)
 myhistos2D["hScatterMultiplicity"].GetXaxis().SetRangeUser(10, myhistos1D["hMultiplicityS"].GetMean()+ myhistos1D["hMultiplicityS"].GetRMS()*5)
 myhistos2D["hScatterMultiplicity"].GetYaxis().SetRangeUser(10, myhistos1D["hMultiplicityS"].GetMean()+ myhistos1D["hMultiplicityS"].GetRMS()*5)
-#myhistos2D["hScatterMultiplicity"].GetYaxis().SetRangeUser(0, myhistos1D["hMultiplicityC"].GetMean()+ myhistos1D["hMultiplicityC"].GetRMS()*5)
 myhistos2D["hScatterMultiplicity"].Draw("COLZ")
 #c.SetLogz()
 c.SaveAs("%s/cSCEP_ScatterMultiplicity.png"%outdir)
