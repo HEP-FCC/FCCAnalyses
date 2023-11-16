@@ -39,7 +39,7 @@ TEST_CASE("sel_absType", "[ReconstructedParticle]") {
   p4.PDG = -13;
   pVec.push_back(p4);
   FCCAnalyses::ReconstructedParticle::sel_absType selAbsType{11};
-  auto res = selAbsType(pVec);
+  auto res = selAbsType(pColl);
   REQUIRE(res.size() == 2);
   REQUIRE(res[0].PDG == 11);
   REQUIRE(res[1].PDG == -11);

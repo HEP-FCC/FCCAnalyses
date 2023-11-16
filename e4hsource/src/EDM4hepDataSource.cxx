@@ -42,7 +42,7 @@ namespace FCCAnalyses {
    * \brief Setup input for the EDM4hepDataSource.
    */
   void EDM4hepDataSource::SetupInput(int nEvents) {
-    std::cout << "EDM4hepDataSource: Constructing the source ..." << std::endl;
+    // std::cout << "EDM4hepDataSource: Constructing the source ..." << std::endl;
 
     if (m_filePathList.empty()) {
       throw std::runtime_error("EDM4hepDataSource: No input files provided!");
@@ -75,11 +75,13 @@ namespace FCCAnalyses {
 
     // Determine over how many events to run
     if (nEventsInFiles > 0) {
+      /*
       std::cout << "EDM4hepDataSource: Found " << nEventsInFiles
                 << " events in files: \n";
       for (const auto& filePath : m_filePathList) {
         std::cout << "               - " << filePath << "\n";
       }
+      */
     } else {
       throw std::runtime_error("EDM4hepDataSource: No events found!");
     }
@@ -96,18 +98,18 @@ namespace FCCAnalyses {
       m_nEvents = nEventsInFiles;
     }
 
-    std::cout << "EDM4hepDataSource: Running over " << m_nEvents << " events."
-              << std::endl;
+    // std::cout << "EDM4hepDataSource: Running over " << m_nEvents << " events."
+    //           << std::endl;
 
     // Get collections stored in the files
     std::vector<std::string> collNames = frame.getAvailableCollections();
-    std::cout << "EDM4hepDataSource: Found following collections:\n";
+    // std::cout << "EDM4hepDataSource: Found following collections:\n";
     for (auto& collName: collNames) {
       const podio::CollectionBase* coll = frame.get(collName);
       if (coll->isValid()) {
         m_columnNames.emplace_back(collName);
         m_columnTypes.emplace_back(coll->getValueTypeName());
-        std::cout << "                - " << collName << "\n";
+        // std::cout << "                - " << collName << "\n";
       }
     }
   }
@@ -118,8 +120,8 @@ namespace FCCAnalyses {
    */
   void
   EDM4hepDataSource::SetNSlots(unsigned int nSlots) {
-    std::cout << "EDM4hepDataSource: Setting num. of slots to: " << nSlots
-              << std::endl;
+    // std::cout << "EDM4hepDataSource: Setting num. of slots to: " << nSlots
+    //           << std::endl;
     m_nSlots = nSlots;
 
     if (m_nSlots > m_nEvents) {
@@ -160,8 +162,7 @@ namespace FCCAnalyses {
    */
   void
   EDM4hepDataSource::Initialize() {
-    std::cout << "EDM4hepDataSource: Initializing the source ..." << std::endl;
-
+    // std::cout << "EDM4hepDataSource: Initializing the source ..." << std::endl;
   }
 
 
@@ -171,7 +172,7 @@ namespace FCCAnalyses {
    */
   std::vector<std::pair<ULong64_t, ULong64_t>>
   EDM4hepDataSource::GetEntryRanges() {
-    std::cout << "EDM4hepDataSource: Getting entry ranges ..." << std::endl;
+    // std::cout << "EDM4hepDataSource: Getting entry ranges ..." << std::endl;
 
     std::vector<std::pair<ULong64_t, ULong64_t>> rangesToBeProcessed;
     for (auto& range: m_rangesAvailable) {
@@ -192,6 +193,7 @@ namespace FCCAnalyses {
     }
 
 
+    /*
     std::cout << "EDM4hepDataSource: Ranges to be processed:\n";
     for (auto& range: rangesToBeProcessed) {
       std::cout << "               {" << range.first << ", " << range.second
@@ -208,6 +210,7 @@ namespace FCCAnalyses {
     } else {
       std::cout << "EDM4hepDataSource: No more remaining ranges.\n";
     }
+    */
 
     return rangesToBeProcessed;
   }
@@ -219,8 +222,8 @@ namespace FCCAnalyses {
    */
   void
   EDM4hepDataSource::InitSlot(unsigned int slot, ULong64_t firstEntry) {
-    std::cout << "EDM4hepDataSource: Initializing slot: " << slot
-              << " with first entry " << firstEntry << std::endl;
+    // std::cout << "EDM4hepDataSource: Initializing slot: " << slot
+    //           << " with first entry " << firstEntry << std::endl;
   }
 
 
@@ -230,8 +233,8 @@ namespace FCCAnalyses {
    */
   bool
   EDM4hepDataSource::SetEntry(unsigned int slot, ULong64_t entry) {
-    std::cout << "EDM4hepDataSource: In slot: " << slot << ", setting entry: "
-              << entry << std::endl;
+    // std::cout << "EDM4hepDataSource: In slot: " << slot << ", setting entry: "
+    //           << entry << std::endl;
 
     m_frames[slot] = std::make_unique<podio::Frame>(
         podio::Frame(m_podioReaders[slot]->readEntry("events", entry)));
@@ -239,12 +242,14 @@ namespace FCCAnalyses {
     for (auto& collectionIndex: m_activeCollections) {
       m_Collections[collectionIndex][slot] =
           m_frames[slot]->get(m_columnNames.at(collectionIndex));
+      /*
       std::cout << "CollName: " << m_columnNames.at(collectionIndex) << "\n";
       std::cout << "Address: " << m_Collections[collectionIndex][slot] << "\n";
       std::cout << "Coll size: " << m_Collections[collectionIndex][slot]->size() << "\n";
       if (m_Collections[collectionIndex][slot]->isValid()) {
         std::cout << "Collection valid\n";
       }
+      */
     }
 
     return true;
@@ -257,7 +262,7 @@ namespace FCCAnalyses {
    */
   void
   EDM4hepDataSource::FinalizeSlot(unsigned int slot) {
-    std::cout << "EDM4hepDataSource: Finalizing slot: " << slot << std::endl;
+    // std::cout << "EDM4hepDataSource: Finalizing slot: " << slot << std::endl;
     // std::cout << "Reader: " << &m_podioReaderRefs[slot].get() << std::endl;
 
     // for (auto& collectionIndex: m_activeCollections) {
@@ -276,7 +281,7 @@ namespace FCCAnalyses {
    */
   void
   EDM4hepDataSource::Finalize() {
-    std::cout << "EDM4hepDataSource: Finalizing ..." << std::endl;
+    // std::cout << "EDM4hepDataSource: Finalizing ..." << std::endl;
   }
 
 
@@ -287,9 +292,11 @@ namespace FCCAnalyses {
   Record_t
   EDM4hepDataSource::GetColumnReadersImpl(std::string_view columnName,
                                       const std::type_info& typeInfo) {
+    /*
     std::cout << "EDM4hepDataSource: Getting column reader implementation for column:\n"
               << "               " << columnName
               << "\n               with type: " << typeInfo.name() << std::endl;
+    */
 
     auto itr = std::find(m_columnNames.begin(), m_columnNames.end(),
                          columnName);
@@ -301,12 +308,14 @@ namespace FCCAnalyses {
     }
     auto columnIndex = std::distance(m_columnNames.begin(), itr);
     m_activeCollections.emplace_back(columnIndex);
+    /*
     std::cout << "EDM4hepDataSource: Active collections so far:\n"
               << "               ";
     for (auto& i: m_activeCollections) {
       std::cout << i << ", ";
     }
     std::cout << std::endl;
+    */
 
     Record_t columnReaders(m_nSlots);
     for (size_t slotIndex = 0; slotIndex < m_nSlots; ++slotIndex) {
@@ -327,7 +336,7 @@ namespace FCCAnalyses {
    */
   const std::vector<std::string>&
   EDM4hepDataSource::GetColumnNames() const {
-    std::cout << "EDM4hepDataSource: Looking for column names" << std::endl;
+    // std::cout << "EDM4hepDataSource: Looking for column names" << std::endl;
 
     return m_columnNames;
   }
@@ -337,8 +346,8 @@ namespace FCCAnalyses {
    */
   bool
   EDM4hepDataSource::HasColumn(std::string_view columnName) const {
-    std::cout << "EDM4hepDataSource: Looking for column: " << columnName
-              << std::endl;
+    // std::cout << "EDM4hepDataSource: Looking for column: " << columnName
+    //           << std::endl;
 
     if (std::find(m_columnNames.begin(),
                   m_columnNames.end(),
@@ -355,15 +364,15 @@ namespace FCCAnalyses {
    */
   std::string
   EDM4hepDataSource::GetTypeName(std::string_view columnName) const {
-    std::cout << "EDM4hepDataSource: Looking for type name of column: "
-              << columnName << std::endl;
+    // std::cout << "EDM4hepDataSource: Looking for type name of column: "
+    //           << columnName << std::endl;
 
     auto itr = std::find(m_columnNames.begin(), m_columnNames.end(),
                          columnName);
     if (itr != m_columnNames.end()) {
       auto i = std::distance(m_columnNames.begin(), itr);
-      std::cout << "EDM4hepDataSource: Found type name: "
-                << m_columnTypes.at(i) << std::endl;
+      // std::cout << "EDM4hepDataSource: Found type name: "
+      //           << m_columnTypes.at(i) << std::endl;
 
       return m_columnTypes.at(i) + "Collection";
     }
