@@ -5,8 +5,14 @@
 #include <iostream>
 #include <stdexcept>
 
+// ROOT
+#include <ROOT/RDataFrame.hxx>
+#include <ROOT/RLogger.hxx>
+
 // EDM4hep
 #include "edm4hep/EDM4hepVersion.h"
+
+#define rdfInfo R__LOG_INFO(ROOT::Detail::RDF::RDFLogChannel())
 
 namespace FCCAnalyses{
 
@@ -31,6 +37,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_type::operator()(
   return result;
 }
 
+
 /// sel_absType
 sel_absType::sel_absType(const int type) : m_type(type) {
   if (m_type < 0) {
@@ -52,8 +59,10 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_absType::operator()(
       result.emplace_back(in[i]);
     }
   }
+
   return result;
 }
+
 
 /// sel_pt
 sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
@@ -124,6 +133,8 @@ edm4hep::ReconstructedParticleCollection selPDG::operator() (
   edm4hep::ReconstructedParticleCollection result;
   result.setSubsetCollection();
 
+  rdfInfo << "Assoc coll size: " << inAssocColl.size();
+
   for (const auto& assoc: inAssocColl) {
     const auto& particle = assoc.getSim();
     if (m_chargeConjugateAllowed) {
@@ -154,6 +165,40 @@ edm4hep::ReconstructedParticleCollection selUpTo::operator() (
       break;
     }
     result.push_back(particle);
+  }
+
+  return result;
+}
+
+sel_genStatus::sel_genStatus(int status) : m_status(status) {};
+
+edm4hep::ReconstructedParticleCollection sel_genStatus::operator() (
+    const edm4hep::MCRecoParticleAssociationCollection& inAssocColl) {
+  edm4hep::ReconstructedParticleCollection result;
+  result.setSubsetCollection();
+
+
+  // std::cout << "******************************************" << std::endl;
+  for (const auto& assoc: inAssocColl) {
+    const auto& mcParticle = assoc.getSim();
+    const auto& recoParticle = assoc.getRec();
+    // std::cout << "------------------------------------" << std::endl;
+    // std::cout << "gen status: " << mcParticle.getGeneratorStatus() << std::endl;
+    // std::cout << "energy: " << mcParticle.getEnergy() << std::endl;
+    // std::cout << "pdg: " << mcParticle.getPDG() << std::endl;
+    // std::cout << "" << std::endl;
+    // std::cout << "type: " << recoParticle.getType() << std::endl;
+    // std::cout << "energy: " << recoParticle.getEnergy() << std::endl;
+    // std::cout << "momentum, x: " << recoParticle.getMomentum().x << std::endl;
+    // std::cout << "momentum, y: " << recoParticle.getMomentum().y << std::endl;
+    // std::cout << "momentum, z: " << recoParticle.getMomentum().z << std::endl;
+    // std::cout << "position, x: " << recoParticle.getReferencePoint().x << std::endl;
+    // std::cout << "position, y: " << recoParticle.getReferencePoint().y << std::endl;
+    // std::cout << "position, z: " << recoParticle.getReferencePoint().z << std::endl;
+    // std::cout << "goodnessOfPID: " << recoParticle.getGoodnessOfPID() << std::endl;
+    if (mcParticle.getGeneratorStatus() == m_status) {
+      result.push_back(assoc.getRec());
+    }
   }
 
   return result;
