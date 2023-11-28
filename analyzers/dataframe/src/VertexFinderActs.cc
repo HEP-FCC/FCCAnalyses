@@ -105,8 +105,10 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   Finder::Config finderConfig = {std::move(fitter), seedFinder, ipEstimator,
                                  std::move(linearizer), bField};
 
+#if ACTS_VERSION_MAJOR < 29
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;
+#endif
   //finderConfig.useSeedConstraint = false;
   //finderConfig.tracksMaxSignificance = 100.;//5.;
   //finderConfig.maxVertexChi2 = 500.;//18.42;
@@ -122,6 +124,11 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   using VertexingOptions = Acts::VertexingOptions<Acts::BoundTrackParameters>;
   //VertexingOptions finderOpts(myContext, myContext);
   VertexingOptions finderOpts(geoContext, magFieldContext);
+#if ACTS_VERSION_MAJOR >= 29
+  // We do not want to use a beamspot constraint here
+  finderOpts.useConstraintInFit = false;
+#endif
+
   //  vertexingOptions.vertexConstraint = std::get<BeamSpotData>(csvData);
 
   int Ntr = tracks.size();
@@ -153,7 +160,12 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     }
 
     // Get track covariance vector
+#if ACTS_VERSION_MAJOR < 29
     using Covariance = Acts::BoundSymMatrix;
+#else
+    using Covariance = Acts::BoundSquareMatrix;
+#endif
+
     Covariance covMat;
     covMat <<
       covACTS(0,0), covACTS(1,0), covACTS(2,0), covACTS(3,0), covACTS(4,0), covACTS(5,0),
@@ -164,12 +176,15 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
       covACTS(0,5), covACTS(1,5), covACTS(2,5), covACTS(3,5), covACTS(4,5), covACTS(5,5);
 
     // Create track parameters and add to track list
-    std::shared_ptr<Acts::PerigeeSurface> perigeeSurface;
     Acts::Vector3 beamspotPos;
     beamspotPos << 0.0, 0.0, 0.0;
-    perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
+    auto perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
 
+#if ACTS_VERSION_MAJOR < 30
     allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
+#else
+    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat), Acts::ParticleHypothesis::pion());
+#endif
 
     //std::cout << "params: " << allTracks[i] << std::endl;
     }
