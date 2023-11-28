@@ -1,7 +1,7 @@
 var searchData=
 [
   ['index_0',['index',['../struct_f_c_c_analyses_1_1my_utils_1_1_f_c_c_analyses_composite.html#a456b23abb9e6a6233b5eb1da95ccaefb',1,'FCCAnalyses::myUtils::FCCAnalysesComposite']]],
-  ['inference_1',['inference',['../classjet_flavour_helper_1_1_jet_flavour_helper.html#a222931026dab83ba9a3501851304b286',1,'jetFlavourHelper::JetFlavourHelper']]],
+  ['inference_1',['inference',['../classjet_flavour_helper_1_1_jet_flavour_helper.html#a18dc5b5d28a75783cc78df8a96d4623b',1,'jetFlavourHelper::JetFlavourHelper']]],
   ['info_2',['info',['../struct_weaver_interface_1_1_preprocess_params.html#a4f8ca7fd16cb2a99bae7ee397221d668',1,'WeaverInterface::PreprocessParams']]],
   ['init_3',['init',['../classcontrib_1_1_valencia_brief_jet.html#a634c8167dc6b0e89bcf19e54e30a4990',1,'contrib::ValenciaBriefJet']]],
   ['initialise_5ffccanalysesjet_4',['initialise_FCCAnalysesJet',['../namespace_f_c_c_analyses_1_1_jet_clustering_utils.html#a99da9ebefeed1cf04ba4c80d28f67e05',1,'FCCAnalyses::JetClusteringUtils']]],

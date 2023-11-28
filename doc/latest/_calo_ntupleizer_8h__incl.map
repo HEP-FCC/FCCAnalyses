@@ -1,11 +1,19 @@
 <map id="analyzers/dataframe/FCCAnalyses/CaloNtupleizer.h" name="analyzers/dataframe/FCCAnalyses/CaloNtupleizer.h">
-<area shape="rect" id="node1" title=" " alt="" coords="440,5,661,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,94,67,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="91,94,153,119"/>
-<area shape="rect" id="node4" title=" " alt="" coords="179,94,301,119"/>
-<area shape="rect" id="node5" title=" " alt="" coords="325,94,552,119"/>
-<area shape="rect" id="node6" title=" " alt="" coords="576,94,752,119"/>
-<area shape="rect" id="node7" title=" " alt="" coords="777,94,975,119"/>
-<area shape="rect" id="node8" title=" " alt="" coords="1000,94,1091,119"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1115,94,1245,119"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="440,5,661,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,94,67,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="440,41,274,62,81,96,80,91,274,57,439,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="91,94,153,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="440,46,314,67,168,96,167,91,313,62,439,40"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="179,94,301,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="477,48,299,93,297,88,476,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="325,94,552,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="525,48,468,88,465,84,522,44"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="576,94,752,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="580,44,637,84,634,88,577,48"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="777,94,975,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="629,43,816,88,815,93,628,48"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="1000,94,1091,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="662,39,987,91,988,91,987,96,986,96,661,45"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1115,94,1245,119"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="662,36,1101,91,1101,96,661,42"/>
 </map>
