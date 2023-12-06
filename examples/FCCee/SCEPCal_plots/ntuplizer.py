@@ -10,11 +10,11 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 _fcc  = ROOT.dummyLoader
 ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 
-#/afs/cern.ch/work/f/fcetorel/private/work2/SCEPCAL/SCEPCALsim/SCEPCALsimG4Components/test/data/
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-inputFilesName",  help = "name of the input rootfiles", type = str)
-parser.add_argument("-baseFolder",help = "folder for the rootfiles", type = str)
+parser.add_argument("-baseFolder",help = "input folder", type = str)
+parser.add_argument("-outFolder",help = "output folder", type = str)
 args = parser.parse_args()
 NBITS = 27
 
@@ -50,7 +50,7 @@ df = (df
 
       )
        
-outfilename = 'flatNtupla_'+ args.inputFilesName
+outfilename = args.outFolder+'/flatNtupla_'+ args.inputFilesName
 print(f'Writing snapshot to disk ... \t{outfilename}')
 
 df.Snapshot('events', outfilename,
