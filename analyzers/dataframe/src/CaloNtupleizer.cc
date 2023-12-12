@@ -33,6 +33,102 @@ ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>  sel_layers::operator() (const R
   }
   return res;
 }
+// SIM calo hit
+ROOT::VecOps::RVec<float> getSimCaloHit_r (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(std::sqrt(p.position.x * p.position.x + p.position.y * p.position.y));
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCaloHit_x (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.position.x);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCaloHit_y (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.position.y);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCaloHit_z (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.position.z);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCaloHit_phi (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.position.x, p.position.y, p.position.z);
+    result.push_back(t3.Phi());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCaloHit_theta (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.position.x, p.position.y, p.position.z);
+    result.push_back(t3.Theta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCaloHit_eta (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.position.x, p.position.y, p.position.z);
+    result.push_back(t3.Eta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCellID (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    result.push_back(p.cellID);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getSimCaloHit_energy (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(p.energy);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int> getSimCaloHit_depth (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in,const int decodingVal){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    result.push_back(p.cellID >> decodingVal & (8-1) );
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<TVector3> getSimCaloHit_positionVector3 (const ROOT::VecOps::RVec<edm4hep::SimCalorimeterHitData>& in){
+  ROOT::VecOps::RVec<TVector3> result;
+  for (auto & p: in){
+    TVector3 t3;
+    t3.SetXYZ(p.position.x, p.position.y, p.position.z);
+    result.push_back(t3);
+  }
+  return result;
+}
 
 // calo hit
 ROOT::VecOps::RVec<float> getCaloHit_x (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
