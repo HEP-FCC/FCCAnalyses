@@ -57,4 +57,8 @@ def test_fccanalyses(mainparser):
         ctest_command.append('-E')
         ctest_command.append(args.exclude_regex)
 
+    if args.parallel != -1:
+        ctest_command.append('-j')
+        ctest_command.append(str(args.parallel))
+
     run_subprocess(ctest_command, local_dir + '/build')
