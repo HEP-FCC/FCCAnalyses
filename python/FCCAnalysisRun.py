@@ -308,7 +308,7 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
     frun_condor.write('Error            = {}/condor_job.{}.$(ClusterId).$(ProcId).error\n'.format(logDir,process))
     frun_condor.write('getenv           = False\n')
     frun_condor.write('environment      = "LS_SUBCWD={}"\n'.format(logDir)) # not sure
-    frun_condor.write('requirements     = ( (OpSysAndVer =?= "CentOS7") && (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n')
+    frun_condor.write('requirements     = ( (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n')
     frun_condor.write('on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n')
     frun_condor.write('max_retries      = 3\n')
     frun_condor.write('+JobFlavour      = "{}"\n'.format(getElement(rdfModule, "batchQueue")))
@@ -318,8 +318,8 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
     frun_condor.close()
 
     cmdBatch="condor_submit {}".format(frunfull_condor)
-    LOGGER.info('Batch command: ', cmdBatch)
-    job=SubmitToCondor(cmdBatch,10)
+    LOGGER.info('Batch command: %s', cmdBatch)
+    job=SubmitToCondor(cmdBatch, 10)
 
 
 #__________________________________________________________
