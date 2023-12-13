@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702459816924,
+  "lastUpdate": 1702459819036,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -30978,6 +30978,60 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a75bd6fe3e216dd59a0ca0770ec6d4eb0987e7c5",
+          "message": "Improving tests (#325)\n\n* Adding OS(centos7,alma9,ubuntu) in CI tests\r\n\r\n* ubuntu -> ubuntu22\r\n\r\n* Removing new lines\r\n\r\n* Running tests in parallel",
+          "timestamp": "2023-12-13T09:52:25+01:00",
+          "tree_id": "b4197d5a2cfa3d2a59f19749aacde3d10b8fe799",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/a75bd6fe3e216dd59a0ca0770ec6d4eb0987e7c5"
+        },
+        "date": 1702459818210,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/weaver/analysis_inference.py",
+            "value": 2.294137421451726,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 0.5377492035776243,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 1.3136729356030674,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 0.7564518110753493,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 0.5524682384444848,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 2.4721104967681353,
+            "unit": "Evt/s"
           }
         ]
       }
