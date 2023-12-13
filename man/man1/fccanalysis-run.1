@@ -9,8 +9,7 @@ fccanalysis\-run \- run FCC analysis
 \fIfccanalysis run\fR [\-h | \-\-help] [\-\-files\-list FILES_LIST [FILES_LIST ...]]
                 [\-\-output OUTPUT] [\-\-nevents NEVENTS] [\-\-test] [\-\-bench]
                 [\-\-ncpus NCPUS] [\-\-preprocess] [\-\-validate] [\-\-rerunfailed]
-                [\-\-jobdir JOBDIR] [\-\-eloglevel {kUnset,kFatal,kError,kWarning,kInfo,kDebug}]
-                [\-\-batch] <analysis-file>
+                [\-\-jobdir JOBDIR] <analysis-file>
 .fi
 .sp
 .SH DESCRIPTION
@@ -83,11 +82,6 @@ Rerun failed jobs\&.
 \-\-jobdir JOBDIR
 .RS 4
 Specify the batch job directory\&.
-.RE
-.PP
-\-\-eloglevel {kUnset,kFatal,kError,kWarning,kInfo,kDebug}
-.RS 4
-Specify the RDataFrame ELogLevel\&.
 .RE
 .SH ENVIRONMENT VARIABLES
 .PP
