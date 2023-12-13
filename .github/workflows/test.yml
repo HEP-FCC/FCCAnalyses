@@ -1,4 +1,4 @@
-name: linux
+name: 'Build and Test'
 
 on: [push, pull_request]
 
@@ -8,42 +8,48 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        SETUP: ['/cvmfs/sw.hsf.org/key4hep/setup.sh', '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+        STACK: ['/cvmfs/sw.hsf.org/key4hep/setup.sh',
+                '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+        OS: ['aidasoft/centos7',
+             'key4hep/key4hep-images/alma9',
+             'key4hep/key4hep-images/ubuntu22']
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest /bin/bash
+        docker run -it --name CI_container \
+                   -v ${GITHUB_WORKSPACE}:/Package \
+                   -v /cvmfs:/cvmfs:shared \
+                   -d ghcr.io/${{ matrix.OS }}:latest /bin/bash
     - name: CMake Configure
       run: |
         docker exec CI_container /bin/bash -c 'cd Package;\
          mkdir -p build install;\
-         source ${{ matrix.SETUP }};\
+         source ${{ matrix.STACK }};\
          cd build;\
-         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -DWITH_DD4HEP=ON -DWITH_ACTS=ON -DWITH_ONNX=ON -G Ninja ..;'
+         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -DWITH_DD4HEP=ON -DWITH_ACTS=ON -DWITH_ONNX=ON -G Ninja ..;'
     - name: Compile
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
-        source ${{ matrix.SETUP }};\
+        source ${{ matrix.STACK }};\
         cd build;\
         ninja -k0;'
     - name: Install
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
-          source ${{ matrix.SETUP }};\
+          source ${{ matrix.STACK }};\
           cd build;\
           ninja -k0 install;'
     - name: Test
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
-        source ${{ matrix.SETUP }};\
+        source ${{ matrix.STACK }};\
         cd build;\
         ninja -k0 && ctest --output-on-failure;'
     - name: Test using local Setup.sh
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package
-        source ${{ matrix.SETUP }}
-        source ./setup.sh
-        fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root
-        '
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        source ${{ matrix.STACK }};\
+        source ./setup.sh;\
+        fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root'

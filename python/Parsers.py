@@ -39,6 +39,12 @@ def setup_test_parser(parser):
         type=str,
         help='Exclude tests matching regular expression'
     )
+    test_args.add_argument(
+        '-j', '--parallel',
+        type=int,
+        default=-1,
+        help='number of tests running in parallel (equivalent to `ctest -j`)'
+    )
 
 
 def setup_pin_parser(parser):
