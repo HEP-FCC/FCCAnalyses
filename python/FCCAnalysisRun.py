@@ -1040,32 +1040,18 @@ def runHistmaker(args, rdfModule, analysisFile):
     LOGGER.info(info_msg)
 
 
-#__________________________________________________________
+# __________________________________________________________
 def runPlots(analysisFile):
     import doPlots as dp
     dp.run(analysisFile)
 
-#__________________________________________________________
-def runValidate(jobdir):
-    listdir=os.listdir(jobdir)
-    if jobdir[-1]!="/":jobdir+="/"
-    for dir in listdir:
-        if not os.path.isdir(jobdir+dir): continue
-        listfile=glob.glob(jobdir+dir+"/*.sh")
-        for file in listfile:
-            with open(file) as f:
-                for line in f:
-                    pass
-                lastLine = line
-            LOGGER.info(line)
 
-
-def run(mainparser, subparser=None):
+def run(parser):
     '''
     Set things in motion.
     '''
 
-    args, _ = mainparser.parse_known_args()
+    args, _ = parser.parse_known_args()
 
     # Check that the analysis file exists
     analysisFile = args.anafile_path
