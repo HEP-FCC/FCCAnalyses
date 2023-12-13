@@ -1,5 +1,5 @@
-import ROOT
-import os, sys
+import os
+import sys
 import time
 import yaml
 import glob
@@ -7,16 +7,16 @@ import json
 import logging
 import subprocess
 import importlib.util
-from array import array
 import datetime
 import numpy as np
 
+import ROOT
 from anafile import getElement, getElementDict
 from process import getProcessInfo, get_process_dict
 
-
 LOGGER = logging.getLogger('FCCAnalyses.run')
 
+ROOT.gROOT.SetBatch(True)
 
 # __________________________________________________________
 def get_entries(infilepath):
