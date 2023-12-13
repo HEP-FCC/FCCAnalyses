@@ -1060,51 +1060,27 @@ def runValidate(jobdir):
             LOGGER.info(line)
 
 
-#__________________________________________________________
-def setup_run_parser(parser):
-    publicOptions = parser.add_argument_group('User options')
-    publicOptions.add_argument('anafile_path', help="path to analysis script")
-    publicOptions.add_argument("--files-list", help="Specify input file to bypass the processList", default=[], nargs='+')
-    publicOptions.add_argument("--output", help="Specify output file name to bypass the processList and or outputList, default output.root", type=str, default="output.root")
-    publicOptions.add_argument("--nevents", help="Specify max number of events to process", type=int, default=-1)
-    publicOptions.add_argument("--test", action='store_true', help="Run over the test file", default=False)
-    publicOptions.add_argument('--bench', action='store_true', help='Output benchmark results to a JSON file', default=False)
-    publicOptions.add_argument("--ncpus", help="Set number of threads", type=int)
-    publicOptions.add_argument("--final", action='store_true', help="Run final analysis (produces final histograms and trees)", default=False)
-    publicOptions.add_argument("--plots", action='store_true', help="Run analysis plots", default=False)
-    publicOptions.add_argument("--preprocess", action='store_true', help="Run preprocessing", default=False)
-    publicOptions.add_argument("--validate", action='store_true', help="Validate a given production", default=False)
-    publicOptions.add_argument("--rerunfailed", action='store_true', help="Rerun failed jobs", default=False)
-    publicOptions.add_argument("--jobdir", help="Specify the batch job directory", type=str, default="output.root")
-
-    internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
-    internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
-
-
-#__________________________________________________________
 def run(mainparser, subparser=None):
-    """
+    '''
     Set things in motion.
-    The two parser arguments are a hack to allow running this
-    both as `fccanalysis run` and `python config/FCCAnalysisRun.py`
-    For the latter case, both are the same (see below).
-    """
+    '''
 
-    if subparser:
-        setup_run_parser(subparser)
     args, _ = mainparser.parse_known_args()
-    #check that the analysis file exists
+
+    # Check that the analysis file exists
     analysisFile = args.anafile_path
     if not os.path.isfile(analysisFile):
-        LOGGER.error('Script %s does not exist!\nSpecify a valid analysis '
-                     'script in the command line arguments', analysisFile)
+        LOGGER.error('Analysis script %s not found!\nAborting...',
+                     analysisFile)
         sys.exit(3)
 
+    # Load pre compiled analyzers
     LOGGER.info('Loading analyzers from libFCCAnalyses...')
     ROOT.gSystem.Load("libFCCAnalyses")
     # Is this still needed?? 01/04/2022 still to be the case
     _fcc = ROOT.dummyLoader
 
+    # Set verbosity level
     if args.verbose:
         # ROOT.Experimental.ELogLevel.kInfo verbosity level is more
         # equivalent to DEBUG in other log systems
@@ -1131,75 +1107,25 @@ def run(mainparser, subparser=None):
     rdfModule = importlib.util.module_from_spec(rdfSpec)
     rdfSpec.loader.exec_module(rdfModule)
 
-    if hasattr(args, 'command'):
-        if args.command == "run":
-            if hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
-                LOGGER.error('Analysis file ambiguous!\nBoth "RDFanalysis" '
-                             'class and "build_graph" function are defined.')
-                sys.exit(3)
-            elif hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
-                runHistmaker(args, rdfModule, analysisFile)
-            elif not hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
-                runStages(args, rdfModule, args.preprocess, analysisFile)
-            else:
-                LOGGER.error('Analysis file does not contain required '
-                             'objects!\nProvide either "RDFanalysis" class or '
-                             '"build_graph" function.')
-                sys.exit(3)
-        elif args.command == "final":
-            runFinal(rdfModule)
-        elif args.command == "plots":
-            runPlots(analysisFile)
-        return
+    if not hasattr(args, 'command'):
+        LOGGER.error('Unknow sub-command "%s"!\nAborting...')
+        sys.exit(3)
 
-    LOGGER.warning('Running the old way...\nThis way of running the analysis '
-                   'is deprecated and will be removed in the next release!\n'
-                   'The FCCAnalyses release 0.8.0 is the last one to support '
-                   'this stile of running!')
-
-    # below is legacy using the old way of runnig with options in
-    # "python config/FCCAnalysisRun.py analysis.py --options check if this is
-    # final analysis
-    if args.final:
-        if args.plots:
-            LOGGER.error('Can not have --plots with --final, exit')
+    if args.command == "run":
+        if hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
+            LOGGER.error('Analysis file ambiguous!\nBoth "RDFanalysis" '
+                         'class and "build_graph" function are defined.')
             sys.exit(3)
-        if args.preprocess:
-            LOGGER.error('Can not have --preprocess with --final, exit')
+        elif hasattr(rdfModule, "build_graph") and not hasattr(rdfModule, "RDFanalysis"):
+            runHistmaker(args, rdfModule, analysisFile)
+        elif not hasattr(rdfModule, "build_graph") and hasattr(rdfModule, "RDFanalysis"):
+            runStages(args, rdfModule, args.preprocess, analysisFile)
+        else:
+            LOGGER.error('Analysis file does not contain required '
+                         'objects!\nProvide either "RDFanalysis" class or '
+                         '"build_graph" function.')
             sys.exit(3)
+    elif args.command == "final":
         runFinal(rdfModule)
-
-    elif args.plots:
-        if args.final:
-            LOGGER.error('Can not have --final with --plots, exit')
-            sys.exit(3)
-        if args.preprocess:
-            LOGGER.error('Can not have --preprocess with --plots, exit')
-            sys.exit(3)
+    elif args.command == "plots":
         runPlots(analysisFile)
-
-    elif args.validate:
-        runValidate(args.jobdir)
-
-    else:
-        if args.preprocess:
-            if args.plots:
-                LOGGER.error('Can not have --plots with --preprocess, exit')
-                sys.exit(3)
-            if args.final:
-                LOGGER.error('Can not have --final with --preprocess, exit')
-                sys.exit(3)
-        runStages(args, rdfModule, args.preprocess, analysisFile)
-
-
-# __________________________________________________________
-if __name__ == "__main__":
-    LOGGER.warning('Running this script directly is deprecated, use '
-                   '`fccanalysis run` instead. FCCAnalyses release 0.8.0 is '
-                   'the last one to support this style of running!')
-    # legacy behavior: allow running this script directly
-    # with python config/FCCAnalysis.py
-    # and the same behavior as `fccanalysis run`
-    import argparse
-    parser = argparse.ArgumentParser()
-    run(parser, parser)
