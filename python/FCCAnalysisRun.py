@@ -1076,8 +1076,7 @@ def setup_run_parser(parser):
     publicOptions.add_argument("--validate", action='store_true', help="Validate a given production", default=False)
     publicOptions.add_argument("--rerunfailed", action='store_true', help="Rerun failed jobs", default=False)
     publicOptions.add_argument("--jobdir", help="Specify the batch job directory", type=str, default="output.root")
-    publicOptions.add_argument("--eloglevel", help="Specify the RDataFrame ELogLevel", type=str, default="kUnset", choices = ['kUnset','kFatal','kError','kWarning','kInfo','kDebug'])
-    
+
     internalOptions = parser.add_argument_group('\033[4m\033[1m\033[91m Internal options, NOT FOR USERS\033[0m')
     internalOptions.add_argument("--batch", action='store_true', help="Submit on batch", default=False)
 
@@ -1106,35 +1105,24 @@ def run(mainparser, subparser=None):
     # Is this still needed?? 01/04/2022 still to be the case
     _fcc = ROOT.dummyLoader
 
-    # Set the RDF ELogLevel
-    if args.eloglevel != "kUnset":
-        try:
-            verbosity = ROOT.Experimental.RLogScopedVerbosity(
-                ROOT.Detail.RDF.RDFLogChannel(),
-                getattr(ROOT.Experimental.ELogLevel, args.eloglevel)
-            )
-        except AttributeError:
-            LOGGER.warning('Verbosity level "%s" not known by RDataFrame!',
-                           args.eloglevel)
-    else:
-        if args.verbose:
-            # ROOT.Experimental.ELogLevel.kInfo verbosity level is more
-            # equivalent to DEBUG in other log systems
-            LOGGER.debug('Setting verbosity level "kInfo" for RDataFrame...')
-            verbosity = ROOT.Experimental.RLogScopedVerbosity(
-                ROOT.Detail.RDF.RDFLogChannel(),
-                ROOT.Experimental.ELogLevel.kInfo)
-        if args.more_verbose:
-            LOGGER.debug('Setting verbosity level "kDebug" for RDataFrame...')
-            verbosity = ROOT.Experimental.RLogScopedVerbosity(
-                ROOT.Detail.RDF.RDFLogChannel(),
-                ROOT.Experimental.ELogLevel.kDebug)
-        if args.most_verbose:
-            LOGGER.debug('Setting verbosity level "kDebug+10" for '
-                         'RDataFrame...')
-            verbosity = ROOT.Experimental.RLogScopedVerbosity(
-                ROOT.Detail.RDF.RDFLogChannel(),
-                ROOT.Experimental.ELogLevel.kDebug+10)
+    if args.verbose:
+        # ROOT.Experimental.ELogLevel.kInfo verbosity level is more
+        # equivalent to DEBUG in other log systems
+        LOGGER.debug('Setting verbosity level "kInfo" for RDataFrame...')
+        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+            ROOT.Detail.RDF.RDFLogChannel(),
+            ROOT.Experimental.ELogLevel.kInfo)
+    if args.more_verbose:
+        LOGGER.debug('Setting verbosity level "kDebug" for RDataFrame...')
+        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+            ROOT.Detail.RDF.RDFLogChannel(),
+            ROOT.Experimental.ELogLevel.kDebug)
+    if args.most_verbose:
+        LOGGER.debug('Setting verbosity level "kDebug+10" for '
+                     'RDataFrame...')
+        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+            ROOT.Detail.RDF.RDFLogChannel(),
+            ROOT.Experimental.ELogLevel.kDebug+10)
 
     # Load the analysis
     analysisFile = os.path.abspath(analysisFile)

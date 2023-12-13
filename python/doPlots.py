@@ -63,7 +63,7 @@ def mapHistos(var, label, sel, param, rebin):
                 except AttributeError:
                     LOGGER.info('No scale signal, using 1.')
                     param.scaleSig=scaleSig
-                LOGGER.info('ScaleSig: ', scaleSig)
+                LOGGER.info('ScaleSig: %g', scaleSig)
                 hh.Scale(param.intLumi*scaleSig)
                 hh.Rebin(rebin)
 
