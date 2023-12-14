@@ -31,6 +31,8 @@ class MultiLineFormatter(logging.Formatter):
 
 def main():
     parser = argparse.ArgumentParser(description='FCCAnalyses v0.8.0')
+
+    # Verbosity settings
     verbosity_argument_group = parser.add_mutually_exclusive_group()
     verbosity_argument_group.add_argument('-v', '--verbose',
                                           action='store_true',
@@ -42,16 +44,32 @@ def main():
                                           action='store_true',
                                           help='make output most verbose')
 
-    subparsers = parser.add_subparsers(help='types of running modes', dest='command')
-    parser_init      = subparsers.add_parser('init', help="generate a RDataFrame based FCC analysis")
-    parser_build     = subparsers.add_parser('build', help='build and install local analysis')
+    # Create sub-parsers
+    subparsers = parser.add_subparsers(help='types of running modes',
+                                       dest='command')
+    parser_init = subparsers.add_parser(
+        'init',
+        help="generate a RDataFrame based FCC analysis")
+    parser_build = subparsers.add_parser(
+        'build',
+        help='build and install local analysis')
     parser_test = subparsers.add_parser(
-        'test', help='test whole or a part of the analysis framework')
-    parser_pin       = subparsers.add_parser('pin', help='pin fccanalyses to the current version of Key4hep stack')
-    parser_run       = subparsers.add_parser('run', help="run a RDataFrame based FCC analysis")
-    parser_run_final = subparsers.add_parser('final', help="run a RDataFrame based FCC analysis final configuration")
-    parser_run_plots = subparsers.add_parser('plots', help="run a RDataFrame based FCC analysis plot configuration")
+        'test',
+        help='test whole or a part of the analysis framework')
+    parser_pin = subparsers.add_parser(
+        'pin',
+        help='pin fccanalyses to the current version of Key4hep stack')
+    parser_run = subparsers.add_parser(
+        'run',
+        help="run a RDataFrame based FCC analysis")
+    parser_run_final = subparsers.add_parser(
+        'final',
+        help="run a RDataFrame based FCC analysis final configuration")
+    parser_run_plots = subparsers.add_parser(
+        'plots',
+        help="run a RDataFrame based FCC analysis plot configuration")
 
+    # Setup sub-parsers
     import Parsers as fccpars
     fccpars.setup_init_parser(parser_init)
     fccpars.setup_build_parser(parser_build)

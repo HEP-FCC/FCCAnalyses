@@ -8,7 +8,7 @@ processList = {
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
 prodTag     = "FCCee/spring2021/IDEA/"
 
-#Optional: output directory, default is local dir
+#Optional: output directory, default is local running dir
 outputDir   = "ZH_mumu_recoil_batch/stage1"
 
 #Optional: ncpus, default is 4
