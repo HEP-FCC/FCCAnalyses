@@ -116,7 +116,11 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   //finderConfig.maxIterations = 10000;//100;
   // Instantiate the finder
 
+#if ACTS_VERSION_MAJOR < 31
   Finder finder(finderConfig);//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
+#else
+  Finder finder(std::move(finderConfig));//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
+#endif
   // The vertex finder state
   Finder::State state;
 
