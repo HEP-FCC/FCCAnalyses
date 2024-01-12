@@ -102,7 +102,7 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
   //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
   //Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
-  Finder::Config finderConfig = {std::move(fitter), seedFinder, ipEstimator,
+  Finder::Config finderConfig = {std::move(fitter), std::move(seedFinder), ipEstimator,
                                  std::move(linearizer), bField};
 
 #if ACTS_VERSION_MAJOR < 29
@@ -116,7 +116,11 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   //finderConfig.maxIterations = 10000;//100;
   // Instantiate the finder
 
+#if ACTS_VERSION_MAJOR >= 31
+  Finder finder(std::move(finderConfig));//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
+#else
   Finder finder(finderConfig);//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
+#endif
   // The vertex finder state
   Finder::State state;
 
