@@ -15,6 +15,11 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
     source /cvmfs/sw.hsf.org/key4hep/setup.sh
   fi
 
+  if [ -z "${KEY4HEP_STACK}" ]; then
+    echo "----> Error: Key4hep stack not setup correctly! Aborting..."
+    return 1
+  fi
+
   echo "----> Info: Setting up environment variables..."
   export PYTHONPATH=${LOCAL_DIR}/python:${PYTHONPATH}
   export PYTHONPATH=${LOCAL_DIR}/install/python:${PYTHONPATH}
