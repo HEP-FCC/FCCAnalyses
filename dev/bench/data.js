@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705074834516,
+  "lastUpdate": 1705074836692,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -32658,6 +32658,60 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "zuoxunwu@gmail.com",
+            "name": "Xunwu Zuo",
+            "username": "zuoxunwu"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "032874fd1e6daaec216166365b4e9097084abcb3",
+          "message": "Add CentOS7 option in FCCAnalysisRun so older version still runs. (#329)\n\n* Add CentOS7 option in FCCAnalysisRun so older version still runs.\r\n\r\n* In FCCAnalysisRun, add handling of missing CMakeConfigureLog.yaml",
+          "timestamp": "2024-01-12T16:40:06+01:00",
+          "tree_id": "06622e87766c1350780be2d888756ab742a91587",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/032874fd1e6daaec216166365b4e9097084abcb3"
+        },
+        "date": 1705074835903,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/weaver/analysis_inference.py",
+            "value": 1.9071444911999982,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 7.625111114213777,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 7.2873098074416705,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 5.803424502850404,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 7.164085656235889,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 2.99630988391198,
+            "unit": "Evt/s"
           }
         ]
       }
