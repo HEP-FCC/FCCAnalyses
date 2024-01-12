@@ -301,6 +301,22 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
         LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
         time.sleep(10)
         frun_condor = open(frunfull_condor, 'w')
+    sysVer_str = ''
+    try:
+        f_make = open(localDir+'/build/CMakeFiles/CMakeConfigureLog.yaml', 'r')
+    except IOError as e:
+        LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
+        LOGGER.warning('File not found: ' + localDir+'/build/CMakeFiles/CMakeConfigureLog.yaml')
+    else:
+        with open(localDir+'/build/CMakeFiles/CMakeConfigureLog.yaml', 'r') as makeConfig:
+            make_content = makeConfig.read()
+            if 'centos7' in make_content:
+                sysVer_str = '(OpSysAndVer =?= "CentOS7")' + ' &&'
+            if 'almalinux9' in make_content:
+                sysVer_str = '(OpSysAndVer =?= "AlmaLinux9")' + ' &&'
+    if sysVer_str == '':
+        LOGGER.warning('FCCAnalysis was compiled in an environment not available in lxplus HTcondor. Please check.'
+                       'Submitting jobs to default operating system. There may be compatibility issues.')
     subprocess.getstatusoutput('chmod 777 {}'.format(frunfull_condor))
     frun_condor.write('executable       = $(filename)\n')
     frun_condor.write('Log              = {}/condor_job.{}.$(ClusterId).$(ProcId).log\n'.format(logDir,process))
@@ -308,7 +324,7 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
     frun_condor.write('Error            = {}/condor_job.{}.$(ClusterId).$(ProcId).error\n'.format(logDir,process))
     frun_condor.write('getenv           = False\n')
     frun_condor.write('environment      = "LS_SUBCWD={}"\n'.format(logDir)) # not sure
-    frun_condor.write('requirements     = ( (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n')
+    frun_condor.write('requirements     = ({} (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'.format(sysVer_str))
     frun_condor.write('on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n')
     frun_condor.write('max_retries      = 3\n')
     frun_condor.write('+JobFlavour      = "{}"\n'.format(getElement(rdfModule, "batchQueue")))
