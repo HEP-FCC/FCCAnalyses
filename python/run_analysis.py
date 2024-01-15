@@ -6,6 +6,7 @@ import os
 import sys
 import time
 import json
+import shutil
 import logging
 import subprocess
 import importlib.util
@@ -19,6 +20,76 @@ from process import get_process_info, get_process_dict
 LOGGER = logging.getLogger('FCCAnalyses.run')
 
 ROOT.gROOT.SetBatch(True)
+
+
+# _____________________________________________________________________________
+def determine_os(local_dir):
+    '''
+    Determines platform on which FCCAnalyses was compiled
+    '''
+    cmake_config_path = local_dir + '/build/CMakeFiles/CMakeConfigureLog.yaml'
+    if not os.path.isfile(cmake_config_path):
+        LOGGER.warning('CMake configuration file was not found!\n'
+                       'Was FCCAnalyses properly build?')
+        return None
+
+    with open(cmake_config_path, 'r', encoding='utf-8') as cmake_config_file:
+        cmake_config = cmake_config_file.read()
+        if 'centos7' in cmake_config:
+            return 'centos7'
+        if 'almalinux9' in cmake_config:
+            return 'almalinux9'
+
+    return None
+
+
+# _____________________________________________________________________________
+def create_condor_config(log_dir, process_name, build_os, rdf_module,
+                         subjob_scripts):
+    '''
+    Creates contents of condor configuration file.
+    '''
+    cfg = 'executable       = $(filename)\n'
+
+    cfg += f'Log              = {log_dir}/condor_job.{process_name}.'
+    cfg += '$(ClusterId).$(ProcId).log\n'
+
+    cfg += f'Output           = {log_dir}/condor_job.{process_name}.'
+    cfg += '$(ClusterId).$(ProcId).out\n'
+
+    cfg += f'Error            = {log_dir}/condor_job.{process_name}.'
+    cfg += '$(ClusterId).$(ProcId).error\n'
+
+    cfg += 'getenv           = False\n'
+
+    cfg += 'environment      = "LS_SUBCWD={log_dir}"\n'  # not sure
+
+    cfg += 'requirements     = ( '
+    if build_os == 'centos7':
+        cfg += '(OpSysAndVer =?= "CentOS7") && '
+    if build_os == 'almalinux9':
+        cfg += '(OpSysAndVer =?= "AlmaLinux9") && '
+    if build_os is None:
+        LOGGER.warning('Submitting jobs to default operating system. There '
+                       'may be compatibility issues.')
+    cfg += '(Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'
+
+    cfg += 'on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n'
+
+    cfg += 'max_retries      = 3\n'
+
+    cfg += '+JobFlavour      = "%s"\n' % getElement(rdf_module, 'batchQueue')
+
+    cfg += '+AccountingGroup = "%s"\n' % getElement(rdf_module, 'compGroup')
+
+    cfg += 'RequestCpus      = %i\n' % getElement(rdf_module, "nCPUS")
+
+    cfg += 'queue filename matching files'
+    for script in subjob_scripts:
+        cfg += ' ' + script
+    cfg += '\n'
+
+    return cfg
 
 
 # _____________________________________________________________________________
@@ -52,7 +123,7 @@ def getsubfileList(in_file_list, event_list, fraction):
     return out_file_list
 
 
-# __________________________________________________________
+# _____________________________________________________________________________
 def getchunkList(fileList, chunks):
     chunk_list = list(np.array_split(fileList, chunks))
     chunk_list = [chunk for chunk in chunk_list if chunk.size > 0]
@@ -60,7 +131,7 @@ def getchunkList(fileList, chunks):
     return chunk_list
 
 
-# __________________________________________________________
+# _____________________________________________________________________________
 def saveBenchmark(outfile, benchmark):
     benchmarks = []
     try:
@@ -86,39 +157,50 @@ def getCommandOutput(command):
 
 
 # _____________________________________________________________________________
-def SubmitToCondor(cmd, nbtrials):
+def submit_job(cmd, max_trials):
     submissionStatus = 0
-    cmd = cmd.replace('//', '/')  # -> dav : is it needed?
-    for i in range(nbtrials):
+    for i in range(max_trials):
+        with subprocess.Popen(cmd, shell=True,
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                              universal_newlines=True) as proc:
+            (stdout, stderr) = proc.communicate()
+
+        print('stdout:')
+        print(stdout)
+        print('stderr:')
+        print(stderr)
+
         outputCMD = getCommandOutput(cmd)
         stderr = outputCMD["stderr"].split('\n')
-        stdout = outputCMD["stdout"].split('\n')  # -> dav : is it needed?
 
         if len(stderr) == 1 and stderr[0] == '':
             LOGGER.info('GOOD SUBMISSION')
             submissionStatus = 1
         else:
             LOGGER.warning('Error while submitting, retrying...\n\t'
-                           'Trial: %i / %i\n\tError: %s', i, nbtrials, stderr)
+                           'Trial: %i / %i\n\tError: %s', i, max_trials, stderr)
             time.sleep(10)
 
         if submissionStatus == 1:
             return 1
 
-        if i == nbtrials-1:
+        if i == max_trials - 1:
             LOGGER.error('Failed submitting after: %i trials, stop trying to '
-                         'submit', nbtrials)
+                         'submit', max_trials)
             return 0
 
 # __________________________________________________________
-def initialize(args, rdfModule, analysisFile):
+def initialize(args, rdf_module, anascript_path):
+    '''
+    Common initialization steps.
+    '''
 
     # for convenience and compatibility with user code
     ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
-    geometryFile = getElement(rdfModule, "geometryFile")
-    readoutName = getElement(rdfModule, "readoutName")
-    if geometryFile != "" and readoutName != "":
-        ROOT.CaloNtupleizer.loadGeometry(geometryFile, readoutName)
+    geometryFile = getElement(rdf_module, "geometryFile")
+    readout_name = getElement(rdf_module, "readoutName")
+    if geometryFile != "" and readout_name != "":
+        ROOT.CaloNtupleizer.loadGeometry(geometryFile, readout_name)
 
     # set multithreading (no MT if number of events is specified)
     ncpus = 1
@@ -126,7 +208,7 @@ def initialize(args, rdfModule, analysisFile):
         if isinstance(args.ncpus, int) and args.ncpus >= 1:
             ncpus = args.ncpus
         else:
-            ncpus = getElement(rdfModule, "nCPUS")
+            ncpus = getElement(rdf_module, "nCPUS")
         if ncpus < 0:  # use all available threads
             ROOT.EnableImplicitMT()
             ncpus = ROOT.GetThreadPoolSize()
@@ -140,20 +222,20 @@ def initialize(args, rdfModule, analysisFile):
         LOGGER.info('No multithreading enabled. Running in single thread...')
 
     # custom header files
-    includePaths = getElement(rdfModule, "includePaths")
-    if includePaths:
+    include_paths = getElement(rdf_module, "includePaths")
+    if include_paths:
         ROOT.gInterpreter.ProcessLine(".O3")
-        basepath = os.path.dirname(os.path.abspath(analysisFile))+"/"
-        for path in includePaths:
+        basepath = os.path.dirname(os.path.abspath(anascript_path)) + "/"
+        for path in include_paths:
             LOGGER.info('Loading %s...', path)
             ROOT.gInterpreter.Declare(f'#include "{basepath}/{path}"')
 
     # check if analyses plugins need to be loaded before anything
     # still in use?
-    analysesList = getElement(rdfModule, "analysesList")
-    if analysesList and len(analysesList) > 0:
+    analyses_list = getElement(rdf_module, "analysesList")
+    if analyses_list and len(analyses_list) > 0:
         _ana = []
-        for analysis in analysesList:
+        for analysis in analyses_list:
             LOGGER.info('Load cxx analyzers from %s...', analysis)
             if analysis.startswith('libFCCAnalysis_'):
                 ROOT.gSystem.Load(analysis)
@@ -162,11 +244,11 @@ def initialize(args, rdfModule, analysisFile):
             if not hasattr(ROOT, analysis):
                 ROOT.error('Analysis %s not properly loaded!\nAborting...',
                            analysis)
-                sys.exit(4)
+                sys.exit(3)
             _ana.append(getattr(ROOT, analysis).dictionary)
 
 # _____________________________________________________________________________
-def runRDF(rdfModule, inputlist, outFile, nevt, args):
+def runRDF(rdf_module, inputlist, outFile, nevt, args):
     df = ROOT.RDataFrame("events", inputlist)
 
     # limit number of events processed
@@ -174,10 +256,10 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
         df = df.Range(0, args.nevents)
 
     try:
-        df2 = getElement(rdfModule.RDFanalysis, "analysers")(df)
+        df2 = getElement(rdf_module.RDFanalysis, "analysers")(df)
 
         branch_list = ROOT.vector('string')()
-        blist = getElement(rdfModule.RDFanalysis, "output")()
+        blist = getElement(rdf_module.RDFanalysis, "output")()
         for bname in blist:
             branch_list.push_back(bname)
 
@@ -191,7 +273,7 @@ def runRDF(rdfModule, inputlist, outFile, nevt, args):
 
 
 # _____________________________________________________________________________
-def sendToBatch(rdfModule, chunkList, process, analysisFile):
+def sendToBatch(rdf_module, chunkList, process, analysisFile):
     localDir = os.environ["LOCAL_DIR"]
     current_date = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
@@ -210,18 +292,18 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
                      'installed!\nAborting job submission...')
         sys.exit(3)
 
-    outputDir = getElement(rdfModule, "outputDir")
-    outputDirEos = getElement(rdfModule, "outputDirEos")
-    eosType = getElement(rdfModule, "eosType")
-    userBatchConfig = getElement(rdfModule, "userBatchConfig")
+    outputDir = getElement(rdf_module, "outputDir")
+    outputDirEos = getElement(rdf_module, "outputDirEos")
+    eosType = getElement(rdf_module, "eosType")
+    userBatchConfig = getElement(rdf_module, "userBatchConfig")
 
     if outputDir!="" and outputDir[-1]!="/": outputDir+="/"
 
-    condor_file_str = ''
+    subjob_scripts = []
     for ch in range(len(chunkList)):
         frunname = '{}/job{}_chunk{}.sh'.format(logDir, process, ch)
         LOGGER.info('Script to run %s: ', frunname)
-        condor_file_str += frunname + " "
+        subjob_scripts.append(frunname)
 
         frun = None
         try:
@@ -267,51 +349,28 @@ def sendToBatch(rdfModule, chunkList, process, analysisFile):
 
         frun.close()
 
-    condor_file_str = condor_file_str.replace("//", "/")
-    frunname_condor = 'job_desc_{}.cfg'.format(process)
-    frunfull_condor = '%s/%s' % (logDir, frunname_condor)
-    frun_condor = None
-    try:
-        frun_condor = open(frunfull_condor, 'w')
-    except IOError as e:
-        LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
-        time.sleep(10)
-        frun_condor = open(frunfull_condor, 'w')
-    sysVer_str = ''
-    try:
-        f_make = open(localDir+'/build/CMakeFiles/CMakeConfigureLog.yaml', 'r')
-    except IOError as e:
-        LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
-        LOGGER.warning('File not found: ' + localDir+'/build/CMakeFiles/CMakeConfigureLog.yaml')
-    else:
-        with open(localDir+'/build/CMakeFiles/CMakeConfigureLog.yaml', 'r') as makeConfig:
-            make_content = makeConfig.read()
-            if 'centos7' in make_content:
-                sysVer_str = '(OpSysAndVer =?= "CentOS7")' + ' &&'
-            if 'almalinux9' in make_content:
-                sysVer_str = '(OpSysAndVer =?= "AlmaLinux9")' + ' &&'
-    if sysVer_str == '':
-        LOGGER.warning('FCCAnalysis was compiled in an environment not available in lxplus HTcondor. Please check.'
-                       'Submitting jobs to default operating system. There may be compatibility issues.')
-    subprocess.getstatusoutput('chmod 777 {}'.format(frunfull_condor))
-    frun_condor.write('executable       = $(filename)\n')
-    frun_condor.write('Log              = {}/condor_job.{}.$(ClusterId).$(ProcId).log\n'.format(logDir,process))
-    frun_condor.write('Output           = {}/condor_job.{}.$(ClusterId).$(ProcId).out\n'.format(logDir,process))
-    frun_condor.write('Error            = {}/condor_job.{}.$(ClusterId).$(ProcId).error\n'.format(logDir,process))
-    frun_condor.write('getenv           = False\n')
-    frun_condor.write('environment      = "LS_SUBCWD={}"\n'.format(logDir)) # not sure
-    frun_condor.write('requirements     = ({} (Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'.format(sysVer_str))
-    frun_condor.write('on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n')
-    frun_condor.write('max_retries      = 3\n')
-    frun_condor.write('+JobFlavour      = "{}"\n'.format(getElement(rdfModule, "batchQueue")))
-    frun_condor.write('+AccountingGroup = "{}"\n'.format(getElement(rdfModule, "compGroup")))
-    frun_condor.write('RequestCpus      = {}\n'.format(getElement(rdfModule, "nCPUS")))
-    frun_condor.write('queue filename matching files {}\n'.format(condor_file_str))
-    frun_condor.close()
+    condor_config_path = f'{logDir}/job_desc_{process}.cfg'
 
-    cmdBatch = "condor_submit {}".format(frunfull_condor)
-    LOGGER.info('Batch command: %s', cmdBatch)
-    job = SubmitToCondor(cmdBatch, 10)
+    for _ in range(3):
+        try:
+            with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
+                condor_config = create_condor_config(logDir,
+                                                     process,
+                                                     determine_os(localDir),
+                                                     rdf_module,
+                                                     subjob_scripts)
+                cfgfile.write(condor_config)
+        except IOError as e:
+            LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
+        else:
+            break
+        time.sleep(10)
+    subprocess.getstatusoutput(f'chmod 777 {condor_config_path}')
+
+    batch_cmd = f'condor_submit {condor_config_path}'
+    LOGGER.info('Batch command: %s', batch_cmd)
+    ntry = SubmitToCondor(batch_cmd, 10)
+    LOGGER.debug('Batch command submitted on %i try.', ntry)
 
 
 # _____________________________________________________________________________
@@ -342,13 +401,19 @@ def apply_filepath_rewrites(filepath):
     return filepath
 
 
-# __________________________________________________________
-def runLocal(rdfModule, infile_list, args):
+# _____________________________________________________________________________
+def runLocal(rdf_module, infile_list, args):
+    '''
+    Run analysis locally.
+    '''
     # Create list of files to be processed
     info_msg = 'Creating dataframe object from files:\n\t'
     file_list = ROOT.vector('string')()
-    nevents_orig = 0   # Amount of events processed in previous stage (= 0 if it is the first stage)
-    nevents_local = 0  # The amount of events in the input file(s)
+    # Amount of events processed in previous stage (= 0 if it is the first
+    # stage)
+    nevents_orig = 0
+    # The amount of events in the input file(s)
+    nevents_local = 0
     for filepath in infile_list:
 
         filepath = apply_filepath_rewrites(filepath)
@@ -381,7 +446,7 @@ def runLocal(rdfModule, infile_list, args):
     else:
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
 
-    output_dir = getElement(rdfModule, "outputDir")
+    output_dir = getElement(rdf_module, "outputDir")
     if not args.batch:
         if os.path.isabs(args.output):
             LOGGER.warning('Provided output path is absolute, "outputDir" '
@@ -393,7 +458,7 @@ def runLocal(rdfModule, infile_list, args):
 
     # Run RDF
     start_time = time.time()
-    outn = runRDF(rdfModule, file_list, outfile_path, nevents_local, args)
+    outn = runRDF(rdf_module, file_list, outfile_path, nevents_local, args)
     outn = outn.GetValue()
 
     outfile = ROOT.TFile(outfile_path, 'update')
@@ -422,7 +487,7 @@ def runLocal(rdfModule, infile_list, args):
     LOGGER.info(info_msg)
 
     if args.bench:
-        analysis_name = getElement(rdfModule, 'analysisName')
+        analysis_name = getElement(rdf_module, 'analysisName')
         if not analysis_name:
             analysis_name = args.anafile_path
 
@@ -445,22 +510,22 @@ def runLocal(rdfModule, infile_list, args):
         saveBenchmark('benchmarks_bigger_better.json', bench_evt_per_sec)
 
 
-#__________________________________________________________
-def runStages(args, rdfModule, preprocess, analysisFile):
+# _____________________________________________________________________________
+def runStages(args, rdf_module, preprocess, analysisFile):
     '''
     Run regular stage.
     '''
 
     # Set ncpus, load header files, custom dicts, ...
-    initialize(args, rdfModule, analysisFile)
+    initialize(args, rdf_module, analysisFile)
 
     # Check if outputDir exist and if not create it
-    outputDir = getElement(rdfModule, "outputDir")
+    outputDir = getElement(rdf_module, "outputDir")
     if not os.path.exists(outputDir) and outputDir:
         os.system("mkdir -p {}".format(outputDir))
 
     # Check if outputDir exist and if not create it
-    outputDirEos = getElement(rdfModule,"outputDirEos")
+    outputDirEos = getElement(rdf_module, "outputDirEos")
     if not os.path.exists(outputDirEos) and outputDirEos:
         os.system("mkdir -p {}".format(outputDirEos))
 
@@ -468,11 +533,11 @@ def runStages(args, rdfModule, preprocess, analysisFile):
     # will exit after)
     if args.test:
         LOGGER.info('Running over test file...')
-        testfile_path = getElement(rdfModule, "testFile")
+        testfile_path = getElement(rdf_module, "testFile")
         directory, _ = os.path.split(args.output)
         if directory:
             os.system("mkdir -p {}".format(directory))
-        runLocal(rdfModule, [testfile_path], args)
+        runLocal(rdf_module, [testfile_path], args)
         sys.exit(0)
 
     # Check if files are specified, and if so run the analysis on it/them (this
@@ -482,20 +547,23 @@ def runStages(args, rdfModule, preprocess, analysisFile):
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        runLocal(rdfModule, args.files_list, args)
+        runLocal(rdf_module, args.files_list, args)
         sys.exit(0)
 
     # Check if batch mode and set start and end file from original list
-    run_batch = getElement(rdfModule, "runBatch")
+    run_batch = getElement(rdf_module, "runBatch")
+    if run_batch and shutil.which('condor_q') is None:
+        LOGGER.error('HTCondor tools can\'t be found!\nAborting...')
+        sys.exit(3)
 
     # Check if the process list is specified
-    process_list = getElement(rdfModule, "processList")
+    process_list = getElement(rdf_module, "processList")
 
     for process_name in process_list:
         file_list, event_list = get_process_info(
             process_name,
-            getElement(rdfModule, "prodTag"),
-            getElement(rdfModule, "inputDir"))
+            getElement(rdf_module, "prodTag"),
+            getElement(rdf_module, "inputDir"))
 
         if len(file_list) <= 0:
             LOGGER.error('No files to process!\nAborting...')
@@ -544,78 +612,83 @@ def runStages(args, rdfModule, preprocess, analysisFile):
                 LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
                                'only one chunk might not be optimal\033[0m')
 
-            sendToBatch(rdfModule, chunk_list, process_name, analysisFile)
+            sendToBatch(rdf_module, chunk_list, process_name, analysisFile)
 
         else:
             # Running locally
             LOGGER.info('Running locally...')
             if len(chunk_list) == 1:
                 args.output = '{}.root'.format(output_stem)
-                runLocal(rdfModule, chunk_list[0], args)
+                runLocal(rdf_module, chunk_list[0], args)
             else:
                 for index, chunk in enumerate(chunk_list):
                     args.output = '{}/chunk{}.root'.format(output_stem, index)
-                    runLocal(rdfModule, chunk, args)
+                    runLocal(rdf_module, chunk, args)
 
 
-def runHistmaker(args, rdfModule, analysisFile):
+def runHistmaker(args, rdf_module, analysisFile):
 
     # set ncpus, load header files, custom dicts, ...
-    initialize(args, rdfModule, analysisFile)
+    initialize(args, rdf_module, analysisFile)
 
     # load process dictionary
-    proc_dict_location = getElement(rdfModule, "procDict", True)
+    proc_dict_location = getElement(rdf_module, "procDict", True)
     if not proc_dict_location:
         LOGGER.error('Location of the procDict not provided.\nAborting...')
         sys.exit(3)
 
-    procDict = get_process_dict(proc_dict_location) 
+    procDict = get_process_dict(proc_dict_location)
 
     # check if outputDir exist and if not create it
-    outputDir = getElement(rdfModule,"outputDir")
-    if not os.path.exists(outputDir) and outputDir!='':
-        os.system("mkdir -p {}".format(outputDir))
+    outputDir = getElement(rdf_module, "outputDir")
+    if not os.path.exists(outputDir) and outputDir != '':
+        os.system(f'mkdir -p {outputDir}')
 
-    doScale = getElement(rdfModule,"doScale", True)
-    intLumi = getElement(rdfModule,"intLumi", True)
+    doScale = getElement(rdf_module, "doScale", True)
+    intLumi = getElement(rdf_module, "intLumi", True)
 
     # check if the process list is specified, and create graphs for them
-    processList = getElement(rdfModule,"processList")
-    graph_function = getattr(rdfModule, "build_graph")
-    results = [] # all the histograms
-    hweights = [] # all the weights
-    evtcounts = [] # event count of the input file
-    eventsProcessedDict = {} # number of events processed per process, in a potential previous step
+    processList = getElement(rdf_module, "processList")
+    graph_function = getattr(rdf_module, "build_graph")
+    results = []  # all the histograms
+    hweights = []  # all the weights
+    evtcounts = []  # event count of the input file
+    eventsProcessedDict = {}  # number of events processed per process, in a potential previous step
     for process in processList:
         fileList, eventList = get_process_info(
             process,
-            getElement(rdfModule, "prodTag"),
-            getElement(rdfModule, "inputDir"))
+            getElement(rdf_module, "prodTag"),
+            getElement(rdf_module, "inputDir"))
         if len(fileList) == 0:
             LOGGER.error('No files to process!\nAborting...')
             sys.exit(3)
-        processDict={}
         fraction = 1
         output = process
         chunks = 1
         try:
-            processDict = processList[process]
-            if getElementDict(processList[process], 'fraction') != None: fraction = getElementDict(processList[process], 'fraction')
-            if getElementDict(processList[process], 'output')   != None: output   = getElementDict(processList[process], 'output')
-            if getElementDict(processList[process], 'chunks')   != None: chunks   = getElementDict(processList[process], 'chunks')
+            if getElementDict(processList[process], 'fraction') is not None:
+                fraction = getElementDict(processList[process], 'fraction')
+            if getElementDict(processList[process], 'output') is not None:
+                output = getElementDict(processList[process], 'output')
+            if getElementDict(processList[process], 'chunks') is not None:
+                chunks = getElementDict(processList[process], 'chunks')
         except TypeError:
             LOGGER.warning('No values set for process %s will use default '
                            'values!', process)
-        if fraction < 1:fileList = getsubfileList(fileList, eventList, fraction)
+        if fraction < 1:
+            fileList = getsubfileList(fileList, eventList, fraction)
 
         # get the number of events processed, in a potential previous step
         fileListRoot = ROOT.vector('string')()
-        nevents_meta = 0 # amount of events processed in previous stage (= 0 if it is the first stage)
+        # amount of events processed in previous stage (= 0 if it is the first
+        # stage)
+        nevents_meta = 0
         for fileName in fileList:
             fileName = apply_filepath_rewrites(fileName)
             fileListRoot.push_back(fileName)
-            if getElement(rdfModule,"prodTag") == None: # skip check for processed events in case of first stage
-                tf=ROOT.TFile.Open(str(fileName),"READ")
+            # Skip check for processed events in case of first stage
+            if getElement(rdf_module, "prodTag") is None:
+                tf = ROOT.TFile.Open(str(fileName), "READ")
                 tf.cd()
                 for key in tf.GetListOfKeys():
                     if 'eventsProcessed' == key.GetName():
@@ -746,7 +819,9 @@ def run(parser):
     LOGGER.info('Loading analyzers from libFCCAnalyses...')
     ROOT.gSystem.Load("libFCCAnalyses")
     # Is this still needed?? 01/04/2022 still to be the case
-    _fcc = ROOT.dummyLoader
+    fcc_loaded = ROOT.dummyLoader()
+    if fcc_loaded:
+        LOGGER.debug('Succesfuly loaded main FCCanalyses analyzers.')
 
     # Set verbosity level
     if args.verbose:

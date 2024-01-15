@@ -20,12 +20,12 @@ def run_subprocess(command, run_dir):
     stdin/stout/stderr.
     '''
     try:
-        proc = subprocess.Popen(command, cwd=run_dir)
-        status = proc.wait()
+        with subprocess.Popen(command, cwd=run_dir) as proc:
+            status = proc.wait()
 
-        if status != 0:
-            LOGGER.error('Error encountered!\nAborting...')
-            sys.exit(3)
+            if status != 0:
+                LOGGER.error('Error encountered!\nAborting...')
+                sys.exit(3)
 
     except KeyboardInterrupt:
         LOGGER.error('Aborting...')
