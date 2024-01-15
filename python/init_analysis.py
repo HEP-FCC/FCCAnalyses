@@ -1,6 +1,6 @@
 import logging
 
-LOGGER = logging.getLogger('FCCAnalyses.analysis_builder')
+LOGGER = logging.getLogger('FCCAnalyses.init_analysis')
 
 def find_author():
     from subprocess import getoutput
@@ -13,11 +13,11 @@ def replace_all(input: str, repl) -> str:
     return output
 
 def setup_analysis(package: str,
-                   author: str='',
-                   description: str='',
-                   name: str='',
-                   standalone: bool=False,
-                   output_dir: str=''):
+                   author: str = '',
+                   description: str = '',
+                   name: str = '',
+                   standalone: bool = False,
+                   output_dir: str = ''):
     if not author:
         author = find_author()
     if not description:
@@ -63,3 +63,21 @@ def setup_analysis(package: str,
     except OSError as error:
         LOGGER.error('FCCAnalysis package "%s" creation error:\n%s',
                      package, error)
+
+
+def init_analysis(mainparser):
+    '''
+    Initialize analysis package
+    '''
+
+    args, _ = mainparser.parse_known_args()
+
+    if args.command != 'init':
+        LOGGER.error('Wrong sub-command!\nAborting...')
+
+    setup_analysis(package=args.package,
+                   name=args.name,
+                   author=args.author,
+                   description=args.description,
+                   standalone=args.standalone,
+                   output_dir=args.output_dir)
