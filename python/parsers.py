@@ -96,10 +96,10 @@ def setup_run_parser(parser):
     '''
     Define command line arguments for the run sub-command.
     '''
-    parser.add_argument('anafile_path',
-                        help='path to analysis file')
+    parser.add_argument('anascript_path',
+                        help='path to analysis script')
     parser.add_argument('--files-list', default=[], nargs='+',
-                        help='specify input file to bypass the processList')
+                        help='specify input file(s) to bypass the processList')
     parser.add_argument(
         '--output',
         type=str,
@@ -109,7 +109,7 @@ def setup_run_parser(parser):
     parser.add_argument('--nevents', type=int, default=-1,
                         help='specify max number of events to process')
     parser.add_argument('--test', action='store_true', default=False,
-                        help='run over the test file')
+                        help='run over the test input file')
     parser.add_argument('--bench', action='store_true', default=False,
                         help='output benchmark results to a JSON file')
     parser.add_argument('--ncpus', type=int, default=-1,
@@ -139,7 +139,7 @@ def setup_run_parser_final(parser):
     '''
     Define command line arguments for the final sub-command.
     '''
-    parser.add_argument('anafile_path',
+    parser.add_argument('anascript_path',
                         help='path to analysis_final script')
 
 

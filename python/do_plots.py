@@ -33,14 +33,14 @@ def sortedDictValues(dic):
 
 
 def formatStatUncHist(hists, name, hstyle=3254):
-    hTot = hists[0].Clone(name + "_unc")
+    hist_tot = hists[0].Clone(name + "_unc")
     for h in hists[1:]:
-        hTot.Add(h)
-    hTot.SetFillColor(ROOT.kBlack)
-    hTot.SetMarkerSize(0)
-    hTot.SetLineWidth(0)
-    hTot.SetFillStyle(hstyle)
-    return hTot
+        hist_tot.Add(h)
+    hist_tot.SetFillColor(ROOT.kBlack)
+    hist_tot.SetMarkerSize(0)
+    hist_tot.SetLineWidth(0)
+    hist_tot.SetFillStyle(hstyle)
+    return hist_tot
 
 
 # _____________________________________________________________________________
@@ -59,9 +59,10 @@ def mapHistos(var, label, sel, param, rebin):
                 LOGGER.info('File "%s" not found!\nSkipping it...', fin)
                 continue
 
-            tf = ROOT.TFile(fin)
-            h = tf.Get(var)
-            hh = copy.deepcopy(h)
+            with ROOT.TFile(fin, 'READ') as tf:
+                h = tf.Get(var)
+                hh = copy.deepcopy(h)
+                hh.SetDirectory(0)
             scaleSig = 1.
             try:
                 scaleSig = param.scaleSig
@@ -87,9 +88,10 @@ def mapHistos(var, label, sel, param, rebin):
                 LOGGER.info('File "%s" not found!\nSkipping it...', fin)
                 continue
 
-            tf = ROOT.TFile(fin)
-            h = tf.Get(var)
-            hh = copy.deepcopy(h)
+            with ROOT.TFile(fin) as tf:
+                h = tf.Get(var)
+                hh = copy.deepcopy(h)
+                hh.SetDirectory(0)
             hh.Scale(param.intLumi)
             hh.Rebin(rebin)
             if len(hbackgrounds[b]) == 0:
@@ -130,9 +132,10 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
                 LOGGER.info('File "%s" not found!\nSkipping it...', fin)
                 continue
 
-            tf = ROOT.TFile(fin)
-            h = tf.Get(hName)
-            hh = copy.deepcopy(h)
+            with ROOT.TFile(fin) as tf:
+                h = tf.Get(hName)
+                hh = copy.deepcopy(h)
+                hh.SetDirectory(0)
             LOGGER.info('ScaleSig: %g', scaleSig)
             hh.Scale(param.intLumi*scaleSig)
             hh.Rebin(rebin)
@@ -151,9 +154,10 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
                 LOGGER.info('File "%s" not found!\nSkipping it...', fin)
                 continue
 
-            tf = ROOT.TFile(fin)
-            h = tf.Get(hName)
-            hh = copy.deepcopy(h)
+            with ROOT.TFile(fin) as tf:
+                h = tf.Get(hName)
+                hh = copy.deepcopy(h)
+                hh.SetDirectory(0)
             hh.Scale(param.intLumi)
             hh.Rebin(rebin)
             if len(hbackgrounds[b]) == 0:
@@ -558,26 +562,27 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
     h_dummy.GetXaxis().SetLimits(xmin, xmax)
 
     # y limits
-    def getMinMaxRange(hists, xmin, xmax):
-        hTot = hists[0].Clone(name + "_unc")
+    def get_minmax_range(hists, xmin, xmax):
+        hist_tot = hists[0].Clone(name + "_unc")
         for h in hists[1:]:
-            hTot.Add(h)
+            hist_tot.Add(h)
         vals = []
-        for i in range(0, hTot.GetNbinsX()+1):
-            if hTot.GetBinLowEdge(i) > xmin or hTot.GetBinLowEdge(i+1) < xmax:
-                if hTot.GetBinContent(i) != 0:
-                    vals.append(hTot.GetBinContent(i))
+        for i in range(0, hist_tot.GetNbinsX()+1):
+            if hist_tot.GetBinLowEdge(i) > xmin or \
+                    hist_tot.GetBinLowEdge(i+1) < xmax:
+                if hist_tot.GetBinContent(i) != 0:
+                    vals.append(hist_tot.GetBinContent(i))
         if len(vals) == 0:
             return 1e-5, 1
         return min(vals), max(vals)
 
     if stacksig:
-        ymin_, ymax_ = getMinMaxRange(hStack.GetHists(), xmin, xmax)
+        ymin_, ymax_ = get_minmax_range(hStack.GetHists(), xmin, xmax)
     else:
-        yminSig, ymaxSig = getMinMaxRange(hStackSig.GetHists(), xmin, xmax)
-        yminBkg, ymaxBkg = getMinMaxRange(hStackBkg.GetHists(), xmin, xmax)
-        ymin_ = min(yminSig, yminBkg)
-        ymax_ = max(ymaxSig, ymaxBkg)
+        ymin_sig, ymax_sig = get_minmax_range(hStackSig.GetHists(), xmin, xmax)
+        ymin_bkg, ymax_bkg = get_minmax_range(hStackBkg.GetHists(), xmin, xmax)
+        ymin_ = min(ymin_sig, ymin_bkg)
+        ymax_ = max(ymax_sig, ymax_bkg)
     if ymin == -1:
         ymin = ymin_*0.1 if logY else 0
     if ymax == -1:
@@ -592,45 +597,45 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
     if legend2 is not None:
         legend2.Draw()
 
-    Text = ROOT.TLatex()
-    Text.SetNDC()
-    Text.SetTextAlign(31)
-    Text.SetTextSize(0.04)
+    latex = ROOT.TLatex()
+    latex.SetNDC()
+    latex.SetTextAlign(31)
+    latex.SetTextSize(0.04)
 
     text = '#it{' + leftText + '}'
-    Text.DrawLatex(0.90, 0.94, text)
+    latex.DrawLatex(0.90, 0.94, text)
 
     text = '#it{'+customLabel+'}'
-    Text.SetTextAlign(12)
-    Text.SetNDC(ROOT.kTRUE)
-    Text.SetTextSize(0.04)
-    Text.DrawLatex(0.18, 0.85, text)
+    latex.SetTextAlign(12)
+    latex.SetNDC(ROOT.kTRUE)
+    latex.SetTextSize(0.04)
+    latex.DrawLatex(0.18, 0.85, text)
 
     rightText = re.split(",", rightText)
     text = '#bf{#it{' + rightText[0] + '}}'
 
-    Text.SetTextAlign(12)
-    Text.SetNDC(ROOT.kTRUE)
-    Text.SetTextSize(0.04)
-    Text.DrawLatex(0.18, 0.81, text)
+    latex.SetTextAlign(12)
+    latex.SetNDC(ROOT.kTRUE)
+    latex.SetTextSize(0.04)
+    latex.DrawLatex(0.18, 0.81, text)
 
     rightText[1] = rightText[1].replace("   ", "")
     text = '#bf{#it{' + rightText[1] + '}}'
-    Text.SetTextSize(0.035)
-    Text.DrawLatex(0.18, 0.76, text)
+    latex.SetTextSize(0.035)
+    latex.DrawLatex(0.18, 0.76, text)
 
     text = '#bf{#it{' + ana_tex + '}}'
-    Text.SetTextSize(0.04)
-    Text.DrawLatex(0.18, 0.71, text)
+    latex.SetTextSize(0.04)
+    latex.DrawLatex(0.18, 0.71, text)
 
     text = '#bf{#it{' + extralab + '}}'
-    Text.SetTextSize(0.025)
-    Text.DrawLatex(0.18, 0.66, text)
+    latex.SetTextSize(0.025)
+    latex.DrawLatex(0.18, 0.66, text)
 
     text = '#bf{#it{' + 'Signal scale=' + str(scaleSig)+'}}'
-    Text.SetTextSize(0.025)
+    latex.SetTextSize(0.025)
     if scaleSig != 1:
-        Text.DrawLatex(0.18, 0.63, text)
+        latex.DrawLatex(0.18, 0.63, text)
 
     canvas.RedrawAxis()
     canvas.GetFrame().SetBorderSize(12)
