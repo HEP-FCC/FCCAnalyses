@@ -114,10 +114,6 @@ def setup_run_parser(parser):
                         help='output benchmark results to a JSON file')
     parser.add_argument('--ncpus', type=int, default=-1,
                         help='set number of threads')
-    parser.add_argument('--rerunfailed', action='store_true', default=False,
-                        help='rerun failed jobs')
-    parser.add_argument('--jobdir', type=str, default='output.root',
-                        help='specify the batch job directory')
 
     # Internal argument, not to be used by the users
     parser.add_argument('--batch', action='store_true', default=False,
