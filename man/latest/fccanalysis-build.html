@@ -1,62 +1,61 @@
 <!DOCTYPE html>
 <html>
 <!-- This is an automatically generated file.  Do not edit.
-   Manpage for fccanalysis-test
+   Manpage for fccanalysis-build
    Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
  -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../../css/mandoc.css" type="text/css" media="all"/>
-  <title>FCCANALYSIS-TEST(1)</title>
+  <title>FCCANALYSIS-BUILD(1)</title>
 </head>
 <body>
 <table class="head">
   <tr>
-    <td class="head-ltitle">FCCANALYSIS-TEST(1)</td>
-    <td class="head-vol">fccanalysis-test man page</td>
-    <td class="head-rtitle">FCCANALYSIS-TEST(1)</td>
+    <td class="head-ltitle">FCCANALYSIS-BUILD(1)</td>
+    <td class="head-vol">fccanalysis-build man page</td>
+    <td class="head-rtitle">FCCANALYSIS-BUILD(1)</td>
   </tr>
 </table>
 <div class="manual-text">
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp"><b>fccanalysis-test</b> &#x2013; test FCCAnalyses framework</p>
+<p class="Pp"><b>fccanalysis-build</b> &#x2013; helper to build FCCAnalyses
+    framework locally</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>fccanalysis test</b> [<b>-h</b> | <b>--help</b>] [<b>-R</b>
-    <i>TESTS_REGEX</i>] [<b>-E</b> <i>EXCLUDE_REGEX</i>] [<b>-j</b>
-    <i>PARALLEL</i>]</p>
+<p class="Pp"><b>fccanalysis build</b> [<b>-h</b> | <b>--help</b>] [<b>-c</b>]
+    [<b>-j</b> <i>BUILD_THREADS</i>]</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp"><b>fccanalysis-test</b> will test the whole or a part of the FCC
-    analysis framework.</p>
-<p class="Pp">It is not intended as a replacement for running <i>ctest</i>
-    command directly in the build directory, it is just convenience
-  shortcut.</p>
+<p class="Pp"><b>fccanalysis-build</b> will build the whole FCCAnalyses
+    framework.</p>
+<p class="Pp">This sub-command is not intended as a replacement for the CMake
+    build procedure, it just makes this task a little easier. The helper will
+    build the framework in the directory: build and install it into the
+    directory: install.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
 <dl class="Bl-tag">
   <dt id="h"><a class="permalink" href="#h"><b>-h</b>, <b>--help</b></a></dt>
   <dd>Prints short help message and exits.</dd>
-  <dt id="R"><a class="permalink" href="#R"><b>-R</b>
-    <i>TESTS_REGEX</i></a></dt>
-  <dd>Specify subset of tests to be run.</dd>
-  <dt id="E"><a class="permalink" href="#E"><b>-E</b>
-    <i>EXCLUDE_REGEX</i></a></dt>
-  <dd>Specify subset of tests to ignore.</dd>
-  <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>PARALLEL</i>,
-    <b>--parallel</b> <i>PARALLEL</i><i></i></a></dt>
-  <dd>Number of tests running in parallel (equivalent to `ctest -j`).</dd>
+  <dt id="c"><a class="permalink" href="#c"><b>-c</b>,
+    <b>--clean-build</b></a></dt>
+  <dd>Completely clean build directory before compilation.</dd>
+  <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>BUILD_THREADS</i>,
+    <b>--build-threads</b> <i>BUILD_THREADS</i></a></dt>
+  <dd>Specify number of threads used when compiling (equivalent to `make
+    -j`)</dd>
 </dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<p class="Pp">fccanalysis(1), fccanalysis-build(7), ctest(1)</p>
+<p class="Pp">fccanalysis(1), fccanalysis-test(7), cmake(1)</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>

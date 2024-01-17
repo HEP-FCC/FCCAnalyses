@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <!-- This is an automatically generated file.  Do not edit.
-   Manpage for fccanalysis
-   Contact fcc-experiments-sw-dev@cern.ch to correct errors or typos.
+   Manpage for fccanalysis-run
+   Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
  -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="/css/mandoc.css" type="text/css" media="all"/>
+  <link rel="stylesheet" href="../../css/mandoc.css" type="text/css" media="all"/>
   <title>FCCANALYSIS-RUN(1)</title>
 </head>
 <body>
@@ -21,68 +21,65 @@
 <div class="manual-text">
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp">fccanalysis-run - run FCC analysis</p>
+<p class="Pp"><b>fccanalysis-run</b> - run FCC analysis</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre><i>fccanalysis run</i> [-h | --help] [--files-list FILES_LIST [FILES_LIST ...]]
-<br/>
-                [--output OUTPUT] [--nevents NEVENTS] [--test] [--bench]
-<br/>
-                [--ncpus NCPUS] [--preprocess] [--validate] [--rerunfailed]
-<br/>
-                [--jobdir JOBDIR] &lt;analysis-file&gt;</pre>
-<p class="Pp"></p>
+<p class="Pp"><b>fccanalysis run</b> [<b>-h</b> | <b>--help</b>]
+    [<b>--files-list</b> <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]]
+    [<b>--output</b> <i>OUTPUT</i>] [<b>--nevents</b> <i>NEVENTS</i>]
+    [<b>--test</b>] [<b>--bench</b>] [<b>--ncpus</b> <i>NCPUS</i>]
+    <i>analysis-script</i></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp"><i>fccanalysis-run</i> will run analysis provided in the analysis
+<p class="Pp"><b>fccanalysis-run</b> will run analysis provided in the analysis
     file. The analysis itself can be divided into several stages if desired. For
     all those stages <i>fccanalysis-run</i> is used.</p>
-<p class="Pp">When using <i>fccanalysis-run</i> the analysis is running in the
-    managed mode, where the RDataFrame provided is steered by the framework and
-    users can control some aspects of the running with additional global
-    attributes, see <b>fccanalysis-file</b>(8).</p>
+<p class="Pp">When using <b>fccanalysis-run</b> the analysis is running in the
+    managed mode, where the RDataFrame is steered by the framework and users can
+    control some aspects of the running with additional global attributes, see
+    <i>fccanalysis-script</i>(8).</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
-<p class="Pp">&lt;analysis-file&gt;</p>
-<div class="Bd-indent">Path to analysis file.</div>
-<p class="Pp">--help</p>
-<div class="Bd-indent">Prints short help message and exits.</div>
-<p class="Pp">--files-list FILES_LIST [FILES_LIST ...]</p>
-<div class="Bd-indent">Specify input file to bypass the processList.</div>
-<p class="Pp">--output OUTPUT</p>
-<div class="Bd-indent">Specify output file name to bypass the processList and or
-  outputList, default <i>output.root</i>.</div>
-<p class="Pp">--nevents NEVENTS</p>
-<div class="Bd-indent">Specify max number of events to process.</div>
-<p class="Pp">--test</p>
-<div class="Bd-indent">Run over the test file.</div>
-<p class="Pp">--bench</p>
-<div class="Bd-indent">Output benchmark results to a JSON file.</div>
-<p class="Pp">--ncpus NCPUS</p>
-<div class="Bd-indent">Set number of threads.</div>
-<p class="Pp">--preprocess</p>
-<div class="Bd-indent">Run preprocessing.</div>
-<p class="Pp">--validate</p>
-<div class="Bd-indent">Validate a given production.</div>
-<p class="Pp">--rerunfailed</p>
-<div class="Bd-indent">Rerun failed jobs.</div>
-<p class="Pp">--jobdir JOBDIR</p>
-<div class="Bd-indent">Specify the batch job directory.</div>
+<dl class="Bl-tag">
+  <dt id="analysis-script"><a class="permalink" href="#analysis-script"><i>analysis-script</i></a></dt>
+  <dd>Path to analysis script.</dd>
+  <dt id="h"><a class="permalink" href="#h"><b>-h</b>, <b>--help</b></a></dt>
+  <dd>Prints short help message and exits.</dd>
+  <dt id="files"><a class="permalink" href="#files"><b>--files-list</b>
+    <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]</a></dt>
+  <dd>Specify input file to bypass the processList.</dd>
+  <dt id="output"><a class="permalink" href="#output"><b>--output</b>
+    <i>OUTPUT</i></a></dt>
+  <dd>Specify output file name to bypass the processList and or outputList,
+      default <i>output.root</i>.</dd>
+  <dt id="nevents"><a class="permalink" href="#nevents"><b>--nevents</b>
+    <i>NEVENTS</i></a></dt>
+  <dd>Specify max number of events to process.</dd>
+  <dt id="test"><a class="permalink" href="#test"><b>--test</b></a></dt>
+  <dd>Run over the test file.</dd>
+  <dt id="bench"><a class="permalink" href="#bench"><b>--bench</b></a></dt>
+  <dd>Output benchmark results to a JSON file.</dd>
+  <dt id="ncpus"><a class="permalink" href="#ncpus">--ncpus
+    <i>NCPUS</i></a></dt>
+  <dd>Set number of threads.</dd>
+</dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="ENVIRONMENT_VARIABLES"><a class="permalink" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT
   VARIABLES</a></h1>
-<p class="Pp"><b>FCCDICTSDIR</b></p>
-<div class="Bd-indent">Controls search path for the process dictionaries. The
-  default value is <i>/cvmfs/fcc.cern.ch/FCCDicts/</i>.</div>
+<dl class="Bl-tag">
+  <dt id="FCCDICTSDIR"><a class="permalink" href="#FCCDICTSDIR"><b>FCCDICTSDIR</b></a></dt>
+  <dd>Controls search path for the process dictionaries. The default value is
+      <i>/cvmfs/fcc.cern.ch/FCCDicts/</i>.</dd>
+</dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<p class="Pp">fccanalysis(1), fccanalysis-file(7)</p>
+<p class="Pp">fccanalysis(1), fccanalysis-script(7)</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
@@ -93,12 +90,11 @@
 <p class="Pp">There are many contributors to the FCCAnalyses framework, but the
     principal authors are:
   <br/>
-</p>
-<div class="Bd-indent">Clement Helsens
-<br/>
-Valentin Volk
-<br/>
-Gerardo Ganis</div>
+  Clement Helsens
+  <br/>
+  Valentin Volk
+  <br/>
+  Gerardo Ganis</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="FCCANALYSES"><a class="permalink" href="#FCCANALYSES">FCCANALYSES</a></h1>
@@ -106,17 +102,21 @@ Gerardo Ganis</div>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LINKS"><a class="permalink" href="#LINKS">LINKS</a></h1>
-<p class="Pp">1. FCCAnalyses webpage</p>
-<div class="Bd-indent">https://hep-fcc.github.io/FCCAnalyses/</div>
-<p class="Pp">2. FCCAnalysises GitHub repository</p>
-<div class="Bd-indent">https://github.com/HEP-FCC/FCCAnalyses/</div>
-<p class="Pp">3. FCCSW Forum</p>
-<div class="Bd-indent">https://fccsw-forum.web.cern.ch/</div>
+<p class="Pp"><a class="Lk" href="https://hep-fcc.github.io/FCCAnalyses/">FCCAnalyses
+    webpage</a></p>
+<p class="Pp"><a class="Lk" href="https://github.com/HEP-FCC/FCCAnalyses/">FCCAnalysises
+    GitHub repository</a></p>
+<p class="Pp"><a class="Lk" href="https://fccsw-forum.web.cern.ch/">FCCSW
+    Forum</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CONTACT"><a class="permalink" href="#CONTACT">CONTACT</a></h1>
+<p class="Pp"><a class="Mt" href="mailto:FCC-PED-SoftwareAndComputing-Analysis@cern.ch">FCC-PED-SoftwareAndComputing-Analysis</a></p>
 </section>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">24 May 2023</td>
+    <td class="foot-date">17 Jan 2024</td>
     <td class="foot-os">0.8.0</td>
   </tr>
 </table>
