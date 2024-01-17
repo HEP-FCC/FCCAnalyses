@@ -7,15 +7,15 @@ import sys
 import logging
 
 
-LOGGER = logging.getLogger('FCCAnalyses.run')
+LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.run')
 
 
-def getElement(rdfModule, element, isFinal=False):
+def get_element(rdf_module, element: str, is_final: bool = False):
     '''
     Pick up the attribute from the analysis file.
     '''
     try:
-        return getattr(rdfModule, element)
+        return getattr(rdf_module, element)
     except AttributeError:
 
         # return default values or crash if mandatory
@@ -27,7 +27,7 @@ def getElement(rdfModule, element, isFinal=False):
         elif element == 'analysers':
             LOGGER.error('The function <%s> is mandatory in your analysis '
                          'script!.\nAborting...', element)
-            if isFinal:
+            if is_final:
                 LOGGER.error('The function <%s> is not part of the final '
                              'stage of the analysis!', element)
             sys.exit(3)
@@ -35,7 +35,7 @@ def getElement(rdfModule, element, isFinal=False):
         elif element == 'output':
             LOGGER.error('The function <%s> is mandatory in your analysis '
                          'script.\nAborting...', element)
-            if isFinal:
+            if is_final:
                 LOGGER.error('The function <%s> is not part of the final '
                              'stage of the analysis!', element)
             sys.exit(3)
@@ -53,7 +53,7 @@ def getElement(rdfModule, element, isFinal=False):
         elif element == 'runBatch':
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning default value: False')
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return False
@@ -68,7 +68,7 @@ def getElement(rdfModule, element, isFinal=False):
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning default value: "workday"',
                          element)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return 'workday'
@@ -77,7 +77,7 @@ def getElement(rdfModule, element, isFinal=False):
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning default value: '
                          '"group_u_FCC.local_gen"', element)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return 'group_u_FCC.local_gen'
@@ -85,7 +85,7 @@ def getElement(rdfModule, element, isFinal=False):
         elif element == 'outputDirEos':
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning empty string.', element)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return ''
@@ -94,7 +94,7 @@ def getElement(rdfModule, element, isFinal=False):
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning default value: "eospublic"',
                          element)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return 'eospublic'
@@ -102,7 +102,7 @@ def getElement(rdfModule, element, isFinal=False):
         elif element == 'userBatchConfig':
             LOGGER.debug('The variable <%s> is optional in your your analysis '
                          'script.\nReturning empty string.', element)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return ''
@@ -115,13 +115,13 @@ def getElement(rdfModule, element, isFinal=False):
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning default test file:\n\t%s',
                          element, test_file_path)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return test_file_path
 
         elif element == 'procDict':
-            if isFinal:
+            if is_final:
                 LOGGER.error('The variable <%s> is mandatory in the final '
                              'stage of the analysis.\nAborting...', element)
                 sys.exit(3)
@@ -129,7 +129,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'cutList':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in your final '
                              'analysis script.\nReturning empty dictionary.',
                              element)
@@ -138,7 +138,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'defineList':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in your final '
                              'analysis script.\nReturning empty dictionary.',
                              element)
@@ -147,7 +147,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'histoList':
-            if isFinal:
+            if is_final:
                 LOGGER.error('The variable <%s> is mandatory in the final '
                              'stage of the analysis.\nAborting...', element)
                 sys.exit(3)
@@ -155,7 +155,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'doTree':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in your final '
                              'analysis script.\nReturning default value: '
                              'False',
@@ -165,7 +165,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'procDictAdd':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in your final '
                              'analysis script.\nReturning empty dictionary.',
                              element)
@@ -174,7 +174,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'doScale':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in the analysis '
                              'final step/histmaker.\nBy default no scaling is '
                              'applied.', element)
@@ -183,7 +183,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'intLumi':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in the analysis '
                              'final step/histmaker.\nUsing the default value: '
                              '1', element)
@@ -192,7 +192,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'saveTabular':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in your final '
                              'analysis script.\nReturning empty dictionary.',
                              element)
@@ -201,7 +201,7 @@ def getElement(rdfModule, element, isFinal=False):
                          'stages of the analysis', element)
 
         elif element == 'cutLabels':
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The variable <%s> is optional in your final '
                              'analysis script.\nReturning empty dictionary.',
                              element)
@@ -212,7 +212,7 @@ def getElement(rdfModule, element, isFinal=False):
         elif element == 'geometryFile':
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning empty string.', element)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return ''
@@ -220,7 +220,7 @@ def getElement(rdfModule, element, isFinal=False):
         elif element == 'readoutName':
             LOGGER.debug('The variable <%s> is optional in your analysis '
                          'script.\nReturning empty string.', element)
-            if isFinal:
+            if is_final:
                 LOGGER.debug('The option <%s> is not available in the final '
                              'stage of the analysis.', element)
             return ''
@@ -228,7 +228,7 @@ def getElement(rdfModule, element, isFinal=False):
         return None
 
 
-def getElementDict(_dict, element):
+def get_element_dict(_dict, element: str):
     '''
     Returns None if the key is not found in the dictionary.
     '''

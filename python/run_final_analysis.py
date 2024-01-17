@@ -9,8 +9,8 @@ import glob
 import logging
 import importlib.util
 
-import ROOT
-from anascript import getElement, getElementDict
+import ROOT  # type: ignore
+from anascript import get_element, get_element_dict
 from process import get_process_dict
 
 LOGGER = logging.getLogger('FCCAnalyses.run_final')
@@ -70,8 +70,11 @@ def testfile(f: str) -> bool:
 
 
 # __________________________________________________________
-def runFinal(rdf_module):
-    proc_dict_location = getElement(rdf_module, "procDict", True)
+def run(rdf_module):
+    '''
+    Main loop.
+    '''
+    proc_dict_location = get_element(rdf_module, "procDict", True)
     if not proc_dict_location:
         LOGGER.error(
             'Location of the process dictionary not provided!\nAborting...')
@@ -79,14 +82,14 @@ def runFinal(rdf_module):
 
     process_dict = get_process_dict(proc_dict_location)
 
-    process_dict_additions = getElement(rdf_module, "procDictAdd", True)
+    process_dict_additions = get_element(rdf_module, "procDictAdd", True)
     for addition in process_dict_additions:
-        if getElementDict(process_dict, addition) is None:
+        if get_element_dict(process_dict, addition) is None:
             process_dict[addition] = process_dict_additions[addition]
         else:
             LOGGER.debug('Process already in the dictionary. Skipping it...')
 
-    ROOT.ROOT.EnableImplicitMT(getElement(rdf_module, "nCPUS", True))
+    ROOT.ROOT.EnableImplicitMT(get_element(rdf_module, "nCPUS", True))
 
     nevents_real = 0
     start_time = time.time()
@@ -97,7 +100,7 @@ def runFinal(rdf_module):
     save_tab = []
     efficiency_list = []
 
-    input_dir = getElement(rdf_module, "inputDir", True)
+    input_dir = get_element(rdf_module, "inputDir", True)
     if not input_dir:
         LOGGER.error('The inputDir variable is mandatory for the final stage '
                      'of the analysis!\nAborting...')
@@ -106,7 +109,7 @@ def runFinal(rdf_module):
     if input_dir[-1] != "/":
         input_dir += "/"
 
-    output_dir = getElement(rdf_module, "outputDir", True)
+    output_dir = get_element(rdf_module, "outputDir", True)
     if output_dir != "":
         if output_dir[-1] != "/":
             output_dir += "/"
@@ -114,12 +117,12 @@ def runFinal(rdf_module):
     if not os.path.exists(output_dir) and output_dir != '':
         os.system(f'mkdir -p {output_dir}')
 
-    cut_list = getElement(rdf_module, "cutList", True)
+    cut_list = get_element(rdf_module, "cutList", True)
     length_cuts_names = max(len(cut) for cut in cut_list)
-    cut_labels = getElement(rdf_module, "cutLabels", True)
+    cut_labels = get_element(rdf_module, "cutLabels", True)
 
     # save a table in a separate tex file
-    save_tabular = getElement(rdf_module, "saveTabular", True)
+    save_tabular = get_element(rdf_module, "saveTabular", True)
     if save_tabular:
         # option to rewrite the cuts in a better way for the table. otherwise,
         # take them from the cutList
@@ -132,7 +135,7 @@ def runFinal(rdf_module):
         save_tab.append(cut_names)
         efficiency_list.append(cut_names)
 
-    process_list = getElement(rdf_module, "processList", True)
+    process_list = get_element(rdf_module, "processList", True)
     for process_name in process_list:
         process_events[process_name] = 0
         events_ttree[process_name] = 0
@@ -171,11 +174,11 @@ def runFinal(rdf_module):
         info_msg += f'\n\t- {process_name}: {n_events:,}'
     LOGGER.info(info_msg)
 
-    histo_list = getElement(rdf_module, "histoList", True)
-    do_scale = getElement(rdf_module, "doScale", True)
-    int_lumi = getElement(rdf_module, "intLumi", True)
+    histo_list = get_element(rdf_module, "histoList", True)
+    do_scale = get_element(rdf_module, "doScale", True)
+    int_lumi = get_element(rdf_module, "intLumi", True)
 
-    do_tree = getElement(rdf_module, "doTree", True)
+    do_tree = get_element(rdf_module, "doTree", True)
     for process_name in process_list:
         LOGGER.info('Running over process: %s', process_name)
 
@@ -186,7 +189,7 @@ def runFinal(rdf_module):
             sys.exit(3)
 
         df = ROOT.ROOT.RDataFrame("events", file_list[process_name])
-        define_list = getElement(rdf_module, "defineList", True)
+        define_list = get_element(rdf_module, "defineList", True)
         if len(define_list) > 0:
             LOGGER.info('Registering extra DataFrame defines...')
             for define in define_list:
@@ -490,4 +493,4 @@ def run_final(parser):
     rdf_module = importlib.util.module_from_spec(rdf_spec)
     rdf_spec.loader.exec_module(rdf_module)
 
-    runFinal(rdf_module)
+    run(rdf_module)

@@ -10,7 +10,7 @@ import importlib
 import copy
 import re
 import logging
-import ROOT
+import ROOT  # type: ignore
 
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
@@ -21,13 +21,19 @@ LOGGER = logging.getLogger('FCCAnalyses.plot')
 
 
 # _____________________________________________________________________________
-def removekey(d, key):
+def removekey(d: dict, key: str) -> dict:
+    '''
+    Remove dictionary element.
+    '''
     r = dict(d)
     del r[key]
     return r
 
 
-def sortedDictValues(dic):
+def sorted_dict_values(dic: dict) -> list:
+    ''''
+    Sort values in the dictionary.
+    '''
     keys = sorted(dic)
     return [dic[key] for key in keys]
 
@@ -517,7 +523,7 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
         else:
             BgMCHistYieldsDic[-1*nbkg] = h
     # sort stack by yields (smallest to largest)
-    BgMCHistYieldsDic = sortedDictValues(BgMCHistYieldsDic)
+    BgMCHistYieldsDic = sorted_dict_values(BgMCHistYieldsDic)
     for h in BgMCHistYieldsDic:
         hStack.Add(h)
         hStackBkg.Add(h)
@@ -652,64 +658,64 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
         dummyh.Draw("AH")
         legend.Draw()
 
-        Text.SetNDC()
-        Text.SetTextAlign(31)
-        Text.SetTextSize(0.04)
+        latex.SetNDC()
+        latex.SetTextAlign(31)
+        latex.SetTextSize(0.04)
 
         text = '#it{' + leftText + '}'
-        Text.DrawLatex(0.90, 0.92, text)
+        latex.DrawLatex(0.90, 0.92, text)
 
         text = '#bf{#it{' + rightText[0] + '}}'
-        Text.SetTextAlign(12)
-        Text.SetNDC(ROOT.kTRUE)
-        Text.SetTextSize(0.04)
-        Text.DrawLatex(0.18, 0.83, text)
+        latex.SetTextAlign(12)
+        latex.SetNDC(ROOT.kTRUE)
+        latex.SetTextSize(0.04)
+        latex.DrawLatex(0.18, 0.83, text)
 
         text = '#bf{#it{' + rightText[1] + '}}'
-        Text.SetTextSize(0.035)
-        Text.DrawLatex(0.18, 0.78, text)
+        latex.SetTextSize(0.035)
+        latex.DrawLatex(0.18, 0.78, text)
 
         text = '#bf{#it{' + ana_tex + '}}'
-        Text.SetTextSize(0.04)
-        Text.DrawLatex(0.18, 0.73, text)
+        latex.SetTextSize(0.04)
+        latex.DrawLatex(0.18, 0.73, text)
 
         text = '#bf{#it{' + extralab + '}}'
-        Text.SetTextSize(0.025)
-        Text.DrawLatex(0.18, 0.68, text)
+        latex.SetTextSize(0.025)
+        latex.DrawLatex(0.18, 0.68, text)
 
         text = '#bf{#it{' + 'Signal scale=' + str(scaleSig) + '}}'
-        Text.SetTextSize(0.04)
-        Text.DrawLatex(0.18, 0.55, text)
+        latex.SetTextSize(0.04)
+        latex.DrawLatex(0.18, 0.55, text)
 
         dy = 0
         text = '#bf{#it{' + 'Process' + '}}'
-        Text.SetTextSize(0.035)
-        Text.DrawLatex(0.18, 0.45, text)
+        latex.SetTextSize(0.035)
+        latex.DrawLatex(0.18, 0.45, text)
 
         text = '#bf{#it{' + 'Yields' + '}}'
-        Text.SetTextSize(0.035)
-        Text.DrawLatex(0.5, 0.45, text)
+        latex.SetTextSize(0.035)
+        latex.DrawLatex(0.5, 0.45, text)
 
         text = '#bf{#it{' + 'Raw MC' + '}}'
-        Text.SetTextSize(0.035)
-        Text.DrawLatex(0.75, 0.45, text)
+        latex.SetTextSize(0.035)
+        latex.DrawLatex(0.75, 0.45, text)
 
         for y in yields:
             text = '#bf{#it{' + yields[y][0] + '}}'
-            Text.SetTextSize(0.035)
-            Text.DrawLatex(0.18, 0.4-dy*0.05, text)
+            latex.SetTextSize(0.035)
+            latex.DrawLatex(0.18, 0.4-dy*0.05, text)
 
             stry = str(yields[y][1])
             stry = stry.split('.', maxsplit=1)[0]
             text = '#bf{#it{' + stry + '}}'
-            Text.SetTextSize(0.035)
-            Text.DrawLatex(0.5, 0.4-dy*0.05, text)
+            latex.SetTextSize(0.035)
+            latex.DrawLatex(0.5, 0.4-dy*0.05, text)
 
             stry = str(yields[y][2])
             stry = stry.split('.', maxsplit=1)[0]
             text = '#bf{#it{' + stry + '}}'
-            Text.SetTextSize(0.035)
-            Text.DrawLatex(0.75, 0.4-dy*0.05, text)
+            latex.SetTextSize(0.035)
+            latex.DrawLatex(0.75, 0.4-dy*0.05, text)
 
             dy += 1
         # canvas.Modified()
@@ -738,6 +744,9 @@ def print_canvas(canvas, name, formats, directory):
 
 # _____________________________________________________________________________
 def run(script_path):
+    '''
+    Run over all the plots.
+    '''
     ROOT.gROOT.SetBatch(True)
     ROOT.gErrorIgnoreLevel = ROOT.kWarning
 

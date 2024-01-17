@@ -8,12 +8,12 @@ import json
 import glob
 import logging
 import urllib.request
-import yaml
-import ROOT
+import yaml  # type: ignore
+import ROOT  # type: ignore
 
 ROOT.gROOT.SetBatch(True)
 
-LOGGER = logging.getLogger('FCCAnalyses.process_info')
+LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.process_info')
 
 
 def get_entries(inpath: str) -> int:
@@ -27,7 +27,9 @@ def get_entries(inpath: str) -> int:
     return nevents
 
 
-def get_process_info(process: str, prod_tag: str, input_dir: str):
+def get_process_info(process: str,
+                     prod_tag: str,
+                     input_dir: str) -> tuple[list[str], list[int]]:
     '''
     Decide where to look for the filelist and eventlist.
     '''
@@ -47,7 +49,8 @@ def get_process_info(process: str, prod_tag: str, input_dir: str):
     return get_process_info_files(process, input_dir)
 
 
-def get_process_info_files(process: str, input_dir: str):
+def get_process_info_files(process: str, input_dir: str) -> tuple[list[str],
+                                                                  list[int]]:
     '''
     Get list of files and events from the specified location
     '''
@@ -81,7 +84,8 @@ def get_process_info_files(process: str, input_dir: str):
     return filelist, eventlist
 
 
-def get_process_info_yaml(process: str, prod_tag: str):
+def get_process_info_yaml(process: str, prod_tag: str) -> tuple[list[str],
+                                                                list[int]]:
     '''
     Get list of files and events from the YAML file
     '''
@@ -118,7 +122,7 @@ def get_process_info_yaml(process: str, prod_tag: str):
     return filelist, eventlist
 
 
-def get_process_dict(proc_dict_location: str):
+def get_process_dict(proc_dict_location: str) -> dict:
     '''
     Pick up the dictionary with process information
     '''
@@ -163,17 +167,17 @@ def get_process_dict(proc_dict_location: str):
     return proc_dict
 
 
-def get_process_dict_dirs():
+def get_process_dict_dirs() -> list[str]:
     '''
     Get search directories for the process dictionaries
     '''
-    dirs = os.getenv('FCCDICTSDIR')
-    if not dirs:
+    dirs_var = os.getenv('FCCDICTSDIR')
+    if dirs_var is None:
         LOGGER.error('Environment variable FCCDICTSDIR not defined!\n'
                      'Was the setup.sh file sourced properly?\n'
                      'Aborting...')
         sys.exit(3)
-    dirs = dirs.split(':')
-    dirs = [d for d in dirs if d]
+    dirs = dirs_var.split(':')
+    dirs[:] = [d for d in dirs if d]
 
     return dirs

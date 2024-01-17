@@ -13,7 +13,7 @@ import logging
 LOGGER = logging.getLogger('FCCAnalyses.build')
 
 
-def run_subprocess(command, run_dir):
+def run_subprocess(command: str, run_dir: str):
     '''
     Run subprocess in specified directory.
     Check only the return value, otherwise keep the subprocess connected to
@@ -21,7 +21,7 @@ def run_subprocess(command, run_dir):
     '''
     try:
         with subprocess.Popen(command, cwd=run_dir) as proc:
-            status = proc.wait()
+            status: int = proc.wait()
 
             if status != 0:
                 LOGGER.error('Error encountered!\nAborting...')
@@ -67,5 +67,5 @@ def build_analysis(mainparser):
         LOGGER.info('Creating install directory...')
         os.makedirs(install_path)
 
-    run_subprocess(['make', '-j{}'.format(args.build_threads), 'install'],
+    run_subprocess(['make', f'-j{args.build_threads}', 'install'],
                    local_dir + '/build')

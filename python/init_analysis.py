@@ -1,16 +1,49 @@
+'''
+Initialize local analysis
+'''
+
 import logging
+import os
+import sys
+from subprocess import getoutput
+
 
 LOGGER = logging.getLogger('FCCAnalyses.init_analysis')
 
-def find_author():
-    from subprocess import getoutput
-    return getoutput('git config --global --get user.name') + ' <' + getoutput('git config --global --get user.email') + '>'
 
-def replace_all(input: str, repl) -> str:
-    output = input
+def find_author():
+    '''
+    Retrieve the author of the package from the git confioguration
+    '''
+    return getoutput('git config --global --get user.name') + \
+        ' <' + getoutput('git config --global --get user.email') + '>'
+
+
+def replace_all(_input: str, repl: dict) -> str:
+    '''
+    Replace all elements of repl in the provided string.
+    '''
+    output = _input
     for a, b in repl.items():
         output = output.replace(a, b)
     return output
+
+
+def create_file(dest_path: str,
+                template_path: str,
+                replacements: dict) -> bool:
+    '''
+    Create file from a template.
+    TODO: exceptions
+    '''
+    with open(template_path, 'r', encoding='utf-8') as template_file:
+        template: str = template_file.read()
+
+    with open(dest_path, 'w', encoding='utf-8') as dest_file:
+        dest_file.write(replace_all(template, replacements))
+
+    return True
+
 
 def setup_analysis(package: str,
                    author: str = '',
@@ -18,13 +51,16 @@ def setup_analysis(package: str,
                    name: str = '',
                    standalone: bool = False,
                    output_dir: str = ''):
+    '''
+    Generates the analysis package.
+    '''
     if not author:
         author = find_author()
     if not description:
         description = '[...]'
     elif '\n' in description:
-        raise RuntimeError('Multiline description is not supported. Please edit the output analysis header file directly.')
-    from subprocess import getoutput
+        raise RuntimeError('Multiline description is not supported. Please '
+                           'edit the output analysis header file directly.')
     fccanalyses_path = getoutput('git rev-parse --show-toplevel')
     replacement_dict = {
         '__pkgname__': package,
@@ -39,7 +75,6 @@ def setup_analysis(package: str,
     else:
         path = output_dir
 
-    import os
     for p in [path, f'{path}/src', f'{path}/include', f'{path}/scripts']:
         try:
             os.mkdir(p)
@@ -47,22 +82,25 @@ def setup_analysis(package: str,
             LOGGER.warning('FCCAnalysis package "%s" already exists.', package)
     try:
         tmpl_dir = os.path.join(fccanalyses_path, 'templates')
-        with open(f'{path}/src/classes.h', 'w') as f:
-            f.write(replace_all(open(f'{tmpl_dir}/classes.h', 'r').read(), replacement_dict))
-        with open(f'{path}/src/classes_def.xml', 'w') as f:
-            f.write(replace_all(open(f'{tmpl_dir}/classes_def.xml', 'r').read(), replacement_dict))
-        with open(f'{path}/src/{name}.cc', 'w') as f:
-            f.write(replace_all(open(f'{tmpl_dir}/Package.cc', 'r').read(), replacement_dict))
-        with open(f'{path}/include/{name}.h', 'w') as f:
-            f.write(replace_all(open(f'{tmpl_dir}/Package.h', 'r').read(), replacement_dict))
-        with open(f'{path}/scripts/analysis_cfg.py', 'w') as f:
-            f.write(replace_all(open(f'{tmpl_dir}/analysis_cfg.py', 'r').read(), replacement_dict))
+        create_file(f'{path}/src/classes.h', f'{tmpl_dir}/classes.h',
+                    replacement_dict)
+        create_file(f'{path}/src/classes_def.xml',
+                    f'{tmpl_dir}/classes_def.xml',
+                    replacement_dict)
+        create_file(f'{path}/src/{name}.cc', f'{tmpl_dir}/Package.cc',
+                    replacement_dict)
+        create_file(f'{path}/include/{name}.h', f'{tmpl_dir}/Package.h',
+                    replacement_dict)
+        create_file(f'{path}/scripts/analysis_cfg.py',
+                    f'{tmpl_dir}/analysis_cfg.py',
+                    replacement_dict)
         if standalone:
-            with open(f'{path}/CMakeLists.txt', 'w') as f:
-                f.write(replace_all(open(f'{tmpl_dir}/CMakeLists.txt', 'r').read(), replacement_dict))
+            create_file(f'{path}/CMakeLists.txt', f'{tmpl_dir}/CMakeLists.txt',
+                        replacement_dict)
     except OSError as error:
         LOGGER.error('FCCAnalysis package "%s" creation error:\n%s',
                      package, error)
+        sys.exit(3)
 
 
 def init_analysis(mainparser):
