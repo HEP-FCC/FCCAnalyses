@@ -123,6 +123,12 @@ def setup_run_parser(parser):
     parser.add_argument('--graph-path', type=str, default='',
                         help='analysis graph save path, should end with '
                         '\'.dot\' or \'.png\'')
+    parser.add_argument(
+        '--use-data-source', action='store_true', default=False,
+        help='use EDM4hep RDataSource to construct dataframe')
+    parser.add_argument(
+        '--use-legacy-source', action='store_true', default=False,
+        help='use EDM4hep Legacy RDataSource to construct dataframe')
 
     # Internal argument, not to be used by the users
     parser.add_argument('--batch', action='store_true', default=False,

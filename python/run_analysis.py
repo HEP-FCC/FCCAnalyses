@@ -314,11 +314,34 @@ def run_rdf(rdf_module,
     '''
     Create RDataFrame and snapshot it.
     '''
-    dframe = ROOT.RDataFrame("events", input_list)
+    if args.use_data_source:
+        LOGGER.info('Loading events through EDM4hep RDataSource...')
+        ROOT.gSystem.Load("libe4hsource")
+        if ROOT.loadEDM4hepDataSource():
+            LOGGER.debug('EDM4hep RDataSource loaded.')
+        try:
+            dframe = ROOT.FCCAnalyses.FromEDM4hep(input_list)
+        except TypeError as excp:
+            LOGGER.error('Unable to build dataframe using RDataSource!\n%s',
+                         excp)
+            sys.exit(3)
+    elif args.use_legacy_source:
+        LOGGER.info('Loading events through legacy EDM4hep RDataSource...')
+        ROOT.gSystem.Load("libe4hlegacysource")
+        if ROOT.loadEDM4hepLegacySource():
+            LOGGER.debug('Legacy EDM4hep RDataSource loaded.')
+        try:
+            dframe = ROOT.FCCAnalyses.FromEDM4hepLegacy(input_list)
+        except TypeError as excp:
+            LOGGER.error('Unable to build dataframe using legacy '
+                         'RDataSource!\n%s', excp)
+            sys.exit(3)
+    else:
+            dframe = ROOT.RDataFrame("events", input_list)
 
     # limit number of events processed
     if args.nevents > 0:
-        dframe2 = dframe.Range(0, args.nevents)
+        dframe = dframe.Range(0, args.nevents)
     else:
         dframe2 = dframe
 
@@ -331,6 +354,7 @@ def run_rdf(rdf_module,
         for bname in blist:
             branch_list.push_back(bname)
 
+        # Registering Count before Snapshot to avoid additional event loops
         evtcount_final = dframe3.Count()
 
         # Generate computational graph of the analysis
@@ -339,8 +363,8 @@ def run_rdf(rdf_module,
 
         dframe3.Snapshot("events", out_file, branch_list)
     except Exception as excp:
-        LOGGER.error('During the execution of the analysis file exception '
-                     'occurred:\n%s', excp)
+        LOGGER.error('During the execution of the analysis script an '
+                     'exception occurred:\n%s', excp)
         sys.exit(3)
 
     return evtcount_init.GetValue(), evtcount_final.GetValue()
@@ -469,7 +493,8 @@ def run_local(rdf_module, infile_list, args):
     nevents_local = 0
     for filepath in infile_list:
 
-        filepath = apply_filepath_rewrites(filepath)
+        if not args.use_data_source and not args.use_legacy_source:
+            filepath = apply_filepath_rewrites(filepath)
 
         file_list.push_back(filepath)
         info_msg += f'- {filepath}\t\n'
@@ -717,27 +742,27 @@ def run_histmaker(args, rdf_module, anapath):
     evtcounts = []  # event count of the input file
     # number of events processed per process, in a potential previous step
     events_processed_dict = {}
-    for process in process_list:
+    for process_name, process_dict in process_list.items():
         file_list, event_list = get_process_info(
-            process,
+            process_name,
             get_element(rdf_module, "prodTag"),
             get_element(rdf_module, "inputDir"))
         if len(file_list) == 0:
             LOGGER.error('No files to process!\nAborting...')
             sys.exit(3)
         fraction = 1
-        output = process
+        output = process_name
         chunks = 1
         try:
-            if get_element_dict(process_list[process], 'fraction') is not None:
-                fraction = get_element_dict(process_list[process], 'fraction')
-            if get_element_dict(process_list[process], 'output') is not None:
-                output = get_element_dict(process_list[process], 'output')
-            if get_element_dict(process_list[process], 'chunks') is not None:
-                chunks = get_element_dict(process_list[process], 'chunks')
+            if get_element_dict(process_dict, 'fraction') is not None:
+                fraction = get_element_dict(process_dict, 'fraction')
+            if get_element_dict(process_dict, 'output') is not None:
+                output = get_element_dict(process_dict, 'output')
+            if get_element_dict(process_dict, 'chunks') is not None:
+                chunks = get_element_dict(process_dict, 'chunks')
         except TypeError:
             LOGGER.warning('No values set for process %s will use default '
-                           'values!', process)
+                           'values!', process_name)
         if fraction < 1:
             file_list = get_subfile_list(file_list, event_list, fraction)
 
@@ -747,7 +772,8 @@ def run_histmaker(args, rdf_module, anapath):
         # stage)
         nevents_meta = 0
         for file_name in file_list:
-            file_name = apply_filepath_rewrites(file_name)
+            if not (args.use_data_source or args.use_legacy_source):
+                file_name = apply_filepath_rewrites(file_name)
             file_list_root.push_back(file_name)
             # Skip check for processed events in case of first stage
             if get_element(rdf_module, "prodTag") is None:
@@ -759,17 +785,41 @@ def run_histmaker(args, rdf_module, anapath):
                 infile.Close()
             if args.test:
                 break
-        events_processed_dict[process] = nevents_meta
-        info_msg = f'Add process "{process}" with:'
+        events_processed_dict[process_name] = nevents_meta
+        info_msg = f'Add process "{process_name}" with:'
         info_msg += f'\n\tfraction = {fraction}'
         info_msg += f'\n\tnFiles = {len(file_list_root):,}'
         info_msg += f'\n\toutput = {output}\n\tchunks = {chunks}'
         LOGGER.info(info_msg)
 
-        dframe = ROOT.ROOT.RDataFrame("events", file_list_root)
+        if args.use_data_source:
+            LOGGER.info('Loading events through EDM4hep RDataSource...')
+            ROOT.gSystem.Load("libe4hsource")
+            if ROOT.loadEDM4hepDataSource():
+                LOGGER.debug('EDM4hep RDataSource loaded.')
+            try:
+                dframe = ROOT.FCCAnalyses.FromEDM4hep(file_list_root)
+            except TypeError as excp:
+                LOGGER.error('Unable to build dataframe using EDM4hep '
+                             'RDataSource!\n%s', excp)
+                sys.exit(3)
+        elif args.use_legacy_source:
+            LOGGER.info('Loading events through EDM4hep Legacy RDataSource...')
+            ROOT.gSystem.Load("libe4hlegacysource")
+            if ROOT.loadEDM4hepLegacySource():
+                LOGGER.debug('EDM4hep Legacy RDataSource loaded.')
+            try:
+                dframe = ROOT.FCCAnalyses.FromEDM4hepLegacy(file_list_root)
+            except TypeError as excp:
+                LOGGER.error('Unable to build dataframe using legacy EDM4hep '
+                             'RDataSource!\n%s', excp)
+                sys.exit(3)
+        else:
+            dframe = ROOT.ROOT.RDataFrame("events", file_list_root)
         evtcount = dframe.Count()
 
-        res, hweight = graph_function(dframe, process)
+        res, hweight = graph_function(dframe, process_name)
+
         results.append(res)
         hweights.append(hweight)
         evtcounts.append(evtcount)
@@ -886,6 +936,9 @@ def run(parser):
         LOGGER.error('Unknow sub-command "%s"!\nAborting...')
         sys.exit(3)
 
+    # Work with absolute path of the analysis script
+    anapath = os.path.abspath(args.anascript_path)
+
     # Check that the analysis file exists
     anapath = args.anascript_path
     if not os.path.isfile(anapath):
@@ -926,11 +979,25 @@ def run(parser):
 
     # Load the analysis script as a module
     anapath = os.path.abspath(anapath)
-    LOGGER.info('Loading analysis file:\n%s', anapath)
-    rdf_spec = importlib.util.spec_from_file_location("fcc_analysis_module",
-                                                      anapath)
-    rdf_module = importlib.util.module_from_spec(rdf_spec)
-    rdf_spec.loader.exec_module(rdf_module)
+    LOGGER.info('Loading analysis script:\n%s', anapath)
+    try:
+        rdf_spec = importlib.util.spec_from_file_location('rdfanalysis',
+                                                          anapath)
+        rdf_module = importlib.util.module_from_spec(rdf_spec)
+        rdf_spec.loader.exec_module(rdf_module)
+    except SyntaxError as err:
+        LOGGER.error('Syntax error encountered in the analysis script:\n%s',
+                     err)
+        sys.exit(3)
+
+    # Merge command line arguments with anascript
+    # Check whether to use RDataSource to load the events
+    use_data_source = get_element(rdf_module, "useDataSource")
+    if use_data_source:
+        args.use_data_source = True
+    use_legacy_source = get_element(rdf_module, "useLegacyDataSource")
+    if use_legacy_source:
+        args.use_legacy_source = True
 
     # Merge configuration from analysis script file with command line arguments
     if get_element(rdf_module, 'graph'):
