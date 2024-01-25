@@ -1,102 +1,86 @@
 .\" Manpage for fccanalysis
-.\" Contact fcc-experiments-sw-dev@cern.ch to correct errors or typos.
-.TH FCCANALYSIS 1 "19 Oct 2023" "0.8.0" "fccanalysis man page"
+.\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
+.TH FCCANALYSIS 1 "17 Jan 2024" "0.8.0" "fccanalysis man page"
 .SH NAME
-fccanalysis \- build and run your FCC analysis
+\fBfccanalysis\fR \(en write, build and run your FCC analysis
 .SH SYNOPSIS
-.sp
-.nf
-\fIfccanalysis\fR [\-h] [\-v | \-vv | \-vvv] <command> [<args>]
-.fi
-.sp
+.B fccanalysis
+[\fB\-h\fR]
+[\fB\-v\fR | \fB\-vv\fR | \fB\-vvv\fR]
+<\fIsub-command\fR>
+[<\fIargs\fR>]
 .SH DESCRIPTION
-\fIfccanalysis\fR is the manager program for the FCC analysis, which can build,
+.B fccanalysis
+is the manager program for the FCC analysis, which can build,
 run or submit analysis to the batch\&.
 .SH OPTIONS
-.PP
-\-h, \-\-help
-.RS 4
+.TP
+.BR \-h ", " \-\-help
 Prints short help message and exits\&.
-.RE
-.PP
-\-v, \-\-verbose
-.RS 4
+.TP
+.BR \-v ", " \-\-verbose
 Makes output verbose. RDataFrame verbosity level is set to
 ROOT.Experimental.ELogLevel.kInfo\&.
-.RE
-.PP
-\-vv, \-\-more\-verbose
-.RS 4
+.TP
+.BR \-vv ", " \-\-more\-verbose
 Makes output more verbose. RDataFrame verbosity level is set to
 ROOT.Experimental.ELogLevel.kDebug\&.
-.RE
-.PP
-\-vvv, \-\-most\-verbose
-.RS 4
+.TP
+.BR \-vvv ", " \-\-most\-verbose
 Makes output even more verbose. RDataFrame verbosity level is set to
 ROOT.Experimental.ELogLevel.kDebug+10 \-\-\- outputs also generated code\&.
-.RE
-.SH COMMANDS
-.PP
-\fBfccanalysis-init\fR
-.RS 4
-[Experimental] Generate a RDataFrame based FCC analysis\&.
-.RE
-.PP
-\fBfccanalysis-build\fR
-.RS 4
-Builds and installs the FCCAnalyses framework\&.
-.RE
-.PP
-\fBfccanalysis-pin\fR
-.RS 4
+.SH SUB-COMMANDS
+.TP
+.B fccanalysis-init
+[Experimental] Generate a RDataFrame based FCC analysis package\&.
+.TP
+.B fccanalysis-build
+Helper to build and install FCCAnalyses framework\&.
+.TP
+.B fccanalysis-pin
 Pin analysis to the currently sourced version of the Key4hep stack\&.
-.RE
-.PP
-\fBfccanalysis-run\fR(1)
-.RS 4
-Runs the stage analysis file provided\&.
-.RE
-.PP
-\fBfccanalysis-final\fR
-.RS 4
-Runs the finalization analysis file provided\&.
-.RE
-.PP
-\fBfccanalysis-plots\fR
-.RS 4
+.TP
+.B fccanalysis-run
+Runs the analysis script provided\&.
+.TP
+.B fccanalysis-final
+Runs the finalization analysis script provided\&.
+.TP
+.B fccanalysis-plots
 Generate plots based on the plots analysis file provided\&.
-.RE
+.TP
+.B fccanalysis-test
+Helper to run tests of the full FCCAnalyses framework\&.
 .SH SEE ALSO
-fccanalysis-run(1), fccanalysis-file(7)
+fccanalysis\-run(1), fccanalysis\-script(7)
 .SH BUGS
 Many
 .SH AUTHORS
 There are many contributors to the FCCAnalyses framework, but the principal
 authors are:
-.br
-.RS 4
+.in +4
 Clement Helsens
 .br
 Valentin Volk
 .br
 Gerardo Ganis
-.RE
 .SH FCCANALYSES
 Part of the FCCAnalyses framework\&.
 .SH LINKS
 .PP
-1\&. FCCAnalyses webpage
-.RS 4
-https://hep\-fcc\&.github\&.io/FCCAnalyses/
-.RE
+.UR https://hep-fcc\&.github\&.io/FCCAnalyses/
+FCCAnalyses webpage
+.UE
 .PP
-2\&. FCCAnalysises GitHub repository
-.RS
-https://github\&.com/HEP-FCC/FCCAnalyses/
-.RE
+.UR https://github\&.com/HEP\-FCC/FCCAnalyses/
+FCCAnalysises GitHub repository
+.UE
 .PP
-3\&. FCCSW Forum
-.RS
-https://fccsw\-forum\&.web\&.cern\&.ch/
-.RE
+.UR https://fccsw\-forum\&.web\&.cern\&.ch/
+FCCSW Forum
+.UE
+.SH CONTACT
+.pp
+.MT FCC-PED-SoftwareAndComputing-Analysis@cern.ch
+FCC-PED-SoftwareAndComputing-Analysis
+.ME

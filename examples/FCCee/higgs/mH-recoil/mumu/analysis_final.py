@@ -22,6 +22,8 @@ nCPUS = 2
 #produces ROOT TTrees, default is False
 doTree = False
 
+saveTabular = True
+
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
 cutList = {"sel0":"Zcand_q == 0",
             "sel1":"Zcand_q == -1 || Zcand_q == 1",
