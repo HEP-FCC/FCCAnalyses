@@ -23,6 +23,7 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   echo "----> Info: Setting up environment variables..."
   export PYTHONPATH=${LOCAL_DIR}/python:${PYTHONPATH}
   export PYTHONPATH=${LOCAL_DIR}/install/python:${PYTHONPATH}
+  export PYTHONPATH=${LOCAL_DIR}/install/share/examples:${PYTHONPATH}
   export PATH=${LOCAL_DIR}/bin:${PATH}
   export PATH=${LOCAL_DIR}/install/bin:${PATH}
   export LD_LIBRARY_PATH=${LOCAL_DIR}/install/lib:${LD_LIBRARY_PATH}
