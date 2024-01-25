@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706176804518,
+  "lastUpdate": 1706176806542,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -32778,6 +32778,60 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d9246538bdc27c3a90524df5d6ae1116bfc9685e",
+          "message": "Splitting FCCAnalysisRun (#335)\n\n* Splitting FCCAnalysisRun\r\n\r\n* Check for HTCondor commands\r\n\r\n* Improved batch submition\r\n\r\n* Using with context for ROOT files\r\n\r\n* Adding type hints\r\n\r\n* Updated man pages",
+          "timestamp": "2024-01-25T10:52:46+01:00",
+          "tree_id": "c36786a780b341c90c39bdd9be2d949b9f02f471",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/d9246538bdc27c3a90524df5d6ae1116bfc9685e"
+        },
+        "date": 1706176806115,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: examples/FCCee/weaver/analysis_inference.py",
+            "value": 3.0027247501501004,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.763016574882961,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 9.271667786046196,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.8584950399865106,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.841043447438325,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.1634619087585234,
+            "unit": "Evt/s"
           }
         ]
       }
