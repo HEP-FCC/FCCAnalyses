@@ -28,8 +28,8 @@
 <p class="Pp"><b>fccanalysis run</b> [<b>-h</b> | <b>--help</b>]
     [<b>--files-list</b> <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]]
     [<b>--output</b> <i>OUTPUT</i>] [<b>--nevents</b> <i>NEVENTS</i>]
-    [<b>--test</b>] [<b>--bench</b>] [<b>--ncpus</b> <i>NCPUS</i>]
-    <i>analysis-script</i></p>
+    [<b>--test</b>] [<b>--bench</b>] [<b>--ncpus</b> <i>NCPUS</i>] [<b>-g</b>]
+    [<b>--graph-path</b> <i>GRAPH_PATH</i>] <i>analysis-script</i></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -62,9 +62,15 @@
   <dd>Run over the test file.</dd>
   <dt id="bench"><a class="permalink" href="#bench"><b>--bench</b></a></dt>
   <dd>Output benchmark results to a JSON file.</dd>
-  <dt id="ncpus"><a class="permalink" href="#ncpus">--ncpus
+  <dt id="ncpus"><a class="permalink" href="#ncpus"><b>--ncpus</b>
     <i>NCPUS</i></a></dt>
   <dd>Set number of threads.</dd>
+  <dt id="g"><a class="permalink" href="#g"><b>-g</b>, <b>--graph</b></a></dt>
+  <dd>The computational graph of the analysis will be generated.</dd>
+  <dt id="graph"><a class="permalink" href="#graph"><b>--graph-path</b>
+    <i>GRAPH_PATH</i></a></dt>
+  <dd>Location where the computational graph of the analysis should be stored.
+      Only paths with <i>.dot</i> and <i>.png</i> extensions are accepted.</dd>
 </dl>
 </section>
 <section class="Sh">
