@@ -15,7 +15,7 @@ LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.frame')
 
 
 # _____________________________________________________________________________
-def generate_graph(dframe, args, suffix=None) -> None:
+def generate_graph(dframe, args, suffix: str = None) -> None:
     '''
     Generate computational graph of the analysis
     '''

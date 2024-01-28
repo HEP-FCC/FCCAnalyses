@@ -84,8 +84,9 @@ def get_process_info_files(process: str, input_dir: str) -> tuple[list[str],
     return filelist, eventlist
 
 
-def get_process_info_yaml(process: str, prod_tag: str) -> tuple[list[str],
-                                                                list[int]]:
+def get_process_info_yaml(process_name: str,
+                          prod_tag: str) -> tuple[list[str],
+                                                  list[int]]:
     '''
     Get list of files and events from the YAML file
     '''
@@ -93,13 +94,13 @@ def get_process_info_yaml(process: str, prod_tag: str) -> tuple[list[str],
     proc_dict_dirs = get_process_dict_dirs()
     yamlfilepath = None
     for path in proc_dict_dirs:
-        yamlfilepath = os.path.join(path, 'yaml', prod_tag, process,
+        yamlfilepath = os.path.join(path, 'yaml', prod_tag, process_name,
                                     'merge.yaml')
         if not os.path.isfile(yamlfilepath):
             continue
-    if not yamlfilepath:
-        LOGGER.error('Can\'t find the YAML file with process info!\n'
-                     'Aborting...')
+    if not os.path.isfile(yamlfilepath):
+        LOGGER.error('Can\'t find the YAML file with process info for process '
+                     '"%s"!\nAborting...', process_name)
         sys.exit(3)
 
     with open(yamlfilepath, 'r', encoding='utf-8') as ftmp:

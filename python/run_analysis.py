@@ -759,17 +759,17 @@ def run_histmaker(args, rdf_module, anapath):
         info_msg += f'\n\toutput = {output}\n\tchunks = {chunks}'
         LOGGER.info(info_msg)
 
-        df = ROOT.ROOT.RDataFrame("events", file_list_root)
+        dframe = ROOT.ROOT.RDataFrame("events", file_list_root)
         evtcount = df.Count()
 
-        # Generate computational graph of the analysis
-        if args.graph:
-            generate_graph(df, args)
-
-        res, hweight = graph_function(df, process)
+        res, hweight = graph_function(dframe, process)
         results.append(res)
         hweights.append(hweight)
         evtcounts.append(evtcount)
+
+    # Generate computational graph of the analysis
+    if args.graph:
+        generate_graph(dframe, args)
 
     LOGGER.info('Starting the event loop...')
     start_time = time.time()
