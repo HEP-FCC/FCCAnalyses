@@ -6,7 +6,6 @@ import os
 import sys
 import time
 import shutil
-import pathlib
 import json
 import logging
 import subprocess
@@ -196,11 +195,11 @@ def get_subfile_list(in_file_list: list[str],
 
 
 # _____________________________________________________________________________
-def get_chunk_list(file_list: str, chunks: int) -> list[list[str]]:
+def get_chunk_list(file_list: str, chunks: int):
     '''
     Get list of input file paths arranged into chunks.
     '''
-    chunk_list: list[list[str]] = list(np.array_split(file_list, chunks))
+    chunk_list = list(np.array_split(file_list, chunks))
     return [chunk for chunk in chunk_list if chunk.size > 0]
 
 
@@ -760,7 +759,7 @@ def run_histmaker(args, rdf_module, anapath):
         LOGGER.info(info_msg)
 
         dframe = ROOT.ROOT.RDataFrame("events", file_list_root)
-        evtcount = df.Count()
+        evtcount = dframe.Count()
 
         res, hweight = graph_function(dframe, process)
         results.append(res)

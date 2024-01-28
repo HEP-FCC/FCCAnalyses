@@ -15,7 +15,7 @@ LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.frame')
 
 
 # _____________________________________________________________________________
-def generate_graph(dframe, args, suffix: str = None) -> None:
+def generate_graph(dframe, args, suffix: str | None = None) -> None:
     '''
     Generate computational graph of the analysis
     '''
@@ -25,8 +25,7 @@ def generate_graph(dframe, args, suffix: str = None) -> None:
         graph_path = pathlib.PurePath(args.anascript_path).with_suffix('.dot')
 
     # check if file path ends with "correct" extension
-    if not (graph_path.suffix == '.dot' or  # extension
-            graph_path.suffix == '.png'):
+    if graph_path.suffix not in ('.dot', '.png'):
         LOGGER.warning('Graph output file extension not recognized!\n'
                        'Using analysis script name...')
         graph_path = pathlib.PurePath(args.anascript_path).with_suffix('.dot')
