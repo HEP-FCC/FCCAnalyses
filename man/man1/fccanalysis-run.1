@@ -12,6 +12,8 @@
 [\fB\-\-test\fR]
 [\fB\-\-bench\fR]
 [\fB\-\-ncpus\fR \fINCPUS\fR]
+[\fB\-g\fR]
+[\fB\-\-graph\-path\fR \fIGRAPH_PATH\fR]
 .I analysis-script
 .SH DESCRIPTION
 .B fccanalysis-run
@@ -47,8 +49,15 @@ Run over the test file\&.
 .B \-\-bench
 Output benchmark results to a JSON file\&.
 .TP
-\-\-ncpus \fINCPUS\fR
+\fB\-\-ncpus\fR \fINCPUS\fR
 Set number of threads\&.
+.TP
+.BR \-g ", " \-\-graph
+The computational graph of the analysis will be generated\&.
+.TP
+\fB\-\-graph\-path\fR \fIGRAPH_PATH\fR
+Location where the computational graph of the analysis should be stored. Only
+paths with \fI.dot\fR and \fI.png\fR extensions are accepted.
 .SH ENVIRONMENT VARIABLES
 .TP
 .B FCCDICTSDIR

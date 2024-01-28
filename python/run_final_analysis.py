@@ -12,6 +12,7 @@ import importlib.util
 import ROOT  # type: ignore
 from anascript import get_element, get_element_dict
 from process import get_process_dict
+from frame import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run_final')
 
@@ -70,7 +71,7 @@ def testfile(f: str) -> bool:
 
 
 # __________________________________________________________
-def run(rdf_module):
+def run(rdf_module, args):
     '''
     Main loop.
     '''
@@ -117,7 +118,7 @@ def run(rdf_module):
     if not os.path.exists(output_dir) and output_dir != '':
         os.system(f'mkdir -p {output_dir}')
 
-    cut_list = get_element(rdf_module, "cutList", True)
+    cut_list: dict[str, str] = get_element(rdf_module, "cutList", True)
     length_cuts_names = max(len(cut) for cut in cut_list)
     cut_labels = get_element(rdf_module, "cutLabels", True)
 
@@ -206,12 +207,13 @@ def run(rdf_module):
 
         # Define all histos, snapshots, etc...
         LOGGER.info('Defining snapshots and histograms')
-        for cut in cut_list:
+        for cut_name, cut_definition in cut_list.items():
             # output file for tree
-            fout = output_dir + process_name + '_' + cut + '.root'
+            fout = output_dir + process_name + '_' + cut_name + '.root'
             fout_list.append(fout)
 
-            df_cut = df.Filter(cut_list[cut])
+            df_cut = df.Filter(cut_definition)
+
             count_list.append(df_cut.Count())
 
             histos = []
@@ -269,6 +271,9 @@ def run(rdf_module):
                 # Needed to avoid python garbage collector messing around with
                 # the snapshot
                 tdf_list.append(snapshot_tdf)
+
+        if args.graph:
+            generate_graph(df, args)
 
         # Now perform the loop and evaluate everything at once.
         LOGGER.info('Evaluating...')
@@ -407,11 +412,8 @@ def run(rdf_module):
                           '    \\begin{tabular}{|l||')
             outfile.write('c|' * (len(cuts_list)-1))
             outfile.write('} \\hline\n')
-            print(eff_list)
             for i in range(len(eff_list)):
                 outfile.write('        ')
-                print('i:', i)
-                print(efficiency_list)
                 v = [row[i] for row in efficiency_list]
                 outfile.write(' & '.join(str(v)))
                 outfile.write(' \\\\\n')
@@ -493,4 +495,11 @@ def run_final(parser):
     rdf_module = importlib.util.module_from_spec(rdf_spec)
     rdf_spec.loader.exec_module(rdf_module)
 
-    run(rdf_module)
+    # Merge configuration from analysis script file with command line arguments
+    if get_element(rdf_module, 'graph'):
+        args.graph = True
+
+    if get_element(rdf_module, 'graphPath') != '':
+        args.graph_path = get_element(rdf_module, 'graphPath')
+
+    run(rdf_module, args)

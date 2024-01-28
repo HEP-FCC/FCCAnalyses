@@ -100,3 +100,7 @@ benchmark*json
 
 # Local configuration
 .fccana/*
+
+# Graphviz graphs
+*.dot
+*.png

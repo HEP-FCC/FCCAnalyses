@@ -114,6 +114,11 @@ def setup_run_parser(parser):
                         help='output benchmark results to a JSON file')
     parser.add_argument('--ncpus', type=int, default=-1,
                         help='set number of threads')
+    parser.add_argument('-g', '--graph', action='store_true', default=False,
+                        help='generate computational graph of the analysis')
+    parser.add_argument('--graph-path', type=str, default='',
+                        help='analysis graph save path, should end with '
+                        '\'.dot\' or \'.png\'')
 
     # Internal argument, not to be used by the users
     parser.add_argument('--batch', action='store_true', default=False,
@@ -126,6 +131,11 @@ def setup_run_parser_final(parser):
     '''
     parser.add_argument('anascript_path',
                         help='path to analysis_final script')
+    parser.add_argument('-g', '--graph', action='store_true', default=False,
+                        help='generate computational graph of the analysis')
+    parser.add_argument('--graph-path', type=str, default='',
+                        help='analysis graph save path, should end with '
+                        '\'.dot\' or \'.png\'')
 
 
 def setup_run_parser_plots(parser):

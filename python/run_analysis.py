@@ -5,8 +5,9 @@ Run regular stage of an analysis
 import os
 import sys
 import time
-import json
 import shutil
+import pathlib
+import json
 import logging
 import subprocess
 import importlib.util
@@ -16,6 +17,7 @@ import numpy as np
 import ROOT  # type: ignore
 from anascript import get_element, get_element_dict
 from process import get_process_info, get_process_dict
+from frame import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run')
 
@@ -158,24 +160,26 @@ def create_subjob_script(local_dir: str,
 
 
 # _____________________________________________________________________________
-def get_subfile_list(in_file_list, event_list, fraction):
+def get_subfile_list(in_file_list: list[str],
+                     event_list: list[int],
+                     fraction: float) -> list[str]:
     '''
     Obtain list of files roughly containing the requested fraction of events.
     '''
-    nevts_total = sum(event_list)
-    nevts_target = int(nevts_total * fraction)
+    nevts_total: int = sum(event_list)
+    nevts_target: int = int(nevts_total * fraction)
 
     if nevts_target <= 0:
         LOGGER.error('The reduction fraction %f too stringent, no events '
                      'left!\nAborting...', fraction)
         sys.exit(3)
 
-    nevts_real = 0
-    out_file_list = []
-    for i in enumerate(event_list):
+    nevts_real: int = 0
+    out_file_list: list[str] = []
+    for i, nevts in enumerate(event_list):
         if nevts_real >= nevts_target:
             break
-        nevts_real += event_list[i]
+        nevts_real += nevts
         out_file_list.append(in_file_list[i])
 
     info_msg = f'Reducing the input file list by fraction "{fraction}" of '
@@ -192,11 +196,11 @@ def get_subfile_list(in_file_list, event_list, fraction):
 
 
 # _____________________________________________________________________________
-def get_chunk_list(file_list: str, chunks: int):
+def get_chunk_list(file_list: str, chunks: int) -> list[list[str]]:
     '''
     Get list of input file paths arranged into chunks.
     '''
-    chunk_list = list(np.array_split(file_list, chunks))
+    chunk_list: list[list[str]] = list(np.array_split(file_list, chunks))
     return [chunk for chunk in chunk_list if chunk.size > 0]
 
 
@@ -325,13 +329,19 @@ def run_rdf(rdf_module,
         for bname in blist:
             branch_list.push_back(bname)
 
+        evtcount = df2.Count()
+
+        # Generate computational graph of the analysis
+        if args.graph:
+            generate_graph(df2, args)
+
         df2.Snapshot("events", out_file, branch_list)
     except Exception as excp:
         LOGGER.error('During the execution of the analysis file exception '
                      'occurred:\n%s', excp)
         sys.exit(3)
 
-    return df2.Count()
+    return evtcount
 
 
 # _____________________________________________________________________________
@@ -751,6 +761,11 @@ def run_histmaker(args, rdf_module, anapath):
 
         df = ROOT.ROOT.RDataFrame("events", file_list_root)
         evtcount = df.Count()
+
+        # Generate computational graph of the analysis
+        if args.graph:
+            generate_graph(df, args)
+
         res, hweight = graph_function(df, process)
         results.append(res)
         hweights.append(hweight)
@@ -905,6 +920,13 @@ def run(parser):
                                                       anapath)
     rdf_module = importlib.util.module_from_spec(rdf_spec)
     rdf_spec.loader.exec_module(rdf_module)
+
+    # Merge configuration from analysis script file with command line arguments
+    if get_element(rdf_module, 'graph'):
+        args.graph = True
+
+    if get_element(rdf_module, 'graphPath') != '':
+        args.graph_path = get_element(rdf_module, 'graphPath')
 
     if hasattr(rdf_module, "build_graph") and \
             hasattr(rdf_module, "RDFanalysis"):
