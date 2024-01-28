@@ -225,6 +225,12 @@ def get_element(rdf_module, element: str, is_final: bool = False):
                              'stage of the analysis.', element)
             return ''
 
+        elif element == 'graph':
+            return False
+
+        elif element == 'graphPath':
+            return ''
+
         return None
 
 
