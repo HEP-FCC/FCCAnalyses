@@ -64,35 +64,35 @@ def create_condor_config(log_dir: str,
     cfg += f'Error            = {log_dir}/condor_job.{process_name}.'
     cfg += '$(ClusterId).$(ProcId).error\n'
 
-    cfg += 'getenv           = False\n'
+    cfg += 'getenv           = True\n'
 
     cfg += 'environment      = "LS_SUBCWD={log_dir}"\n'  # not sure
 
-    cfg += 'requirements     = ( '
-    if build_os == 'centos7':
-        cfg += '(OpSysAndVer =?= "CentOS7") && '
-    if build_os == 'almalinux9':
-        cfg += '(OpSysAndVer =?= "AlmaLinux9") && '
-    if build_os is None:
-        LOGGER.warning('Submitting jobs to default operating system. There '
-                       'may be compatibility issues.')
-    cfg += '(Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'
+    #cfg += 'requirements     = ( '
+    #if build_os == 'centos7':
+    #    cfg += '(OpSysAndVer =?= "CentOS7") && '
+    #if build_os == 'almalinux9':
+    #    cfg += '(OpSysAndVer =?= "AlmaLinux9") && '
+    #if build_os is None:
+    #    LOGGER.warning('Submitting jobs to default operating system. There '
+    #                   'may be compatibility issues.')
+    #cfg += '(Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'
 
-    cfg += 'on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n'
+    #cfg += 'on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n'
 
     cfg += 'max_retries      = 3\n'
 
     cfg += '+JobFlavour      = "%s"\n' % get_element(rdf_module, 'batchQueue')
 
-    cfg += '+AccountingGroup = "%s"\n' % get_element(rdf_module, 'compGroup')
+    #cfg += '+AccountingGroup = "%s"\n' % get_element(rdf_module, 'compGroup')
 
-    cfg += 'RequestCpus      = %i\n' % get_element(rdf_module, "nCPUS")
+    #cfg += 'RequestCpus      = %i\n' % get_element(rdf_module, "nCPUS")
 
     cfg += 'queue filename matching files'
     for script in subjob_scripts:
         cfg += ' ' + script
     cfg += '\n'
-
+    
     return cfg
 
 
@@ -102,6 +102,7 @@ def create_subjob_script(local_dir: str,
                          process_name: str,
                          chunk_num: int,
                          chunk_list: list[list[str]],
+                         log_dir: str,
                          anapath: str) -> str:
     '''
     Creates sub-job script to be run.
@@ -114,6 +115,7 @@ def create_subjob_script(local_dir: str,
 
     scr = '#!/bin/bash\n\n'
     scr += 'source ' + local_dir + '/setup.sh\n\n'
+    scr += 'cd ' + log_dir + ' \n'
 
     # add userBatchConfig if any
     if user_batch_config != '':
@@ -344,17 +346,11 @@ def run_rdf(rdf_module,
 
 
 # _____________________________________________________________________________
-def send_to_batch(rdf_module, chunk_list, process, anapath: str):
+def send_to_batch(rdf_module, chunk_list, process, log_dir, anapath: str):
     '''
     Send jobs to HTCondor batch system.
     '''
     local_dir = os.environ['LOCAL_DIR']
-    current_date = datetime.datetime.fromtimestamp(
-        datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-    log_dir = os.path.join(local_dir, 'BatchOutputs', current_date, process)
-    if not os.path.exists(log_dir):
-        os.system(f'mkdir -p {log_dir}')
-
     # Making sure the FCCAnalyses libraries are compiled and installed
     try:
         subprocess.check_output(['make', 'install'],
@@ -380,6 +376,7 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str):
                                                          process,
                                                          ch,
                                                          chunk_list,
+                                                         log_dir,
                                                          anapath)
                     ofile.write(subjob_script)
             except IOError as e:
@@ -512,12 +509,12 @@ def run_local(rdf_module, infile_list, args):
     outn = run_rdf(rdf_module, file_list, outfile_path, args)
     outn = outn.GetValue()
 
-    with ROOT.TFile(outfile_path, 'update') as outfile:
-        param = ROOT.TParameter(int)(
-                'eventsProcessed',
-                nevents_orig if nevents_orig != 0 else nevents_local)
-        param.Write()
-        outfile.Write()
+    outfile = ROOT.TFile(outfile_path, 'update')
+    param = ROOT.TParameter(int)(
+            'eventsProcessed',
+            nevents_orig if nevents_orig != 0 else nevents_local)
+    param.Write()
+    outfile.Write()
 
     elapsed_time = time.time() - start_time
     info_msg = f"{' SUMMARY ':=^80}\n"
@@ -663,7 +660,14 @@ def run_stages(args, rdf_module, anapath):
                 LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
                                'only one chunk might not be optimal\033[0m')
 
-            send_to_batch(rdf_module, chunk_list, process_name, anapath)
+            local_dir = os.environ['LOCAL_DIR']
+            current_date = datetime.datetime.fromtimestamp(
+                datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
+            log_dir = os.path.join(local_dir, 'BatchOutputs', current_date, process_name)
+            if not os.path.exists(log_dir):
+                os.system(f'mkdir -p {log_dir}')
+
+            send_to_batch(rdf_module, chunk_list, process_name, log_dir, anapath)
 
         else:
             # Running locally

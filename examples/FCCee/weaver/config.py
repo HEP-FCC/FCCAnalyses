@@ -437,14 +437,14 @@ variables_jet = {
 }
 
 variables_event = {
-    "event_invariant_mass": {
-        "name": "event_invariant_mass",
-        "title": "m_{jj} [GeV]",
-        "bin": 100,
-        "xmin": 0,
-        "xmax": 200,
-        "scale": "lin",
-    },
+    #"event_invariant_mass": {
+    #    "name": "event_invariant_mass",
+    #    "title": "m_{jj} [GeV]",
+    #    "bin": 100,
+    #    "xmin": 0,
+    #    "xmax": 200,
+    #    "scale": "lin",
+    #},
     "event_njet": {
         "name": "event_njet",
         "title": "N_{j} ",
