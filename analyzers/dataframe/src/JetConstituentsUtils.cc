@@ -1269,6 +1269,8 @@ namespace FCCAnalyses
       
       rv::RVec<double> InvariantMasses;
 
+      if(AllJets.size() < 2) return InvariantMasses;
+
       // For each jet, take its invariant mass with the remaining jets. Stop at last jet.
       for(int i = 0; i < AllJets.size()-1; ++i) {
 
