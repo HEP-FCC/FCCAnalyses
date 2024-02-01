@@ -249,11 +249,6 @@ def jet_sequence(df, njets):
     jet_corr_vars = ["e", "px", "py", "pz"]
     for jet_corr_var in jet_corr_vars: df = df.Define("jet_%s_corr"%(jet_corr_var), "FCCAnalyses::TLVHelpers::get_%s(jets_tlv_corr)"%(jet_corr_var))
     
-    #df = df.Define("jet_e_corr", "FCCAnalyses::TLVHelpers::get_e(jets_tlv_corr)")
-    #df = df.Define("jet_px_corr", "FCCAnalyses::TLVHelpers::get_px(jets_tlv_corr)")
-    #df = df.Define("jet_py_corr", "FCCAnalyses::TLVHelpers::get_py(jets_tlv_corr)")
-    #df = df.Define("jet_pz_corr", "FCCAnalyses::TLVHelpers::get_pz(jets_tlv_corr)")
-
     df = df.Define("all_invariant_masses", "JetConstituentsUtils::all_invariant_masses(jet_p4)")
     df = df.Define("recoil_masses", "all_recoil_masses(jet_p4)")
     
@@ -302,8 +297,6 @@ class RDFanalysis:
         branchList += ["jet_py_corr"]
         branchList += ["jet_pz_corr"]
 
-        #branchList += ["recojet_isTAU"]
-
         # truth info
         branchList += ["jets_truth"]
 
@@ -319,8 +312,6 @@ class RDFanalysis:
         for MET_var in MET_vars:
             branchList += [f"RecoMissingEnergy_{MET_var}"]
 
-        branchList = list(set(branchList)) # remove duplicates
-
-        branchList = sorted(branchList)
+        branchList = sorted(list(set(branchList)) # remove duplicates, sort
 
         return branchList
