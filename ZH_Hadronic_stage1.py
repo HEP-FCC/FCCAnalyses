@@ -54,46 +54,46 @@ processList = {
     "wzp6_ee_bbH_Hbb_ecm240" : {'chunks' : 2},
     
     #"""
-    #"wzp6_ee_bbH_Hcc_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_bbH_Hgg_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_bbH_Hss_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_bbH_Htautau_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_bbH_HWW_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_bbH_HZa_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_bbH_HZZ_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_Hbb_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_Hcc_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_Hgg_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_Hss_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_Htautau_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_HWW_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_HZa_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ccH_HZZ_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_nunuH_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_Hbb_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_Hcc_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_Hgg_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_Hss_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_Htautau_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_HWW_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_HZa_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_qqH_HZZ_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_Hbb_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_Hcc_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_Hgg_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_Hss_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_Htautau_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_HWW_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_HZa_ecm240" : {'chunks' : 2},
-    #"wzp6_ee_ssH_HZZ_ecm240" : {'chunks' : 2},
+    "wzp6_ee_bbH_Hcc_ecm240" : {'chunks' : 2},
+    "wzp6_ee_bbH_Hgg_ecm240" : {'chunks' : 2},
+    "wzp6_ee_bbH_Hss_ecm240" : {'chunks' : 2},
+    "wzp6_ee_bbH_Htautau_ecm240" : {'chunks' : 2},
+    "wzp6_ee_bbH_HWW_ecm240" : {'chunks' : 2},
+    "wzp6_ee_bbH_HZa_ecm240" : {'chunks' : 2},
+    "wzp6_ee_bbH_HZZ_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_Hbb_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_Hcc_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_Hgg_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_Hss_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_Htautau_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_HWW_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_HZa_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ccH_HZZ_ecm240" : {'chunks' : 2},
+    "wzp6_ee_nunuH_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_Hbb_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_Hcc_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_Hgg_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_Hss_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_Htautau_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_HWW_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_HZa_ecm240" : {'chunks' : 2},
+    "wzp6_ee_qqH_HZZ_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_Hbb_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_Hcc_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_Hgg_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_Hss_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_Htautau_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_HWW_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_HZa_ecm240" : {'chunks' : 2},
+    "wzp6_ee_ssH_HZZ_ecm240" : {'chunks' : 2},
     #"""    
 
     # backgrounds. Option: 'fraction' : frac_value
     #'p8_ee_WW_ecm240' : {'chunks':3740, 'fraction' : 0.0001},
     
     'p8_ee_WW_ecm240' : {'chunks':1000},
-    #'p8_ee_ZZ_ecm240' : {'chunks':250},
-    #'p8_ee_Zqq_ecm240' : {'chunks':250}
+    'p8_ee_ZZ_ecm240' : {'chunks':250},
+    'p8_ee_Zqq_ecm240' : {'chunks':250}
     
     #'p8_ee_WW_ecm240' : {'chunks':3740},
     #'p8_ee_ZZ_ecm240' : {'chunks':562},
@@ -142,8 +142,10 @@ url_preproc = "{}/{}.json".format(url_model_dir, model_name)
 url_model = "{}/{}.onnx".format(url_model_dir, model_name)
 
 ## model files locally stored on /eos
+if(batch):
+    model_dir = "/usatlas/u/atishelma/FCC/FCCAnalyses/"
+else: model_dir = "./"
 #model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_7classes_12_04_2023/"
-model_dir = "./" # copied it locally
 local_preproc = "{}/{}.json".format(model_dir, model_name)
 local_model = "{}/{}.onnx".format(model_dir, model_name)
 
