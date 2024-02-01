@@ -288,9 +288,6 @@ class RDFanalysis:
         branchList = branches_jet 
         branchList += jetFlavourHelper.outputBranches()
 
-        print("jet branches:",list(variables_jet.keys()))
-        print("jet flavor helper branches:",jetFlavourHelper.outputBranches())
- 
         branchList += ["event_njet"]
         
         branchList += ["all_invariant_masses"]
@@ -321,5 +318,7 @@ class RDFanalysis:
             branchList += [f"RecoMissingEnergy_{MET_var}"]
 
         branchList = list(set(branchList)) # remove duplicates
+
+        branchList = sorted(branchList)
 
         return branchList
