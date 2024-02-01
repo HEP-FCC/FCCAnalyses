@@ -312,6 +312,6 @@ class RDFanalysis:
         for MET_var in MET_vars:
             branchList += [f"RecoMissingEnergy_{MET_var}"]
 
-        branchList = sorted(list(set(branchList)) # remove duplicates, sort
+        branchList = sorted(list(set(branchList))) # remove duplicates, sort
 
         return branchList
