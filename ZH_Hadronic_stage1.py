@@ -21,6 +21,7 @@ batch = 1 # use HTCondor
 EOSoutput = 0 # output to EOS
 JobName = "ZHadronic_4JetReco" # job named used for output directory
 njets = 4 # number of jets in exclusive reclustering
+outputDir   = f"/usatlas/atlas01/atlasdisk/users/atishelma/{JobName}/stage1/"
 #exclusive = 1 # to be implemented: type of reclustering to e.g. inclusive vs. exclusive
 
 # originally was using the flag definitions below. Should follow the path of the `exclusive` flag to see what it actually means.
@@ -40,6 +41,7 @@ njets = 4 # number of jets in exclusive reclustering
 #JobName = "Inclusive_R0p4"
 #njets = 4
 #exclusive = 0 
+#outputDir   = f"/usatlas/atlas01/atlasdisk/users/atishelma/{JobName}/stage1/"
 
 print("batch:",batch)
 print("EOSoutput:",EOSoutput)
@@ -108,8 +110,6 @@ if(EOSoutput):
     #outputDir = f"/eos/user/a/atishelm/ntuples/FCC/ZH_Hadronic_4JetReco/"
 
     eosType = "eosuser" # specify as necessary
-else:
-    outputDir   = f"/usatlas/atlas01/atlasdisk/users/atishelma/{JobName}/stage1/"
 
 runBatch    = batch
 batchQueue = "testmatch" 
