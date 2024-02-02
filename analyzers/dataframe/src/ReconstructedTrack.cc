@@ -159,7 +159,7 @@ ROOT::VecOps::RVec<float> tracks_length(
 ROOT::VecOps::RVec<float> tracks_TOF(
     const ROOT::VecOps::RVec<int> &track_indices,
     const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-    const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits) {
+    const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits) {
 
   ROOT::VecOps::RVec<float> results;
   for (int i = 0; i < track_indices.size(); i++) {
@@ -179,7 +179,7 @@ ROOT::VecOps::RVec<float> tracks_TOF(
     float tof = -1;
     if (tk_jdx >= 0) {
       int idx_tout = trackdata[tk_jdx].trackerHits_end - 1; // at calo
-      edm4hep::TrackerHitData thits_2 = trackerhits.at(idx_tout);
+      edm4hep::TrackerHit3DData thits_2 = trackerhits.at(idx_tout);
       float hit_time = thits_2.time; // in s
       tof = hit_time * 1e12;         // in ps
     }
@@ -193,7 +193,7 @@ ROOT::VecOps::RVec<float> tracks_TOF(
     const ROOT::VecOps::RVec<edm4hep::TrackState> &some_tracks,
     const ROOT::VecOps::RVec<edm4hep::TrackState> &FullTracks,
     const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-    const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits) {
+    const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits) {
   ROOT::VecOps::RVec<int> indices = get_indices(some_tracks, FullTracks);
   return tracks_TOF(indices, trackdata, trackerhits);
 }
