@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en">
   <head>
@@ -7,6 +7,8 @@
     <title>FCCAnalyses</title>
     <meta name="description" content="Common analysis framework for the Future Circular Collider">
     <meta name="author" content="CERN">
+
+    <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
 
     <meta property="og:site_name"   content="FCCAnalyses" />
     <meta property="og:title"       content="FCCAnalyses" />
@@ -22,10 +24,22 @@
   <body>
     <header>
       <div class="brand">
-        <img width="7%" src="/FCCAnalyses/img/FCC-Circle_Main_RGB_Black.png">
+        <img width="7%"
+             alt="FCC Logo"
+             src="/FCCAnalyses/img/FCC-Circle_Main_RGB_Black.png">
         <a href="/FCCAnalyses">FCCAnalyses</a>
       </div>
       <p><em>Common analysis framework for the Future Circular Collider</em></p>
+      <hr>
+      <div>
+        <a class="active" href="/FCCAnalyses">Introduction</a>
+        <a href="/FCCAnalyses/examples">Examples</a>
+        <a href="https://hep-fcc.github.io/fcc-tutorials/">Tutorials</a>
+        <a href="/FCCAnalyses/man">Manual</a>
+        <a href="/FCCAnalyses/doc/latest">Reference</a>
+        <a href="/FCCAnalyses/dev/bench">Benchmarks</a>
+        <a href="https://github.com/HEP-FCC/FCCAnalyses">Repository</a>
+      </div>
       <hr>
     </header>
 
@@ -33,16 +47,66 @@
       <h1>About</h1>
 
       <p>
-        The framework is used for the majority of the FCC related analyses, non
-        definitive list can be found at
-        <a href="https://hep-fcc.github.io/FCCeePhysicsPerformance/">FCCee Physics Performance</a>.
+        The FCCAnalyses framework is used for the majority of the FCC related
+        analyses, non definitive list of the analyses can be found at
+        <a href="https://hep-fcc.github.io/FCCeePhysicsPerformance/">FCCee
+          Physics Performance</a> website.
+      </p>
 
+      <p>
         Individual analyses are designed to use the
         <a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html">ROOT RDataFrame</a>
         as the main event processor and the analyses input files contain
         physics objects in <a href="https://edm4hep.web.cern.ch/">EDM4hep</a>
         format.
       </p>
+
+      <p>
+        Using ROOT dataframe allows to use modern, high-level interface and
+        very quick processing time as it natively supports multithreading.
+      </p>
+
+      <h2>Quick start</h2>
+
+      <h3>Running analysis</h3>
+      <p>
+        Running analysis script can be done using <code>fccanalysis</code>
+        command which is shipped in Key4hep stack:
+      </p>
+      <pre><code>source /cvmfs/sw.hsf.org/key4hep/setup.sh
+fccanalysis run analysis_script.py</code></pre>
+
+      <p>
+      To have access to the FCC pre-generated samples, one needs to be
+      subscribed to one of the following e-groups (with owner approval)
+      <code>fcc-eos-read-xx</code> with <code>xx = ee,hh,eh</code>.
+      </p>
+
+      <h4>Demo</h4>
+      <script async
+              data-rows=14
+              id="asciicast-L8YePtAMCWSCZV8ueDTZWhpDN"
+              src="https://asciinema.org/a/L8YePtAMCWSCZV8ueDTZWhpDN.js"></script>
+
+      <h3>Compiling framework</h3>
+      <p>
+        When compiling whole framework first fork it on GitHub and after that
+        use:
+      </p>
+      <pre><code>git clone git@github.com:&lt;your_github_handle&gt;/FCCAnalyses.git
+cd FCCAnalyses
+git remote add upstream git@github.com:HEP-FCC/FCCAnalyses.git
+git fetch upstream
+source setup.sh
+fccanalysis build -j 16
+fccanalysis run analysis_script.py</code></pre>
+
+      <h4>Demo</h4>
+      <script async
+              data-rows=14
+              id="asciicast-KN170yd8EcsxrgqJU1c4AA9X6"
+              src="https://asciinema.org/a/KN170yd8EcsxrgqJU1c4AA9X6.js"></script>
+
 
       <h2>Documentation</h2>
 
@@ -59,6 +123,11 @@
         <li><a href="https://github.com/HEP-FCC/FCCAnalyses">Repository</a></li>
       </ul>
 
+      <footer>
+        <p>
+          &copy; Copyright 2024, CERN.
+        </p>
+      </footer>
     </article>
   </body>
 </html>

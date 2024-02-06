@@ -1,13 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
 
+@font-face {
+  font-family: 'Roobert Regular';
+  src: url('/FCCAnalyses/font/Roobert-Regular.woff2') format('woff2'),
+       url('/FCCAnalyses/font/Roobert-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roobert Medium';
+  src: url('/FCCAnalyses/font/Roobert-Medium.otf'),
+       url('/FCCAnalyses/font/Roobert-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'Roobert Light';
+  src: url('/FCCAnalyses/font/Roobert-Light.otf');
+}
+
 body {
   min-width: 200px;
   max-width: 980px;
   margin: 0 auto;
   padding: 45px;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Roobert Regular', sans-serif;
+  line-height: 1.4;
   color: black;
-
 }
 
 header {
@@ -28,10 +47,57 @@ header a {
   text-decoration: none;
 }
 
-article a {
-  /* Taken from:
-   * https://twiki.cern.ch/twiki/bin/view/FCC/LogoDesign
-   */
-  color: #807fff;
+header div a {
+  padding: 25px;
+}
+
+header a.active {
+  color: #ff7a48;
+}
+
+header a:hover {
+  color: #0593a2;
+}
+
+
+a {
+  color: #0593a2;
   text-decoration: none;
+}
+
+code {
+  font-family: 'Space Mono', monospace;
+  font-size: inherit;
+}
+
+/* Code in text */
+p > code,
+li > code,
+dd > code,
+td > code {
+  background: #f1f1f1;
+  color: indianred;
+  word-wrap: break-word;
+  box-decoration-break: clone;
+  padding: .1rem .3rem .1rem;
+  border-radius: .2rem;
+}
+
+pre code {
+  display: block;
+  background: #151f30;
+  color: white;
+  white-space: pre;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: scroll;
+  max-width: 100%;
+  min-width: 100px;
+  padding: 0;
+  border-radius: .2rem;
+}
+
+footer {
+  text-align: center;
+  color: #a1a1a1;
+  font-size: 8pt;
 }

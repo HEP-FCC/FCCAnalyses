@@ -1,0 +1,195 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>FCCAnalyses</title>
+    <meta name="description" content="Common analysis framework for the Future Circular Collider">
+    <meta name="author" content="CERN">
+
+    <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
+
+    <meta property="og:site_name"   content="Examples | FCCAnalyses" />
+    <meta property="og:title"       content="Examples | FCCAnalyses" />
+    <meta property="og:description" content="Examples for the FCCAnalyses Framework" />
+    <meta property="og:image"       content="/FCCAnalyses/img/FCC-Circle_Main_RGB_Black.png" />
+    <meta property="og:url"         content="https://hep-fcc.github.io/FCCAnalyses/examples/" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:locale"      content="en_US" />
+
+    <link rel="stylesheet" href="/FCCAnalyses/css/style.css">
+  </head>
+
+  <body>
+    <header>
+      <div class="brand">
+        <img width="7%"
+             alt="FCC Logo"
+             src="/FCCAnalyses/img/FCC-Circle_Main_RGB_Black.png">
+        <a href="/FCCAnalyses">FCCAnalyses</a>
+      </div>
+      <p><em>Common analysis framework for the Future Circular Collider</em></p>
+      <hr>
+      <div>
+        <a href="/FCCAnalyses">Introduction</a>
+        <a class="active" href="/FCCAnalyses/examples">Examples</a>
+        <a href="https://hep-fcc.github.io/fcc-tutorials/">Tutorials</a>
+        <a href="/FCCAnalyses/man">Manual</a>
+        <a href="/FCCAnalyses/doc/latest">Reference</a>
+        <a href="/FCCAnalyses/dev/bench">Benchmarks</a>
+        <a href="https://github.com/HEP-FCC/FCCAnalyses">Repository</a>
+      </div>
+      <hr>
+    </header>
+
+    <p>&#x2190; <a href="/FCCAnalyses">back</a></p>
+
+    <article>
+      <h1>Examples</h1>
+
+      <h2>Example analysis</h2>
+
+      <p>
+        To better explain the FCCAnalyses workflow let's run our example
+        analysis. The analysis should be located at
+        <code>examples/FCCee/higgs/mH-recoil/mumu/</code>.
+      </p>
+
+
+      <h3 id="pre-selection">Pre-selection</h3>
+
+      <p>
+        The pre-selection runs over already existing and properly registered
+        FCCSW EDM4hep events. The dataset names with the corresponding
+        statistics can be found
+        <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/FCCee/spring2021/Delphesevents_IDEA.php">here</a>
+        for the IDEA spring 2021 campaign. The <code>processList</code> is a
+        dictionary of processes, each process having it's own dictionary of
+        parameters. For example
+      </p>
+
+      <pre><code>'p8_ee_ZH_ecm240':{'fraction':0.2, 'chunks':2, 'output':'p8_ee_ZH_ecm240_out'}</code></pre>
+
+      <p>
+        where <code>p8_ee_ZH_ecm240</code> should match an existing sample in
+        the database, <code>fraction</code> is the fraction of the sample you
+        want to run on (default is 1), <code>chunks</code> is the number of
+        jobs to run (you will have the corresponding number of output files)
+        and <code>output</code> in case you need to change the name of the
+        output file (please note that then the sample will not be matched in
+        the database for <code>finalSel.py</code> histograms normalisation).
+        The other parameters are explained in
+        <a href="https://github.com/HEP-FCC/FCCAnalyses/blob/master/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py">the example file</a>.
+      </p>
+
+      <p>
+        To run the pre-selection stage of the example analysis run:
+      </p>
+
+      <pre><code>fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py</code></pre>
+
+      <p>
+        This will create the output files in the
+        <code>ZH_mumu_recoil/stage1</code> subdirectory of the output director
+        specified with parameter <code>outDir</code> in the file.
+      </p>
+
+      <p>
+        You also have the possibility to bypass the samples specified in the
+        <code>processList</code> variable by using command line parameter
+        <code>--output</code>, like so:
+      </p>
+
+      <pre><code>fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py \
+       --output &lt;myoutput.root&gt; \
+       --files-list &lt;file.root or file1.root file2.root or file*.root&gt;</code></pre>
+
+      <p>
+        The example analysis consists of two pre-selection stages, to run the
+        second one slightly alter the previous command:
+      </p>
+
+      <pre><code>fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage2.py</code></pre>
+
+      <h4>Pre-selection on batch (HTCondor)</h4>
+
+      <p>
+        It is also possible to run the pre-selection step on the batch. For that
+        the <code>runBatch</code> parameter needs to be set to true. Please make
+        sure you select a long enough <code>batchQueue</code> and that your
+        computing group is properly set <code>compGroup</code> (as you might not
+        have the right to use the default one <code>group_u_FCC.local_gen</code>
+        as it request to be part of the FCC computing e-group
+        <code>fcc-experiments-comp</code>). When running on batch, you should
+        use the <code>chunk</code> parameter for each sample in your
+        <code>processList</code> such that you benefit from high
+        parallelisation.
+      </p>
+
+
+      <h3>Final selection</h3>
+
+      <p>
+        The final selection runs on the pre-selection files that were produced
+        in the <a href="#pre-selection">Pre-selection</a> stages. In the
+        configuration file <code>analysis_final.py</code> various cuts are
+        defined to be run on and the final variables to be stored in both a
+        <code>TTree</code> and histograms. This is why the variables needs extra
+        fields like <code>title</code>, number of bins and range for the
+        histogram creation. In the example analysis it can be run like this:
+      </p>
+
+      <pre><code>fccanalysis final examples/FCCee/higgs/mH-recoil/mumu/analysis_final.py</code></pre>
+
+      <p>
+        This will create 2 files per selection
+        <code>SAMPLENAME_SELECTIONNAME.root</code> for the <code>TTree</code>
+        and <code>SAMPLENAME_SELECTIONNAME_histo.root</code> for the histograms.
+        <code>SAMPLENAME</code> and <code>SELECTIONNAME</code> correspond to the
+        name of the sample and selection respectively in the configuration file.
+      </p>
+
+
+      <h3>Plotting</h3>
+
+      <p>
+        The plotting analysis file <code>analysis_plots.py</code> contains not
+        only details for the rendering of the plots but also ways of combining
+        samples for plotting. In the example analysis it can be run in the
+        following manner:
+      </p>
+
+      <pre><code>fccanalysis plots examples/FCCee/higgs/mH-recoil/mumu/analysis_plots.py</code></pre>
+
+      <p>
+        Resulting plots will be located the <code>outdir</code> defined in the
+        analysis file.
+      </p>
+
+
+      <h2>Compiling framework with CMake</h2>
+      <p>
+        In order to customize installation of the locally compiled FCCAnalyses
+        one can compile the framework using standard CMake commands:
+      </p>
+      <pre><code>git clone git@github.com:&lt;your_github_handle&gt;/FCCAnalyses.git
+cd FCCAnalyses
+git remote add upstream git@github.com:HEP-FCC/FCCAnalyses.git
+git fetch upstream
+source setup.sh
+mkdir build install
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=../install
+make install
+cd ..
+fccanalysis run analysis_script.py</code></pre>
+
+      <footer>
+        <p>
+          &copy; Copyright 2024, CERN.
+        </p>
+      </footer>
+    </article>
+  </body>
+</html>
