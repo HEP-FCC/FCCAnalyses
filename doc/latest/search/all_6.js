@@ -32,8 +32,7 @@ var searchData=
   ['fccanalysesvertexmc_29',['FCCAnalysesVertexMC',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex_m_c.html',1,'FCCAnalyses::VertexingUtils']]],
   ['filter_5fpdgid_30',['filter_pdgid',['../struct_f_c_c_analyses_1_1_m_c_particle_1_1filter__pdg_i_d.html',1,'FCCAnalyses::MCParticle::filter_pdgID'],['../struct_f_c_c_analyses_1_1_m_c_particle_1_1filter__pdg_i_d.html#a5dca8e11912d134328d0dd57c7922d37',1,'FCCAnalyses::MCParticle::filter_pdgID::filter_pdgID()']]],
   ['filter_5fpv_31',['filter_pv',['../struct_f_c_c_analyses_1_1my_utils_1_1filter___p_v.html',1,'FCCAnalyses::myUtils::filter_PV'],['../struct_f_c_c_analyses_1_1my_utils_1_1filter___p_v.html#a76b0bcce72b96739cb592dbfc71ed7a8',1,'FCCAnalyses::myUtils::filter_PV::filter_PV()']]],
-  ['final_20selection_32',['Final selection',['../index.html#autotoc_md8',1,'']]],
-  ['final_5ftrack_5fphases_33',['final_track_phases',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a0a1f834b2ed3113138c4afb057d1edbc',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]],
-  ['findsvfromtracks_34',['findSVfromTracks',['../namespace_f_c_c_analyses_1_1_vertex_finder_l_c_f_i_plus.html#a7e2c566652e55b151a6a7304d1af3bba',1,'FCCAnalyses::VertexFinderLCFIPlus']]],
-  ['formating_35',['Code formating',['../index.html#autotoc_md12',1,'']]]
+  ['final_5ftrack_5fphases_32',['final_track_phases',['../struct_f_c_c_analyses_1_1_vertexing_utils_1_1_f_c_c_analyses_vertex.html#a0a1f834b2ed3113138c4afb057d1edbc',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]],
+  ['findsvfromtracks_33',['findSVfromTracks',['../namespace_f_c_c_analyses_1_1_vertex_finder_l_c_f_i_plus.html#a7e2c566652e55b151a6a7304d1af3bba',1,'FCCAnalyses::VertexFinderLCFIPlus']]],
+  ['formating_34',['Code formating',['../index.html#autotoc_md3',1,'']]]
 ];
