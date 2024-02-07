@@ -314,27 +314,29 @@ def run_rdf(rdf_module,
     '''
     Create RDataFrame and snapshot it.
     '''
-    df = ROOT.RDataFrame("events", input_list)
+    dframe = ROOT.RDataFrame("events", input_list)
 
     # limit number of events processed
     if args.nevents > 0:
-        df = df.Range(0, args.nevents)
+        dframe2 = dframe.Range(0, args.nevents)
+    else:
+        dframe2 = dframe
 
     try:
-        df2 = get_element(rdf_module.RDFanalysis, "analysers")(df)
+        dframe3 = get_element(rdf_module.RDFanalysis, "analysers")(dframe2)
 
         branch_list = ROOT.vector('string')()
         blist = get_element(rdf_module.RDFanalysis, "output")()
         for bname in blist:
             branch_list.push_back(bname)
 
-        evtcount = df2.Count()
+        evtcount = dframe3.Count()
 
         # Generate computational graph of the analysis
         if args.graph:
-            generate_graph(df2, args)
+            generate_graph(dframe, args)
 
-        df2.Snapshot("events", out_file, branch_list)
+        dframe3.Snapshot("events", out_file, branch_list)
     except Exception as excp:
         LOGGER.error('During the execution of the analysis file exception '
                      'occurred:\n%s', excp)
