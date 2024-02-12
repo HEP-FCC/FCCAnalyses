@@ -19,6 +19,10 @@ To have access to the FCC pre-generated samples, one needs to be subscribed to o
 
 Detailed documentation can be found at the [FCCAnalyses](https://hep-fcc.github.io/FCCAnalyses/) webpage.
 
+## Pre-generated Samples
+
+All sample information, including Key4hep stack used for the campaign, is collected at the [FCC Physics Events](http://fcc-physics-events.web.cern.ch/fcc-physics-events/) website.
+
 
 ## Contributing
 
