@@ -10,7 +10,7 @@ import urllib.request
 import yaml 
 import sys
 
-sys.path.append("/usatlas/u/atishelma/FCC/FCCAnalyses/")
+sys.path.append(" /usatlas/u/ivelisce/FCC_at_BNL/FCCAnalyses/")
 
 from examples.FCCee.weaver.config import collections
 from CustomDefinitions import CustomDefinitions
@@ -21,7 +21,7 @@ batch = 1 # use HTCondor
 EOSoutput = 0 # output to EOS
 JobName = "ZHadronic_4JetReco" # job named used for output directory
 njets = 4 # number of jets in exclusive reclustering
-outputDir   = f"/usatlas/atlas01/atlasdisk/users/atishelma/{JobName}/stage1/"
+outputDir   = f"/usatlas/atlas01/atlasdisk/users/ivelisce/{JobName}/stage1/"
 #exclusive = 1 # to be implemented: type of reclustering to e.g. inclusive vs. exclusive
 
 # originally was using the flag definitions below. Should follow the path of the `exclusive` flag to see what it actually means.
@@ -143,7 +143,7 @@ url_model = "{}/{}.onnx".format(url_model_dir, model_name)
 
 ## model files locally stored on /eos
 if(batch):
-    model_dir = "/usatlas/u/atishelma/FCC/FCCAnalyses/"
+    model_dir = "/usatlas/u/ivelisce/FCC_at_BNL/FCCAnalyses/"
 else: model_dir = "./"
 #model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_7classes_12_04_2023/"
 local_preproc = "{}/{}.json".format(model_dir, model_name)
@@ -188,6 +188,13 @@ def analysis_sequence(df):
         )
         .Define("event_nmu", "muons.size()")
         .Define("muons_p", "ReconstructedParticle::get_p(muons)[0]")
+        
+        #Get kinematics variables needed for selection later
+        .Define("P4_vis", "ReconstructedParticle::get_P4vis({})".format(collections["PFParticles"]))
+        .Define("vis_M", "P4_vis.M()")
+        .Define("vis_E", "P4_vis.E()")
+        .Define("P3_vis","TVector3(P4_vis.Px(), P4_vis.Py(), P4_vis.Pz())")
+        .Define("vis_theta", "P3_vis.Theta()")
 
         #EVENTWIDE VARIABLES: Access quantities that exist only once per event, such as the missing energy (despite the name, the MissingET collection contains the total missing energy)
         .Define("RecoMissingEnergy_e", "ReconstructedParticle::get_e(MissingET)")
@@ -261,6 +268,7 @@ def jet_sequence(df, njets):
 
     df = df.Define("jetconstituents", "FCCAnalyses::JetClusteringUtils::get_constituents(_jet)")
     df = df.Define("jets_truth", "FCCAnalyses::jetTruthFinder(jetconstituents, ReconstructedParticles, Particle)")
+    df = df.Define("jets_truthv2", "FCCAnalyses::jetTruthFinderV2(jet_p4, Particle)")
 
     return df
 
@@ -296,9 +304,21 @@ class RDFanalysis:
         branchList += ["jet_px_corr"]
         branchList += ["jet_py_corr"]
         branchList += ["jet_pz_corr"]
-
+        
+        # not corrected pt, e
+        branchList += ["recojet_e"]
+        branchList += ["recojet_px"]
+        branchList += ["recojet_py"]
+        branchList += ["recojet_pz"]
+        
         # truth info
         branchList += ["jets_truth"]
+        branchList += ["jets_truthv2"]
+        
+        # vis kinematics
+        branchList += ["vis_theta"]
+        branchList += ["vis_M"]
+        branchList += ["vis_E"]
 
         for x in range(1, 9):
             branchList.append("d_{}{}".format(x,x+1))
@@ -306,6 +326,8 @@ class RDFanalysis:
         # leptons
         branchList += ["event_nel"]
         branchList += ["event_nmu"]
+        branchList += ["muons_p"]
+        branchList += ["electrons_p"]
 
         # MET
         MET_vars = ["e", "p", "pt", "px", "pt", "pz", "eta", "theta", "phi"]
