@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708010141338,
+  "lastUpdate": 1708010142775,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -34938,6 +34938,60 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "abraham.tishelman.charny@cern.ch",
+            "name": "Abraham Tishelman-Charny",
+            "username": "atishelmanch"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b408bdc20de60cecb6d8fee2e6c3fe7ca680e5bc",
+          "message": "Protection in all_invariant_masses computation (#342)\n\n* Adding protection in all_invariant_masses computation\r\n\r\n* Adding description of analyzer",
+          "timestamp": "2024-02-15T16:06:21+01:00",
+          "tree_id": "be88e832d66568b6a03ddedebcb9da25a6a566c7",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/b408bdc20de60cecb6d8fee2e6c3fe7ca680e5bc"
+        },
+        "date": 1708010142331,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/weaver/analysis_inference.py",
+            "value": 2.922652900580248,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 10.336180735696917,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 9.080798592504623,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.74294614200895,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.94571091396379,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.205360086322329,
+            "unit": "Evt/s"
           }
         ]
       }
