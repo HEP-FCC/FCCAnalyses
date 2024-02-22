@@ -342,7 +342,7 @@ def run_rdf(rdf_module,
                      'occurred:\n%s', excp)
         sys.exit(3)
 
-    return evtcount
+    return evtcount.GetValue()
 
 
 # _____________________________________________________________________________
@@ -512,16 +512,8 @@ def run_local(rdf_module, infile_list, args):
     # Run RDF
     start_time = time.time()
     outn = run_rdf(rdf_module, file_list, outfile_path, args)
-    outn = outn.GetValue()
-
-    with ROOT.TFile(outfile_path, 'update') as outfile:
-        param = ROOT.TParameter(int)(
-                'eventsProcessed',
-                nevents_orig if nevents_orig != 0 else nevents_local)
-        param.Write()
-        outfile.Write()
-
     elapsed_time = time.time() - start_time
+
     info_msg = f"{' SUMMARY ':=^80}\n"
     info_msg += 'Elapsed time (H:M:S):    '
     info_msg += time.strftime('%H:%M:%S', time.gmtime(elapsed_time))
@@ -537,6 +529,14 @@ def run_local(rdf_module, infile_list, args):
     info_msg += 80 * '='
     info_msg += '\n'
     LOGGER.info(info_msg)
+
+    # Update resulting root file with number of processed events
+    with ROOT.TFile(outfile_path, 'update') as outfile:
+        param = ROOT.TParameter(int)(
+                'eventsProcessed',
+                nevents_orig if nevents_orig != 0 else nevents_local)
+        param.Write()
+        outfile.Write()
 
     if args.bench:
         analysis_name = get_element(rdf_module, 'analysisName')
