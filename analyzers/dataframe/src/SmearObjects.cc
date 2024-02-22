@@ -530,7 +530,7 @@ SmearedReconstructedParticle::operator()(
     edm4hep::ReconstructedParticleData reco_part = allRecoParticles[ipart];
     edm4hep::ReconstructedParticleData smeared_part = reco_part;
 
-    int reco_part_type = abs(reco_part.type);
+    int reco_part_type = abs(reco_part.PDG);
 
     // have to manually infer pid of ele/mu from mass because type not stored in
     // reco particles
@@ -611,7 +611,7 @@ SmearedReconstructedParticle::operator()(
         smeared_part.momentum.z = gen_p4.Pz();
 
         // set type
-        smeared_part.type = mc_part.PDG;
+        smeared_part.PDG = mc_part.PDG;
       }
 
       if (m_debug) {
@@ -625,7 +625,7 @@ SmearedReconstructedParticle::operator()(
                   << " " << reco_p4.P() << " " << reco_p4.Theta() << " "
                   << reco_p4.Phi() << " " << reco_p4.M() << std::endl;
         std::cout << "smeared part (PID, p, theta, phi, m): "
-                  << smeared_part.type << " " << smeared_p4.P() << " "
+                  << smeared_part.PDG << " " << smeared_p4.P() << " "
                   << smeared_p4.Theta() << " " << smeared_p4.Phi() << " "
                   << smeared_p4.M() << std::endl;
       }
