@@ -155,6 +155,14 @@ ROOT::VecOps::RVec<float> getCaloHit_z (const ROOT::VecOps::RVec<edm4hep::Calori
   return result;
 }
 
+ROOT::VecOps::RVec<float> getCaloHit_r (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in){
+    result.push_back(sqrt(p.position.x * p.position.x + p.position.y * p.position.y));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> getCaloHit_phi (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
@@ -342,6 +350,156 @@ getCaloCluster_energyInLayers (const ROOT::VecOps::RVec<edm4hep::ClusterData>& i
   return result;
 }
 
+// High level cluster variables
+// max cell energy in a given layer
+ROOT::VecOps::RVec<float> getCaloCluster_maxEnergyInLayer (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer) {
+  ROOT::VecOps::RVec<float> result;
+  static const int layer_idx = m_decoder->index("layer");
+  for (auto & c: in) {
+    float max_energy = -1;
+    for (auto i = c.hits_begin; i < c.hits_end; i++) {
+      int cell_layer = m_decoder->get(cells[i].cellID, layer_idx);
+      float cell_energy = cells[i].energy;
+      if(cell_layer == layer && cell_energy > max_energy){
+          max_energy = cell_energy;
+      }
+    }
+    result.push_back(max_energy);
+  }
+  return result;
+}
+
+// next to max cell energy in a given layer, separated from the cell with max energy by at least one cell
+ROOT::VecOps::RVec<float> getCaloCluster_secondMaxEnergyInLayer (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer) {
+  ROOT::VecOps::RVec<float> result;
+  static const int layer_idx = m_decoder->index("layer");
+  for (auto & c: in) {
+    float max_energy = -1;
+    int max_energy_cell_phi_bin = -1;
+    int max_energy_cell_eta_bin = -1;
+    int max_phi_index_for_modulo = 2; // should be improved but without hardcoding the max number of bins
+    int max_eta_index_for_modulo = 2; // should be improved but without hardcoding the max number of bins
+    for (auto i = c.hits_begin; i < c.hits_end; i++) {
+      int cell_layer = m_decoder->get(cells[i].cellID, layer_idx);
+      float cell_energy = cells[i].energy;
+      if(cell_layer == layer){
+        int cell_phi_bin = m_decoder->get(cells[i].cellID, "phi");
+        int cell_eta_bin = m_decoder->get(cells[i].cellID, "eta");
+        if(cell_phi_bin > max_phi_index_for_modulo){
+            max_phi_index_for_modulo = cell_phi_bin;
+        }
+        if(cell_eta_bin > max_eta_index_for_modulo){
+            max_eta_index_for_modulo = cell_eta_bin;
+        }
+        if (cell_energy > max_energy){
+          max_energy = cell_energy;
+          max_energy_cell_phi_bin = m_decoder->get(cells[i].cellID, "phi");
+          max_energy_cell_eta_bin = m_decoder->get(cells[i].cellID, "eta");
+        }
+      }
+    }
+    float next_to_max_energy = -1;
+    int next_to_max_energy_cell_phi_bin = -1;
+    int next_to_max_energy_cell_eta_bin = -1;
+    for (auto i = c.hits_begin; i < c.hits_end; i++) {
+      float cell_energy = cells[i].energy;
+      next_to_max_energy_cell_phi_bin = m_decoder->get(cells[i].cellID, "phi");
+      next_to_max_energy_cell_eta_bin = m_decoder->get(cells[i].cellID, "eta");
+      float dist_with_max_energy = sqrt(((max_energy_cell_phi_bin - next_to_max_energy_cell_phi_bin) % (max_phi_index_for_modulo - 1)) * ((max_energy_cell_phi_bin - next_to_max_energy_cell_phi_bin) % (max_phi_index_for_modulo - 1)) + ((max_energy_cell_eta_bin - next_to_max_energy_cell_eta_bin) % (max_eta_index_for_modulo - 1)) * ((max_energy_cell_eta_bin - next_to_max_energy_cell_eta_bin) % (max_eta_index_for_modulo - 1)));
+      if(cell_energy < max_energy && cell_energy > next_to_max_energy && dist_with_max_energy > 1.0){
+          next_to_max_energy = cells[i].energy;
+      }
+    }
+    result.push_back(max_energy);
+  }
+  return result;
+}
+
+// total energy in a layer divided by cluster energy (sensitive to the longitudinal shower development useful for e.g. high energy pi0/gamma separation where transverse shape become similar)
+ROOT::VecOps::RVec<float> getCaloCluster_energyInLayerOverClusterEnergy (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer) {
+  static const int layer_idx = m_decoder->index("layer");
+  ROOT::VecOps::RVec<float> result;
+  for (const auto & c: in) {
+    float cluster_energy = c.energy;
+    float energy_in_layer = 0;
+    for (auto i = c.hits_begin; i < c.hits_end; i++) {
+      int cell_layer = m_decoder->get(cells[i].cellID, layer_idx);
+      if(cell_layer == layer){
+          energy_in_layer += cells[i].energy;
+      }
+    }
+    result.push_back(energy_in_layer/cluster_energy);
+  }
+  return result;
+}
+
+// distance between the max and second max energy cells whithin a layer, given in units of cell size
+ROOT::VecOps::RVec<float> getCaloCluster_distBetweenMaximaInLayer (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer) {
+  static const int layer_idx = m_decoder->index("layer");
+  ROOT::VecOps::RVec<float> result;
+  for (const auto & c: in) {
+    float max_energy = 0;
+    float next_to_max_energy = 0;
+    int max_energy_cell_phi_bin = -1;
+    int max_energy_cell_eta_bin = -1;
+    int next_to_max_energy_cell_phi_bin = -1;
+    int next_to_max_energy_cell_eta_bin = -1;
+    int max_phi_index_for_modulo = 2; // should be improved but without hardcoding the max number of bins
+    int max_eta_index_for_modulo = 2; // should be improved but without hardcoding the max number of bins
+    for (auto i = c.hits_begin; i < c.hits_end; i++) {
+      int cell_layer = m_decoder->get(cells[i].cellID, layer_idx);
+      if(cell_layer == layer){
+          float cell_energy = cells[i].energy;
+          int cell_phi_bin = m_decoder->get(cells[i].cellID, "phi");
+          int cell_eta_bin = m_decoder->get(cells[i].cellID, "eta");
+          if(cell_energy > max_energy){
+              max_energy = cell_energy;
+              max_energy_cell_phi_bin = cell_phi_bin;
+              max_energy_cell_eta_bin = cell_eta_bin;
+          }
+          else if(cell_energy > next_to_max_energy){
+              next_to_max_energy = cell_energy;
+              next_to_max_energy_cell_phi_bin = cell_phi_bin;
+              next_to_max_energy_cell_eta_bin = cell_eta_bin;
+          }
+          if(cell_phi_bin > max_phi_index_for_modulo){
+              max_phi_index_for_modulo = cell_phi_bin;
+          }
+          if(cell_eta_bin > max_eta_index_for_modulo){
+              max_eta_index_for_modulo = cell_eta_bin;
+          }
+      }
+    }
+    float distance = 0;
+    if (next_to_max_energy_cell_phi_bin != -1){ // protect from clusters with one cell
+        distance = sqrt(((max_energy_cell_phi_bin - next_to_max_energy_cell_phi_bin) % (max_phi_index_for_modulo - 1))  * ((max_energy_cell_phi_bin - next_to_max_energy_cell_phi_bin) % (max_phi_index_for_modulo - 1)) + ((max_energy_cell_eta_bin - next_to_max_energy_cell_eta_bin) % (max_energy_cell_eta_bin -1)) * ((max_energy_cell_eta_bin - next_to_max_energy_cell_eta_bin) % (max_energy_cell_eta_bin -1)));
+    }
+    result.push_back(distance);
+  }
+  return result;
+}
+
+// Core energy
+//ROOT::VecOps::RVec<float> getCaloCluster_coreEnergyInLayer (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer) {
+//  static const int layer_idx = m_decoder->index("layer");
+//  ROOT::VecOps::RVec<float> result;
+//  for (const auto & c: in) {
+//    float max_energy = 0;
+//    size_t max_energy_cell_idx = -1;
+//    for (auto i = c.hits_begin; i < c.hits_end; i++) {
+//      int cell_layer = m_decoder->get(cells[i].cellID, layer_idx);
+//      if(cell_layer == layer){
+//          float cell_energy = cells[i].energy;
+//          if(cell_energy > max_energy){
+//              max_energy = cell_energy;
+//              max_energy_cell_idx = i;
+//          }
+//
+//}
+
+
+
+// SimSecondaries particles
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_x (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){

@@ -50,6 +50,7 @@ ROOT::VecOps::RVec<TVector3> getSimCaloHit_positionVector3 (const ROOT::VecOps::
 ROOT::VecOps::RVec<float> getCaloHit_x (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getCaloHit_y (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getCaloHit_z (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
+ROOT::VecOps::RVec<float> getCaloHit_r (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getCaloHit_phi (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<int> getCaloHit_phiBin (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getCaloHit_theta (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
@@ -71,6 +72,11 @@ ROOT::VecOps::RVec<TVector3> getCaloCluster_positionVector3 (const ROOT::VecOps:
 ROOT::VecOps::RVec<int> getCaloCluster_firstCell (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in);
 ROOT::VecOps::RVec<int> getCaloCluster_lastCell (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in);
 ROOT::VecOps::RVec<std::vector<float>> getCaloCluster_energyInLayers (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int nLayers=12);
+ROOT::VecOps::RVec<float> getCaloCluster_maxEnergyInLayer (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer = 2);
+ROOT::VecOps::RVec<float> getCaloCluster_secondMaxEnergyInLayer (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer = 2);
+ROOT::VecOps::RVec<float> getCaloCluster_energyInLayerOverClusterEnergy (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer = 2);
+ROOT::VecOps::RVec<float> getCaloCluster_distBetweenMaximaInLayer (const ROOT::VecOps::RVec<edm4hep::ClusterData>& in, const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& cells, const int layer = 2);
+
 
 // SimParticleSecondary
 ROOT::VecOps::RVec<float> getSimParticleSecondaries_x (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in);
