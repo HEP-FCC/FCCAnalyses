@@ -4,7 +4,6 @@
 #include "FCCAnalyses/ReconstructedParticle2MC.h"
 #include "edm4hep/MCParticleData.h"
 #include "edm4hep/Track.h"
-#include "edm4hep/TrackerHitData.h"
 #include "edm4hep/TrackData.h"
 #include "edm4hep/Cluster.h"
 #include "edm4hep/ClusterData.h"
@@ -754,7 +753,7 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_mtof(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
                                                       const rv::RVec<float> &track_L,
                                                       const rv::RVec<edm4hep::TrackData> &trackdata,
-                                                      const rv::RVec<edm4hep::TrackerHitData> &trackerhits,
+                                                      const rv::RVec<edm4hep::TrackerHit3DData> &trackerhits,
                                                       const rv::RVec<edm4hep::ClusterData> &gammadata,
                                                       const rv::RVec<edm4hep::ClusterData> &nhdata,
                                                       const rv::RVec<edm4hep::CalorimeterHitData> &calohits,

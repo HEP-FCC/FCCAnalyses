@@ -70,11 +70,11 @@ struct SmearedTracksTOF {
   TRandom m_random;
   float m_scale;
   SmearedTracksTOF(float m_scale, bool debug);
-  ROOT::VecOps::RVec<edm4hep::TrackerHitData>
+  ROOT::VecOps::RVec<edm4hep::TrackerHit3DData>
   operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
                  &allRecoParticles,
              const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata,
-             const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits,
+             const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits,
              const ROOT::VecOps::RVec<float> &length,
              const ROOT::VecOps::RVec<int> &RP2MC_indices,
              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);

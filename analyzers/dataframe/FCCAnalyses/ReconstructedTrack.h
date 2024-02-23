@@ -7,7 +7,15 @@
 #include "edm4hep/Quantity.h"
 #include "edm4hep/TrackData.h"
 #include "edm4hep/TrackState.h"
+
+#if __has_include("edm4hep/TrackerHit3DData.h")
+#include "edm4hep/TrackerHit3DData.h"
+#else
 #include "edm4hep/TrackerHitData.h"
+namespace edm4hep {
+  using TrackerHit3DData = edm4hep::TrackerHitData;
+}
+#endif
 
 namespace FCCAnalyses {
 
@@ -53,13 +61,13 @@ tracks_length(const ROOT::VecOps::RVec<edm4hep::TrackState> &some_tracks,
 ROOT::VecOps::RVec<float> tracks_TOF(
     const ROOT::VecOps::RVec<int> &track_indices,
     const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-    const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits);
+    const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits);
 
 ROOT::VecOps::RVec<float> tracks_TOF(
     const ROOT::VecOps::RVec<edm4hep::TrackState> &some_tracks,
     const ROOT::VecOps::RVec<edm4hep::TrackState> &FullTracks,
     const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-    const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits);
+    const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits);
 
 /// the dndx values
 ROOT::VecOps::RVec<float> tracks_dNdx(

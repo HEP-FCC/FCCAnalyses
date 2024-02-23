@@ -10,7 +10,14 @@
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/TrackData.h"
 #include "edm4hep/TrackState.h"
+#if __has_include("edm4hep/TrackerHit3DData.h")
+#include "edm4hep/TrackerHit3DData.h"
+#else
 #include "edm4hep/TrackerHitData.h"
+namespace edm4hep {
+  using TrackerHit3DData = edm4hep::TrackerHitData;
+}
+#endif
 #include <TVectorD.h>
 #include <TVector3.h>
 #include <TLorentzVector.h>
