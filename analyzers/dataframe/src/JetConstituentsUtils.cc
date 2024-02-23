@@ -770,7 +770,7 @@ namespace FCCAnalyses
         {
           if (ct.at(j).clusters_begin < nhdata.size() + gammadata.size())
           {
-            if (ct.at(j).type == 130)
+            if (ct.at(j).PDG == 130)
             {
               // this assumes that in converter photons are filled first and nh after
               float T = calohits.at(nhdata.at(ct.at(j).clusters_begin - gammadata.size()).hits_begin).time;
@@ -796,7 +796,7 @@ namespace FCCAnalyses
                 tmp.push_back((9.));
               }
             }
-            else if (ct.at(j).type == 22)
+            else if (ct.at(j).PDG == 22)
             {
               tmp.push_back((0.));
             }
@@ -1153,7 +1153,7 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
-          if (ct.at(j).type == 130)
+          if (ct.at(j).PDG == 130)
           {
             is_NeutralHad.push_back(1.);
           }
@@ -1174,7 +1174,7 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
-          if (ct.at(j).type == 22)
+          if (ct.at(j).PDG == 22)
           {
             is_NeutralHad.push_back(1.);
           }

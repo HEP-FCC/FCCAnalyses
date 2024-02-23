@@ -17,7 +17,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_type::operator()(
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
-    if (in[i].type == m_type) {
+    if (in[i].PDG == m_type) {
       result.emplace_back(in[i]);
     }
   }
@@ -37,7 +37,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_absType::operator()(
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   result.reserve(in.size());
   for (size_t i = 0; i < in.size(); ++i) {
-    if (std::abs(in[i].type) == m_type) {
+    if (std::abs(in[i].PDG) == m_type) {
       result.emplace_back(in[i]);
     }
   }
@@ -427,7 +427,7 @@ ROOT::VecOps::RVec<int>
 get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in) {
-    result.push_back(p.type);
+    result.push_back(p.PDG);
   }
   return result;
 }
