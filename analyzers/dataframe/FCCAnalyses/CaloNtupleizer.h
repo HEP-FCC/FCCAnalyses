@@ -53,6 +53,7 @@ ROOT::VecOps::RVec<float> getCaloHit_z (const ROOT::VecOps::RVec<edm4hep::Calori
 ROOT::VecOps::RVec<float> getCaloHit_phi (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<int> getCaloHit_phiBin (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getCaloHit_theta (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
+ROOT::VecOps::RVec<int> getCaloHit_thetaBin (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<float> getCaloHit_eta (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<int> getCaloHit_etaBin (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);
 ROOT::VecOps::RVec<int> getCaloHit_layer (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in);

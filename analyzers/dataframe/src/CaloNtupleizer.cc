@@ -174,6 +174,15 @@ ROOT::VecOps::RVec<int> getCaloHit_phiBin (const ROOT::VecOps::RVec<edm4hep::Cal
   return result;
 }
 
+ROOT::VecOps::RVec<int> getCaloHit_thetaBin (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in){
+    dd4hep::DDSegmentation::CellID cellId = p.cellID;
+    result.push_back(m_decoder->get(cellId, "theta"));
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<float> getCaloHit_theta (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in){
