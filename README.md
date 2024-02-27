@@ -19,6 +19,28 @@ To have access to the FCC pre-generated samples, one needs to be subscribed to o
 
 Detailed documentation can be found at the [FCCAnalyses](https://hep-fcc.github.io/FCCAnalyses/) webpage.
 
+
+### Running over pre-generated samples
+
+In order to run over pre-generated samples from `winter2023` or `spring2021` campaigns one needs to use release `v0.9.0` of FCCAnalyses:
+
+* Nightlies:
+   ```
+   source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh -r 2024-02-21
+   git clone --branch v0.9.0 git@github.com:HEP-FCC/FCCAnalyses.git
+   cd FCCAnalyses
+   source ./setup.sh
+   fccanalysis build -j 8
+   ```
+
+* Stable stack:
+   ```
+   git clone --branch v0.9.0 git@github.com:HEP-FCC/FCCAnalyses.git
+   cd FCCAnalyses
+   source ./setup.sh
+   fccanalysis build -j 8
+   ```
+
 ## Pre-generated Samples
 
 All sample information, including Key4hep stack used for the campaign, is collected at the [FCC Physics Events](http://fcc-physics-events.web.cern.ch/fcc-physics-events/) website.
