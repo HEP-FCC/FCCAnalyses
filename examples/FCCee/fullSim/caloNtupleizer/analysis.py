@@ -33,7 +33,7 @@ parser.add_argument("-genBranchName", default = "MCParticles", help="Name of the
 parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool)
 parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str, nargs = '+')
 parser.add_argument("-useGeometry", default = True, help="Whether or not to load the FCCSW geometry. Used to get the detector segmentation for e.g. the definition of the cell layer index.", type = str2bool)
-parser.add_argument("-geometryFile", default = os.environ['K4GEO'] + '/FCCee/ALLEGRO/compact/ALLEGRO_o1_v02/ALLEGRO_o1_v02.xml', help = "Path to the xml geometry file", type = str)
+parser.add_argument("-geometryFile", default=os.environ['K4GEO'] + '/FCCee/ALLEGRO/compact/ALLEGRO_o1_v02/ALLEGRO_o1_v02.xml', help="Path to the xml geometry file", type=str)
 parser.add_argument("-readoutName", default='ECalBarrelModuleThetaMerged', help="Name of the readout to use for the layer/phi/theta bin definition", type=str)
 parser.add_argument("-extractHighestEnergyClusterCells", default = False, help = "Use it if you need cells attached to the higest energy cluster, will use the first cluster collection in clusterBranchNames", type = str2bool)
 parser.add_argument("-isPi0", default = 0, help = "Weaver training needs a branch in the input tree with the target label: set it to 1 when running on pi0 files, 0 for photon files", type = int)
