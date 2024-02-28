@@ -34,7 +34,7 @@ parser.add_argument("-storeSimParticleSecondaries", default = False, help="Wheth
 parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str, nargs = '+')
 parser.add_argument("-useGeometry", default = True, help="Whether or not to load the FCCSW geometry. Used to get the detector segmentation for e.g. the definition of the cell layer index.", type = str2bool)
 parser.add_argument("-geometryFile", default = os.environ['K4GEO'] + '/FCCee/ALLEGRO/compact/ALLEGRO_o1_v02/ALLEGRO_o1_v02.xml', help = "Path to the xml geometry file", type = str)
-parser.add_argument("-readoutName", default = 'ECalBarrelModuleThetaMerged2',  help = "Name of the readout to use for the layer/phi/theta bin definition", type = str)
+parser.add_argument("-readoutName", default='ECalBarrelModuleThetaMerged', help="Name of the readout to use for the layer/phi/theta bin definition", type=str)
 parser.add_argument("-extractHighestEnergyClusterCells", default = False, help = "Use it if you need cells attached to the higest energy cluster, will use the first cluster collection in clusterBranchNames", type = str2bool)
 parser.add_argument("-isPi0", default = 0, help = "Weaver training needs a branch in the input tree with the target label: set it to 1 when running on pi0 files, 0 for photon files", type = int)
 parser.add_argument("-doWeaverInference", default = False, help = "Apply weaver inference on highest energy cluster cell variables, extractHighestEnergyClusterCells must be set to True", type = str2bool)
@@ -72,7 +72,8 @@ class analysis():
                 dict_outputBranchName_function["%s_eta"%cellBranchName] = "CaloNtupleizer::getCaloHit_eta(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_energy"%cellBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%cellBranchName
                 if args.useGeometry:
-                    dict_outputBranchName_function["%s_thetaBin"%cellBranchName] = "CaloNtupleizer::getCaloHit_thetaBin(%s)"%cellBranchName
+                    dict_outputBranchName_function["%s_moduleIdx"%cellBranchName] = "CaloNtupleizer::getCaloHit_moduleIdx(%s)"%cellBranchName
+                    dict_outputBranchName_function["%s_thetaIdx"%cellBranchName] = "CaloNtupleizer::getCaloHit_thetaIdx(%s)"%cellBranchName
                     dict_outputBranchName_function["%s_layer"%cellBranchName] = "CaloNtupleizer::getCaloHit_layer(%s)"%cellBranchName
 
         # clusters
@@ -99,7 +100,8 @@ class analysis():
                 dict_outputBranchName_function["%s_eta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_eta(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%clusterCellsBranchName
                 if args.useGeometry:
-                    dict_outputBranchName_function["%s_thetaBin"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_thetaBin(%s)"%clusterCellsBranchName
+                    dict_outputBranchName_function["%s_moduleIdx"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_moduleIdx(%s)"%clusterCellsBranchName
+                    dict_outputBranchName_function["%s_thetaIdx"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_thetaIdx(%s)"%clusterCellsBranchName
                     dict_outputBranchName_function["%s_layer"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_layer(%s)"%clusterCellsBranchName
 
         # SimParticleSecondaries
