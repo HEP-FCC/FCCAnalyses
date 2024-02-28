@@ -165,7 +165,8 @@ ROOT::VecOps::RVec<float> getCaloHit_phi (const ROOT::VecOps::RVec<edm4hep::Calo
   return result;
 }
 
-ROOT::VecOps::RVec<int> getCaloHit_phiIdx (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
+ROOT::VecOps::RVec<int>
+getCaloHit_phiIdx(const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> &in) {
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in){
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
@@ -174,18 +175,20 @@ ROOT::VecOps::RVec<int> getCaloHit_phiIdx (const ROOT::VecOps::RVec<edm4hep::Cal
   return result;
 }
 
-ROOT::VecOps::RVec<int> getCaloHit_moduleIdx (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
+ROOT::VecOps::RVec<int> getCaloHit_moduleIdx(
+    const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> &in) {
   ROOT::VecOps::RVec<int> result;
-  for (auto & p: in){
+  for (auto &p : in) {
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
     result.push_back(m_decoder->get(cellId, "module"));
   }
   return result;
 }
 
-ROOT::VecOps::RVec<int> getCaloHit_thetaIdx (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
+ROOT::VecOps::RVec<int>
+getCaloHit_thetaIdx(const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> &in) {
   ROOT::VecOps::RVec<int> result;
-  for (auto & p: in){
+  for (auto &p : in) {
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
     result.push_back(m_decoder->get(cellId, "theta"));
   }
@@ -212,7 +215,8 @@ ROOT::VecOps::RVec<float> getCaloHit_eta (const ROOT::VecOps::RVec<edm4hep::Calo
   return result;
 }
 
-ROOT::VecOps::RVec<int> getCaloHit_etaIdx (const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData>& in){
+ROOT::VecOps::RVec<int>
+getCaloHit_etaIdx(const ROOT::VecOps::RVec<edm4hep::CalorimeterHitData> &in) {
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in){
     dd4hep::DDSegmentation::CellID cellId = p.cellID;
