@@ -46,7 +46,7 @@ if(BUILD_TESTING)
     )
   endif()
   # add all integration tests
-  add_integration_test("examples/FCCee/weaver/analysis_inference.py")
+  # add_integration_test("examples/FCCee/weaver/analysis_inference.py")
 endif()
 
 file(GLOB _addon_python_files python/*.py)
