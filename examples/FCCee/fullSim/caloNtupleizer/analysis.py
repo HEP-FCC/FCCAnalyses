@@ -20,7 +20,11 @@ _fcc  = ROOT.dummyLoader
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-inputFiles", default = 'ALLEGRO_sim_digi_reco.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
+parser.add_argument("-inputFiles", type=str,
+                    default='ALLEGRO_sim_digi_reco.root',
+                    help="Input rootfiles (can be a single file or a regex)")
+parser.add_argument("-t", "--test", action="store_true", default=False,
+                    help="Run over pre-defined test file")
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
 parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = str2bool)
 parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"], help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
@@ -29,7 +33,8 @@ parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Nam
 parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = str2bool)
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
-parser.add_argument("-genBranchName", default = "MCParticles", help="Name of the gen particle branch in the input rootfile", type = str)
+parser.add_argument("-genBranchName", type=str, default="MCParticles",
+                    help="Name of the gen particle branch in the input rootfile")
 parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool)
 parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str, nargs = '+')
 parser.add_argument("-useGeometry", default = True, help="Whether or not to load the FCCSW geometry. Used to get the detector segmentation for e.g. the definition of the cell layer index.", type = str2bool)
@@ -191,8 +196,14 @@ class analysis():
 
         df2.Snapshot("events", self.outname, branchList)
 
+if args.test:
+    filelist = ["https://fccsw.web.cern.ch/fccsw/testsamples/fccanalyses/ALLEGRO_sim_digi_reco.root"]
+else:
+    filelist = glob.glob(args.inputFiles)
 
-filelist = glob.glob(args.inputFiles)
+if not filelist:
+    print('No input found! Aborting...')
+    sys.exit(3)
 
 fileListRoot = ROOT.vector('string')()
 print ("Input files:")
