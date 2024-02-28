@@ -20,7 +20,11 @@ _fcc  = ROOT.dummyLoader
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-inputFiles", default = '/eos/user/b/brfranco/rootfile_storage/220618_gamma_flat_1_100_noNoise/fccsw_output_pdgID_22_pMin_1000_pMax_100000_thetaMin_50_thetaMax_130.root', help = "Input rootfiles (can be a single file or a regex)", type = str)
+parser.add_argument("-inputFiles", type=str,
+                    default='ALLEGRO_sim_digi_reco.root',
+                    help="Input rootfiles (can be a single file or a regex)")
+parser.add_argument("-t", "--test", action="store_true", default=False,
+                    help="Run over pre-defined test file")
 parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
 parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = str2bool)
 parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"], help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
@@ -29,12 +33,13 @@ parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Nam
 parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = str2bool)
 parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
 parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
-parser.add_argument("-genBranchName", default = "genParticles", help="Name of the gen particle branch in the input rootfile", type = str)
+parser.add_argument("-genBranchName", type=str, default="MCParticles",
+                    help="Name of the gen particle branch in the input rootfile")
 parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool)
 parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str, nargs = '+')
 parser.add_argument("-useGeometry", default = True, help="Whether or not to load the FCCSW geometry. Used to get the detector segmentation for e.g. the definition of the cell layer index.", type = str2bool)
-parser.add_argument("-geometryFile", default = '/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/test_recipe_April2022/FCCDetectors/Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml', help = "Path to the xml geometry file", type = str)
-parser.add_argument("-readoutName", default = 'ECalBarrelPhiEta',  help = "Name of the readout to use for the layer/phi/theta bin definition", type = str)
+parser.add_argument("-geometryFile", default=os.environ['K4GEO'] + '/FCCee/ALLEGRO/compact/ALLEGRO_o1_v02/ALLEGRO_o1_v02.xml', help="Path to the xml geometry file", type=str)
+parser.add_argument("-readoutName", default='ECalBarrelModuleThetaMerged', help="Name of the readout to use for the layer/phi/theta bin definition", type=str)
 parser.add_argument("-extractHighestEnergyClusterCells", default = False, help = "Use it if you need cells attached to the higest energy cluster, will use the first cluster collection in clusterBranchNames", type = str2bool)
 parser.add_argument("-isPi0", default = 0, help = "Weaver training needs a branch in the input tree with the target label: set it to 1 when running on pi0 files, 0 for photon files", type = int)
 parser.add_argument("-doWeaverInference", default = False, help = "Apply weaver inference on highest energy cluster cell variables, extractHighestEnergyClusterCells must be set to True", type = str2bool)
@@ -72,9 +77,9 @@ class analysis():
                 dict_outputBranchName_function["%s_eta"%cellBranchName] = "CaloNtupleizer::getCaloHit_eta(%s)"%cellBranchName
                 dict_outputBranchName_function["%s_energy"%cellBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%cellBranchName
                 if args.useGeometry:
-                    dict_outputBranchName_function["%s_phiBin"%cellBranchName] = "CaloNtupleizer::getCaloHit_phiBin(%s)"%cellBranchName
+                    dict_outputBranchName_function["%s_moduleIdx"%cellBranchName] = "CaloNtupleizer::getCaloHit_moduleIdx(%s)"%cellBranchName
+                    dict_outputBranchName_function["%s_thetaIdx"%cellBranchName] = "CaloNtupleizer::getCaloHit_thetaIdx(%s)"%cellBranchName
                     dict_outputBranchName_function["%s_layer"%cellBranchName] = "CaloNtupleizer::getCaloHit_layer(%s)"%cellBranchName
-                    dict_outputBranchName_function["%s_etaBin"%cellBranchName] = "CaloNtupleizer::getCaloHit_etaBin(%s)"%cellBranchName
 
         # clusters
         if args.storeClusterBranches:
@@ -100,9 +105,9 @@ class analysis():
                 dict_outputBranchName_function["%s_eta"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_eta(%s)"%clusterCellsBranchName
                 dict_outputBranchName_function["%s_energy"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_energy(%s)"%clusterCellsBranchName
                 if args.useGeometry:
-                    dict_outputBranchName_function["%s_phiBin"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_phiBin(%s)"%clusterCellsBranchName
+                    dict_outputBranchName_function["%s_moduleIdx"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_moduleIdx(%s)"%clusterCellsBranchName
+                    dict_outputBranchName_function["%s_thetaIdx"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_thetaIdx(%s)"%clusterCellsBranchName
                     dict_outputBranchName_function["%s_layer"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_layer(%s)"%clusterCellsBranchName
-                    dict_outputBranchName_function["%s_etaBin"%clusterCellsBranchName] = "CaloNtupleizer::getCaloHit_etaBin(%s)"%clusterCellsBranchName
 
         # SimParticleSecondaries
         if args.storeSimParticleSecondaries:
@@ -191,8 +196,14 @@ class analysis():
 
         df2.Snapshot("events", self.outname, branchList)
 
+if args.test:
+    filelist = ["https://fccsw.web.cern.ch/fccsw/testsamples/fccanalyses/ALLEGRO_sim_digi_reco.root"]
+else:
+    filelist = glob.glob(args.inputFiles)
 
-filelist = glob.glob(args.inputFiles)
+if not filelist:
+    print('No input found! Aborting...')
+    sys.exit(3)
 
 fileListRoot = ROOT.vector('string')()
 print ("Input files:")
