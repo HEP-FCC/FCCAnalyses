@@ -1,0 +1,28 @@
+name: Key4hep build
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        build_type: ["release", "nightly"]
+        image: ["alma9", "ubuntu22", "centos7"]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: key4hep/key4hep-actions/key4hep-build@main
+      with:
+        build_type: ${{ matrix.build_type }}
+        image: ${{ matrix.image }}
+    - name: Test using local Setup.sh
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;\
+        source ${{ matrix.build_type }};\
+        source ./setup.sh;\
+        fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root'
