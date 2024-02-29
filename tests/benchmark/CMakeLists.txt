@@ -36,7 +36,6 @@ set(filter_tests "")
 
 add_executable(bench algorithms.cpp myutils.cpp)
 target_link_libraries(bench PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain)
-target_include_directories(bench PUBLIC ${VDT_INCLUDE_DIR})
 
 include(Catch)
 catch_discover_tests(bench
