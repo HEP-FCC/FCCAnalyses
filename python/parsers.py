@@ -51,6 +51,12 @@ def setup_build_parser(parser):
                             action='store_true',
                             default=False,
                             help='enable ACTS based analyzers')
+    build_args.add_argument(
+        '--no-source',
+        action='store_true',
+        default=False,
+        help='do not build EDM4hep RDataSource'
+    )
 
 
 def setup_test_parser(parser):

@@ -13,7 +13,7 @@ namespace FCCAnalyses :: Association {
    * \param pdg  Desired PDG ID of the partile.
    */
   struct sel_PDG {
-    sel_PDG(const int pdg);
+    explicit sel_PDG(const int pdg);
     const int m_pdg;
     template <typename T>
     T operator() (
@@ -30,7 +30,7 @@ namespace FCCAnalyses :: Association {
   struct sel_absPDG {
     const int m_pdg;
 
-    sel_absPDG(const int pdg) : m_pdg(pdg) {
+    explicit sel_absPDG(const int pdg) : m_pdg(pdg) {
       if (m_pdg < 0) {
         throw std::invalid_argument(
             "Association::sel_absPDG: Received negative value!");
@@ -61,7 +61,7 @@ namespace FCCAnalyses :: Association {
    * \param pdg  Desired generator status of the partile.
    */
   struct sel_genStatus {
-    sel_genStatus(const int status);
+    explicit sel_genStatus(const int status);
     const int m_status;
     template <typename T>
     T operator() (

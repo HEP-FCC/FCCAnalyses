@@ -316,7 +316,11 @@ def run_rdf(rdf_module,
     '''
     if args.use_data_source:
         LOGGER.info('Loading events through EDM4hep RDataSource...')
-        ROOT.gSystem.Load("libe4hsource")
+        if ROOT.gSystem.Load("libe4hsource") < 0:
+            LOGGER.error('Unable to load EDM4hep RDataSource library!\n'
+                         'Aborting...')
+            sys.exit(3)
+
         if ROOT.loadEDM4hepDataSource():
             LOGGER.debug('EDM4hep RDataSource loaded.')
         try:
@@ -337,7 +341,7 @@ def run_rdf(rdf_module,
                          'RDataSource!\n%s', excp)
             sys.exit(3)
     else:
-            dframe = ROOT.RDataFrame("events", input_list)
+        dframe = ROOT.RDataFrame("events", input_list)
 
     # limit number of events processed
     if args.nevents > 0:
@@ -794,7 +798,11 @@ def run_histmaker(args, rdf_module, anapath):
 
         if args.use_data_source:
             LOGGER.info('Loading events through EDM4hep RDataSource...')
-            ROOT.gSystem.Load("libe4hsource")
+            if ROOT.gSystem.Load("libe4hsource") < 0:
+                LOGGER.error('Unable to load EDM4hep RDataSource library!\n'
+                             'Aborting...')
+                sys.exit(3)
+
             if ROOT.loadEDM4hepDataSource():
                 LOGGER.debug('EDM4hep RDataSource loaded.')
             try:
