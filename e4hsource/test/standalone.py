@@ -6,10 +6,10 @@ import ROOT
 ROOT.gROOT.SetBatch(True)
 
 def main():
-    input_list = ['/eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/' \
-                  'IDEA/p8_ee_WW_ecm240/events_192112516.root']
+    input_list = ['https://fccsw.web.cern.ch/fccsw/testsamples/edm4hep1/'
+                  'p8_ee_WW_ecm240_edm4hep.root']
 
-    print ("----> Info: Loading analyzers from libFCCAnalyses... ",)
+    print("----> Info: Loading analyzers from libFCCAnalyses... ",)
     ROOT.gSystem.Load("libFCCAnalyses")
     _fcc = ROOT.dummyLoader
 
