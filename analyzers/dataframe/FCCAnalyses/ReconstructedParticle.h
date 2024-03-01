@@ -12,6 +12,7 @@
 
 // EDM4hep
 #include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/ReconstructedParticleCollection.h"
 #include "edm4hep/MCRecoParticleAssociationCollection.h"
 #include "edm4hep/ParticleIDData.h"
 

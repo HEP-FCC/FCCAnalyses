@@ -76,7 +76,7 @@ TEST_CASE("sel_absType", "[ReconstructedParticle]") {
   pVec.push_back(p4);
 #endif
   FCCAnalyses::ReconstructedParticle::sel_absType selAbsType{11};
-  auto res = selAbsType(pColl);
+  auto res = selAbsType(pVec);
   REQUIRE(res.size() == 2);
 #if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
   REQUIRE(res[0].PDG == 11);

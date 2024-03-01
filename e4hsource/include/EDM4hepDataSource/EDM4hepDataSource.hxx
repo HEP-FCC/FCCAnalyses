@@ -13,7 +13,7 @@
 
 // Podio
 #include <podio/Frame.h>
-#include <podio/ROOTFrameReader.h>
+#include <podio/ROOTReader.h>
 #include <podio/CollectionBase.h>
 
 bool loadEDM4hepDataSource();
@@ -76,7 +76,7 @@ namespace FCCAnalyses {
       /// Active collections
       std::vector<unsigned int> m_activeCollections;
       /// Root podio readers
-      std::vector<std::unique_ptr<podio::ROOTFrameReader>> m_podioReaders;
+      std::vector<std::unique_ptr<podio::ROOTReader>> m_podioReaders;
       /// Podio frames
       std::vector<std::unique_ptr<podio::Frame>> m_frames;
       /// Setup input

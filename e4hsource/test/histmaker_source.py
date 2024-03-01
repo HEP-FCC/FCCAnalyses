@@ -1,9 +1,9 @@
 # list of processes (mandatory)
 processList = {
-    'p8_ee_WW_ecm240': {'output': 'p8_ee_WW_ecm240_out',
-                        'testfile': '/eos/experiment/fcc/ee/generation/'
-                                    'DelphesEvents/winter2023/IDEA/'
-                                    'p8_ee_WW_ecm240/events_192112516.root'}
+    'p8_ee_WW_ecm240': {
+        'output': 'p8_ee_WW_ecm240_out',
+        'testfile': 'https://fccsw.web.cern.ch/fccsw/testsamples/edm4hep1/'
+                    'p8_ee_WW_ecm240_edm4hep.root'}
 }
 
 # Production tag when running over EDM4Hep centrally produced events, this

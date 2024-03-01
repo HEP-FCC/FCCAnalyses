@@ -11,8 +11,7 @@
 // ROOT
 #include <TFile.h>
 #include <podio/Frame.h>
-#include <podio/ROOTFrameReader.h>
-#include <podio/ROOTLegacyReader.h>
+#include <podio/ROOTReader.h>
 
 bool loadEDM4hepDataSource() {
   return true;
@@ -68,7 +67,7 @@ namespace FCCAnalyses {
     // Create probing frame
     podio::Frame frame;
     unsigned int nEventsInFiles = 0;
-    podio::ROOTFrameReader podioReader;
+    podio::ROOTReader podioReader;
     podioReader.openFiles(m_filePathList);
     nEventsInFiles = podioReader.getEntries("events");
     frame = podio::Frame(podioReader.readEntry("events", 0));
@@ -142,7 +141,7 @@ namespace FCCAnalyses {
 
     // Initialize podio readers
     for (size_t i = 0; i < m_nSlots; ++i) {
-      m_podioReaders.emplace_back(std::make_unique<podio::ROOTFrameReader>());
+      m_podioReaders.emplace_back(std::make_unique<podio::ROOTReader>());
     }
 
     for (size_t i = 0; i < m_nSlots; ++i) {
@@ -291,7 +290,7 @@ namespace FCCAnalyses {
    */
   Record_t
   EDM4hepDataSource::GetColumnReadersImpl(std::string_view columnName,
-                                      const std::type_info& typeInfo) {
+                                          const std::type_info& typeInfo) {
     /*
     std::cout << "EDM4hepDataSource: Getting column reader implementation for column:\n"
               << "               " << columnName
