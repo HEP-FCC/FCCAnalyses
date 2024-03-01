@@ -16,8 +16,8 @@ outputDir = "."
 # How to read input files
 useDataSource = True
 
-testFile = '/eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/' \
-           'IDEA/p8_ee_WW_ecm240/events_192112516.root'
+testFile = 'https://fccsw.web.cern.ch/fccsw/testsamples/fccanalyses/' \
+           'events_192112516.root'
 
 # RDFanalysis class where the use defines the operations on the TTree
 # (mandatory)

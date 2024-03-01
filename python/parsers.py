@@ -47,6 +47,12 @@ def setup_build_parser(parser):
         default=1,
         help='number of threads when building (equivalent to `make -j`)'
     )
+    build_args.add_argument(
+        '--no-source',
+        action='store_true',
+        default=False,
+        help='do not build EDM4hep RDataSource'
+    )
 
 
 def setup_test_parser(parser):
