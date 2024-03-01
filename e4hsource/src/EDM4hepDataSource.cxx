@@ -50,15 +50,15 @@ namespace FCCAnalyses {
 
     for (const auto& filePath : m_filePathList) {
       // Check if file exists
-      if (!std::filesystem::exists(filePath)) {
-        throw std::runtime_error("EDM4hepDataSource: Provided file \""
-                                 + filePath + "\" does not exist!");
-      }
+      // Warning: file can be coming from web or eos
+      // if (!std::filesystem::exists(filePath)) {
+      //   throw std::runtime_error("EDM4hepDataSource: Provided file \""
+      //                            + filePath + "\" does not exist!");
+      // }
 
       // Check if the provided file contains required metadata
-      TFile infile = TFile(filePath.data(), "READ");
-      auto metadata = infile.Get("podio_metadata");
-      infile.Close();
+      std::unique_ptr<TFile> inFile(TFile::Open(filePath.data(), "READ"));
+      auto metadata = inFile->Get("podio_metadata");
       if (!metadata) {
         throw std::runtime_error(
             "EDM4hepDataSource: Provided file is missing podio metadata!");

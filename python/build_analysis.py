@@ -61,9 +61,13 @@ def build_analysis(mainparser):
         LOGGER.info('Creating build directory...')
         os.makedirs(build_path)
 
-        run_subprocess(['cmake', '-DCMAKE_INSTALL_PREFIX=../install',
-                        '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '..'],
-                       local_dir + '/build')
+        build_cmd = ['cmake', '..', '-DCMAKE_INSTALL_PREFIX=../install',
+                     '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON']
+
+        if args.no_source:
+            build_cmd += ['-DWITH_SOURCE=OFF']
+
+        run_subprocess(build_cmd, local_dir + '/build')
 
     if not install_path.is_dir():
         LOGGER.info('Creating install directory...')

@@ -50,10 +50,11 @@ namespace FCCAnalyses {
 
     for (const auto& filePath : m_filePathList) {
       // Check if file exists
-      if (!std::filesystem::exists(filePath)) {
-        throw std::runtime_error("EDM4hepLegacySource: Provided file \"" + filePath
-                                 + "\" does not exist!");
-      }
+      // File can be comming from remote
+      // if (!std::filesystem::exists(filePath)) {
+      //   throw std::runtime_error("EDM4hepLegacySource: Provided file \"" + filePath
+      //                            + "\" does not exist!");
+      // }
 
       // Check if the provided file contains required metadata
       TFile infile = TFile(filePath.data(), "READ");
