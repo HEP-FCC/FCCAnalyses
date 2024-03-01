@@ -11,7 +11,6 @@ if(WITH_SOURCE)
   add_integration_test("e4hsource/test/histmaker_source.py")
   add_integration_test("e4hsource/test/stages_source.py")
   add_standalone_test("e4hsource/test/standalone.py")
-  # add_standalone_test("e4hsource/test/standalone_legacy.py")
 endif()
 
 add_standalone_test("examples/FCCee/fullSim/caloNtupleizer/analysis.py")
