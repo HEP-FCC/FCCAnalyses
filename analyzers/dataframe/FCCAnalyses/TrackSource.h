@@ -1,5 +1,9 @@
-#ifndef  FCCANALYSES_TRACK_ANALYZERS_H
-#define  FCCANALYSES_TRACK_ANALYZERS_H
+#ifndef  TRACK_SOURCE_ANALYZERS_H
+#define  TRACK_SOURCE_ANALYZERS_H
+
+// std
+#include <cstddef>
+
 
 // ROOT
 #include "ROOT/RVec.hxx"
@@ -19,7 +23,7 @@ namespace FCCAnalyses {
      *        PDG ID. Default value false --- charge conjugate not allowed.
      */
     struct selPDG {
-      selPDG(const int pdgID, const bool chargeConjugateAllowed = false);
+      explicit selPDG(const int pdgID, const bool chargeConjugateAllowed = false);
       const int m_pdg;
       const bool m_chargeConjugateAllowed;
       edm4hep::TrackCollection operator() (
@@ -42,4 +46,4 @@ namespace FCCAnalyses {
   }
 }
 
-#endif /* FCCANALYSES_TRACK_ANALYZERS_H */
+#endif /* TRACK_SOURCE_ANALYZERS_H */
