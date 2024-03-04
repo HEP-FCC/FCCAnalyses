@@ -1,4 +1,4 @@
-#include "FCCAnalyses/Association.h"
+#include "FCCAnalyses/AssociationSource.h"
 
 // std
 #include <cstdlib>

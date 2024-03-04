@@ -12,8 +12,6 @@
 
 // EDM4hep
 #include "edm4hep/ReconstructedParticleData.h"
-#include "edm4hep/ReconstructedParticleCollection.h"
-#include "edm4hep/MCRecoParticleAssociationCollection.h"
 #include "edm4hep/ParticleIDData.h"
 
 namespace FCCAnalyses{
@@ -103,59 +101,11 @@ namespace ReconstructedParticle{
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<bool> tags, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
-
-  /**
-   * \brief Analyzer to select reconstructed particles associated with a
-   *        specified PDG ID.
-   *
-   * \param pdgID  Desired PDG ID.
-   * \param chargeConjugateAllowed  Whether to allow also charge conjugate
-   *        PDG ID. Default value false --- charge conjugate not allowed.
-   */
-  struct selPDG {
-    selPDG(const int pdgID, const bool chargeConjugateAllowed = false);
-    const int m_pdg;
-    const bool m_chargeConjugateAllowed;
-    edm4hep::ReconstructedParticleCollection operator() (
-        const edm4hep::MCRecoParticleAssociationCollection& inAssocColl);
-  };
-
-
-  /**
-   * \brief Analyzer to select specified number of reconstructed particles
-   *
-   * \param size  Desired number of particles
-   */
-  struct selUpTo {
-    selUpTo(const size_t size);
-    const size_t m_size;
-    edm4hep::ReconstructedParticleCollection operator() (
-        const edm4hep::ReconstructedParticleCollection& inColl);
-  };
-
-
-  /**
-   * \brief Analyzer to select reconstructed particles by generator status
-   *
-   * \param status  Desired generator status of the particles
-   */
-  struct sel_genStatus {
-    sel_genStatus(const int status);
-    const int m_status;
-    edm4hep::ReconstructedParticleCollection operator() (
-        const edm4hep::MCRecoParticleAssociationCollection& inAssocColl);
-  };
-
-
   /// return reconstructed particles
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// return the transverse momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
-
-  /// return the transverse momenta of the input ReconstructedParticles
-  ROOT::VecOps::RVec<float>
-  getPt(const edm4hep::ReconstructedParticleCollection& inParticles);
 
   /// return the momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_p(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
@@ -202,7 +152,7 @@ namespace ReconstructedParticle{
   /// return the TlorentzVector of the one input ReconstructedParticle
   TLorentzVector get_tlv(edm4hep::ReconstructedParticleData in);
 
-	/// return visible 4-momentum vector
+  /// return visible 4-momentum vector
   TLorentzVector get_P4vis(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// concatenate both input vectors and return the resulting vector
@@ -219,11 +169,6 @@ namespace ReconstructedParticle{
 
   /// get number of b-jets
   int getJet_ntags(ROOT::VecOps::RVec<bool> in);
-
-  /// reorder input ReconstructedParticles by pT
-  edm4hep::ReconstructedParticleCollection
-  sortByPt(const edm4hep::ReconstructedParticleCollection& inParticles);
-
 }//end NS ReconstructedParticle
 
 }//end NS FCCAnalyses

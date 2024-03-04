@@ -14,6 +14,7 @@ import datetime
 import numpy as np
 
 import ROOT  # type: ignore
+import cppyy
 from anascript import get_element, get_element_dict
 from process import get_process_info, get_process_dict
 from frame import generate_graph
@@ -355,9 +356,9 @@ def run_rdf(rdf_module,
             generate_graph(dframe, args)
 
         dframe3.Snapshot("events", out_file, branch_list)
-    except Exception as excp:
+    except cppyy.gbl.std.runtime_error:
         LOGGER.error('During the execution of the analysis script an '
-                     'exception occurred:\n%s', excp)
+                     'exception occurred!\nAborting...')
         sys.exit(3)
 
     return evtcount_init.GetValue(), evtcount_final.GetValue()
@@ -822,7 +823,12 @@ def run_histmaker(args, rdf_module, anapath):
             dframe = ROOT.ROOT.RDataFrame("events", file_list_root)
         evtcount = dframe.Count()
 
-        res, hweight = graph_function(dframe, process_name)
+        try:
+            res, hweight = graph_function(dframe, process_name)
+        except cppyy.gbl.std.runtime_error:
+            LOGGER.error('During loading of the analysis an error occurred!'
+                         '\nAborting...')
+            sys.exit(3)
 
         results.append(res)
         hweights.append(hweight)

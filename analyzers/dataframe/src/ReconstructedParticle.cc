@@ -125,86 +125,6 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_charge::operator() (
 }
 
 
-selPDG::selPDG(const int pdg, const bool chargeConjugateAllowed) :
-    m_pdg(pdg), m_chargeConjugateAllowed(chargeConjugateAllowed) {};
-
-edm4hep::ReconstructedParticleCollection selPDG::operator() (
-    const edm4hep::MCRecoParticleAssociationCollection& inAssocColl) {
-  edm4hep::ReconstructedParticleCollection result;
-  result.setSubsetCollection();
-
-  rdfInfo << "Assoc coll size: " << inAssocColl.size();
-
-  for (const auto& assoc: inAssocColl) {
-    const auto& particle = assoc.getSim();
-    if (m_chargeConjugateAllowed) {
-      if (std::abs(particle.getPDG() ) == std::abs(m_pdg)) {
-        result.push_back(assoc.getRec());
-      }
-    }
-    else {
-      if (particle.getPDG() == m_pdg) {
-        result.push_back(assoc.getRec());
-      }
-    }
-  }
-
-  return result;
-}
-
-
-selUpTo::selUpTo(const size_t size) : m_size(size) {};
-
-edm4hep::ReconstructedParticleCollection selUpTo::operator() (
-    const edm4hep::ReconstructedParticleCollection& inColl) {
-  edm4hep::ReconstructedParticleCollection result;
-  result.setSubsetCollection();
-
-  for (const auto& particle: inColl) {
-    if (result.size() >= m_size) {
-      break;
-    }
-    result.push_back(particle);
-  }
-
-  return result;
-}
-
-sel_genStatus::sel_genStatus(int status) : m_status(status) {};
-
-edm4hep::ReconstructedParticleCollection sel_genStatus::operator() (
-    const edm4hep::MCRecoParticleAssociationCollection& inAssocColl) {
-  edm4hep::ReconstructedParticleCollection result;
-  result.setSubsetCollection();
-
-
-  // std::cout << "******************************************" << std::endl;
-  for (const auto& assoc: inAssocColl) {
-    const auto& mcParticle = assoc.getSim();
-    const auto& recoParticle = assoc.getRec();
-    // std::cout << "------------------------------------" << std::endl;
-    // std::cout << "gen status: " << mcParticle.getGeneratorStatus() << std::endl;
-    // std::cout << "energy: " << mcParticle.getEnergy() << std::endl;
-    // std::cout << "pdg: " << mcParticle.getPDG() << std::endl;
-    // std::cout << "" << std::endl;
-    // std::cout << "type: " << recoParticle.getType() << std::endl;
-    // std::cout << "energy: " << recoParticle.getEnergy() << std::endl;
-    // std::cout << "momentum, x: " << recoParticle.getMomentum().x << std::endl;
-    // std::cout << "momentum, y: " << recoParticle.getMomentum().y << std::endl;
-    // std::cout << "momentum, z: " << recoParticle.getMomentum().z << std::endl;
-    // std::cout << "position, x: " << recoParticle.getReferencePoint().x << std::endl;
-    // std::cout << "position, y: " << recoParticle.getReferencePoint().y << std::endl;
-    // std::cout << "position, z: " << recoParticle.getReferencePoint().z << std::endl;
-    // std::cout << "goodnessOfPID: " << recoParticle.getGoodnessOfPID() << std::endl;
-    if (mcParticle.getGeneratorStatus() == m_status) {
-      result.push_back(assoc.getRec());
-    }
-  }
-
-  return result;
-}
-
-
 resonanceBuilder::resonanceBuilder(float arg_resonance_mass) {m_resonance_mass = arg_resonance_mass;}
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> resonanceBuilder::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
@@ -331,19 +251,6 @@ ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedPartic
  for (size_t i = 0; i < in.size(); ++i) {
    result.push_back(sqrt(in[i].momentum.x * in[i].momentum.x + in[i].momentum.y * in[i].momentum.y));
  }
- return result;
-}
-
-
-ROOT::VecOps::RVec<float>
-getPt(const edm4hep::ReconstructedParticleCollection& inParticles) {
- ROOT::VecOps::RVec<float> result;
-
- for (const auto& particle: inParticles) {
-   result.push_back(std::sqrt(std::pow(particle.getMomentum().x, 2) +
-                              std::pow(particle.getMomentum().y, 2)));
- }
-
  return result;
 }
 
@@ -575,34 +482,6 @@ int getJet_ntags(ROOT::VecOps::RVec<bool> in) {
   for (size_t i = 0; i < in.size(); ++i)
     if (in.at(i))result+=1;
   return result;
-}
-
-
-edm4hep::ReconstructedParticleCollection
-sortByPt(const edm4hep::ReconstructedParticleCollection& inColl) {
-  edm4hep::ReconstructedParticleCollection outColl;
-  outColl.setSubsetCollection();
-
-  std::vector<edm4hep::ReconstructedParticle> rpVec;
-  for (const auto& particle: inColl) {
-    rpVec.emplace_back(particle);
-  }
-
-  auto pt = [] (const auto& particle) {
-    return std::sqrt(std::pow(particle.getMomentum().x, 2) +
-                     std::pow(particle.getMomentum().y, 2));
-  };
-
-  std::sort(rpVec.begin(), rpVec.end(),
-            [&pt](const auto& lhs, const auto& rhs) {
-              return pt(lhs) > pt(rhs);
-            });
-
-  for (const auto& particle: rpVec) {
-    outColl.push_back(particle);
-  }
-
-  return outColl;
 }
 
 }//end NS ReconstructedParticle

@@ -1,5 +1,5 @@
-#ifndef  ASSOCIATION_ANALYZERS_H
-#define  ASSOCIATION_ANALYZERS_H
+#ifndef  ASSOCIATION_SOURCE_ANALYZERS_H
+#define  ASSOCIATION_SOURCE_ANALYZERS_H
 
 // EDM4hep
 #include "edm4hep/MCRecoParticleAssociationCollection.h"
@@ -69,4 +69,4 @@ namespace FCCAnalyses :: Association {
   };
 } /* FCCAnalyses::Association */
 
-#endif /* ASSOCIATION_ANALYZERS_H */
+#endif /* ASSOCIATION_SOURCE_ANALYZERS_H */

@@ -32,6 +32,15 @@ if(NOT WITH_ACTS)
   list(FILTER sources EXCLUDE REGEX "VertexFinderActs.cc")
 endif()
 
+if(NOT WITH_SOURCE)
+  list(FILTER headers EXCLUDE REGEX "AssociationSource.h")
+  list(FILTER sources EXCLUDE REGEX "AssociationSource.cc")
+  list(FILTER headers EXCLUDE REGEX "ReconstructedParticleSource.h")
+  list(FILTER sources EXCLUDE REGEX "ReconstructedParticleSource.cc")
+  list(FILTER headers EXCLUDE REGEX "TrackSource.h")
+  list(FILTER sources EXCLUDE REGEX "TrackSource.cc")
+endif()
+
 message(STATUS "FCCAnalyses headers:\n   ${headers}")
 message(STATUS "FCCAnalyses sources:\n   ${sources}")
 
