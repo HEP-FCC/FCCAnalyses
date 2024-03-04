@@ -37,7 +37,7 @@ def build_graph(df, dataset):
 
     df = df.Define(
         "electron_truth",
-        "FCCAnalyses::ReconstructedParticle::selPDG(11)(MCRecoAssociations)")
+        "FCCAnalyses::ReconstructedParticle::selAbsPDG(11)(MCRecoAssociations)")
 
     df = df.Define(
         "electron_truth_pt",
