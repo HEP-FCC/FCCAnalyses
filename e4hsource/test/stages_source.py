@@ -31,18 +31,18 @@ class RDFanalysis():
             df
             .Define(
               "electron_truth",
-              "FCCAnalyses::ReconstructedParticle::selPDG(11)(MCRecoAssociations)")
+              "recoParticle::selPDG(11)(MCRecoAssociations)")
 
             .Define(
               "electron_truth_pt",
-              "FCCAnalyses::ReconstructedParticle::getPt(electron_truth)")
+              "recoParticle::getPt(electron_truth)")
         )
 
         return df2
 
     def output():
         branchList = [
-                "electron_truth",
+                # "electron_truth",
                 "electron_truth_pt"
         ]
 
