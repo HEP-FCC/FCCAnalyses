@@ -37,11 +37,11 @@ def build_graph(df, dataset):
 
     df = df.Define(
         "electron_truth",
-        "FCCAnalyses::ReconstructedParticle::selAbsPDG(11)(MCRecoAssociations)")
+        "recoParticle::selAbsPDG(11)(MCRecoAssociations)")
 
     df = df.Define(
         "electron_truth_pt",
-        "FCCAnalyses::ReconstructedParticle::getPt(electron_truth)")
+        "recoParticle::getPt(electron_truth)")
 
     results.append(df.Histo1D(("h_electron_truth_pt", "", *bins_pt),
                               "electron_truth_pt"))
