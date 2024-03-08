@@ -356,9 +356,9 @@ def run_rdf(rdf_module,
             generate_graph(dframe, args)
 
         dframe3.Snapshot("events", out_file, branch_list)
-    except cppyy.gbl.std.runtime_error:
-        LOGGER.error('During the execution of the analysis script an '
-                     'exception occurred!\nAborting...')
+    except cppyy.gbl.std.runtime_error as err:
+        LOGGER.error('%s\nDuring the execution of the analysis script an '
+                     'exception occurred!\nAborting...', err)
         sys.exit(3)
 
     return evtcount_init.GetValue(), evtcount_final.GetValue()

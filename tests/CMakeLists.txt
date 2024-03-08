@@ -10,6 +10,7 @@ add_integration_test("examples/FCCee/vertex_lcfiplus/analysis_V0.py")
 if(WITH_SOURCE)
   add_integration_test("e4hsource/test/histmaker_source.py")
   add_integration_test("e4hsource/test/stages_source.py")
+  add_integration_test("e4hsource/test/analysis_stage1.py")
   add_standalone_test("e4hsource/test/standalone.py")
 endif()
 

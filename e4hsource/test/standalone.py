@@ -25,11 +25,11 @@ def main():
 
     dframe2 = dframe.Define(
         "electron_truth",
-        "FCCAnalyses::ReconstructedParticle::selPDG(11)(MCRecoAssociations)")
+        "recoParticle::selPDG(11)(MCRecoAssociations)")
 
     dframe3 = dframe2.Define(
         "electron_truth_pt",
-        "FCCAnalyses::ReconstructedParticle::getPt(electron_truth)")
+        "recoParticle::getPt(electron_truth)")
 
     dframe4 = dframe3.Filter("electron_truth_pt.size() < 3")
 
