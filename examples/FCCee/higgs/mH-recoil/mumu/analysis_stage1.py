@@ -55,10 +55,9 @@ class Analysis():
         # self.run_batch = False
 
         # Optional: test file
-        # self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/hh/' \
-        #                  'tutorials/edm4hep_tutorial_data/' \
-        #                  'p8_ee_ZH_ecm240.root'
-        self.test_file = 'input/30k/p8_ee_ZH_ecm240_edm4hep.root'
+        self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/hh/' \
+                         'tutorials/edm4hep_tutorial_data/' \
+                         'p8_ee_ZH_ecm240.root'
 
     # Mandatory: analyzers function to define the analysis graph, please make
     # sure you return the dataframe, in this example it is dframe2

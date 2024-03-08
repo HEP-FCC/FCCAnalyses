@@ -51,9 +51,9 @@ useDataSource = True
 
 # Optional:
 # Test file location
-# testFile = 'https://fccsw.web.cern.ch/fccsw/testsamples/' \
-#            'edm4hep1/p8_ee_WW_ecm240_edm4hep.root'
-testFile = 'input/30k/p8_ee_ZH_ecm240_edm4hep.root'
+testFile = 'https://fccsw.web.cern.ch/fccsw/testsamples/' \
+           'edm4hep1/p8_ee_WW_ecm240_edm4hep.root'
+# testFile = 'input/30k/p8_ee_ZH_ecm240_edm4hep.root'
 
 
 # Mandatory:
