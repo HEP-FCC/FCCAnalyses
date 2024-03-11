@@ -90,16 +90,17 @@ Quick start</h1>
 </div><!-- fragment --><p>To have access to the FCC pre-generated samples, one needs to be subscribed to one of the following e-groups (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx = ee,hh,eh</code>.</p>
 <p>Detailed documentation can be found at the <a href="https://hep-fcc.github.io/FCCAnalyses/">FCCAnalyses</a> webpage.</p>
 <h2><a class="anchor" id="autotoc_md2"></a>
-Running over pre-generated samples</h2>
-<p>In order to run over pre-generated samples from <code>winter2023</code> or <code>spring2021</code> campaigns one needs to use release <code>v0.9.0</code> of <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a>:</p>
+Winter 2023 and Spring 2021 pre-generated samples</h2>
+<p>In order to run over pre-generated samples from <code>winter2023</code> or <code>spring2021</code> campaigns one needs to use release <code>v0.9.0</code> of <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> in a specific release:</p>
 <ul>
-<li>Nightlies: <div class="fragment"><div class="line">source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh -r 2024-02-21</div>
+<li>Stable stack: <div class="fragment"><div class="line">source /cvmfs/sw.hsf.org/key4hep/setup.sh -r 2024-03-10</div>
 <div class="line">git clone --branch v0.9.0 git@github.com:HEP-FCC/FCCAnalyses.git</div>
 <div class="line">cd FCCAnalyses</div>
 <div class="line">source ./setup.sh</div>
 <div class="line">fccanalysis build -j 8</div>
 </div><!-- fragment --></li>
-<li>Stable stack: <div class="fragment"><div class="line">git clone --branch v0.9.0 git@github.com:HEP-FCC/FCCAnalyses.git</div>
+<li>Nightlies: <div class="fragment"><div class="line">source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh -r 2024-02-21</div>
+<div class="line">git clone --branch v0.9.0 git@github.com:HEP-FCC/FCCAnalyses.git</div>
 <div class="line">cd FCCAnalyses</div>
 <div class="line">source ./setup.sh</div>
 <div class="line">fccanalysis build -j 8</div>
@@ -120,7 +121,7 @@ Code formating</h2>
 <!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 28 2024 16:15:11 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 11 2024 17:57:22 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.9.8
 </small></address>
