@@ -31,6 +31,9 @@ option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, o
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
+set(WITH_SOURCE ON CACHE STRING "Enable EDM4hep RDataSource")
+set_property(CACHE WITH_SOURCE PROPERTY STRINGS ON OFF)
+
 #--- Set a better default for installation directory---------------------------
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}/install" CACHE PATH "default install path" FORCE)
@@ -146,6 +149,10 @@ install(FILES ${_man_files_7} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man7
 install(DIRECTORY examples DESTINATION ${CMAKE_INSTALL_PREFIX}/share/examples)
 
 #--- Descend into subdirectories ----------------------------------------------
+
+if(WITH_SOURCE)
+  add_subdirectory(e4hsource)
+endif()
 
 set(ADDONS_LIBRARIES CACHE STRING "List of external libraries the RDF utilities will be linked against")
 add_subdirectory(addons)

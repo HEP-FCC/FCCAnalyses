@@ -47,6 +47,12 @@ def setup_build_parser(parser):
         default=1,
         help='number of threads when building (equivalent to `make -j`)'
     )
+    build_args.add_argument(
+        '--no-source',
+        action='store_true',
+        default=False,
+        help='do not build EDM4hep RDataSource'
+    )
 
 
 def setup_test_parser(parser):
@@ -119,6 +125,9 @@ def setup_run_parser(parser):
     parser.add_argument('--graph-path', type=str, default='',
                         help='analysis graph save path, should end with '
                         '\'.dot\' or \'.png\'')
+    parser.add_argument(
+        '--use-data-source', action='store_true', default=False,
+        help='use EDM4hep RDataSource to construct dataframe')
 
     # Internal argument, not to be used by the users
     parser.add_argument('--batch', action='store_true', default=False,
