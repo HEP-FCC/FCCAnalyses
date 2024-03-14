@@ -294,10 +294,10 @@ merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in){
   std::cout<<"============================"<<std::endl;
   for (size_t i = 0; i < in.size()-1; ++i){
     edm4hep::VertexData vi = in.at(i).vertex;
-    std::array<float,6> vi_covMatrix = vi.covMatrix;
+    const auto& vi_covMatrix = vi.covMatrix;
     for (size_t j = i+1; j < in.size(); ++j){
       edm4hep::VertexData vj = in.at(j).vertex;
-      std::array<float,6> vj_covMatrix = vj.covMatrix;
+      const auto& vj_covMatrix = vj.covMatrix;
       float dist = get_distanceVertex(vi,vj,-1);
       float err1 = sqrt(vi_covMatrix[0]+vj_covMatrix[0]+vi_covMatrix[2]+vj_covMatrix[2]+vi_covMatrix[5]+vj_covMatrix[5]);
       float err2 = get_distanceErrorVertex(vi,vj,-1);
@@ -605,8 +605,8 @@ float get_distanceVertex(edm4hep::VertexData v1, edm4hep::VertexData v2, int com
 
 float get_distanceErrorVertex(edm4hep::VertexData v1, edm4hep::VertexData v2, int comp){
 
-  std::array<float,6> v1_covMatrix = v1.covMatrix;
-  std::array<float,6> v2_covMatrix = v2.covMatrix;
+  const auto& v1_covMatrix = v1.covMatrix;
+  const auto& v2_covMatrix = v2.covMatrix;
 
   //when error on x, y, z only
   if      (comp==0) return sqrt(v1_covMatrix[0]+v2_covMatrix[0]);

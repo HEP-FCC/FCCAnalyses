@@ -151,6 +151,14 @@ TVectorD Delphes2Edm4hep_TrackParam(const TVectorD &param, bool Units_mm) {
   return result;
 }
 
+#if __has_include("edm4hep/CovMatrix6f.h")
+TMatrixDSym
+Edm4hep2Delphes_TrackCovMatrix(const edm4hep::CovMatrix6f &covMatrix,
+                               bool Units_mm) {
+  return Edm4hep2Delphes_TrackCovMatrix(covMatrix.values, Units_mm);
+}
+#endif
+
 TMatrixDSym
 Edm4hep2Delphes_TrackCovMatrix(const std::array<float, 21> &covMatrix,
                                bool Units_mm) {
@@ -270,12 +278,10 @@ TVectorD get_trackParam(edm4hep::TrackState &atrack, bool Units_mm) {
   return res;
 }
 
-TMatrixDSym get_trackCov(edm4hep::TrackState &atrack, bool Units_mm) {
-  auto covMatrix = atrack.covMatrix;
+TMatrixDSym get_trackCov(const edm4hep::TrackState &atrack, bool Units_mm) {
+  const auto &covMatrix = atrack.covMatrix;
 
-  TMatrixDSym covM = Edm4hep2Delphes_TrackCovMatrix(covMatrix, Units_mm);
-
-  return covM;
+  return Edm4hep2Delphes_TrackCovMatrix(covMatrix, Units_mm);
 }
 
 // ----------------------------------------------------------------------------------------
