@@ -1,0 +1,99 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Quick Start | FCCAnalyses</title>
+    <meta name="description" content="Common analysis framework for the Future Circular Collider">
+    <meta name="author" content="CERN">
+
+    <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
+
+    <meta property="og:site_name"   content="Quick Start | FCCAnalyses" />
+    <meta property="og:title"       content="Quick Start | FCCAnalyses" />
+    <meta property="og:description" content="Quick Start with the FCCAnalyses Framework" />
+    <meta property="og:image"       content="/FCCAnalyses/img/FCC-Circle_Main_RGB_Black.png" />
+    <meta property="og:url"         content="https://hep-fcc.github.io/FCCAnalyses/examples/" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:locale"      content="en_US" />
+
+    <link rel="stylesheet" href="/FCCAnalyses/css/style.css">
+  </head>
+
+  <body>
+    <header>
+      <div class="brand">
+        <img alt="FCC Logo"
+             src="/FCCAnalyses/img/FCC-Circle_Main_RGB_Black.png">
+        <a href="/FCCAnalyses">FCCAnalyses</a>
+        <p><em>Common analysis framework for the Future Circular Collider</em></p>
+      </div>
+      <ul class="navbar">
+        <li><a href="/FCCAnalyses">Introduction</a></li>
+        <li><a href="/FCCAnalyses/examples">Examples</a></li>
+        <li><a href="https://hep-fcc.github.io/fcc-tutorials/">Tutorials</a></li>
+        <li class="dropdown">
+          <a class="active" href="#" class="dropbtn">Documentation</a>
+          <div class="dropdown-content">
+            <a class="active" href="/FCCAnalyses/quick-start">Quick Start</a>
+            <a href="/FCCAnalyses/man">Manual Pages</a>
+            <a href="/FCCAnalyses/doc/latest">Reference</a>
+          </div>
+        </li>
+        <li><a href="/FCCAnalyses/dev/bench">Benchmarks</a></li>
+        <li><a href="https://github.com/HEP-FCC/FCCAnalyses">Repository</a></li>
+      </ul>
+      <p>&#x2190; <a class="back" href="/FCCAnalyses">back</a></p>
+    </header>
+
+    <article>
+      <h1>Quick Start</h1>
+
+      <h3>Running analysis</h3>
+      <p>
+        Running analysis script can be done using <code>fccanalysis</code>
+        command which is shipped in Key4hep stack:
+      </p>
+      <pre><code>source /cvmfs/sw.hsf.org/key4hep/setup.sh
+fccanalysis run analysis_script.py</code></pre>
+
+      <p>
+      To have access to the FCC pre-generated samples, one needs to be
+      subscribed to one of the following e-groups (with owner approval)
+      <code>fcc-eos-read-xx</code> with <code>xx = ee,hh,eh</code>.
+      </p>
+
+      <h4>Demo</h4>
+      <script async
+              data-rows=14
+              id="asciicast-L8YePtAMCWSCZV8ueDTZWhpDN"
+              src="https://asciinema.org/a/L8YePtAMCWSCZV8ueDTZWhpDN.js"></script>
+
+      <h3>Compiling framework</h3>
+      <p>
+        When compiling whole framework first fork it on GitHub and after that
+        use:
+      </p>
+      <pre><code>git clone git@github.com:&lt;your_github_handle&gt;/FCCAnalyses.git
+cd FCCAnalyses
+git remote add upstream git@github.com:HEP-FCC/FCCAnalyses.git
+git fetch upstream
+source setup.sh
+fccanalysis build -j 16
+fccanalysis run analysis_script.py</code></pre>
+
+      <h4>Demo</h4>
+      <script async
+              data-rows=14
+              id="asciicast-KN170yd8EcsxrgqJU1c4AA9X6"
+              src="https://asciinema.org/a/KN170yd8EcsxrgqJU1c4AA9X6.js"></script>
+    </article>
+
+    <footer>
+      <p>
+        &copy; Copyright 2024, CERN.
+      </p>
+    </footer>
+  </body>
+</html>
