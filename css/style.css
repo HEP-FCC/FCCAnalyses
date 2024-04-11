@@ -29,48 +29,115 @@ body {
   color: black;
 }
 
-header {
+
+/*
+ * Header
+ */
+.brand {
   text-align: center;
 }
 
-header .brand {
+.brand a {
+  color: black;
+  text-decoration: none;
   font-size: 2em;
   font-weight: bold;
-}
-
-header img {
+  padding-left: 25px;
   vertical-align: middle;
 }
 
-header a {
+.brand img {
+  height: 70px;
+  vertical-align: middle;
+}
+
+ul.navbar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #f0f0f5;
+  border-radius: 10px
+}
+
+.navbar li {
+  float: left;
+}
+
+.navbar li a, .dropbtn {
+  display: inline-block;
   color: black;
+  text-align: center;
+  padding: 14px 16px;
   text-decoration: none;
 }
 
-header div a {
-  padding: 25px;
+.navbar li a:hover, .dropdown:hover .dropbtn {
+  background-color: #0593a2;
+  color: white;
+  border-radius: 10px;
 }
 
-header a.active {
+.navbar li.dropdown {
+  display: block;
+}
+
+.navbar li.dropdown .dropdown-content {
+  display: none;
+  position: absolute;
+  /* background-color: #f9f9f9; */
+  background-color: #f0f0f5;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.navbar li.dropdown .dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  border-radius: 10px;
+}
+
+.navbar li.dropdown .dropdown-content a:hover {
+  background-color: #06b3c6;
+  color: white !important;
+}
+
+.navbar li.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.navbar a.active, .navbar li.dropdown .dropdown-content a.active {
   color: #ff7a48;
 }
 
-header a:hover {
-  color: #0593a2;
-}
-
-
-a {
+header a.back {
   color: #0593a2;
   text-decoration: none;
 }
 
-code {
+
+/*
+ * Article
+ */
+article a {
+  color: #0593a2;
+  text-decoration: none;
+}
+
+article code {
   font-family: 'Space Mono', monospace;
   font-size: inherit;
 }
 
-/* Code in text */
+
+/*
+ * Code
+ */
 p > code,
 li > code,
 dd > code,
@@ -96,8 +163,13 @@ pre code {
   border-radius: .2rem;
 }
 
+
+/*
+ * Footer
+ */
 footer {
   text-align: center;
   color: #a1a1a1;
   font-size: 8pt;
 }
+
