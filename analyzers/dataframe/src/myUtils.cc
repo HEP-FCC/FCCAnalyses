@@ -1,9 +1,14 @@
+#include "FCCAnalyses/myUtils.h"
 
+// std
 #include <iostream>
 #include <cstdlib>
 #include <vector>
 
-#include "FCCAnalyses/myUtils.h"
+// EDM4hep
+#include "edm4hep/EDM4hepVersion.h"
+
+// FCCAnalyses
 #include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/ReconstructedParticle.h"
 #include "FCCAnalyses/MCParticle.h"
@@ -968,8 +973,13 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> build_Bu2D0Pi(ROOT::VecOps::RVec<edm4he
     //std::cout << "index sise "<< d0index.size() << " ind 0 " << d0index.at(0)<< " ind 1 " << d0index.at(1)  <<std::endl;
     //std::cout << " recop.at(index.at(0)) "<<recop.at(d0index.at(0)).type<< " recop.at(index.at(1)) "<<recop.at(d0index.at(1)).type<< std::endl;
 
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
     if (recop.at(d0index.at(0)).PDG==321)kaoncharge=recop.at(d0index.at(0)).charge;
     else if (recop.at(d0index.at(1)).PDG==321)kaoncharge=recop.at(d0index.at(1)).charge;
+#else
+    if (recop.at(d0index.at(0)).type==321)kaoncharge=recop.at(d0index.at(0)).charge;
+    else if (recop.at(d0index.at(1)).type==321)kaoncharge=recop.at(d0index.at(1)).charge;
+#endif
     else std::cout <<"huston there iis a problem no kaon found build_Bu2D0Pi" <<std::endl;
     for (size_t j = 0; j < pions.size(); ++j) {
       if (get_p(recop.at(pions.at(j)))<1.)continue;
@@ -1086,7 +1096,11 @@ ROOT::VecOps::RVec<int> getFCCAnalysesComposite_type(ROOT::VecOps::RVec<FCCAnaly
   for (auto & p: in) {
 
     int recoind = vertex.at(p.vertex).reco_ind.at(index);
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
     result.push_back(recop.at(recoind).PDG);
+#else
+    result.push_back(recop.at(recoind).type);
+#endif
   }
   return result;
 }
@@ -1486,7 +1500,11 @@ ROOT::VecOps::RVec<int>
 sel_PID::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
   ROOT::VecOps::RVec<int> result;
   for (size_t i = 0; i < recop.size(); ++i) {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
     if (recop.at(i).PDG==m_PDG)
+#else
+    if (recop.at(i).type==m_PDG)
+#endif
       result.push_back(i);
   }
   return result;
@@ -1503,7 +1521,11 @@ PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 
     //id a pion
     if (fabs(mc.at(mcind.at(i)).PDG)==211){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       recop.at(recind.at(i)).PDG = 211;
+#else
+      recop.at(recind.at(i)).type = 211;
+#endif
       recop.at(recind.at(i)).mass = 0.13957039;
       recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) +
 					   pow(recop.at(recind.at(i)).momentum.y,2) +
@@ -1512,7 +1534,11 @@ PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
     }
     //id a kaon
     else if (fabs(mc.at(mcind.at(i)).PDG)==321){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       recop.at(recind.at(i)).PDG = 321;
+#else
+      recop.at(recind.at(i)).type = 321;
+#endif
       recop.at(recind.at(i)).mass = 0.493677;
       recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) +
 					   pow(recop.at(recind.at(i)).momentum.y,2) +
@@ -1521,7 +1547,11 @@ PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
     }
     //id a proton
     else if (fabs(mc.at(mcind.at(i)).PDG)==2212){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       recop.at(recind.at(i)).PDG = 2212;
+#else
+      recop.at(recind.at(i)).type = 2212;
+#endif
       recop.at(recind.at(i)).mass = 0.938272081;
       recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) +
 					   pow(recop.at(recind.at(i)).momentum.y,2) +
@@ -1530,7 +1560,11 @@ PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
     }
     //id an electron
     else if (fabs(mc.at(mcind.at(i)).PDG)==11){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       recop.at(recind.at(i)).PDG = 11;
+#else
+      recop.at(recind.at(i)).type = 11;
+#endif
       recop.at(recind.at(i)).mass = 0.0005109989461;
       recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) +
 					   pow(recop.at(recind.at(i)).momentum.y,2) +
@@ -1539,7 +1573,11 @@ PID(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
     }
     //id an muon
     else if (fabs(mc.at(mcind.at(i)).PDG)==13){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       recop.at(recind.at(i)).PDG = 13;
+#else
+      recop.at(recind.at(i)).type = 13;
+#endif
       recop.at(recind.at(i)).mass = 0.1056583745;
       recop.at(recind.at(i)).energy = sqrt(pow(recop.at(recind.at(i)).momentum.x,2) +
 					   pow(recop.at(recind.at(i)).momentum.y,2) +
@@ -1613,7 +1651,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_tau23pi(ROOT::VecOps::RVec<Verte
     bool is3pi=true;
     int charge=0;
     for (auto &r:p.reco_ind){
-      if (recop.at(r).PDG!=211)is3pi=false;
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+      if (recop.at(r).PDG != 211)is3pi=false;
+#else
+      if (recop.at(r).type != 211)is3pi=false;
+#endif
       charge+=recop.at(r).charge;
     }
     if (is3pi==false){counter+=1; continue;}
@@ -1647,7 +1689,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstee(ROOT::VecOps::RVec<Verte
     int charge_ee=0;
     int nobj_ee=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==11){
+#else
+      if (recop.at(r).type==11){
+#endif
 	nobj_ee+=1;
 	charge_ee+=recop.at(r).charge;
       }
@@ -1656,7 +1702,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstee(ROOT::VecOps::RVec<Verte
     int charge_k=0;
     int nobj_k=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==321 ){
+#else
+      if (recop.at(r).type==321 ){
+#endif
 	nobj_k+=1;
 	charge_k+=recop.at(r).charge;
       }
@@ -1666,7 +1716,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstee(ROOT::VecOps::RVec<Verte
     int charge_pi=0;
     int nobj_pi=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==211){
+#else
+      if (recop.at(r).type==211){
+#endif
 	nobj_pi+=1;
 	charge_pi+=recop.at(r).charge;
       }
@@ -1706,7 +1760,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstmumu(ROOT::VecOps::RVec<Ver
     int charge_mumu=0;
     int nobj_mumu=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==13){
+#else
+      if (recop.at(r).type==13){
+#endif
 	nobj_mumu+=1;
 	charge_mumu+=recop.at(r).charge;
       }
@@ -1716,7 +1774,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstmumu(ROOT::VecOps::RVec<Ver
     int charge_k=0;
     int nobj_k=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==321 ){
+#else
+      if (recop.at(r).type==321 ){
+#endif
 	nobj_k+=1;
 	charge_k+=recop.at(r).charge;
       }
@@ -1726,7 +1788,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstmumu(ROOT::VecOps::RVec<Ver
     int charge_pi=0;
     int nobj_pi=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==211){
+#else
+      if (recop.at(r).type==211){
+#endif
 	nobj_pi+=1;
 	charge_pi+=recop.at(r).charge;
       }
@@ -1766,7 +1832,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2KstNuNu(ROOT::VecOps::RVec<Ve
     int charge_k=0;
     int nobj_k=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==321 ){
+#else
+      if (recop.at(r).type==321 ){
+#endif
 	nobj_k+=1;
 	charge_k+=recop.at(r).charge;
       }
@@ -1776,7 +1846,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2KstNuNu(ROOT::VecOps::RVec<Ve
     int charge_pi=0;
     int nobj_pi=0;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==211){
+#else
+      if (recop.at(r).type==321 ){
+#endif
 	nobj_pi+=1;
 	charge_pi+=recop.at(r).charge;
       }
@@ -1812,7 +1886,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bs2PhiNuNu(ROOT::VecOps::RVec<Ve
     int charge_phi=0;
     int nobj_phi=0;
     for (auto &r:vertex.at(i).reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==321 ){
+#else
+      if (recop.at(r).type==321 ){
+#endif
 	nobj_phi+=1;
 	charge_phi+=recop.at(r).charge;
       }
@@ -1849,7 +1927,11 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2MuMu(ROOT::VecOps::RVec<Verte
     int charge_Bd=0;
     int nobj_Bd=0;
     for (auto &r:vertex.at(i).reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG==13 ){
+#else
+      if (recop.at(r).type==13 ){
+#endif
 	nobj_Bd+=1;
 	charge_Bd+=recop.at(r).charge;
       }
@@ -1889,7 +1971,11 @@ build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
     int charge=0;
     float angle = -9999999.;
     for (auto &r:p.reco_ind){
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
       if (recop.at(r).PDG!=211)is3pi=false;
+#else
+      if (recop.at(r).type!=211)is3pi=false;
+#endif
       if (get_p(recop.at(r))<m_p) pcut=false;
       charge+=recop.at(r).charge;
       TVector3 p1( recop.at(r).momentum.x, recop.at(r).momentum.y, recop.at(r).momentum.z );
