@@ -9,6 +9,7 @@
 #include "edm4hep/ClusterData.h"
 #include "edm4hep/CalorimeterHitData.h"
 #include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/EDM4hepVersion.h"
 #include "FCCAnalyses/JetClusteringUtils.h"
 // #include "FCCAnalyses/ExternalRecombiner.h"
 #include "fastjet/JetDefinition.hh"
@@ -769,7 +770,11 @@ namespace FCCAnalyses
         {
           if (ct.at(j).clusters_begin < nhdata.size() + gammadata.size())
           {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
             if (ct.at(j).PDG == 130)
+#else
+            if (ct.at(j).type == 130)
+#endif
             {
               // this assumes that in converter photons are filled first and nh after
               float T = calohits.at(nhdata.at(ct.at(j).clusters_begin - gammadata.size()).hits_begin).time;
@@ -795,7 +800,11 @@ namespace FCCAnalyses
                 tmp.push_back((9.));
               }
             }
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
             else if (ct.at(j).PDG == 22)
+#else
+            else if (ct.at(j).type == 22)
+#endif
             {
               tmp.push_back((0.));
             }
@@ -1152,7 +1161,11 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
           if (ct.at(j).PDG == 130)
+#else
+          if (ct.at(j).type == 130)
+#endif
           {
             is_NeutralHad.push_back(1.);
           }
@@ -1173,7 +1186,11 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
           if (ct.at(j).PDG == 22)
+#else
+          if (ct.at(j).type == 22)
+#endif
           {
             is_NeutralHad.push_back(1.);
           }
