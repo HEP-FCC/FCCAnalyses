@@ -144,6 +144,13 @@ def setup_run_parser_plots(parser):
     '''
     parser.add_argument('script_path', help="path to the plots script")
 
+def setup_run_parser_combine(parser):
+    '''
+    Define command line arguments for the combine sub-command.
+    '''
+    parser.add_argument('script_path', help="path to the combine script")
+
+
 
 # _____________________________________________________________________________
 def setup_subparsers(subparsers):
@@ -173,6 +180,9 @@ def setup_subparsers(subparsers):
     parser_run_plots = subparsers.add_parser(
         'plots',
         help="run a RDataFrame based FCC analysis plot configuration")
+    parser_run_combine = subparsers.add_parser(
+        'combine',
+        help="prepare combine cards to run basic template fits")
 
     # Register sub-parsers
     setup_init_parser(parser_init)
@@ -182,3 +192,4 @@ def setup_subparsers(subparsers):
     setup_run_parser(parser_run)
     setup_run_parser_final(parser_run_final)
     setup_run_parser_plots(parser_run_plots)
+    setup_run_parser_combine(parser_run_combine)
