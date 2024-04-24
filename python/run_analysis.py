@@ -745,7 +745,7 @@ def run_histmaker(args, rdf_module, anapath):
             file_list_root.push_back(file_name)
             # Skip check for processed events in case of first stage
             if get_element(rdf_module, "prodTag") is None:
-                infile = ROOT.TFile(str(file_name), 'READ')
+                infile = ROOT.TFile.Open(str(file_name), 'READ')
                 for key in infile.GetListOfKeys():
                     if 'eventsProcessed' == key.GetName():
                         nevents_meta += infile.eventsProcessed.GetVal()
