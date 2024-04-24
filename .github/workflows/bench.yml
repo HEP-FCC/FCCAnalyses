@@ -1,6 +1,9 @@
-name: benchmark
+name: Benchmark
 
-on: [push]
+on:
+  push:
+    branches:
+    - master
 
 jobs:
   bench:
