@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713946574444,
+  "lastUpdate": 1713946576456,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -36779,6 +36779,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smieško",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d3573c0961ef95ba483cec5c8b372365b84185a",
+          "message": "Doxygen update to 1.9.8 (#369)\n\n* Update doxygen\r\n\r\n* No custom style file anymore",
+          "timestamp": "2024-04-24T10:05:07+02:00",
+          "tree_id": "aeed5769173d69cb58fdb48a9477bd7796c19fbd",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/5d3573c0961ef95ba483cec5c8b372365b84185a"
+        },
+        "date": 1713946575611,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 6.851086261942735,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 7.42441641351165,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 5.114827106618855,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 7.513981459761533,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 1.1903131312615327,
+            "unit": "Evt/s"
           }
         ]
       }
