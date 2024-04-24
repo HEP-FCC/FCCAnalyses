@@ -2,7 +2,7 @@ var searchData=
 [
   ['gamma_0',['gamma',['../classcontrib_1_1ValenciaPlugin.html#ad8b8c24f55904e1f4c8eac5c1c5d0402',1,'contrib::ValenciaPlugin::gamma()'],['../classcontrib_1_1ValenciaInfo.html#af78cbe09edcd473fbffc71b6c82b892a',1,'contrib::ValenciaInfo::gamma()']]],
   ['gamma_5f_1',['gamma_',['../classcontrib_1_1ValenciaInfo.html#a2f938a04000ce805914da463f0f84420',1,'contrib::ValenciaInfo']]],
-  ['generated_20samples_2',['generated samples',['../index.html#autotoc_md3',1,'Pre-generated Samples'],['../index.html#autotoc_md2',1,'Winter 2023 and Spring 2021 pre-generated samples']]],
+  ['generated_20samples_2',['generated samples',['../index.html#autotoc_md2',1,'Pre-generated Samples'],['../index.html#autotoc_md4',1,'Winter 2023 and Spring 2021 pre-generated samples']]],
   ['get_3',['get',['../namespaceFCCAnalyses_1_1ReconstructedParticle.html#ae59881aa2caf5152af31e287b59aef23',1,'FCCAnalyses::ReconstructedParticle']]],
   ['get_5fall_5fsvs_4',['get_all_SVs',['../namespaceFCCAnalyses_1_1VertexingUtils.html#ab5914113fb17efbd18019564e8a8accc',1,'FCCAnalyses::VertexingUtils']]],
   ['get_5fall_5fvertices_5',['get_all_vertices',['../namespaceFCCAnalyses_1_1VertexingUtils.html#a4e2916ff220d21bfa3fcea78b739c08a',1,'FCCAnalyses::VertexingUtils::get_all_vertices(FCCAnalysesVertex PV, ROOT::VecOps::RVec&lt; FCCAnalysesVertex &gt; SV)'],['../namespaceFCCAnalyses_1_1VertexingUtils.html#ad810d413e152f141a7f99d7d20f584ca',1,'FCCAnalyses::VertexingUtils::get_all_vertices(FCCAnalysesVertex PV, ROOT::VecOps::RVec&lt; ROOT::VecOps::RVec&lt; FCCAnalysesVertex &gt; &gt; SV)']]],
