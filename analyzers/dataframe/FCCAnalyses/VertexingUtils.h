@@ -20,10 +20,11 @@
 #include "fastjet/JetDefinition.hh"
 
 
-/** Vertexing utilities
-*/
 namespace FCCAnalyses{
 
+/**
+ * Vertexing utilities.
+ */
 namespace VertexingUtils{
 
   /// from delphes: returns track state parameters (delphes convention) for a given vertex (x), momentum (p) and charge

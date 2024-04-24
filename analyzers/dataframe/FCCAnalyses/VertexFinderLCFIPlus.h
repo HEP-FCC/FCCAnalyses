@@ -14,11 +14,14 @@
 
 #include "fastjet/JetDefinition.hh"
 
-/** Primary and Seconday Vertex Finder interface using vertex fitter from VertexFitterSimple. 
-This represents a set functions and utilities to find vertices from a list of tracks following the algorithm from LCFIPlus framework.  
-*/
-
 namespace FCCAnalyses{
+/**
+ * Primary and Seconday Vertex Finder interface using vertex fitter from
+ * VertexFitterSimple.
+ *
+ * This represents a set functions and utilities to find vertices from a list
+ * of tracks following the algorithm from LCFIPlus framework.
+ */
 
 namespace VertexFinderLCFIPlus{
 

@@ -13,6 +13,9 @@
 #include "ReconstructedParticle2MC.h"
 
 
+/**
+ * @brief All FCC analyzers.
+ */
 namespace FCCAnalyses {
 
     

@@ -26,11 +26,14 @@
 #include "VertexMore.h"
 
 
-/** Vertex interface using Franco Bedeshi's code.
-This represents a set functions and utilities to perfom vertexing from a list of tracks.
-*/
 namespace FCCAnalyses{
 
+/**
+ * Vertex interface using Franco Bedeshi's code.
+ *
+ * This represents a set functions and utilities to perform vertexing from a
+ * list of tracks.
+ */
 namespace VertexFitterSimple{
 
   /// Vertex (code from Franco Bedeschi): passing the recoparticles. Units for the beamspot constraint: mum
