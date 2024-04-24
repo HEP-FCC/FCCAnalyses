@@ -8,17 +8,14 @@
 #include "fastjet/JetDefinition.hh"
 #include <vector>
 
-/** Jet tagging utilities interface.
-This represents a set functions and utilities to perfom jet tagging from a list
-of jets.
-*/
 namespace FCCAnalyses {
-
-namespace JetTaggingUtils {
-
-/** @name JetTaggingUtils
- *  Jet tagging interface utilities.
+/**
+ * @brief Jet tagging interface utilities.
+ *
+ * This represents a set functions and utilities to perfom jet tagging from
+ * a list of jets.
  */
+namespace JetTaggingUtils {
 
 // Get flavour association of jet
 ROOT::VecOps::RVec<int>
@@ -52,7 +49,6 @@ struct sel_tag {
              ROOT::VecOps::RVec<fastjet::PseudoJet> in);
 };
 
-///@}
 } // namespace JetTaggingUtils
 
 } // namespace FCCAnalyses

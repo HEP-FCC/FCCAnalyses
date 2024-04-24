@@ -14,13 +14,13 @@
 
 namespace FCCAnalyses{
 
+/**
+ * Various algorithms.
+ *
+ * This represents a set functions and utilities to perform algorithmics in
+ * FCCAnalyses.
+ */
 namespace Algorithms{
-
-  /** @name Algorithms
-   * Algorithms class .
-   This represents a set functions and utilities to perfom algorithmics in FCCAnalyses.
-  */
-  ///@{
 
   /// Function that runs the fit for the sphericity axis determination
   struct sphericityFit {
@@ -203,9 +203,6 @@ namespace Algorithms{
                                         const ROOT::VecOps::RVec<float> & RP_e,
                                         const ROOT::VecOps::RVec<float> & RP_costheta ) ;
   } ;
-  
-
-  ///@}
 
 }//end NS Algorithms
 

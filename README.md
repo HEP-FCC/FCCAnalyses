@@ -53,7 +53,8 @@ As usual, if you aim at contributing to the repository, please fork it, develop 
 
 ### Code formating
 
-The preferred style of the C++ code in the FCCAnalyses is LLVM which is checked
+The preferred style of the C++ code in the
+[FCCAnalyses](https://hep-fcc.github.io/FCCAnalyses/) is LLVM which is checked
 by CI job.
 
 To apply formatting to a given file:
