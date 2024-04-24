@@ -83,7 +83,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a> Common framework for FCC related analyses. This framework allows one to write full analysis, taking <a href="https://github.com/key4hep/EDM4hep">EDM4hep</a> input ROOT files and producing the plots.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Quick start</h1>
+Quick Start</h1>
 <p>Running analysis script can be done using <code>fccanalysis</code> command which is shipped in Key4hep stack:</p>
 <div class="fragment"><div class="line">source /cvmfs/sw.hsf.org/key4hep/setup.sh</div>
 <div class="line">fccanalysis run analysis_script.py</div>
@@ -93,17 +93,14 @@ Pre-generated Samples</h1>
 Access</h2>
 <p>To have access to the FCC pre-generated samples, one needs to be subscribed to one of the following e-groups (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx = ee,hh,eh</code>.</p>
 <h2><a class="anchor" id="autotoc_md4"></a>
-Winter 2023 and Spring 2021 pre-generated samples</h2>
+Winter 2023 and Spring 2021 Pre-generated Samples</h2>
 <p>In order to run over pre-generated samples from <code>winter2023</code> or <code>spring2021</code> campaigns one needs to compile <code>pre-edm4hep1</code> branch of the <a class="el" href="namespaceFCCAnalyses.html" title="All FCC analyzers.">FCCAnalyses</a> in the <code>2024-03-10</code> release:</p>
-<ul>
-<li>Stable stack: <div class="fragment"><div class="line">source /cvmfs/sw.hsf.org/key4hep/setup.sh -r 2024-03-10</div>
+<div class="fragment"><div class="line">source /cvmfs/sw.hsf.org/key4hep/setup.sh -r 2024-03-10</div>
 <div class="line">git clone --branch pre-edm4hep1 git@github.com:HEP-FCC/FCCAnalyses.git</div>
 <div class="line">cd FCCAnalyses</div>
 <div class="line">source ./setup.sh</div>
 <div class="line">fccanalysis build -j 8</div>
-</div><!-- fragment --></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
 Sample Metadata</h2>
 <p>All sample information, including Key4hep stack used for the campaign, is collected at the <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/">FCC Physics Events</a> website.</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
@@ -113,7 +110,7 @@ Documentation</h1>
 Contributing</h1>
 <p>As usual, if you aim at contributing to the repository, please fork it, develop your feature/analysis and submit a pull requests.</p>
 <h2><a class="anchor" id="autotoc_md8"></a>
-Code formating</h2>
+Code Formating</h2>
 <p>The preferred style of the C++ code in the <a href="https://hep-fcc.github.io/FCCAnalyses/">FCCAnalyses</a> is LLVM, which is checked by a CI job.</p>
 <p>To apply formatting to a file: </p><div class="fragment"><div class="line">clang-format -i -style=file /path/to/file.cpp</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->

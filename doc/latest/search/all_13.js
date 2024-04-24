@@ -1,7 +1,7 @@
 var searchData=
 [
   ['sample_20metadata_0',['Sample Metadata',['../index.html#autotoc_md5',1,'']]],
-  ['samples_1',['samples',['../index.html#autotoc_md2',1,'Pre-generated Samples'],['../index.html#autotoc_md4',1,'Winter 2023 and Spring 2021 pre-generated samples']]],
+  ['samples_1',['samples',['../index.html#autotoc_md2',1,'Pre-generated Samples'],['../index.html#autotoc_md4',1,'Winter 2023 and Spring 2021 Pre-generated Samples']]],
   ['scores_2',['scores',['../classjetFlavourHelper_1_1JetFlavourHelper.html#a03d8edf0968c8bcbbfc05af186c35637',1,'jetFlavourHelper::JetFlavourHelper']]],
   ['sel_5fabstype_3',['sel_abstype',['../structFCCAnalyses_1_1ReconstructedParticle_1_1sel__absType.html',1,'FCCAnalyses::ReconstructedParticle::sel_absType'],['../structFCCAnalyses_1_1ReconstructedParticle_1_1sel__absType.html#a874f0beced3b2be5961f3de24aadff8a',1,'FCCAnalyses::ReconstructedParticle::sel_absType::sel_absType()']]],
   ['sel_5faxis_4',['sel_axis',['../structFCCAnalyses_1_1ReconstructedParticle_1_1sel__axis.html',1,'FCCAnalyses::ReconstructedParticle::sel_axis'],['../structFCCAnalyses_1_1ReconstructedParticle_1_1sel__axis.html#ac7740d82742395202ca7ba72775039b4',1,'FCCAnalyses::ReconstructedParticle::sel_axis::sel_axis()']]],
@@ -38,7 +38,7 @@ var searchData=
   ['smearobjects_2ecc_35',['SmearObjects.cc',['../SmearObjects_8cc.html',1,'']]],
   ['smearobjects_2eh_36',['SmearObjects.h',['../SmearObjects_8h.html',1,'']]],
   ['sphericityfit_37',['sphericityfit',['../structFCCAnalyses_1_1Algorithms_1_1sphericityFit.html',1,'FCCAnalyses::Algorithms::sphericityFit'],['../structFCCAnalyses_1_1Algorithms_1_1sphericityFit.html#a024b324a41bea3f3c760fceb01f6f419',1,'FCCAnalyses::Algorithms::sphericityFit::sphericityFit()']]],
-  ['spring_202021_20pre_20generated_20samples_38',['Winter 2023 and Spring 2021 pre-generated samples',['../index.html#autotoc_md4',1,'']]],
-  ['start_39',['Quick start',['../index.html#autotoc_md1',1,'']]],
+  ['spring_202021_20pre_20generated_20samples_38',['Winter 2023 and Spring 2021 Pre-generated Samples',['../index.html#autotoc_md4',1,'']]],
+  ['start_39',['Quick Start',['../index.html#autotoc_md1',1,'']]],
   ['sum_5ftlv_5fconstituents_40',['sum_tlv_constituents',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a27bc13971584b1eacbd2c416ee88c617',1,'FCCAnalyses::JetConstituentsUtils']]]
 ];

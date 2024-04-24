@@ -11,7 +11,7 @@ var searchData=
   ['pftrack_8',['pftrack',['../classjetFlavourHelper_1_1JetFlavourHelper.html#a4bd520345a53f36a8a1d83cf3ef931f4',1,'jetFlavourHelper::JetFlavourHelper']]],
   ['pid_9',['PID',['../namespaceFCCAnalyses_1_1myUtils.html#ac1fa7429dd12a0bc02a7407b8b336766',1,'FCCAnalyses::myUtils']]],
   ['plus_10',['plus',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#a3d005b301b597a3c26af1f97e05bb78c',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
-  ['pre_20generated_20samples_11',['pre generated samples',['../index.html#autotoc_md2',1,'Pre-generated Samples'],['../index.html#autotoc_md4',1,'Winter 2023 and Spring 2021 pre-generated samples']]],
+  ['pre_20generated_20samples_11',['pre generated samples',['../index.html#autotoc_md2',1,'Pre-generated Samples'],['../index.html#autotoc_md4',1,'Winter 2023 and Spring 2021 Pre-generated Samples']]],
   ['prep_5finfo_5fmap_5f_12',['prep_info_map_',['../classWeaverInterface.html#a749b65a4430a53347da41ad9a20370ab',1,'WeaverInterface']]],
   ['preprocessparams_13',['PreprocessParams',['../structWeaverInterface_1_1PreprocessParams.html',1,'WeaverInterface']]]
 ];

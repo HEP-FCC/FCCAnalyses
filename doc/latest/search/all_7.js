@@ -34,5 +34,5 @@ var searchData=
   ['filter_5fpv_31',['filter_pv',['../structFCCAnalyses_1_1myUtils_1_1filter__PV.html',1,'FCCAnalyses::myUtils::filter_PV'],['../structFCCAnalyses_1_1myUtils_1_1filter__PV.html#a76b0bcce72b96739cb592dbfc71ed7a8',1,'FCCAnalyses::myUtils::filter_PV::filter_PV()']]],
   ['final_5ftrack_5fphases_32',['final_track_phases',['../structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html#a0a1f834b2ed3113138c4afb057d1edbc',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertex']]],
   ['findsvfromtracks_33',['findSVfromTracks',['../namespaceFCCAnalyses_1_1VertexFinderLCFIPlus.html#a7e2c566652e55b151a6a7304d1af3bba',1,'FCCAnalyses::VertexFinderLCFIPlus']]],
-  ['formating_34',['Code formating',['../index.html#autotoc_md8',1,'']]]
+  ['formating_34',['Code Formating',['../index.html#autotoc_md8',1,'']]]
 ];

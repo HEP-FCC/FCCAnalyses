@@ -7,7 +7,7 @@ var searchData=
   ['algorithms_2ecc_4',['Algorithms.cc',['../Algorithms_8cc.html',1,'']]],
   ['algorithms_2eh_5',['Algorithms.h',['../Algorithms_8h.html',1,'']]],
   ['all_5finvariant_5fmasses_6',['all_invariant_masses',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a29b39d697374dfaccdbe1f74a8b415f0',1,'FCCAnalyses::JetConstituentsUtils']]],
-  ['and_20spring_202021_20pre_20generated_20samples_7',['Winter 2023 and Spring 2021 pre-generated samples',['../index.html#autotoc_md4',1,'']]],
+  ['and_20spring_202021_20pre_20generated_20samples_7',['Winter 2023 and Spring 2021 Pre-generated Samples',['../index.html#autotoc_md4',1,'']]],
   ['anglebetweentwomcparticles_8',['AngleBetweenTwoMCParticles',['../namespaceFCCAnalyses_1_1MCParticle.html#ac2c1305df7223fb14bae082b708ff9d9',1,'FCCAnalyses::MCParticle']]],
   ['angular_5fseparationbuilder_9',['angular_separationbuilder',['../structFCCAnalyses_1_1ReconstructedParticle_1_1angular__separationBuilder.html',1,'FCCAnalyses::ReconstructedParticle::angular_separationBuilder'],['../structFCCAnalyses_1_1ReconstructedParticle_1_1angular__separationBuilder.html#a50e769286f542040233a20434aa3fa9f',1,'FCCAnalyses::ReconstructedParticle::angular_separationBuilder::angular_separationBuilder()']]],
   ['as_5fvector_10',['as_vector',['../namespaceFCCAnalyses_1_1Utils.html#a483978f1147b2349c48cab9b42670746',1,'FCCAnalyses::Utils']]]

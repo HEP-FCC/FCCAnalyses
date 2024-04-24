@@ -21,7 +21,7 @@ var searchData=
   ['clustering_5fjade_18',['clustering_jade',['../structJetClustering_1_1clustering__jade.html#a0a961c9e0f25be7e57ebb6c54b8bc983',1,'JetClustering::clustering_jade::clustering_jade()'],['../structJetClustering_1_1clustering__jade.html',1,'JetClustering::clustering_jade']]],
   ['clustering_5fkt_19',['clustering_kt',['../structJetClustering_1_1clustering__kt.html',1,'JetClustering::clustering_kt'],['../structJetClustering_1_1clustering__kt.html#a8feb6d5f4b12d244ec426d31d3b34018',1,'JetClustering::clustering_kt::clustering_kt()']]],
   ['clustering_5fvalencia_20',['clustering_valencia',['../structJetClustering_1_1clustering__valencia.html#ac6ab3509cefdb5607c0117e35d5e6bbd',1,'JetClustering::clustering_valencia::clustering_valencia()'],['../structJetClustering_1_1clustering__valencia.html',1,'JetClustering::clustering_valencia']]],
-  ['code_20formating_21',['Code formating',['../index.html#autotoc_md8',1,'']]],
+  ['code_20formating_21',['Code Formating',['../index.html#autotoc_md8',1,'']]],
   ['compare_5ftracks_22',['compare_Tracks',['../namespaceFCCAnalyses_1_1VertexingUtils.html#a988e973a9d896b81dc9679d81a1226e7',1,'FCCAnalyses::VertexingUtils']]],
   ['compute_5fresidue_5fenergy_23',['compute_residue_energy',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a9fddae51aa2714fd16a14eeb7924d97a',1,'FCCAnalyses::JetConstituentsUtils']]],
   ['compute_5fresidue_5fphi_24',['compute_residue_phi',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a649d5974d73c409dd414e3bfec4a4d9b',1,'FCCAnalyses::JetConstituentsUtils']]],
