@@ -1,0 +1,21 @@
+<map id="analyzers/dataframe/FCCAnalyses/CaloNtupleizer.h" name="analyzers/dataframe/FCCAnalyses/CaloNtupleizer.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="529,5,733,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,101,64,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="528,32,432,39,318,50,196,69,77,96,70,98,68,93,75,91,195,63,317,45,431,33,528,27"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="89,101,146,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="529,35,354,54,255,72,158,96,152,98,151,93,157,91,254,67,353,49,528,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="170,101,289,126"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="532,48,302,96,285,100,284,95,301,91,531,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="313,101,513,126"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="584,48,456,98,454,93,582,43"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="538,93,723,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="633,46,633,79,628,79,628,46"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="747,101,906,126"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="675,43,789,93,787,98,673,48"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="930,101,1113,126"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="717,43,957,95,956,100,716,48"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1137,101,1223,126"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="733,32,917,53,1022,70,1126,91,1138,94,1137,99,1125,96,1021,75,917,58,733,37"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="1247,101,1369,126"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="733,31,964,52,1100,69,1235,91,1255,95,1254,100,1234,96,1099,75,963,58,733,36"/>
+</map>

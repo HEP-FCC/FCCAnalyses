@@ -1,11 +1,11 @@
 <map id="addons/ONNXRuntime/test/onnxtest.cpp" name="addons/ONNXRuntime/test/onnxtest.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="273,5,439,45"/>
-<area shape="rect" id="Node000002" href="$_jet_flavour_utils_8h.html" title=" " alt="" coords="5,94,221,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,48,162,92,161,87,297,43"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="247,94,465,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="359,46,359,80,353,80,353,46"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="489,94,673,119"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="411,43,537,87,535,92,409,48"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="52,169,175,194"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,120,116,155,111,155,111,120"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="255,5,411,45"/>
+<area shape="rect" id="Node000002" href="$JetFlavourUtils_8h.html" title=" " alt="" coords="5,93,208,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="280,48,154,91,152,86,278,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="233,93,434,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="336,46,336,79,331,79,331,46"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="458,93,625,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="384,43,499,86,497,91,382,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="47,167,166,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,119,109,153,104,153,104,119"/>
 </map>

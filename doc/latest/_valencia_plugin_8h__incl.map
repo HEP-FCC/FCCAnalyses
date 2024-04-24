@@ -1,9 +1,0 @@
-<map id="addons/FastJet/ValenciaPlugin.h" name="addons/FastJet/ValenciaPlugin.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="173,6,400,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,179,106"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,34,136,78,135,73,255,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="203,81,371,106"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="289,32,289,67,284,67,284,32"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="395,81,592,106"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="320,29,449,74,447,79,319,34"/>
-</map>
