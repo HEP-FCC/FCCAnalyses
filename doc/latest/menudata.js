@@ -24,8 +24,9 @@
 */
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
-{text:"Key4HEP Home Page",url:"^https://cern.ch/key4hep"},
-{text:"Contribution Guide",url:"md_doc_contributing.html"},
+{text:"FCCAnalyses website",url:"^https://hep-fcc.github.io/FCCAnalyses/"},
+{text:"EDM4hep",url:"^https://cern.ch/edm4hep"},
+{text:"ROOT RDataFrame",url:"^https://root.cern/doc/master/classROOT_1_1RDataFrame.html"},
 {text:"Namespaces",url:"namespaces.html",children:[
 {text:"Namespace List",url:"namespaces.html"},
 {text:"Namespace Members",url:"namespacemembers.html",children:[
