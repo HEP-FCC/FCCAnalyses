@@ -20,9 +20,8 @@ fccanalysis run analysis_script.py
 
 ### Access
 
-To have access to the FCC pre-generated samples, one needs to be subscribed to
-one of the following e-groups (with owner approval)
-`fcc-eos-read-xx` with `xx = ee,hh,eh`.
+To have read access to the FCC pre-generated samples, one needs to be subscribed to
+the following e-group (with owner approval): `fcc-eos-access`.
 
 
 ### Winter 2023 and Spring 2021 Pre-generated Samples
