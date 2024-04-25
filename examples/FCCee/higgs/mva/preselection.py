@@ -1,5 +1,5 @@
 
-import addons.helpers.TMVAHelper as helper_tmva
+from addons.TMVAHelper.TMVAHelper import TMVAHelperXGB
 
 # list of processes (mandatory)
 processList = {
@@ -27,7 +27,7 @@ nCPUS       = -1
 #batchQueue  = "longlunch"
 #compGroup = "group_u_FCC.local_gen"
 
-doInference = True
+doInference = False
 
 class RDFanalysis():
 
@@ -52,6 +52,13 @@ class RDFanalysis():
         # electron veto
         df = df.Define("electrons_no", "FCCAnalyses::ReconstructedParticle::get_n(electrons)")
         df = df.Filter("electrons_no == 0")
+
+        # photon veto
+        df = df.Alias("Photon0", "Photon#0.index")
+        df = df.Define("photons_all", "FCCAnalyses::ReconstructedParticle::get(Photon0, ReconstructedParticles)")
+        df = df.Define("photons", "FCCAnalyses::ReconstructedParticle::sel_p(40)(photons_all)")
+        df = df.Define("photons_no", "FCCAnalyses::ReconstructedParticle::get_n(photons)")
+        df = df.Filter("photons_no == 0")
 
         # basic cuts: two OS leptons
         df = df.Define("muons_p", "FCCAnalyses::ReconstructedParticle::get_p(muons)")
@@ -87,7 +94,7 @@ class RDFanalysis():
 
 
         if doInference:
-            tmva_helper = helper_tmva.TMVAHelperXGB("outputs/FCCee/higgs/mva/bdt_model_example.root", "bdt_model") # read the XGBoost training
+            tmva_helper = TMVAHelperXGB("outputs/FCCee/higgs/mva/bdt_model_example.root", "bdt_model") # read the XGBoost training
             df = tmva_helper.run_inference(df, col_name="mva_score") # by default, makes a new column mva_score
 
         return df
