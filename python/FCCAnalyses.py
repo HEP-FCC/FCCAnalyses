@@ -33,9 +33,14 @@ class Analysis:
         Create and return ROOT RDataFrame
         '''
         print('----> INFO: Loading standard FCCAnalyses analyzers...')
+        # TODO: find out which are actually needed
+        ROOT.gSystem.Load("libedm4hep")
+        ROOT.gSystem.Load("libpodio")
         ROOT.gSystem.Load("libFCCAnalyses")
         ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
-        ROOT.dummyLoader()
+        _pod  = ROOT.podio.ObjectID()
+        _edm  = ROOT.edm4hep.ReconstructedParticleData()
+        _fcc  = ROOT.dummyLoader()
 
         print('----> INFO: Loading additional analyzers from:')
         for path in self.additional_analyzers:
