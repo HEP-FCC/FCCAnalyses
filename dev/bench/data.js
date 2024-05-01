@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714562532871,
+  "lastUpdate": 1714562534429,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -38519,6 +38519,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "thomas.madlener@desy.de",
+            "name": "Thomas Madlener",
+            "username": "tmadlener"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "994d52c51aba675dc9ff0c0653383a864ef9b5f3",
+          "message": "Make upcoming introduction of cov matrix components transparent (#362)",
+          "timestamp": "2024-05-01T13:12:08+02:00",
+          "tree_id": "e4247ef5f90881cc450fd6a90c8005737e1a93e5",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/994d52c51aba675dc9ff0c0653383a864ef9b5f3"
+        },
+        "date": 1714562533902,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 8.12860860128956,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 8.28993063447724,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.8200203658950524,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.561720159658588,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.073435818271811,
+            "unit": "Evt/s"
           }
         ]
       }
