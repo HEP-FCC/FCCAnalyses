@@ -25,6 +25,4 @@ namespace FCCAnalyses {
   using Vec_tlv = ROOT::VecOps::RVec<TLorentzVector>;
 } // namespace FCCAnalyses
 
-namespace recoParticle = FCCAnalyses::ReconstructedParticle::Source;
-
 #endif

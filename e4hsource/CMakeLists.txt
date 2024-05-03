@@ -3,8 +3,6 @@ target_include_directories(e4hsource PUBLIC include)
 target_link_libraries(e4hsource PUBLIC ROOT::RIO
                                        ROOT::ROOTDataFrame
                                        podio::podioRootIO
-                                       EDM4HEP::edm4hep
-                                       EDM4HEP::edm4hepDict
 )
 
 ROOT_GENERATE_DICTIONARY(G__FCCAnalyses_EDM4hepDataSource
