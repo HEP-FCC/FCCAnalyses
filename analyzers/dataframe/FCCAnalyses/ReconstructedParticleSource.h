@@ -252,4 +252,6 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
 
 } /* FCCAnalyses :: ReconstructedParticle :: Source */
 
+namespace recoParticle = FCCAnalyses::ReconstructedParticle::Source;
+
 #endif /* RECONSTRUCTED_PARTICLE_SOURCE_ANALYZERS_H */
