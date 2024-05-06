@@ -27,7 +27,8 @@ outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
 #compGroup = "group_u_FCC.local_gen"
 
 #Optional test file
-testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+testFile ="/eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+# testFile = 'input/30k/p8_ee_ZH_ecm240_edm4hep.root'
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
@@ -39,6 +40,7 @@ class RDFanalysis():
             df
             # define an alias for muon index collection
             .Alias("Muon0", "Muon#0.index")
+            # .Alias("Muon0", "Muon_objIdx.index")
             # define the muon collection
             .Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
             #select muons on pT

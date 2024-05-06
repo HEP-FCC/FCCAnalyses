@@ -5,8 +5,14 @@
 #include <iostream>
 #include <stdexcept>
 
+// ROOT
+#include <ROOT/RDataFrame.hxx>
+#include <ROOT/RLogger.hxx>
+
 // EDM4hep
 #include "edm4hep/EDM4hepVersion.h"
+
+#define rdfInfo R__LOG_INFO(ROOT::Detail::RDF::RDFLogChannel())
 
 namespace FCCAnalyses{
 
@@ -31,6 +37,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_type::operator()(
   return result;
 }
 
+
 /// sel_absType
 sel_absType::sel_absType(const int type) : m_type(type) {
   if (m_type < 0) {
@@ -52,8 +59,10 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_absType::operator()(
       result.emplace_back(in[i]);
     }
   }
+
   return result;
 }
+
 
 /// sel_pt
 sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
@@ -114,7 +123,6 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_charge::operator() (
   }
   return result;
 }
-
 
 
 resonanceBuilder::resonanceBuilder(float arg_resonance_mass) {m_resonance_mass = arg_resonance_mass;}
@@ -245,6 +253,7 @@ ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedPartic
  }
  return result;
 }
+
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y) {
   //to be keept as ROOT::VecOps::RVec

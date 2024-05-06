@@ -26,7 +26,7 @@ def get_element(rdf_module, element: str, is_final: bool = False):
 
         elif element == 'analysers':
             LOGGER.error('The function <%s> is mandatory in your analysis '
-                         'script!.\nAborting...', element)
+                         'script!\nAborting...', element)
             if is_final:
                 LOGGER.error('The function <%s> is not part of the final '
                              'stage of the analysis!', element)

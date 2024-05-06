@@ -18,7 +18,6 @@
 
 
 auto _m = edm4hep::ReconstructedParticleData();
-auto _pod  = podio::ObjectID();
 
 
 // Reproduce Heppy analysis
