@@ -316,19 +316,18 @@ def run_rdf(rdf_module,
     Create RDataFrame and snapshot it.
     '''
     if args.use_data_source:
-        LOGGER.info('Loading events through EDM4hep RDataSource...')
-        if ROOT.gSystem.Load("libe4hsource") < 0:
-            LOGGER.error('Unable to load EDM4hep RDataSource library!\n'
-                         'Aborting...')
+        if ROOT.podio.ROOTReader():
+            LOGGER.debug('Found Podio ROOT I/O.')
+        else:
+            LOGGER.error('Podio ROOT I/O library not found!\nAborting...')
             sys.exit(3)
+        LOGGER.info('Loading events through podio::ROOTDataSource...')
 
-        if ROOT.loadEDM4hepDataSource():
-            LOGGER.debug('EDM4hep RDataSource loaded.')
         try:
-            dframe = ROOT.FCCAnalyses.FromEDM4hep(input_list)
+            dframe = ROOT.podio.CreateDataFrame(input_list)
         except TypeError as excp:
-            LOGGER.error('Unable to build dataframe using RDataSource!\n%s',
-                         excp)
+            LOGGER.error('Unable to build dataframe using'
+                         'podio::RDataSource!\n%s', excp)
             sys.exit(3)
     else:
         dframe = ROOT.RDataFrame("events", input_list)
@@ -491,7 +490,7 @@ def run_local(rdf_module, infile_list, args):
             filepath = apply_filepath_rewrites(filepath)
 
         file_list.push_back(filepath)
-        info_msg += f'- {filepath}\t\n'
+        info_msg += f'\t- {filepath}\n'
         try:
             infile = ROOT.TFile.Open(filepath, 'READ')
         except OSError as excp:
@@ -805,16 +804,15 @@ def run_histmaker(args, rdf_module, anapath):
         LOGGER.info(info_msg)
 
         if args.use_data_source:
-            LOGGER.info('Loading events through EDM4hep RDataSource...')
-            if ROOT.gSystem.Load("libe4hsource") < 0:
-                LOGGER.error('Unable to load EDM4hep RDataSource library!\n'
-                             'Aborting...')
+            if ROOT.podio.ROOTReader():
+                LOGGER.debug('Found Podio ROOT I/O.')
+            else:
+                LOGGER.error('Podio ROOT I/O library not found!\nAborting...')
                 sys.exit(3)
+            LOGGER.info('Loading events through podio::ROOTDataSource...')
 
-            if ROOT.loadEDM4hepDataSource():
-                LOGGER.debug('EDM4hep RDataSource loaded.')
             try:
-                dframe = ROOT.FCCAnalyses.FromEDM4hep(file_list_root)
+                dframe = ROOT.podio.CreateDataFrame(file_list_root)
             except TypeError as excp:
                 LOGGER.error('Unable to build dataframe using EDM4hep '
                              'RDataSource!\n%s', excp)

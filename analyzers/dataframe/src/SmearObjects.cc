@@ -151,7 +151,8 @@ ROOT::VecOps::RVec<edm4hep::TrackState> SmearedTracks::operator()(
 
     smeared_track.covMatrix = covMatrix_edm4hep;
 
-    if (m_debug) {
+    // if (m_debug) {
+    if (false) {
       std::cout << std::endl
                 << "Original track " << track.D0 << " " << track.phi << " "
                 << track.omega << " " << track.Z0 << " " << track.tanLambda
@@ -292,7 +293,8 @@ TVectorD CovSmear(TVectorD x, TMatrixDSym C, TRandom *ran, bool debug = false) {
   TVectorD r(Nvec);
   for (Int_t i = 0; i < Nvec; i++)
     r(i) = ran->Gaus(0.0, 1.0); // Array of normal random numbers
-  if (debug)
+  // if (debug)
+  if (false)
     std::cout << " random nb " << ran->Gaus(0.0, 1.0) << std::endl;
   TVectorD xOut = x + DCv * (Ut * r); // Observed parameter vector
   //

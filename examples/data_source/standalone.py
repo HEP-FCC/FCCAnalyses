@@ -5,20 +5,25 @@ Standalone test of EDM4hep RDataSource in Python.
 import ROOT
 ROOT.gROOT.SetBatch(True)
 
+
 def main():
+    '''
+    Main entry point for the standalone analysis.
+    '''
     input_list = ['https://fccsw.web.cern.ch/fccsw/testsamples/edm4hep1/'
                   'p8_ee_WW_ecm240_edm4hep.root']
 
-    print("----> Info: Loading analyzers from libFCCAnalyses... ",)
     ROOT.gSystem.Load("libFCCAnalyses")
-    _fcc = ROOT.dummyLoader
+    if ROOT.dummyLoader:
+        print('----> Debug: Found FCCAnalyses library.')
+    print("----> Info: Loading analyzers from libFCCAnalyses... ",)
 
+    if ROOT.podio.ROOTReader():
+        print('----> Debug: Found Podio ROOT I/O.')
     print('----> Info: Loading events through EDM4hep RDataSource...')
-    ROOT.gSystem.Load("libe4hsource")
-    if ROOT.loadEDM4hepDataSource():
-        print('----> Debug: EDM4hep RDataSource loaded')
+
     try:
-        dframe = ROOT.FCCAnalyses.FromEDM4hep(input_list)
+        dframe = ROOT.podio.CreateDataFrame(input_list)
     except TypeError as excp:
         print('----> Error: Unable to build dataframe!')
         print(excp)
@@ -35,10 +40,12 @@ def main():
 
     count = dframe4.Count()
     dframe4.Snapshot("events", "output.root", {"electron_truth_pt"})
-    # dframe4.Snapshot("events", "output.root", {"electron_truth", "electron_truth_pt"})
+    # dframe4.Snapshot("events", "output.root", {"electron_truth",
+    #                                            "electron_truth_pt"})
 
     print("---------------------")
     print("Nuber of events: ", count.GetValue())
+
 
 if __name__ == "__main__":
     main()

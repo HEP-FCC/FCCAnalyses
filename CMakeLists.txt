@@ -159,10 +159,6 @@ install(DIRECTORY examples DESTINATION ${CMAKE_INSTALL_PREFIX}/share/examples)
 
 #--- Descend into subdirectories ----------------------------------------------
 
-if(WITH_SOURCE)
-  add_subdirectory(e4hsource)
-endif()
-
 set(ADDONS_LIBRARIES CACHE STRING "List of external libraries the RDF utilities will be linked against")
 add_subdirectory(addons)
 add_subdirectory(analyzers/dataframe)
