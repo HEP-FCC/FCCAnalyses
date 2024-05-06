@@ -1,29 +1,37 @@
 '''
-First stage
+First analysis stage
 '''
 
 # Mandatory:
-# List of processes used in the analysis
+# List of samples(processes) used in the analysis
 processList = {
     # Run over the full statistics and save it to one output file named
     # <outputDir>/<process_name>.root
-    'p8_ee_ZZ_ecm240': {'fraction': 0.005},
+    # 'p8_ee_ZZ_ecm240': {'fraction': 0.005},
+    'p8_ee_ZZ_ecm240': {'fraction': 1.},
     # Run over 50% of the statistics and save output into two files named
     # <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
-    'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
+    # 'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
+    'p8_ee_WW_ecm240': {'fraction': 1.},
     # Run over 20% of the statistics and save output into one file named
     # <outputDir>/p8_ee_ZH_ecm240_out.root
-    'p8_ee_ZH_ecm240': {'fraction': 0.2, 'output': 'p8_ee_ZH_ecm240_out'}
+    # 'p8_ee_ZH_ecm240': {'fraction': 0.2, 'output': 'p8_ee_ZH_ecm240_out'}
+    'p8_ee_ZH_ecm240': {'fraction': 1.}
 }
 
-# Mandatory:
+# Mandatory: prodTag or inputDir
 # Production tag when running over EDM4Hep centrally produced events, this
-# points to the yaml files for getting sample statistics
-prodTag = "FCCee/spring2021/IDEA/"
+# points to the yaml files for getting sample file list.
+# prodTag = "FCCee/spring2021/IDEA/"
+
+# Mandatory: prodTag or inputDir
+# Input directory when not running over centrally produced EDM4hep events.
+# It can still be EDM4hep files produced standalone.
+inputDir = "/home/jsmiesko/gen"
 
 # Optional:
 # Output directory, default is local running directory
-outputDir = "outputs/source"
+outputDir = "outputs/data_source/stage1"
 
 # Optional:
 # Name of the analysis, default is ""
@@ -31,7 +39,7 @@ outputDir = "outputs/source"
 
 # Optional:
 # Number of threads to run on, default is 4
-# nCPUS = 4
+nCPUS = 32
 
 # Optional:
 # Optional running on HTCondor, default is False
@@ -113,6 +121,7 @@ class RDFanalysis():
             # Filter on at least one candidate
             .Filter("zed_leptonic_recoil_m.size() > 0")
         )
+
         return dframe2
 
     # Mandatory:
@@ -123,14 +132,14 @@ class RDFanalysis():
         Which columns to snapshot.
         '''
         branchList = [
-                "selected_muons_pt",
-                "selected_muons_y",
-                "selected_muons_p",
-                "selected_muons_e",
-                "zed_leptonic_pt",
-                "zed_leptonic_m",
-                "zed_leptonic_charge",
-                "zed_leptonic_recoil_m"
-            ]
+            "selected_muons_pt",
+            "selected_muons_y",
+            "selected_muons_p",
+            "selected_muons_e",
+            "zed_leptonic_pt",
+            "zed_leptonic_m",
+            "zed_leptonic_charge",
+            "zed_leptonic_recoil_m"
+        ]
 
         return branchList
