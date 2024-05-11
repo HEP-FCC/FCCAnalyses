@@ -93,8 +93,11 @@ if(WITH_DD4HEP)
 endif()
 
 if(WITH_ONNX)
+  # New onnxruntime (at least 1.17.1 and above) provide a onnxruntimeConfig.cmake
+  # and use the name onnxruntime
+  find_package(onnxruntime)
   find_package(ONNXRuntime)
-  if(ONNXRuntime_FOUND)
+  if(onnxruntime_FOUND OR ONNXRuntime_FOUND)
 
   elseif(WITH_ONNX STREQUAL AUTO)
     message(WARNING "ONNXRuntime not found. Skipping ONNX-dependent analyzers.")
