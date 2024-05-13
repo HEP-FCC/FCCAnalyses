@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['xptopar_0',['XPtoPar',['../namespaceFCCAnalyses_1_1VertexingUtils.html#a3e2381761cb0a11ed4acbdfb8a088144',1,'FCCAnalyses::VertexingUtils']]],
-  ['xptopar_5fc_1',['xptopar_c',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a96713561ab090f408d5a9207f28ef643',1,'FCCAnalyses::JetConstituentsUtils::XPtoPar_C()'],['../namespaceFCCAnalyses_1_1ReconstructedParticle2Track.html#ac8d8768c3ec53697008f56597a3e4d3e',1,'FCCAnalyses::ReconstructedParticle2Track::XPtoPar_C()']]],
-  ['xptopar_5fct_2',['xptopar_ct',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#ae7a1b5f27281461d5be2020fb0650876',1,'FCCAnalyses::JetConstituentsUtils::XPtoPar_ct()'],['../namespaceFCCAnalyses_1_1ReconstructedParticle2Track.html#a0799fa77da90692ac62f8abf2c85edd3',1,'FCCAnalyses::ReconstructedParticle2Track::XPtoPar_ct()']]],
-  ['xptopar_5fdxy_3',['xptopar_dxy',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a74cb01dffab31560348266d9a04632ce',1,'FCCAnalyses::JetConstituentsUtils::XPtoPar_dxy()'],['../namespaceFCCAnalyses_1_1ReconstructedParticle2Track.html#a63e80023995086fc8310197a6743de77',1,'FCCAnalyses::ReconstructedParticle2Track::XPtoPar_dxy()']]],
-  ['xptopar_5fdz_4',['xptopar_dz',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a423845deb4320da57cb4a9a777aebee2',1,'FCCAnalyses::JetConstituentsUtils::XPtoPar_dz()'],['../namespaceFCCAnalyses_1_1ReconstructedParticle2Track.html#a3862a7c2e3a03679e65756fb6a0c356f',1,'FCCAnalyses::ReconstructedParticle2Track::XPtoPar_dz()']]],
-  ['xptopar_5fphi_5',['xptopar_phi',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#abf6d7463a12fe3c13422ad03b0721f2b',1,'FCCAnalyses::JetConstituentsUtils::XPtoPar_phi()'],['../namespaceFCCAnalyses_1_1ReconstructedParticle2Track.html#ac4be76b3113c9786b95976585e27ecff',1,'FCCAnalyses::ReconstructedParticle2Track::XPtoPar_phi()']]]
+  ['_7eonnxruntime_0',['~ONNXRuntime',['../class_o_n_n_x_runtime.html#abd1b66a2a24ddf3c7e4e2fff40b4a054',1,'ONNXRuntime']]],
+  ['_7etmva_5fhelper_5fxgb_1',['~tmva_helper_xgb',['../classtmva__helper__xgb.html#ae3541c62e3aa9a477e19b262e0522b0e',1,'tmva_helper_xgb']]]
 ];
