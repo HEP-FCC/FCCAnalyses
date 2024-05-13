@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weaverinterface_0',['WeaverInterface',['../class_weaver_interface.html',1,'']]]
+  ['weaverinterface_0',['WeaverInterface',['../classWeaverInterface.html',1,'']]]
 ];
