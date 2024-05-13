@@ -53,16 +53,17 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
   auto propagator = std::make_shared<Propagator>(stepper);
 
 
-  using Linearizer = Acts::HelicalTrackLinearizer<Propagator>;
+  using Linearizer = Acts::HelicalTrackLinearizer;
   Linearizer::Config ltConfig(bField, propagator);
   Linearizer linearizer(ltConfig);
 
   // Set up Billoir Vertex Fitter
-  using VertexFitter = Acts::FullBilloirVertexFitter<Acts::BoundTrackParameters, Linearizer>;
+  using VertexFitter = Acts::FullBilloirVertexFitter;
   VertexFitter::Config vertexFitterCfg;
   VertexFitter billoirFitter(vertexFitterCfg);
   //VertexFitter::State state(magFieldContext);
-  VertexFitter::State state(bField->makeCache(magFieldContext));
+  // TODO:
+  //VertexFitter::State state(bField->makeCache(magFieldContext));
 
 #if ACTS_VERSION_MAJOR < 29
   using CovMatrix4D = Acts::SymMatrix4;
@@ -70,7 +71,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
   using CovMatrix4D = Acts::SquareMatrix4;
 #endif
   // Constraint for vertex fit
-  Acts::Vertex<Acts::BoundTrackParameters> myConstraint;
+  Acts::Vertex myConstraint;
   // Some abitrary values
   CovMatrix4D myCovMat = CovMatrix4D::Zero();
   myCovMat(0, 0) = 30.;
@@ -81,8 +82,8 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
   myConstraint.setFullPosition(Acts::Vector4(0, 0, 0, 0));
 
 
-  Acts::VertexingOptions<Acts::BoundTrackParameters> vfOptions(geoContext, magFieldContext);
-  Acts::VertexingOptions<Acts::BoundTrackParameters> vfOptionsConstr(geoContext, magFieldContext, myConstraint);
+  Acts::VertexingOptions vfOptions(geoContext, magFieldContext);
+  Acts::VertexingOptions vfOptionsConstr(geoContext, magFieldContext, myConstraint);
 
 
   int Ntr = tracks.size();
@@ -176,8 +177,15 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
     return TheVertex;   // can not reconstruct a vertex with only one track...
   }
 
-  Acts::Vertex<Acts::BoundTrackParameters> fittedVertex =
-    billoirFitter.fit(tracksPtr, linearizer, vfOptions, state).value();
+  // TODO:
+  std::vector<Acts::InputTrack> newTracks;
+
+  // TODO:
+  auto ctx = Acts::MagneticFieldContext();
+  auto cache = Acts::MagneticFieldProvider::Cache();
+
+  Acts::Vertex fittedVertex =
+    billoirFitter.fit(newTracks, vfOptions, cache).value();
   //Acts::Vertex<Acts::BoundTrackParameters> fittedVertexConstraint =
   //  billoirFitter.fit(tracksPtr, linearizer, vfOptionsConstr, state).value();
 
