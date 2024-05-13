@@ -14,6 +14,7 @@ from pin_analysis import PinAnalysis
 from run_analysis import run
 from run_final_analysis import run_final
 from do_plots import do_plots
+from do_combine import do_combine
 
 
 class MultiLineFormatter(logging.Formatter):
@@ -94,6 +95,8 @@ def main():
         run_final(parser)
     elif args.command == 'plots':
         do_plots(parser)
+    elif args.command == 'combine':
+        do_combine(parser)
     else:
         run(parser)
 
