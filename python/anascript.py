@@ -178,7 +178,7 @@ def get_element(rdf_module, element: str, is_final: bool = False):
                 LOGGER.debug('The variable <%s> is optional in the analysis '
                              'final step/histmaker.\nBy default no scaling is '
                              'applied.', element)
-                return False
+                return True
             LOGGER.debug('The option <%s> is not available in the presel. '
                          'stages of the analysis', element)
 
