@@ -5,7 +5,7 @@ endif()
 find_package(ONNXRuntime QUIET)
 find_package(nlohmann_json QUIET)
 find_package(ROOT COMPONENTS ROOTVecOps QUIET)
-if(ONNXRuntime_FOUND AND nlohmann_json_FOUND)
+if(nlohmann_json_FOUND)
   message(STATUS "includes-------------------------- onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
 elseif(WITH_ONNX STREQUAL AUTO)
   message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found. Skipping ONNX-dependent analyzers.")
@@ -14,6 +14,11 @@ elseif(WITH_ONNX STREQUAL AUTO)
 else()
   message(FATAL_ERROR "Failed to locate ONNXRuntime and/or nlohmann's JSON library!")
 endif()
+# For the newer versions of ONNXRuntime, including directories is done
+# through the onnxruntime::onnxruntime target
+if(onnxruntime_FOUND)
+  set(ONNXRUNTIME_LIBRARIES onnxruntime::onnxruntime)
+endif()
 
 file(GLOB sources src/*.cc)
 file(GLOB headers *.h)
@@ -21,7 +26,7 @@ file(GLOB headers *.h)
 fccanalyses_addon_build(ONNXRuntime
                         SOURCES ${sources} ${headers}
                         EXT_HEADERS ${ONNXRUNTIME_INCLUDE_DIRS}
-                        EXT_LIBS ROOT::ROOTVecOps ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json
+                        EXT_LIBS ROOT::ROOTVecOps ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json ${ONNXRUNTIME_LIBRARIES}
                         INSTALL_COMPONENT onnxruntime)
 
 add_custom_command(TARGET ONNXRuntime POST_BUILD
