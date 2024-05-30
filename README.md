@@ -43,7 +43,7 @@ campaigns one needs to compile `pre-edm4hep1` branch of the FCCAnalyses in the
 
 All sample information, including Key4hep stack used for the campaign, is
 collected at the
-[FCC Physics Events](http://fcc-physics-events.web.cern.ch/fcc-physics-events/)
+[FCC Physics Events](https://fcc-physics-events.web.cern.ch/)
 website.
 
 
