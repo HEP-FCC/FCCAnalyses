@@ -14,14 +14,11 @@
 #include "edm4hep/Vector2i.h"
 
 
+/** MCParticle interface.
+This represents a set functions and utilities to access and perform operations on the MCParticle collection.
+*/
 namespace FCCAnalyses{
 
-/**
- * Analyzers operating on/with Monte Carlo particles.
- *
- * This represents a set functions and utilities to access and perform
- * operations on the MCParticle collection.
- */
 namespace MCParticle{
 
   /// Filter events based on a MCParticles PDGID
@@ -39,6 +36,17 @@ namespace MCParticle{
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
+    /// select MCParticles with momentum greater than a minimum value [GeV]
+  struct sel_p {
+    sel_p(float arg_min_p);
+    float m_min_p = 0; //
+    ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+  };
+
+  
+
+
+  
   /// select MCParticles with their status
   struct sel_genStatus {
     sel_genStatus(int arg_status);
@@ -53,7 +61,20 @@ namespace MCParticle{
     bool m_chargeconjugate = true;
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
+  struct sel_genleps {
+    sel_genleps(int arg_pdg1, int arg_pdg2,bool arg_chargeconjugate);
+    int m_pdg1 = 13; int m_pdg2 = 11;
+    bool m_chargeconjugate = true;
+    ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+  };
+    struct sel_lightQuarks {
+    sel_lightQuarks(bool arg_chargeconjugate);
+    bool m_chargeconjugate = true;
+    ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+  };
 
+  
+  
   /// get MC history tree for a given MCParticle index
   struct get_tree{
     get_tree(int arg_index);
@@ -242,6 +263,8 @@ namespace MCParticle{
                                              const ROOT::VecOps::RVec<int> &ind);
 
 
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> remove( ROOT::VecOps::RVec<edm4hep::MCParticleData> x, ROOT::VecOps::RVec<edm4hep::MCParticleData> y);
+  
 }//end NS MCParticle
 
 }//end NS FCCAnalyses
