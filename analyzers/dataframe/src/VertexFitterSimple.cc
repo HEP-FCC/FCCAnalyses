@@ -6,11 +6,32 @@
 #include "TFile.h"
 #include "TString.h"
 
+#include <fcntl.h>
+
 //#include "TrkUtil.h"    // from delphes
 
 namespace FCCAnalyses {
 
 namespace VertexFitterSimple {
+
+int supress_stdout() {
+  fflush(stdout);
+
+  int ret = dup(1);
+  int nullfd = open("/dev/null", O_WRONLY);
+  // check nullfd for error omitted
+  dup2(nullfd, 1);
+  close(nullfd);
+
+  return ret;
+}
+
+void resume_stdout(int fd) {
+  fflush(stdout);
+  dup2(fd, 1);
+  close(fd);
+  std::cout << std::flush;
+}
 
 // -----------------------------------------------------------------------------
 
@@ -77,6 +98,11 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 const ROOT::VecOps::RVec<edm4hep::TrackState> &alltracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
                 double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
+  // Suppressing printf() output from TMatrixBase:
+  // https://github.com/root-project/root/blob/722eb4652bfc79149df00c8b0e92d0837caf054c/math/matrix/src/TMatrixTBase.cxx#L662
+  // The solution found here:
+  // https://stackoverflow.com/questions/46728680/how-to-temporarily-suppress-output-from-printf
+  int fd = supress_stdout();
 
   // Units for the beam-spot : mum
   // See
@@ -213,6 +239,8 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   }
   delete[] trkPar;
   delete[] trkCov;
+
+  resume_stdout(fd);
 
   return TheVertex;
 }
