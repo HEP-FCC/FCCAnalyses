@@ -170,7 +170,7 @@ histoList = {
     "Reco_DecayVertex_y_prompt":    {"name":"RecoDecayVertex.position.y",  "title":"Reco decay vertex y [mm]",            "bin":100,"xmin":-0.01 ,"xmax":0.01},
     "Reco_DecayVertex_z_prompt":    {"name":"RecoDecayVertex.position.z",  "title":"Reco decay vertex z [mm]",            "bin":100,"xmin":-0.01 ,"xmax":0.01},
     "Reco_DecayVertex_chi2":        {"name":"RecoDecayVertex.chi2",        "title":"Reco decay vertex #chi^{2}",          "bin":100,"xmin":0 ,"xmax":3},
-    "Reco_DecayVertex_probability": {"name":"RecoDecayVertex.probability", "title":"Reco decay vertex probability",       "bin":100,"xmin":0 ,"xmax":10},
+    "Reco_DecayVertex_ndf":         {"name":"RecoDecayVertex.ndf",         "title":"Reco decay vertex fit ndf",           "bin":50,"xmin":0 ,"xmax":50},
     "Reco_Lxy":                     {"name":"Reco_Lxy",                    "title":"Reco L_{xy} [mm]",     "bin":100,"xmin":0 ,"xmax":1000},
     "Reco_Lxyz":                    {"name":"Reco_Lxyz",                   "title":"Reco L_{xyz} [mm]",    "bin":100,"xmin":0 ,"xmax":1000},
     "Reco_Lxyz_prompt":             {"name":"Reco_Lxyz",                   "title":"Reco L_{xyz} [mm]",    "bin":100,"xmin":0 ,"xmax":0.1},
