@@ -3,8 +3,6 @@ find_package(ROOT REQUIRED COMPONENTS ROOTDataFrame ROOTVecOps TMVA)
 include(${ROOT_USE_FILE})
 #include("${ROOT_DIR}/modules/RootNewMacros.cmake")
 
-find_package(Vdt)
-
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 get_target_property(EDM4HEP_INCLUDE_DIRS EDM4HEP::edm4hep INTERFACE_INCLUDE_DIRECTORIES)
@@ -13,7 +11,6 @@ include_directories(${EDM4HEP_INCLUDE_DIRS}
                     ${podio_INCLUDE_DIR}
                     ${FASTJET_INCLUDE_DIR}
                     ${acts_INCLUDE_DIR}
-                    ${VDT_INCLUDE_DIR}
                     )
 
 message(STATUS "includes-------------------------- dataframe edm4hep: ${EDM4HEP_INCLUDE_DIRS}")
