@@ -1,17 +1,12 @@
 #ifndef ONNXRuntime_ONNXRuntime_h
 #define ONNXRuntime_ONNXRuntime_h
 
+#include "onnxruntime_cxx_api.h"
+
 #include <string>
 #include <vector>
 #include <map>
 #include <memory>
-
-namespace Ort {
-  class Env;
-  namespace Experimental {
-    class Session;
-  }
-}  // namespace Ort
 
 class ONNXRuntime {
 public:
@@ -33,9 +28,10 @@ private:
   size_t variablePos(const std::string&) const;
 
   std::unique_ptr<Ort::Env> env_;
-  std::unique_ptr<Ort::Experimental::Session> session_;
+  std::unique_ptr<Ort::Session> session_;
+  Ort::MemoryInfo memoryInfo_;
 
-  std::vector<std::string> input_node_strings_, output_node_strings_;
+  std::vector<const char*> input_node_strings_, output_node_strings_;
   std::vector<std::string> input_names_;
   std::map<std::string, std::vector<int64_t>> input_node_dims_, output_node_dims_;
 };
