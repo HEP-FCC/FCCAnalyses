@@ -11,4 +11,13 @@ mark_as_advanced(ONNXRUNTIME_FOUND ONNXRUNTIME_INCLUDE_DIR ONNXRUNTIME_LIBRARY)
 
 set(ONNXRUNTIME_INCLUDE_DIRS ${ONNXRUNTIME_INCLUDE_DIR})
 set(ONNXRUNTIME_LIBRARIES ${ONNXRUNTIME_LIBRARY})
-get_filename_component(ONNXRUNTIME_LIBRARY_DIRS ${ONNXRUNTIME_LIBRARY} PATH)
+
+# Rig an onnxruntime::onnxruntime target that works similar (enough) to the one
+# that can be directly found via find_package(onnxruntime) for newer versions of
+# onnxruntime
+add_library(onnxruntime::onnxruntime INTERFACE IMPORTED GLOBAL)
+set_target_properties(onnxruntime::onnxruntime
+  PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${ONNXRUNTIME_INCLUDE_DIRS}"
+  INTERFACE_LINK_LIBRARIES "${ONNXRUNTIME_LIBRARIES}"
+)
