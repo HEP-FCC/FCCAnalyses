@@ -1,4 +1,6 @@
-find_path(ONNXRUNTIME_INCLUDE_DIR onnxruntime/core/session/onnxruntime_cxx_inline.h
+find_path(ONNXRUNTIME_INCLUDE_DIR
+          NAMES onnxruntime_cxx_api.h
+          PATH_SUFFIXES onnxruntime/core/session
           HINTS $ENV{ONNXRUNTIME_ROOT_DIR}/include ${ONNXRUNTIME_ROOT_DIR}/include)
 
 find_library(ONNXRUNTIME_LIBRARY NAMES onnxruntime
