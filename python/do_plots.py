@@ -188,7 +188,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
 
 
 # _____________________________________________________________________________
-def runPlots(var, sel, param, hsignal, hbackgrounds, extralab, splitLeg,
+def runPlots(args, var, sel, param, hsignal, hbackgrounds, extralab, splitLeg,
              plotStatUnc):
 
     # Below are settings for separate signal and background legends
@@ -201,7 +201,7 @@ def runPlots(var, sel, param, hsignal, hbackgrounds, extralab, splitLeg,
         leg2.SetFillStyle(0)
         leg2.SetLineColor(0)
         leg2.SetShadowColor(10)
-        leg2.SetTextSize(0.035)
+        leg2.SetTextSize(args.legend_text_size)
         leg2.SetTextFont(42)
     else:
         legsize = 0.04*(len(hbackgrounds)+len(hsignal))
@@ -213,12 +213,16 @@ def runPlots(var, sel, param, hsignal, hbackgrounds, extralab, splitLeg,
             legCoord = [0.68, 0.86-legsize, 0.96, 0.88]
         leg2 = None
 
-    leg = ROOT.TLegend(legCoord[0], legCoord[1], legCoord[2], legCoord[3])
+    leg = ROOT.TLegend(
+        args.legend_x_min if args.legend_x_min > 0 else legCoord[0],
+        args.legend_y_min if args.legend_y_min > 0 else legCoord[1],
+        args.legend_x_max if args.legend_x_max > 0 else legCoord[2],
+        args.legend_y_max if args.legend_y_max > 0 else legCoord[3])
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
     leg.SetShadowColor(10)
-    leg.SetTextSize(0.035)
+    leg.SetTextSize(args.legend_text_size)
     leg.SetTextFont(42)
 
     for b in hbackgrounds:
@@ -320,7 +324,7 @@ def runPlots(var, sel, param, hsignal, hbackgrounds, extralab, splitLeg,
 
 
 # _____________________________________________________________________________
-def runPlotsHistmaker(hName, param, plotCfg):
+def runPlotsHistmaker(args, hName, param, plotCfg):
 
     output = plotCfg['output']
     hsignal, hbackgrounds = mapHistosFromHistmaker(hName, param, plotCfg)
@@ -345,7 +349,7 @@ def runPlotsHistmaker(hName, param, plotCfg):
         leg2.SetFillStyle(0)
         leg2.SetLineColor(0)
         leg2.SetShadowColor(10)
-        leg2.SetTextSize(0.035)
+        leg2.SetTextSize(args.legend_text_size)
         leg2.SetTextFont(42)
     else:
         legsize = 0.04*(len(hbackgrounds)+len(hsignal))
@@ -357,12 +361,16 @@ def runPlotsHistmaker(hName, param, plotCfg):
             legCoord = [0.68, 0.86-legsize, 0.96, 0.88]
         leg2 = None
 
-    leg = ROOT.TLegend(legCoord[0], legCoord[1], legCoord[2], legCoord[3])
+    leg = ROOT.TLegend(
+        args.legend_x_min if args.legend_x_min > 0 else legCoord[0],
+        args.legend_y_min if args.legend_y_min > 0 else legCoord[1],
+        args.legend_x_max if args.legend_x_max > 0 else legCoord[2],
+        args.legend_y_max if args.legend_y_max > 0 else legCoord[3])
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
     leg.SetShadowColor(10)
-    leg.SetTextSize(0.035)
+    leg.SetTextSize(args.legend_text_size)
     leg.SetTextFont(42)
 
     for b in hbackgrounds:
@@ -743,16 +751,16 @@ def print_canvas(canvas, name, formats, directory):
 
 
 # _____________________________________________________________________________
-def run(script_path):
+def run(args):
     '''
     Run over all the plots.
     '''
     ROOT.gROOT.SetBatch(True)
     ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
-    module_path = os.path.abspath(script_path)
+    module_path = os.path.abspath(args.script_path)
     module_dir = os.path.dirname(module_path)
-    base_name = os.path.splitext(ntpath.basename(script_path))[0]
+    base_name = os.path.splitext(ntpath.basename(args.script_path))[0]
 
     sys.path.insert(0, module_dir)
     param = importlib.import_module(base_name)
@@ -767,7 +775,7 @@ def run(script_path):
 
     if hasattr(param, "hists"):
         for hist_name, plot_cfg in param.hists.items():
-            runPlotsHistmaker(hist_name, param, plot_cfg)
+            runPlotsHistmaker(args, hist_name, param, plot_cfg)
         sys.exit()
 
     counter = 0
@@ -780,10 +788,11 @@ def run(script_path):
                     rebin_tmp = param.rebin[var_index]
                 hsignal, hbackgrounds = mapHistos(var, label, sel, param,
                                                   rebin=rebin_tmp)
-                runPlots(var+"_"+label, sel, param, hsignal, hbackgrounds,
-                         param.extralabel[sel], split_leg, plot_stat_unc)
+                runPlots(args, var+"_"+label, sel, param, hsignal,
+                         hbackgrounds, param.extralabel[sel], split_leg,
+                         plot_stat_unc)
                 if counter == 0:
-                    runPlots("AAAyields_"+label, sel, param, hsignal,
+                    runPlots(args, "AAAyields_"+label, sel, param, hsignal,
                              hbackgrounds, param.extralabel[sel], split_leg,
                              plot_stat_unc)
         counter += 1
@@ -804,4 +813,4 @@ def do_plots(parser):
                      args.script_path)
         sys.exit(3)
 
-    run(args.script_path)
+    run(args)
