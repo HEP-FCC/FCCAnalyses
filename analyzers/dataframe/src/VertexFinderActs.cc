@@ -1,5 +1,9 @@
 #include "FCCAnalyses/VertexFinderActs.h"
 
+#include <edm4hep/EDM4hepVersion.h>
+#if EDM4HEP_BUILD_VERSION > EDM4HEP_VERSION(0, 10, 6)
+#include <edm4hep/utils/bit_utils.h>
+#endif
 #include <iostream>
 
 // ACTS
@@ -243,7 +247,11 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     //	      << vtx.tracks().size() << " tracks." << std::endl;
 
     TheVertex.ntracks = vtx.tracks().size();
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
     edm4hep_vertex.primary = 1;
+#else
+    edm4hep_vertex.type = edm4hep::utils::setBit(edm4hep_vertex.type, edm4hep::Vertex::BITPrimaryVertex, true);
+#endif
     edm4hep_vertex.chi2 = vtx.fitQuality().first/ vtx.fitQuality().second ;
     edm4hep_vertex.position = edm4hep::Vector3f( vtx.position()[0],vtx.position()[1], vtx.position()[2]) ;  // store the  vertex in mm
     auto vtxCov = vtx.covariance();
