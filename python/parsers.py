@@ -144,12 +144,12 @@ def setup_run_parser_plots(parser):
     '''
     parser.add_argument('script_path', help="path to the plots script")
 
+
 def setup_run_parser_combine(parser):
     '''
     Define command line arguments for the combine sub-command.
     '''
     parser.add_argument('script_path', help="path to the combine script")
-
 
 
 # _____________________________________________________________________________

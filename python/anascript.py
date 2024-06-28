@@ -245,3 +245,15 @@ def get_element_dict(_dict, element: str):
         LOGGER.debug('Element "%s" not present in the dictionary!',
                      element)
         return None
+
+
+def get_attribute(obj, attr_name: str, default_val=None):
+    '''
+    Returns requested attribute value or default value.
+    '''
+    try:
+        val = getattr(obj, attr_name)
+    except AttributeError:
+        val = default_val
+
+    return val
