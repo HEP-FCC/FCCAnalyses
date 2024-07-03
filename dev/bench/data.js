@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720021334933,
+  "lastUpdate": 1720021640915,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -39672,6 +39672,65 @@ window.BENCHMARK_DATA = {
             "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
             "value": 3.2229926662098607,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "juraj.smiesko@cern.ch",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "distinct": true,
+          "id": "5f59bd1d1514e2e14f120aeebd2e286afdca5ff6",
+          "message": "Allowing plot legend to be adjusted (#384)\n\n* Allowing plot legend to be adjusted\r\n\r\n* Synchronized script and command line",
+          "timestamp": "2024-07-03T17:38:17+02:00",
+          "tree_id": "bfe40870996d29d76c0080fc03029e371635d0df",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/5f59bd1d1514e2e14f120aeebd2e286afdca5ff6"
+        },
+        "date": 1720021636002,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 12.37003755569458,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 11.730509281158447,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 13.864964485168457,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 10.768413066864014,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 30.858633279800415,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
           }
         ]
       }
