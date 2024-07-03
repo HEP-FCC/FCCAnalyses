@@ -1,36 +1,54 @@
 #include "ONNXRuntime/ONNXRuntime.h"
 
-#include "onnxruntime/core/session/experimental_onnxruntime_cxx_api.h"
-
 #include <numeric>
 #include <algorithm>
 
 ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::string>& input_names)
-    : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")), input_names_(input_names) {
+    : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")),
+      memoryInfo_(Ort::MemoryInfo::CreateCpu(OrtAllocatorType::OrtArenaAllocator, OrtMemTypeDefault)),
+      input_names_(input_names) {
   if (model_path.empty())
     throw std::runtime_error("Path to ONNX model cannot be empty!");
   Ort::SessionOptions options;
   options.SetIntraOpNumThreads(1);
-  std::string model{model_path};  // fixes a poor Ort experimental API
-  session_ = std::make_unique<Ort::Experimental::Session>(*env_, model, options);
+  session_ = std::make_unique<Ort::Session>(*env_, model_path.c_str(), options);
+
+  Ort::AllocatorWithDefaultOptions allocator;
+#if ORT_API_VERSION < 13
+  // Before 1.13 we have to roll our own unique_ptr wrapper here
+  auto allocDeleter = [&allocator](char* p) { allocator.Free(p); };
+  using AllocatedStringPtr = std::unique_ptr<char, decltype(allocDeleter)>;
+#endif
 
   // get input names and shapes
-  input_node_strings_ = session_->GetInputNames();
   input_node_dims_.clear();
   for (size_t i = 0; i < session_->GetInputCount(); ++i) {
-    const auto input_name = input_node_strings_.at(i);
+#if ORT_API_VERSION < 13
+  input_node_strings_.emplace_back(AllocatedStringPtr(session_->GetInputName(i, allocator), allocDeleter).release());
+#else
+  input_node_strings_.emplace_back(session_->GetInputNameAllocated(i, allocator).release());
+#endif
+
+    const auto& input_name = input_node_strings_[i];
     // get input shapes
-    input_node_dims_[input_name] = session_->GetInputShapes()[i];
+    const auto nodeInfo = session_->GetInputTypeInfo(i);
+    input_node_dims_[input_name] = nodeInfo.GetTensorTypeAndShapeInfo().GetShape();
   }
 
   // get output names and shapes
-  output_node_strings_ = session_->GetOutputNames();
   output_node_dims_.clear();
   for (size_t i = 0; i < session_->GetOutputCount(); ++i) {
+#if ORT_API_VERSION < 13
+    output_node_strings_.emplace_back(AllocatedStringPtr(session_->GetOutputName(i, allocator), allocDeleter).release());
+#else
+    output_node_strings_.emplace_back(session_->GetOutputNameAllocated(i, allocator).release());
+#endif
+
     // get output node names
-    const auto output_name = output_node_strings_.at(i);
+    const auto& output_name = output_node_strings_[i];
     // get output node types
-    output_node_dims_[output_name] = session_->GetOutputShapes()[i];
+    const auto nodeInfo = session_->GetOutputTypeInfo(i);
+    output_node_dims_[output_name] = nodeInfo.GetTensorTypeAndShapeInfo().GetShape();
     // the 0th dim depends on the batch size
     output_node_dims_[output_name].at(0) = -1;
   }
@@ -59,16 +77,17 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
     }
     auto expected_len = std::accumulate(input_dims.begin(), input_dims.end(), 1, std::multiplies<int64_t>());
     if (expected_len != (int64_t)value->size())
-      throw std::runtime_error("Input array '" + name + "' has a wrong size of " + std::to_string(value->size()) +
+      throw std::runtime_error("Input array '" + std::string(name) + "' has a wrong size of " + std::to_string(value->size()) +
                                ", expected " + std::to_string(expected_len));
-    auto input_tensor = Ort::Experimental::Value::CreateTensor<float>(value->data(), value->size(), input_dims);
+    auto input_tensor = Ort::Value::CreateTensor<float>(memoryInfo_, const_cast<float*>(value->data()), value->size(), input_dims.data(), input_dims.size());
     if (!input_tensor.IsTensor())
-      throw std::runtime_error("Failed to create an input tensor for variable '" + name + "'.");
+      throw std::runtime_error("Failed to create an input tensor for variable '" + std::string(name) + "'.");
+
     tensors_in.emplace_back(std::move(input_tensor));
   }
 
   // run the inference
-  auto output_tensors = session_->Run(session_->GetInputNames(), tensors_in, session_->GetOutputNames());
+  auto output_tensors = session_->Run(Ort::RunOptions{nullptr}, input_node_strings_.data(), tensors_in.data(), tensors_in.size(), output_node_strings_.data(), output_node_strings_.size());
 
   // convert output tensor to values
   Tensor<T> outputs;

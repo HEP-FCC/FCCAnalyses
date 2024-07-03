@@ -2,22 +2,17 @@ if(WITH_ONNX STREQUAL OFF)
   return()
 endif()
 
-find_package(ONNXRuntime QUIET)
 find_package(nlohmann_json QUIET)
 find_package(ROOT COMPONENTS ROOTVecOps QUIET)
+get_target_property(ONNXRUNTIME_INCLUDE_DIRS onnxruntime::onnxruntime INTERFACE_INCLUDE_DIRECTORIES)
 if(nlohmann_json_FOUND)
   message(STATUS "includes-------------------------- onnxruntime: ${ONNXRUNTIME_INCLUDE_DIRS}")
 elseif(WITH_ONNX STREQUAL AUTO)
-  message(WARNING "ONNXRuntime and/or nlohmann's JSON libraries not found. Skipping ONNX-dependent analyzers.")
+  message(WARNING "nlohmann's JSON libraries not found. Skipping ONNX-dependent analyzers.")
   set(WITH_ONNX OFF)
   return()
 else()
-  message(FATAL_ERROR "Failed to locate ONNXRuntime and/or nlohmann's JSON library!")
-endif()
-# For the newer versions of ONNXRuntime, including directories is done
-# through the onnxruntime::onnxruntime target
-if(onnxruntime_FOUND)
-  set(ONNXRUNTIME_LIBRARIES onnxruntime::onnxruntime)
+  message(FATAL_ERROR "nlohmann's JSON library!")
 endif()
 
 file(GLOB sources src/*.cc)
@@ -26,7 +21,7 @@ file(GLOB headers *.h)
 fccanalyses_addon_build(ONNXRuntime
                         SOURCES ${sources} ${headers}
                         EXT_HEADERS ${ONNXRUNTIME_INCLUDE_DIRS}
-                        EXT_LIBS ROOT::ROOTVecOps ${ONNXRUNTIME_LIBRARIES} nlohmann_json::nlohmann_json ${ONNXRUNTIME_LIBRARIES}
+                        EXT_LIBS ROOT::ROOTVecOps nlohmann_json::nlohmann_json onnxruntime::onnxruntime
                         INSTALL_COMPONENT onnxruntime)
 
 add_custom_command(TARGET ONNXRuntime POST_BUILD
@@ -41,7 +36,7 @@ if(BUILD_TESTING)
     # add all unit tests
     add_executable(onnxruntime-unittest test/onnxtest.cpp)
     target_link_libraries(onnxruntime-unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain ONNXRuntime)
-    target_include_directories(onnxruntime-unittest PUBLIC ${VDT_INCLUDE_DIR} ${ONNXRUNTIME_INCLUDE_DIRS})
+    target_include_directories(onnxruntime-unittest PUBLIC ${VDT_INCLUDE_DIR})
     target_compile_definitions(onnxruntime-unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")
     include(Catch)
     catch_discover_tests(onnxruntime-unittest
