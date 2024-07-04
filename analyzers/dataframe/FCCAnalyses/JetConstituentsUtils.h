@@ -4,6 +4,7 @@
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticle.h"
 #include "edm4hep/MCParticle.h"
+#include "edm4hep/Quantity.h"
 #if __has_include("edm4hep/TrackerHit3DData.h")
 #include "edm4hep/TrackerHit3DData.h"
 #else
