@@ -143,8 +143,10 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   int Ntr = tracks.size();
   TheVertex.ntracks = Ntr;
-  if (Ntr <= 1)
+  if (Ntr <= 1) {
+    resume_stdout(fd);
     return TheVertex; // can not reconstruct a vertex with only one track...
+  }
 
   TVectorD **trkPar = new TVectorD *[Ntr];
   TMatrixDSym **trkCov = new TMatrixDSym *[Ntr];
