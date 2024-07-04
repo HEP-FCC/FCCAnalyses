@@ -15,7 +15,8 @@ class Analysis():
             usage='Provide additional arguments after analysis script path')
         parser.add_argument('--mva', default="", type=str,
                             help='Path to the trained MVA ROOT file.')
-        self.args = parser.parse_args(cmdline_args)
+        # Parse additional arguments not known to the FCCAnalyses parsers
+        self.args = parser.parse_args(cmdline_args['unknown'])
 
         # Mandatory: List of processes to run over
         self.process_list = {

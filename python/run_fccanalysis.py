@@ -566,7 +566,8 @@ def run_fccanalysis(args, analysis_module):
     '''
 
     # Get analysis class out of the module
-    analysis = analysis_module.Analysis(args.unknown)
+    analysis_args = vars(args)
+    analysis = analysis_module.Analysis(analysis_args)
 
     # Set number of threads, load header files, custom dicts, ...
     initialize(args, analysis_module)
