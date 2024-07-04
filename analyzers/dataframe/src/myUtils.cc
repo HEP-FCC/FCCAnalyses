@@ -2089,7 +2089,7 @@ ROOT::VecOps::RVec<float> get_DVertex_thrusthemis_angle(ROOT::VecOps::RVec<Verte
   ROOT::VecOps::RVec<float> result;
 
   for (auto &p:vertex){
-    if (isPrimaryOrSecondaryVtx(p.vertex))continue;
+    if (isPrimaryVtx(p.vertex))continue;
     ROOT::VecOps::RVec<int> reco_ind = p.reco_ind;
     TLorentzVector tlv;
     for (auto &i:reco_ind){
