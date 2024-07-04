@@ -1,9 +1,0 @@
-<map id="analyzers/dataframe/FCCAnalyses/JetClusteringUtils.h" name="analyzers/dataframe/FCCAnalyses/JetClusteringUtils.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="160,6,357,61"/>
-<area shape="rect" id="Node000002" href="$_jet_clustering_8cc.html" title=" " alt="" coords="5,109,144,149"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,69,113,111,111,107,194,65"/>
-<area shape="rect" id="Node000003" href="$_jet_clustering_utils_8cc.html" title=" " alt="" coords="169,109,348,149"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,75,261,109,256,109,256,75"/>
-<area shape="rect" id="Node000004" href="$_jet_constituents_utils_8cc.html" title=" " alt="" coords="373,109,568,149"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="332,64,429,107,427,111,330,69"/>
-</map>

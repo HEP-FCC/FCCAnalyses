@@ -1,0 +1,21 @@
+<map id="analyzers/dataframe/FCCAnalyses/MCParticle.h" name="analyzers/dataframe/FCCAnalyses/MCParticle.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="456,5,643,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,64,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="456,39,284,61,78,96,77,91,283,55,455,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="89,93,146,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="456,42,320,64,160,96,159,91,319,59,455,37"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="170,93,291,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="474,48,291,93,290,87,472,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="315,93,434,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="509,48,414,90,412,85,506,43"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="458,93,641,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="552,46,552,79,547,79,547,46"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="665,93,841,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="599,43,711,86,709,91,597,48"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="866,93,1003,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="642,43,866,88,865,93,641,48"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1028,93,1169,119"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="644,37,1015,90,1014,95,643,43"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="1194,93,1331,119"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="643,33,882,57,1180,91,1180,96,882,62,643,38"/>
+</map>
