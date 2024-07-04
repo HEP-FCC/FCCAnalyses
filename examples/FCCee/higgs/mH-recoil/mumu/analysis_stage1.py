@@ -4,7 +4,8 @@ Analysis example, measure Higgs mass in the Z(mumu)H recoil measurement.
 from argparse import ArgumentParser
 
 
-# Mandatory: Analysis class where the user defines the dataframe operations
+# Mandatory: Analysis class where the user defines the operations on the
+# dataframe.
 class Analysis():
     '''
     Higgs mass recoil analysis in Z(mumu)H.
@@ -33,31 +34,23 @@ class Analysis():
                                 'output': 'p8_ee_ZH_ecm240_out'}
         }
 
-        # Mandatory: Production tag when running over centrally produced
+        # Mandatory: Production tag when running over the centrally produced
         # samples, this points to the yaml files for getting sample statistics
         self.prod_tag = 'FCCee/spring2021/IDEA/'
 
         # Optional: output directory, default is local running directory
         self.output_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/stage1'
 
-        # Optional: analysisName, default is ""
-        # self.analysis_name = "My Analysis"
+        # Optional: analysisName, default is ''
+        # self.analysis_name = 'My Analysis'
 
-        # Optional: ncpus, default is 4
-        self.n_threads = 8
+        # Optional: number of threads to run on, default is "all available"
+        # self.n_threads = 4
 
-        # Optional running on HTCondor, default is False
-        # runBatch    = False
+        # Optional: running on HTCondor, default is False
+        # self.run_batch = False
 
-        # Optional: batch queue name when running on HTCondor, default is
-        # "workday"
-        # batchQueue = "longlunch"
-
-        # Optional: computing account when running on CERN's HTCondor, default
-        # is "group_u_FCC.local_gen"
-        # compGroup = 'group_u_FCC.local_gen'
-
-        # Optional test file
+        # Optional: test file
         self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/' \
                          'generation/DelphesEvents/spring2021/IDEA/' \
                          'p8_ee_ZH_ecm240/events_101027117.root'
@@ -115,7 +108,7 @@ class Analysis():
         )
         return dframe2
 
-    # Mandatory: output function, please make sure you return the branch_list
+    # Mandatory: output function, please make sure you return the branch list
     # as a python list
     def output(self):
         '''
