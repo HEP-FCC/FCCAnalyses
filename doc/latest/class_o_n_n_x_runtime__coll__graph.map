@@ -1,0 +1,18 @@
+<map id="ONNXRuntime" name="ONNXRuntime">
+<area shape="rect" id="Node000001" title=" " alt="" coords="859,107,973,133"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="496,5,651,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="665,36,749,53,836,78,895,105,892,110,834,82,747,58,664,41"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="478,69,669,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="683,96,859,112,858,118,682,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="480,226,667,251"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="680,248,758,243,797,234,833,219,859,200,880,176,907,131,911,134,884,179,863,204,836,224,799,239,759,248,681,253"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="235,206,322,231"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="336,228,387,235,480,238,480,244,386,240,335,233"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="481,133,666,173"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="335,204,482,171,483,176,336,209"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,199,144,239"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="158,216,235,216,235,221,158,221"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="680,155,756,153,834,144,884,130,885,135,835,149,756,158,680,160"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="195,135,362,161"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="376,147,480,149,480,154,376,152"/>
+</map>
