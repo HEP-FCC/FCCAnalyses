@@ -1297,7 +1297,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState> get_pseudotrack(ROOT::VecOps::RVec<Verte
   ROOT::VecOps::RVec<edm4hep::TrackState> result;
   float norm = 1e-3;   // to convert from mm to meters
   for (auto & p: vertex){
-    if (isPrimaryOrSecondaryVtx(p.vertex))continue;
+    if (isPrimaryVtx(p.vertex))continue;
     edm4hep::TrackState track;
     TVector3 vertexFB( p.vertex.position.x * norm,
 		       p.vertex.position.y * norm,
