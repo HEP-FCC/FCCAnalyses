@@ -1,0 +1,25 @@
+<map id="addons/FastJet/JetClustering.h" name="addons/FastJet/JetClustering.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="410,5,614,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,64,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="410,32,257,51,78,81,77,76,256,46,409,27"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="89,79,146,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="431,33,307,53,160,81,159,76,306,48,430,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="171,79,333,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="471,33,308,78,307,72,470,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="361,152,541,177"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="466,33,428,51,411,64,398,80,394,96,399,112,411,127,425,141,421,145,407,131,395,114,389,96,394,77,408,60,425,46,464,28"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="409,79,615,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="515,31,515,65,509,65,509,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="989,152,1142,177"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="614,18,778,22,964,32,1123,49,1177,62,1207,77,1215,89,1215,102,1210,113,1199,122,1168,138,1132,151,1130,146,1166,134,1196,118,1205,109,1210,100,1210,91,1204,81,1175,67,1122,55,963,38,778,28,614,23"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="831,79,1025,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="579,28,848,74,847,79,578,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1049,79,1193,104"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="615,28,1036,76,1035,81,614,33"/>
+<area shape="rect" id="Node000010" href="$ValenciaPlugin_8h.html" title=" " alt="" coords="639,79,806,104"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="547,28,677,72,675,77,545,33"/>
+<area shape="poly" id="edge12_Node000010_Node000005" title=" " alt="" coords="680,107,508,151,507,146,678,101"/>
+<area shape="poly" id="edge11_Node000010_Node000007" title=" " alt="" coords="778,101,997,147,996,152,777,107"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="645,152,800,177"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="725,104,725,138,720,138,720,104"/>
+</map>

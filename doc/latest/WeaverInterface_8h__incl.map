@@ -1,0 +1,17 @@
+<map id="addons/ONNXRuntime/WeaverInterface.h" name="addons/ONNXRuntime/WeaverInterface.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="309,5,465,45"/>
+<area shape="rect" id="Node000002" href="$ONNXRuntime_8h.html" title=" " alt="" coords="186,93,399,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="366,48,319,86,316,82,363,43"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="424,93,543,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="412,43,460,82,457,87,409,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,161,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="260,121,131,165,130,160,258,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="185,167,240,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="282,121,238,160,234,156,278,117"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="264,167,321,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="295,119,295,153,290,153,290,119"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="345,167,392,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="307,117,348,155,344,159,303,121"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="416,167,487,192"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="319,116,414,159,412,163,317,121"/>
+</map>
