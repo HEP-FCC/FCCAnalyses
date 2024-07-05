@@ -15,10 +15,12 @@ class Analysis():
         parser = ArgumentParser(
             description='Additional analysis arguments',
             usage='Provide additional arguments after analysis script path')
-        parser.add_argument('--mva', default="", type=str,
-                            help='Path to the trained MVA ROOT file.')
+        parser.add_argument('--muon-pt', default='10.', type=float,
+                            help='Minimal pT of the mouns.')
         # Parse additional arguments not known to the FCCAnalyses parsers
-        self.args = parser.parse_args(cmdline_args['unknown'])
+        # All command line arguments know to fccanalysis are provided in the
+        # `cmdline_arg` dictionary.
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
 
         # Mandatory: List of processes to run over
         self.process_list = {
@@ -39,7 +41,7 @@ class Analysis():
         # Optional: analysisName, default is ''
         # self.analysis_name = 'My Analysis'
 
-        # Optional: number of threads to run on, default is "all available"
+        # Optional: number of threads to run on, default is 'all available'
         # self.n_threads = 4
 
         # Optional: running on HTCondor, default is False
@@ -56,7 +58,7 @@ class Analysis():
         # Optional: output directory on eos, if specified files will be copied
         # there once the batch job is done, default is empty
         self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
-                              'higgs/mH-recoil/'
+                              f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
 
         # Optional: type for eos, needed when <outputDirEos> is specified. The
         # default is FCC EOS, which is eospublic
@@ -73,50 +75,53 @@ class Analysis():
         '''
         Analysis graph.
         '''
+
+        muon_pt = self.ana_args.muon_pt
+
         dframe2 = (
             dframe
             # define an alias for muon index collection
-            .Alias("Muon0", "Muon#0.index")
+            .Alias('Muon0', 'Muon#0.index')
             # define the muon collection
             .Define(
-                "muons",
-                "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
+                'muons',
+                'ReconstructedParticle::get(Muon0, ReconstructedParticles)')
             # select muons on pT
-            .Define("selected_muons",
-                    "ReconstructedParticle::sel_pt(10.)(muons)")
+            .Define('selected_muons',
+                    f'ReconstructedParticle::sel_pt({muon_pt})(muons)')
             # create branch with muon transverse momentum
-            .Define("selected_muons_pt",
-                    "ReconstructedParticle::get_pt(selected_muons)")
+            .Define('selected_muons_pt',
+                    'ReconstructedParticle::get_pt(selected_muons)')
             # create branch with muon rapidity
-            .Define("selected_muons_y",
-                    "ReconstructedParticle::get_y(selected_muons)")
+            .Define('selected_muons_y',
+                    'ReconstructedParticle::get_y(selected_muons)')
             # create branch with muon total momentum
-            .Define("selected_muons_p",
-                    "ReconstructedParticle::get_p(selected_muons)")
+            .Define('selected_muons_p',
+                    'ReconstructedParticle::get_p(selected_muons)')
             # create branch with muon energy
-            .Define("selected_muons_e",
-                    "ReconstructedParticle::get_e(selected_muons)")
+            .Define('selected_muons_e',
+                    'ReconstructedParticle::get_e(selected_muons)')
             # find zed candidates from  di-muon resonances
             .Define(
-                "zed_leptonic",
-                "ReconstructedParticle::resonanceBuilder(91)(selected_muons)")
+                'zed_leptonic',
+                'ReconstructedParticle::resonanceBuilder(91)(selected_muons)')
             # create branch with zed mass
-            .Define("zed_leptonic_m",
-                    "ReconstructedParticle::get_mass(zed_leptonic)")
+            .Define('zed_leptonic_m',
+                    'ReconstructedParticle::get_mass(zed_leptonic)')
             # create branch with zed transverse momenta
-            .Define("zed_leptonic_pt",
-                    "ReconstructedParticle::get_pt(zed_leptonic)")
+            .Define('zed_leptonic_pt',
+                    'ReconstructedParticle::get_pt(zed_leptonic)')
             # calculate recoil of zed_leptonic
-            .Define("zed_leptonic_recoil",
-                    "ReconstructedParticle::recoilBuilder(240)(zed_leptonic)")
+            .Define('zed_leptonic_recoil',
+                    'ReconstructedParticle::recoilBuilder(240)(zed_leptonic)')
             # create branch with recoil mass
-            .Define("zed_leptonic_recoil_m",
-                    "ReconstructedParticle::get_mass(zed_leptonic_recoil)")
+            .Define('zed_leptonic_recoil_m',
+                    'ReconstructedParticle::get_mass(zed_leptonic_recoil)')
             # create branch with leptonic charge
-            .Define("zed_leptonic_charge",
-                    "ReconstructedParticle::get_charge(zed_leptonic)")
+            .Define('zed_leptonic_charge',
+                    'ReconstructedParticle::get_charge(zed_leptonic)')
             # Filter at least one candidate
-            .Filter("zed_leptonic_recoil_m.size()>0")
+            .Filter('zed_leptonic_recoil_m.size()>0')
         )
         return dframe2
 
@@ -127,13 +132,13 @@ class Analysis():
         Output variables which will be saved to output root file.
         '''
         branch_list = [
-            "selected_muons_pt",
-            "selected_muons_y",
-            "selected_muons_p",
-            "selected_muons_e",
-            "zed_leptonic_pt",
-            "zed_leptonic_m",
-            "zed_leptonic_charge",
-            "zed_leptonic_recoil_m"
+            'selected_muons_pt',
+            'selected_muons_y',
+            'selected_muons_p',
+            'selected_muons_e',
+            'zed_leptonic_pt',
+            'zed_leptonic_m',
+            'zed_leptonic_charge',
+            'zed_leptonic_recoil_m'
         ]
         return branch_list
