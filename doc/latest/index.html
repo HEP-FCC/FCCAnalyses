@@ -1,12 +1,11 @@
-<!-- HTML header for doxygen 1.9.8-->
+<!-- HTML header for doxygen 1.8.15-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
 <title>FCCAnalyses: FCCAnalyses</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -22,14 +21,15 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="fccanalyses_stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr id="projectrow">
-  <td id="projectalign">
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">FCCAnalyses
    </div>
   </td>
@@ -78,47 +78,35 @@ $(function() {
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title"><a class="el" href="namespaceFCCAnalyses.html" title="FCC analyzers collection.">FCCAnalyses</a> </div></div>
+  <div class="headertitle"><div class="title"><a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> Common framework for FCC related analyses. This framework allows one to write full analysis, taking <a href="https://github.com/key4hep/EDM4hep">EDM4hep</a> input ROOT files and producing the plots.</p>
+<div class="textblock"><p><a class="anchor" id="md__r_e_a_d_m_e"></a> Common framework for FCC related analyses. This framework allows one to write full analysis, taking <a href="https://github.com/key4hep/EDM4hep">EDM4hep</a> input ROOT files and producing the plots.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Quick Start</h1>
+Quick start</h1>
 <p>Running analysis script can be done using <code>fccanalysis</code> command which is shipped in Key4hep stack:</p>
 <div class="fragment"><div class="line">source /cvmfs/sw.hsf.org/key4hep/setup.sh</div>
 <div class="line">fccanalysis run analysis_script.py</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
-Pre-generated Samples</h1>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Access</h2>
-<p>To have read access to the FCC pre-generated samples, one needs to be subscribed to the following e-group (with owner approval): <code>fcc-eos-access</code>.</p>
-<h2><a class="anchor" id="autotoc_md4"></a>
-Winter 2023 and Spring 2021 Pre-generated Samples</h2>
-<p>In order to run over pre-generated samples from <code>winter2023</code> or <code>spring2021</code> campaigns one needs to compile <code>pre-edm4hep1</code> branch of the <a class="el" href="namespaceFCCAnalyses.html" title="FCC analyzers collection.">FCCAnalyses</a> in the <code>2024-03-10</code> release:</p>
-<div class="fragment"><div class="line">source /cvmfs/sw.hsf.org/key4hep/setup.sh -r 2024-03-10</div>
-<div class="line">git clone --branch pre-edm4hep1 git@github.com:HEP-FCC/FCCAnalyses.git</div>
-<div class="line">cd FCCAnalyses</div>
-<div class="line">source ./setup.sh</div>
-<div class="line">fccanalysis build -j 8</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
-Sample Metadata</h2>
-<p>All sample information, including Key4hep stack used for the campaign, is collected at the <a href="https://fcc-physics-events.web.cern.ch/">FCC Physics Events</a> website.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
-Documentation</h1>
+</div><!-- fragment --><p>To have access to the FCC pre-generated samples, one needs to be subscribed to one of the following e-groups (with owner approval) <code>fcc-eos-read-xx</code> with <code>xx = ee,hh,eh</code>.</p>
 <p>Detailed documentation can be found at the <a href="https://hep-fcc.github.io/FCCAnalyses/">FCCAnalyses</a> webpage.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Pre-generated Samples</h1>
+<p>All sample information, including Key4hep stack used for the campaign, is collected at the <a href="http://fcc-physics-events.web.cern.ch/fcc-physics-events/">FCC Physics Events</a> website.</p>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Contributing</h1>
 <p>As usual, if you aim at contributing to the repository, please fork it, develop your feature/analysis and submit a pull requests.</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
-Code Formating</h2>
-<p>The preferred style of the C++ code in the <a href="https://hep-fcc.github.io/FCCAnalyses/">FCCAnalyses</a> is LLVM, which is checked by a CI job.</p>
-<p>To apply formatting to a file: </p><div class="fragment"><div class="line">clang-format -i -style=file /path/to/file.cpp</div>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Code formating</h2>
+<p>The preferred style of the C++ code in the <a class="el" href="namespace_f_c_c_analyses.html" title="Jet clustering utilities interface.">FCCAnalyses</a> is LLVM which is checked by CI job.</p>
+<p>To apply formatting to a given file: </p><div class="fragment"><div class="line">clang-format -i -style=file /path/to/file.cpp</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
-<!-- HTML footer for doxygen 1.9.8-->
+<!-- HTML footer for doxygen 1.8.15-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri Jul 5 2024 14:56:02 for FCCAnalyses by &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.9.8
 </small></address>
 </body>
 </html>

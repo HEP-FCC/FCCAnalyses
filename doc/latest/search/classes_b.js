@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['recoilbuilder_0',['recoilbuilder',['../structFCCAnalyses_1_1JetClusteringUtils_1_1recoilBuilder.html',1,'FCCAnalyses::JetClusteringUtils::recoilBuilder'],['../structFCCAnalyses_1_1ReconstructedParticle_1_1recoilBuilder.html',1,'FCCAnalyses::ReconstructedParticle::recoilBuilder']]],
-  ['resonancebuilder_1',['resonancebuilder',['../structFCCAnalyses_1_1JetClusteringUtils_1_1resonanceBuilder.html',1,'FCCAnalyses::JetClusteringUtils::resonanceBuilder'],['../structFCCAnalyses_1_1ReconstructedParticle_1_1resonanceBuilder.html',1,'FCCAnalyses::ReconstructedParticle::resonanceBuilder']]]
+  ['recoilbuilder_0',['recoilbuilder',['../struct_f_c_c_analyses_1_1_jet_clustering_utils_1_1recoil_builder.html',1,'FCCAnalyses::JetClusteringUtils::recoilBuilder'],['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1recoil_builder.html',1,'FCCAnalyses::ReconstructedParticle::recoilBuilder']]],
+  ['resonancebuilder_1',['resonancebuilder',['../struct_f_c_c_analyses_1_1_jet_clustering_utils_1_1resonance_builder.html',1,'FCCAnalyses::JetClusteringUtils::resonanceBuilder'],['../struct_f_c_c_analyses_1_1_reconstructed_particle_1_1resonance_builder.html',1,'FCCAnalyses::ReconstructedParticle::resonanceBuilder']]]
 ];
