@@ -1,84 +1,133 @@
-#Mandatory: List of processes
-processList = {
-    'p8_ee_ZZ_ecm240':{'fraction':0.005},#Run the full statistics in one output file named <outputDir>/p8_ee_ZZ_ecm240.root
-    'p8_ee_WW_ecm240':{'fraction':0.5, 'chunks':2}, #Run 50% of the statistics in two files named <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
-    'p8_ee_ZH_ecm240':{'fraction':0.2, 'output':'p8_ee_ZH_ecm240_out'} #Run 20% of the statistics in one file named <outputDir>/p8_ee_ZH_ecm240_out.root (example on how to change the output name)
-}
+'''
+Analysis example, measure Higgs mass in the Z(mumu)H recoil measurement.
+'''
+from argparse import ArgumentParser
 
-#Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
-prodTag     = "FCCee/spring2021/IDEA/"
 
-#Optional: output directory, default is local running directory
-outputDir   = "outputs/FCCee/higgs/mH-recoil/mumu/stage1"
+# Mandatory: Analysis class where the user defines the operations on the
+# dataframe.
+class Analysis():
+    '''
+    Higgs mass recoil analysis in Z(mumu)H.
+    '''
+    def __init__(self, cmdline_args):
+        parser = ArgumentParser(
+            description='Additional analysis arguments',
+            usage='Provide additional arguments after analysis script path')
+        parser.add_argument('--muon-pt', default='10.', type=float,
+                            help='Minimal pT of the mouns.')
+        # Parse additional arguments not known to the FCCAnalyses parsers
+        # All command line arguments know to fccanalysis are provided in the
+        # `cmdline_arg` dictionary.
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
 
-#Optional: analysisName, default is ""
-#analysisName = "My Analysis"
+        # Mandatory: List of processes to run over
+        self.process_list = {
+            # Run the full statistics in one output file named
+            # <outputDir>/p8_ee_ZZ_ecm240.root
+            'p8_ee_ZZ_ecm240': {'fraction': 0.005},
+            # Run 50% of the statistics with output into two files named
+            # <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
+            'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
+            # Run 20% of the statistics in one file named
+            # <outputDir>/p8_ee_ZH_ecm240_out.root (example on how to change
+            # the output name)
+            'p8_ee_ZH_ecm240': {'fraction': 0.2,
+                                'output': 'p8_ee_ZH_ecm240_out'}
+        }
 
-#Optional: ncpus, default is 4
-#nCPUS       = 8
+        # Mandatory: Production tag when running over the centrally produced
+        # samples, this points to the yaml files for getting sample statistics
+        self.prod_tag = 'FCCee/spring2021/IDEA/'
 
-#Optional running on HTCondor, default is False
-#runBatch    = False
+        # Optional: output directory, default is local running directory
+        self.output_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/' \
+                          f'stage1_{self.ana_args.muon_pt}'
 
-#Optional batch queue name when running on HTCondor, default is workday
-#batchQueue = "longlunch"
+        # Optional: analysisName, default is ''
+        # self.analysis_name = 'My Analysis'
 
-#Optional computing account when running on HTCondor, default is group_u_FCC.local_gen
-#compGroup = "group_u_FCC.local_gen"
+        # Optional: number of threads to run on, default is 'all available'
+        # self.n_threads = 4
 
-#Optional test file
-testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+        # Optional: running on HTCondor, default is False
+        # self.run_batch = False
 
-#Mandatory: RDFanalysis class where the use defines the operations on the TTree
-class RDFanalysis():
+        # Optional: test file
+        self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/' \
+                         'generation/DelphesEvents/spring2021/IDEA/' \
+                         'p8_ee_ZH_ecm240/events_101027117.root'
 
-    #__________________________________________________________
-    #Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
-    def analysers(df):
-        df2 = (
-            df
+    # Mandatory: analyzers function to define the analysis graph, please make
+    # sure you return the dataframe, in this example it is dframe2
+    def analyzers(self, dframe):
+        '''
+        Analysis graph.
+        '''
+
+        muon_pt = self.ana_args.muon_pt
+
+        dframe2 = (
+            dframe
             # define an alias for muon index collection
-            .Alias("Muon0", "Muon#0.index")
+            .Alias('Muon0', 'Muon#0.index')
             # define the muon collection
-            .Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
-            #select muons on pT
-            .Define("selected_muons", "ReconstructedParticle::sel_pt(10.)(muons)")
+            .Define(
+                'muons',
+                'ReconstructedParticle::get(Muon0, ReconstructedParticles)')
+            # select muons on pT
+            .Define('selected_muons',
+                    f'ReconstructedParticle::sel_pt({muon_pt})(muons)')
             # create branch with muon transverse momentum
-            .Define("selected_muons_pt", "ReconstructedParticle::get_pt(selected_muons)")
+            .Define('selected_muons_pt',
+                    'ReconstructedParticle::get_pt(selected_muons)')
             # create branch with muon rapidity
-            .Define("selected_muons_y",  "ReconstructedParticle::get_y(selected_muons)")
+            .Define('selected_muons_y',
+                    'ReconstructedParticle::get_y(selected_muons)')
             # create branch with muon total momentum
-            .Define("selected_muons_p",     "ReconstructedParticle::get_p(selected_muons)")
+            .Define('selected_muons_p',
+                    'ReconstructedParticle::get_p(selected_muons)')
             # create branch with muon energy
-            .Define("selected_muons_e",     "ReconstructedParticle::get_e(selected_muons)")
+            .Define('selected_muons_e',
+                    'ReconstructedParticle::get_e(selected_muons)')
             # find zed candidates from  di-muon resonances
-            .Define("zed_leptonic",         "ReconstructedParticle::resonanceBuilder(91)(selected_muons)")
+            .Define(
+                'zed_leptonic',
+                'ReconstructedParticle::resonanceBuilder(91)(selected_muons)')
             # create branch with zed mass
-            .Define("zed_leptonic_m",       "ReconstructedParticle::get_mass(zed_leptonic)")
+            .Define('zed_leptonic_m',
+                    'ReconstructedParticle::get_mass(zed_leptonic)')
             # create branch with zed transverse momenta
-            .Define("zed_leptonic_pt",      "ReconstructedParticle::get_pt(zed_leptonic)")
+            .Define('zed_leptonic_pt',
+                    'ReconstructedParticle::get_pt(zed_leptonic)')
             # calculate recoil of zed_leptonic
-            .Define("zed_leptonic_recoil",  "ReconstructedParticle::recoilBuilder(240)(zed_leptonic)")
+            .Define('zed_leptonic_recoil',
+                    'ReconstructedParticle::recoilBuilder(240)(zed_leptonic)')
             # create branch with recoil mass
-            .Define("zed_leptonic_recoil_m","ReconstructedParticle::get_mass(zed_leptonic_recoil)")
+            .Define('zed_leptonic_recoil_m',
+                    'ReconstructedParticle::get_mass(zed_leptonic_recoil)')
             # create branch with leptonic charge
-            .Define("zed_leptonic_charge","ReconstructedParticle::get_charge(zed_leptonic)")
+            .Define('zed_leptonic_charge',
+                    'ReconstructedParticle::get_charge(zed_leptonic)')
             # Filter at least one candidate
-            .Filter("zed_leptonic_recoil_m.size()>0")
+            .Filter('zed_leptonic_recoil_m.size()>0')
         )
-        return df2
+        return dframe2
 
-    #__________________________________________________________
-    #Mandatory: output function, please make sure you return the branchlist as a python list
-    def output():
-        branchList = [
-            "selected_muons_pt",
-            "selected_muons_y",
-            "selected_muons_p",
-            "selected_muons_e",
-            "zed_leptonic_pt",
-            "zed_leptonic_m",
-            "zed_leptonic_charge",
-            "zed_leptonic_recoil_m"
+    # Mandatory: output function, please make sure you return the branch list
+    # as a python list
+    def output(self):
+        '''
+        Output variables which will be saved to output root file.
+        '''
+        branch_list = [
+            'selected_muons_pt',
+            'selected_muons_y',
+            'selected_muons_p',
+            'selected_muons_e',
+            'zed_leptonic_pt',
+            'zed_leptonic_m',
+            'zed_leptonic_charge',
+            'zed_leptonic_recoil_m'
         ]
-        return branchList
+        return branch_list
