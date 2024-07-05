@@ -114,8 +114,8 @@ def get_process_info_yaml(process_name: str,
                          exc.errno, exc.strerror, yamlfilepath)
             sys.exit(3)
         finally:
-            LOGGER.info('YAML file with process information successfully '
-                        'loaded:\n%s', yamlfilepath)
+            LOGGER.debug('YAML file with process information successfully '
+                         'loaded:\n%s', yamlfilepath)
 
     filelist = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]

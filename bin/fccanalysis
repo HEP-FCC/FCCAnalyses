@@ -69,7 +69,7 @@ def main():
 
     setup_subparsers(subparsers)
 
-    args = parser.parse_args()
+    args, _ = parser.parse_known_args()
 
     verbosity_level = logging.INFO
     if args.verbose or args.more_verbose or args.most_verbose:
