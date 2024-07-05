@@ -101,7 +101,8 @@ def create_subjob_script(local_dir: str,
                          process_name: str,
                          chunk_num: int,
                          chunk_list: list[list[str]],
-                         anapath: str) -> str:
+                         anapath: str,
+                         cmd_args) -> str:
     '''
     Creates sub-job script to be run.
     '''
@@ -133,9 +134,13 @@ def create_subjob_script(local_dir: str,
                                    f'chunk_{chunk_num}.root')
 
     scr += local_dir
-    scr += f'/bin/fccanalysis run {anapath} --batch '
-    scr += f'--output {output_path} '
-    scr += '--files-list'
+    scr += f'/bin/fccanalysis run {anapath} --batch'
+    scr += f' --output {output_path}'
+    if cmd_args.ncpus > 0:
+        scr += f' --ncpus {cmd_args.ncpus}'
+    if len(cmd_args.unknown) > 0:
+        scr += ' ' + ' '.join(cmd_args.unknown)
+    scr += ' --files-list'
     for file_path in chunk_list[chunk_num]:
         scr += f' {file_path}'
     scr += '\n\n'
@@ -338,14 +343,15 @@ def run_rdf(args,
 
 
 # _____________________________________________________________________________
-def send_to_batch(analysis, chunk_list, process, anapath: str):
+def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
     '''
     Send jobs to HTCondor batch system.
     '''
     local_dir = os.environ['LOCAL_DIR']
     current_date = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-    log_dir = os.path.join(local_dir, 'BatchOutputs', current_date, process)
+    log_dir = os.path.join(local_dir, 'BatchOutputs', current_date,
+                           sample_name)
     if not os.path.exists(log_dir):
         os.system(f'mkdir -p {log_dir}')
 
@@ -362,8 +368,9 @@ def send_to_batch(analysis, chunk_list, process, anapath: str):
 
     subjob_scripts = []
     for ch_num in range(len(chunk_list)):
-        subjob_script_path = os.path.join(log_dir,
-                                          f'job_{process}_chunk_{ch_num}.sh')
+        subjob_script_path = os.path.join(
+            log_dir,
+            f'job_{sample_name}_chunk_{ch_num}.sh')
         subjob_scripts.append(subjob_script_path)
 
         for i in range(3):
@@ -371,10 +378,11 @@ def send_to_batch(analysis, chunk_list, process, anapath: str):
                 with open(subjob_script_path, 'w', encoding='utf-8') as ofile:
                     subjob_script = create_subjob_script(local_dir,
                                                          analysis,
-                                                         process,
+                                                         sample_name,
                                                          ch_num,
                                                          chunk_list,
-                                                         anapath)
+                                                         anapath,
+                                                         args)
                     ofile.write(subjob_script)
             except IOError as err:
                 if i < 2:
@@ -391,13 +399,13 @@ def send_to_batch(analysis, chunk_list, process, anapath: str):
     LOGGER.debug('Sub-job scripts to be run:\n - %s',
                  '\n - '.join(subjob_scripts))
 
-    condor_config_path = f'{log_dir}/job_desc_{process}.cfg'
+    condor_config_path = f'{log_dir}/job_desc_{sample_name}.cfg'
 
     for i in range(3):
         try:
             with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
                 condor_config = create_condor_config(log_dir,
-                                                     process,
+                                                     sample_name,
                                                      determine_os(local_dir),
                                                      analysis,
                                                      subjob_scripts)
@@ -678,7 +686,7 @@ def run_fccanalysis(args, analysis_module):
 
             anapath = os.path.abspath(args.anascript_path)
 
-            send_to_batch(analysis, chunk_list, process_name, anapath)
+            send_to_batch(args, analysis, chunk_list, process_name, anapath)
 
         else:
             # Running locally
