@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720184650822,
+  "lastUpdate": 1720184652756,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -40619,6 +40619,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "juraj.smiesko@cern.ch",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "distinct": true,
+          "id": "4eecfd537d3f5c58c61e0199e530a753dac17f0b",
+          "message": "Making additional cmd line agruments available in the analysis script (#383)\n\n* Making additional command line agruments available in the analysis script\r\n\r\n* Providing all command line arguments\r\n\r\n* Adjusting batch example\r\n\r\n* .gitignore adjustment\r\n\r\n* Introduced muon_pt example argument\r\n\r\n* Providing additional args also to batch runs",
+          "timestamp": "2024-07-05T14:54:34+02:00",
+          "tree_id": "288a9bde0325530af028a148674b9bdb3328046e",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/4eecfd537d3f5c58c61e0199e530a753dac17f0b"
+        },
+        "date": 1720184652014,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 4.748602102789912,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 7.36845485671063,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.18475730907472,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.26597026283427,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 2.608711379782412,
+            "unit": "Evt/s"
           }
         ]
       }
