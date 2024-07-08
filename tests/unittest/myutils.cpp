@@ -1,5 +1,10 @@
 #include "FCCAnalyses/myUtils.h"
 
+#include "edm4hep/EDM4hepVersion.h"
+#if __has_include("edm4hep/utils/bit_utils.h")
+#include "edm4hep/utils/bit_utils.h"
+#endif
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 
@@ -55,17 +60,31 @@ TEST_CASE("PV_ntracks", "[basics]") {
   ROOT::VecOps::RVec<FCCAnalyses::VertexingUtils::FCCAnalysesVertex> vVec;
 
   FCCAnalyses::VertexingUtils::FCCAnalysesVertex v1;
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
   v1.vertex.primary = 1;
+#else
+  v1.vertex.type = edm4hep::utils::setBit(v1.vertex.type, edm4hep::Vertex::BITPrimaryVertex, true);
+#endif
   v1.ntracks = 7;
   vVec.push_back(v1);
 
   FCCAnalyses::VertexingUtils::FCCAnalysesVertex v2;
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
   v2.vertex.primary = 0;
+#else
+  v1.vertex.type = edm4hep::utils::setBit(v1.vertex.type, edm4hep::Vertex::BITPrimaryVertex, false);
+#endif
+
   v2.ntracks = 14;
   vVec.push_back(v2);
 
   FCCAnalyses::VertexingUtils::FCCAnalysesVertex v3;
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
   v3.vertex.primary = -4;
+#else
+  v1.vertex.type = static_cast<uint32_t>(-4);
+#endif
+
   v3.ntracks = 21;
   vVec.push_back(v3);
 
@@ -78,19 +97,30 @@ TEST_CASE("PV_ntracks", "[basics]") {
 TEST_CASE("hasPV", "[basics]") {
   ROOT::VecOps::RVec<FCCAnalyses::VertexingUtils::FCCAnalysesVertex> vVec1;
   FCCAnalyses::VertexingUtils::FCCAnalysesVertex v1;
-  v1.vertex.primary = 1;
-  vVec1.push_back(v1);
   FCCAnalyses::VertexingUtils::FCCAnalysesVertex v2;
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
+  v1.vertex.primary = 1;
   v2.vertex.primary = 0;
+#else
+  v1.vertex.type = edm4hep::utils::setBit(v1.vertex.type, edm4hep::Vertex::BITPrimaryVertex, true);
+  v2.vertex.type = edm4hep::utils::setBit(v2.vertex.type, edm4hep::Vertex::BITPrimaryVertex, false);
+#endif
+  vVec1.push_back(v1);
   vVec1.push_back(v2);
 
   ROOT::VecOps::RVec<FCCAnalyses::VertexingUtils::FCCAnalysesVertex> vVec2;
   FCCAnalyses::VertexingUtils::FCCAnalysesVertex v3;
-  v3.vertex.primary = 0;
-  vVec2.push_back(v3);
   FCCAnalyses::VertexingUtils::FCCAnalysesVertex v4;
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
+  v3.vertex.primary = 0;
   v4.vertex.primary = -4;
+#else
+  v3.vertex.type = edm4hep::utils::setBit(v3.vertex.type, edm4hep::Vertex::BITPrimaryVertex, false);
+  v4.vertex.type = static_cast<uint32_t>(-4);
+#endif
+
   vVec2.push_back(v4);
+  vVec2.push_back(v3);
 
   REQUIRE(FCCAnalyses::myUtils::hasPV(vVec1) == 1);
   REQUIRE(FCCAnalyses::myUtils::hasPV(vVec2) == 0);

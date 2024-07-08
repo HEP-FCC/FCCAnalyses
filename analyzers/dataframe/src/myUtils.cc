@@ -6,7 +6,12 @@
 #include <vector>
 
 // EDM4hep
+#include "FCCAnalyses/VertexingUtils.h"
 #include "edm4hep/EDM4hepVersion.h"
+#if __has_include("edm4hep/utils/bit_utils.h")
+#include "edm4hep/utils/bit_utils.h"
+#endif
+
 
 // FCCAnalyses
 #include "FCCAnalyses/VertexFitterSimple.h"
@@ -67,10 +72,31 @@ float get_dPV2DV_ave(ROOT::VecOps::RVec<float> in){
   return result;
 }
 
+namespace {
+bool isPrimaryVtx(const edm4hep::VertexData& vertex) {
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
+  return vertex.primary == 1;
+#else
+  return edm4hep::utils::checkBit(vertex.type,
+                                  edm4hep::Vertex::BITPrimaryVertex);
+#endif
+}
+
+bool isPrimaryOrSecondaryVtx(const edm4hep::VertexData &vertex) {
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
+  return vertex.primary > 0;
+#else
+  return edm4hep::utils::checkAnyBits(vertex.type,
+                                      edm4hep::Vertex::BITPrimaryVertex,
+                                      edm4hep::Vertex::BITSecondaryVertex);
+#endif
+}
+} // namespace
+
 int get_PV_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   int result=0;
   for (auto &p:vertex){
-    if (p.vertex.primary==1) {
+    if (isPrimaryVtx(p.vertex)) {
       result=p.ntracks;
       break;
     }
@@ -81,7 +107,7 @@ int get_PV_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex)
 int hasPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   int result=0;
   for (auto &p:vertex){
-    if (p.vertex.primary==1) {
+    if (isPrimaryVtx(p.vertex)) {
       result=1;
       break;
     }
@@ -153,7 +179,7 @@ ROOT::VecOps::RVec<float> get_Vertex_chi2(ROOT::VecOps::RVec<VertexingUtils::FCC
 ROOT::VecOps::RVec<int> get_Vertex_isPV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   ROOT::VecOps::RVec<int> result;
   for (auto &p:vertex)
-    result.push_back(p.vertex.primary);
+    result.push_back(isPrimaryVtx(p.vertex));
   return result;
 }
 
@@ -169,10 +195,10 @@ ROOT::VecOps::RVec<float> get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCC
   ROOT::VecOps::RVec<float> result;
   VertexingUtils::FCCAnalysesVertex PV;
   for (auto &p:vertex)
-    if (p.vertex.primary>0) PV=p;
+    if (isPrimaryVtx(p.vertex)) PV=p;
 
   for (auto &p:vertex){
-    if (p.vertex.primary>0) result.push_back(0);
+    if (isPrimaryVtx(p.vertex)) result.push_back(0);
     else result.push_back(get_distanceVertex(PV.vertex,p.vertex, comp));
   }
   return result;
@@ -184,10 +210,10 @@ ROOT::VecOps::RVec<float> get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils
   ROOT::VecOps::RVec<float> result;
   VertexingUtils::FCCAnalysesVertex PV;
   for (auto &p:vertex)
-    if (p.vertex.primary>0) PV=p;
+    if (isPrimaryVtx(p.vertex)) PV=p;
 
   for (auto &p:vertex){
-    if (p.vertex.primary>0) result.push_back(0);
+    if (isPrimaryVtx(p.vertex)) result.push_back(0);
     else result.push_back(get_distanceErrorVertex(PV.vertex,p.vertex, comp));
   }
   return result;
@@ -289,7 +315,7 @@ get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
 
 int globalmm=0;
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
-merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in){
+merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in) {
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> result;
   std::cout<<"============================"<<std::endl;
   for (size_t i = 0; i < in.size()-1; ++i){
@@ -302,15 +328,27 @@ merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in){
       float err1 = sqrt(vi_covMatrix[0]+vj_covMatrix[0]+vi_covMatrix[2]+vj_covMatrix[2]+vi_covMatrix[5]+vj_covMatrix[5]);
       float err2 = get_distanceErrorVertex(vi,vj,-1);
       if (dist<err1 || dist<err2){
-	globalmm+=1;
-	std::cout << globalmm << "  i,j="<< i<<", "<<j<<"  d= "<<dist<<"  err1  " << err1 << "  err2  " << err2 << " ntrk v1,v2="<< in.at(i).ntracks<<", "<< in.at(j).ntracks << "  isPV="<< vi.primary <<", "<< vj.primary<<std::endl;
+        globalmm+=1;
+        std::cout << globalmm << "  i,j=" << i << ", " << j << "  d= " << dist
+                  << "  err1  " << err1 << "  err2  " << err2
+                  << " ntrk v1,v2=" << in.at(i).ntracks << ", "
+                  << in.at(j).ntracks << "  isPV="
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
+                  << vi.primary << ", " << vj.primary
+#else
+                  << edm4hep::utils::checkBit(vi.type,
+                                              edm4hep::Vertex::BITPrimaryVertex)
+                  << ", "
+                  << edm4hep::utils::checkBit(vj.type,
+                                              edm4hep::Vertex::BITPrimaryVertex)
+#endif
+                  << std::endl;
       }
     }
   }
   //return result;
   return in;
 }
-
 
 std::vector<std::vector<int>> get_Vertex_ind(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   std::vector<std::vector<int>> result;
@@ -1259,7 +1297,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState> get_pseudotrack(ROOT::VecOps::RVec<Verte
   ROOT::VecOps::RVec<edm4hep::TrackState> result;
   float norm = 1e-3;   // to convert from mm to meters
   for (auto & p: vertex){
-    if (p.vertex.primary>0)continue;
+    if (isPrimaryVtx(p.vertex))continue;
     edm4hep::TrackState track;
     TVector3 vertexFB( p.vertex.position.x * norm,
 		       p.vertex.position.y * norm,
@@ -1643,7 +1681,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_tau23pi(ROOT::VecOps::RVec<Verte
   int counter=0;
   for (auto &p:vertex){
     //not consider PV
-    if (p.vertex.primary==1){counter+=1;continue;}
+    if (isPrimaryVtx(p.vertex)){counter+=1;continue;}
     //exactly 3 tracks
     if (p.ntracks!=3){counter+=1;continue;}
 
@@ -1681,7 +1719,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstee(ROOT::VecOps::RVec<Verte
   int counter=0;
   for (auto &p:vertex){
     //not consider PV
-    if (p.vertex.primary==1){counter+=1;continue;}
+    if (isPrimaryVtx(p.vertex)){counter+=1;continue;}
     //exactly 4 tracks
     if (p.ntracks!=4){counter+=1;continue;}
 
@@ -1752,7 +1790,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstmumu(ROOT::VecOps::RVec<Ver
   int counter=0;
   for (auto &p:vertex){
     //not consider PV
-    if (p.vertex.primary==1){counter+=1;continue;}
+    if (isPrimaryVtx(p.vertex)){counter+=1;continue;}
     //exactly 4 tracks
     if (p.ntracks!=4){counter+=1;continue;}
 
@@ -1824,7 +1862,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2KstNuNu(ROOT::VecOps::RVec<Ve
   int counter=0;
   for (auto &p:vertex){
     //not consider PV
-    if (p.vertex.primary==1){counter+=1;continue;}
+    if (isPrimaryVtx(p.vertex)){counter+=1;continue;}
     //exactly 2 tracks
     if (p.ntracks!=2){counter+=1;continue;}
 
@@ -1879,7 +1917,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bs2PhiNuNu(ROOT::VecOps::RVec<Ve
   for (size_t i=0;i<vertex.size();i++){
 
     //not consider PV, exactly 2 tracks
-    if (vertex.at(i).vertex.primary==1)continue;
+    if (isPrimaryVtx(vertex.at(i).vertex))continue;
     if (vertex.at(i).ntracks!=2)       continue;
 
     //2 tracks id as kaons
@@ -1920,7 +1958,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2MuMu(ROOT::VecOps::RVec<Verte
   for (size_t i=0;i<vertex.size();i++){
 
     //not consider PV, exactly 2 tracks
-    if (vertex.at(i).vertex.primary==1)continue;
+    if (isPrimaryVtx(vertex.at(i).vertex))continue;
     if (vertex.at(i).ntracks!=2)       continue;
 
     //2 tracks id as muons
@@ -2051,7 +2089,7 @@ ROOT::VecOps::RVec<float> get_DVertex_thrusthemis_angle(ROOT::VecOps::RVec<Verte
   ROOT::VecOps::RVec<float> result;
 
   for (auto &p:vertex){
-    if (p.vertex.primary>0)continue;
+    if (isPrimaryVtx(p.vertex))continue;
     ROOT::VecOps::RVec<int> reco_ind = p.reco_ind;
     TLorentzVector tlv;
     for (auto &i:reco_ind){
