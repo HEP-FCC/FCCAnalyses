@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720446700450,
+  "lastUpdate": 1720446702410,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -40835,6 +40835,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "thomas.madlener@desy.de",
+            "name": "Thomas Madlener",
+            "username": "tmadlener"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4716953495c0b21da35d80a829788435e845f624",
+          "message": "Switch to Vertex updates in EDM4hep (#382)\n\n* Switch to Vertex updates in EDM4hep\r\n\r\n* Change to appropriate check after discussion.\r\n\r\n* Incorporate results from discussion",
+          "timestamp": "2024-07-08T15:36:27+02:00",
+          "tree_id": "5ca36e091a7c72a368933b3516da207807780e5f",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/4716953495c0b21da35d80a829788435e845f624"
+        },
+        "date": 1720446701704,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 7.196511856106,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 7.743329556164544,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.32582006864993,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.1752074532685,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.084145502026649,
+            "unit": "Evt/s"
           }
         ]
       }
