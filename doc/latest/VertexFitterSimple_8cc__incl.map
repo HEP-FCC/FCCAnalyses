@@ -1,17 +1,19 @@
 <map id="analyzers/dataframe/src/VertexFitterSimple.cc" name="analyzers/dataframe/src/VertexFitterSimple.cc">
-<area shape="rect" id="Node000001" title=" " alt="" coords="2663,5,2837,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="2761,5,2936,45"/>
 <area shape="rect" id="Node000002" href="$VertexFitterSimple_8h.html" title=" " alt="" coords="1938,93,2111,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2663,40,2125,103,2124,98,2662,34"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2762,38,2125,104,2125,99,2761,33"/>
 <area shape="rect" id="Node000019" title=" " alt="" coords="3411,262,3483,287"/>
-<area shape="poly" id="edge63_Node000001_Node000019" title=" " alt="" coords="2744,46,2732,89,2733,112,2743,132,2778,170,2813,199,2849,220,2884,235,2920,244,2957,248,3033,247,3114,239,3201,231,3296,233,3346,240,3399,252,3408,255,3407,260,3397,257,3345,245,3295,239,3201,237,3115,244,3033,252,2957,254,2919,249,2882,240,2846,225,2810,203,2774,173,2738,135,2728,113,2727,89,2738,45"/>
+<area shape="poly" id="edge64_Node000001_Node000019" title=" " alt="" coords="2807,48,2776,65,2749,87,2741,98,2736,109,2736,120,2743,132,2778,170,2813,199,2849,220,2884,235,2920,244,2957,248,3033,247,3114,239,3201,231,3296,233,3346,240,3399,252,3408,255,3407,260,3397,257,3345,245,3295,239,3201,237,3115,244,3033,252,2957,254,2919,249,2882,240,2846,225,2810,203,2774,173,2739,135,2731,122,2731,108,2736,95,2746,83,2773,61,2804,43"/>
 <area shape="rect" id="Node000029" href="$MCParticle_8h.html" title=" " alt="" coords="776,181,959,207"/>
-<area shape="poly" id="edge53_Node000001_Node000029" title=" " alt="" coords="2662,36,1926,96,973,185,972,180,1926,91,2662,31"/>
-<area shape="rect" id="Node000034" title=" " alt="" coords="2753,101,2816,126"/>
-<area shape="poly" id="edge64_Node000001_Node000034" title=" " alt="" coords="2760,45,2777,87,2772,89,2755,47"/>
-<area shape="rect" id="Node000035" title=" " alt="" coords="2841,101,2915,126"/>
-<area shape="poly" id="edge65_Node000001_Node000035" title=" " alt="" coords="2780,43,2851,91,2848,95,2777,48"/>
-<area shape="rect" id="Node000036" title=" " alt="" coords="2939,101,2998,126"/>
-<area shape="poly" id="edge66_Node000001_Node000036" title=" " alt="" coords="2803,43,2928,91,2932,93,2930,98,2926,96,2801,48"/>
+<area shape="poly" id="edge53_Node000001_Node000029" title=" " alt="" coords="2761,35,2397,60,1926,96,1390,144,973,185,972,179,1389,139,1926,91,2397,55,2761,30"/>
+<area shape="rect" id="Node000034" title=" " alt="" coords="2753,101,2945,126"/>
+<area shape="poly" id="edge63_Node000001_Node000034" title=" " alt="" coords="2851,46,2851,87,2846,87,2846,46"/>
+<area shape="rect" id="Node000035" title=" " alt="" coords="2969,101,3032,126"/>
+<area shape="poly" id="edge65_Node000001_Node000035" title=" " alt="" coords="2883,43,2970,92,2967,96,2881,48"/>
+<area shape="rect" id="Node000036" title=" " alt="" coords="3057,101,3131,126"/>
+<area shape="poly" id="edge66_Node000001_Node000036" title=" " alt="" coords="2905,43,3044,91,3052,94,3050,99,3042,96,2904,48"/>
+<area shape="rect" id="Node000037" title=" " alt="" coords="3155,101,3214,126"/>
+<area shape="poly" id="edge67_Node000001_Node000037" title=" " alt="" coords="2937,39,3037,61,3144,91,3150,93,3148,98,3143,96,3036,66,2936,44"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="1047,262,1106,287"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1938,121,1448,146,1215,164,1138,174,1103,184,1092,197,1085,213,1079,248,1074,247,1080,212,1088,194,1101,179,1137,169,1214,159,1448,141,1938,116"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="1131,262,1188,287"/>
