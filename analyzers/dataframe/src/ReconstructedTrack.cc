@@ -1,6 +1,8 @@
 #include "FCCAnalyses/ReconstructedParticle.h"
 #include <iostream>
 
+#include "edm4hep/EDM4hepVersion.h"
+
 #include "FCCAnalyses/ReconstructedTrack.h"
 #include "FCCAnalyses/VertexingUtils.h"
 
@@ -219,10 +221,12 @@ ROOT::VecOps::RVec<float> tracks_dNdx(
       }
     }
     float dndx = -1;
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
     if (tk_jdx >= 0) {
       int j = trackdata[tk_jdx].dxQuantities_begin;
       dndx = dNdx[j].value / 1000;
     }
+#endif
     results.push_back(dndx);
   }
   return results;
