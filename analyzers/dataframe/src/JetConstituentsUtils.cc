@@ -377,7 +377,11 @@ namespace FCCAnalyses
         {
           if (ct.at(j).tracks_begin < trackdata.size() && (int)isChargedHad.at(j) == 1)
           {
+#if EDM4HEP_BUILD_VERSION > EDM4HEP_VERSION(0, 10, 6)
+            tmp.push_back(-1);
+#else
             tmp.push_back(dNdx.at(trackdata.at(ct.at(j).tracks_begin).dxQuantities_begin).value / 1000.);
+#endif
           }
           else
           {
