@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721141734068,
+  "lastUpdate": 1721141735356,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -40943,6 +40943,55 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "thomas.madlener@desy.de",
+            "name": "Thomas Madlener",
+            "username": "tmadlener"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "19ff3367d843cbc54a4a0619638a343db6c182f6",
+          "message": "Disable the reading of dQ/dx values form Tracks (#387)\n\n* Add missing header\r\n\r\n* Disable usage of track dq/dx information in analyzers",
+          "timestamp": "2024-07-16T16:47:19+02:00",
+          "tree_id": "0478724d2b4769aa71e5a055e02584c703d7e848",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/19ff3367d843cbc54a4a0619638a343db6c182f6"
+        },
+        "date": 1721141734969,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 8.550876268777333,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 8.931375742084652,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.92637844550999,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 9.507323973627408,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 2.8343177402375104,
+            "unit": "Evt/s"
           }
         ]
       }
