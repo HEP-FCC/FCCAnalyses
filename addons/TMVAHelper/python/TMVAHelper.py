@@ -3,7 +3,7 @@ import ROOT
 import pathlib
 
 ROOT.gInterpreter.ProcessLine('#include "TMVAHelper/TMVAHelper.h"')
-ROOT.gSystem.Load("libTMVAHelper.so")
+ROOT.gSystem.Load("libTMVAHelper")
 
 class TMVAHelperXGB():
 

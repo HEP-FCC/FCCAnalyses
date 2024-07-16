@@ -29,7 +29,7 @@ int main(int argc, char* argv[]){
    #endif
 
    // fcc edm libraries
-   gSystem->Load("libdatamodel.so");
+   gSystem->Load("libdatamodel");
 
    // very basic command line argument parsing
    if (argc < 3) {
