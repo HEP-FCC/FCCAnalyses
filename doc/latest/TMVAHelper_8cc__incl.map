@@ -1,11 +1,15 @@
 <map id="addons/TMVAHelper/src/TMVAHelper.cc" name="addons/TMVAHelper/src/TMVAHelper.cc">
-<area shape="rect" id="Node000001" title=" " alt="" coords="125,5,289,45"/>
-<area shape="rect" id="Node000002" href="$TMVAHelper_8h.html" title=" " alt="" coords="115,93,300,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,46,210,79,205,79,205,46"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="273,5,437,45"/>
+<area shape="rect" id="Node000002" href="$TMVAHelper_8h.html" title=" " alt="" coords="263,93,448,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="358,46,358,79,353,79,353,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,167,124,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,121,101,163,99,158,183,116"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="148,167,267,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="210,119,210,153,205,153,205,119"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="291,167,414,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="232,116,318,158,316,163,230,121"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="309,121,125,166,124,161,308,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="149,167,271,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="333,121,247,163,245,158,331,116"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="296,167,415,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="358,119,358,153,353,153,353,119"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="439,167,493,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="375,116,438,157,435,161,372,121"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="517,167,575,192"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="387,116,505,160,504,165,385,121"/>
 </map>

@@ -6,7 +6,7 @@ var searchData=
   ['test_5ffile_3',['TEST_FILE',['../onnxtest_8cpp.html#ad05e6c0cad6477bf659ce541e115012e',1,'onnxtest.cpp']]],
   ['thrustfit_4',['thrustfit',['../structFCCAnalyses_1_1Algorithms_1_1thrustFit.html',1,'FCCAnalyses::Algorithms::thrustFit'],['../structFCCAnalyses_1_1Algorithms_1_1thrustFit.html#a48de3d0fb8a8057e70b216fa4531b154',1,'FCCAnalyses::Algorithms::thrustFit::thrustFit()']]],
   ['tmva_5fhelper_5',['tmva_helper',['../classTMVAHelper_1_1TMVAHelperXGB.html#a18c88610b777b0a291c45aa3ec253599',1,'TMVAHelper::TMVAHelperXGB']]],
-  ['tmva_5fhelper_5fxgb_6',['tmva_helper_xgb',['../classtmva__helper__xgb.html',1,'tmva_helper_xgb'],['../classtmva__helper__xgb.html#a7b6a6e5eed7ef700f51affca406f32ad',1,'tmva_helper_xgb::tmva_helper_xgb()']]],
+  ['tmva_5fhelper_5fxgb_6',['tmva_helper_xgb',['../classtmva__helper__xgb.html',1,'tmva_helper_xgb'],['../classtmva__helper__xgb.html#ab811a37ae2568b3469f97adcea655cd0',1,'tmva_helper_xgb::tmva_helper_xgb()']]],
   ['tmvahelper_7',['TMVAHelper',['../namespaceTMVAHelper.html',1,'']]],
   ['tmvahelper_2ecc_8',['TMVAHelper.cc',['../TMVAHelper_8cc.html',1,'']]],
   ['tmvahelper_2eh_9',['TMVAHelper.h',['../TMVAHelper_8h.html',1,'']]],
