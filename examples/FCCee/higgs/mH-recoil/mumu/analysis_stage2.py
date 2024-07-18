@@ -43,7 +43,7 @@ class Analysis():
         # It can still be edm4hep files produced standalone or files from a
         # first analysis step (this is the case in this example it runs over
         # the files produced from analysis.py)
-        self.input_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/stage1'
+        self.input_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/stage1_10.0'
 
         # Optional: output directory, default is local dir
         self.output_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/stage2'
