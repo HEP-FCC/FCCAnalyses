@@ -24,32 +24,32 @@ jobs:
                    /bin/bash
     - name: CMake Configure
       run: |
-        docker exec CI_container /bin/bash -c 'cd Package;\
-         mkdir -p build install;\
-         source ${{ matrix.STACK }};\
-         cd build;\
-         cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -DWITH_DD4HEP=ON -DWITH_ACTS=OFF -DWITH_ONNX=ON -G Ninja ..;'
+        docker exec CI_container /bin/bash -c 'cd Package; \
+           mkdir -p build install; \
+           source ${{ matrix.STACK }}; \
+           cd build; \
+           cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -DWITH_DD4HEP=ON -DWITH_ACTS=OFF -DWITH_ONNX=ON -G Ninja ..;'
     - name: Compile
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package;\
-        source ${{ matrix.STACK }};\
-        cd build;\
-        ninja -k0;'
+        docker exec CI_container /bin/bash -c 'cd ./Package; \
+          source ${{ matrix.STACK }}; \
+          cd build; \
+          ninja -k0;'
     - name: Install
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package;\
-          source ${{ matrix.STACK }};\
-          cd build;\
+        docker exec CI_container /bin/bash -c 'cd ./Package; \
+          source ${{ matrix.STACK }}; \
+          cd build; \
           ninja -k0 install;'
     - name: Test
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package;\
-        source ${{ matrix.STACK }};\
-        cd build;\
-        ninja -k0 && ctest --output-on-failure;'
+        docker exec CI_container /bin/bash -c 'cd ./Package; \
+          source ${{ matrix.STACK }}; \
+          cd build; \
+          ninja -k0 && ctest --output-on-failure'
     - name: Test using local Setup.sh
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package;\
-        source ${{ matrix.STACK }};\
-        source ./setup.sh;\
-        fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root'
+        docker exec CI_container /bin/bash -c 'cd ./Package; \
+          source ${{ matrix.STACK }}; \
+          source ./setup.sh; \
+          fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root'
