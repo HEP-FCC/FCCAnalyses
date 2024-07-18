@@ -24,23 +24,26 @@
   <body>
     <header>
       <div class="brand">
-        <img width="7%"
-             alt="FCC Logo"
+        <img alt="FCC Logo"
              src="/FCCAnalyses/img/FCC-Circle_Main_RGB_Black.png">
         <a href="/FCCAnalyses">FCCAnalyses</a>
+        <p><em>Common analysis framework for the Future Circular Collider</em></p>
       </div>
-      <p><em>Common analysis framework for the Future Circular Collider</em></p>
-      <hr>
-      <div>
-        <a href="/FCCAnalyses">Introduction</a>
-        <a href="/FCCAnalyses/examples">Examples</a>
-        <a href="https://hep-fcc.github.io/fcc-tutorials/">Tutorials</a>
-        <a class="active" href="/FCCAnalyses/man">Manual</a>
-        <a href="/FCCAnalyses/doc/latest">Reference</a>
-        <a href="/FCCAnalyses/dev/bench">Benchmarks</a>
-        <a href="https://github.com/HEP-FCC/FCCAnalyses">Repository</a>
-      </div>
-      <hr>
+      <ul class="navbar">
+        <li><a href="/FCCAnalyses">Introduction</a></li>
+        <li><a href="/FCCAnalyses/examples">Examples</a></li>
+        <li><a href="https://hep-fcc.github.io/fcc-tutorials/">Tutorials</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropbtn active">Documentation &#x25be;</a>
+          <div class="dropdown-content">
+            <a href="/FCCAnalyses/quick-start">Quick Start</a>
+            <a class="active" href="/FCCAnalyses/man">Manual Pages</a>
+            <a href="/FCCAnalyses/doc/latest">Reference</a>
+          </div>
+        </li>
+        <li><a href="/FCCAnalyses/dev/bench">Benchmarks</a></li>
+        <li><a href="https://github.com/HEP-FCC/FCCAnalyses">Repository</a></li>
+      </ul>
     </header>
 
     <p>&#x2190; <a href="/FCCAnalyses">back</a></p>
@@ -57,10 +60,22 @@
           <a href="/FCCAnalyses/man/latest/fccanalysis-build.html">fccanalysis build</a>
         </li>
         <li>
+          <a href="/FCCAnalyses/man/latest/fccanalysis-test.html">fccanalysis test</a>
+        </li>
+        <li>
+          <a href="/FCCAnalyses/man/latest/fccanalysis-pin.html">fccanalysis pin</a>
+        </li>
+        <li>
           <a href="/FCCAnalyses/man/latest/fccanalysis-run.html">fccanalysis run</a>
         </li>
         <li>
-          <a href="/FCCAnalyses/man/latest/fccanalysis-test.html">fccanalysis test</a>
+          <a href="/FCCAnalyses/man/latest/fccanalysis-final.html">fccanalysis final</a>
+        </li>
+        <li>
+          <a href="/FCCAnalyses/man/latest/fccanalysis-plots.html">fccanalysis plots</a>
+        </li>
+        <li>
+          <a href="/FCCAnalyses/man/latest/fccanalysis-combine.html">fccanalysis combine</a>
         </li>
       </ul>
 
