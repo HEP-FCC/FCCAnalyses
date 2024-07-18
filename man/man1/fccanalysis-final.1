@@ -1,35 +1,30 @@
-.\" Manpage for fccanalysis-test
+.\" Manpage for fccanalysis-final
 .\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
-.TH FCCANALYSIS\-TEST 1 "17 Jan 2024" "0.9.0" "fccanalysis-test man page"
+.TH FCCANALYSIS\-FINAL 1 "18 Jul 2024" "0.9.0" "fccanalysis-final man page"
 .SH NAME
-\fBfccanalysis\-test\fR \(en test FCCAnalyses framework
+\fBfccanalysis\-final\fR \(en finalize your analysis into histograms
 .SH SYNOPSIS
-.B fccanalysis test
+.B fccanalysis final
 [\fB\-h\fR | \fB\-\-help\fR]
-[\fB\-R\fR \fITESTS_REGEX\fR]
-[\fB\-E\fR \fIEXCLUDE_REGEX\fR]
-[\fB\-j\fR \fIPARALLEL\fR]
+[\fB\-g\fR | \fB\-\-graph\fR]
+[\fB\-\-graph\-path\fR \fIGRAPH_PATH\fR]
 .SH DESCRIPTION
-.B fccanalysis\-test
-will test the whole or a part of the FCC analysis framework\&.
-
-It is not intended as a replacement for running \fIctest\fR command directly in
-the build directory, it is just convenience shortcut.
+.PP
+.B fccanalysis\-final runs the last stage of the analysis, where one defines
+final cuts and histograms\&. This stage can also output ROOT and LaTeX files for
+further use\&.
 .SH OPTIONS
 .TP
 .BR \-h ", " \-\-help
 Prints short help message and exits\&.
 .TP
-\fB\-R\fR \fITESTS_REGEX\fR
-Specify subset of tests to be run\&.
+.BR \-g ", " \-\-graph
+Generates computational graph of the analysis\&.
 .TP
-\fB\-E\fR \fIEXCLUDE_REGEX\fR
-Specify subset of tests to ignore\&.
-.TP
-\fB\-j\fR \fIPARALLEL\fR, \fB\-\-parallel\fR \fIPARALLEL\fI
-Number of tests running in parallel (equivalent to `ctest -j`)\&.
+\fB\-\-graph\-path\fR \fIGRAPH_PATH\fR
+Analysis graph save path, should end with '.dot' or '.png'\&.
 .SH SEE ALSO
-fccanalysis(1), fccanalysis\-build(7), ctest(1)
+fccanalysis(1)
 .SH BUGS
 Many
 .SH AUTHORS
