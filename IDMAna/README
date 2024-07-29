@@ -1,0 +1,10 @@
+#How to run
+#After compiling FCCAnalyses, also necessary to redo make install after updating the main python scripts
+source setup.sh
+fccanalysis run analysis_stage1_bkg.py #same with signal
+fccanalysis run analysis_stage2_bkg.py #same with signal
+#prepare BDT files - edit python script first to set the loop over BP in 2 runs, all in one go crashes for some reason.
+python prepare_TMVA.py
+fccanalysis run analysis_stage3.py
+fccanalysis final analysis_final.py
+fccanalysis plots analysis_plots.py
