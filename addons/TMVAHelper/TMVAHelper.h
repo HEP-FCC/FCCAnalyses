@@ -3,8 +3,8 @@
 
 // ROOT
 #include "ROOT/RVec.hxx"
-#include "TMVA/RBDT.hxx"
 #include "RVersion.h"
+#include "TMVA/RBDT.hxx"
 
 // TBB
 #include <tbb/task_arena.h>
