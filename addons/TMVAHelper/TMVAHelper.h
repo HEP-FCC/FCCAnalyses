@@ -3,6 +3,7 @@
 
 // ROOT
 #include "ROOT/RVec.hxx"
+#include "RVersion.h"
 #include "TMVA/RBDT.hxx"
 
 // TBB
@@ -22,7 +23,11 @@ public:
 private:
   // Default backend (template parameter) is:
   // TMVA::Experimental::BranchlessJittedForest<float>
+#if ROOT_VERSION_CODE >= ROOT_VERSION(6, 32, 0)
+  std::vector<TMVA::Experimental::RBDT> m_interpreters;
+#else
   std::vector<TMVA::Experimental::RBDT<>> m_interpreters;
+#endif
 };
 
 #endif
