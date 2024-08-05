@@ -47,6 +47,10 @@ def setup_build_parser(parser):
         default=1,
         help='number of threads when building (equivalent to `make -j`)'
     )
+    build_args.add_argument('--acts-on',
+                            action='store_true',
+                            default=False,
+                            help='enable ACTS based analyzers')
 
 
 def setup_test_parser(parser):
