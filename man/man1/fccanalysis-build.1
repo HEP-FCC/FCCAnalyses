@@ -8,6 +8,7 @@
 [\fB\-h\fR | \fB\-\-help\fR]
 [\fB\-c\fR]
 [\fB\-j\fR \fIBUILD_THREADS\fR]
+[\fB\-\-acts\-on\fR]
 .SH DESCRIPTION
 .B fccanalysis\-build
 will build the whole FCCAnalyses framework\&.
@@ -25,6 +26,9 @@ Completely clean build directory before compilation\&.
 .TP
 \fB\-j\fR \fIBUILD_THREADS\fR, \fB\-\-build\-threads\fR \fIBUILD_THREADS\fR
 Specify number of threads used when compiling (equivalent to `make -j`)
+.TP
+\fB\-\-acts\-on\fR
+Enable also ACTS based analyzers to be build\&.
 .SH SEE ALSO
 fccanalysis(1), fccanalysis\-test(1), cmake(1)
 .SH BUGS
