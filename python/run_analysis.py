@@ -316,18 +316,19 @@ def run_rdf(rdf_module,
     Create RDataFrame and snapshot it.
     '''
     if args.use_data_source:
-        if ROOT.podio.ROOTReader():
-            LOGGER.debug('Found Podio ROOT I/O.')
+        if ROOT.podio.DataSource:
+            LOGGER.debug('Found PODIO ROOT DataSource.')
         else:
-            LOGGER.error('Podio ROOT I/O library not found!\nAborting...')
+            LOGGER.error('PODIO ROOT DataSource library not found!\n'
+                         'Aborting...')
             sys.exit(3)
-        LOGGER.info('Loading events through podio::ROOTDataSource...')
+        LOGGER.info('Loading events through podio::DataSource...')
 
         try:
             dframe = ROOT.podio.CreateDataFrame(input_list)
         except TypeError as excp:
-            LOGGER.error('Unable to build dataframe using'
-                         'podio::RDataSource!\n%s', excp)
+            LOGGER.error('Unable to build dataframe using '
+                         'podio::DataSource!\n%s', excp)
             sys.exit(3)
     else:
         dframe = ROOT.RDataFrame("events", input_list)
@@ -382,7 +383,7 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str):
                                 stderr=subprocess.DEVNULL
                                 )
     except subprocess.CalledProcessError:
-        LOGGER.error('The FCCanalyses libraries are not properly build and '
+        LOGGER.error('The FCCAnalyses libraries are not properly build and '
                      'installed!\nAborting job submission...')
         sys.exit(3)
 
@@ -538,7 +539,7 @@ def run_local(rdf_module, infile_list, args):
     start_time = time.time()
     inn, outn = run_rdf(rdf_module, file_list, outfile_path, args)
     elapsed_time = time.time() - start_time
-    
+
     # replace nevents_local by inn = the amount of processed events
 
     info_msg = f"{' SUMMARY ':=^80}\n"
@@ -610,6 +611,10 @@ def run_stages(args, rdf_module, anapath):
     output_dir_eos = get_element(rdf_module, "outputDirEos")
     if not os.path.exists(output_dir_eos) and output_dir_eos:
         os.system(f'mkdir -p {output_dir_eos}')
+
+    # Check whether to use PODIO ROOT DataSource to load the events
+    if get_element(rdf_module, "useDataSource", False):
+        args.use_data_source = True
 
     # Check if test mode is specified, and if so run the analysis on it (this
     # will exit after)
@@ -733,6 +738,10 @@ def run_histmaker(args, rdf_module, anapath):
     do_scale = get_element(rdf_module, "doScale", True)
     int_lumi = get_element(rdf_module, "intLumi", True)
 
+    # Check whether to use PODIO ROOT DataSource to load the events
+    if get_element(rdf_module, "useDataSource", False):
+        args.use_data_source = True
+
     # check if the process list is specified, and create graphs for them
     process_list = get_element(rdf_module, "processList")
     graph_function = getattr(rdf_module, "build_graph")
@@ -804,18 +813,19 @@ def run_histmaker(args, rdf_module, anapath):
         LOGGER.info(info_msg)
 
         if args.use_data_source:
-            if ROOT.podio.ROOTReader():
-                LOGGER.debug('Found Podio ROOT I/O.')
+            if ROOT.podio.DataSource:
+                LOGGER.debug('Found Podio ROOT DataSource.')
             else:
-                LOGGER.error('Podio ROOT I/O library not found!\nAborting...')
+                LOGGER.error('Podio ROOT DataSource library not found!'
+                             '\nAborting...')
                 sys.exit(3)
-            LOGGER.info('Loading events through podio::ROOTDataSource...')
+            LOGGER.info('Loading events through podio::DataSource...')
 
             try:
                 dframe = ROOT.podio.CreateDataFrame(file_list_root)
             except TypeError as excp:
-                LOGGER.error('Unable to build dataframe using EDM4hep '
-                             'RDataSource!\n%s', excp)
+                LOGGER.error('Unable to build dataframe using '
+                             'podio::DataSource!\n%s', excp)
                 sys.exit(3)
         else:
             dframe = ROOT.ROOT.RDataFrame("events", file_list_root)
@@ -998,14 +1008,8 @@ def run(parser):
                      err)
         sys.exit(3)
 
-    # Merge command line arguments with anascript
-    # Check whether to use RDataSource to load the events
-    use_data_source = get_element(rdf_module, "useDataSource")
-    if use_data_source:
-        args.use_data_source = True
-
     # Merge configuration from analysis script file with command line arguments
-    if get_element(rdf_module, 'graph'):
+    if get_element(rdf_module, 'graph', False):
         args.graph = True
 
     if get_element(rdf_module, 'graphPath') != '':

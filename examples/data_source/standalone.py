@@ -18,9 +18,9 @@ def main():
         print('----> Debug: Found FCCAnalyses library.')
     print("----> Info: Loading analyzers from libFCCAnalyses... ",)
 
-    if ROOT.podio.ROOTReader():
-        print('----> Debug: Found Podio ROOT I/O.')
-    print('----> Info: Loading events through EDM4hep RDataSource...')
+    if ROOT.podio.DataSource:
+        print('----> Debug: Found Podio ROOT DataSource.')
+    print('----> Info: Loading events through podio::DataSource...')
 
     try:
         dframe = ROOT.podio.CreateDataFrame(input_list)

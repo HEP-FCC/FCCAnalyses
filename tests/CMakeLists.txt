@@ -8,20 +8,20 @@ add_integration_test("examples/FCCee/test/jet_constituents.py")
 add_integration_test("examples/FCCee/vertex_lcfiplus/analysis_V0.py")
 
 if(WITH_SOURCE)
-  add_integration_test("e4hsource/test/histmaker_source.py")
-  add_integration_test("e4hsource/test/stages_source.py")
-  add_integration_test("e4hsource/test/analysis_stage1.py")
-  add_standalone_test("e4hsource/test/standalone.py")
+  add_integration_test("examples/data_source/histmaker_source.py")
+  add_integration_test("examples/data_source/stages_source.py")
+  add_integration_test("examples/data_source/analysis_stage1.py")
+  add_standalone_test("examples/data_source/standalone.py")
 endif()
 
 add_standalone_test("examples/FCCee/fullSim/caloNtupleizer/analysis.py")
 
 # C++ Analyses
 
-# podio::ROOTDataSource
+# podio::DataSource
 add_executable(test_data_source ${CMAKE_SOURCE_DIR}/tests/data_source/test_source.cxx)
 target_include_directories(test_data_source PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(test_data_source podio::podioRootIO
+target_link_libraries(test_data_source podio::podioDataSource
                                        EDM4HEP::edm4hep
 )
 
@@ -29,7 +29,7 @@ add_executable(test_source_associations
                ${CMAKE_SOURCE_DIR}/tests/data_source/test_source_associations.cxx)
 target_include_directories(test_source_associations PRIVATE
                            ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(test_source_associations podio::podioRootIO
+target_link_libraries(test_source_associations podio::podioDataSource
                                                EDM4HEP::edm4hep
                                                FCCAnalyses
 )
@@ -37,7 +37,7 @@ target_link_libraries(test_source_associations podio::podioRootIO
 # Low level access
 add_executable(test_low_level ${CMAKE_SOURCE_DIR}/tests/data_source/test_low_level.cxx)
 target_link_libraries(test_low_level ROOT::ROOTDataFrame
-                                     podio::podioRootIO
+                                     podio::podioDataSource
                                      EDM4HEP::edm4hep
                                      EDM4HEP::edm4hepDict
 )
@@ -45,7 +45,7 @@ target_link_libraries(test_low_level ROOT::ROOTDataFrame
 add_executable(test_low_level_associations
                ${CMAKE_SOURCE_DIR}/tests/data_source/test_low_level_associations.cxx)
 target_link_libraries(test_low_level_associations ROOT::ROOTDataFrame
-                                                  podio::podioRootIO
+                                                  podio::podioDataSource
                                                   EDM4HEP::edm4hep
                                                   EDM4HEP::edm4hepDict
                                                   FCCAnalyses

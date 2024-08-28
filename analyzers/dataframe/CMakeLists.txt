@@ -69,6 +69,8 @@ target_link_libraries(FCCAnalyses PUBLIC
                       EDM4HEP::edm4hep
                       EDM4HEP::edm4hepDict
                       podio::podio
+                      podio::podioRootIO
+                      podio::podioDataSource
                       ${ADDONS_LIBRARIES}
                       ${DELPHES_LIBRARY}
                       gfortran # todo: why necessary?

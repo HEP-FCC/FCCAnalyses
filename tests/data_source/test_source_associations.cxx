@@ -14,7 +14,7 @@
 #include <TMatrixDSym.h>
 
 // PODIO
-#include <podio/ROOTDataSource.h>
+#include <podio/DataSource.h>
 
 // EDM4hep
 #include <edm4hep/MCParticle.h>
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]) {
 
   ROOT::EnableImplicitMT(nCPU);
 
-  ROOT::RDataFrame rdf(std::make_unique<podio::ROOTDataSource>(filePathList));
+  ROOT::RDataFrame rdf(std::make_unique<podio::DataSource>(filePathList));
 
   // rdf.Describe().Print();
   std::cout << std::endl;
