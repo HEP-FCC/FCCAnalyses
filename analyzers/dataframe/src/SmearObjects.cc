@@ -1,10 +1,17 @@
 #include "FCCAnalyses/SmearObjects.h"
 
-#include "FCCAnalyses/VertexFitterSimple.h"
-#include "FCCAnalyses/VertexingUtils.h"
+// std
+#include <iostream>
+
+// ROOT
 #include "TDecompChol.h"
 
-#include <iostream>
+// EDM4hep
+#include "edm4hep/EDM4hepVersion.h"
+
+// FCCAnalyses
+#include "FCCAnalyses/VertexFitterSimple.h"
+#include "FCCAnalyses/VertexingUtils.h"
 
 namespace FCCAnalyses {
 
@@ -390,11 +397,11 @@ SmearedTracksTOF::SmearedTracksTOF(float scale, bool debug = false) {
   m_debug = debug;
 }
 
-ROOT::VecOps::RVec<edm4hep::TrackerHitData> SmearedTracksTOF::operator()(
+ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> SmearedTracksTOF::operator()(
     const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
         &allRecoParticles,
     const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata,
-    const ROOT::VecOps::RVec<edm4hep::TrackerHitData> &trackerhits,
+    const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits,
     const ROOT::VecOps::RVec<float> &length,
     const ROOT::VecOps::RVec<int> &RP2MC_indices,
     const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles) {
@@ -403,8 +410,8 @@ ROOT::VecOps::RVec<edm4hep::TrackerHitData> SmearedTracksTOF::operator()(
   // retrieve the MC particle that is associated to a track, and builds a "track
   // state" out of the MC particle and regenerates a new value of the dNdx
 
-  ROOT::VecOps::RVec<edm4hep::TrackerHitData> result;
-  edm4hep::TrackerHitData dummy;
+  ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> result;
+  edm4hep::TrackerHit3DData dummy;
 
   int ntracks = length.size();
   int nhits = trackerhits.size(); // 3x size of tracks since 3 hits per track
@@ -415,8 +422,8 @@ ROOT::VecOps::RVec<edm4hep::TrackerHitData> SmearedTracksTOF::operator()(
   float c_light = 2.99792458e+8;
   float mm_to_sec = 1e-03 / c_light;
 
-  edm4hep::TrackerHitData thits_0, thits_1, thits_2;
-  edm4hep::TrackerHitData smeared_thits_0, smeared_thits_1, smeared_thits_2;
+  edm4hep::TrackerHit3DData thits_0, thits_1, thits_2;
+  edm4hep::TrackerHit3DData smeared_thits_0, smeared_thits_1, smeared_thits_2;
 
   for (int itrack = 0; itrack < ntracks; itrack++) {
 
@@ -530,7 +537,11 @@ SmearedReconstructedParticle::operator()(
     edm4hep::ReconstructedParticleData reco_part = allRecoParticles[ipart];
     edm4hep::ReconstructedParticleData smeared_part = reco_part;
 
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+    int reco_part_type = abs(reco_part.PDG);
+#else
     int reco_part_type = abs(reco_part.type);
+#endif
 
     // have to manually infer pid of ele/mu from mass because type not stored in
     // reco particles
@@ -611,7 +622,11 @@ SmearedReconstructedParticle::operator()(
         smeared_part.momentum.z = gen_p4.Pz();
 
         // set type
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+        smeared_part.PDG = mc_part.PDG;
+#else
         smeared_part.type = mc_part.PDG;
+#endif
       }
 
       if (m_debug) {
@@ -625,7 +640,11 @@ SmearedReconstructedParticle::operator()(
                   << " " << reco_p4.P() << " " << reco_p4.Theta() << " "
                   << reco_p4.Phi() << " " << reco_p4.M() << std::endl;
         std::cout << "smeared part (PID, p, theta, phi, m): "
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+                  << smeared_part.PDG << " " << smeared_p4.P() << " "
+#else
                   << smeared_part.type << " " << smeared_p4.P() << " "
+#endif
                   << smeared_p4.Theta() << " " << smeared_p4.Phi() << " "
                   << smeared_p4.M() << std::endl;
       }

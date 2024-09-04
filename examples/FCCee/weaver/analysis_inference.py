@@ -11,8 +11,11 @@ def get_file_path(url, filename):
 
 # ____________________________________________________________
 
-## input file needed for unit test in CI
+## input file needed for unit test in CI
 testFile = "https://fccsw.web.cern.ch/fccsw/testsamples/wzp6_ee_nunuH_Hss_ecm240.root"
+
+## output directory
+outputDir   = "outputs/inference"
 
 ## latest particle transformer model, trainied on 9M jets in winter2023 samples
 model_name = "fccee_flavtagging_edm4hep_wc_v1"
@@ -31,8 +34,8 @@ local_model = "{}/{}.onnx".format(model_dir, model_name)
 weaver_preproc = get_file_path(url_preproc, local_preproc)
 weaver_model = get_file_path(url_model, local_model)
 
-from addons.ONNXRuntime.python.jetFlavourHelper import JetFlavourHelper
-from addons.FastJet.python.jetClusteringHelper import ExclusiveJetClusteringHelper
+from addons.ONNXRuntime.jetFlavourHelper import JetFlavourHelper
+from addons.FastJet.jetClusteringHelper import ExclusiveJetClusteringHelper
 
 jetFlavourHelper = None
 jetClusteringHelper = None

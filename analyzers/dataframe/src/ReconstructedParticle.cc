@@ -1,10 +1,61 @@
 #include "FCCAnalyses/ReconstructedParticle.h"
+
+// std
+#include <cstdlib>
 #include <iostream>
+#include <stdexcept>
+
+// EDM4hep
+#include "edm4hep/EDM4hepVersion.h"
 
 namespace FCCAnalyses{
 
 namespace ReconstructedParticle{
 
+/// sel_type
+sel_type::sel_type(const int type) : m_type(type) {}
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_type::operator()(
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  result.reserve(in.size());
+  for (size_t i = 0; i < in.size(); ++i) {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+    if (in[i].PDG == m_type) {
+#else
+    if (in[i].type == m_type) {
+#endif
+      result.emplace_back(in[i]);
+    }
+  }
+  return result;
+}
+
+/// sel_absType
+sel_absType::sel_absType(const int type) : m_type(type) {
+  if (m_type < 0) {
+    throw std::invalid_argument(
+        "ReconstructedParticle::sel_absType: Received negative value!");
+  }
+}
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_absType::operator()(
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
+  result.reserve(in.size());
+  for (size_t i = 0; i < in.size(); ++i) {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+    if (std::abs(in[i].PDG) == m_type) {
+#else
+    if (std::abs(in[i].type) == m_type) {
+#endif
+      result.emplace_back(in[i]);
+    }
+  }
+  return result;
+}
+
+/// sel_pt
 sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_pt::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
@@ -387,7 +438,11 @@ ROOT::VecOps::RVec<int>
 get_type(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
   ROOT::VecOps::RVec<int> result;
   for (auto & p: in) {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+    result.push_back(p.PDG);
+#else
     result.push_back(p.type);
+#endif
   }
   return result;
 }

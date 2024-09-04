@@ -5,6 +5,10 @@ The module pins/unpins FCCAnalyses to the current version of the Key4hep stack
 import os
 import sys
 import pathlib
+import logging
+
+
+LOGGER = logging.getLogger('FCCAnalyses.pin')
 
 
 class PinAnalysis:
@@ -17,8 +21,8 @@ class PinAnalysis:
         '''
 
         if 'LOCAL_DIR' not in os.environ:
-            print('----> Error: FCCAnalyses environment not set up correctly!')
-            print('      Aborting...')
+            LOGGER.error('FCCAnalyses environment not set up '
+                         'correctly!\nAborting...')
             sys.exit(3)
 
         self.local_dir = os.environ.get('LOCAL_DIR')
@@ -39,20 +43,20 @@ class PinAnalysis:
         Show current pin
         '''
         if not self.pin_path.is_file():
-            print('----> Info: Analysis not pinned.')
+            LOGGER.info('Analysis not pinned.')
             sys.exit(0)
 
-        with open(self.pin_path, 'r') as pinfile:
+        with open(self.pin_path, 'r', encoding='utf-8') as pinfile:
             lines = pinfile.readlines()
 
             if len(lines) != 1:
-                print('----> Error: Analysis pin file malformed!')
+                LOGGER.error('Analysis pin file malformed!')
                 sys.exit(3)
 
             stack_path = lines[0]
 
-            print('----> Analysis pinned to the following Key4hep stack:')
-            print('      ' + stack_path)
+            LOGGER.info('Analysis pinned to the following Key4hep stack:\n%s',
+                        stack_path)
 
         sys.exit(0)
 
@@ -61,11 +65,10 @@ class PinAnalysis:
         Unpin analysis from any Key4hep stack version
         '''
         if not self.pin_path.is_file():
-            print('----> Warning: Analysis pin file not found!')
+            LOGGER.warning('Analysis pin file not found!')
             sys.exit(0)
 
-        print('----> Unpinning analysis located in:')
-        print('      ' + self.local_dir)
+        LOGGER.info('Unpinning analysis located in:\n%s', self.local_dir)
         self.pin_path.unlink()
 
         with os.scandir(os.path.dirname(self.pin_path)) as item:
@@ -80,26 +83,25 @@ class PinAnalysis:
         Pin analysis to the Key4hep stack version
         '''
         if self.pin_path.is_file() and not self.args.force:
-            print('----> Warning: Analysis pin file already created!')
-            print('      Use "--force" flag to overwrite current pin.')
-            print('      Aborting...')
+            LOGGER.warning('Analysis pin file already created!\n'
+                           'Use "--force" flag to overwrite current pin.\n'
+                           'Aborting...')
             sys.exit(0)
 
         if 'KEY4HEP_STACK' not in os.environ:
-            print('----> Error: FCCAnalyses environment not set up correctly!')
-            print('      Aborting...')
+            LOGGER.error('FCCAnalyses environment not set up correctly!\n'
+                         'Aborting...')
             sys.exit(3)
 
         stack_path = os.environ.get('KEY4HEP_STACK')
 
-        print('----> Pinning analysis located in:')
-        print('      ' + self.local_dir)
-        print('      to Key4hep stack:')
-        print('      ' + stack_path)
+        LOGGER.info('Pinning analysis located in:\n%s\n'
+                    'to Key4hep stack:\n%s',
+                    self.local_dir, stack_path)
 
         os.makedirs(os.path.dirname(self.pin_path), exist_ok=True)
 
-        with open(self.pin_path, 'w') as pinfile:
+        with open(self.pin_path, 'w', encoding='utf-8') as pinfile:
             pinfile.write(stack_path + '\n')
 
         sys.exit(0)

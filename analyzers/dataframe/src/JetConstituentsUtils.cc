@@ -4,12 +4,12 @@
 #include "FCCAnalyses/ReconstructedParticle2MC.h"
 #include "edm4hep/MCParticleData.h"
 #include "edm4hep/Track.h"
-#include "edm4hep/TrackerHitData.h"
 #include "edm4hep/TrackData.h"
 #include "edm4hep/Cluster.h"
 #include "edm4hep/ClusterData.h"
 #include "edm4hep/CalorimeterHitData.h"
 #include "edm4hep/ReconstructedParticleData.h"
+#include "edm4hep/EDM4hepVersion.h"
 #include "FCCAnalyses/JetClusteringUtils.h"
 // #include "FCCAnalyses/ExternalRecombiner.h"
 #include "fastjet/JetDefinition.hh"
@@ -377,7 +377,11 @@ namespace FCCAnalyses
         {
           if (ct.at(j).tracks_begin < trackdata.size() && (int)isChargedHad.at(j) == 1)
           {
+#if EDM4HEP_BUILD_VERSION > EDM4HEP_VERSION(0, 10, 6)
+            tmp.push_back(-1);
+#else
             tmp.push_back(dNdx.at(trackdata.at(ct.at(j).tracks_begin).dxQuantities_begin).value / 1000.);
+#endif
           }
           else
           {
@@ -754,7 +758,7 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_mtof(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
                                                       const rv::RVec<float> &track_L,
                                                       const rv::RVec<edm4hep::TrackData> &trackdata,
-                                                      const rv::RVec<edm4hep::TrackerHitData> &trackerhits,
+                                                      const rv::RVec<edm4hep::TrackerHit3DData> &trackerhits,
                                                       const rv::RVec<edm4hep::ClusterData> &gammadata,
                                                       const rv::RVec<edm4hep::ClusterData> &nhdata,
                                                       const rv::RVec<edm4hep::CalorimeterHitData> &calohits,
@@ -770,7 +774,11 @@ namespace FCCAnalyses
         {
           if (ct.at(j).clusters_begin < nhdata.size() + gammadata.size())
           {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+            if (ct.at(j).PDG == 130)
+#else
             if (ct.at(j).type == 130)
+#endif
             {
               // this assumes that in converter photons are filled first and nh after
               float T = calohits.at(nhdata.at(ct.at(j).clusters_begin - gammadata.size()).hits_begin).time;
@@ -796,7 +804,11 @@ namespace FCCAnalyses
                 tmp.push_back((9.));
               }
             }
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+            else if (ct.at(j).PDG == 22)
+#else
             else if (ct.at(j).type == 22)
+#endif
             {
               tmp.push_back((0.));
             }
@@ -1153,7 +1165,11 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+          if (ct.at(j).PDG == 130)
+#else
           if (ct.at(j).type == 130)
+#endif
           {
             is_NeutralHad.push_back(1.);
           }
@@ -1174,7 +1190,11 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+          if (ct.at(j).PDG == 22)
+#else
           if (ct.at(j).type == 22)
+#endif
           {
             is_NeutralHad.push_back(1.);
           }
@@ -1268,6 +1288,8 @@ namespace FCCAnalyses
       double invmass; 
       
       rv::RVec<double> InvariantMasses;
+
+      if(AllJets.size() < 2) return InvariantMasses;
 
       // For each jet, take its invariant mass with the remaining jets. Stop at last jet.
       for(int i = 0; i < AllJets.size()-1; ++i) {

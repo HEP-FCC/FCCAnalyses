@@ -15,9 +15,15 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
     source /cvmfs/sw.hsf.org/key4hep/setup.sh
   fi
 
+  if [ -z "${KEY4HEP_STACK}" ]; then
+    echo "----> Error: Key4hep stack not setup correctly! Aborting..."
+    return 1
+  fi
+
   echo "----> Info: Setting up environment variables..."
   export PYTHONPATH=${LOCAL_DIR}/python:${PYTHONPATH}
   export PYTHONPATH=${LOCAL_DIR}/install/python:${PYTHONPATH}
+  export PYTHONPATH=${LOCAL_DIR}/install/share/examples:${PYTHONPATH}
   export PATH=${LOCAL_DIR}/bin:${PATH}
   export PATH=${LOCAL_DIR}/install/bin:${PATH}
   export LD_LIBRARY_PATH=${LOCAL_DIR}/install/lib:${LD_LIBRARY_PATH}
@@ -35,6 +41,8 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
 
   export MANPATH=${LOCAL_DIR}/man:${MANPATH}
   export MANPATH=${LOCAL_DIR}/install/share/man:${MANPATH}
+
+  export MYPYPATH=${LOCAL_DIR}/python:${MYPYPATH}
 
   export FCCDICTSDIR=/cvmfs/fcc.cern.ch/FCCDicts:${FCCDICTSDIR}
 else

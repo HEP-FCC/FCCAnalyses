@@ -5,74 +5,88 @@ Handle process related information
 import os
 import sys
 import json
-import yaml
 import glob
-import ROOT
+import logging
+import urllib.request
+import yaml  # type: ignore
+import ROOT  # type: ignore
+
+ROOT.gROOT.SetBatch(True)
+
+LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.process_info')
 
 
-def getEntries(f):
-    tf=ROOT.TFile.Open(f,"READ")
-    tf.cd()
-    tt=tf.Get("events")
-    nevents=tt.GetEntries()
-    tf.Close()
+def get_entries(inpath: str) -> int:
+    '''
+    Get number of entries in the TTree named "events".
+    '''
+    nevents = None
+    with ROOT.TFile(inpath, 'READ') as infile:
+        tt = infile.Get("events")
+        nevents = tt.GetEntries()
     return nevents
 
 
-def getProcessInfo(process, prodTag, inputDir):
+def get_process_info(process: str,
+                     prod_tag: str,
+                     input_dir: str) -> tuple[list[str], list[int]]:
     '''
     Decide where to look for the filelist and eventlist.
     '''
-    if prodTag==None and inputDir==None:
-        print('The variable <prodTag> or <inputDir> is mandatory your analysis.py file, will exit')
+    if prod_tag is None and input_dir is None:
+        LOGGER.error('The variable <prodTag> or <inputDir> is mandatory in '
+                     'your analysis script!\nAborting...')
         sys.exit(3)
-    elif prodTag!=None and inputDir!=None:
-        print('The variable <prodTag> and <inputDir> can not be set both at the same time in your analysis.py file, will exit')
+    elif prod_tag is not None and input_dir is not None:
+        LOGGER.error('The variables <prodTag> and <inputDir> can\'t be set '
+                     'both at the same time in your analysis script!\n'
+                     'Aborting...')
         sys.exit(3)
 
-    if prodTag!=None:
-        return getProcessInfoYaml(process, prodTag)
-    elif inputDir!=None:
-        return getProcessInfoFiles(process, inputDir)
-    else:
-        print('problem, why are you here???, exit')
-        sys.exist(3)
+    if prod_tag is not None:
+        return get_process_info_yaml(process, prod_tag)
+
+    return get_process_info_files(process, input_dir)
 
 
-def getProcessInfoFiles(process, inputDir):
+def get_process_info_files(process: str, input_dir: str) -> tuple[list[str],
+                                                                  list[int]]:
     '''
     Get list of files and events from the specified location
     '''
-    filelist=[]
-    eventlist=[]
-    filetest='{}/{}.root'.format(inputDir, process)
-    dirtest='{}/{}'.format(inputDir, process)
+    filelist = []
+    eventlist = []
+    filetest = f'{input_dir}/{process}.root'
+    dirtest = f'{input_dir}/{process}'
 
     if os.path.isfile(filetest) and os.path.isdir(dirtest):
-        print ("----> For process {} both a file {} and a directory {} exist".format(process,filetest,dirtest))
-        print ("----> Exactly one should be used, please check. Exit")
+        LOGGER.error('For process "%s" both a file %s and a directory %s '
+                     'exist!\nExactly one should be used, please '
+                     'check.\nAborting...', process, filetest, dirtest)
         sys.exit(3)
 
     if not os.path.isfile(filetest) and not os.path.isdir(dirtest):
-        print ("----> For process {} neither a file {} nor a directory {} exist".format(process,filetest,dirtest))
-        print ("----> Exactly one should be used, please check. Exit")
+        LOGGER.error('For process "%s" neither a file %s nor a directory %s '
+                     'exist!\nExactly one should be used, please check.\n'
+                     'Aborting...', process, filetest, dirtest)
         sys.exit(3)
 
     if os.path.isfile(filetest):
         filelist.append(filetest)
-        eventlist.append(getEntries(filetest))
+        eventlist.append(get_entries(filetest))
 
     if os.path.isdir(dirtest):
-        flist=glob.glob(dirtest+"/*.root")
+        flist = glob.glob(dirtest+"/*.root")
         for f in flist:
             filelist.append(f)
-            eventlist.append(getEntries(f))
-
+            eventlist.append(get_entries(f))
 
     return filelist, eventlist
 
 
-def getProcessInfoYaml(process, prodTag):
+def get_process_info_yaml(process_name: str,
+                          prod_tag: str) -> tuple[list[str],
+                                                  list[int]]:
     '''
     Get list of files and events from the YAML file
     '''
@@ -80,46 +94,49 @@ def getProcessInfoYaml(process, prodTag):
     proc_dict_dirs = get_process_dict_dirs()
     yamlfilepath = None
     for path in proc_dict_dirs:
-        yamlfilepath = os.path.join(path, 'yaml', prodTag, process, 'merge.yaml')
+        yamlfilepath = os.path.join(path, 'yaml', prod_tag, process_name,
+                                    'merge.yaml')
         if not os.path.isfile(yamlfilepath):
             continue
-    if not yamlfilepath:
-        print('----> Error: Can\'t find the YAML file with process info!')
-        print('             Aborting...')
+    if not os.path.isfile(yamlfilepath):
+        LOGGER.error('Can\'t find the YAML file with process info for process '
+                     '"%s"!\nAborting...', process_name)
         sys.exit(3)
 
-    with open(yamlfilepath) as ftmp:
+    with open(yamlfilepath, 'r', encoding='utf-8') as ftmp:
         try:
             doc = yaml.load(ftmp, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
-            print(exc)
+            LOGGER.error(exc)
+            sys.exit(3)
         except IOError as exc:
-            print("----> Error: I/O error({0}): {1}".format(exc.errno, exc.strerror))
-            print("             yamlfile: ", yamlfilepath)
+            LOGGER.error('I/O error(%i): %s\nYAML file: %s',
+                         exc.errno, exc.strerror, yamlfilepath)
+            sys.exit(3)
         finally:
-            print('----> Info: YAML file with process information successfully loaded:')
-            print('            {}'.format(yamlfilepath))
+            LOGGER.debug('YAML file with process information successfully '
+                         'loaded:\n%s', yamlfilepath)
 
     filelist = [doc['merge']['outdir']+f[0] for f in doc['merge']['outfiles']]
     eventlist = [f[1] for f in doc['merge']['outfiles']]
+
     return filelist, eventlist
 
 
-def get_process_dict(proc_dict_location):
+def get_process_dict(proc_dict_location: str) -> dict:
     '''
     Pick up the dictionary with process information
     '''
     if 'http://' in proc_dict_location or 'https://' in proc_dict_location:
-        print('----> Info: Getting process dictionary from the web:')
-        print('            {}'.format(proc_dict_location))
-        import urllib.request
-        req = urllib.request.urlopen(proc_dict_location).read()
-        try:
-            proc_dict = json.loads(req.decode('utf-8'))
-        except json.decoder.JSONDecodeError:
-            print('----> Error: Failed to parse process dictionary correctly!')
-            print('             Aborting...')
-            sys.exit(3)
+        LOGGER.info('Getting process dictionary from the web:\n%s',
+                    proc_dict_location)
+        with urllib.request.urlopen(proc_dict_location).read() as response:
+            try:
+                proc_dict = json.loads(response.read())
+            except json.decoder.JSONDecodeError:
+                LOGGER.error('Failed to parse process dictionary correctly!\n'
+                             'Aborting...')
+                sys.exit(3)
 
     else:
         proc_dict_dirs = get_process_dict_dirs()
@@ -131,35 +148,37 @@ def get_process_dict(proc_dict_location):
             if not os.path.isfile(proc_dict_path):
                 continue
 
-            print('----> Info: Loading process dictionary from:')
-            print('            {}'.format(proc_dict_path))
+            LOGGER.info('Loading process dictionary from:\n%s', proc_dict_path)
 
-            with open(proc_dict_path, 'r') as infile:
+            with open(proc_dict_path, 'r', encoding='utf-8') as infile:
                 try:
                     proc_dict = json.load(infile)
                 except json.decoder.JSONDecodeError:
-                    print('----> Error: Failed to parse process dictionary '
-                          'correctly!')
-                    print('             Aborting...')
+                    LOGGER.error('Failed to parse process dictionary '
+                                 'correctly!\nAborting...')
                     sys.exit(3)
 
+            if proc_dict:
+                break
+
         if not proc_dict:
-            print('----> Error: Process dictionary not found!')
-            print('             Aborting...')
+            LOGGER.error('Process dictionary not found!\nAborting...')
+            sys.exit(3)
 
     return proc_dict
 
 
-def get_process_dict_dirs():
+def get_process_dict_dirs() -> list[str]:
     '''
     Get search directories for the process dictionaries
     '''
-    dirs = os.getenv('FCCDICTSDIR')
-    if not dirs:
-        print('----> Error: Evironment variable FCCDICTSDIR not defined.')
-        print('             Was the setup.sh file sourced properly?')
-        print('             Aborting...')
-    dirs = dirs.split(':')
-    dirs = [d for d in dirs if d]
+    dirs_var = os.getenv('FCCDICTSDIR')
+    if dirs_var is None:
+        LOGGER.error('Environment variable FCCDICTSDIR not defined!\n'
+                     'Was the setup.sh file sourced properly?\n'
+                     'Aborting...')
+        sys.exit(3)
+    dirs = dirs_var.split(':')
+    dirs[:] = [d for d in dirs if d]
 
     return dirs

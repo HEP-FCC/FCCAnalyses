@@ -1,7 +1,8 @@
+import sys
 import json
 import ROOT
-import sys
 
+ROOT.gROOT.SetBatch(True)
 
 class JetFlavourHelper:
     def __init__(self, coll, jet, jetc, tag=""):

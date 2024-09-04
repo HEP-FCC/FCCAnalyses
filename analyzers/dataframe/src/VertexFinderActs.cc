@@ -1,8 +1,13 @@
 #include "FCCAnalyses/VertexFinderActs.h"
 
+#include <edm4hep/EDM4hepVersion.h>
+#if EDM4HEP_BUILD_VERSION > EDM4HEP_VERSION(0, 10, 6)
+#include <edm4hep/utils/bit_utils.h>
+#endif
 #include <iostream>
 
 // ACTS
+
 #include "Acts/MagneticField/ConstantBField.hpp"
 #include "Acts/Propagator/EigenStepper.hpp"
 #include "Acts/Propagator/Propagator.hpp"
@@ -57,12 +62,12 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   auto propagator = std::make_shared<Propagator>(stepper);
 
   // Set up ImpactPointEstimator
-  using IPEstimator = Acts::ImpactPointEstimator<Acts::BoundTrackParameters, Propagator>;
+  using IPEstimator = Acts::ImpactPointEstimator;
   IPEstimator::Config ipEstimatorCfg(bField, propagator);
   IPEstimator ipEstimator(ipEstimatorCfg);
 
   // Set up the helical track linearizer
-  using Linearizer = Acts::HelicalTrackLinearizer<Propagator>;
+  using Linearizer = Acts::HelicalTrackLinearizer;
   Linearizer::Config ltConfig(bField, propagator);
   Linearizer linearizer(ltConfig);
 
@@ -74,14 +79,18 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
 
 
   // Set up the vertex fitter with user-defined annealing
-  using Fitter = Acts::AdaptiveMultiVertexFitter<Acts::BoundTrackParameters, Linearizer>;
+  using Fitter = Acts::AdaptiveMultiVertexFitter;
   Fitter::Config fitterCfg(ipEstimator);
   fitterCfg.annealingTool = annealingUtility;
   Fitter fitter(fitterCfg);//, Acts::getDefaultLogger("Fitter", Acts::Logging::VERBOSE));
 
   // Set up the vertex seed finder
-  using SeedFinder = Acts::TrackDensityVertexFinder<Fitter, Acts::GaussianTrackDensity<Acts::BoundTrackParameters>>;
-  SeedFinder seedFinder;
+  using SeedFinder = Acts::TrackDensityVertexFinder;
+  Acts::GaussianTrackDensity::Config trkDensityCfg;
+  trkDensityCfg.extractParameters.connect<&Acts::InputTrack::extractParameters>();
+
+  auto seedFinder = std::make_shared<SeedFinder>(SeedFinder::Config{trkDensityCfg});
+
 
 
   /*
@@ -99,14 +108,15 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   */
 
   // The vertex finder type
-  using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, SeedFinder>;
+  using Finder = Acts::AdaptiveMultiVertexFinder;
   //using Finder = Acts::AdaptiveMultiVertexFinder<Fitter, VertexSeedFinder>;
   //Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
-  Finder::Config finderConfig = {std::move(fitter), seedFinder, ipEstimator,
-                                 std::move(linearizer), bField};
+  Finder::Config finderConfig(std::move(fitter), std::move(seedFinder), ipEstimator, bField);
 
+#if ACTS_VERSION_MAJOR < 29
   // We do not want to use a beamspot constraint here
   finderConfig.useBeamSpotConstraint = false;
+#endif
   //finderConfig.useSeedConstraint = false;
   //finderConfig.tracksMaxSignificance = 100.;//5.;
   //finderConfig.maxVertexChi2 = 500.;//18.42;
@@ -114,14 +124,24 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   //finderConfig.maxIterations = 10000;//100;
   // Instantiate the finder
 
+#if ACTS_VERSION_MAJOR >= 31
+  Finder finder(std::move(finderConfig));//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
+#else
   Finder finder(finderConfig);//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
+#endif
   // The vertex finder state
-  Finder::State state;
+  // TODO:
+  // Finder::State state;
 
   // Default vertexing options, this is where e.g. a constraint could be set
-  using VertexingOptions = Acts::VertexingOptions<Acts::BoundTrackParameters>;
+  using VertexingOptions = Acts::VertexingOptions;
   //VertexingOptions finderOpts(myContext, myContext);
   VertexingOptions finderOpts(geoContext, magFieldContext);
+#if ACTS_VERSION_MAJOR >= 29
+  // We do not want to use a beamspot constraint here
+  finderOpts.useConstraintInFit = false;
+#endif
+
   //  vertexingOptions.vertexConstraint = std::get<BeamSpotData>(csvData);
 
   int Ntr = tracks.size();
@@ -153,7 +173,12 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     }
 
     // Get track covariance vector
+#if ACTS_VERSION_MAJOR < 29
     using Covariance = Acts::BoundSymMatrix;
+#else
+    using Covariance = Acts::BoundSquareMatrix;
+#endif
+
     Covariance covMat;
     covMat <<
       covACTS(0,0), covACTS(1,0), covACTS(2,0), covACTS(3,0), covACTS(4,0), covACTS(5,0),
@@ -164,12 +189,15 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
       covACTS(0,5), covACTS(1,5), covACTS(2,5), covACTS(3,5), covACTS(4,5), covACTS(5,5);
 
     // Create track parameters and add to track list
-    std::shared_ptr<Acts::PerigeeSurface> perigeeSurface;
     Acts::Vector3 beamspotPos;
     beamspotPos << 0.0, 0.0, 0.0;
-    perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
+    auto perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
 
+#if ACTS_VERSION_MAJOR < 30
     allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
+#else
+    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat), Acts::ParticleHypothesis::pion());
+#endif
 
     //std::cout << "params: " << allTracks[i] << std::endl;
     }
@@ -187,6 +215,7 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   for (const auto& trk : allTracks) {
     tracksPtr.push_back(&trk);
   }
+  std::vector<Acts::InputTrack> newTracks;
 
 
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> TheVertexColl;
@@ -195,7 +224,9 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     return TheVertexColl;   // can not reconstruct a vertex with only one track...return an empty collection
 
   // find vertices
-  auto result = finder.find(tracksPtr, finderOpts, state);
+  // TODO:
+  auto state = finder.makeState(Acts::MagneticFieldContext());
+  auto result = finder.find(newTracks, finderOpts, state);
 
   //std::cout << "result  " << result.ok() << std::endl;
   if (not result.ok()) {
@@ -224,7 +255,11 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     //	      << vtx.tracks().size() << " tracks." << std::endl;
 
     TheVertex.ntracks = vtx.tracks().size();
+#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
     edm4hep_vertex.primary = 1;
+#else
+    edm4hep_vertex.type = edm4hep::utils::setBit(edm4hep_vertex.type, edm4hep::Vertex::BITPrimaryVertex, true);
+#endif
     edm4hep_vertex.chi2 = vtx.fitQuality().first/ vtx.fitQuality().second ;
     edm4hep_vertex.position = edm4hep::Vector3f( vtx.position()[0],vtx.position()[1], vtx.position()[2]) ;  // store the  vertex in mm
     auto vtxCov = vtx.covariance();
@@ -241,16 +276,17 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     edm4hep_vertex.algorithmType = 2;
     edm4hep_vertex.covMatrix = edm4hep_vtxcov;
 
-    std::vector<Acts::TrackAtVertex<Acts::BoundTrackParameters>> tracksAtVertex = vtx.tracks();
+    std::vector<Acts::TrackAtVertex> tracksAtVertex = vtx.tracks();
 
     for (const auto& trk : tracksAtVertex) {
 
       reco_chi2.push_back(trk.chi2Track);
       double ndf = trk.ndf;
 
-      const Acts::BoundTrackParameters* originalParams = trk.originalParams;
-      for (size_t trkind=0;trkind<tracksPtr.size();trkind++)
-	if (originalParams == tracksPtr.at(trkind))reco_ind.push_back(trkind);
+      // TODO:
+      //const Acts::BoundTrackParameters* originalParams = trk.originalParams;
+      //for (size_t trkind=0;trkind<tracksPtr.size();trkind++)
+      //  if (originalParams == tracksPtr.at(trkind))reco_ind.push_back(trkind);
     }
     TheVertex.vertex = edm4hep_vertex;
     TheVertex.reco_ind = reco_ind;

@@ -7,7 +7,7 @@ processList = {
 prodTag     = "FCCee/spring2021/IDEA/"
 
 #Optional: output directory, default is local running directory
-outputDir   = "."
+outputDir   = "outputs/jet_constituents"
 
 #Optional
 nCPUS       = 8

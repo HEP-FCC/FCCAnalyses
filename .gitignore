@@ -10,6 +10,10 @@ __pycache__/
 # ROOT files
 *.root
 
+# HTCondor
+# ignores <lxplus-username>.cc file in the top FCCAnalyses directory
+/*.cc
+
 # Editors
 *~
 .vimlocal
@@ -100,3 +104,7 @@ benchmark*json
 
 # Local configuration
 .fccana/*
+
+# Graphviz graphs
+*.dot
+*.png

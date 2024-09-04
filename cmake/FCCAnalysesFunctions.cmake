@@ -38,7 +38,7 @@ function(add_integration_test _testname)
           )
   set_property(TEST fccanalysisrun_${_testname} APPEND PROPERTY ENVIRONMENT
     LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
-    PYTHONPATH=${CMAKE_SOURCE_DIR}/python:$ENV{PYTHONPATH}
+    PYTHONPATH=${CMAKE_SOURCE_DIR}/python:${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}
     PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
     ROOT_INCLUDE_PATH=${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
     TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
@@ -56,6 +56,20 @@ function(add_generic_test _testname _testcmd)
                PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
                ROOT_INCLUDE_PATH=${INSTALL_LIB_DIR}:${CMAKE_SOURCE_DIR}/analyzers/dataframe:${CMAKE_BINARY_DIR}/case-studies:$ENV{ROOT_INCLUDE_PATH}
                TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR})
+endfunction()
+
+function(add_standalone_test _testname)
+  add_test(NAME fccanalysis_standalone_${_testname}
+           COMMAND python ${_testname} --test
+           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
+  set_property(TEST fccanalysis_standalone_${_testname} APPEND PROPERTY ENVIRONMENT
+               LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/e4hsource:${CMAKE_BINARY_DIR}/analyzers/dataframe:$ENV{LD_LIBRARY_PATH}
+               PYTHONPATH=${CMAKE_SOURCE_DIR}/python:$ENV{PYTHONPATH}
+               PATH=${CMAKE_SOURCE_DIR}/bin:${CMAKE_BINARY_DIR}:$ENV{PATH}
+               ROOT_INCLUDE_PATH=${CMAKE_BINARY_DIR}/e4hsource:${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
+               TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
+  )
 endfunction()
 
 macro(fccanalyses_addon_build _name)

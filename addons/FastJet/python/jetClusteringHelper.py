@@ -1,6 +1,7 @@
 import json
 import ROOT
 
+ROOT.gROOT.SetBatch(True)
 
 class ExclusiveJetClusteringHelper:
     def __init__(self, coll, njets, tag=""):

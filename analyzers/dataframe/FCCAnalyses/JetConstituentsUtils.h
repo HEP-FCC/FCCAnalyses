@@ -4,6 +4,16 @@
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticle.h"
 #include "edm4hep/MCParticle.h"
+#include "edm4hep/Quantity.h"
+#if __has_include("edm4hep/TrackerHit3DData.h")
+#include "edm4hep/TrackerHit3DData.h"
+#else
+#include "edm4hep/TrackerHitData.h"
+namespace edm4hep {
+  using TrackerHit3DData = edm4hep::TrackerHitData;
+}
+#endif
+
 #include "fastjet/JetDefinition.hh"
 
 #include "TMath.h"
@@ -195,7 +205,7 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_mtof(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                       const rv::RVec<float>& track_L,
                                                       const rv::RVec<edm4hep::TrackData>& trackdata,
-                                                      const rv::RVec<edm4hep::TrackerHitData>& trackerhits,
+                                                      const rv::RVec<edm4hep::TrackerHit3DData>& trackerhits,
                                                       const rv::RVec<edm4hep::ClusterData>& gammadata,
                                                       const rv::RVec<edm4hep::ClusterData>& nhdata,
                                                       const rv::RVec<edm4hep::CalorimeterHitData>& calohits,
@@ -252,7 +262,11 @@ namespace FCCAnalyses {
     rv::RVec<TLorentzVector> compute_tlv_jets(const rv::RVec<fastjet::PseudoJet>& jets);
     rv::RVec<TLorentzVector> sum_tlv_constituents(const rv::RVec<FCCAnalysesJetConstituents>& jets);
     float InvariantMass(const TLorentzVector& tlv1, const TLorentzVector& tlv2);
-    rv::RVec<double> all_invariant_masses(rv::RVec<TLorentzVector> AllJets); // invariant masses of all jet pairs given a vector of jets
+    
+    /**
+     * @brief all_invariant_masses takes an RVec of TLorentzVectors of jets and computes the invariant masses of all jet pairs, and returns an RVec with all invariant masses.
+    */
+    rv::RVec<double> all_invariant_masses(rv::RVec<TLorentzVector> AllJets);
     rv::RVec<double> compute_residue_energy(const rv::RVec<TLorentzVector>& tlv_jet,
 					    const rv::RVec<TLorentzVector>& sum_tlv_jcs);
     rv::RVec<double> compute_residue_pt(const rv::RVec<TLorentzVector>& tlv_jet,

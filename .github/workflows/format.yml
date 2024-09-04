@@ -6,24 +6,29 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - uses: cvmfs-contrib/github-action-cvmfs@v3
+    - uses: cvmfs-contrib/github-action-cvmfs@v4
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest /bin/bash
+        docker run -it --name CI_container \
+                   -v ${GITHUB_WORKSPACE}:/Package \
+                   -v /cvmfs:/cvmfs:shared \
+                   -d ghcr.io/key4hep/key4hep-images/alma9:latest \
+                   /bin/bash
     - name: Add upstream
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package
-          git remote add upstream https://github.com/HEP-FCC/FCCAnalyses.git
+        docker exec CI_container /bin/bash -c 'cd Package; \
+          git config --global --add safe.directory /Package; \
+          git remote add upstream https://github.com/HEP-FCC/FCCAnalyses.git; \
           git fetch upstream'
     - name: Run formatter
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package
-          source /cvmfs/sft.cern.ch/lcg/contrib/clang/14.0.6/x86_64-centos7/setup.sh
+        docker exec CI_container /bin/bash -c 'cd ./Package; \
+          source /cvmfs/sw.hsf.org/key4hep/setup.sh;\
           git clang-format --style=file $(git merge-base upstream/master HEAD)'
     - name: Check cleanliness
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package
+        docker exec CI_container /bin/bash -c 'cd ./Package; \
           git diff'

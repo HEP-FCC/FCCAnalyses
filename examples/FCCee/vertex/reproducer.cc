@@ -21,12 +21,12 @@ void reproducer()
 {
 
   gInterpreter->ProcessLine("#include \"VertexFinderActs.h\"");
-  gSystem->Load("libpodio.so");
-  gSystem->Load("libpodioDict.so");
-  gSystem->Load("libpodioRootIO.so");
-  gSystem->Load("libedm4hep.so");
-  gSystem->Load("libedm4hepDict.so");
-  gSystem->Load("libFCCAnalyses.so");
+  gSystem->Load("libpodio");
+  gSystem->Load("libpodioDict");
+  gSystem->Load("libpodioRootIO");
+  gSystem->Load("libedm4hep");
+  gSystem->Load("libedm4hepDict");
+  gSystem->Load("libFCCAnalyses");
 
   auto reader = podio::ROOTReader();
   reader.openFile("https://fcc-physics-events.web.cern.ch/fcc-physics-events/sharedFiles/FCCee/test_zbb_Bs2DsK.root");

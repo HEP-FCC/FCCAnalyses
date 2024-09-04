@@ -1,16 +1,23 @@
-name: documentation
+name: Documentation
 
-on: [push]
+on:
+  push:
+    branches:
+    - master
 
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: cvmfs-contrib/github-action-cvmfs@v3
+    - uses: actions/checkout@v4
+    - uses: cvmfs-contrib/github-action-cvmfs@v4
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest /bin/bash
+        docker run -it \
+                   --name CI_container \
+                   -v ${GITHUB_WORKSPACE}:/Package \
+                   -v /cvmfs:/cvmfs:shared \
+                   -d ghcr.io/key4hep/key4hep-images/alma9:latest /bin/bash
     - name: Compile Documentation
       run: |
         docker exec CI_container /bin/bash -c 'cd Package
@@ -21,7 +28,7 @@ jobs:
           cmake ..
           make doc'
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./build/doxygen/html
@@ -37,7 +44,7 @@ jobs:
       run: |
         .github/scripts/man2html.sh
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./man/html

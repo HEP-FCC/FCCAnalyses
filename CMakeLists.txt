@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.16.9)
 
 
-project(FCCAnalyses CXX)
+project(FCCAnalyses VERSION 0.9.0
+                    LANGUAGES CXX
+)
 
 #--- RPATH settings -----------------------------------------------------------
 
@@ -29,6 +31,9 @@ option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, o
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
+#--- Export compile commands --------------------------------------------------
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 #--- Set a better default for installation directory---------------------------
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}/install" CACHE PATH "default install path" FORCE)
@@ -46,17 +51,17 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
 
 #--- Declare C++ Standard -----------------------------------------------------
 
-set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
-if(NOT CMAKE_CXX_STANDARD MATCHES "17")
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
+if(NOT CMAKE_CXX_STANDARD MATCHES "17|20")
   message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}")
 endif()
 message (STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
 
 #--- Dependencies -------------------------------------------------------------
 
-find_package(ROOT COMPONENTS ROOTVecOps ROOTDataFrame REQUIRED)
-find_package(EDM4HEP REQUIRED)
-find_package(podio)
+find_package(ROOT REQUIRED COMPONENTS ROOTVecOps ROOTDataFrame TMVA TMVAUtils)
+find_package(EDM4HEP REQUIRED)  # will find also podio
+find_package(TBB REQUIRED COMPONENTS tbb)
 
 # need to use our own FindFastJet.cmake
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
@@ -91,9 +96,15 @@ if(WITH_DD4HEP)
 endif()
 
 if(WITH_ONNX)
-  find_package(ONNXRuntime)
-  if(ONNXRuntime_FOUND)
+  # New onnxruntime (at least 1.17.1 and above) provide a onnxruntimeConfig.cmake
+  # and use the name onnxruntime
+  find_package(onnxruntime)
+  if (NOT onnxruntime_FOUND)
+    message(STATUS "Could not find onnxruntime (> 1.17.1). Looking for an older version")
+    find_package(ONNXRuntime)
+  endif()
 
+  if(onnxruntime_FOUND OR ONNXRuntime_FOUND)
   elseif(WITH_ONNX STREQUAL AUTO)
     message(WARNING "ONNXRuntime not found. Skipping ONNX-dependent analyzers.")
     set(WITH_ONNX OFF)
@@ -139,6 +150,9 @@ file(GLOB _man_files_1 man/man1/*.1)
 install(FILES ${_man_files_1} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
 file(GLOB _man_files_7 man/man7/*.7)
 install(FILES ${_man_files_7} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man7)
+
+
+install(DIRECTORY examples DESTINATION ${CMAKE_INSTALL_PREFIX}/share/examples)
 
 #--- Descend into subdirectories ----------------------------------------------
 
