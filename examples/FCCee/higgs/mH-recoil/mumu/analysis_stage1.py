@@ -23,26 +23,26 @@ class Analysis():
 
         # Mandatory: List of processes to run over
         self.process_list = {
-            # Run the full statistics in one output file named
-            # <outputDir>/p8_ee_ZZ_ecm240.root
-            'p8_ee_ZZ_ecm240': {'fraction': 0.005},
-            # Run 50% of the statistics with output into two files named
-            # <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
-            'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
-            # Run 20% of the statistics in one file named
-            # <outputDir>/p8_ee_ZH_ecm240_out.root (example on how to change
-            # the output name)
+            # # Run the full statistics in one output file named
+            # # <outputDir>/p8_ee_ZZ_ecm240.root
+            'p8_ee_ZZ_ecm240': {'fraction': 1.},
+            # # Run 50% of the statistics with output into two files named
+            # # <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
+            'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2}, #this doesn't work? 
+            # # Run 20% of the statistics in one file named
+            # # <outputDir>/p8_ee_ZH_ecm240_out_f02.root (example on how to change
+            # # the output name)
             'p8_ee_ZH_ecm240': {'fraction': 0.2,
-                                'output': 'p8_ee_ZH_ecm240_out'}
+                                'output': 'p8_ee_ZH_ecm240_out_f02'}
         }
 
         # Mandatory: Production tag when running over the centrally produced
         # samples, this points to the yaml files for getting sample statistics
-        self.prod_tag = 'FCCee/spring2021/IDEA/'
+        self.input_dir = '/eos/experiment/fcc/hh/tutorials/edm4hep_tutorial_data/'
+        # self.prod_tag = 'FCCee/spring2021/IDEA/'
 
         # Optional: output directory, default is local running directory
-        self.output_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/' \
-                          f'stage1_{self.ana_args.muon_pt}'
+        # self.output_dir = ''
 
         # Optional: analysisName, default is ''
         # self.analysis_name = 'My Analysis'
@@ -54,9 +54,10 @@ class Analysis():
         # self.run_batch = False
 
         # Optional: test file
-        self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/' \
-                         'generation/DelphesEvents/spring2021/IDEA/' \
-                         'p8_ee_ZH_ecm240/events_101027117.root'
+        # self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/' \
+        #                  'generation/DelphesEvents/spring2021/IDEA/' \
+        #                  'p8_ee_ZH_ecm240/events_101027117.root'
+        # self.test_file = "test_edm4hep_v099.root"
 
     # Mandatory: analyzers function to define the analysis graph, please make
     # sure you return the dataframe, in this example it is dframe2
@@ -70,7 +71,8 @@ class Analysis():
         dframe2 = (
             dframe
             # define an alias for muon index collection
-            .Alias('Muon0', 'Muon#0.index')
+            .Alias('Muon0', 'Muon_objIdx.index')
+            # .Alias('Muon0', 'Muon#0.index')
             # define the muon collection
             .Define(
                 'muons',

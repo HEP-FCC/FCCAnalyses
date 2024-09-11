@@ -12,7 +12,9 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
     echo "      ${STACK_PATH}"
     source ${STACK_PATH}
   else
-    source /cvmfs/sw.hsf.org/key4hep/setup.sh
+    #use latest nightly while developing on this branch to have latest edm4hep 
+    source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
+    # source /cvmfs/sw.hsf.org/key4hep/setup.sh
   fi
 
   if [ -z "${KEY4HEP_STACK}" ]; then
