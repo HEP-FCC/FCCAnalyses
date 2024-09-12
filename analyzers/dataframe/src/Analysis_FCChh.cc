@@ -881,9 +881,9 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_tagged
 
 	for (size_t iJet = 0; iJet < jets.size(); ++iJet){
 	// for (auto & jet : jets){
-		// std::cout << jet.particleIDs_begin << " to " << jet.particleIDs_end << std::endl;
+		std::cout << jet.particles_begin << " to " << jet.particles_end << std::endl;
 		// get the jet particle id index for the jet
-		const auto jetIDIndex = index[jets[iJet].particleIDs_begin];
+		const auto jetIDIndex = index[jets[iJet].particles_begin];
 		// std::cout << "jet index = " << jetIDIndex << std::endl;
 		const auto jetID = pid[jetIDIndex];
 		// get the tag value
@@ -909,7 +909,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_tau_je
 	// for (auto & jet : jets){
 		// std::cout << jet.particleIDs_begin << " to " << jet.particleIDs_end << std::endl;
 		// get the jet particle id index for the jet
-		const auto jetIDIndex = index[jets[iJet].particleIDs_begin];
+		const auto jetIDIndex = index[jets[iJet].particles_begin];
 		// std::cout << "jet index = " << jetIDIndex << std::endl;
 		const auto jetID = pid[jetIDIndex]; 
 		// get the tag value
@@ -935,7 +935,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_untagg
 	// for (auto & jet : jets){
 		// std::cout << jet.particleIDs_begin << " to " << jet.particleIDs_end << std::endl;
 		// get the jet particle id index for the jet
-		const auto jetIDIndex = index[jets[iJet].particleIDs_begin];
+		const auto jetIDIndex = index[jets[iJet].particles_begin];
 		// std::cout << "jet index = " << jetIDIndex << std::endl;
 		const auto jetID = pid[jetIDIndex];
 		// get the tag value
