@@ -52,4 +52,4 @@ jobs:
         docker exec CI_container /bin/bash -c 'cd ./Package; \
           source ${{ matrix.STACK }}; \
           source ./setup.sh; \
-          fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --files-list root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_Zbb_ecm91_EvtGen_Bc2TauNuTAUHADNU/events_131527278.root'
+          fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --test'
