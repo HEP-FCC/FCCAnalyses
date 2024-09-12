@@ -52,4 +52,4 @@ jobs:
         docker exec CI_container /bin/bash -c 'cd ./Package; \
           source ${{ matrix.STACK }}; \
           source ./setup.sh; \
-          fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --test
+          fccanalysis run examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py --output myoutput.root --test'
