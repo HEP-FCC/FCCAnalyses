@@ -42,7 +42,8 @@ class Analysis():
         # self.prod_tag = 'FCCee/spring2021/IDEA/'
 
         # Optional: output directory, default is local running directory
-        # self.output_dir = ''
+        self.output_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/' \
+                          f'stage1_{self.ana_args.muon_pt}'
 
         # Optional: analysisName, default is ''
         # self.analysis_name = 'My Analysis'
@@ -72,7 +73,6 @@ class Analysis():
             dframe
             # define an alias for muon index collection
             .Alias('Muon0', 'Muon_objIdx.index')
-            # .Alias('Muon0', 'Muon#0.index')
             # define the muon collection
             .Define(
                 'muons',

@@ -61,16 +61,12 @@ def build_graph(df, dataset):
     weightsum = df.Sum("weight")
     
     # define some aliases to be used later on
-    # df = df.Alias("Particle0", "Particle#0.index")
-    # df = df.Alias("Particle1", "Particle#1.index")
-
     df = df.Alias("Particle0", "_Particle_daughters.index")
     df = df.Alias("Particle1", "_Particle_parents.index")
 
     df = df.Alias("MCRecoAssociations0", "_MCRecoAssociations_from.index")
     df = df.Alias("MCRecoAssociations1", "_MCRecoAssociations_to.index")
 
-    # df = df.Alias("Muon0", "Muon#0.index")
     df = df.Alias("Muon0", "Muon_objIdx.index")
 
 
