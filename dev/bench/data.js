@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722850241781,
+  "lastUpdate": 1726146171909,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -42396,6 +42396,65 @@ window.BENCHMARK_DATA = {
             "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
             "value": 3.195778769086518,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "79460851+bistapf@users.noreply.github.com",
+            "name": "bistapf",
+            "username": "bistapf"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "54e849554155d86eeb0eb70d2c5ea7b753fb1dba",
+          "message": "Updating FCC-ee mH recoil mumu example to work with edm4hep v1 format (#400)\n\n* updating mH recoil mumu example to work with edm4hep v1, adding also histmaker and plots scripts as used in FCC SW tutorial\r\n\r\n* fix test file needed by FCCAnalysis_analysis_example_run_analysis\r\n\r\n* adapt build&test to work with edm4hep v1 format with temporary changes/ommissions to be able to develop further on this branch\r\n\r\n* fix comments in test\r\n\r\n* cleanup/changes from review of PR#400\r\n\r\n* add missing end quote\r\n\r\n---------\r\n\r\nCo-authored-by: Birgit Stapf <bistapf@desy.de>",
+          "timestamp": "2024-09-12T14:55:44+02:00",
+          "tree_id": "ec7f7514dc6b4e926e0003ddd1e7fe7e65aeaa83",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/54e849554155d86eeb0eb70d2c5ea7b753fb1dba"
+        },
+        "date": 1726146166554,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 13.256650447845459,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 9.771024465560913,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 14.958144664764404,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 11.084159851074219,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 30.719473600387573,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
           }
         ]
       }
