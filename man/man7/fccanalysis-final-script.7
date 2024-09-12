@@ -10,8 +10,8 @@ analysis
 .SH DESCRIPTION
 .PP
 The analysis script for the final stage of the analysis is expected to be a
-valid Python script containing description of the final histograms and output
-variables\&. To run the final stage do
+valid Python script containing definitions of the cuts and the final
+histograms\&. To run the final stage do
 .IP
 fccanalysis final \fIanalysis_script.py\fR
 
@@ -22,7 +22,7 @@ final analysis stage\&.
 .TP
 \fBprocDict\fR (mandatory)
 This variable controls which process dictionary will be used. It can be either
-simple file name, absolute path or url\&. In the case of simple filename, the
+simple file name, absolute path or url\&. In the case of a simple filename, the
 file is being searched for first in the working directory and then at the
 locations indicated in the $FCCDICTSDIR environment variable\&.
 .TP
@@ -31,8 +31,8 @@ User can provide additional processes, which are not included in the main
 processes dictionary\&.
 .TP
 \fBinputDir\fR (mandatory)
-User has to specify the directory for the input files coming from the previous
-analysis stage\&.
+User has to specify the directory where the input files coming from the previous
+analysis stage are stored\&.
 .TP
 \fBoutputDir\fR (optional)
 User can specify the directory for the output files\&.
@@ -56,6 +56,31 @@ Dictionary of labels for cuts defined in \fBcutList\fR which will be used in
 LaTeX table(s)\&.
 .br
 Default value: Empty dictionary
+.TP
+\fBdoScale\fR (optional)
+Whether to scale the results to the expected integrated luminosity\&.
+.br
+Default value: True
+.TP
+\fBintLumi\fR (optional)
+Expected integrated luminosity in pb^{-1}\&.
+.br
+Default value: 1.0 pb^{-1}
+.TP
+\fBdoTree\fR (optional)
+Save events passing final cuts into output TTree\&.
+.br
+Default value: False
+.TP
+\fBsaveTabular\fR (optional)
+Save results into LaTeX table(s)\&.
+.br
+Default value: False
+.TP
+\fBsaveJSON\fR (optional)
+Save results into JSON file.
+.br
+Default value: False
 .PP
 This section is under construction. You are invited to help :)
 .SH SEE ALSO

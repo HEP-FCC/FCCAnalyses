@@ -32,13 +32,23 @@ procDictAdd = {"MySample_p8_ee_ZH_ecm240": {"numberOfEvents": 10000000,
                                             "kfactor": 1.0,
                                             "matchingEfficiency": 1.0}}
 
-# Number of CPUs to use
+# Expected integrated luminosity
+intLumi = 5.0e+06  # pb-1
+
+# Whether to scale to expected integrated luminosity
+doScale = True
+
+# Number of threads to use
 nCPUS = 2
 
 # Whether to produce ROOT TTrees, default is False
-doTree = False
+doTree = True
 
+# Save cut yields and efficiencies in LaTeX table
 saveTabular = True
+
+# Save cut yields and efficiencies in JSON file
+saveJSON = True
 
 # Dictionary with the list of cuts. The key is the name of the selection that
 # will be added to the output file

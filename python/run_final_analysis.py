@@ -13,6 +13,7 @@ import json
 import math
 
 import ROOT  # type: ignore
+import cppyy
 from anascript import get_element, get_attribute
 from process import get_process_dict
 from frame import generate_graph
@@ -44,33 +45,6 @@ def get_entries(infilepath: str) -> tuple[int, int]:
             sys.exit(3)
 
     return events_processed, events_in_ttree
-
-
-# _____________________________________________________________________________
-def testfile(f: str) -> bool:
-    '''
-    Test input file from previous stages
-    '''
-    with ROOT.TFile(f, 'READ') as infile:
-        tt = None
-        try:
-            tt = infile.Get("events")
-            if tt is None:
-                LOGGER.warning('File does not contains events, selection was '
-                               'too tight, skipping it: %s', f)
-                return False
-        except IOError as e:
-            LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
-            return False
-        except ValueError:
-            LOGGER.warning('Could read the file')
-            return False
-        except:
-            LOGGER.warning('Unexpected error: %s\nfile ===%s=== must be '
-                           'deleted',
-                           sys.exc_info()[0], f)
-            return False
-    return True
 
 
 # _____________________________________________________________________________
@@ -142,7 +116,6 @@ def save_tables(results: dict[str, dict[str, any]],
             cut_labels[name] = f'{name}'
 
     cut_labels['all_events'] = 'All events'
-    print(cut_labels)
 
     with open(outpath, 'w', encoding='utf-8') as outfile:
         # Printing the number of events in format of a LaTeX table
@@ -245,8 +218,9 @@ def run(rdf_module, args) -> None:
     if ncpus < 0:  # use all available threads
         ROOT.EnableImplicitMT()
         ncpus = ROOT.GetThreadPoolSize()
-    ROOT.ROOT.EnableImplicitMT(ncpus)
-    ROOT.EnableThreadSafety()
+    if ncpus != 1:
+        ROOT.ROOT.EnableImplicitMT(ncpus)
+        ROOT.EnableThreadSafety()
 
     nevents_real = 0
     start_time = time.time()
@@ -326,11 +300,25 @@ def run(rdf_module, args) -> None:
         info_msg += f'\n\t- {process_name}: {n_events:,}'
     LOGGER.info(info_msg)
 
-    histo_list = get_element(rdf_module, "histoList", True)
-    do_scale = get_element(rdf_module, "doScale", True)
-    int_lumi = get_element(rdf_module, "intLumi", True)
+    # Check if there are any histograms defined
+    histo_list: dict[str, dict[str, any]] = get_attribute(rdf_module,
+                                                          "histoList", {})
+    if not histo_list:
+        LOGGER.error('No histograms defined!\nAborting...')
+        sys.exit(3)
 
+    # Check whether to scale the results to the luminosity
+    do_scale = get_attribute(rdf_module, "doScale", True)
+    if do_scale:
+        int_lumi = get_attribute(rdf_module, "intLumi", 1.)
+        if int_lumi < 0.:
+            LOGGER.error('Integrated luminosity value not valid!\nAborting...')
+            sys.exit(3)
+
+    # Check whether to save resulting TTree(s) into a file(s)
     do_tree = get_element(rdf_module, "doTree", True)
+
+    # Main loop
     for process_name in process_list:
         LOGGER.info('Running over process: %s', process_name)
 
@@ -349,7 +337,7 @@ def run(rdf_module, args) -> None:
 
         fout_list = []
         histos_list = []
-        tdf_list = []
+        snapshots = []
         count_list = []
         cuts_list = []
         cuts_list.append(process_name)
@@ -357,44 +345,54 @@ def run(rdf_module, args) -> None:
         eff_list.append(process_name)
         results[process_name] = {}
 
-        # Get process information from process directory
-        try:
-            xsec = process_dict[process_name]["crossSection"]
-        except KeyError:
-            xsec = 1.0
-            LOGGER.warning('Cross-section value not found for process "%s"!\n'
-                           'Using 1.0...', process_name)
+        if do_scale:
+            # Get process information from process directory
+            try:
+                xsec = process_dict[process_name]["crossSection"]
+            except KeyError:
+                xsec = 1.0
+                LOGGER.warning('Cross-section value not found for process '
+                               '"%s"!\nUsing 1.0...', process_name)
 
-        try:
-            kfactor = process_dict[process_name]["kfactor"]
-        except KeyError:
-            kfactor = 1.0
-            LOGGER.warning('Kfactor value not found for process "%s"!\n'
-                           'Using 1.0...', process_name)
+            try:
+                kfactor = process_dict[process_name]["kfactor"]
+            except KeyError:
+                kfactor = 1.0
+                LOGGER.warning('Kfactor value not found for process "%s"!\n'
+                               'Using 1.0...', process_name)
 
-        try:
-            matching_efficiency = \
-                process_dict[process_name]["matchingEfficiency"]
-        except KeyError:
-            matching_efficiency = 1.0
-            LOGGER.warning('Matching efficiency value not found for process '
-                           '"%s"!\nUsing 1.0...', process_name)
+            try:
+                matching_efficiency = \
+                    process_dict[process_name]["matchingEfficiency"]
+            except KeyError:
+                matching_efficiency = 1.0
+                LOGGER.warning('Matching efficiency value not found for '
+                               'process "%s"!\nUsing 1.0...', process_name)
 
-        gen_sf = xsec * kfactor * matching_efficiency
+            gen_sf = xsec * kfactor * matching_efficiency
+            lpn = len(process_name) + 8
+            LOGGER.info('Generator scale factor for "%s": %.4g',
+                        process_name, gen_sf)
+            LOGGER.info(' - cross-section:      ' + lpn*' ' + '%.4g pb',
+                        xsec)
+            LOGGER.info(' - kfactor:            ' + lpn*' ' + '%.4g', kfactor)
+            LOGGER.info(' - matching efficiency:' + lpn*' ' + '%.4g',
+                        matching_efficiency)
+            LOGGER.info('Integrated luminosity: %.4g pb-1', int_lumi)
 
         # Define all histos, snapshots, etc...
-        LOGGER.info('Defining snapshots and histograms')
+        LOGGER.info('Defining cuts and histograms')
         for cut_name, cut_definition in cuts.items():
-            # output file for tree
-            fout = output_dir + process_name + '_' + cut_name + '.root'
-            fout_list.append(fout)
-
-            dframe_cut = dframe.Filter(cut_definition)
+            try:
+                dframe_cut = dframe.Filter(cut_definition)
+            except cppyy.gbl.std.runtime_error:
+                LOGGER.error('During defining of the cuts an error '
+                             'occurred!\nAborting...')
+                sys.exit(3)
 
             count_list.append(dframe_cut.Count())
 
             histos = []
-
             for hist_name, hist_definition in histo_list.items():
                 # default 1D histogram, looks for the name of the column.
                 if "name" in hist_definition:
@@ -434,22 +432,16 @@ def run(rdf_module, args) -> None:
             histos_list.append(histos)
 
             if do_tree:
+                # output file for the TTree
+                fout = os.path.join(output_dir,
+                                    process_name + '_' + cut_name + '.root')
+                fout_list.append(fout)
+
                 opts = ROOT.RDF.RSnapshotOptions()
                 opts.fLazy = True
-                try:
-                    snapshot_tdf = dframe_cut.Snapshot("events",
-                                                       fout, "", opts)
-                except Exception as excp:
-                    LOGGER.error('During the execution of the final stage '
-                                 'exception occurred:\n%s', excp)
-                    sys.exit(3)
-
-                # Needed to avoid python garbage collector messing around with
-                # the snapshot
-                tdf_list.append(snapshot_tdf)
-
-        if args.graph:
-            generate_graph(dframe, args)
+                # Snapshots need to be kept in memory until the event loop is
+                # run
+                snapshots.append(dframe_cut.Snapshot("events", fout, "", opts))
 
         # Now perform the loop and evaluate everything at once.
         LOGGER.info('Evaluating...')
@@ -460,13 +452,11 @@ def run(rdf_module, args) -> None:
         uncertainty = ROOT.Math.sqrt(all_events_raw)
 
         if do_scale:
-            LOGGER.info('Scaling the histograms...')
-            LOGGER.debug('')
+            LOGGER.info('Scaling cut yields...')
             all_events = all_events_raw * 1. * gen_sf * \
                 int_lumi / process_events[process_name]
             uncertainty = ROOT.Math.sqrt(all_events_raw) * gen_sf * \
                 int_lumi / process_events[process_name]
-            LOGGER.info('Printing scaled number of events!!!')
         else:
             all_events = all_events_raw
             uncertainty = ROOT.Math.sqrt(all_events_raw)
@@ -511,42 +501,71 @@ def run(rdf_module, args) -> None:
 
         LOGGER.info(info_msg)
 
+        if args.graph:
+            generate_graph(dframe, args)
+            args.graph = False
+
         # And save everything
         LOGGER.info('Saving the outputs...')
+        if do_scale:
+            LOGGER.info('Scaling the histograms...')
         for i, cut in enumerate(cuts):
             # output file for histograms
-            fhisto = output_dir + process_name + '_' + cut + '_histo.root'
-            with ROOT.TFile(fhisto, 'RECREATE'):
+            fhisto = os.path.join(output_dir,
+                                  process_name + '_' + cut + '_histo.root')
+            with ROOT.TFile(fhisto, 'RECREATE') as outfile:
                 for hist in histos_list[i]:
+                    hist_name = hist.GetName() + '_raw'
+                    outfile.WriteObject(hist.GetValue(), hist_name)
                     if do_scale:
                         hist.Scale(gen_sf * int_lumi /
                                    process_events[process_name])
-                    hist.Write()
+                        outfile.WriteObject(hist.GetValue())
 
-                # write all meta info to the output file
+                # write all metadata info to the output file
                 param = ROOT.TParameter(int)("eventsProcessed",
                                              process_events[process_name])
-                param.Write()
-                # take sum of weights=eventsProcessed for now
-                # (assume weights==1)
+                outfile.WriteObject(param)
+
                 param = ROOT.TParameter(float)("sumOfWeights",
                                                process_events[process_name])
-                param.Write()
-                param = ROOT.TParameter(float)("intLumi", int_lumi)
-                param.Write()
-                param = ROOT.TParameter(float)("crossSection", xsec)
-                param.Write()
-                param = ROOT.TParameter(float)("kfactor", kfactor)
-                param.Write()
-                param = ROOT.TParameter(float)("matchingEfficiency",
-                                               matching_efficiency)
-                param.Write()
+                outfile.WriteObject(param)
 
+                param = ROOT.TParameter(bool)("scaled",
+                                              do_scale)
+                outfile.WriteObject(param)
+
+                if do_scale:
+                    param = ROOT.TParameter(float)("intLumi", int_lumi)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("crossSection", xsec)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("kfactor", kfactor)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("matchingEfficiency",
+                                                   matching_efficiency)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("generatorScaleFactor",
+                                                   gen_sf)
+                    outfile.WriteObject(param)
             if do_tree:
-                # test that the snapshot worked well
-                validfile = testfile(fout_list[i])
-                if not validfile:
-                    continue
+                # Number of events from a particular cut
+                nevt_cut = results[process_name][cut]['n_events_raw']
+                # Number of events in file
+                try:
+                    nevt_infile = snapshots[i].Count().GetValue()
+                except cppyy.gbl.std.runtime_error:
+                    nevt_infile = 0
+
+                if nevt_cut != nevt_infile:
+                    LOGGER.error('Number of events for cut "%s" in sample '
+                                 '"%s" does not match with number of saved '
+                                 'events!', cut, process_name)
+                    sys.exit(3)
 
     # Save results either to JSON or LaTeX tables
     save_results(results, rdf_module)
@@ -563,8 +582,6 @@ def run(rdf_module, args) -> None:
     info_msg += 80 * '='
     info_msg += '\n'
     LOGGER.info(info_msg)
-
-
 
 
 def run_final(parser):
