@@ -379,7 +379,9 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         leg2.SetFillStyle(0)
         leg2.SetLineColor(0)
         leg2.SetShadowColor(10)
-        leg2.SetTextSize(args.legend_text_size)
+        leg2.SetTextSize(args.legend_text_size
+                         if args.legend_text_size is not None
+                         else 0.035)
         leg2.SetTextFont(42)
     else:
         legsize = 0.04*(len(hbackgrounds)+len(hsignal))
@@ -392,15 +394,17 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         leg2 = None
 
     leg = ROOT.TLegend(
-        args.legend_x_min if args.legend_x_min > 0 else legCoord[0],
-        args.legend_y_min if args.legend_y_min > 0 else legCoord[1],
-        args.legend_x_max if args.legend_x_max > 0 else legCoord[2],
-        args.legend_y_max if args.legend_y_max > 0 else legCoord[3])
+        args.legend_x_min if args.legend_x_min is not None else legCoord[0],
+        args.legend_y_min if args.legend_y_min is not None else legCoord[1],
+        args.legend_x_max if args.legend_x_max is not None else legCoord[2],
+        args.legend_y_max if args.legend_y_max is not None else legCoord[3])
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
     leg.SetShadowColor(10)
-    leg.SetTextSize(args.legend_text_size)
+    leg.SetTextSize(args.legend_text_size
+                    if args.legend_text_size is not None
+                    else 0.035)
     leg.SetTextFont(42)
 
     for b in hbackgrounds:
