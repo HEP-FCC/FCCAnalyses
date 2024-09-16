@@ -50,61 +50,135 @@ def formatStatUncHist(hists, name, hstyle=3254):
 
 
 # _____________________________________________________________________________
-def mapHistos(var, label, sel, param, rebin):
-    LOGGER.info('Run plots for var:%s     label:%s     selection:%s',
-                var, label, sel)
-    signal = param.plots[label]['signal']
-    backgrounds = param.plots[label]['backgrounds']
+def load_hists(var: str,
+               label: str,
+               sel: str,
+               config: dict[str, any],
+               rebin: int) -> tuple[dict[str, any], dict[str: any]]:
+    '''
+    Load all histograms needed for the plot
+    '''
+
+    signal = config['plots'][label]['signal']
+    backgrounds = config['plots'][label]['backgrounds']
 
     hsignal = {}
     for s in signal:
         hsignal[s] = []
-        for f in signal[s]:
-            fin = param.inputDir+f+'_'+sel+'_histo.root'
-            if not os.path.isfile(fin):
-                LOGGER.info('File "%s" not found!\nSkipping it...', fin)
+        for filepathstem in signal[s]:
+            infilepath = config['input_dir'] + filepathstem + '_' + sel + \
+                         '_histo.root'
+            if not os.path.isfile(infilepath):
+                LOGGER.info('File "%s" not found!\nSkipping it...', infilepath)
                 continue
 
-            with ROOT.TFile(fin, 'READ') as tf:
-                h = tf.Get(var)
-                hh = copy.deepcopy(h)
-                hh.SetDirectory(0)
-            scaleSig = 1.
-            try:
-                scaleSig = param.scaleSig
-            except AttributeError:
-                LOGGER.debug('No scale signal, using 1.')
-                param.scaleSig = scaleSig
-            LOGGER.info('ScaleSig: %g', scaleSig)
-            hh.Scale(param.intLumi*scaleSig)
-            hh.Rebin(rebin)
+            with ROOT.TFile(infilepath, 'READ') as infile:
+                hist = copy.deepcopy(infile.Get(var))
+                hist.SetDirectory(0)
+
+                scale = config['scale_sig']
+
+                # Check if histograms were already scaled to lumi
+                try:
+                    scaled = infile.scaled
+                except AttributeError:
+                    LOGGER.error('Input file does not contain scaling '
+                                 'information!\n  %s\nAborting...', infilepath)
+                    sys.exit(3)
+
+                if scaled:
+                    try:
+                        int_lumi_in_file = infile.intLumi.GetVal()
+                    except AttributeError:
+                        LOGGER.error('Can not load integrated luminosity '
+                                     'value from the input file!\n  %s\n'
+                                     'Aborting...', infilepath)
+
+                    if config['int_lumi'] != int_lumi_in_file:
+                        LOGGER.warning(
+                            'Histograms are already scaled to different '
+                            'luminosity value!\n'
+                            'Luminosity from the input file is %s pb-1 and '
+                            'luminosity in plots script is %s pb-1.',
+                            config['int_lumi'], int_lumi_in_file)
+                        if config['do_scale']:
+                            LOGGER.warning(
+                                'Rescaling from %s pb-1 to %s pb-1...',
+                                config['int_lumi'], int_lumi_in_file)
+                            scale *= config['int_lumi'] / int_lumi_in_file
+
+                else:
+                    if config['do_scale']:
+                        scale = scale * config['int_lumi']
+
+            hist.Scale(scale)
+
+            hist.Rebin(rebin)
 
             if len(hsignal[s]) == 0:
-                hsignal[s].append(hh)
+                hsignal[s].append(hist)
             else:
-                hh.Add(hsignal[s][0])
-                hsignal[s][0] = hh
+                hist.Add(hsignal[s][0])
+                hsignal[s][0] = hist
 
     hbackgrounds = {}
     for b in backgrounds:
         hbackgrounds[b] = []
-        for f in backgrounds[b]:
-            fin = param.inputDir+f+'_'+sel+'_histo.root'
-            if not os.path.isfile(fin):
-                LOGGER.info('File "%s" not found!\nSkipping it...', fin)
+        for filepathstem in backgrounds[b]:
+            infilepath = config['input_dir'] + filepathstem + '_' + sel + \
+                         '_histo.root'
+            if not os.path.isfile(infilepath):
+                LOGGER.info('File "%s" not found!\nSkipping it...', infilepath)
                 continue
 
-            with ROOT.TFile(fin) as tf:
-                h = tf.Get(var)
-                hh = copy.deepcopy(h)
-                hh.SetDirectory(0)
-            hh.Scale(param.intLumi)
-            hh.Rebin(rebin)
+            with ROOT.TFile(infilepath) as infile:
+                hist = copy.deepcopy(infile.Get(var))
+                hist.SetDirectory(0)
+
+                scale = config['scale_bkg']
+
+                # Check if histograms were already scaled to lumi
+                try:
+                    scaled = infile.scaled
+                except AttributeError:
+                    LOGGER.error('Input file does not contain scaling '
+                                 'information!\n  %s\nAborting...', infilepath)
+                    sys.exit(3)
+
+                if scaled:
+                    try:
+                        int_lumi_in_file = infile.intLumi.GetVal()
+                    except AttributeError:
+                        LOGGER.error('Can not load integrated luminosity '
+                                     'value from the input file!\n  %s\n'
+                                     'Aborting...', infilepath)
+
+                    if config['int_lumi'] != int_lumi_in_file:
+                        LOGGER.warning(
+                            'Histograms are already scaled to different '
+                            'luminosity value!\n'
+                            'Luminosity from the input file is %s pb-1 and '
+                            'luminosity in plots script is %s pb-1.',
+                            config['int_lumi'], int_lumi_in_file)
+                        if config['do_scale']:
+                            LOGGER.warning(
+                                'Rescaling from %s pb-1 to %s pb-1...',
+                                config['int_lumi'], int_lumi_in_file)
+                            scale *= config['int_lumi'] / int_lumi_in_file
+
+                else:
+                    if config['do_scale']:
+                        scale = scale * config['int_lumi']
+
+            hist.Scale(scale)
+
+            hist.Rebin(rebin)
+
             if len(hbackgrounds[b]) == 0:
-                hbackgrounds[b].append(hh)
+                hbackgrounds[b].append(hist)
             else:
-                hh.Add(hbackgrounds[b][0])
-                hbackgrounds[b][0] = hh
+                hist.Add(hbackgrounds[b][0])
+                hbackgrounds[b][0] = hist
 
     for s in hsignal:
         if len(hsignal[s]) == 0:
@@ -801,8 +875,71 @@ def run(args):
     script_module = importlib.import_module(base_name)
 
     # Merge script and command line arguments into one configuration object
-    config = {}
+    # Also check the script attributes
+    config: dict[str, any] = {}
 
+    # Input directory
+    config['input_dir'] = os.getcwd()
+    if hasattr(script_module, 'indir'):
+        config['input_dir'] = script_module.indir
+    if hasattr(script_module, 'inputDir'):
+        config['input_dir'] = script_module.inputDir
+    if args.input_dir is not None:
+        config['input_dir'] = args.input_dir
+
+    # Output directory
+    config['output_dir'] = os.getcwd()
+    if hasattr(script_module, 'outdir'):
+        config['output_dir'] = script_module.outdir
+    if hasattr(script_module, 'outputDir'):
+        config['output_dir'] = script_module.outputDir
+    if args.output_dir is not None:
+        config['output_dir'] = args.output_dir
+
+    # Integrated luminosity
+    config['int_lumi'] = 1.
+    if hasattr(script_module, 'intLumi'):
+        config['int_lumi'] = script_module.intLumi
+    else:
+        LOGGER.debug('No integrated luminosity provided, using 1.0 pb-1.')
+    LOGGER.info('Integrated luminosity: %g pb-1', config['int_lumi'])
+
+    # Whether to scale histograms to luminosity
+    config['do_scale'] = 1.0
+    if hasattr(script_module, 'doScale'):
+        config['do_scale'] = script_module.doScale
+    else:
+        LOGGER.debug('No scaling to luminosity requested, scaling won\'t be '
+                     'done.')
+        config['do_scale'] = False
+    if config['do_scale']:
+        LOGGER.info('Histograms will be scaled to luminosity.')
+
+    # Scale factor to apply to all signal histograms
+    config['scale_sig'] = 1.0
+    if hasattr(script_module, 'scaleSig'):
+        config['scale_sig'] = script_module.scaleSig
+    else:
+        LOGGER.debug('No scale factor for signal provided, using 1.0.')
+    LOGGER.info('Scale factor for signal: %g', config['scale_sig'])
+
+    # Scale factor to apply to all background histograms
+    config['scale_bkg'] = 1.0
+    if hasattr(script_module, 'scaleBkg'):
+        config['scale_bkg'] = script_module.scaleBkg
+    else:
+        LOGGER.debug('No scale factor for background provided, using 1.0.')
+    LOGGER.info('Scale factor for background: %g', config['scale_sig'])
+
+    # Plots list
+    config['plots']: dict[str, any] = {}
+    if hasattr(script_module, 'plots'):
+        config['plots'] = script_module.plots
+    else:
+        LOGGER.debug('List of plots not provided!\nAborting...')
+        sys.exit(3)
+
+    # Splitting legend into two columns
     config['split_leg'] = False
     if hasattr(script_module, 'splitLeg'):
         config['split_leg'] = script_module.splitLeg
@@ -836,6 +973,7 @@ def run(args):
         sys.exit()
 
     counter = 0
+    LOGGER.info('Plotting:')
     for var_index, var in enumerate(script_module.variables):
         for label, sels in script_module.selections.items():
             for sel in sels:
@@ -844,11 +982,15 @@ def run(args):
                     if len(script_module.rebin) == \
                             len(script_module.variables):
                         rebin_tmp = script_module.rebin[var_index]
-                hsignal, hbackgrounds = mapHistos(var,
-                                                  label,
-                                                  sel,
-                                                  script_module,
-                                                  rebin=rebin_tmp)
+
+                LOGGER.info('  var: %s     label: %s     selection: %s',
+                            var, label, sel)
+
+                hsignal, hbackgrounds = load_hists(var,
+                                                   label,
+                                                   sel,
+                                                   config,
+                                                   rebin=rebin_tmp)
                 runPlots(config,
                          args,
                          var + "_" + label,
