@@ -25,6 +25,9 @@ rebin = [1, 1, 1, 1, 2]  # uniform rebin per variable (optional)
 selections = {}
 selections['ZH'] = ["sel0", "sel1"]
 selections['ZH_2'] = ["sel0", "sel1"]
+selections['ZH_3'] = ["sel0", "sel1"]
+selections['ZH_4'] = ["sel0", "sel1"]
+selections['ZH_5'] = ["sel0", "sel1"]
 
 extralabel = {}
 extralabel['sel0'] = "Selection: N_{Z} = 1"
@@ -41,9 +44,15 @@ plots['ZH'] = {'signal': {'ZH': ['MySample_p8_ee_ZH_ecm240']},
                'backgrounds': {'WW': ['p8_ee_WW_ecm240'],
                                'ZZ': ['p8_ee_ZZ_ecm240']}}
 
-
 plots['ZH_2'] = {'signal': {'ZH': ['MySample_p8_ee_ZH_ecm240']},
                  'backgrounds': {'VV': ['p8_ee_WW_ecm240', 'p8_ee_ZZ_ecm240']}}
+
+plots['ZH_3'] = {'signal': {'ZH': ['MySample_p8_ee_ZH_ecm240']}}
+
+plots['ZH_4'] = {'backgrounds': {'VV': ['p8_ee_WW_ecm240', 'p8_ee_ZZ_ecm240']}}
+
+plots['ZH_5'] = {'backgrounds': {'WW': ['p8_ee_WW_ecm240'],
+                                 'ZZ': ['p8_ee_ZZ_ecm240']}}
 
 legend = {}
 legend['ZH'] = 'ZH'
