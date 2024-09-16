@@ -50,6 +50,51 @@ def formatStatUncHist(hists, name, hstyle=3254):
 
 
 # _____________________________________________________________________________
+def determine_lumi_scaling(config: dict[str, any],
+                           infile: object,
+                           initial_scale: float = 1.0) -> float:
+    '''
+    Determine whether to (re)scale histograms in the file to luminosity.
+    '''
+    scale: float = initial_scale
+
+    # Check if histograms were already scaled to lumi
+    try:
+        scaled: bool = infile.scaled.GetVal()
+    except AttributeError:
+        LOGGER.error('Input file does not contain scaling '
+                     'information!\n  %s\nAborting...', infile.GetName())
+        sys.exit(3)
+
+    if scaled:
+        try:
+            int_lumi_in_file: float = infile.intLumi.GetVal()
+        except AttributeError:
+            LOGGER.error('Can not load integrated luminosity '
+                         'value from the input file!\n  %s\n'
+                         'Aborting...', infile.GetName())
+
+        if config['int_lumi'] != int_lumi_in_file:
+            LOGGER.warning(
+                'Histograms are already scaled to different '
+                'luminosity value!\n'
+                'Luminosity in the input file is %s pb-1 and '
+                'luminosity requested in plots script is %s pb-1.',
+                int_lumi_in_file, config['int_lumi'])
+            if config['do_scale']:
+                LOGGER.warning(
+                    'Rescaling from %s pb-1 to %s pb-1...',
+                    int_lumi_in_file, config['int_lumi'])
+                scale *= config['int_lumi'] / int_lumi_in_file
+
+    else:
+        if config['do_scale']:
+            scale = scale * config['int_lumi']
+
+    return scale
+
+
+# _____________________________________________________________________________
 def load_hists(var: str,
                label: str,
                sel: str,
@@ -83,43 +128,10 @@ def load_hists(var: str,
                 hist = copy.deepcopy(infile.Get(var))
                 hist.SetDirectory(0)
 
-                scale = config['scale_sig']
-
-                # Check if histograms were already scaled to lumi
-                try:
-                    scaled = infile.scaled
-                except AttributeError:
-                    LOGGER.error('Input file does not contain scaling '
-                                 'information!\n  %s\nAborting...', infilepath)
-                    sys.exit(3)
-
-                if scaled:
-                    try:
-                        int_lumi_in_file = infile.intLumi.GetVal()
-                    except AttributeError:
-                        LOGGER.error('Can not load integrated luminosity '
-                                     'value from the input file!\n  %s\n'
-                                     'Aborting...', infilepath)
-
-                    if config['int_lumi'] != int_lumi_in_file:
-                        LOGGER.warning(
-                            'Histograms are already scaled to different '
-                            'luminosity value!\n'
-                            'Luminosity in the input file is %s pb-1 and '
-                            'luminosity requested in plots script is %s pb-1.',
-                            int_lumi_in_file, config['int_lumi'])
-                        if config['do_scale']:
-                            LOGGER.warning(
-                                'Rescaling from %s pb-1 to %s pb-1...',
-                                int_lumi_in_file, config['int_lumi'])
-                            scale *= config['int_lumi'] / int_lumi_in_file
-
-                else:
-                    if config['do_scale']:
-                        scale = scale * config['int_lumi']
-
+                scale = determine_lumi_scaling(config,
+                                               infile,
+                                               config['scale_sig'])
             hist.Scale(scale)
-
             hist.Rebin(rebin)
 
             if len(hsignal[s]) == 0:
@@ -142,43 +154,10 @@ def load_hists(var: str,
                 hist = copy.deepcopy(infile.Get(var))
                 hist.SetDirectory(0)
 
-                scale = config['scale_bkg']
-
-                # Check if histograms were already scaled to lumi
-                try:
-                    scaled = infile.scaled
-                except AttributeError:
-                    LOGGER.error('Input file does not contain scaling '
-                                 'information!\n  %s\nAborting...', infilepath)
-                    sys.exit(3)
-
-                if scaled:
-                    try:
-                        int_lumi_in_file = infile.intLumi.GetVal()
-                    except AttributeError:
-                        LOGGER.error('Can not load integrated luminosity '
-                                     'value from the input file!\n  %s\n'
-                                     'Aborting...', infilepath)
-
-                    if config['int_lumi'] != int_lumi_in_file:
-                        LOGGER.warning(
-                            'Histograms are already scaled to different '
-                            'luminosity value!\n'
-                            'Luminosity in the input file is %s pb-1 and '
-                            'luminosity requested in plots script is %s pb-1.',
-                            int_lumi_in_file, config['int_lumi'])
-                        if config['do_scale']:
-                            LOGGER.warning(
-                                'Rescaling from %s pb-1 to %s pb-1...',
-                                int_lumi_in_file, config['int_lumi'])
-                            scale *= config['int_lumi'] / int_lumi_in_file
-
-                else:
-                    if config['do_scale']:
-                        scale = scale * config['int_lumi']
-
+                scale = determine_lumi_scaling(config,
+                                               infile,
+                                               config['scale_bkg'])
             hist.Scale(scale)
-
             hist.Rebin(rebin)
 
             if len(hbackgrounds[b]) == 0:
