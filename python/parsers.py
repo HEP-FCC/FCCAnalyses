@@ -146,7 +146,11 @@ def setup_run_parser_plots(parser):
     '''
     Define command line arguments for the plots sub-command.
     '''
-    parser.add_argument('script_path', help="path to the plots script")
+    parser.add_argument('script_path', help='path to the plots script')
+    parser.add_argument('--input-dir', type=str, default=None,
+                        help='input directory location')
+    parser.add_argument('--output-dir', type=str, default=None,
+                        help='output directory location')
     parser.add_argument('--legend-text-size', type=float, default=None,
                         help='text size for the legend elements')
     parser.add_argument('--legend-x-min', type=float, default=None,
@@ -157,7 +161,6 @@ def setup_run_parser_plots(parser):
                         help='minimal y position of the legend')
     parser.add_argument('--legend-y-max', type=float, default=None,
                         help='maximal y position of the legend')
-
 
 
 def setup_run_parser_combine(parser):

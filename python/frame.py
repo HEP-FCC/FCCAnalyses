@@ -22,13 +22,13 @@ def generate_graph(dframe, args, suffix: str | None = None) -> None:
     # Check if output file path is provided
     graph_path: pathlib.PurePath = pathlib.PurePath(args.graph_path)
     if args.graph_path == '':
-        graph_path = pathlib.PurePath(args.anascript_path).with_suffix('.dot')
+        graph_path = pathlib.PurePath(os.getcwd(), 'fccanalysis_graph.dot')
 
     # check if file path ends with "correct" extension
     if graph_path.suffix not in ('.dot', '.png'):
         LOGGER.warning('Graph output file extension not recognized!\n'
                        'Using analysis script name...')
-        graph_path = pathlib.PurePath(args.anascript_path).with_suffix('.dot')
+        graph_path = pathlib.PurePath(os.getcwd(), 'fccanalysis_graph.dot')
 
     # Add optional suffix to the output file path
     if suffix is not None:
@@ -41,7 +41,8 @@ def generate_graph(dframe, args, suffix: str | None = None) -> None:
         LOGGER.info('Analysis computational graph will be saved into:\n - %s',
                     graph_path.with_suffix('.dot'))
     else:
-        LOGGER.info('Analysis computational graph will be saved into:\n - %s\n - %s',
+        LOGGER.info('Analysis computational graph will be saved '
+                    'into:\n - %s\n - %s',
                     graph_path.with_suffix('.dot'),
                     graph_path.with_suffix('.png'))
 

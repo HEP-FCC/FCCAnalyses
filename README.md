@@ -1,5 +1,10 @@
 # FCCAnalyses
 
+[![DOI](https://zenodo.org/badge/177151745.svg)](https://zenodo.org/doi/10.5281/zenodo.4767810)
+
+![test](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml/badge.svg)
+![docs](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/docs.yml/badge.svg)
+
 Common framework for FCC related analyses. This framework allows one to write
 full analysis, taking [EDM4hep](https://github.com/key4hep/EDM4hep) input ROOT
 files and producing the plots.
