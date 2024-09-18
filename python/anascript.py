@@ -247,7 +247,7 @@ def get_element_dict(_dict, element: str):
         return None
 
 
-def get_attribute(obj, attr_name: str, default_val=None):
+def get_attribute(obj: object, attr_name: str, default_val=None) -> any:
     '''
     Returns requested attribute value or default value.
     '''

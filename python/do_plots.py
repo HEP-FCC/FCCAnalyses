@@ -50,61 +50,121 @@ def formatStatUncHist(hists, name, hstyle=3254):
 
 
 # _____________________________________________________________________________
-def mapHistos(var, label, sel, param, rebin):
-    LOGGER.info('Run plots for var:%s     label:%s     selection:%s',
-                var, label, sel)
-    signal = param.plots[label]['signal']
-    backgrounds = param.plots[label]['backgrounds']
+def determine_lumi_scaling(config: dict[str, any],
+                           infile: object,
+                           initial_scale: float = 1.0) -> float:
+    '''
+    Determine whether to (re)scale histograms in the file to luminosity.
+    '''
+    scale: float = initial_scale
+
+    # Check if histograms were already scaled to lumi
+    try:
+        scaled: bool = infile.scaled.GetVal()
+    except AttributeError:
+        LOGGER.error('Input file does not contain scaling '
+                     'information!\n  %s\nAborting...', infile.GetName())
+        sys.exit(3)
+
+    if scaled:
+        try:
+            int_lumi_in_file: float = infile.intLumi.GetVal()
+        except AttributeError:
+            LOGGER.error('Can not load integrated luminosity '
+                         'value from the input file!\n  %s\n'
+                         'Aborting...', infile.GetName())
+
+        if config['int_lumi'] != int_lumi_in_file:
+            LOGGER.warning(
+                'Histograms are already scaled to different '
+                'luminosity value!\n'
+                'Luminosity in the input file is %s pb-1 and '
+                'luminosity requested in plots script is %s pb-1.',
+                int_lumi_in_file, config['int_lumi'])
+            if config['do_scale']:
+                LOGGER.warning(
+                    'Rescaling from %s pb-1 to %s pb-1...',
+                    int_lumi_in_file, config['int_lumi'])
+                scale *= config['int_lumi'] / int_lumi_in_file
+
+    else:
+        if config['do_scale']:
+            scale = scale * config['int_lumi']
+
+    return scale
+
+
+# _____________________________________________________________________________
+def load_hists(var: str,
+               label: str,
+               sel: str,
+               config: dict[str, any],
+               rebin: int) -> tuple[dict[str, any], dict[str: any]]:
+    '''
+    Load all histograms needed for the plot
+    '''
+
+    try:
+        signal = config['plots'][label]['signal']
+    except KeyError:
+        signal = {}
+
+    try:
+        backgrounds = config['plots'][label]['backgrounds']
+    except KeyError:
+        backgrounds = {}
 
     hsignal = {}
     for s in signal:
         hsignal[s] = []
-        for f in signal[s]:
-            fin = param.inputDir+f+'_'+sel+'_histo.root'
-            if not os.path.isfile(fin):
-                LOGGER.info('File "%s" not found!\nSkipping it...', fin)
+        for filepathstem in signal[s]:
+            infilepath = config['input_dir'] + filepathstem + '_' + sel + \
+                         '_histo.root'
+            if not os.path.isfile(infilepath):
+                LOGGER.info('File "%s" not found!\nSkipping it...', infilepath)
                 continue
 
-            with ROOT.TFile(fin, 'READ') as tf:
-                h = tf.Get(var)
-                hh = copy.deepcopy(h)
-                hh.SetDirectory(0)
-            scaleSig = 1.
-            try:
-                scaleSig = param.scaleSig
-            except AttributeError:
-                LOGGER.debug('No scale signal, using 1.')
-                param.scaleSig = scaleSig
-            LOGGER.info('ScaleSig: %g', scaleSig)
-            hh.Scale(param.intLumi*scaleSig)
-            hh.Rebin(rebin)
+            with ROOT.TFile(infilepath, 'READ') as infile:
+                hist = copy.deepcopy(infile.Get(var))
+                hist.SetDirectory(0)
+
+                scale = determine_lumi_scaling(config,
+                                               infile,
+                                               config['scale_sig'])
+            hist.Scale(scale)
+            hist.Rebin(rebin)
 
             if len(hsignal[s]) == 0:
-                hsignal[s].append(hh)
+                hsignal[s].append(hist)
             else:
-                hh.Add(hsignal[s][0])
-                hsignal[s][0] = hh
+                hist.Add(hsignal[s][0])
+                hsignal[s][0] = hist
 
     hbackgrounds = {}
     for b in backgrounds:
         hbackgrounds[b] = []
-        for f in backgrounds[b]:
-            fin = param.inputDir+f+'_'+sel+'_histo.root'
-            if not os.path.isfile(fin):
-                LOGGER.info('File "%s" not found!\nSkipping it...', fin)
+        for filepathstem in backgrounds[b]:
+            infilepath = config['input_dir'] + filepathstem + '_' + sel + \
+                         '_histo.root'
+            if not os.path.isfile(infilepath):
+                LOGGER.info('File "%s" not found!\nSkipping it...', infilepath)
                 continue
 
-            with ROOT.TFile(fin) as tf:
-                h = tf.Get(var)
-                hh = copy.deepcopy(h)
-                hh.SetDirectory(0)
-            hh.Scale(param.intLumi)
-            hh.Rebin(rebin)
+            with ROOT.TFile(infilepath) as infile:
+                hist = copy.deepcopy(infile.Get(var))
+                hist.SetDirectory(0)
+
+                scale = determine_lumi_scaling(config,
+                                               infile,
+                                               config['scale_bkg'])
+            hist.Scale(scale)
+            hist.Rebin(rebin)
+
             if len(hbackgrounds[b]) == 0:
-                hbackgrounds[b].append(hh)
+                hbackgrounds[b].append(hist)
             else:
-                hh.Add(hbackgrounds[b][0])
-                hbackgrounds[b][0] = hh
+                hist.Add(hbackgrounds[b][0])
+                hbackgrounds[b][0] = hist
 
     for s in hsignal:
         if len(hsignal[s]) == 0:
@@ -113,10 +173,6 @@ def mapHistos(var, label, sel, param, rebin):
     for b in hbackgrounds:
         if len(hbackgrounds[b]) == 0:
             hbackgrounds = removekey(hbackgrounds, b)
-
-    if not hsignal:
-        LOGGER.error('No signal input files found!\nAborting...')
-        sys.exit(3)
 
     return hsignal, hbackgrounds
 
@@ -188,7 +244,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
 
 
 # _____________________________________________________________________________
-def runPlots(config: dict,
+def runPlots(config: dict[str, any],
              args,
              var,
              sel,
@@ -278,17 +334,14 @@ def runPlots(config: dict,
         histos.append(hbackgrounds[bkg][0])
         colors.append(script_module.colors[bkg])
 
-    intLumiab = script_module.intLumi/1e+06
-    intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
-    if hasattr(script_module, "intLumiLabel"):
-        intLumi = getattr(script_module, "intLumiLabel")
-
     lt = 'FCCAnalyses: FCC-hh Simulation (Delphes)'
-    rt = f'#sqrt{{s}} = {script_module.energy:.1f} TeV,   L = {intLumi}'
+    rt = f'#sqrt{{s}} = {script_module.energy:.1f} TeV,   ' \
+         f'{config["int_lumi_label"]}'
 
     if 'ee' in script_module.collider:
         lt = 'FCCAnalyses: FCC-ee Simulation (Delphes)'
-        rt = f'#sqrt{{s}} = {script_module.energy:.1f} GeV,   {intLumi}'
+        rt = f'#sqrt{{s}} = {script_module.energy:.1f} GeV,   ' \
+             f'{config["int_lumi_label"]}'
 
     customLabel = ""
     try:
@@ -296,33 +349,26 @@ def runPlots(config: dict,
     except AttributeError:
         LOGGER.debug('No custom label, using nothing...')
 
-    scaleSig = 1.
-    try:
-        scaleSig = script_module.scaleSig
-    except AttributeError:
-        LOGGER.debug('No scale signal, using 1.')
-        script_module.scaleSig = scaleSig
-
     if 'AAAyields' in var:
-        drawStack(var, 'events', leg, lt, rt, script_module.formats,
+        drawStack(config, var, 'events', leg, lt, rt, script_module.formats,
                   script_module.outdir + "/" + sel, False, True, histos,
-                  colors, script_module.ana_tex, extralab, scaleSig,
+                  colors, script_module.ana_tex, extralab,
                   customLabel, nsig, nbkg, leg2, yields,
                   config['plot_stat_unc'])
         return
 
     if 'stack' in script_module.stacksig:
         if 'lin' in script_module.yaxis:
-            drawStack(var + "_stack_lin", 'events', leg, lt, rt,
+            drawStack(config, var + "_stack_lin", 'events', leg, lt, rt,
                       script_module.formats, script_module.outdir + "/" + sel,
                       False, True, histos, colors, script_module.ana_tex,
-                      extralab, scaleSig, customLabel, nsig, nbkg, leg2,
+                      extralab, customLabel, nsig, nbkg, leg2,
                       yields, config['plot_stat_unc'])
         if 'log' in script_module.yaxis:
-            drawStack(var + "_stack_log", 'events', leg, lt, rt,
+            drawStack(config, var + "_stack_log", 'events', leg, lt, rt,
                       script_module.formats, script_module.outdir + "/" + sel,
                       True, True, histos, colors, script_module.ana_tex,
-                      extralab, scaleSig, customLabel, nsig, nbkg, leg2,
+                      extralab, customLabel, nsig, nbkg, leg2,
                       yields, config['plot_stat_unc'])
         if 'lin' not in script_module.yaxis and \
                 'log' not in script_module.yaxis:
@@ -331,17 +377,17 @@ def runPlots(config: dict,
 
     if 'nostack' in script_module.stacksig:
         if 'lin' in script_module.yaxis:
-            drawStack(var + "_nostack_lin", 'events', leg, lt, rt,
+            drawStack(config, var + "_nostack_lin", 'events', leg, lt, rt,
                       script_module.formats,
                       script_module.outdir + "/" + sel, False, False, histos,
-                      colors, script_module.ana_tex, extralab, scaleSig,
+                      colors, script_module.ana_tex, extralab,
                       customLabel, nsig, nbkg, leg2, yields,
                       config['plot_stat_unc'])
         if 'log' in script_module.yaxis:
-            drawStack(var + "_nostack_log", 'events', leg, lt, rt,
+            drawStack(config, var + "_nostack_log", 'events', leg, lt, rt,
                       script_module.formats, script_module.outdir + "/" + sel,
                       True, False, histos, colors, script_module.ana_tex,
-                      extralab, scaleSig, customLabel, nsig, nbkg, leg2,
+                      extralab, customLabel, nsig, nbkg, leg2,
                       yields, config['plot_stat_unc'])
         if 'lin' not in script_module.yaxis and \
                 'log' not in script_module.yaxis:
@@ -379,7 +425,9 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         leg2.SetFillStyle(0)
         leg2.SetLineColor(0)
         leg2.SetShadowColor(10)
-        leg2.SetTextSize(args.legend_text_size)
+        leg2.SetTextSize(args.legend_text_size
+                         if args.legend_text_size is not None
+                         else 0.035)
         leg2.SetTextFont(42)
     else:
         legsize = 0.04*(len(hbackgrounds)+len(hsignal))
@@ -392,15 +440,17 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         leg2 = None
 
     leg = ROOT.TLegend(
-        args.legend_x_min if args.legend_x_min > 0 else legCoord[0],
-        args.legend_y_min if args.legend_y_min > 0 else legCoord[1],
-        args.legend_x_max if args.legend_x_max > 0 else legCoord[2],
-        args.legend_y_max if args.legend_y_max > 0 else legCoord[3])
+        args.legend_x_min if args.legend_x_min is not None else legCoord[0],
+        args.legend_y_min if args.legend_y_min is not None else legCoord[1],
+        args.legend_x_max if args.legend_x_max is not None else legCoord[2],
+        args.legend_y_max if args.legend_y_max is not None else legCoord[3])
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
     leg.SetShadowColor(10)
-    leg.SetTextSize(args.legend_text_size)
+    leg.SetTextSize(args.legend_text_size
+                    if args.legend_text_size is not None
+                    else 0.035)
     leg.SetTextFont(42)
 
     for b in hbackgrounds:
@@ -435,6 +485,8 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         histos.append(hbackgrounds[b][0])
         colors.append(param.colors[b])
 
+    config: dict[str, any] = {}
+
     xtitle = plotCfg['xtitle'] if 'xtitle' in plotCfg else ""
     ytitle = plotCfg['ytitle'] if 'ytitle' in plotCfg else "Events"
     xmin = plotCfg['xmin'] if 'xmin' in plotCfg else -1
@@ -444,7 +496,7 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
     stack = plotCfg['stack'] if 'stack' in plotCfg else False
     logy = plotCfg['logy'] if 'logy' in plotCfg else False
     extralab = plotCfg['extralab'] if 'extralab' in plotCfg else ""
-    scaleSig = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
+    config['scale_sig'] = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
 
     intLumiab = param.intLumi/1e+06
     intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
@@ -466,36 +518,36 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
 
     if stack:
         if logy:
-            drawStack(output, ytitle, leg, lt, rt, param.formats, param.outdir,
-                      True, True, histos, colors, param.ana_tex, extralab,
-                      scaleSig, customLabel, nsig, nbkg, leg2, yields,
+            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
+                      param.outdir, True, True, histos, colors, param.ana_tex,
+                      extralab, customLabel, nsig, nbkg, leg2, yields,
                       plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
                       xtitle=xtitle)
         else:
-            drawStack(output, ytitle, leg, lt, rt, param.formats, param.outdir,
-                      False, True, histos, colors, param.ana_tex, extralab,
-                      scaleSig, customLabel, nsig, nbkg, leg2, yields,
+            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
+                      param.outdir, False, True, histos, colors, param.ana_tex,
+                      extralab, customLabel, nsig, nbkg, leg2, yields,
                       plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
                       xtitle=xtitle)
 
     else:
         if logy:
-            drawStack(output, ytitle, leg, lt, rt, param.formats, param.outdir,
-                      True, False, histos, colors, param.ana_tex, extralab,
-                      scaleSig, customLabel, nsig, nbkg, leg2, yields,
+            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
+                      param.outdir, True, False, histos, colors, param.ana_tex,
+                      extralab, customLabel, nsig, nbkg, leg2, yields,
                       plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
                       xtitle=xtitle)
         else:
-            drawStack(output, ytitle, leg, lt, rt, param.formats, param.outdir,
-                      False, False, histos, colors, param.ana_tex, extralab,
-                      scaleSig, customLabel, nsig, nbkg, leg2, yields,
-                      plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
-                      xtitle=xtitle)
+            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
+                      param.outdir, False, False, histos, colors,
+                      param.ana_tex, extralab, customLabel, nsig, nbkg, leg2,
+                      yields, plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin,
+                      ymax=ymax, xtitle=xtitle)
 
 
 # _____________________________________________________________________________
-def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
-              logY, stacksig, histos, colors, ana_tex, extralab, scaleSig,
+def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
+              directory, logY, stacksig, histos, colors, ana_tex, extralab,
               customLabel, nsig, nbkg, legend2=None, yields=None,
               plotStatUnc=False, xmin=-1, xmax=-1, ymin=-1, ymax=-1,
               xtitle=""):
@@ -589,8 +641,9 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
         hStackSig.Draw("HIST SAME NOSTACK")
         if plotStatUnc:
             # bkg-only uncertainty
-            hUnc_bkg = formatStatUncHist(hStackBkg.GetHists(), "bkg_only")
-            hUnc_bkg.Draw("E2 SAME")
+            if hStackBkg.GetNhists() != 0:
+                hUnc_bkg = formatStatUncHist(hStackBkg.GetHists(), "bkg_only")
+                hUnc_bkg.Draw("E2 SAME")
             for sHist in hStackSig.GetHists():
                 # sigs uncertainty
                 hUnc_sig = formatStatUncHist([sHist], "sig", 3245)
@@ -623,10 +676,17 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
     if stacksig:
         ymin_, ymax_ = get_minmax_range(hStack.GetHists(), xmin, xmax)
     else:
-        ymin_sig, ymax_sig = get_minmax_range(hStackSig.GetHists(), xmin, xmax)
-        ymin_bkg, ymax_bkg = get_minmax_range(hStackBkg.GetHists(), xmin, xmax)
-        ymin_ = min(ymin_sig, ymin_bkg)
-        ymax_ = max(ymax_sig, ymax_bkg)
+        if hStackSig.GetNhists() != 0 and hStackBkg.GetNhists() != 0:
+            ymin_sig, ymax_sig = get_minmax_range(hStackSig.GetHists(),
+                                                  xmin, xmax)
+            ymin_bkg, ymax_bkg = get_minmax_range(hStackBkg.GetHists(),
+                                                  xmin, xmax)
+            ymin_ = min(ymin_sig, ymin_bkg)
+            ymax_ = max(ymax_sig, ymax_bkg)
+        elif hStackSig.GetNhists() == 0:
+            ymin_, ymax_ = get_minmax_range(hStackBkg.GetHists(), xmin, xmax)
+        elif hStackBkg.GetNhists() == 0:
+            ymin_, ymax_ = get_minmax_range(hStackSig.GetHists(), xmin, xmax)
     if ymin == -1:
         ymin = ymin_*0.1 if logY else 0
     if ymax == -1:
@@ -676,9 +736,16 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
     latex.SetTextSize(0.025)
     latex.DrawLatex(0.18, 0.66, text)
 
-    text = '#bf{#it{' + 'Signal scale=' + str(scaleSig)+'}}'
-    latex.SetTextSize(0.025)
-    if scaleSig != 1:
+    if config['scale_sig'] != 1.0:
+        text = '#bf{#it{Signal Scaling = ' + f'{config["scale_sig"]:.3g}' + \
+               '}}'
+        latex.SetTextSize(0.025)
+        latex.DrawLatex(0.18, 0.63, text)
+
+    if config['scale_bkg'] != 1.0:
+        text = '#bf{#it{Background Scaling = ' + \
+                f'{config["scale_bkg"]:.3g}' + '}}'
+        latex.SetTextSize(0.025)
         latex.DrawLatex(0.18, 0.63, text)
 
     canvas.RedrawAxis()
@@ -721,9 +788,15 @@ def drawStack(name, ylabel, legend, leftText, rightText, formats, directory,
         latex.SetTextSize(0.025)
         latex.DrawLatex(0.18, 0.68, text)
 
-        text = '#bf{#it{' + 'Signal scale=' + str(scaleSig) + '}}'
+        text = '#bf{#it{Signal Scaling = ' + f'{config["scale_sig"]:.3g}' + \
+               '}}'
         latex.SetTextSize(0.04)
-        latex.DrawLatex(0.18, 0.55, text)
+        latex.DrawLatex(0.18, 0.57, text)
+
+        text = '#bf{#it{Background Scaling = ' + \
+            f'{config["scale_bkg"]:.3g}' + '}}'
+        latex.SetTextSize(0.04)
+        latex.DrawLatex(0.18, 0.52, text)
 
         dy = 0
         text = '#bf{#it{' + 'Process' + '}}'
@@ -797,8 +870,71 @@ def run(args):
     script_module = importlib.import_module(base_name)
 
     # Merge script and command line arguments into one configuration object
-    config = {}
+    # Also check the script attributes
+    config: dict[str, any] = {}
 
+    # Input directory
+    config['input_dir'] = os.getcwd()
+    if hasattr(script_module, 'indir'):
+        config['input_dir'] = script_module.indir
+    if hasattr(script_module, 'inputDir'):
+        config['input_dir'] = script_module.inputDir
+    if args.input_dir is not None:
+        config['input_dir'] = args.input_dir
+
+    # Output directory
+    config['output_dir'] = os.getcwd()
+    if hasattr(script_module, 'outdir'):
+        config['output_dir'] = script_module.outdir
+    if hasattr(script_module, 'outputDir'):
+        config['output_dir'] = script_module.outputDir
+    if args.output_dir is not None:
+        config['output_dir'] = args.output_dir
+
+    # Integrated luminosity
+    config['int_lumi'] = 1.
+    if hasattr(script_module, 'intLumi'):
+        config['int_lumi'] = script_module.intLumi
+    else:
+        LOGGER.debug('No integrated luminosity provided, using 1.0 pb-1.')
+    LOGGER.info('Integrated luminosity: %g pb-1', config['int_lumi'])
+
+    # Whether to scale histograms to luminosity
+    config['do_scale'] = 1.0
+    if hasattr(script_module, 'doScale'):
+        config['do_scale'] = script_module.doScale
+    else:
+        LOGGER.debug('No scaling to luminosity requested, scaling won\'t be '
+                     'done.')
+        config['do_scale'] = False
+    if config['do_scale']:
+        LOGGER.info('Histograms will be scaled to luminosity.')
+
+    # Scale factor to apply to all signal histograms
+    config['scale_sig'] = 1.0
+    if hasattr(script_module, 'scaleSig'):
+        config['scale_sig'] = script_module.scaleSig
+    else:
+        LOGGER.debug('No scale factor for signal provided, using 1.0.')
+    LOGGER.info('Scale factor for signal: %g', config['scale_sig'])
+
+    # Scale factor to apply to all background histograms
+    config['scale_bkg'] = 1.0
+    if hasattr(script_module, 'scaleBkg'):
+        config['scale_bkg'] = script_module.scaleBkg
+    else:
+        LOGGER.debug('No scale factor for background provided, using 1.0.')
+    LOGGER.info('Scale factor for background: %g', config['scale_sig'])
+
+    # Plots list
+    config['plots']: dict[str, any] = {}
+    if hasattr(script_module, 'plots'):
+        config['plots'] = script_module.plots
+    else:
+        LOGGER.debug('List of plots not provided!\nAborting...')
+        sys.exit(3)
+
+    # Splitting legend into two columns
     config['split_leg'] = False
     if hasattr(script_module, 'splitLeg'):
         config['split_leg'] = script_module.splitLeg
@@ -825,6 +961,21 @@ def run(args):
     if args.legend_text_size is not None:
         config['legend_text_size'] = args.legend_text_size
 
+    # Label for the integrated luminosity
+    config['int_lumi_label'] = None
+    if hasattr(script_module, "intLumiLabel"):
+        config['int_lumi_label'] = script_module.intLumiLabel
+    if config['int_lumi_label'] is None:
+        if config['int_lumi'] >= 1e6:
+            int_lumi_label = config['int_lumi'] / 1e6
+            config['int_lumi_label'] = f'L = {int_lumi_label:.2g} ab^{{-1}}'
+        elif config['int_lumi'] >= 1e3:
+            int_lumi_label = config['int_lumi'] / 1e3
+            config['int_lumi_label'] = f'L = {int_lumi_label:.2g} fb^{{-1}}'
+        else:
+            config['int_lumi_label'] = \
+                f'L = {config["int_lumi"]:.2g} pb^{{-1}}'
+
     # Handle plots for Histmaker analyses and exit
     if hasattr(script_module, 'hists'):
         for hist_name, plot_cfg in script_module.hists.items():
@@ -832,6 +983,7 @@ def run(args):
         sys.exit()
 
     counter = 0
+    LOGGER.info('Plotting:')
     for var_index, var in enumerate(script_module.variables):
         for label, sels in script_module.selections.items():
             for sel in sels:
@@ -840,11 +992,15 @@ def run(args):
                     if len(script_module.rebin) == \
                             len(script_module.variables):
                         rebin_tmp = script_module.rebin[var_index]
-                hsignal, hbackgrounds = mapHistos(var,
-                                                  label,
-                                                  sel,
-                                                  script_module,
-                                                  rebin=rebin_tmp)
+
+                LOGGER.info('  var: %s     label: %s     selection: %s',
+                            var, label, sel)
+
+                hsignal, hbackgrounds = load_hists(var,
+                                                   label,
+                                                   sel,
+                                                   config,
+                                                   rebin=rebin_tmp)
                 runPlots(config,
                          args,
                          var + "_" + label,
