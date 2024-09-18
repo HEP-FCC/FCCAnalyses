@@ -68,12 +68,11 @@ class Analysis():
             .Define("weight",  "EventHeader.weight")
 
             ########################################### PHOTONS ########################################### 
-            # .Alias("Photon0", "Photon#0.index") 
-            # #.Alias("Photon0", "Photon_objIdx.index")
+
             .Define("gamma",  "FCCAnalyses::ReconstructedParticle::get(Photon_objIdx.index, ReconstructedParticles)")
-            .Define("sel_gamma", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(gamma)")
-            # .Define("sel_gamma_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_gamma)")
-            # .Define("sel_gamma", "AnalysisFCChh::SortParticleCollection(sel_gamma_unsort)")
+            .Define("selpt_gamma", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(gamma)")
+            .Define("sel_gamma_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_gamma)")
+            .Define("sel_gamma", "AnalysisFCChh::SortParticleCollection(sel_gamma_unsort)")
 
             .Define("ngamma",  "FCCAnalyses::ReconstructedParticle::get_n(sel_gamma)") 
             .Define("g1_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_gamma)[0]")
@@ -85,69 +84,58 @@ class Analysis():
             .Define("g2_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_gamma)[1]")
             .Define("g2_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_gamma)[1]")
 
+            #H(yy) if it exists, if there are no 2 selected photons, doesnt get filled 
+            .Define("yy_pairs_unmerged", "AnalysisFCChh::getPairs(sel_gamma)")
+            .Define("yy_pairs", "AnalysisFCChh::merge_pairs(yy_pairs_unmerged)")
+            .Define("m_yy", "FCCAnalyses::ReconstructedParticle::get_mass(yy_pairs)")
+
 
             ########################################### JETS ########################################### 
 
             # jets after overlap removal is performed between jets and isolated electrons, muons and photons
 
-            #selected jets above a pT threshold of 30 GeV, eta < 4, tight ID 
-            # .Define("selpt_jets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(Jet)")
-            # .Define("sel_jets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_jets)")
-            # .Define("sel_jets", "AnalysisFCChh::SortParticleCollection(sel_jets_unsort)") 
-            # .Define("njets",  "FCCAnalyses::ReconstructedParticle::get_n(sel_jets)")
-            # .Define("j1_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_jets)[0]")
-            # .Define("j1_pt",  "FCCAnalyses::ReconstructedParticle::get_pt(sel_jets)[0]")
-            # .Define("j1_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_jets)[0]")
-            # .Define("j1_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_jets)[0]")
+            # selected jets above a pT threshold of 30 GeV, eta < 4, tight ID 
+            .Define("selpt_jets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(Jet)")
+            .Define("sel_jets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_jets)")
+            .Define("sel_jets", "AnalysisFCChh::SortParticleCollection(sel_jets_unsort)") 
+            .Define("njets",  "FCCAnalyses::ReconstructedParticle::get_n(sel_jets)")
+            .Define("j1_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_jets)[0]")
+            .Define("j1_pt",  "FCCAnalyses::ReconstructedParticle::get_pt(sel_jets)[0]")
+            .Define("j1_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_jets)[0]")
+            .Define("j1_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_jets)[0]")
 
-            # .Define("j2_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_jets)[1]")
-            # .Define("j2_pt",  "FCCAnalyses::ReconstructedParticle::get_pt(sel_jets)[1]")
-            # .Define("j2_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_jets)[1]")
-            # .Define("j2_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_jets)[1]")
+            .Define("j2_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_jets)[1]")
+            .Define("j2_pt",  "FCCAnalyses::ReconstructedParticle::get_pt(sel_jets)[1]")
+            .Define("j2_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_jets)[1]")
+            .Define("j2_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_jets)[1]")
+
+            #b-tagged jets:
+            # .Alias("Jet3","Jet#3.index") 
+            .Alias("Jet3","_Jet_particles.index")
+            #LOOSE WP : bit 1 = medium WP, bit 2 = tight WP
+            #b tagged jets
+            .Define("bjets", "AnalysisFCChh::get_tagged_jets(ReconstructedParticles, ParticleIDs, _ParticleIDs_particle, _ParticleIDs_parameters, 1)") #bit 0 = loose WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
+            # .Define("bjets", "AnalysisFCChh::get_tagged_jets(Jet, Jet3, ParticleIDs, _ParticleIDs_parameters, 1)") #bit 0 = loose WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
+            .Define("selpt_bjets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(bjets)")
+            .Define("sel_bjets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_bjets)")
+            .Define("sel_bjets", "AnalysisFCChh::SortParticleCollection(sel_bjets_unsort)")
+            .Define("nbjets", "FCCAnalyses::ReconstructedParticle::get_n(sel_bjets)")
+            .Define("b1_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_bjets)[0]")
+            .Define("b1_pt",  "FCCAnalyses::ReconstructedParticle::get_pt(sel_bjets)[0]")
+            .Define("b1_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_bjets)[0]")
+            .Define("b1_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_bjets)[0]")
+            .Define("b2_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_bjets)[1]")
+            .Define("b2_pt",  "FCCAnalyses::ReconstructedParticle::get_pt(sel_bjets)[1]")
+            .Define("b2_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_bjets)[1]")
+            .Define("b2_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_bjets)[1]")
 
 
-            # # define an alias for muon index collection
-            # .Alias('Muon0', 'Muon_objIdx.index')
-            # # define the muon collection
-            # .Define(
-            #     'muons',
-            #     'ReconstructedParticle::get(Muon0, ReconstructedParticles)')
-            # # select muons on pT
-            # .Define('selected_muons',
-            #         f'ReconstructedParticle::sel_pt({muon_pt})(muons)')
-            # # create branch with muon transverse momentum
-            # .Define('selected_muons_pt',
-            #         'ReconstructedParticle::get_pt(selected_muons)')
-            # # create branch with muon rapidity
-            # .Define('selected_muons_y',
-            #         'ReconstructedParticle::get_y(selected_muons)')
-            # # create branch with muon total momentum
-            # .Define('selected_muons_p',
-            #         'ReconstructedParticle::get_p(selected_muons)')
-            # # create branch with muon energy
-            # .Define('selected_muons_e',
-            #         'ReconstructedParticle::get_e(selected_muons)')
-            # # find zed candidates from  di-muon resonances
-            # .Define(
-            #     'zed_leptonic',
-            #     'ReconstructedParticle::resonanceBuilder(91)(selected_muons)')
-            # # create branch with zed mass
-            # .Define('zed_leptonic_m',
-            #         'ReconstructedParticle::get_mass(zed_leptonic)')
-            # # create branch with zed transverse momenta
-            # .Define('zed_leptonic_pt',
-            #         'ReconstructedParticle::get_pt(zed_leptonic)')
-            # # calculate recoil of zed_leptonic
-            # .Define('zed_leptonic_recoil',
-            #         'ReconstructedParticle::recoilBuilder(240)(zed_leptonic)')
-            # # create branch with recoil mass
-            # .Define('zed_leptonic_recoil_m',
-            #         'ReconstructedParticle::get_mass(zed_leptonic_recoil)')
-            # # create branch with leptonic charge
-            # .Define('zed_leptonic_charge',
-            #         'ReconstructedParticle::get_charge(zed_leptonic)')
-            # # Filter at least one candidate
-            # .Filter('zed_leptonic_recoil_m.size()>0')
+            # #H(bb) system - using the loose WP b-jets -> if the events has < 2 bjets these variables do not get filled!
+            # .Define("bb_pairs_unmerged", "AnalysisFCChh::getPairs(sel_bjets)") #currently gets only leading pT pair, as a RecoParticlePair
+            # #then merge the bb pair into one object and get its kinematic properties
+            # .Define("bb_pairs", "AnalysisFCChh::merge_pairs(bb_pairs_unmerged)") #merge into one object to access inv masses etc
+            # .Define("m_bb", "FCCAnalyses::ReconstructedParticle::get_mass(bb_pairs)")
+
         )
         return dframe2
 
@@ -158,7 +146,10 @@ class Analysis():
         Output variables which will be saved to output root file.
         '''
         branch_list = [
+            'nbjets',
+            # 'm_bb',
             'ngamma',
+            'm_yy',
             # 'selected_muons_pt',
             # 'selected_muons_y',
             # 'selected_muons_p',
