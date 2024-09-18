@@ -870,33 +870,61 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getBhadron(ROOT::VecO
 }
 
 
+//rewrite of functions to get tagged jets to work with updated edm4hep, https://github.com/key4hep/EDM4hep/pull/268
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_tagged_jets(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco_particles, 
+																					  ROOT::VecOps::RVec<edm4hep::ParticleIDData> pids, 
+																					  ROOT::VecOps::RVec<podio::ObjectID> pids_rp_indices, 
+																					  ROOT::VecOps::RVec<float> tag_values, 
+																					  int algoIndex){
+	
+	ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tagged_jets;
+
+	// make sure we have the right collections: every PID should have exactly one RP index
+	assert(pids.size() == pids_rp_indices.size());
+
+
+	for (size_t pid_index = 0; pid_index < pids.size(); ++pid_index){
+
+		const auto tag = static_cast<unsigned>(tag_values[pids[pid_index].parameters_begin]);
+
+		// std::cout << "Tag = " << tag << std::endl;
+
+		if (tag & (1 << algoIndex)) {
+      		// std::cout << "Requested tag is true" << std::endl;
+      		tagged_jets.push_back(reco_particles[pids_rp_indices[pid_index].index]);
+    	}
+
+	}
+	return tagged_jets;
+}
 
 
 //return the full jets rather than the list of tags
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_tagged_jets(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> jets, ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> tag_values, int algoIndex){
+// ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_tagged_jets(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> jets, ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> tag_values, int algoIndex){
 	
-	ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  tagged_jets;
+// 	ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  tagged_jets;
 
-	// std::cout << "running AnalysisFCChh::get_tagged_jets() on jet collection of size" << jets.size() << std::endl;
+// 	// std::cout << "running AnalysisFCChh::get_tagged_jets() on jet collection of size" << jets.size() << std::endl;
 
-	for (size_t iJet = 0; iJet < jets.size(); ++iJet){
-	// for (auto & jet : jets){
-		std::cout << jet.particles_begin << " to " << jet.particles_end << std::endl;
-		// get the jet particle id index for the jet
-		const auto jetIDIndex = index[jets[iJet].particles_begin];
-		// std::cout << "jet index = " << jetIDIndex << std::endl;
-		const auto jetID = pid[jetIDIndex];
-		// get the tag value
-		const auto tag = static_cast<unsigned>(tag_values[jetID.parameters_begin]);
-		// std::cout << "Tag = " << tag << std::endl;
-		// check if the tag satisfies what we want
-    	if (tag & (1 << algoIndex)) {
-      		tagged_jets.push_back(jets[iJet]);
-    	}
-	}
+// 	for (size_t iJet = 0; iJet < jets.size(); ++iJet){
+// 	// for (auto & jet : jets){
+// 		// std::cout << jet.particles_begin << " to " << jet.particles_end << std::endl;
+// 		// get the jet particle id index for the jet
+// 		const auto jetIDIndex = index[jets[iJet].particles_begin];
+// 		// std::cout << "jet index = " << jetIDIndex << std::endl;
+// 		const auto jetID = pid[jetIDIndex];
+// 		// get the tag value
+// 		const auto tag = static_cast<unsigned>(tag_values[jetID.parameters_begin]);
+// 		// std::cout << "Tag = " << tag << std::endl;
+// 		// check if the tag satisfies what we want
+//     	if (tag & (1 << algoIndex)) {
+//       		tagged_jets.push_back(jets[iJet]);
+//     	}
+// 	}
 
-	return tagged_jets;
-}
+// 	return tagged_jets;
+// }
 
 //same for tau tags: they are second entry in the 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_tau_jets(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> jets, ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> tag_values, int algoIndex){
