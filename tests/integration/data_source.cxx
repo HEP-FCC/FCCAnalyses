@@ -9,12 +9,12 @@
 
 // EDM4hep
 #include <edm4hep/ReconstructedParticle.h>
-#include <edm4hep/MCRecoParticleAssociationCollection.h>
+#include <edm4hep/RecoMCParticleLinkCollection.h>
 #include <edm4hep/MCParticle.h>
 #include <edm4hep/MCParticleCollection.h>
 #include <edm4hep/SimCalorimeterHitCollection.h>
 
-edm4hep::MCParticleCollection selElectrons(edm4hep::MCParticleCollection& inParticles) {
+edm4hep::MCParticleCollection selElectrons(const edm4hep::MCParticleCollection& inParticles) {
   edm4hep::MCParticleCollection electrons;
   electrons.setSubsetCollection();
   for (auto particle: inParticles) {
@@ -28,17 +28,17 @@ edm4hep::MCParticleCollection selElectrons(edm4hep::MCParticleCollection& inPart
 }
 
 struct selPDG {
-  selPDG(int pdg = 11, bool chargeConjugateAllowed = true);
+  selPDG(int pdg, bool chargeConjugateAllowed);
   const int m_pdg;
   const bool m_chargeConjugateAllowed;
-  edm4hep::MCParticleCollection operator() (edm4hep::MCParticleCollection& inParticles);
+  edm4hep::MCParticleCollection operator() (const edm4hep::MCParticleCollection& inParticles);
 };
 
 selPDG::selPDG(int pdg,
                bool chargeConjugateAllowed) : m_pdg(pdg),
                                               m_chargeConjugateAllowed(chargeConjugateAllowed) {};
 
-edm4hep::MCParticleCollection selPDG::operator() (edm4hep::MCParticleCollection& inParticles) {
+edm4hep::MCParticleCollection selPDG::operator() (const edm4hep::MCParticleCollection& inParticles) {
   edm4hep::MCParticleCollection result;
   result.setSubsetCollection();
   for (auto particle: inParticles) {
@@ -57,7 +57,7 @@ edm4hep::MCParticleCollection selPDG::operator() (edm4hep::MCParticleCollection&
   return result;
 }
 
-ROOT::VecOps::RVec<float> getPx(edm4hep::MCParticleCollection& inParticles) {
+ROOT::VecOps::RVec<float> getPx(const edm4hep::MCParticleCollection& inParticles) {
   ROOT::VecOps::RVec<float> result;
   for (auto particle: inParticles) {
     result.push_back(particle.getMomentum().x);
@@ -87,12 +87,12 @@ edm4hep::MCParticleCollection get_stable_particles_from_decay(edm4hep::MCParticl
 
 edm4hep::MCParticle get_mcParticle(
     const edm4hep::ReconstructedParticle& recoParticle,
-    const edm4hep::MCRecoParticleAssociationCollection& assocColl) {
+    const edm4hep::RecoMCParticleLinkCollection& assocColl) {
   edm4hep::MCParticle no_result;
 
   for (const auto& assoc: assocColl) {
-    if (assoc.getRec() == recoParticle) {
-      return assoc.getSim();
+    if (assoc.getFrom() == recoParticle) {
+      return assoc.getTo();
     }
   }
 
@@ -100,35 +100,31 @@ edm4hep::MCParticle get_mcParticle(
 }
 
 
-int main(int argc, char *argv[]) {
-  // auto verbosity = ROOT::Experimental::RLogScopedVerbosity(ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
+int main(int argc, const char *argv[]) {
+  auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
+    ROOT::Detail::RDF::RDFLogChannel(),
+    ROOT::Experimental::ELogLevel::kInfo
+  );
 
-  int nCPU = 4;
+  int nThreads = 1;
   if (argc > 1) {
-    nCPU = atoi(argv[1]);
+    nThreads = atoi(argv[1]);
   }
 
-  std::vector<std::string> filePathList;
-  std::string filePathBase = "/home/jsmiesko/source/FCCAnalyses/inputs/";
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_10.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_11.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_12.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_1.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_2.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_3.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_4.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_5.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_6.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_7.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_8.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_9.edm4hep.root");
+  if (nThreads > 1) {
+    ROOT::EnableImplicitMT(nThreads);
+  }
 
-  ROOT::EnableImplicitMT(nCPU);
+  std::string filePath = "https://fccsw.web.cern.ch/fccsw/testsamples/"
+                         "edm4hep1/p8_ee_WW_ecm240_edm4hep.root";
+  if (argc > 2) {
+    filePath = argv[2];
+  }
 
-  ROOT::RDataFrame rdf(std::make_unique<podio::DataSource>(filePathList));
+  ROOT::RDataFrame rdf(std::make_unique<podio::DataSource>(filePath));
 
   // rdf.Describe().Print();
-  std::cout << std::endl;
+  // std::cout << std::endl;
 
   std::cout << "Info: Num. of slots: " <<  rdf.GetNSlots() << std::endl;
 
@@ -144,9 +140,9 @@ int main(int argc, char *argv[]) {
 
   auto canvas = std::make_unique<TCanvas>("canvas", "Canvas", 450, 450);
   h_particles_px->Draw();
-  canvas->Print("source_particles_px.pdf");
+  canvas->Print("/tmp/source_particles_px.pdf");
   h_electrons_px->Draw();
-  canvas->Print("source_electrons_px.pdf");
+  canvas->Print("/tmp/source_electrons_px.pdf");
 
   return EXIT_SUCCESS;
 }

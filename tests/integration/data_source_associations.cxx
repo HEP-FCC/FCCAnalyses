@@ -23,7 +23,7 @@
 #include "edm4hep/TrackState.h"
 #include "edm4hep/TrackCollection.h"
 #include "edm4hep/ReconstructedParticleCollection.h"
-#include "edm4hep/MCRecoParticleAssociationCollection.h"
+#include "edm4hep/RecoMCParticleLinkCollection.h"
 
 // FCCAnalyses
 #include "FCCAnalyses/SmearObjects.h"
@@ -68,7 +68,7 @@ struct SmearedTracks {
                 float smear_z0, float smear_tlambda, bool debug);
   ROOT::VecOps::RVec<edm4hep::TrackState>
   operator()(
-      const edm4hep::MCRecoParticleAssociationCollection &mcRecoAssoc);
+      const edm4hep::RecoMCParticleLinkCollection &mcRecoLink);
 };
 
 
@@ -88,7 +88,7 @@ SmearedTracks::SmearedTracks(float smear_d0, float smear_phi, float smear_omega,
 
 ROOT::VecOps::RVec<edm4hep::TrackState>
 SmearedTracks::operator() (
-    const edm4hep::MCRecoParticleAssociationCollection &mcRecoAssoc) {
+    const edm4hep::RecoMCParticleLinkCollection &mcRecoLink) {
 
   // returns a vector of TrackStates that is parallel to the collection of full
   // tracks (alltracks), i.e. same number of entries, same order. The method
@@ -105,9 +105,9 @@ SmearedTracks::operator() (
     zero(k) = 0.;
   }
 
-  for (const auto &assoc : mcRecoAssoc) {
-    const auto &recoParticle = assoc.getRec();
-    const auto &mcParticle = assoc.getSim();
+  for (const auto &assoc : mcRecoLink) {
+    const auto &recoParticle = assoc.getFrom();
+    const auto &mcParticle = assoc.getTo();
 
     if (recoParticle.getTracks().size() < 1) {
       continue;
@@ -225,7 +225,10 @@ SmearedTracks::operator() (
 
 
 int main(int argc, char *argv[]) {
-  // auto verbosity = ROOT::Experimental::RLogScopedVerbosity(ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
+  auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
+    ROOT::Detail::RDF::RDFLogChannel(),
+    ROOT::Experimental::ELogLevel::kInfo
+  );
 
   bool success = gInterpreter->Declare("#include \"edm4hep/TrackState.h\"");
   if (!success) {
@@ -234,32 +237,25 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  int nCPU = 4;
+  int nThreads = 1;
   if (argc > 1) {
-    nCPU = atoi(argv[1]);
+    nThreads = atoi(argv[1]);
   }
 
-  std::vector<std::string> filePathList;
-  std::string filePathBase = "/home/jsmiesko/source/FCCAnalyses/inputs/";
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_10.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_11.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_12.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_1.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_2.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_3.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_4.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_5.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_6.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_7.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_8.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_9.edm4hep.root");
+  if (nThreads > 1) {
+    ROOT::EnableImplicitMT(nThreads);
+  }
 
-  ROOT::EnableImplicitMT(nCPU);
+  std::string filePath = "https://fccsw.web.cern.ch/fccsw/testsamples/"
+                         "edm4hep1/p8_ee_WW_ecm240_edm4hep.root";
+  if (argc > 2) {
+    filePath = argv[2];
+  }
 
-  ROOT::RDataFrame rdf(std::make_unique<podio::DataSource>(filePathList));
+  ROOT::RDataFrame rdf(std::make_unique<podio::DataSource>(filePath));
 
   // rdf.Describe().Print();
-  std::cout << std::endl;
+  // std::cout << std::endl;
 
   std::cout << "Info: Num. of slots: " <<  rdf.GetNSlots() << std::endl;
 
@@ -277,7 +273,7 @@ int main(int argc, char *argv[]) {
 
   auto canvas = std::make_unique<TCanvas>("canvas", "Canvas", 450, 450);
   h_smeared_tracks_omega->Draw();
-  canvas->Print("source_smeared_tracks_omega.pdf");
+  canvas->Print("/tmp/source_smeared_tracks_omega.pdf");
 
   return EXIT_SUCCESS;
 }

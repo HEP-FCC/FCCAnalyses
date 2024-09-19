@@ -19,7 +19,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> selElectrons(ROOT::VecOps::RVec<edm4
 }
 
 struct selPDG {
-  selPDG(int pdg = 11, bool chargeConjugateAllowed = true);
+  selPDG(int pdg, bool chargeConjugateAllowed);
   const int m_pdg;
   const bool m_chargeConjugateAllowed;
   ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData>& inParticles);
@@ -58,35 +58,31 @@ ROOT::VecOps::RVec<float> getPx(ROOT::VecOps::RVec<edm4hep::MCParticleData> inPa
 }
 
 
-int main(int argc, char *argv[]) {
-  // auto verbosity = ROOT::Experimental::RLogScopedVerbosity(ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
+int main(int argc, const char *argv[]) {
+  auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
+    ROOT::Detail::RDF::RDFLogChannel(),
+    ROOT::Experimental::ELogLevel::kInfo
+  );
 
-  int nCPU = 4;
+  int nThreads = 1;
   if (argc > 1) {
-    nCPU = atoi(argv[1]);
+    nThreads = atoi(argv[1]);
   }
 
-  std::vector<std::string> filePathList;
-  std::string filePathBase = "/home/jsmiesko/source/FCCAnalyses/inputs/";
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_10.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_11.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_12.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_1.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_2.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_3.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_4.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_5.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_6.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_7.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_8.edm4hep.root");
-  filePathList.emplace_back(filePathBase + "p8_ee_WW_ecm240/p8_ee_WW_ecm240_9.edm4hep.root");
+  if (nThreads > 1) {
+    ROOT::EnableImplicitMT(nThreads);
+  }
 
-  ROOT::EnableImplicitMT(nCPU);
+  std::string filePath = "https://fccsw.web.cern.ch/fccsw/testsamples/"
+                         "edm4hep1/p8_ee_WW_ecm240_edm4hep.root";
+  if (argc > 2) {
+    filePath = argv[2];
+  }
 
-  ROOT::RDataFrame rdf("events", filePathList);
+  ROOT::RDataFrame rdf("events", filePath);
 
   // rdf.Describe().Print();
-  std::cout << std::endl;
+  // std::cout << std::endl;
 
   std::cout << "Info: Num. of slots: " <<  rdf.GetNSlots() << std::endl;
 
@@ -102,9 +98,9 @@ int main(int argc, char *argv[]) {
 
   auto canvas = std::make_unique<TCanvas>("canvas", "Canvas", 450, 450);
   h_particles_px->Draw();
-  canvas->Print("low_level_particles_px.pdf");
+  canvas->Print("/tmp/low_level_particles_px.pdf");
   h_electrons_px->Draw();
-  canvas->Print("low_level_electrons_px.pdf");
+  canvas->Print("/tmp/low_level_electrons_px.pdf");
 
   return EXIT_SUCCESS;
 }

@@ -1,6 +1,6 @@
 find_catch_instance()
 
-# The unittests are a bit better and they are labelled so we can put together a
+# The unittests are a bit better and they are labeled so we can put together a
 # list of labels that we want to ignore
 set(filter_tests "")
 

@@ -47,7 +47,7 @@ endfunction()
 
 function(add_generic_test _testname _testcmd)
   add_test(NAME ${_testname}
-           COMMAND ${_testcmd}
+           COMMAND sh -c ${_testcmd}
            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   set_property(TEST ${_testname}
                APPEND PROPERTY ENVIRONMENT
