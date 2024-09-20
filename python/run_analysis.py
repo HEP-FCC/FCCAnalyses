@@ -255,7 +255,11 @@ def initialize(args, rdf_module, anapath: str):
     '''
 
     # for convenience and compatibility with user code
-    ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
+    if args.use_data_source:
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::Source;")
+    else:
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
+
     geometry_file = get_element(rdf_module, "geometryFile")
     readout_name = get_element(rdf_module, "readoutName")
     if geometry_file != "" and readout_name != "":
@@ -315,23 +319,7 @@ def run_rdf(rdf_module,
     '''
     Create RDataFrame and snapshot it.
     '''
-    if args.use_data_source:
-        if ROOT.podio.DataSource:
-            LOGGER.debug('Found PODIO ROOT DataSource.')
-        else:
-            LOGGER.error('PODIO ROOT DataSource library not found!\n'
-                         'Aborting...')
-            sys.exit(3)
-        LOGGER.info('Loading events through podio::DataSource...')
-
-        try:
-            dframe = ROOT.podio.CreateDataFrame(input_list)
-        except TypeError as excp:
-            LOGGER.error('Unable to build dataframe using '
-                         'podio::DataSource!\n%s', excp)
-            sys.exit(3)
-    else:
-        dframe = ROOT.RDataFrame("events", input_list)
+    dframe = ROOT.RDataFrame("events", input_list)
 
     # limit number of events processed
     if args.nevents > 0:
@@ -487,8 +475,7 @@ def run_local(rdf_module, infile_list, args):
     nevents_local = 0
     for filepath in infile_list:
 
-        if not args.use_data_source:
-            filepath = apply_filepath_rewrites(filepath)
+        filepath = apply_filepath_rewrites(filepath)
 
         file_list.push_back(filepath)
         info_msg += f'\t- {filepath}\n'
@@ -612,10 +599,6 @@ def run_stages(args, rdf_module, anapath):
     if not os.path.exists(output_dir_eos) and output_dir_eos:
         os.system(f'mkdir -p {output_dir_eos}')
 
-    # Check whether to use PODIO ROOT DataSource to load the events
-    if get_element(rdf_module, "useDataSource", False):
-        args.use_data_source = True
-
     # Check if test mode is specified, and if so run the analysis on it (this
     # will exit after)
     if args.test:
@@ -719,6 +702,10 @@ def run_histmaker(args, rdf_module, anapath):
     Run the analysis using histmaker (all stages integrated into one).
     '''
 
+    # Check whether to use PODIO ROOT DataSource to load the events
+    if get_element(rdf_module, "useDataSource", False):
+        args.use_data_source = True
+
     # set ncpus, load header files, custom dicts, ...
     initialize(args, rdf_module, anapath)
 
@@ -737,10 +724,6 @@ def run_histmaker(args, rdf_module, anapath):
 
     do_scale = get_element(rdf_module, "doScale", True)
     int_lumi = get_element(rdf_module, "intLumi", True)
-
-    # Check whether to use PODIO ROOT DataSource to load the events
-    if get_element(rdf_module, "useDataSource", False):
-        args.use_data_source = True
 
     # check if the process list is specified, and create graphs for them
     process_list = get_element(rdf_module, "processList")

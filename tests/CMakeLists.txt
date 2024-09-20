@@ -11,7 +11,7 @@ add_integration_test("examples/FCCee/vertex_lcfiplus/analysis_V0.py")
 
 add_standalone_test("examples/FCCee/fullSim/caloNtupleizer/analysis.py")
 
-if(WITH_SOURCE)
+if(WITH_PODIO_DATASOURCE)
   add_standalone_test("examples/data_source/standalone.py")
   add_integration_test("examples/data_source/histmaker_source.py")
   add_integration_test("examples/data_source/stages_source.py")

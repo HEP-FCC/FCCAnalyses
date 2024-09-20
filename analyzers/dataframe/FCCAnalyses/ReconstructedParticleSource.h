@@ -1,14 +1,14 @@
-#ifndef  RECONSTRUCTED_PARTICLE_SOURCE_ANALYZERS_H
-#define  RECONSTRUCTED_PARTICLE_SOURCE_ANALYZERS_H
+#ifndef  ANALYZERS_SOURCE_RECONSTRUCTED_PARTICLE_H
+#define  ANALYZERS_SOURCE_RECONSTRUCTED_PARTICLE_H
 
 // ROOT
 #include "ROOT/RVec.hxx"
 
 // EDM4hep
 #include "edm4hep/ReconstructedParticleCollection.h"
-#include "edm4hep/MCRecoParticleAssociationCollection.h"
+#include "edm4hep/RecoMCParticleLinkCollection.h"
 
-namespace FCCAnalyses :: ReconstructedParticle :: Source {
+namespace FCCAnalyses :: Source :: ReconstructedParticle {
   // --------------------  Selectors  -----------------------------------------
 
 
@@ -25,14 +25,14 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
      */
     explicit selPDG(const int pdgID);
     /**
-     * \brief Operator over the input particle collection.
+     * \brief Operator over the input link collection.
      *
-     * \param[in] inAssocColl  Input collection of the MC-reco associations.
+     * \param[in] inLinkColl  Input collection of the reco-MC links.
      * \param[out] result  Collection of the reconstructed particles associated
-     *                     with the MC particle with the desired PDG ID.
+     *                     with the MC particle of the desired PDG ID.
      */
     edm4hep::ReconstructedParticleCollection operator() (
-        const edm4hep::MCRecoParticleAssociationCollection& inAssocColl);
+        const edm4hep::RecoMCParticleLinkCollection& inLinkColl);
   };
 
 
@@ -49,15 +49,15 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
      */
     explicit selAbsPDG(const int pdgID);
     /**
-     * \brief Operator over input particle associations collection.
+     * \brief Operator over the input link collection.
      *
-     * \param[in] inAssocColl  Input collection of the MC-reco associations.
+     * \param[in] inLinkColl  Input collection of the MC-reco links.
      * \param[out] result  Collection of the reconstructed particles associated
-     *                     with the MC particle with the absolute value of the
-     *                     desired PDG ID.
+     *                     with the MC particle with the desired absolute value
+     *                     of the PDG ID.
      */
     edm4hep::ReconstructedParticleCollection operator() (
-        const edm4hep::MCRecoParticleAssociationCollection& inAssocColl);
+        const edm4hep::RecoMCParticleLinkCollection& inLinkColl);
   };
 
 
@@ -74,7 +74,7 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
      */
     explicit selPt(float minPt);
     /**
-     * \brief Operator over input particle associations collection.
+     * \brief Operator over input link collection.
      *
      * \param[in] inColl  Input collection of the reconstructed particles.
      * \param[out] result  Collection of the selected reconstructed particles.
@@ -96,7 +96,7 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
      */
     explicit selUpTo(const size_t size);
     /**
-     * \brief Operator over input particle associations collection.
+     * \brief Operator over input link collection.
      *
      * \param[out] inColl  Input collection of reconstructed particles.
      * \param[out] result  Output collection of reconstructed particles.
@@ -119,13 +119,13 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
      */
     explicit selGenStatus(const int status);
     /**
-     * \brief Operator over input particle associations collection.
+     * \brief Operator over input link collection.
      *
-     * \param[in] inColl  Input collection of the MC-reco particle associations.
-     * \param[out] result  Output collection of reconstructed particles.
+     * \param[in] inColl  Input collection of the reco-MC particle links.
+     * \param[out] result  Output collection of the reconstructed particles.
      */
     edm4hep::ReconstructedParticleCollection operator() (
-        const edm4hep::MCRecoParticleAssociationCollection& inAssocColl);
+        const edm4hep::RecoMCParticleLinkCollection& inLinkColl);
   };
 
 
@@ -250,8 +250,8 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
         const edm4hep::ReconstructedParticleCollection& inColl);
   };
 
-} /* FCCAnalyses :: ReconstructedParticle :: Source */
+} /* FCCAnalyses :: Source :: ReconstructedParticle */
 
-namespace recoParticle = FCCAnalyses::ReconstructedParticle::Source;
+// namespace recoParticle = FCCAnalyses::Source::ReconstructedParticle;
 
-#endif /* RECONSTRUCTED_PARTICLE_SOURCE_ANALYZERS_H */
+#endif /* ANALYZERS_SOURCE_RECONSTRUCTED_PARTICLE_H */

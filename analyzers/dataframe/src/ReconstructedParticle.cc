@@ -2,7 +2,6 @@
 
 // std
 #include <cstdlib>
-#include <iostream>
 #include <stdexcept>
 
 // ROOT
@@ -11,8 +10,6 @@
 
 // EDM4hep
 #include "edm4hep/EDM4hepVersion.h"
-
-#define rdfInfo R__LOG_INFO(ROOT::Detail::RDF::RDFLogChannel())
 
 namespace FCCAnalyses{
 

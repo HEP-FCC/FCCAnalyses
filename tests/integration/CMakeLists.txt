@@ -28,7 +28,7 @@ add_generic_test(
   "https://fccsw.web.cern.ch/fccsw/testsamples/edm4hep1/p8_ee_WW_ecm240_edm4hep.root"
 )
 
-if(WITH_SOURCE)
+if(WITH_PODIO_DATASOURCE)
   add_executable(data_source
                  ${CMAKE_SOURCE_DIR}/tests/integration/data_source.cxx)
   target_include_directories(data_source PRIVATE ${CMAKE_SOURCE_DIR}/include)

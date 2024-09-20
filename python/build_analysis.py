@@ -57,7 +57,7 @@ def build_analysis(mainparser) -> None:
         cmake_args += ['-DWITH_ACTS=ON']
 
     if args.no_source:
-        cmake_args += ['-DWITH_SOURCE=OFF']
+        cmake_args += ['-DWITH_PODIO_DATASOURCE=OFF']
 
     if args.clean_build:
         LOGGER.info('Clearing build and install directories...')

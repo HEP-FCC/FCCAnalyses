@@ -16,6 +16,7 @@ def main():
     ROOT.gSystem.Load('libFCCAnalyses')
     if ROOT.dummyLoader:
         print('----> DEBUG: Found FCCAnalyses library.')
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::Source;")
     print('----> INFO: Loading analyzers from libFCCAnalyses... ',)
 
     if ROOT.podio.DataSource:
@@ -30,11 +31,11 @@ def main():
 
     dframe2 = dframe.Define(
         'electron_truth',
-        'recoParticle::selPDG(11)(MCRecoAssociations)')
+        'ReconstructedParticle::selPDG(11)(MCRecoAssociations)')
 
     dframe3 = dframe2.Define(
         'electron_truth_pt',
-        'recoParticle::getPt(electron_truth)')
+        'ReconstructedParticle::getPt(electron_truth)')
 
     dframe4 = dframe3.Filter('electron_truth_pt.size() < 3')
 

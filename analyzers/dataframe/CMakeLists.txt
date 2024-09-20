@@ -32,9 +32,8 @@ if(NOT WITH_ACTS)
   list(FILTER sources EXCLUDE REGEX "VertexFinderActs.cc")
 endif()
 
-if(NOT WITH_SOURCE)
-  list(FILTER headers EXCLUDE REGEX "AssociationSource.h")
-  list(FILTER sources EXCLUDE REGEX "AssociationSource.cc")
+if(NOT WITH_PODIO_DATASOURCE)
+  list(FILTER headers EXCLUDE REGEX "LinkSource.h")
   list(FILTER headers EXCLUDE REGEX "ReconstructedParticleSource.h")
   list(FILTER sources EXCLUDE REGEX "ReconstructedParticleSource.cc")
   list(FILTER headers EXCLUDE REGEX "TrackSource.h")
@@ -68,6 +67,7 @@ target_link_libraries(FCCAnalyses PUBLIC
                       ROOT::ROOTDataFrame
                       EDM4HEP::edm4hep
                       EDM4HEP::edm4hepDict
+                      EDM4HEP::utils
                       podio::podio
                       podio::podioRootIO
                       podio::podioDataSource

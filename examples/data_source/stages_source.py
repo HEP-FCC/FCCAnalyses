@@ -42,16 +42,19 @@ class Analysis():
             dframe
             .Define(
               "electron_truth",
-              "recoParticle::selPDG(11)(MCRecoAssociations)")
+              "ReconstructedParticle::selPDG(11)(MCRecoAssociations)")
 
             .Define(
               "electron_truth_pt",
-              "recoParticle::getPt(electron_truth)")
+              "ReconstructedParticle::getPt(electron_truth)")
         )
 
         return dframe2
 
     def output(self) -> list[str]:
+        '''
+        List of columns to cave into output file.
+        '''
         return [
                 # "electron_truth",
                 "electron_truth_pt"

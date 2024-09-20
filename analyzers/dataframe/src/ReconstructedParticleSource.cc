@@ -1,10 +1,10 @@
 #include "FCCAnalyses/ReconstructedParticleSource.h"
+#include "FCCAnalyses/Logger.h"
 
 // std
 #include <vector>
 #include <cmath>
 #include <cstdlib>
-#include <iostream>
 #include <stdexcept>
 
 // ROOT
@@ -12,27 +12,24 @@
 #include <ROOT/RLogger.hxx>
 #include <TLorentzVector.h>
 
-
-#define rdfFatal R__LOG_FATAL(ROOT::Detail::RDF::RDFLogChannel())
-#define rdfError R__LOG_ERROR(ROOT::Detail::RDF::RDFLogChannel())
-#define rdfWarning R__LOG_WARNING(ROOT::Detail::RDF::RDFLogChannel())
-#define rdfInfo R__LOG_INFO(ROOT::Detail::RDF::RDFLogChannel())
+// EDM4hep
+#include <edm4hep/utils/kinematics.h>
 
 
-namespace FCCAnalyses :: ReconstructedParticle :: Source {
+namespace FCCAnalyses :: Source :: ReconstructedParticle {
   selPDG::selPDG(const int pdg): m_pdg(pdg) {};
 
   edm4hep::ReconstructedParticleCollection selPDG::operator() (
-      const edm4hep::MCRecoParticleAssociationCollection& inAssocColl) {
+      const edm4hep::RecoMCParticleLinkCollection& inLinkColl) {
     edm4hep::ReconstructedParticleCollection result;
     result.setSubsetCollection();
 
-    rdfInfo << "Assoc. coll size: " << inAssocColl.size();
+    rdfDebug << "Link collection size: " << inLinkColl.size();
 
-    for (const auto& assoc: inAssocColl) {
-      const auto& particle = assoc.getSim();
+    for (const auto& link: inLinkColl) {
+      const auto& particle = link.getTo();
       if (particle.getPDG() == m_pdg) {
-        result.push_back(assoc.getRec());
+        result.push_back(link.getFrom());
       }
     }
 
@@ -49,14 +46,14 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
   };
 
   edm4hep::ReconstructedParticleCollection selAbsPDG::operator() (
-      const edm4hep::MCRecoParticleAssociationCollection& inAssocColl) {
+      const edm4hep::RecoMCParticleLinkCollection& inLinkColl) {
     edm4hep::ReconstructedParticleCollection result;
     result.setSubsetCollection();
 
-    for (const auto& assoc: inAssocColl) {
-      const auto& particle = assoc.getSim();
+    for (const auto& link: inLinkColl) {
+      const auto& particle = link.getTo();
       if (std::abs(particle.getPDG()) == m_absPdg) {
-        result.push_back(assoc.getRec());
+        result.push_back(link.getFrom());
       }
     }
 
@@ -78,8 +75,7 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
     result.setSubsetCollection();
 
     for (const auto& particle: inColl) {
-      if (std::sqrt(std::pow(particle.getMomentum().x, 2) +
-                    std::pow(particle.getMomentum().y, 2)) > m_minPt) {
+      if (edm4hep::utils::pt(particle) > m_minPt) {
         result.push_back(particle);
       }
     }
@@ -111,16 +107,15 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
   selGenStatus::selGenStatus(int status) : m_status(status) {};
 
   edm4hep::ReconstructedParticleCollection selGenStatus::operator() (
-      const edm4hep::MCRecoParticleAssociationCollection& inAssocColl) {
+      const edm4hep::RecoMCParticleLinkCollection& inLinkColl) {
     edm4hep::ReconstructedParticleCollection result;
     result.setSubsetCollection();
 
-
-    for (const auto& assoc: inAssocColl) {
-      const auto& mcParticle = assoc.getSim();
-      const auto& recoParticle = assoc.getRec();
+    for (const auto& link: inLinkColl) {
+      const auto& mcParticle = link.getTo();
+      const auto& recoParticle = link.getFrom();
       if (mcParticle.getGeneratorStatus() == m_status) {
-        result.push_back(assoc.getRec());
+        result.push_back(link.getFrom());
       }
     }
 
@@ -133,11 +128,7 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
     ROOT::VecOps::RVec<float> result;
 
     for (const auto& particle: inColl) {
-      TLorentzVector lVec;
-      lVec.SetXYZM(particle.getMomentum().x,
-                   particle.getMomentum().y,
-                   particle.getMomentum().z,
-                   particle.getMass());
+      auto lVec = edm4hep::utils::p4(particle, edm4hep::utils::UseMass);
       result.push_back(static_cast<float>(lVec.P()));
     }
     return result;
@@ -148,13 +139,13 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
   ROOT::VecOps::RVec<float>
   getPt(const edm4hep::ReconstructedParticleCollection& inColl) {
     ROOT::VecOps::RVec<float> result;
+    result.reserve(inColl.size());
 
     std::transform(
       inColl.begin(), inColl.end(),
       std::back_inserter(result),
       [](edm4hep::ReconstructedParticle p){
-        return std::sqrt(std::pow(p.getMomentum().x, 2) +
-                         std::pow(p.getMomentum().y, 2));
+        return edm4hep::utils::pt(p);
       }
     );
 
@@ -168,11 +159,7 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
     ROOT::VecOps::RVec<float> result;
 
     for (const auto& particle: inColl) {
-      TLorentzVector lVec;
-      lVec.SetXYZM(particle.getMomentum().x,
-                   particle.getMomentum().y,
-                   particle.getMomentum().z,
-                   particle.getMass());
+      auto lVec = edm4hep::utils::p4(particle, edm4hep::utils::UseMass);
       result.push_back(static_cast<float>(lVec.Rapidity()));
     }
 
@@ -232,18 +219,14 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
     outColl.setSubsetCollection();
 
     std::vector<edm4hep::ReconstructedParticle> rpVec;
+    rpVec.reserve(inColl.size());
     for (const auto& particle: inColl) {
       rpVec.emplace_back(particle);
     }
 
-    auto pt = [] (const auto& particle) {
-      return std::sqrt(std::pow(particle.getMomentum().x, 2) +
-                       std::pow(particle.getMomentum().y, 2));
-    };
-
     std::sort(rpVec.begin(), rpVec.end(),
-              [&pt](const auto& lhs, const auto& rhs) {
-                return pt(lhs) > pt(rhs);
+              [](const auto& lhs, const auto& rhs) {
+                return edm4hep::utils::pt(lhs) > edm4hep::utils::pt(rhs);
               });
 
     for (const auto& particle: rpVec) {
@@ -273,28 +256,20 @@ namespace FCCAnalyses :: ReconstructedParticle :: Source {
 
     // Convert collection into std::vector
     std::vector<edm4hep::ReconstructedParticle> rpVec;
+    rpVec.reserve(inColl.size());
     for (const auto& particle: inColl) {
       rpVec.emplace_back(particle);
     }
 
     // Loop over all possible combinations
     std::vector<edm4hep::ReconstructedParticle> resonanceVec;
-    for (auto first = rpVec.begin(); first != rpVec.end(); ++first) {
-      for (auto second = first + 1; second != rpVec.end(); ++second) {
+    for (auto p1 = rpVec.begin(); p1 != rpVec.end(); ++p1) {
+      for (auto p2 = p1 + 1; p2 != rpVec.end(); ++p2) {
         edm4hep::MutableReconstructedParticle resonance;
-        resonance.setCharge(first->getCharge() + second->getCharge());
+        resonance.setCharge(p1->getCharge() + p2->getCharge());
 
-        TLorentzVector lVec1;
-        lVec1.SetXYZM(first->getMomentum().x,
-                      first->getMomentum().y,
-                      first->getMomentum().z,
-                      first->getMass());
-
-        TLorentzVector lVec2;
-        lVec2.SetXYZM(second->getMomentum().x,
-                      second->getMomentum().y,
-                      second->getMomentum().z,
-                      second->getMass());
+        auto lVec1 = edm4hep::utils::p4(*p1, edm4hep::utils::UseMass);
+        auto lVec2 = edm4hep::utils::p4(*p2, edm4hep::utils::UseMass);
 
         auto lVec = lVec1 + lVec2;
         resonance.setMomentum({static_cast<float>(lVec.Px()),
