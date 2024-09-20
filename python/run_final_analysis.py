@@ -8,9 +8,13 @@ import time
 import glob
 import logging
 import importlib.util
+import pathlib
+import json
+import math
 
 import ROOT  # type: ignore
-from anascript import get_element, get_element_dict
+import cppyy
+from anascript import get_element, get_attribute
 from process import get_process_dict
 from frame import generate_graph
 
@@ -44,60 +48,179 @@ def get_entries(infilepath: str) -> tuple[int, int]:
 
 
 # _____________________________________________________________________________
-def testfile(f: str) -> bool:
+def get_processes(rdf_module: object) -> list[str]:
     '''
-    Test input file from previous stages
+    Get processes from the analysis script or find them in the input directory.
+    TODO: filter out files without .root suffix
     '''
-    with ROOT.TFile(f, 'READ') as infile:
-        tt = None
-        try:
-            tt = infile.Get("events")
-            if tt is None:
-                LOGGER.warning('File does not contains events, selection was '
-                               'too tight, skipping it: %s', f)
-                return False
-        except IOError as e:
-            LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
-            return False
-        except ValueError:
-            LOGGER.warning('Could read the file')
-            return False
-        except:
-            LOGGER.warning('Unexpected error: %s\nfile ===%s=== must be '
-                           'deleted',
-                           sys.exc_info()[0], f)
-            return False
-    return True
+    process_list: list[str] = get_attribute(rdf_module, 'processList', [])
+    input_dir: str = get_attribute(rdf_module, 'inputDir', '')
+    if not process_list:
+        files_or_dirs = glob.glob(f'{input_dir}/*')
+        process_list = [pathlib.Path(p).stem for p in files_or_dirs]
+        info_msg = f'Found {len(process_list)} processes in the input ' \
+                   'directory:'
+        for process_name in process_list:
+            info_msg += f'\n  - {process_name}'
+        LOGGER.info(info_msg)
+
+    return process_list
+
+
+# _____________________________________________________________________________
+def save_results(results: dict[str, dict[str, any]],
+                 rdf_module: object) -> None:
+    '''
+    Save results into various formats, depending on the analysis script.
+    '''
+    output_dir: str = get_attribute(rdf_module, 'outputDir', '.')
+
+    if get_attribute(rdf_module, 'saveJSON', False):
+        json_path: str = os.path.join(output_dir, 'results.json')
+        LOGGER.info('Saving results into JSON file:\n%s', json_path)
+        save_json(results, json_path)
+
+    if get_attribute(rdf_module, 'saveTabular', False):
+        cut_labels: dict[str, str] = get_attribute(rdf_module, 'cutLabels',
+                                                   None)
+        tables_path: str = os.path.join(output_dir, 'outputTabular.txt')
+        LOGGER.info('Saving results in LaTeX tables to:\n%s', tables_path)
+        save_tables(results, tables_path, cut_labels)
+
+
+# _____________________________________________________________________________
+def save_json(results: dict[str, dict[str, any]],
+              outpath: str) -> None:
+    '''
+    Save results into a JSON file.
+    '''
+    with open(outpath, 'w', encoding='utf-8') as outfile:
+        json.dump(results, outfile)
+
+
+# _____________________________________________________________________________
+def save_tables(results: dict[str, dict[str, any]],
+                outpath: str,
+                cut_labels: dict[str, str] = None) -> None:
+    '''
+    Save results into LaTeX tables.
+    '''
+    cut_names: list[str] = list(results[next(iter(results))].keys())
+    if not cut_names:
+        LOGGER.error('No results found!\nAborting...')
+        sys.exit(3)
+
+    if cut_labels is None:
+        cut_labels = {}
+        for name in cut_names:
+            cut_labels[name] = f'{name}'
+
+    cut_labels['all_events'] = 'All events'
+
+    with open(outpath, 'w', encoding='utf-8') as outfile:
+        # Printing the number of events in format of a LaTeX table
+        # Yields
+        outfile.write('Yields:\n')
+        outfile.write('\\begin{table}[H]\n'
+                      '    \\resizebox{\\textwidth}{!}{\n')
+
+        outfile.write('        \\begin{tabular}{|l||')
+        outfile.write('c|' * (len(cut_labels) + 2))  # Number of cuts
+        outfile.write('} \\hline\n')
+
+        outfile.write(8 * ' ')
+        outfile.write(' & ')
+        outfile.write(' & '.join(cut_labels.values()))
+        outfile.write(' \\\\ \\hline\n')
+
+        for process_name, result in results.items():
+            outfile.write(8 * ' ')
+            outfile.write(process_name)
+            for cut_name in cut_names:
+                cut_result: dict[str, any] = result[cut_name]
+                outfile.write(' & ')
+                if cut_result["n_events_raw"] == 0.:
+                    outfile.write('0.')
+                else:
+                    outfile.write(f'{cut_result["n_events"]:.2e}')
+                    outfile.write(' $\\pm$ ')
+                    outfile.write(f'{cut_result["uncertainty"]:.2e}')
+            outfile.write(' \\\\\n')
+        outfile.write('        \\hline\n'
+                      '    \\end{tabular}}\n'
+                      '    \\caption{Caption}\n'
+                      '    \\label{tab:my_label}\n'
+                      '\\end{table}')
+
+        # Efficiency:
+        outfile.write('\n\nEfficiency:\n')
+        outfile.write('\\begin{table}[H] \n'
+                      '    \\resizebox{\\textwidth}{!}{ \n')
+
+        outfile.write('    \\begin{tabular}{|l||')
+        outfile.write('c|' * len(results))
+        outfile.write('} \\hline\n')
+
+        outfile.write(8 * ' ')
+        outfile.write(' & ')
+        outfile.write(' & '.join(results.keys()))
+        outfile.write(' \\hline \\\\\n')
+
+        for cut_name in cut_names:
+            if cut_name == 'all_events':
+                continue
+            outfile.write(8 * ' ')
+            outfile.write(f'{cut_name}')
+            for result in results.values():
+                efficiency = result[cut_name]['n_events'] / \
+                             result['all_events']['n_events']
+                if efficiency == 0.:
+                    outfile.write(' & 0.')
+                else:
+                    outfile.write(f' & {efficiency:.3g}')
+            outfile.write(' \\\\\n')
+
+        outfile.write('        \\hline\n'
+                      '    \\end{tabular}}\n'
+                      '    \\caption{Caption}\n'
+                      '    \\label{tab:my_label}\n'
+                      '\\end{table}\n')
 
 
 # __________________________________________________________
-def run(rdf_module, args):
+def run(rdf_module, args) -> None:
     '''
-    Main loop.
+    Let's start.
     '''
-    proc_dict_location = get_element(rdf_module, "procDict", True)
+    # Load process dictionary
+    proc_dict_location: str = get_attribute(rdf_module, "procDict", '')
     if not proc_dict_location:
         LOGGER.error(
             'Location of the process dictionary not provided!\nAborting...')
         sys.exit(3)
 
-    process_dict = get_process_dict(proc_dict_location)
+    process_dict: dict[str, any] = get_process_dict(proc_dict_location)
 
-    process_dict_additions = get_element(rdf_module, "procDictAdd", True)
-    for addition in process_dict_additions:
-        if get_element_dict(process_dict, addition) is None:
-            process_dict[addition] = process_dict_additions[addition]
-        else:
-            LOGGER.debug('Process already in the dictionary. Skipping it...')
+    # Add processes into the dictionary
+    process_dict_additions = get_attribute(rdf_module, "procDictAdd", {})
+    if process_dict_additions:
+        info_msg = 'Adding the following processes to the process dictionary:'
+        for process_name, process_info in process_dict_additions.items():
+            info_msg += f'\n  - {process_name}'
+            if process_name in process_dict:
+                LOGGER.debug('Process "%s" already in the dictionary.\n'
+                             'Will be overwritten...', process_name)
+            process_dict[process_name] = process_info
+        LOGGER.info(info_msg)
 
-
-    # set multithreading
-    ncpus = get_element(rdf_module, "nCPUS", 1)
+    # Set multi-threading
+    ncpus = get_attribute(rdf_module, "nCPUS", 4)
     if ncpus < 0:  # use all available threads
         ROOT.EnableImplicitMT()
         ncpus = ROOT.GetThreadPoolSize()
-    ROOT.ROOT.EnableImplicitMT(ncpus)
-    ROOT.EnableThreadSafety()
+    if ncpus != 1:
+        ROOT.ROOT.EnableImplicitMT(ncpus)
+        ROOT.EnableThreadSafety()
 
     nevents_real = 0
     start_time = time.time()
@@ -105,52 +228,40 @@ def run(rdf_module, args):
     process_events = {}
     events_ttree = {}
     file_list = {}
-    save_tab = []
-    efficiency_list = []
+    results = {}
 
-    input_dir = get_element(rdf_module, "inputDir", True)
+    # Checking input directory
+    input_dir = get_attribute(rdf_module, 'inputDir', '')
     if not input_dir:
-        LOGGER.error('The inputDir variable is mandatory for the final stage '
-                     'of the analysis!\nAborting...')
+        LOGGER.error('The "inputDir" variable is mandatory for the final '
+                     'stage of the analysis!\nAborting...')
+        sys.exit(3)
+    if not os.path.isdir(input_dir):
+        LOGGER.error('The specified input directory does not exist!\n'
+                     'Aborting...')
+        LOGGER.error('Input directory: %s', input_dir)
         sys.exit(3)
 
     if input_dir[-1] != "/":
         input_dir += "/"
 
-    output_dir = get_element(rdf_module, "outputDir", True)
-    if output_dir != "":
-        if output_dir[-1] != "/":
-            output_dir += "/"
+    # Checking output directory
+    output_dir = get_attribute(rdf_module, 'outputDir', '.')
 
-    if not os.path.exists(output_dir) and output_dir != '':
+    if output_dir[-1] != "/":
+        output_dir += "/"
+
+    if not os.path.exists(output_dir):
+        LOGGER.debug('Creating output directory:\n  %s', output_dir)
         os.system(f'mkdir -p {output_dir}')
 
-    cut_list: dict[str, str] = get_element(rdf_module, "cutList", True)
-    length_cuts_names = max(len(cut) for cut in cut_list)
-    cut_labels = get_element(rdf_module, "cutLabels", True)
+    # Cuts
+    cuts: dict[str, str] = get_attribute(rdf_module, "cutList", {})
 
-    # save a table in a separate tex file
-    save_tabular = get_element(rdf_module, "saveTabular", True)
-    if save_tabular:
-        # option to rewrite the cuts in a better way for the table. otherwise,
-        # take them from the cutList
-        if cut_labels:
-            cut_names = list(cut_labels.values())
-        else:
-            cut_names = list(cut_list)
+    # Find processes (samples) to run over
+    process_list: list[str] = get_processes(rdf_module)
 
-        cut_names.insert(0, ' ')
-        save_tab.append(cut_names)
-        efficiency_list.append(cut_names)
-
-    process_list = get_element(rdf_module, "processList", {})
-    if len(process_list) == 0:
-        files = glob.glob(f"{input_dir}/*")
-        process_list = [os.path.basename(file.replace(".root", "")) for file in files]
-        info_msg = f"Found {len(process_list)} processes in the input directory:"
-        for process_name in process_list:
-            info_msg += f'\n\t- {process_name}'
-        LOGGER.info(info_msg)
+    # Find number of events per process
     for process_name in process_list:
         process_events[process_name] = 0
         events_ttree[process_name] = 0
@@ -162,7 +273,7 @@ def run(rdf_module, args):
                          'directory as it might have been processed in batch.',
                          infilepath)
         else:
-            LOGGER.info('Open file:\n\t%s', infilepath)
+            LOGGER.info('Open file:\n  %s', infilepath)
             process_events[process_name], events_ttree[process_name] = \
                 get_entries(infilepath)
             file_list[process_name].push_back(infilepath)
@@ -189,93 +300,128 @@ def run(rdf_module, args):
         info_msg += f'\n\t- {process_name}: {n_events:,}'
     LOGGER.info(info_msg)
 
-    histo_list = get_element(rdf_module, "histoList", True)
-    do_scale = get_element(rdf_module, "doScale", True)
-    int_lumi = get_element(rdf_module, "intLumi", True)
+    # Check if there are any histograms defined
+    histo_list: dict[str, dict[str, any]] = get_attribute(rdf_module,
+                                                          "histoList", {})
+    if not histo_list:
+        LOGGER.error('No histograms defined!\nAborting...')
+        sys.exit(3)
 
+    # Check whether to scale the results to the luminosity
+    do_scale = get_attribute(rdf_module, "doScale", True)
+    if do_scale:
+        int_lumi = get_attribute(rdf_module, "intLumi", 1.)
+        if int_lumi < 0.:
+            LOGGER.error('Integrated luminosity value not valid!\nAborting...')
+            sys.exit(3)
+
+    # Check whether to save resulting TTree(s) into a file(s)
     do_tree = get_element(rdf_module, "doTree", True)
+
+    # Main loop
     for process_name in process_list:
         LOGGER.info('Running over process: %s', process_name)
 
-        if process_events[process_name] == 0:
+        if process_events[process_name] <= 0:
             LOGGER.error('Can\'t scale histograms, the number of processed '
                          'events for the process "%s" seems to be zero!',
                          process_name)
             sys.exit(3)
 
-        df = ROOT.ROOT.RDataFrame("events", file_list[process_name])
+        dframe = ROOT.ROOT.RDataFrame("events", file_list[process_name])
         define_list = get_element(rdf_module, "defineList", True)
         if len(define_list) > 0:
             LOGGER.info('Registering extra DataFrame defines...')
             for define in define_list:
-                df = df.Define(define, define_list[define])
+                dframe = dframe.Define(define, define_list[define])
 
         fout_list = []
         histos_list = []
-        tdf_list = []
+        snapshots = []
         count_list = []
         cuts_list = []
         cuts_list.append(process_name)
         eff_list = []
         eff_list.append(process_name)
-        
-        # get process information from prodDict
-        try:
-            xsec = process_dict[process_name]["crossSection"]
-            kfactor = process_dict[process_name]["kfactor"]
-            matchingEfficiency = process_dict[process_name]["matchingEfficiency"]
-        except KeyError:
-            xsec = 1.0
-            kfactor = 1.0
-            matchingEfficiency = 1.0
-            LOGGER.error(
-                f'No value defined for process {process_name} in dictionary!')
-        gen_sf = xsec*kfactor*matchingEfficiency
+        results[process_name] = {}
+
+        if do_scale:
+            # Get process information from process directory
+            try:
+                xsec = process_dict[process_name]["crossSection"]
+            except KeyError:
+                xsec = 1.0
+                LOGGER.warning('Cross-section value not found for process '
+                               '"%s"!\nUsing 1.0...', process_name)
+
+            try:
+                kfactor = process_dict[process_name]["kfactor"]
+            except KeyError:
+                kfactor = 1.0
+                LOGGER.warning('Kfactor value not found for process "%s"!\n'
+                               'Using 1.0...', process_name)
+
+            try:
+                matching_efficiency = \
+                    process_dict[process_name]["matchingEfficiency"]
+            except KeyError:
+                matching_efficiency = 1.0
+                LOGGER.warning('Matching efficiency value not found for '
+                               'process "%s"!\nUsing 1.0...', process_name)
+
+            gen_sf = xsec * kfactor * matching_efficiency
+            lpn = len(process_name) + 8
+            LOGGER.info('Generator scale factor for "%s": %.4g',
+                        process_name, gen_sf)
+            LOGGER.info(' - cross-section:      ' + lpn*' ' + '%.4g pb',
+                        xsec)
+            LOGGER.info(' - kfactor:            ' + lpn*' ' + '%.4g', kfactor)
+            LOGGER.info(' - matching efficiency:' + lpn*' ' + '%.4g',
+                        matching_efficiency)
+            LOGGER.info('Integrated luminosity: %.4g pb-1', int_lumi)
 
         # Define all histos, snapshots, etc...
-        LOGGER.info('Defining snapshots and histograms')
-        for cut_name, cut_definition in cut_list.items():
-            # output file for tree
-            fout = output_dir + process_name + '_' + cut_name + '.root'
-            fout_list.append(fout)
+        LOGGER.info('Defining cuts and histograms')
+        for cut_name, cut_definition in cuts.items():
+            try:
+                dframe_cut = dframe.Filter(cut_definition)
+            except cppyy.gbl.std.runtime_error:
+                LOGGER.error('During defining of the cuts an error '
+                             'occurred!\nAborting...')
+                sys.exit(3)
 
-            df_cut = df.Filter(cut_definition)
-
-            count_list.append(df_cut.Count())
+            count_list.append(dframe_cut.Count())
 
             histos = []
-
-            for v in histo_list:
-                # default 1D histogram
-                if "name" in histo_list[v]:
+            for hist_name, hist_definition in histo_list.items():
+                # default 1D histogram, looks for the name of the column.
+                if "name" in hist_definition:
                     model = ROOT.RDF.TH1DModel(
-                        v,
-                        f';{histo_list[v]["title"]};',
-                        histo_list[v]["bin"],
-                        histo_list[v]["xmin"],
-                        histo_list[v]["xmax"])
-                    histos.append(df_cut.Histo1D(model, histo_list[v]["name"]))
+                        hist_name,
+                        f';{hist_definition["title"]};',
+                        hist_definition["bin"],
+                        hist_definition["xmin"],
+                        hist_definition["xmax"])
+                    histos.append(dframe_cut.Histo1D(model,
+                                                     hist_definition["name"]))
                 # multi dim histogram (1, 2 or 3D)
-                elif "cols" in histo_list[v]:
-                    cols = histo_list[v]['cols']
-                    bins = histo_list[v]['bins']
-                    bins_unpacked = tuple(i for sub in bins for i in sub)
+                elif "cols" in hist_definition:
+                    cols = hist_definition['cols']
+                    bins = hist_definition['bins']
                     if len(bins) != len(cols):
                         LOGGER.error('Amount of columns should be equal to '
                                      'the amount of bin configs!\nAborting...')
                         sys.exit(3)
+                    bins_unpacked = tuple(i for sub in bins for i in sub)
                     if len(cols) == 1:
-                        histos.append(df_cut.Histo1D((v, "", *bins_unpacked),
-                                                     cols[0]))
+                        histos.append(dframe_cut.Histo1D(
+                            (hist_name, '', *bins_unpacked), *cols))
                     elif len(cols) == 2:
-                        histos.append(df_cut.Histo2D((v, "", *bins_unpacked),
-                                                     cols[0],
-                                                     cols[1]))
+                        histos.append(dframe_cut.Histo2D(
+                            (hist_name, "", *bins_unpacked), *cols))
                     elif len(cols) == 3:
-                        histos.append(df_cut.Histo3D((v, "", *bins_unpacked),
-                                                     cols[0],
-                                                     cols[1],
-                                                     cols[2]))
+                        histos.append(dframe_cut.Histo3D(
+                            (hist_name, "", *bins_unpacked), *cols))
                     else:
                         LOGGER.error('Only 1, 2 or 3D histograms supported.')
                         sys.exit(3)
@@ -286,169 +432,147 @@ def run(rdf_module, args):
             histos_list.append(histos)
 
             if do_tree:
+                # output file for the TTree
+                fout = os.path.join(output_dir,
+                                    process_name + '_' + cut_name + '.root')
+                fout_list.append(fout)
+
                 opts = ROOT.RDF.RSnapshotOptions()
                 opts.fLazy = True
-                try:
-                    snapshot_tdf = df_cut.Snapshot("events", fout, "", opts)
-                except Exception as excp:
-                    LOGGER.error('During the execution of the final stage '
-                                 'exception occurred:\n%s', excp)
-                    sys.exit(3)
-
-                # Needed to avoid python garbage collector messing around with
-                # the snapshot
-                tdf_list.append(snapshot_tdf)
-
-        if args.graph:
-            generate_graph(df, args)
+                # Snapshots need to be kept in memory until the event loop is
+                # run
+                snapshots.append(dframe_cut.Snapshot("events", fout, "", opts))
 
         # Now perform the loop and evaluate everything at once.
         LOGGER.info('Evaluating...')
-        all_events = df.Count().GetValue()
+        all_events_raw = dframe.Count().GetValue()
         LOGGER.info('Done')
 
-        nevents_real += all_events
-        uncertainty = ROOT.Math.sqrt(all_events)
+        nevents_real += all_events_raw
+        uncertainty = ROOT.Math.sqrt(all_events_raw)
 
         if do_scale:
-            all_events = all_events * 1. * gen_sf * \
+            LOGGER.info('Scaling cut yields...')
+            all_events = all_events_raw * 1. * gen_sf * \
                 int_lumi / process_events[process_name]
-            uncertainty = ROOT.Math.sqrt(all_events) * gen_sf * \
+            uncertainty = ROOT.Math.sqrt(all_events_raw) * gen_sf * \
                 int_lumi / process_events[process_name]
-            LOGGER.info('Printing scaled number of events!!!')
+        else:
+            all_events = all_events_raw
+            uncertainty = ROOT.Math.sqrt(all_events_raw)
 
-        cfn_width = 16 + length_cuts_names  # Cutflow name width
-        info_msg = 'Cutflow:'
-        info_msg += f'\n\t{"All events":{cfn_width}} : {all_events:,}'
+        results[process_name]['all_events'] = {}
+        results[process_name]['all_events']['n_events_raw'] = all_events_raw
+        results[process_name]['all_events']['n_events'] = all_events
+        results[process_name]['all_events']['uncertainty'] = uncertainty
 
-        if save_tabular:
-            # scientific notation - recomended for backgrounds
-            cuts_list.append(f'{all_events:.2e} $\\pm$ {uncertainty:.2e}')
-            # float notation - recomended for signals with few events
-            # cuts_list.append(f'{all_events:.3f} $\\pm$ {uncertainty:.3f}')
-            # ####eff_list.append(1.)  # start with 100% efficiency
-
-        for i, cut in enumerate(cut_list):
-            nevents_this_cut = count_list[i].GetValue()
-            nevents_this_cut_raw = nevents_this_cut
-            uncertainty = ROOT.Math.sqrt(nevents_this_cut_raw)
+        for i, cut in enumerate(cuts):
+            cut_result = {}
+            cut_result['n_events_raw'] = count_list[i].GetValue()
             if do_scale:
-                nevents_this_cut = \
-                    nevents_this_cut * 1. * gen_sf * \
+                cut_result['n_events'] = \
+                    cut_result['n_events_raw'] * 1. * gen_sf * \
                     int_lumi / process_events[process_name]
-                uncertainty = \
-                    ROOT.Math.sqrt(nevents_this_cut_raw) * gen_sf * \
+                cut_result['uncertainty'] = \
+                    math.sqrt(cut_result['n_events_raw']) * gen_sf * \
                     int_lumi / process_events[process_name]
-            info_msg += f'\n\t{"After selection " + cut:{cfn_width}} : '
-            info_msg += f'{nevents_this_cut:,}'
+            else:
+                cut_result['n_events'] = cut_result['n_events_raw']
+                cut_result['uncertainty'] = \
+                    math.sqrt(cut_result['n_events_raw'])
+            results[process_name][cut] = cut_result
 
-            # Saving the number of events, uncertainty and efficiency for the
-            # output-file
-            if save_tabular and cut != 'selNone':
-                if nevents_this_cut != 0:
-                    # scientific notation - recomended for backgrounds
-                    cuts_list.append(
-                        f'{nevents_this_cut:.2e} $\\pm$ {uncertainty:.2e}')
-                    # float notation - recomended for signals with few events
-                    # cuts_list.append(
-                    #     f'{neventsThisCut:.3f} $\\pm$ {uncertainty:.3f}')
-                    eff_list.append(f'{1.*nevents_this_cut/all_events:.3f}')
-                # if number of events is zero, the previous uncertainty is
-                # saved instead:
-                elif '$\\pm$' in cuts_list[-1]:
-                    cut = (cuts_list[-1]).split()
-                    cuts_list.append(f'$\\leq$ {cut[2]}')
-                    eff_list.append('0.')
+        # Cut name width
+        cn_width = max(len(cn) for cn in results[process_name].keys())
+        info_msg = 'Cutflow:\n'
+        info_msg += '    ' + cn_width * ' ' + '        Raw events'
+        if do_scale:
+            info_msg += '    Scaled events'
+        for cut_name, cut_result in results[process_name].items():
+            if cut_name == 'all_events':
+                cut_name = 'All events'
+            info_msg += f'\n  - {cut_name:{cn_width}} '
+            info_msg += f' {cut_result["n_events_raw"]:>16,}'
+            if do_scale:
+                if cut_result['n_events_raw'] != 0:
+                    info_msg += f' {cut_result["n_events"]:>16.2e}'
                 else:
-                    cuts_list.append(cuts_list[-1])
-                    eff_list.append('0.')
+                    info_msg += f' {"0.":>16}'
 
         LOGGER.info(info_msg)
 
+        if args.graph:
+            generate_graph(dframe, args)
+            args.graph = False
+
         # And save everything
         LOGGER.info('Saving the outputs...')
-        for i, cut in enumerate(cut_list):
+        if do_scale:
+            LOGGER.info('Scaling the histograms...')
+        for i, cut in enumerate(cuts):
             # output file for histograms
-            fhisto = output_dir + process_name + '_' + cut + '_histo.root'
-            with ROOT.TFile(fhisto, 'RECREATE'):
-                for h in histos_list[i]:
+            fhisto = os.path.join(output_dir,
+                                  process_name + '_' + cut + '_histo.root')
+            with ROOT.TFile(fhisto, 'RECREATE') as outfile:
+                for hist in histos_list[i]:
+                    hist_name = hist.GetName() + '_raw'
+                    outfile.WriteObject(hist.GetValue(), hist_name)
                     if do_scale:
-                        h.Scale(gen_sf * int_lumi / process_events[process_name])
-                    h.Write()
+                        hist.Scale(gen_sf * int_lumi /
+                                   process_events[process_name])
+                        outfile.WriteObject(hist.GetValue())
 
-                # write all meta info to the output file
-                p = ROOT.TParameter(int)("eventsProcessed", process_events[process_name])
-                p.Write()
-                # take sum of weights=eventsProcessed for now (assume weights==1)
-                p = ROOT.TParameter(float)("sumOfWeights", process_events[process_name])
-                p.Write()
-                p = ROOT.TParameter(float)("intLumi", int_lumi)
-                p.Write()
-                p = ROOT.TParameter(float)("crossSection", xsec)
-                p.Write()
-                p = ROOT.TParameter(float)("kfactor", kfactor)
-                p.Write()
-                p = ROOT.TParameter(float)("matchingEfficiency",
-                                           matchingEfficiency)
-                p.Write()
+                # write all metadata info to the output file
+                param = ROOT.TParameter(int)("eventsProcessed",
+                                             process_events[process_name])
+                outfile.WriteObject(param)
 
+                param = ROOT.TParameter(float)("sumOfWeights",
+                                               process_events[process_name])
+                outfile.WriteObject(param)
+
+                param = ROOT.TParameter(bool)("scaled",
+                                              do_scale)
+                outfile.WriteObject(param)
+
+                if do_scale:
+                    param = ROOT.TParameter(float)("intLumi", int_lumi)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("crossSection", xsec)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("kfactor", kfactor)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("matchingEfficiency",
+                                                   matching_efficiency)
+                    outfile.WriteObject(param)
+
+                    param = ROOT.TParameter(float)("generatorScaleFactor",
+                                                   gen_sf)
+                    outfile.WriteObject(param)
             if do_tree:
-                # test that the snapshot worked well
-                validfile = testfile(fout_list[i])
-                if not validfile:
-                    continue
+                # Number of events from a particular cut
+                nevt_cut = results[process_name][cut]['n_events_raw']
+                # Number of events in file
+                try:
+                    nevt_infile = snapshots[i].Count().GetValue()
+                except cppyy.gbl.std.runtime_error:
+                    nevt_infile = 0
 
-        if save_tabular and cut != 'selNone':
-            save_tab.append(cuts_list)
-            efficiency_list.append(eff_list)
+                if nevt_cut != nevt_infile:
+                    LOGGER.error('Number of events for cut "%s" in sample '
+                                 '"%s" does not match with number of saved '
+                                 'events!', cut, process_name)
+                    sys.exit(3)
 
-    if save_tabular:
-        tabular_path = output_dir + 'outputTabular.txt'
-        LOGGER.info('Saving tabular to:\n%s', tabular_path)
-        with open(tabular_path, 'w', encoding='utf-8') as outfile:
-            # Printing the number of events in format of a LaTeX table
-            outfile.write('\\begin{table}[H]\n'
-                          '    \\centering\n'
-                          '    \\resizebox{\\textwidth}{!}{\n'
-                          '        \\begin{tabular}{|l||')
-            outfile.write('c|' * (len(cuts_list)-1))
-            outfile.write('} \\hline\n')
-            for i, row in enumerate(save_tab):
-                outfile.write('        ')
-                outfile.write(' & '.join(row))
-                outfile.write(' \\\\\n')
-                if i == 0:
-                    outfile.write('        \\hline\n')
-            outfile.write('        \\hline \n'
-                          '    \\end{tabular}} \n'
-                          '    \\caption{Caption} \n'
-                          '    \\label{tab:my_label} \n'
-                          '\\end{table}\n')
-
-            # Efficiency:
-            outfile.write('\n\nEfficiency:\n')
-            outfile.write('\\begin{table}[H] \n'
-                          '    \\centering \n'
-                          '    \\resizebox{\\textwidth}{!}{ \n'
-                          '    \\begin{tabular}{|l||')
-            outfile.write('c|' * (len(cuts_list)-1))
-            outfile.write('} \\hline\n')
-            for i in range(len(eff_list)):
-                outfile.write('        ')
-                v = [row[i] for row in efficiency_list]
-                outfile.write(' & '.join(str(v)))
-                outfile.write(' \\\\\n')
-                if i == 0:
-                    outfile.write('        \\hline\n')
-            outfile.write('        \\hline \n'
-                          '    \\end{tabular}} \n'
-                          '    \\caption{Caption} \n'
-                          '    \\label{tab:my_label} \n'
-                          '\\end{table}\n')
+    # Save results either to JSON or LaTeX tables
+    save_results(results, rdf_module)
 
     elapsed_time = time.time() - start_time
 
-    info_msg = f"{' SUMMARY ':=^80}\n"
+    info_msg = f"\n{' SUMMARY ':=^80}\n"
     info_msg += 'Elapsed time (H:M:S):    '
     info_msg += time.strftime('%H:%M:%S', time.gmtime(elapsed_time))
     info_msg += '\nEvents processed/second: '
@@ -468,7 +592,7 @@ def run_final(parser):
     args, _ = parser.parse_known_args()
 
     if args.command != 'final':
-        LOGGER.error('Unknow sub-command "%s"!\nAborting...', args.command)
+        LOGGER.error('Unknown sub-command "%s"!\nAborting...', args.command)
         sys.exit(3)
 
     # Check that the analysis file exists
