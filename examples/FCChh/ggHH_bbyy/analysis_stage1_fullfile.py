@@ -28,16 +28,17 @@ class Analysis():
             # # - <name of process> needs to correspond either the name of the input .root file, or the name of a directory containing root files 
             # # If you want to process only part of the events, split the output into chunks or give a different name to the output use the optional arguments
             # # or leave blank to use defaults = run the full statistics in one output file named the same as the process:
-            'pwp8_pp_hh_5f_hhbbyy': {},
+            'pwp8_pp_hh_lambda100_5f_hhbbaa': {},
         }
 
         # Mandatory: Input directory where to find the samples, or a production tag when running over the centrally produced
         # samples (this points to the yaml files for getting sample statistics)
-        self.input_dir = '/eos/experiment/fcc/hh/tutorials/edm4hep_tutorial_data/'
+        self.input_dir = '/eos/experiment/fcc/hh/generation/DelphesEvents/fcc_v06_scenarioI/'
         # self.prod_tag = 'FCCee/spring2021/IDEA/'
 
         # Optional: output directory, default is local running directory
-        self.output_dir = 'outputs/FCChh/ggHH_bbyy/presel/'
+        self.output_dir = 'fcc_v06_bbyy/' \
+                          # f'stage1_{self.ana_args.muon_pt}'
 
         # Optional: analysisName, default is ''
         # self.analysis_name = 'My Analysis'
@@ -71,7 +72,7 @@ class Analysis():
             .Define("gamma",  "FCCAnalyses::ReconstructedParticle::get(Photon_objIdx.index, ReconstructedParticles)")
             .Define("selpt_gamma", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(gamma)")
             .Define("sel_gamma_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_gamma)")
-            .Define("sel_gamma", "AnalysisFCChh::SortParticleCollection(sel_gamma_unsort)") #sort by pT
+            .Define("sel_gamma", "AnalysisFCChh::SortParticleCollection(sel_gamma_unsort)")
 
             .Define("ngamma",  "FCCAnalyses::ReconstructedParticle::get_n(sel_gamma)") 
             .Define("g1_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_gamma)[0]")
@@ -84,14 +85,16 @@ class Analysis():
             .Define("g2_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_gamma)[1]")
 
             #H(yy) if it exists, if there are no 2 selected photons, doesnt get filled 
-            .Define("yy_pairs_unmerged", "AnalysisFCChh::getPairs(sel_gamma)") # retrieves the leading pT pair of all possible 
-            .Define("yy_pairs", "AnalysisFCChh::merge_pairs(yy_pairs_unmerged)") # merge pair into one object to access inv masses etc
+            .Define("yy_pairs_unmerged", "AnalysisFCChh::getPairs(sel_gamma)")
+            .Define("yy_pairs", "AnalysisFCChh::merge_pairs(yy_pairs_unmerged)")
             .Define("m_yy", "FCCAnalyses::ReconstructedParticle::get_mass(yy_pairs)")
 
 
             ########################################### JETS ########################################### 
 
-            # selected jets above a pT threshold of 30 GeV, eta < 4
+            # jets after overlap removal is performed between jets and isolated electrons, muons and photons
+
+            # selected jets above a pT threshold of 30 GeV, eta < 4, tight ID 
             .Define("selpt_jets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(Jet)")
             .Define("sel_jets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_jets)")
             .Define("sel_jets", "AnalysisFCChh::SortParticleCollection(sel_jets_unsort)") 
@@ -107,11 +110,16 @@ class Analysis():
             .Define("j2_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_jets)[1]")
 
             #b-tagged jets:
+            # .Alias("Jet3","Jet#3.index") 
+            .Alias("Jet3","_Jet_particles.index")
+            #LOOSE WP : bit 1 = medium WP, bit 2 = tight WP
             #b tagged jets
-            .Define("bjets", "AnalysisFCChh::get_tagged_jets(ReconstructedParticles, ParticleIDs, _ParticleIDs_particle, _ParticleIDs_parameters, 1)") #bit 1 = medium WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
-            .Define("selpt_bjets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(bjets)")
-            .Define("sel_bjets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_bjets)")
-            .Define("sel_bjets", "AnalysisFCChh::SortParticleCollection(sel_bjets_unsort)")
+            .Define("bjets", "AnalysisFCChh::get_tagged_jets(ReconstructedParticles, ParticleIDs, _ParticleIDs_particle, _ParticleIDs_parameters, 1)") #bit 0 = loose WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
+            # .Define("bjets", "AnalysisFCChh::get_tagged_jets(Jet, Jet3, ParticleIDs, _ParticleIDs_parameters, 1)") #bit 0 = loose WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
+            # .Define("selpt_bjets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(bjets)")
+            # .Define("sel_bjets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_bjets)")
+            # .Define("sel_bjets", "AnalysisFCChh::SortParticleCollection(sel_bjets_unsort)")
+            .Alias("sel_bjets", "bjets")
             .Define("nbjets", "FCCAnalyses::ReconstructedParticle::get_n(sel_bjets)")
             .Define("b1_e",  "FCCAnalyses::ReconstructedParticle::get_e(sel_bjets)[0]")
             .Define("b1_pt",  "FCCAnalyses::ReconstructedParticle::get_pt(sel_bjets)[0]")
@@ -122,16 +130,16 @@ class Analysis():
             .Define("b2_eta",  "FCCAnalyses::ReconstructedParticle::get_eta(sel_bjets)[1]")
             .Define("b2_phi",  "FCCAnalyses::ReconstructedParticle::get_phi(sel_bjets)[1]")
 
-            #H(bb) system - using the medium WP jets - if there are no 2 b-tagged jets these variable don't get filled
-            .Define("bb_pairs_unmerged", "AnalysisFCChh::getPairs(sel_bjets)") # retrieves the leading pT pair of all possible 
-            .Define("bb_pairs", "AnalysisFCChh::merge_pairs(bb_pairs_unmerged)") # merge pair into one object to access inv masses etc
+
+            # #H(bb) system - using the loose WP b-jets -> if the events has < 2 bjets these variables do not get filled!
+            .Define("bb_pairs_unmerged", "AnalysisFCChh::getPairs(sel_bjets)") #currently gets only leading pT pair, as a RecoParticlePair
+            #then merge the bb pair into one object and get its kinematic properties
+            .Define("bb_pairs", "AnalysisFCChh::merge_pairs(bb_pairs_unmerged)") #merge into one object to access inv masses etc
             .Define("m_bb", "FCCAnalyses::ReconstructedParticle::get_mass(bb_pairs)")
 
-            ########################################### APPLY PRE-SELECTION ########################################### 
-
-            #require at least two b-jets and two photons, both with invariant masses compatible with the Higgs mass
+            # Filter at least one candidate
             .Filter("sel_bjets.size()>1")
-            .Filter("sel_gamma.size()>1") 
+            # .Filter("sel_gamma.size()>1") 
             # .Filter("m_bb[0] < 200.") 
             # .Filter("m_bb[0] > 80.") 
             # .Filter("m_yy[0] < 180.") 
@@ -147,9 +155,19 @@ class Analysis():
         Output variables which will be saved to output root file.
         '''
         branch_list = [
-            # Photons and H(yy) system:
-            'ngamma', 'g1_pt', 'g2_pt', 'g1_eta', 'g2_eta', 'm_yy',
-            # b-jets and H(bb) system:
-            'nbjets', 'b1_pt', 'b2_pt', 'b1_eta', 'b2_eta', 'm_bb',
+            'nbjets',
+            # 'm_bb',
+            'ngamma',
+            'm_yy',
+            'm_bb',
+            'b1_pt', 'b2_pt', 'b1_eta', 'b2_eta',
+            # 'selected_muons_pt',
+            # 'selected_muons_y',
+            # 'selected_muons_p',
+            # 'selected_muons_e',
+            # 'zed_leptonic_pt',
+            # 'zed_leptonic_m',
+            # 'zed_leptonic_charge',
+            # 'zed_leptonic_recoil_m'
         ]
         return branch_list
