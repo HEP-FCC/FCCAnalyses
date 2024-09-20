@@ -1,21 +1,18 @@
 // ROOT
-#include "ROOT/RVec.hxx"
 #include "ROOT/RDataFrame.hxx"
 #include "ROOT/RLogger.hxx"
+#include "ROOT/RVec.hxx"
 #include "TCanvas.h"
 // EDM4hep
 #include "edm4hep/MCParticleData.h"
 #include "edm4hep/SimCalorimeterHitData.h"
 // FCCAnalyses
-#include "FCCAnalyses/SmearObjects.h"
 #include "FCCAnalyses/ReconstructedParticle2MC.h"
-
+#include "FCCAnalyses/SmearObjects.h"
 
 int main(int argc, const char *argv[]) {
   auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
-    ROOT::Detail::RDF::RDFLogChannel(),
-    ROOT::Experimental::ELogLevel::kInfo
-  );
+      ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
 
   bool success = gInterpreter->Declare("#include \"edm4hep/TrackState.h\"");
   if (!success) {
@@ -44,24 +41,24 @@ int main(int argc, const char *argv[]) {
   // rdf.Describe().Print();
   // std::cout << std::endl;
 
-  std::cout << "Info: Num. of slots: " <<  rdf.GetNSlots() << std::endl;
+  std::cout << "Info: Num. of slots: " << rdf.GetNSlots() << std::endl;
 
-  auto rdf2 = rdf.Alias("MCRecoAssociations0", "_MCRecoAssociations_from.index");
+  auto rdf2 =
+      rdf.Alias("MCRecoAssociations0", "_MCRecoAssociations_from.index");
   auto rdf3 = rdf2.Alias("MCRecoAssociations1", "_MCRecoAssociations_to.index");
   auto rdf4 = rdf3.Define(
-      "RP_MC_index",
-      FCCAnalyses::ReconstructedParticle2MC::getRP2MC_index,
-      {"MCRecoAssociations0", "MCRecoAssociations1", "ReconstructedParticles"}
-  );
+      "RP_MC_index", FCCAnalyses::ReconstructedParticle2MC::getRP2MC_index,
+      {"MCRecoAssociations0", "MCRecoAssociations1", "ReconstructedParticles"});
   auto rdf5 = rdf4.Define(
       "SmearedTracks",
       FCCAnalyses::SmearObjects::SmearedTracks(2.0, 2.0, 2.0, 2.0, 2.0, true),
-      {"ReconstructedParticles", "_EFlowTrack_trackStates", "RP_MC_index", "Particle"}
-  );
-  auto rdf6 = rdf5.Define("smearTrack_omega", "return SmearedTracks.empty() ? -1 : SmearedTracks.at(0).omega;");
+      {"ReconstructedParticles", "_EFlowTrack_trackStates", "RP_MC_index",
+       "Particle"});
+  auto rdf6 = rdf5.Define(
+      "smearTrack_omega",
+      "return SmearedTracks.empty() ? -1 : SmearedTracks.at(0).omega;");
   // auto rdf6 = rdf5.Define("smearTrack_omega", "return RP_MC_index[0];");
   auto h_smeared_tracks_omega = rdf6.Histo1D("smearTrack_omega");
-
 
   h_smeared_tracks_omega->Print();
 

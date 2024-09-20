@@ -1,60 +1,58 @@
 // std
+#include <cstddef>
 #include <iostream>
 #include <ostream>
-#include <cstddef>
 
 // ROOT
-#include <ROOT/RVec.hxx>
 #include <ROOT/RDataFrame.hxx>
 #include <ROOT/RLogger.hxx>
+#include <ROOT/RVec.hxx>
 #include <TCanvas.h>
+#include <TMatrixDSym.h>
 #include <TRandom.h>
 #include <TVector3.h>
 #include <TVectorD.h>
-#include <TMatrixDSym.h>
 
 // PODIO
 #include <podio/DataSource.h>
 
 // EDM4hep
+#include "edm4hep/RecoMCParticleLinkCollection.h"
+#include "edm4hep/ReconstructedParticleCollection.h"
+#include "edm4hep/TrackCollection.h"
+#include "edm4hep/TrackState.h"
 #include <edm4hep/MCParticle.h>
 #include <edm4hep/MCParticleCollection.h>
 #include <edm4hep/SimCalorimeterHitCollection.h>
-#include "edm4hep/TrackState.h"
-#include "edm4hep/TrackCollection.h"
-#include "edm4hep/ReconstructedParticleCollection.h"
-#include "edm4hep/RecoMCParticleLinkCollection.h"
 
 // FCCAnalyses
 #include "FCCAnalyses/SmearObjects.h"
 #include "FCCAnalyses/VertexingUtils.h"
 
-
 /// for a given MC particle, returns a "track state", i.e. a vector of 5 helix
 /// parameters, in Delphes convention
 TVectorD TrackParamFromMC_DelphesConv(edm4hep::MCParticle aMCParticle) {
 
-  TVector3 p(aMCParticle.getMomentum().x,
-             aMCParticle.getMomentum().y,
+  TVector3 p(aMCParticle.getMomentum().x, aMCParticle.getMomentum().y,
              aMCParticle.getMomentum().z);
-  TVector3 x(1e-3 * aMCParticle.getVertex().x,
-             1e-3 * aMCParticle.getVertex().y,
+  TVector3 x(1e-3 * aMCParticle.getVertex().x, 1e-3 * aMCParticle.getVertex().y,
              1e-3 * aMCParticle.getVertex().z); // mm to m
   float Q = aMCParticle.getCharge();
-  TVectorD param = FCCAnalyses::VertexingUtils::XPtoPar(x, p, Q); // convention Franco
+  TVectorD param =
+      FCCAnalyses::VertexingUtils::XPtoPar(x, p, Q); // convention Franco
 
   return param;
 }
 
-
 TMatrixDSym get_trackCov(const edm4hep::TrackState &atrack, bool Units_mm) {
   auto covMatrix = atrack.covMatrix;
 
-  TMatrixDSym covM = FCCAnalyses::VertexingUtils::Edm4hep2Delphes_TrackCovMatrix(covMatrix, Units_mm);
+  TMatrixDSym covM =
+      FCCAnalyses::VertexingUtils::Edm4hep2Delphes_TrackCovMatrix(covMatrix,
+                                                                  Units_mm);
 
   return covM;
 }
-
 
 /**
  * \brief Generates new track states, by rescaling the covariance matrix of the
@@ -67,10 +65,8 @@ struct SmearedTracks {
   SmearedTracks(float smear_d0, float smear_phi, float smear_omega,
                 float smear_z0, float smear_tlambda, bool debug);
   ROOT::VecOps::RVec<edm4hep::TrackState>
-  operator()(
-      const edm4hep::RecoMCParticleLinkCollection &mcRecoLink);
+  operator()(const edm4hep::RecoMCParticleLinkCollection &mcRecoLink);
 };
-
 
 SmearedTracks::SmearedTracks(float smear_d0, float smear_phi, float smear_omega,
                              float smear_z0, float smear_tlambda,
@@ -85,9 +81,7 @@ SmearedTracks::SmearedTracks(float smear_d0, float smear_phi, float smear_omega,
   m_debug = debug;
 }
 
-
-ROOT::VecOps::RVec<edm4hep::TrackState>
-SmearedTracks::operator() (
+ROOT::VecOps::RVec<edm4hep::TrackState> SmearedTracks::operator()(
     const edm4hep::RecoMCParticleLinkCollection &mcRecoLink) {
 
   // returns a vector of TrackStates that is parallel to the collection of full
@@ -159,8 +153,8 @@ SmearedTracks::operator() (
     //}
 
     // generate a new track state (in Delphes's convention)
-    TVectorD smeared_param_delphes =
-        FCCAnalyses::SmearObjects::CovSmear(mcTrackParam, Cov, &m_random, m_debug);
+    TVectorD smeared_param_delphes = FCCAnalyses::SmearObjects::CovSmear(
+        mcTrackParam, Cov, &m_random, m_debug);
 
     if (smeared_param_delphes == zero) { // Cholesky decomposition failed
       result.emplace_back(trackState);
@@ -168,8 +162,9 @@ SmearedTracks::operator() (
     }
 
     // back to the edm4hep conventions..
-    TVectorD smeared_param = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackParam(
-        smeared_param_delphes, false);
+    TVectorD smeared_param =
+        FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackParam(
+            smeared_param_delphes, false);
 
     auto smearedTrackState = trackState;
     if (smeared_param.GetNoElements() > 4) {
@@ -192,20 +187,21 @@ SmearedTracks::operator() (
 
     if (m_debug) {
       std::cout << std::endl
-                << "Original track " << trackState.D0 << " " << trackState.phi << " "
-                << trackState.omega << " " << trackState.Z0 << " " << trackState.tanLambda
-                << std::endl;
+                << "Original track " << trackState.D0 << " " << trackState.phi
+                << " " << trackState.omega << " " << trackState.Z0 << " "
+                << trackState.tanLambda << std::endl;
       std::cout << "Smeared track " << smearedTrackState.D0 << " "
-                << smearedTrackState.phi << " " << smearedTrackState.omega << " "
-                << smearedTrackState.Z0 << " " << smearedTrackState.tanLambda
-                << std::endl;
+                << smearedTrackState.phi << " " << smearedTrackState.omega
+                << " " << smearedTrackState.Z0 << " "
+                << smearedTrackState.tanLambda << std::endl;
       std::cout << "MC particle " << mcTrackParam_edm4hep[0] << " "
                 << mcTrackParam_edm4hep[1] << " " << mcTrackParam_edm4hep[2]
                 << " " << mcTrackParam_edm4hep[3] << " "
                 << mcTrackParam_edm4hep[4] << std::endl;
       for (int j = 0; j < 15; j++)
         std::cout << "smeared cov matrix(" << j
-                  << "): " << smearedTrackState.covMatrix[j] << ", scale factor: "
+                  << "): " << smearedTrackState.covMatrix[j]
+                  << ", scale factor: "
                   << smearedTrackState.covMatrix[j] / trackState.covMatrix[j]
                   << std::endl;
     }
@@ -221,14 +217,9 @@ SmearedTracks::operator() (
   return result;
 }
 
-
-
-
 int main(int argc, char *argv[]) {
   auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
-    ROOT::Detail::RDF::RDFLogChannel(),
-    ROOT::Experimental::ELogLevel::kInfo
-  );
+      ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
 
   bool success = gInterpreter->Declare("#include \"edm4hep/TrackState.h\"");
   if (!success) {
@@ -257,17 +248,16 @@ int main(int argc, char *argv[]) {
   // rdf.Describe().Print();
   // std::cout << std::endl;
 
-  std::cout << "Info: Num. of slots: " <<  rdf.GetNSlots() << std::endl;
+  std::cout << "Info: Num. of slots: " << rdf.GetNSlots() << std::endl;
 
-  auto rdf2 = rdf.Define(
-      "SmearedTracks",
-      SmearedTracks(2.0, 2.0, 2.0, 2.0, 2.0, false),
-      {"MCRecoAssociations"}
-  );
+  auto rdf2 =
+      rdf.Define("SmearedTracks", SmearedTracks(2.0, 2.0, 2.0, 2.0, 2.0, false),
+                 {"MCRecoAssociations"});
 
-  auto rdf3 = rdf2.Define("smearTrack_omega", "return SmearedTracks.empty() ? -1 : SmearedTracks.at(0).omega;");
+  auto rdf3 = rdf2.Define(
+      "smearTrack_omega",
+      "return SmearedTracks.empty() ? -1 : SmearedTracks.at(0).omega;");
   auto h_smeared_tracks_omega = rdf3.Histo1D("smearTrack_omega");
-
 
   h_smeared_tracks_omega->Print();
 

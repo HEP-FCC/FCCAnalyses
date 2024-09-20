@@ -1,13 +1,14 @@
 // ROOT
-#include <ROOT/RVec.hxx>
 #include <ROOT/RDataFrame.hxx>
 #include <ROOT/RLogger.hxx>
+#include <ROOT/RVec.hxx>
 #include <TCanvas.h>
 // EDM4hep
 #include <edm4hep/MCParticleData.h>
 #include <edm4hep/SimCalorimeterHitData.h>
 
-ROOT::VecOps::RVec<edm4hep::MCParticleData> selElectrons(ROOT::VecOps::RVec<edm4hep::MCParticleData>& inParticles) {
+ROOT::VecOps::RVec<edm4hep::MCParticleData>
+selElectrons(ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> electrons;
   for (size_t i = 0; i < inParticles.size(); ++i) {
     if (inParticles[i].PDG == 11) {
@@ -22,24 +23,24 @@ struct selPDG {
   selPDG(int pdg, bool chargeConjugateAllowed);
   const int m_pdg;
   const bool m_chargeConjugateAllowed;
-  ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData>& inParticles);
+  ROOT::VecOps::RVec<edm4hep::MCParticleData>
+  operator()(ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles);
 };
 
-selPDG::selPDG(int pdg,
-               bool chargeConjugateAllowed) : m_pdg(pdg),
-                                              m_chargeConjugateAllowed(chargeConjugateAllowed) {};
+selPDG::selPDG(int pdg, bool chargeConjugateAllowed)
+    : m_pdg(pdg), m_chargeConjugateAllowed(chargeConjugateAllowed){};
 
-ROOT::VecOps::RVec<edm4hep::MCParticleData> selPDG::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData>& inParticles) {
+ROOT::VecOps::RVec<edm4hep::MCParticleData>
+selPDG::operator()(ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   for (size_t i = 0; i < inParticles.size(); ++i) {
     auto &particle = inParticles[i];
     if (m_chargeConjugateAllowed) {
-      if (std::abs(particle.PDG ) == std::abs(m_pdg)) {
+      if (std::abs(particle.PDG) == std::abs(m_pdg)) {
         result.emplace_back(particle);
       }
-    }
-    else {
-      if(particle.PDG == m_pdg) {
+    } else {
+      if (particle.PDG == m_pdg) {
         result.emplace_back(particle);
       }
     }
@@ -48,21 +49,19 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> selPDG::operator() (ROOT::VecOps::RV
   return result;
 }
 
-ROOT::VecOps::RVec<float> getPx(ROOT::VecOps::RVec<edm4hep::MCParticleData> inParticles) {
+ROOT::VecOps::RVec<float>
+getPx(ROOT::VecOps::RVec<edm4hep::MCParticleData> inParticles) {
   ROOT::VecOps::RVec<float> result;
-  for (auto& p: inParticles) {
+  for (auto &p : inParticles) {
     result.push_back(p.momentum.x);
   }
 
   return result;
 }
 
-
 int main(int argc, const char *argv[]) {
   auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
-    ROOT::Detail::RDF::RDFLogChannel(),
-    ROOT::Experimental::ELogLevel::kInfo
-  );
+      ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
 
   int nThreads = 1;
   if (argc > 1) {
@@ -84,7 +83,7 @@ int main(int argc, const char *argv[]) {
   // rdf.Describe().Print();
   // std::cout << std::endl;
 
-  std::cout << "Info: Num. of slots: " <<  rdf.GetNSlots() << std::endl;
+  std::cout << "Info: Num. of slots: " << rdf.GetNSlots() << std::endl;
 
   auto rdf2 = rdf.Define("particles_px", getPx, {"Particle"});
   // auto rdf3 = rdf2.Define("electrons", selElectrons, {"MCParticles"});

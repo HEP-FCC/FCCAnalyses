@@ -1,23 +1,24 @@
 // ROOT
-#include <ROOT/RVec.hxx>
 #include <ROOT/RDataFrame.hxx>
 #include <ROOT/RLogger.hxx>
+#include <ROOT/RVec.hxx>
 #include <TCanvas.h>
 
 // PODIO
 #include <podio/DataSource.h>
 
 // EDM4hep
-#include <edm4hep/ReconstructedParticle.h>
-#include <edm4hep/RecoMCParticleLinkCollection.h>
 #include <edm4hep/MCParticle.h>
 #include <edm4hep/MCParticleCollection.h>
+#include <edm4hep/RecoMCParticleLinkCollection.h>
+#include <edm4hep/ReconstructedParticle.h>
 #include <edm4hep/SimCalorimeterHitCollection.h>
 
-edm4hep::MCParticleCollection selElectrons(const edm4hep::MCParticleCollection& inParticles) {
+edm4hep::MCParticleCollection
+selElectrons(const edm4hep::MCParticleCollection &inParticles) {
   edm4hep::MCParticleCollection electrons;
   electrons.setSubsetCollection();
-  for (auto particle: inParticles) {
+  for (auto particle : inParticles) {
     if (particle.getPDG() == 11) {
       auto electron = edm4hep::MCParticle(particle);
       electrons.push_back(electron);
@@ -31,24 +32,24 @@ struct selPDG {
   selPDG(int pdg, bool chargeConjugateAllowed);
   const int m_pdg;
   const bool m_chargeConjugateAllowed;
-  edm4hep::MCParticleCollection operator() (const edm4hep::MCParticleCollection& inParticles);
+  edm4hep::MCParticleCollection
+  operator()(const edm4hep::MCParticleCollection &inParticles);
 };
 
-selPDG::selPDG(int pdg,
-               bool chargeConjugateAllowed) : m_pdg(pdg),
-                                              m_chargeConjugateAllowed(chargeConjugateAllowed) {};
+selPDG::selPDG(int pdg, bool chargeConjugateAllowed)
+    : m_pdg(pdg), m_chargeConjugateAllowed(chargeConjugateAllowed){};
 
-edm4hep::MCParticleCollection selPDG::operator() (const edm4hep::MCParticleCollection& inParticles) {
+edm4hep::MCParticleCollection
+selPDG::operator()(const edm4hep::MCParticleCollection &inParticles) {
   edm4hep::MCParticleCollection result;
   result.setSubsetCollection();
-  for (auto particle: inParticles) {
+  for (auto particle : inParticles) {
     if (m_chargeConjugateAllowed) {
-      if (std::abs(particle.getPDG() ) == std::abs(m_pdg)) {
+      if (std::abs(particle.getPDG()) == std::abs(m_pdg)) {
         result.push_back(particle);
       }
-    }
-    else {
-      if(particle.getPDG() == m_pdg) {
+    } else {
+      if (particle.getPDG() == m_pdg) {
         result.push_back(particle);
       }
     }
@@ -57,24 +58,26 @@ edm4hep::MCParticleCollection selPDG::operator() (const edm4hep::MCParticleColle
   return result;
 }
 
-ROOT::VecOps::RVec<float> getPx(const edm4hep::MCParticleCollection& inParticles) {
+ROOT::VecOps::RVec<float>
+getPx(const edm4hep::MCParticleCollection &inParticles) {
   ROOT::VecOps::RVec<float> result;
-  for (auto particle: inParticles) {
+  for (auto particle : inParticles) {
     result.push_back(particle.getMomentum().x);
   }
 
   return result;
 }
 
-edm4hep::MCParticleCollection get_stable_particles_from_decay(edm4hep::MCParticle in) {
+edm4hep::MCParticleCollection
+get_stable_particles_from_decay(edm4hep::MCParticle in) {
   edm4hep::MCParticleCollection result;
   result.setSubsetCollection();
 
   auto daughters = in.getDaughters();
-  if (daughters.size() != 0) {  // particle is unstable
-    for (const auto& daughter : daughters) {
+  if (daughters.size() != 0) { // particle is unstable
+    for (const auto &daughter : daughters) {
       auto stable_daughters = get_stable_particles_from_decay(daughter);
-      for (const auto& stable_daughter : stable_daughters) {
+      for (const auto &stable_daughter : stable_daughters) {
         result.push_back(stable_daughter);
       }
     }
@@ -85,12 +88,12 @@ edm4hep::MCParticleCollection get_stable_particles_from_decay(edm4hep::MCParticl
   return result;
 }
 
-edm4hep::MCParticle get_mcParticle(
-    const edm4hep::ReconstructedParticle& recoParticle,
-    const edm4hep::RecoMCParticleLinkCollection& assocColl) {
+edm4hep::MCParticle
+get_mcParticle(const edm4hep::ReconstructedParticle &recoParticle,
+               const edm4hep::RecoMCParticleLinkCollection &assocColl) {
   edm4hep::MCParticle no_result;
 
-  for (const auto& assoc: assocColl) {
+  for (const auto &assoc : assocColl) {
     if (assoc.getFrom() == recoParticle) {
       return assoc.getTo();
     }
@@ -99,12 +102,9 @@ edm4hep::MCParticle get_mcParticle(
   return no_result;
 }
 
-
 int main(int argc, const char *argv[]) {
   auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
-    ROOT::Detail::RDF::RDFLogChannel(),
-    ROOT::Experimental::ELogLevel::kInfo
-  );
+      ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
 
   int nThreads = 1;
   if (argc > 1) {
@@ -126,7 +126,7 @@ int main(int argc, const char *argv[]) {
   // rdf.Describe().Print();
   // std::cout << std::endl;
 
-  std::cout << "Info: Num. of slots: " <<  rdf.GetNSlots() << std::endl;
+  std::cout << "Info: Num. of slots: " << rdf.GetNSlots() << std::endl;
 
   auto rdf2 = rdf.Define("particles_px", getPx, {"Particle"});
   // auto rdf3 = rdf2.Define("electrons", selElectrons, {"MCParticles"});

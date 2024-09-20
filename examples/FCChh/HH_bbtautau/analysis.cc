@@ -16,9 +16,7 @@
 #include "ReconstructedParticle2Track.h"
 #include "MCParticle.h"
 
-
 auto _m = edm4hep::ReconstructedParticleData();
-
 
 // Reproduce Heppy analysis
 int main(int argc, char* argv[]){
