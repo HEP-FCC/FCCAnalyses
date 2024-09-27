@@ -22,6 +22,9 @@ doTree = True
 
 saveTabular = True
 
+# Optional: Use weighted events
+do_weighted = True 
+
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
 cutList = {
             "sel0_myy":"m_yy[0] > 100. && m_yy[0] < 180.",

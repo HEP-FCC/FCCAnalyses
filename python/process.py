@@ -7,6 +7,7 @@ import sys
 import json
 import glob
 import logging
+from typing import Optional
 import urllib.request
 import yaml  # type: ignore
 import ROOT  # type: ignore
@@ -28,6 +29,68 @@ def get_entries(inpath: str) -> int:
             LOGGER.error('Input file is missing "events" TTree!\nAborting...')
             sys.exit(3)
     return nevents
+
+
+def get_entries_sow(infilepath: str, nevents_max: Optional[int] = None, get_local: bool = True, weight_name: str = "EventHeader.weight") -> tuple[int, int, float, float]:
+    '''
+    Get number of original entries and number of actual entries in the file, as well as the sum of weights
+    '''
+
+    infile = ROOT.TFile.Open(infilepath)
+    infile.cd()
+
+    processEvents = 0
+    processSumOfWeights = 0.
+    try:
+        processEvents = infile.Get('eventsProcessed').GetVal()
+    except AttributeError:
+        print('----> Warning: Input file is missing information about ' # should these warnings be kept? 
+              'original number of events!')
+    try:
+        processSumOfWeights = infile.Get('SumOfWeights').GetVal()
+    except AttributeError:
+        print('----> Warning: Input file is missing information about '
+              'original sum of weights!')
+
+    if not get_local:
+        return processEvents, None, processSumOfWeights, None
+
+    eventsTTree = 0
+    sumOfWeightsTTree = 0.
+
+     # check for empty chunk (can this be improved? exception from RDF cannot be caught it seems?)
+    tree =infile.Get("events")
+    if not tree:
+        print("Tree not found in file", infilepath, " possibly empty chunk - continuing with next one.")
+        infile.Close()
+        return processEvents, eventsTTree, processSumOfWeights, sumOfWeightsTTree
+
+    try:
+
+         #use a RDF here too so the nevents restriction option can be imposed easily for the local events
+        rdf_tmp = ROOT.ROOT.RDataFrame("events", infilepath)
+
+        if nevents_max:
+            rdf_tmp = rdf_tmp.Range(0, nevents_max)
+
+        eventsTTree = rdf_tmp.Count().GetValue()
+
+        # eventsTTree = infile.Get("events").GetEntries()
+        ROOT.gROOT.SetBatch(True)
+        try:
+            # infile.Get("events").Draw('EventHeader.weight[0]>>histo')
+            # histo=ROOT.gDirectory.Get('histo')
+            histo = rdf_tmp.Histo1D(weight_name)
+            sumOfWeightsTTree=float(eventsTTree)*histo.GetMean()
+        except AttributeError:
+            print('----> Warning: Input file has no event weights.')
+    except AttributeError:
+        print('----> Error: Input file is missing events TTree! Probably empty chunk.')
+        infile.Close()
+
+    infile.Close()
+
+    return processEvents, eventsTTree, processSumOfWeights, sumOfWeightsTTree
 
 
 def get_process_info(process: str,
