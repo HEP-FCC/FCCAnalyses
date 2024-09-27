@@ -48,6 +48,9 @@ class Analysis():
         # Optional: running on HTCondor, default is False
         # self.run_batch = False
 
+        # Optional: Use weighted events
+        self.do_weighted = True 
+
         # Optional: test file that is used if you run with the --test argument (fccanalysis run ./examples/FCChh/ggHH_bbyy/analysis_stage1.py --test)
         self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/hh/' \
                          'tutorials/edm4hep_tutorial_data/' \
@@ -130,8 +133,8 @@ class Analysis():
             ########################################### APPLY PRE-SELECTION ########################################### 
 
             #require at least two b-jets and two photons, both with invariant masses compatible with the Higgs mass
-            .Filter("sel_bjets.size()>1")
-            .Filter("sel_gamma.size()>1") 
+            # .Filter("sel_bjets.size()>1")
+            # .Filter("sel_gamma.size()>1") 
             # .Filter("m_bb[0] < 200.") 
             # .Filter("m_bb[0] > 80.") 
             # .Filter("m_yy[0] < 180.") 
@@ -147,6 +150,7 @@ class Analysis():
         Output variables which will be saved to output root file.
         '''
         branch_list = [
+            'weight',
             # Photons and H(yy) system:
             'ngamma', 'g1_pt', 'g2_pt', 'g1_eta', 'g2_eta', 'm_yy',
             # b-jets and H(bb) system:

@@ -924,6 +924,7 @@ AnalysisFCChh::get_tagged_jets(
   for (size_t pid_index = 0; pid_index < pids.size(); ++pid_index) {
 
     const auto tag =
+        // static_cast<unsigned>(tag_values[pid_index]);
         static_cast<unsigned>(tag_values[pids[pid_index].parameters_begin]);
 
     // std::cout << "Tag = " << tag << std::endl;
@@ -1145,7 +1146,8 @@ ROOT::VecOps::RVec<RecoParticlePair> AnalysisFCChh::getOSPairs(
   // FOR DEBUG?
   //  if (OS_pairs.size() > 1){
   //  	std::cout << "Number of possible OS pairs: " << OS_pairs.size() <<
-  //  std::endl; 	std::cout << "Build from: " << leptons_pos.size() << " pos, "
+  //  std::endl; 	std::cout << "Build from: " << leptons_pos.size() << "
+  //  pos, "
   //  << leptons_neg.size() << " neg." << std::endl;
   //  }
 
@@ -1570,8 +1572,8 @@ ROOT::VecOps::RVec<float> AnalysisFCChh::get_mT_pseudo(
 
 // 	//if one of the input particles is empty, just fill a default value of
 // -999 as mT 	if (particle_1.size() < 1 || particle_2.size() < 1||
-// MET_obj.size() < 1 ){ 		m_strans_vector.push_back(-999.); 		return
-// m_strans_vector;
+// MET_obj.size() < 1 ){ 		m_strans_vector.push_back(-999.);
+// return m_strans_vector;
 // 	}
 
 // 	TLorentzVector tlv_vis1 = getTLV_reco(particle_1.at(0));
@@ -1618,8 +1620,8 @@ ROOT::VecOps::RVec<float> AnalysisFCChh::get_mT_pseudo(
 
 // 	//if one of the input particles is empty, just fill a default value of
 // -999 as mT 	if (particle_1.size() < 1 || particle_2.size() < 1||
-// MET_obj.size() < 1 ){ 		m_strans_vector.push_back(-999.); 		return
-// m_strans_vector;
+// MET_obj.size() < 1 ){ 		m_strans_vector.push_back(-999.);
+// return m_strans_vector;
 // 	}
 
 // 	TLorentzVector tlv_vis1 = getTLV_reco(particle_1.at(0));
@@ -2496,7 +2498,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTau(
           !isFromHiggsDirect(
               truth_part, parent_ids,
               truth_particles)) { //&& isFromHadron(truth_part, parent_ids,
-                                  //truth_particles) ) {
+                                  // truth_particles) ) {
         continue;
       }
       // select both from higgs or from hadrons
@@ -2541,7 +2543,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauLeps(
           !isFromHiggsDirect(
               truth_part, parent_ids,
               truth_particles)) { //&& isFromHadron(truth_part, parent_ids,
-                                  //truth_particles) ) {
+                                  // truth_particles) ) {
         continue;
       }
       // select both from higgs or from hadrons
@@ -2618,7 +2620,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauHads(
           !isFromHiggsDirect(
               truth_part, parent_ids,
               truth_particles)) { //&& isFromHadron(truth_part, parent_ids,
-                                  //truth_particles) ) {
+                                  // truth_particles) ) {
         continue;
       }
       // select both from higgs or from hadrons
@@ -3336,7 +3338,7 @@ AnalysisFCChh::find_reco_matches_exclusive(
     }
     // if (reco_match_vector.size() > 1){
     //	std::cout << "Warning in AnalysisFCChh::find_reco_matches() - Truth
-    //particle matched to more than one reco particle." << std::endl;
+    // particle matched to more than one reco particle." << std::endl;
     // }
 
     // check that the reco particle is not already in the out_vector
