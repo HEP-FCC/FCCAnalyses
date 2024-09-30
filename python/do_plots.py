@@ -178,12 +178,15 @@ def load_hists(var: str,
 
 
 # _____________________________________________________________________________
-def mapHistosFromHistmaker(hName, param, plotCfg):
-    rebin = plotCfg['rebin'] if 'rebin' in plotCfg else 1
-    LOGGER.info('Get histograms for %s', hName)
+def mapHistosFromHistmaker(config: dict[str, any],
+                           hist_name: str,
+                           param,
+                           hist_cfg):
+    rebin = hist_cfg['rebin'] if 'rebin' in hist_cfg else 1
+    LOGGER.info('Get histograms for %s', hist_name)
     signal = param.procs['signal']
     backgrounds = param.procs['backgrounds']
-    scaleSig = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
+    scaleSig = hist_cfg['scaleSig'] if 'scaleSig' in hist_cfg else 1
 
     hsignal = {}
     for s in signal:
@@ -195,7 +198,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
                 continue
 
             with ROOT.TFile(fin) as tf:
-                h = tf.Get(hName)
+                h = tf.Get(hist_name)
                 hh = copy.deepcopy(h)
                 hh.SetDirectory(0)
             LOGGER.info('ScaleSig: %g', scaleSig)
@@ -217,7 +220,7 @@ def mapHistosFromHistmaker(hName, param, plotCfg):
                 continue
 
             with ROOT.TFile(fin) as tf:
-                h = tf.Get(hName)
+                h = tf.Get(hist_name)
                 hh = copy.deepcopy(h)
                 hh.SetDirectory(0)
             hh.Scale(param.intLumi)
@@ -400,10 +403,17 @@ def runPlots(config: dict[str, any],
 
 
 # _____________________________________________________________________________
-def runPlotsHistmaker(args, hName, param, plotCfg):
+def runPlotsHistmaker(config: dict[str, any],
+                      args,
+                      hist_name: str,
+                      param,
+                      hist_cfg):
 
-    output = plotCfg['output']
-    hsignal, hbackgrounds = mapHistosFromHistmaker(hName, param, plotCfg)
+    output = hist_cfg['output']
+    hsignal, hbackgrounds = mapHistosFromHistmaker(config,
+                                                   hist_name,
+                                                   param,
+                                                   hist_cfg)
 
     if hasattr(param, "splitLeg"):
         splitLeg = param.splitLeg
@@ -425,13 +435,11 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         leg2.SetFillStyle(0)
         leg2.SetLineColor(0)
         leg2.SetShadowColor(10)
-        leg2.SetTextSize(args.legend_text_size
-                         if args.legend_text_size is not None
-                         else 0.035)
+        leg2.SetTextSize(config['legend_text_size'])
         leg2.SetTextFont(42)
     else:
         legsize = 0.04*(len(hbackgrounds)+len(hsignal))
-        legCoord = [0.68, 0.86-legsize, 0.96, 0.88]
+        legCoord = [0.68, 0.86 - legsize, 0.96, 0.88]
         try:
             legCoord = param.legendCoord
         except AttributeError:
@@ -440,17 +448,19 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         leg2 = None
 
     leg = ROOT.TLegend(
-        args.legend_x_min if args.legend_x_min is not None else legCoord[0],
-        args.legend_y_min if args.legend_y_min is not None else legCoord[1],
-        args.legend_x_max if args.legend_x_max is not None else legCoord[2],
-        args.legend_y_max if args.legend_y_max is not None else legCoord[3])
+        config['leg_position'][0] if config['leg_position'][0] is not None \
+                                  else legCoord[0],
+        config['leg_position'][1] if config['leg_position'][1] is not None \
+                                  else legCoord[1],
+        config['leg_position'][2] if config['leg_position'][2] is not None \
+                                  else legCoord[2],
+        config['leg_position'][3] if config['leg_position'][3] is not None \
+                                  else legCoord[3])
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
     leg.SetShadowColor(10)
-    leg.SetTextSize(args.legend_text_size
-                    if args.legend_text_size is not None
-                    else 0.035)
+    leg.SetTextSize(config['legend_text_size'])
     leg.SetTextFont(42)
 
     for b in hbackgrounds:
@@ -485,18 +495,15 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
         histos.append(hbackgrounds[b][0])
         colors.append(param.colors[b])
 
-    config: dict[str, any] = {}
-
-    xtitle = plotCfg['xtitle'] if 'xtitle' in plotCfg else ""
-    ytitle = plotCfg['ytitle'] if 'ytitle' in plotCfg else "Events"
-    xmin = plotCfg['xmin'] if 'xmin' in plotCfg else -1
-    xmax = plotCfg['xmax'] if 'xmax' in plotCfg else -1
-    ymin = plotCfg['ymin'] if 'ymin' in plotCfg else -1
-    ymax = plotCfg['ymax'] if 'ymax' in plotCfg else -1
-    stack = plotCfg['stack'] if 'stack' in plotCfg else False
-    logy = plotCfg['logy'] if 'logy' in plotCfg else False
-    extralab = plotCfg['extralab'] if 'extralab' in plotCfg else ""
-    config['scale_sig'] = plotCfg['scaleSig'] if 'scaleSig' in plotCfg else 1
+    xtitle = hist_cfg['xtitle'] if 'xtitle' in hist_cfg else ""
+    ytitle = hist_cfg['ytitle'] if 'ytitle' in hist_cfg else "Events"
+    xmin = hist_cfg['xmin'] if 'xmin' in hist_cfg else -1
+    xmax = hist_cfg['xmax'] if 'xmax' in hist_cfg else -1
+    ymin = hist_cfg['ymin'] if 'ymin' in hist_cfg else -1
+    ymax = hist_cfg['ymax'] if 'ymax' in hist_cfg else -1
+    stack = hist_cfg['stack'] if 'stack' in hist_cfg else False
+    logy = hist_cfg['logy'] if 'logy' in hist_cfg else False
+    extralab = hist_cfg['extralab'] if 'extralab' in hist_cfg else ""
 
     intLumiab = param.intLumi/1e+06
     intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
@@ -514,7 +521,7 @@ def runPlotsHistmaker(args, hName, param, plotCfg):
     try:
         customLabel = param.customLabel
     except AttributeError:
-        LOGGER.debug('No customLable, using nothing...')
+        LOGGER.debug('No customLabel, using nothing...')
 
     if stack:
         if logy:
@@ -926,12 +933,19 @@ def run(args):
         LOGGER.debug('No scale factor for background provided, using 1.0.')
     LOGGER.info('Scale factor for background: %g', config['scale_sig'])
 
-    # Plots list
+    # Check if we have plots (staged analysis) or histos (histmaker)
     config['plots']: dict[str, any] = {}
+    config['hists']: dict[str, any] = {}
+    config['ana_type']: str = "none"
     if hasattr(script_module, 'plots'):
         config['plots'] = script_module.plots
-    else:
-        LOGGER.debug('List of plots not provided!\nAborting...')
+        config['ana_type']: str = "staged"
+    if hasattr(script_module, 'hists'):
+        config['hists'] = script_module.hists
+        config['ana_type']: str = "histmaker"
+
+    if config['ana_type'] == "none":
+        LOGGER.error('No plot definitions found!\nAborting...')
         sys.exit(3)
 
     # Splitting legend into two columns
@@ -976,14 +990,15 @@ def run(args):
             config['int_lumi_label'] = \
                 f'L = {config["int_lumi"]:.2g} pb^{{-1}}'
 
-    # Handle plots for Histmaker analyses and exit
-    if hasattr(script_module, 'hists'):
-        for hist_name, plot_cfg in script_module.hists.items():
-            runPlotsHistmaker(args, hist_name, script_module, plot_cfg)
+    # Handle plots for the Histmaker analyses and exit
+    if config['ana_type'] == 'histmaker':
+        LOGGER.info('Plotting histograms from histmaker step...')
+        for hist_name, hist_cfg in script_module.hists.items():
+            runPlotsHistmaker(config, args, hist_name, script_module, hist_cfg)
         sys.exit()
 
     counter = 0
-    LOGGER.info('Plotting:')
+    LOGGER.info('Plotting staged analysis plots...')
     for var_index, var in enumerate(script_module.variables):
         for label, sels in script_module.selections.items():
             for sel in sels:
