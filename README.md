@@ -12,19 +12,21 @@ files and producing the plots.
 
 ## Quick start
 
-Running analysis script can be done using `fccanalysis` command which is shipped in Key4hep stack:
+In order to run over pre-generated samples from `winter2023` or `spring2021`
+campaigns one needs to compile `pre-edm4hep1` branch of the FCCAnalyses in the
+`2024-03-10` release (hard coded into the `setup.sh` script)
 
-```shell
-source /cvmfs/sw.hsf.org/key4hep/setup.sh
-fccanalysis run analysis_script.py
+```sh
+git clone --branch pre-edm4hep1 git@github.com:HEP-FCC/FCCAnalyses.git
+cd FCCAnalyses
+source ./setup.sh
+fccanalysis build -j 8
 ```
 
-To have access to the FCC pre-generated samples, one needs to be subscribed to one of the following e-groups (with owner approval)
-`fcc-eos-read-xx` with `xx = ee,hh,eh`.
+To have access to the FCC pre-generated samples, one needs to be subscribed
+the `fcc-eos-access` e-group (with owner approval).
 
 Detailed documentation can be found at the [FCCAnalyses](https://hep-fcc.github.io/FCCAnalyses/) webpage.
-
-## Pre-generated Samples
 
 All sample information, including Key4hep stack used for the campaign, is collected at the [FCC Physics Events](http://fcc-physics-events.web.cern.ch/fcc-physics-events/) website.
 
