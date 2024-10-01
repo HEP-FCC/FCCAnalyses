@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727792020806,
+  "lastUpdate": 1727792022218,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -43549,6 +43549,65 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eef66b3426237a80ea54902a5afa429c2afd5a72",
+          "message": "podio::DataSource (#309)\n\n* Integrating EDM4hep RDataSource\r\n\r\n* Add legacy reader\r\n\r\n* Split off legacy reader\r\n\r\n* Protecting collection retrieval by mutex\r\n\r\n* Add source test\r\n\r\n* Updated man pages\r\n\r\n* Renaming Source na DataSource\r\n\r\n* Adding source test for run stages\r\n\r\n* Add tests for the standalone mode\r\n\r\n* Adding test files per process for histmaker\r\n\r\n* Adding selector by size and sorter by pT\r\n\r\n* Few more analyzers\r\n\r\n* Putting back things omitted from run_analysis.py\r\n\r\n* Adding e4hsource in LD_LIBRARY_PATH for managed tests\r\n\r\n* Making building of the source optional\r\n\r\n* Removed legacy support\r\n\r\n* Separated analyzers using Collections into independent headers\r\n\r\n* Reimplementing analyzers needed for the stage1 of the example analysis\r\n\r\n* Adjusitng test input files\r\n\r\n* Moving recoParticle definition\r\n\r\n* Changes to use podio::ROOTDataSource\r\n\r\n* using podio::DataSource\r\n\r\n* Adjusting stages source example\r\n\r\n* Adding C++ analysis tests\r\n\r\n* Updating examples\r\n\r\n* Formatting\r\n\r\n* Removing e4hsource\r\n\r\n* Adjust clang-format check\r\n\r\n* Formatting\r\n\r\n* Using PodioSource namespace\r\n\r\n* Adding .cache to .gitignore\r\n\r\n* Formatting",
+          "timestamp": "2024-10-01T16:05:44+02:00",
+          "tree_id": "a6c78db59efdf6e9ec77cc5a60fae830c0ea0f00",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/eef66b3426237a80ea54902a5afa429c2afd5a72"
+        },
+        "date": 1727792021876,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.42704721396891,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 11.52954625177676,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 8.159544931934892,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 9.71000916179687,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.0097065760974733,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/stages_source.py",
+            "value": 7.475006700998591,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 7.116564750276566,
+            "unit": "Evt/s"
           }
         ]
       }
