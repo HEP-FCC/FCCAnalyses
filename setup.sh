@@ -26,6 +26,7 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
   export PYTHONPATH=${LOCAL_DIR}/install/share/examples:${PYTHONPATH}
   export PATH=${LOCAL_DIR}/bin:${PATH}
   export PATH=${LOCAL_DIR}/install/bin:${PATH}
+  export LD_LIBRARY_PATH=${LOCAL_DIR}/install/lib64:${LD_LIBRARY_PATH}
   export LD_LIBRARY_PATH=${LOCAL_DIR}/install/lib:${LD_LIBRARY_PATH}
   export CMAKE_PREFIX_PATH=${LOCAL_DIR}/install:${CMAKE_PREFIX_PATH}
 

@@ -31,6 +31,9 @@ option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, o
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
 
+set(WITH_PODIO_DATASOURCE ON CACHE STRING "Enable PODIO DataSource")
+set_property(CACHE WITH_PODIO_DATASOURCE PROPERTY STRINGS ON OFF)
+
 #--- Export compile commands --------------------------------------------------
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

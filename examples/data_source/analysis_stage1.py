@@ -30,8 +30,8 @@ class Analysis():
             # named <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
             # Number of input files needs to be larger that number of chunks
             'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
-            # Run over 20% of the statistics and save output into one file named
-            # <outputDir>/p8_ee_ZH_ecm240_out_f02.root
+            # Run over 20% of the statistics and save output into one file
+            # named <outputDir>/p8_ee_ZH_ecm240_out_f02.root
             'p8_ee_ZH_ecm240': {'fraction': 0.2,
                                 'output': 'p8_ee_ZH_ecm240_out_f02'}
         }
@@ -61,6 +61,9 @@ class Analysis():
         self.test_file = 'https://fccsw.web.cern.ch/fccsw/testsamples/' \
                          'edm4hep1/p8_ee_WW_ecm240_edm4hep.root'
 
+        # Optional: read the input files with podio::DataSource
+        self.use_data_source = True
+
     # Mandatory: analyzers function to define the analysis graph, please make
     # sure you return the dataframe, in this example it is dframe2
     def analyzers(self, dframe):
@@ -72,46 +75,40 @@ class Analysis():
 
         dframe2 = (
             dframe
-            # define an alias for muon index collection
-            .Alias('Muon0', 'Muon_objIdx.index')
-            # define the muon collection
-            .Define(
-                'muons',
-                'ReconstructedParticle::get(Muon0, ReconstructedParticles)')
             # select muons on pT
             .Define('selected_muons',
-                    f'ReconstructedParticle::sel_pt({muon_pt})(muons)')
+                    f'ReconstructedParticle::selPt({muon_pt})(Muon)')
             # create column with muon transverse momentum
             .Define('selected_muons_pt',
-                    'ReconstructedParticle::get_pt(selected_muons)')
+                    'ReconstructedParticle::getPt(selected_muons)')
             # create column with muon rapidity
             .Define('selected_muons_y',
-                    'ReconstructedParticle::get_y(selected_muons)')
+                    'ReconstructedParticle::getY(selected_muons)')
             # create column with muon total momentum
             .Define('selected_muons_p',
-                    'ReconstructedParticle::get_p(selected_muons)')
+                    'ReconstructedParticle::getP(selected_muons)')
             # create column with muon energy
             .Define('selected_muons_e',
-                    'ReconstructedParticle::get_e(selected_muons)')
+                    'ReconstructedParticle::getE(selected_muons)')
             # find zed candidates from  di-muon resonances
             .Define(
                 'zed_leptonic',
                 'ReconstructedParticle::resonanceBuilder(91)(selected_muons)')
             # create column with zed mass
             .Define('zed_leptonic_m',
-                    'ReconstructedParticle::get_mass(zed_leptonic)')
+                    'ReconstructedParticle::getMass(zed_leptonic)')
             # create column with zed transverse momenta
             .Define('zed_leptonic_pt',
-                    'ReconstructedParticle::get_pt(zed_leptonic)')
+                    'ReconstructedParticle::getPt(zed_leptonic)')
             # calculate recoil of zed_leptonic
             .Define('zed_leptonic_recoil',
                     'ReconstructedParticle::recoilBuilder(240)(zed_leptonic)')
             # create column with recoil mass
             .Define('zed_leptonic_recoil_m',
-                    'ReconstructedParticle::get_mass(zed_leptonic_recoil)')
+                    'ReconstructedParticle::getMass(zed_leptonic_recoil)')
             # create column with leptonic charge
             .Define('zed_leptonic_charge',
-                    'ReconstructedParticle::get_charge(zed_leptonic)')
+                    'ReconstructedParticle::getCharge(zed_leptonic)')
             # Filter on at least one candidate
             .Filter('zed_leptonic_recoil_m.size() > 0')
         )

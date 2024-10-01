@@ -253,13 +253,33 @@ def submit_job(cmd: str, max_trials: int) -> bool:
 
 
 # _____________________________________________________________________________
-def initialize(args, analysis):
+def merge_config(args: object, analysis: object) -> dict[str, any]:
+    '''
+    Merge configuration from command line arguments and analysis class.
+    '''
+    config: dict[str, any] = {}
+
+    # Check whether to use PODIO DataSource to load the events
+    config['use_data_source'] = False
+    if args.use_data_source:
+        config['use_data_source'] = True
+    if get_attribute(analysis, 'use_data_source', False):
+        config['use_data_source'] = True
+
+    return config
+
+
+# _____________________________________________________________________________
+def initialize(config, args, analysis):
     '''
     Common initialization steps.
     '''
 
-    # for convenience and compatibility with user code
-    ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
+    # For convenience and compatibility with user code
+    if config['use_data_source']:
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::PodioSource;")
+    else:
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 
     # Load geometry, needed for the CaloNtupleizer analyzers
     geometry_file = get_attribute(analysis, 'geometry_path', None)
@@ -293,7 +313,7 @@ def initialize(args, analysis):
     # custom header files
     include_paths = get_attribute(analysis, 'include_paths', None)
     if include_paths is not None:
-        ROOT.gInterpreter.ProcessLine(".O3")
+        ROOT.gInterpreter.ProcessLine(".O2")
         basepath = os.path.dirname(os.path.abspath(args.anascript_path)) + "/"
         for path in include_paths:
             LOGGER.info('Loading %s...', path)
@@ -301,7 +321,8 @@ def initialize(args, analysis):
 
 
 # _____________________________________________________________________________
-def run_rdf(args,
+def run_rdf(config: dict[str, any],
+            args,
             analysis,
             input_list: list[str],
             out_file: str) -> int:
@@ -309,7 +330,22 @@ def run_rdf(args,
     Run the analysis ROOTDataFrame and snapshot it.
     '''
     # Create initial dataframe
-    dframe = ROOT.RDataFrame("events", input_list)
+    if config['use_data_source']:
+        if ROOT.podio.DataSource:
+            LOGGER.debug('Found podio::DataSource.')
+        else:
+            LOGGER.error('podio::DataSource library not found!\nAborting...')
+            sys.exit(3)
+        LOGGER.info('Loading events through podio::DataSource...')
+
+        try:
+            dframe = ROOT.podio.CreateDataFrame(input_list)
+        except TypeError as excp:
+            LOGGER.error('Unable to build dataframe using '
+                         'podio::DataSource!\n%s', excp)
+            sys.exit(3)
+    else:
+        dframe = ROOT.RDataFrame("events", input_list)
 
     # Limit number of events processed
     if args.nevents > 0:
@@ -455,7 +491,10 @@ def apply_filepath_rewrites(filepath: str) -> str:
 
 
 # _____________________________________________________________________________
-def run_local(args, analysis, infile_list):
+def run_local(config: dict[str, any],
+              args: object,
+              analysis: object,
+              infile_list):
     '''
     Run analysis locally.
     '''
@@ -469,7 +508,8 @@ def run_local(args, analysis, infile_list):
     nevents_local = 0
     for filepath in infile_list:
 
-        filepath = apply_filepath_rewrites(filepath)
+        if not config['use_data_source']:
+            filepath = apply_filepath_rewrites(filepath)
 
         file_list.push_back(filepath)
         info_msg += f'- {filepath}\t\n'
@@ -512,7 +552,7 @@ def run_local(args, analysis, infile_list):
 
     # Run RDF
     start_time = time.time()
-    inn, outn = run_rdf(args, analysis, file_list, outfile_path)
+    inn, outn = run_rdf(config, args, analysis, file_list, outfile_path)
     elapsed_time = time.time() - start_time
 
     # replace nevents_local by inn = the amount of processed events
@@ -577,8 +617,11 @@ def run_fccanalysis(args, analysis_module):
     analysis_args = vars(args)
     analysis = analysis_module.Analysis(analysis_args)
 
+    # Merge configuration from command line arguments and analysis class
+    config: dict[str, any] = merge_config(args, analysis)
+
     # Set number of threads, load header files, custom dicts, ...
-    initialize(args, analysis_module)
+    initialize(config, args, analysis_module)
 
     # Check if output directory exist and if not create it
     output_dir = get_attribute(analysis, 'output_dir', None)
@@ -598,7 +641,7 @@ def run_fccanalysis(args, analysis_module):
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(args, analysis, [testfile_path])
+        run_local(config, args, analysis, [testfile_path])
         sys.exit(0)
 
     # Check if files are specified, and if so run the analysis on it/them (this
@@ -608,7 +651,7 @@ def run_fccanalysis(args, analysis_module):
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(args, analysis, args.files_list)
+        run_local(config, args, analysis, args.files_list)
         sys.exit(0)
 
     # Check if batch mode is available
@@ -693,11 +736,11 @@ def run_fccanalysis(args, analysis_module):
             LOGGER.info('Running locally...')
             if len(chunk_list) == 1:
                 args.output = f'{output_stem}.root'
-                run_local(args, analysis, chunk_list[0])
+                run_local(config, args, analysis, chunk_list[0])
             else:
                 for index, chunk in enumerate(chunk_list):
                     args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(args, analysis, chunk)
+                    run_local(config, args, analysis, chunk)
 
     if len(process_list) == 0:
         LOGGER.warning('No files processed (process_list not found)!\n'

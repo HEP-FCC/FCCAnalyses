@@ -2,11 +2,15 @@
 #ifndef  RECONSTRUCTEDPARTICLE_ANALYZERS_H
 #define  RECONSTRUCTEDPARTICLE_ANALYZERS_H
 
+// STL
 #include <cmath>
 #include <vector>
 
+// ROOT
 #include "TLorentzVector.h"
 #include "ROOT/RVec.hxx"
+
+// EDM4hep
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/ParticleIDData.h"
 
@@ -97,9 +101,6 @@ namespace ReconstructedParticle{
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<bool> tags, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
-
-
-
   /// return reconstructed particles
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
@@ -151,7 +152,7 @@ namespace ReconstructedParticle{
   /// return the TlorentzVector of the one input ReconstructedParticle
   TLorentzVector get_tlv(edm4hep::ReconstructedParticleData in);
 
-	/// return visible 4-momentum vector
+  /// return visible 4-momentum vector
   TLorentzVector get_P4vis(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// concatenate both input vectors and return the resulting vector
@@ -168,7 +169,6 @@ namespace ReconstructedParticle{
 
   /// get number of b-jets
   int getJet_ntags(ROOT::VecOps::RVec<bool> in);
-
 }//end NS ReconstructedParticle
 
 }//end NS FCCAnalyses

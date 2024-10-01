@@ -1,18 +1,12 @@
 #ifndef DEFINES_ANALYZERS_H
 #define DEFINES_ANALYZERS_H
 
-// std
-#include <cmath>
-#include <math.h>
-#include <vector>
-
 // ROOT
 #include "ROOT/RVec.hxx"
 #include "TLorentzVector.h"
 
 // EDM4hep
 #include "edm4hep/MCParticleData.h"
-#include "edm4hep/ParticleIDData.h"
 #include "edm4hep/ReconstructedParticleData.h"
 
 /**
