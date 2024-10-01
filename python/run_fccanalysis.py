@@ -713,7 +713,7 @@ def run_fccanalysis(args, analysis_module):
         LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
         # Create directory if more than 1 chunk
-        if chunks > 1:
+        if len(chunk_list) > 1:
             output_directory = os.path.join(output_dir if output_dir else '',
                                             output_stem)
 
