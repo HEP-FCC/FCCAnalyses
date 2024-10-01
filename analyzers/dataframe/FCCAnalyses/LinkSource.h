@@ -42,8 +42,8 @@ struct selAbsPDG {
 
   explicit selAbsPDG(const int pdg) : m_pdg(pdg) {
     if (m_pdg < 0) {
-      throw std::invalid_argument(
-          "FCCAnalyses::PodioSource::Link::sel_absPDG: Received negative value!");
+      throw std::invalid_argument("FCCAnalyses::PodioSource::Link::sel_absPDG: "
+                                  "Received negative value!");
     }
   };
 

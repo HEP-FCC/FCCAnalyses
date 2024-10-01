@@ -235,7 +235,7 @@ struct recoilBuilder {
   operator()(const edm4hep::ReconstructedParticleCollection &inColl);
 };
 
-} // namespace FCCAnalyses ::PodioSource ::ReconstructedParticle
+} // namespace FCCAnalyses::PodioSource::ReconstructedParticle
 
 // namespace recoParticle = FCCAnalyses::PodioSource::ReconstructedParticle;
 
