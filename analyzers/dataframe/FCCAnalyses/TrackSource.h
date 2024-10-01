@@ -11,7 +11,7 @@
 #include "edm4hep/TrackCollection.h"
 #include "edm4hep/TrackMCParticleLinkCollection.h"
 
-namespace FCCAnalyses ::Source ::Track {
+namespace FCCAnalyses ::PodioSource ::Track {
 /**
  * \brief Analyzer to select tracks associated with a MC particle of a
  *        specified PDG ID.
@@ -40,6 +40,6 @@ getNstates(const edm4hep::TrackCollection &inColl);
  *
  */
 ROOT::VecOps::RVec<float> getD0(const edm4hep::TrackCollection &inColl);
-} // namespace FCCAnalyses::Source::Track
+} // namespace FCCAnalyses::PodioSource::Track
 
 #endif /* ANALYZERS_SOURCE_TRACK_H */

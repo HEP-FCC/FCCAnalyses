@@ -8,7 +8,7 @@
 #include "edm4hep/RecoMCParticleLinkCollection.h"
 #include "edm4hep/ReconstructedParticleCollection.h"
 
-namespace FCCAnalyses ::Source ::ReconstructedParticle {
+namespace FCCAnalyses ::PodioSource ::ReconstructedParticle {
 // --------------------  Selectors  -----------------------------------------
 
 /**
@@ -235,8 +235,8 @@ struct recoilBuilder {
   operator()(const edm4hep::ReconstructedParticleCollection &inColl);
 };
 
-} // namespace FCCAnalyses::Source::ReconstructedParticle
+} // namespace FCCAnalyses ::PodioSource ::ReconstructedParticle
 
-// namespace recoParticle = FCCAnalyses::Source::ReconstructedParticle;
+// namespace recoParticle = FCCAnalyses::PodioSource::ReconstructedParticle;
 
 #endif /* ANALYZERS_SOURCE_RECONSTRUCTED_PARTICLE_H */

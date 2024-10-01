@@ -16,7 +16,7 @@ def main():
     ROOT.gSystem.Load('libFCCAnalyses')
     if ROOT.dummyLoader:
         print('----> DEBUG: Found FCCAnalyses library.')
-        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::Source;")
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::PodioSource;")
     print('----> INFO: Loading analyzers from libFCCAnalyses... ',)
 
     if ROOT.podio.DataSource:

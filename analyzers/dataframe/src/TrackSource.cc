@@ -1,6 +1,6 @@
 #include "FCCAnalyses/TrackSource.h"
 
-namespace FCCAnalyses ::Source ::Track {
+namespace FCCAnalyses ::PodioSource ::Track {
 selPDG::selPDG(const int pdg, const bool chargeConjugateAllowed)
     : m_pdg(pdg), m_chargeConjugateAllowed(chargeConjugateAllowed){};
 
@@ -46,4 +46,4 @@ ROOT::VecOps::RVec<float> getD0(const edm4hep::TrackCollection &inColl) {
 
   return result;
 }
-} // namespace FCCAnalyses::Source::Track
+} // namespace FCCAnalyses::PodioSource::Track

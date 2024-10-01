@@ -4,17 +4,17 @@
 // EDM4hep
 #include "edm4hep/RecoMCParticleLinkCollection.h"
 
-namespace FCCAnalyses ::Source ::Link {
+namespace FCCAnalyses ::PodioSource ::Link {
 /**
  * \brief Analyzer to select links where the MC particle has a specified PDG
  *        ID.
  *
  * \param[in] pdg  Desired PDG ID of the MC particle.
  */
-struct sel_PDG {
+struct selPDG {
   const int m_pdg;
 
-  explicit sel_PDG(const int pdg) : m_pdg(pdg){};
+  explicit selPDG(const int pdg) : m_pdg(pdg){};
 
   template <typename T> T operator()(const T &inLinkColl) {
     T result;
@@ -37,13 +37,13 @@ struct sel_PDG {
  *
  * \param pdg[in]  Desired absolute value of PDG ID of the MC particle.
  */
-struct sel_absPDG {
+struct selAbsPDG {
   const int m_pdg;
 
-  explicit sel_absPDG(const int pdg) : m_pdg(pdg) {
+  explicit selAbsPDG(const int pdg) : m_pdg(pdg) {
     if (m_pdg < 0) {
       throw std::invalid_argument(
-          "FCCAnalyses::Source::Link::sel_absPDG: Received negative value!");
+          "FCCAnalyses::PodioSource::Link::sel_absPDG: Received negative value!");
     }
   };
 
@@ -68,10 +68,10 @@ struct sel_absPDG {
  *
  * \param status[in]  Desired generator status of the particle.
  */
-struct sel_genStatus {
+struct selGenStatus {
   const int m_status;
 
-  explicit sel_genStatus(const int status) : m_status(status){};
+  explicit selGenStatus(const int status) : m_status(status){};
 
   template <typename T> T operator()(const T &inLinkColl) {
     T result;
@@ -87,6 +87,6 @@ struct sel_genStatus {
     return result;
   }
 };
-} // namespace FCCAnalyses::Source::Link
+} // namespace FCCAnalyses::PodioSource::Link
 
 #endif /* SOURCE_LINK_ANALYZERS_H */

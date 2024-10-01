@@ -256,7 +256,7 @@ def initialize(args, rdf_module, anapath: str):
 
     # for convenience and compatibility with user code
     if args.use_data_source:
-        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::Source;")
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::PodioSource;")
     else:
         ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 

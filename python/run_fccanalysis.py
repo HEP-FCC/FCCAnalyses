@@ -277,8 +277,7 @@ def initialize(config, args, analysis):
 
     # For convenience and compatibility with user code
     if config['use_data_source']:
-        # ROOT.gInterpreter.Declare("using namespace FCCAnalyses::Source;")
-        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::Source;")
+        ROOT.gInterpreter.Declare("using namespace FCCAnalyses::PodioSource;")
     else:
         ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
 

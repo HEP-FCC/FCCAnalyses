@@ -15,7 +15,7 @@
 // EDM4hep
 #include <edm4hep/utils/kinematics.h>
 
-namespace FCCAnalyses ::Source ::ReconstructedParticle {
+namespace FCCAnalyses ::PodioSource ::ReconstructedParticle {
 selPDG::selPDG(const int pdg) : m_pdg(pdg){};
 
 edm4hep::ReconstructedParticleCollection
@@ -297,4 +297,4 @@ edm4hep::ReconstructedParticleCollection recoilBuilder::operator()(
   return result;
 };
 
-} // namespace FCCAnalyses::Source::ReconstructedParticle
+} // namespace FCCAnalyses::PodioSource::ReconstructedParticle
