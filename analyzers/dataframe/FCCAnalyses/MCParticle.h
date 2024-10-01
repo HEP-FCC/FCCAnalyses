@@ -258,6 +258,13 @@ namespace MCParticle{
                         const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
                         const ROOT::VecOps::RVec<int> &ind);
 
+  struct sel_genlepsfromW {
+    sel_genlepsfromW();
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> operator()(
+        const ROOT::VecOps::RVec<edm4hep::MCParticleData>& leptons,
+        const ROOT::VecOps::RVec<int>& mother_pdgIds);
+};
+
   ROOT::VecOps::RVec<int> get_leptons_origin(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &particles,
                                              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
                                              const ROOT::VecOps::RVec<int> &ind);

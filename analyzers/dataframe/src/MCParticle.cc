@@ -53,6 +53,23 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_genleps::operator() (ROOT::VecO
   return result;
 }  
 
+sel_genlepsfromW::sel_genlepsfromW() {}
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_genlepsfromW::operator()(
+    const ROOT::VecOps::RVec<edm4hep::MCParticleData>& leptons,
+    const ROOT::VecOps::RVec<int>& mother_pdgIds)
+{
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+    result.reserve(leptons.size());
+    for (size_t i = 0; i < leptons.size(); ++i) {
+        int mother_pdg = mother_pdgIds[i];
+        if (std::abs(mother_pdg) == 24) {
+            result.emplace_back(leptons[i]);
+        }
+    }
+    return result;
+}
+
 
 sel_lightQuarks::sel_lightQuarks(bool arg_chargeconjugate) : m_chargeconjugate( arg_chargeconjugate )  {};
 ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_lightQuarks::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
