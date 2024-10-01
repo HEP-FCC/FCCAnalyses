@@ -14,7 +14,7 @@ import numpy as np
 
 import ROOT  # type: ignore
 from anascript import get_element, get_element_dict, get_attribute
-from process import get_process_info
+from process import get_process_info, get_entries_sow
 from frame import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run')
@@ -455,7 +455,7 @@ def apply_filepath_rewrites(filepath: str) -> str:
 
 
 # _____________________________________________________________________________
-def run_local(args, analysis, infile_list):
+def run_local(args, analysis, infile_list, do_weighted = False):
     '''
     Run analysis locally.
     '''
@@ -467,38 +467,65 @@ def run_local(args, analysis, infile_list):
     nevents_orig = 0
     # The amount of events in the input file(s)
     nevents_local = 0
+
+    # Same for the sum of weights
+    if do_weighted:
+        sow_orig = 0.
+        sow_local = 0.
+
     for filepath in infile_list:
 
         filepath = apply_filepath_rewrites(filepath)
 
         file_list.push_back(filepath)
         info_msg += f'- {filepath}\t\n'
-        infile = ROOT.TFile.Open(filepath, 'READ')
-        try:
-            nevents_orig += infile.Get('eventsProcessed').GetVal()
-        except AttributeError:
-            pass
 
-        try:
-            nevents_local += infile.Get("events").GetEntries()
-        except AttributeError:
-            LOGGER.error('Input file:\n%s\nis missing events TTree!\n'
-                         'Aborting...', filepath)
+        if do_weighted:
+
+            if args.nevents > 0:
+                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath, args.nevents)
+            else:
+                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath)
+
+            nevents_orig += nevts_param
+            nevents_local += nevts_tree
+            sow_orig += sow_param
+            sow_local += sow_tree
+
+        else:
+            infile = ROOT.TFile.Open(filepath, 'READ')
+            try:
+                nevents_orig += infile.Get('eventsProcessed').GetVal()
+            except AttributeError:
+                pass
+
+            try:
+                nevents_local += infile.Get("events").GetEntries()
+            except AttributeError:
+                LOGGER.error('Input file:\n%s\nis missing events TTree!\n'
+                             'Aborting...', filepath)
+                infile.Close()
+                sys.exit(3)
             infile.Close()
-            sys.exit(3)
-        infile.Close()
+
+            if args.nevents > 0 and args.nevents < nevents_local:
+                nevents_local = args.nevents
+
 
     LOGGER.info(info_msg)
 
-    # Adjust number of events in case --nevents was specified
-    if args.nevents > 0 and args.nevents < nevents_local:
-        nevents_local = args.nevents
-
+   
     if nevents_orig > 0:
         LOGGER.info('Number of events:\n\t- original: %s\n\t- local:    %s',
                     f'{nevents_orig:,}', f'{nevents_local:,}')
+        if do_weighted:
+            LOGGER.info('Sum of weights:\n\t- original: %s\n\t- local:    %s',
+                        f'{sow_orig:,}', f'{sow_local:,}')
     else:
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
+        if do_weighted:
+            LOGGER.info('Local sum of weights: %s', f'{sow_local:,}')
+
 
     output_dir = get_attribute(analysis, 'output_dir', '')
     if not args.batch:
@@ -529,7 +556,7 @@ def run_local(args, analysis, infile_list):
     if nevents_orig > 0:
         info_msg += f'\nReduction factor total:  {outn/nevents_orig}'
     info_msg += '\n'
-    info_msg += 80 * '='
+    info_msg += 80 * '=' 
     info_msg += '\n'
     LOGGER.info(info_msg)
 
@@ -540,8 +567,15 @@ def run_local(args, analysis, infile_list):
                 'eventsProcessed',
                 nevents_orig if nevents_orig != 0 else inn)
         param.Write()
-        param = ROOT.TParameter(int)('eventsSelected', outn)
+        param = ROOT.TParameter(int)('eventsSelected', outn) # Should no of weighted, selected events be added as well? 
         param.Write()
+
+        if do_weighted:
+            param_sow = ROOT.TParameter(float)( 
+                        'SumOfWeights', 
+                        sow_orig if sow_orig != 0 else sow_local )
+            param_sow.Write()
+
         outfile.Write()
 
     if args.bench:
@@ -590,6 +624,12 @@ def run_fccanalysis(args, analysis_module):
     if output_dir_eos is not None and not os.path.exists(output_dir_eos):
         os.system(f'mkdir -p {output_dir_eos}')
 
+    # Check if using weighted events is requested
+    do_weighted = get_attribute(analysis, 'do_weighted', False)
+
+    if do_weighted:
+        LOGGER.info('Using generator weights')
+
     # Check if test mode is specified, and if so run the analysis on it (this
     # will exit after)
     if args.test:
@@ -598,7 +638,7 @@ def run_fccanalysis(args, analysis_module):
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(args, analysis, [testfile_path])
+        run_local(args, analysis, [testfile_path], do_weighted=do_weighted)
         sys.exit(0)
 
     # Check if files are specified, and if so run the analysis on it/them (this
@@ -608,7 +648,7 @@ def run_fccanalysis(args, analysis_module):
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(args, analysis, args.files_list)
+        run_local(args, analysis, args.files_list, do_weighted=do_weighted)
         sys.exit(0)
 
     # Check if batch mode is available
@@ -628,6 +668,8 @@ def run_fccanalysis(args, analysis_module):
         LOGGER.error('No input directory or production tag specified in the '
                      'analysis script!\nAborting...')
         sys.exit(3)
+
+
 
     for process_name in process_list:
         LOGGER.info('Started processing sample "%s" ...', process_name)
@@ -693,11 +735,11 @@ def run_fccanalysis(args, analysis_module):
             LOGGER.info('Running locally...')
             if len(chunk_list) == 1:
                 args.output = f'{output_stem}.root'
-                run_local(args, analysis, chunk_list[0])
+                run_local(args, analysis, chunk_list[0], do_weighted=do_weighted)
             else:
                 for index, chunk in enumerate(chunk_list):
                     args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(args, analysis, chunk)
+                    run_local(args, analysis, chunk, do_weighted=do_weighted)
 
     if len(process_list) == 0:
         LOGGER.warning('No files processed (process_list not found)!\n'
