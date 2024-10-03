@@ -23,7 +23,7 @@ jobs:
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
           source /cvmfs/sw.hsf.org/key4hep/setup.sh
-          git clang-format --style=file $(git merge-base upstream/master HEAD)'
+          git clang-format --style=file $(git merge-base upstream/pre-edm4hep1 HEAD)'
     - name: Check cleanliness
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package
