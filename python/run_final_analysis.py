@@ -520,39 +520,74 @@ def run(rdf_module, args) -> None:
                     if do_scale:
                         hist.Scale(gen_sf * int_lumi /
                                    process_events[process_name])
-                        outfile.WriteObject(hist.GetValue())
+                        outfile.WriteObject(hist.GetValue(), hist.GetName())
 
                 # write all metadata info to the output file
                 param = ROOT.TParameter(int)("eventsProcessed",
                                              process_events[process_name])
-                outfile.WriteObject(param)
+                outfile.WriteObject(param, param.GetName())
 
                 param = ROOT.TParameter(float)("sumOfWeights",
                                                process_events[process_name])
-                outfile.WriteObject(param)
+                outfile.WriteObject(param, param.GetName())
 
                 param = ROOT.TParameter(bool)("scaled",
                                               do_scale)
-                outfile.WriteObject(param)
+                outfile.WriteObject(param, param.GetName())
 
                 if do_scale:
                     param = ROOT.TParameter(float)("intLumi", int_lumi)
-                    outfile.WriteObject(param)
+                    outfile.WriteObject(param, param.GetName())
 
                     param = ROOT.TParameter(float)("crossSection", xsec)
-                    outfile.WriteObject(param)
+                    outfile.WriteObject(param, param.GetName())
 
                     param = ROOT.TParameter(float)("kfactor", kfactor)
-                    outfile.WriteObject(param)
+                    outfile.WriteObject(param, param.GetName())
 
                     param = ROOT.TParameter(float)("matchingEfficiency",
                                                    matching_efficiency)
-                    outfile.WriteObject(param)
+                    outfile.WriteObject(param, param.GetName())
 
                     param = ROOT.TParameter(float)("generatorScaleFactor",
                                                    gen_sf)
-                    outfile.WriteObject(param)
+                    outfile.WriteObject(param, param.GetName())
             if do_tree:
+                # add meta info to the tree file
+                fout = os.path.join(output_dir,
+                                    process_name + '_' + cut + '.root')
+                with ROOT.TFile(fout, 'UPDATE') as outfile:
+                    # write all metadata info to the output file
+                    param = ROOT.TParameter(int)("eventsProcessed",
+                                                 process_events[process_name])
+                    outfile.WriteObject(param, param.GetName())
+
+                    param = ROOT.TParameter(float)("sumOfWeights",
+                                                   process_events[process_name])
+                    outfile.WriteObject(param, param.GetName())
+
+                    param = ROOT.TParameter(bool)("scaled",
+                                                  do_scale)
+                    outfile.WriteObject(param, param.GetName())
+
+                    if do_scale:
+                        param = ROOT.TParameter(float)("intLumi", int_lumi)
+                        outfile.WriteObject(param, param.GetName())
+
+                        param = ROOT.TParameter(float)("crossSection", xsec)
+                        outfile.WriteObject(param, param.GetName())
+
+                        param = ROOT.TParameter(float)("kfactor", kfactor)
+                        outfile.WriteObject(param, param.GetName())
+
+                        param = ROOT.TParameter(float)("matchingEfficiency",
+                                                       matching_efficiency)
+                        outfile.WriteObject(param, param.GetName())
+
+                        param = ROOT.TParameter(float)("generatorScaleFactor",
+                                                       gen_sf)
+                        outfile.WriteObject(param, param.GetName())
+
                 # Number of events from a particular cut
                 nevt_cut = results[process_name][cut]['n_events_raw']
                 # Number of events in file
