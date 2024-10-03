@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Manpage for fccanalysis-script
+   Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../../css/mandoc.css" type="text/css" media="all"/>
+  <title>FCCANALYSIS-SCRIPT(7)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">FCCANALYSIS-SCRIPT(7)</td>
+    <td class="head-vol">fccanalysis-script man page</td>
+    <td class="head-rtitle">FCCANALYSIS-SCRIPT(7)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><b>fccanalysis-script</b> &#x2013; analysis steering script
+    specification</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>*</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The analysis script is expected to be a valid Python script
+    containing either part of or the full analysis. There are two basic modes
+    how to run an analysis, one is to run in the managed mode like so:</p>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>fccanalysis run <i>analysis_script.py</i>
+    <p class="Pp"></p>
+  </dd>
+</dl>
+<br/>
+or
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>fccanalysis final <i>analysis_script.py</i>
+    <p class="Pp"></p>
+  </dd>
+</dl>
+<br/>
+<p class="Pp">where user needs to provide minimal number of variables and
+    settings. In this mode the RDataFrame is managed for the user and it can be
+    controlled by defining several global attributes in the analysis script. The
+    other mode is to run the analysis script as a regular python script:</p>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>python <i>analysis_script.py</i></dd>
+</dl>
+<br/>
+<p class="Pp">here user has full control over the RDataFrame, but has to create
+    all necessary scaffolding.</p>
+<p class="Pp">It is expected that the whole analysis will be split into several
+    stages and it can be done in one of the two styles:</p>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>anascript_stage1.py -&gt; anascript_stage2.py -&gt; ... -&gt;
+      anascript_stage_final.py -&gt; plots.py
+    <p class="Pp"></p>
+  </dd>
+</dl>
+<br/>
+or
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>analysis_histmaker.py -&gt; plots.py
+    <p class="Pp"></p>
+  </dd>
+</dl>
+<br/>
+In the case of the first style there are at least three stages required
+  (anascript_stage1.py, anascript_stage_final.py, plots.py) and there is no
+  upper limit on the number of stages. In the case of the second style only two
+  stages are required. The first style is named &quot;staged analysis&quot; and
+  the second &quot;histmaker analysis&quot;.
+<dl class="Bl-tag">
+  <dt id="staged"><a class="permalink" href="#staged"><b>staged
+    analysis</b></a></dt>
+  <dd>The analysis script needs to contain <i>RDFanalysis</i> class of the
+      following structure:</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>class RDFanalysis():
+    <br/>
+     def analysers(df):
+    <br/>
+     df2 = (
+    <br/>
+     df
+    <br/>
+     # define the muon collection
+    <br/>
+     .Define(&quot;muons&quot;, &quot;ReconstructedParticle::get(Muon0,
+      ReconstructedParticles)&quot;)
+    <br/>
+     ...
+    <br/>
+     )
+    <br/>
+     return df2
+    <br/>
+     def output():
+    <br/>
+     return [&quot;muons&quot;, &quot;muon_mass&quot;]</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="histmaker"><a class="permalink" href="#histmaker"><b>histmaker
+    analysis</b></a></dt>
+  <dd>The analysis script needs to contain <i>build_graph</i> function of the
+      following structure:</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>def build_graph(df, dataset):
+    <br/>
+     results = []
+    <br/>
+     df = df.Define(&quot;weight&quot;, &quot;1.0&quot;)
+    <br/>
+     weightsum = df.Sum(&quot;weight&quot;)
+    <br/>
+     df = df.Define(&quot;muons&quot;,
+      &quot;FCCAnalyses::ReconstructedParticle::sel_p(20)(muons_all)&quot;)
+    <br/>
+     ...
+    <br/>
+     results.append(df.Histo1D((&quot;muons_p_cut0&quot;, &quot;&quot;,
+      *bins_p_mu), &quot;muons_p&quot;))
+    <br/>
+     return results, weightsum</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="plots"><a class="permalink" href="#plots"><b>plots script</b></a></dt>
+  <dd>This stage does not require neither <i>RDFanalysis</i> class neither
+      <i>build_graph</i> function, it has it's own set of attributes, please see
+      the examples in the <i>examples</i> directory.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ATTRIBUTES"><a class="permalink" href="#ATTRIBUTES">ATTRIBUTES</a></h1>
+<p class="Pp">In case of running the FCCAnalysis in the managed mode user can
+    use the following global attributes to control the behavior of the
+  analysis.</p>
+<dl class="Bl-tag">
+  <dt id="processList"><a class="permalink" href="#processList"><b>processList</b>
+    (mandatory)</a></dt>
+  <dd>Dictionary of process samples to be run over. Each process can have
+      several parameters: <i>fraction</i>
+    <br/>
+    The analysis will run over reduced number of input files roughly
+      corresponding to the fraction of total events specified.
+    <br/>
+    Default value: 1 (full process sample)
+    <br/>
+    <i>output</i>
+    <br/>
+    Specifies the stem for the output file(s). The stem will be used to create
+      output directory if there is more than one chunk or as a filename if there
+      is only one.
+    <br/>
+    Default value: output.root
+    <br/>
+    <i>chunks</i>
+    <br/>
+    The analysis RDataFrame can be split into several chunks.
+    <br/>
+    Default value: 1</dd>
+  <dt id="prodTag"><a class="permalink" href="#prodTag"><b>prodTag</b>
+    (mandatory)</a></dt>
+  <dd>Provides information where to find input files. There are several way how
+      to find the information, one of them uses YAML file which is being
+      searched for in the subfolders of $FCCDICTSDIR.</dd>
+  <dt id="outputDir"><a class="permalink" href="#outputDir"><b>outputDir</b>
+    (mandatory)</a></dt>
+  <dd>User can specify the directory for the output files. The output directory
+      can be overwriten by specifiing absolute path with `--output` commandline
+      argument.</dd>
+  <dt id="analysisName"><a class="permalink" href="#analysisName"><b>analysisName</b>
+    (optional)</a></dt>
+  <dd>Optional name for the analysis
+    <br/>
+    Default value: empty string</dd>
+  <dt id="nCPUS"><a class="permalink" href="#nCPUS"><b>nCPUS</b>
+    (optional)</a></dt>
+  <dd>Number of threads the RDataFrame will use.
+    <br/>
+    Default value: 4</dd>
+  <dt id="runBatch"><a class="permalink" href="#runBatch"><b>runBatch</b>
+    (optional)</a></dt>
+  <dd>Run the analysis on the HTCondor batch system.
+    <br/>
+    Default value: False</dd>
+  <dt id="batchQueue"><a class="permalink" href="#batchQueue"><b>batchQueue</b>
+    (optional)</a></dt>
+  <dd>Batch queue name when running on HTCondor.
+    <br/>
+    Default value: &quot;longlunch&quot;</dd>
+  <dt id="compGroup"><a class="permalink" href="#compGroup"><b>compGroup</b>
+    (optional)</a></dt>
+  <dd>Computing account when running on HTCondor.
+    <br/>
+    Default value: &quot;group_u_FCC.local_gen&quot;</dd>
+  <dt id="outputDirEos"><a class="permalink" href="#outputDirEos"><b>outputDirEos</b>
+    (optional)</a></dt>
+  <dd>Output directory on EOS, if specified files will be copied there once the
+      batch job is done.
+    <br/>
+    Default value: empty string</dd>
+  <dt id="eosType"><a class="permalink" href="#eosType"><b>eosType</b>
+    (mandatory if <i>outputDirEos</i> is used)</a></dt>
+  <dd>Type of the EOS proxy to be used.
+    <br/>
+    Default value: empty string</dd>
+  <dt id="testFile"><a class="permalink" href="#testFile"><b>testFile</b>
+    (optional)</a></dt>
+  <dd>Location of the test file.
+    <br/>
+    Default value: empty string</dd>
+  <dt id="graph"><a class="permalink" href="#graph"><b>graph</b>
+    (optional)</a></dt>
+  <dd>The computational graph of the analysis will be generated.
+    <br/>
+    Default value: False</dd>
+  <dt id="graphPath"><a class="permalink" href="#graphPath"><b>graphPath</b>
+    (optional)</a></dt>
+  <dd>Location where the computational graph of the analysis should be stored.
+      Only paths with <i>.dot</i> and <i>.png</i> extensions are accepted.
+    <br/>
+    Default value: empty string</dd>
+  <dt id="procDict"><a class="permalink" href="#procDict"><b>procDict</b></a></dt>
+  <dd>This variable controls which process dictionary will be used. It can be
+      either simple file name, absolute path or url. In the case of simple
+      filename, the file is being searched for first in the working directory
+      and then at the locations indicated in the $FCCDICTSDIR environment
+      variable.</dd>
+</dl>
+<p class="Pp">This section is under construction. You are invited to help :)</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">fccanalysis(1), fccanalysis-run(1)</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">Many</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<p class="Pp">There are many contributors to the FCCAnalyses framework, but the
+    principal authors are:
+  <br/>
+  Clement Helsens
+  <br/>
+  Valentin Volk
+  <br/>
+  Gerardo Ganis</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FCCANALYSES"><a class="permalink" href="#FCCANALYSES">FCCANALYSES</a></h1>
+<p class="Pp">Part of the FCCAnalyses framework.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LINKS"><a class="permalink" href="#LINKS">LINKS</a></h1>
+<p class="Pp"><a class="Lk" href="https://hep-fcc.github.io/FCCAnalyses/">FCCAnalyses
+    webpage</a></p>
+<p class="Pp"><a class="Lk" href="https://github.com/HEP-FCC/FCCAnalyses/">FCCAnalysises
+    GitHub repository</a></p>
+<p class="Pp"><a class="Lk" href="https://fccsw-forum.web.cern.ch/">FCCSW
+    Forum</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CONTACT"><a class="permalink" href="#CONTACT">CONTACT</a></h1>
+<p class="Pp"><a class="Mt" href="mailto:FCC-PED-SoftwareAndComputing-Analysis@cern.ch">FCC-PED-SoftwareAndComputing-Analysis</a></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">17 Jan 2024</td>
+    <td class="foot-os">0.9.0</td>
+  </tr>
+</table>
+</body>
+</html>
