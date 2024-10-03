@@ -16,7 +16,7 @@ jobs:
     - uses: cvmfs-contrib/github-action-cvmfs@v3
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/aidasoft/centos7:latest /bin/bash
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d ghcr.io/key4hep/key4hep-images/alma9:latest /bin/bash
     - name: CMake Configure
       run: |
         docker exec CI_container /bin/bash -c 'cd Package;\
