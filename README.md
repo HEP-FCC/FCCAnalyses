@@ -2,8 +2,8 @@
 
 [![DOI](https://zenodo.org/badge/177151745.svg)](https://zenodo.org/doi/10.5281/zenodo.4767810)
 
-![test](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml/badge.svg)
-![docs](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/docs.yml/badge.svg)
+![test](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml/badge.svg?branch=pre-edm4hep1)
+![docs](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/docs.yml/badge.svg?branch=pre-edm4hep1)
 
 Common framework for FCC related analyses. This framework allows one to write
 full analysis, taking [EDM4hep](https://github.com/key4hep/EDM4hep) input ROOT
@@ -28,7 +28,8 @@ the `fcc-eos-access` e-group (with owner approval).
 
 Detailed documentation can be found at the [FCCAnalyses](https://hep-fcc.github.io/FCCAnalyses/) webpage.
 
-All sample information, including Key4hep stack used for the campaign, is collected at the [FCC Physics Events](http://fcc-physics-events.web.cern.ch/fcc-physics-events/) website.
+All sample information, including Key4hep stack used for the campaign, is collected at the
+[FCC Physics Events](http://fcc-physics-events.web.cern.ch/fcc-physics-events/) website.
 
 
 ## Contributing
