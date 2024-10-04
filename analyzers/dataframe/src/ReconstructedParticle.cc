@@ -2,8 +2,11 @@
 
 // std
 #include <cstdlib>
-#include <iostream>
 #include <stdexcept>
+
+// ROOT
+#include <ROOT/RDataFrame.hxx>
+#include <ROOT/RLogger.hxx>
 
 // EDM4hep
 #include "edm4hep/EDM4hepVersion.h"
@@ -52,6 +55,7 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_absType::operator()(
       result.emplace_back(in[i]);
     }
   }
+
   return result;
 }
 
@@ -114,8 +118,6 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_charge::operator() (
   }
   return result;
 }
-
-
 
 resonanceBuilder::resonanceBuilder(float arg_resonance_mass) {m_resonance_mass = arg_resonance_mass;}
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> resonanceBuilder::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs) {

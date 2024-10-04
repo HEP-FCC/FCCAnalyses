@@ -1,6 +1,6 @@
 .\" Manpage for fccanalysis-script
 .\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
-.TH FCCANALYSIS\-SCRIPT 7 "17 Jan 2024" "0.9.0" "fccanalysis-script man page"
+.TH FCCANALYSIS\-SCRIPT 7 "17 Jan 2024" "0.10.0" "fccanalysis-script man page"
 .SH NAME
 \fBfccanalysis\-script\fR \(en analysis steering script specification
 .SH SYNOPSIS
@@ -13,13 +13,12 @@ part of or the full analysis. There are two basic modes how to run an
 analysis, one is to run in the managed mode like so:
 .IP
 fccanalysis run \fIanalysis_script.py\fR
-
 .RE
+
 or
 .IP
 fccanalysis final \fIanalysis_script.py\fR
 
-.RE
 .PP
 where user needs to provide minimal number of variables and settings. In this
 mode the RDataFrame is managed for the user and it can be controlled by defining
@@ -27,7 +26,6 @@ several global attributes in the analysis script. The other mode is to run the
 analysis script as a regular python script:
 .IP
 python \fIanalysis_script.py\fR
-.RE
 .PP
 here user has full control over the RDataFrame, but has to create all necessary
 scaffolding\&.
@@ -36,13 +34,13 @@ It is expected that the whole analysis will be split into several stages and
 it can be done in one of the two styles:
 .IP
 anascript_stage1.py \-> anascript_stage2.py \-> ... \-> anascript_stage_final.py \-> plots.py
-
 .RE
+
 or
 .IP
 analysis_histmaker.py \-> plots.py
 
-.RE
+.PP
 In the case of the first style there are at least three stages required
 (anascript_stage1.py, anascript_stage_final.py, plots.py) and there is no upper
 limit on the number of stages. In the case of the second style only two stages
@@ -170,6 +168,12 @@ Location where the computational graph of the analysis should be stored. Only
 paths with \fI.dot\fR and \fI.png\fR extensions are accepted.
 .br
 Default value: empty string
+.TP
+\fBuseDataSource\fR (optional)
+User can specify how to provide physical object collections to the analyzers\&.
+If \fITrue\fR the events will be loaded through the EDM4hep RDataSource\&.
+.br
+Default value: False
 .TP
 .B procDict
 This variable controls which process dictionary will be used. It can be either

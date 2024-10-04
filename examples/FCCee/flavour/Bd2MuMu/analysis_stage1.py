@@ -1,4 +1,4 @@
-Mandatory: List of processes
+#Mandatory: List of processes
 processList = {
     'p8_ee_Zbb_ecm91_EvtGen_Bd2MuMu':{},
     'p8_ee_Zbb_ecm91':{'fraction':0.1}

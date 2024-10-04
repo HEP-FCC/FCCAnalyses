@@ -27,8 +27,5 @@ jobs:
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package; \
           source /cvmfs/sw.hsf.org/key4hep/setup.sh;\
-          git clang-format --style=file $(git merge-base upstream/master HEAD)'
-    - name: Check cleanliness
-      run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package; \
-          git diff'
+          git clang-format --diff --style=file $(git merge-base upstream/master HEAD)
+          git clang-format --diffstat --style=file $(git merge-base upstream/master HEAD)'

@@ -32,6 +32,14 @@ if(NOT WITH_ACTS)
   list(FILTER sources EXCLUDE REGEX "VertexFinderActs.cc")
 endif()
 
+if(NOT WITH_PODIO_DATASOURCE)
+  list(FILTER headers EXCLUDE REGEX "LinkSource.h")
+  list(FILTER headers EXCLUDE REGEX "ReconstructedParticleSource.h")
+  list(FILTER sources EXCLUDE REGEX "ReconstructedParticleSource.cc")
+  list(FILTER headers EXCLUDE REGEX "TrackSource.h")
+  list(FILTER sources EXCLUDE REGEX "TrackSource.cc")
+endif()
+
 message(STATUS "FCCAnalyses headers:\n   ${headers}")
 message(STATUS "FCCAnalyses sources:\n   ${sources}")
 
@@ -59,7 +67,10 @@ target_link_libraries(FCCAnalyses PUBLIC
                       ROOT::ROOTDataFrame
                       EDM4HEP::edm4hep
                       EDM4HEP::edm4hepDict
+                      EDM4HEP::utils
                       podio::podio
+                      podio::podioRootIO
+                      podio::podioDataSource
                       ${ADDONS_LIBRARIES}
                       ${DELPHES_LIBRARY}
                       gfortran # todo: why necessary?

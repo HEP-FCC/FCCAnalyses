@@ -46,7 +46,7 @@ def main():
     '''
     Starting point for fccanalysis command
     '''
-    parser = argparse.ArgumentParser(description='FCCAnalyses v0.9.0')
+    parser = argparse.ArgumentParser(description='FCCAnalyses v0.10.0')
 
     # Verbosity arguments
     verbosity_argument_group = parser.add_mutually_exclusive_group()

@@ -35,7 +35,7 @@ class Analysis():
             # Run over the full statistics from stage1 input file
             # <inputDir>/p8_ee_ZH_ecm240_out.root. Change the output name to
             # MySample_p8_ee_ZH_ecm240
-            'p8_ee_ZH_ecm240_out': {'output': 'MySample_p8_ee_ZH_ecm240'}
+            'p8_ee_ZH_ecm240_out_f02': {'output': 'MySample_p8_ee_ZH_ecm240'}
         }
 
         # Mandatory: input directory when not running over centrally produced
