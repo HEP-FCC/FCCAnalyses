@@ -910,28 +910,32 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getBhadron(
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 AnalysisFCChh::get_tagged_jets(
-    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco_particles,
-    ROOT::VecOps::RVec<edm4hep::ParticleIDData> pids,
-    ROOT::VecOps::RVec<podio::ObjectID> pids_rp_indices,
-    ROOT::VecOps::RVec<float> tag_values, int algoIndex) {
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> jets,
+    ROOT::VecOps::RVec<edm4hep::ParticleIDData> jet_tags,  
+    ROOT::VecOps::RVec<podio::ObjectID> jet_tags_indices,  
+    ROOT::VecOps::RVec<float> jet_tags_values, int algoIndex) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tagged_jets;
 
   // make sure we have the right collections: every PID should have exactly one
   // RP index
-  assert(pids.size() == pids_rp_indices.size());
+  assert(jet_tags.size() == jet_tags_indices.size());
 
-  for (size_t pid_index = 0; pid_index < pids.size(); ++pid_index) {
+  for (size_t jet_tags_i = 0; jet_tags_i < jet_tags.size(); ++jet_tags_i) {
 
     const auto tag =
         // static_cast<unsigned>(tag_values[pid_index]);
-        static_cast<unsigned>(tag_values[pids[pid_index].parameters_begin]);
+        static_cast<unsigned>(jet_tags_values[jet_tags[jet_tags_i].parameters_begin]);
 
-    // std::cout << "Tag = " << tag << std::endl;
+    std::cout << "PID is " << jet_tags[jet_tags_i].parameters_begin << " with type " << jet_tags[jet_tags_i].type << " and PDG = " << jet_tags[jet_tags_i].PDG << std::endl;
+
+    std::cout << "Tag = " << tag << std::endl;
 
     if (tag & (1 << algoIndex)) {
-      // std::cout << "Requested tag is true" << std::endl;
-      tagged_jets.push_back(reco_particles[pids_rp_indices[pid_index].index]);
+      std::cout << "Requested tag is true" << std::endl;
+      tagged_jets.push_back(jets[jet_tags_indices[jet_tags_i].index]);
+
+      std::cout <<"Found RP with PDG ID = " << jets[jet_tags_indices[jet_tags_i].index].PDG << " and pT = " << getTLV_reco(jets[jet_tags_indices[jet_tags_i].index]).Pt() << std::endl;
     }
   }
   return tagged_jets;

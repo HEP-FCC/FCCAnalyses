@@ -33,7 +33,8 @@ class Analysis():
 
         # Mandatory: Input directory where to find the samples, or a production tag when running over the centrally produced
         # samples (this points to the yaml files for getting sample statistics)
-        self.input_dir = '/eos/experiment/fcc/hh/tutorials/edm4hep_tutorial_data/'
+        self.input_dir = '/eos/experiment/fcc/hh/tutorials/lhe_unpacked_tester/'
+        # self.input_dir = '/eos/experiment/fcc/hh/tutorials/edm4hep_tutorial_data/'
         # self.prod_tag = 'FCCee/spring2021/IDEA/'
 
         # Optional: output directory, default is local running directory
@@ -111,7 +112,7 @@ class Analysis():
 
             #b-tagged jets:
             #b tagged jets
-            .Define("bjets", "AnalysisFCChh::get_tagged_jets(ReconstructedParticles, ParticleIDs, _ParticleIDs_particle, _ParticleIDs_parameters, 1)") #bit 1 = medium WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
+            .Define("bjets", "AnalysisFCChh::get_tagged_jets(Jet, Jet_tags, _Jet_tags_particle, _Jet_tags_parameters, 1)") #bit 1 = medium WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
             .Define("selpt_bjets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(bjets)")
             .Define("sel_bjets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_bjets)")
             .Define("sel_bjets", "AnalysisFCChh::SortParticleCollection(sel_bjets_unsort)")
