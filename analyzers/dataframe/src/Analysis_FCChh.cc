@@ -917,25 +917,17 @@ AnalysisFCChh::get_tagged_jets(
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tagged_jets;
 
-  // make sure we have the right collections: every PID should have exactly one
-  // RP index
+  // make sure we have the right collections: every tag should have exactly one
+  // jet index
   assert(jet_tags.size() == jet_tags_indices.size());
 
   for (size_t jet_tags_i = 0; jet_tags_i < jet_tags.size(); ++jet_tags_i) {
 
     const auto tag =
-        // static_cast<unsigned>(tag_values[pid_index]);
         static_cast<unsigned>(jet_tags_values[jet_tags[jet_tags_i].parameters_begin]);
 
-    std::cout << "PID is " << jet_tags[jet_tags_i].parameters_begin << " with type " << jet_tags[jet_tags_i].type << " and PDG = " << jet_tags[jet_tags_i].PDG << std::endl;
-
-    std::cout << "Tag = " << tag << std::endl;
-
     if (tag & (1 << algoIndex)) {
-      std::cout << "Requested tag is true" << std::endl;
       tagged_jets.push_back(jets[jet_tags_indices[jet_tags_i].index]);
-
-      std::cout <<"Found RP with PDG ID = " << jets[jet_tags_indices[jet_tags_i].index].PDG << " and pT = " << getTLV_reco(jets[jet_tags_indices[jet_tags_i].index]).Pt() << std::endl;
     }
   }
   return tagged_jets;
