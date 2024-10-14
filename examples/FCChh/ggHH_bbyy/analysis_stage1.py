@@ -53,6 +53,9 @@ class Analysis():
         # Optional: Use weighted events
         self.do_weighted = True 
 
+        # Optional: read the input files with podio::DataSource 
+        self.use_data_source = False # explicitly use old way in this version 
+
         # Optional: test file that is used if you run with the --test argument (fccanalysis run ./examples/FCChh/ggHH_bbyy/analysis_stage1.py --test)
         self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/hh/' \
                          'tutorials/edm4hep_tutorial_data/' \

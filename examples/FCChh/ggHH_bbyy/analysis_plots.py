@@ -33,7 +33,7 @@ colors['bbyy_signal'] = ROOT.kRed
 # colors['VV'] = ROOT.kGreen+3
 
 plots = {}
-plots['bbyy_analysis'] = {'signal':{'bbyy_signal':['pwp8_pp_hh_5f_hhbbyy']},
+plots['bbyy_analysis'] = {'signal':{'bbyy_signal':['pwp8_pp_hh_5f_hhbbyy_split_HF_tau_tags']},
            }
 
 
