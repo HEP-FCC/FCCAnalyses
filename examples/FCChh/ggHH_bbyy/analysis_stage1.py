@@ -28,7 +28,8 @@ class Analysis():
             # # - <name of process> needs to correspond either the name of the input .root file, or the name of a directory containing root files 
             # # If you want to process only part of the events, split the output into chunks or give a different name to the output use the optional arguments
             # # or leave blank to use defaults = run the full statistics in one output file named the same as the process:
-            'pwp8_pp_hh_5f_hhbbyy': {},
+            'pwp8_pp_hh_5f_hhbbyy_split_HF_tau_tags': {},
+            # 'pwp8_pp_hh_5f_hhbbyy': {},
         }
 
         # Mandatory: Input directory where to find the samples, or a production tag when running over the centrally produced
@@ -112,7 +113,7 @@ class Analysis():
 
             #b-tagged jets:
             #b tagged jets
-            .Define("bjets", "AnalysisFCChh::get_tagged_jets(Jet, Jet_tags, _Jet_tags_particle, _Jet_tags_parameters, 1)") #bit 1 = medium WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
+            .Define("bjets", "AnalysisFCChh::get_tagged_jets(Jet, Jet_HF_tags, _Jet_HF_tags_particle, _Jet_HF_tags_parameters, 1)") #bit 1 = medium WP, see: https://github.com/delphes/delphes/blob/master/cards/FCC/scenarios/FCChh_I.tcl
             .Define("selpt_bjets", "FCCAnalyses::ReconstructedParticle::sel_pt(30.)(bjets)")
             .Define("sel_bjets_unsort", "FCCAnalyses::ReconstructedParticle::sel_eta(4)(selpt_bjets)")
             .Define("sel_bjets", "AnalysisFCChh::SortParticleCollection(sel_bjets_unsort)")
@@ -134,12 +135,12 @@ class Analysis():
             ########################################### APPLY PRE-SELECTION ########################################### 
 
             #require at least two b-jets and two photons, both with invariant masses compatible with the Higgs mass
-            # .Filter("sel_bjets.size()>1")
-            # .Filter("sel_gamma.size()>1") 
-            # .Filter("m_bb[0] < 200.") 
-            # .Filter("m_bb[0] > 80.") 
-            # .Filter("m_yy[0] < 180.") 
-            # .Filter("m_yy[0] > 100.")   
+            .Filter("sel_bjets.size()>1")
+            .Filter("sel_gamma.size()>1") 
+            .Filter("m_bb[0] < 200.") 
+            .Filter("m_bb[0] > 80.") 
+            .Filter("m_yy[0] < 180.") 
+            .Filter("m_yy[0] > 100.")   
 
         )
         return dframe2

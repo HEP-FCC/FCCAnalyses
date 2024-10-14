@@ -5,14 +5,23 @@ inputDir  = "outputs/FCChh/ggHH_bbyy/presel/"
 outputDir  = "outputs/FCChh/ggHH_bbyy/final/"
 
 processList = {
-    'pwp8_pp_hh_5f_hhbbyy':{},#Run over the full statistics from stage2 input file <inputDir>/p8_ee_ZZ_ecm240.root. Keep the same output name as input
+    # 'pwp8_pp_hh_5f_hhbbyy':{},#Run over the full statistics from stage2 input file <inputDir>/p8_ee_ZZ_ecm240.root. Keep the same output name as input
+    'pwp8_pp_hh_5f_hhbbyy_split_HF_tau_tags':{},#Run over the full statistics from stage2 input file <inputDir>/p8_ee_ZZ_ecm240.root. Keep the same output name as input
 }
 
 #Link to the dictonary that contains all the cross section informations etc...
 procDict = "FCCee_procDict_spring2021_IDEA.json" # will need an FCC-hh one!
 
 #Add MySample_p8_ee_ZH_ecm240 as it is not an offical process TO UPDATE 
-procDictAdd={"pwp8_pp_hh_5f_hhbbyy":{"numberOfEvents": 10000000, "sumOfWeights": 10000000, "crossSection": 1.0, "kfactor": 1.0, "matchingEfficiency": 1.0}}
+# procDictAdd={"pwp8_pp_hh_5f_hhbbyy":{"numberOfEvents": 10000000, "sumOfWeights": 10000000, "crossSection": 1.0, "kfactor": 1.0, "matchingEfficiency": 1.0}}
+# procDictAdd={"pwp8_pp_hh_5f_hhbbyy_split_HF_tau_tags":{"numberOfEvents": 10000000, "sumOfWeights": 10000000, "crossSection": 1.0, "kfactor": 1.0, "matchingEfficiency": 1.0}}
+procDictAdd={"pwp8_pp_hh_5f_hhbbyy_split_HF_tau_tags": {"numberOfEvents": 4980000, "sumOfWeights": 4980000.0, "crossSection": 0.0029844128399999998, "kfactor": 1.075363, "matchingEfficiency": 1.0}}
+
+# Expected integrated luminosity
+intLumi = 30e+06  # pb-1
+
+# Whether to scale to expected integrated luminosity
+doScale = True
 
 #Number of CPUs to use
 nCPUS = 2
