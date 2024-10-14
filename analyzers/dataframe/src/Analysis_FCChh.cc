@@ -911,8 +911,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getBhadron(
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 AnalysisFCChh::get_tagged_jets(
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> jets,
-    ROOT::VecOps::RVec<edm4hep::ParticleIDData> jet_tags,  
-    ROOT::VecOps::RVec<podio::ObjectID> jet_tags_indices,  
+    ROOT::VecOps::RVec<edm4hep::ParticleIDData> jet_tags,
+    ROOT::VecOps::RVec<podio::ObjectID> jet_tags_indices,
     ROOT::VecOps::RVec<float> jet_tags_values, int algoIndex) {
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tagged_jets;
@@ -923,8 +923,8 @@ AnalysisFCChh::get_tagged_jets(
 
   for (size_t jet_tags_i = 0; jet_tags_i < jet_tags.size(); ++jet_tags_i) {
 
-    const auto tag =
-        static_cast<unsigned>(jet_tags_values[jet_tags[jet_tags_i].parameters_begin]);
+    const auto tag = static_cast<unsigned>(
+        jet_tags_values[jet_tags[jet_tags_i].parameters_begin]);
 
     if (tag & (1 << algoIndex)) {
       tagged_jets.push_back(jets[jet_tags_indices[jet_tags_i].index]);
