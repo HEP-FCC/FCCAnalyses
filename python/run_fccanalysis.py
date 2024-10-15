@@ -359,6 +359,9 @@ def run_rdf(config: dict[str, any],
 
     try:
         evtcount_init = dframe2.Count()
+        sow_init = evtcount_init
+        if config['do_weighted']:
+            sow_init = dframe2.Sum("EventHeader.weight")
 
         dframe3 = analysis.analyzers(dframe2)
 
@@ -368,6 +371,9 @@ def run_rdf(config: dict[str, any],
             branch_list.push_back(bname)
 
         evtcount_final = dframe3.Count()
+        sow_final = evtcount_final
+        if config['do_weighted']:
+            sow_final = dframe3.Sum("EventHeader.weight")
 
         # Generate computational graph of the analysis
         if args.graph:
@@ -379,7 +385,7 @@ def run_rdf(config: dict[str, any],
                      'occurred:\n%s', excp)
         sys.exit(3)
 
-    return evtcount_init.GetValue(), evtcount_final.GetValue()
+    return evtcount_init.GetValue(), evtcount_final.GetValue(), sow_init.GetValue(), sow_final.GetValue()
 
 
 # _____________________________________________________________________________
@@ -569,7 +575,7 @@ def run_local(config: dict[str, any],
     else:
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
         if config['do_weighted']:
-            LOGGER.info('Local sum of weights: %s', f'{sow_local:,}')
+            LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
 
 
     output_dir = get_attribute(analysis, 'output_dir', '')
@@ -584,7 +590,7 @@ def run_local(config: dict[str, any],
 
     # Run RDF
     start_time = time.time()
-    inn, outn = run_rdf(config, args, analysis, file_list, outfile_path)
+    inn, outn, in_sow, out_sow = run_rdf(config, args, analysis, file_list, outfile_path)
     elapsed_time = time.time() - start_time
 
     # replace nevents_local by inn = the amount of processed events
@@ -600,6 +606,13 @@ def run_local(config: dict[str, any],
         info_msg += f'\nReduction factor local:  {outn/inn}'
     if nevents_orig > 0:
         info_msg += f'\nReduction factor total:  {outn/nevents_orig}'
+    if config['do_weighted']:
+        info_msg += f'\nTotal sum of weights processed:  {float(in_sow):0,.2f}'
+        info_msg += f'\nNo. result weighted events :       {float(out_sow):0,.2f}'
+        if in_sow > 0:
+            info_msg += f'\nReduction factor local, weighted:  {float(out_sow/in_sow):0,.4f}'
+        if sow_orig > 0:
+            info_msg += f'\nReduction factor total, weighted:  {float(out_sow/sow_orig):0,.4f}'
     info_msg += '\n'
     info_msg += 80 * '='
     info_msg += '\n'
@@ -612,15 +625,15 @@ def run_local(config: dict[str, any],
                 'eventsProcessed',
                 nevents_orig if nevents_orig != 0 else inn)
         param.Write()
-        param = ROOT.TParameter(int)('eventsSelected', outn) # Should no of weighted, selected events be added as well? 
+        param = ROOT.TParameter(int)('eventsSelected', outn) 
         param.Write()
 
         if config['do_weighted']:
             param_sow = ROOT.TParameter(float)( 
                         'SumOfWeights', 
-                        sow_orig if sow_orig != 0 else sow_local )
+                        sow_orig if sow_orig != 0 else in_sow )
+            param_sow = ROOT.TParameter(float)('SumOfWeightsSelected', out_sow) # No of weighted, selected events
             param_sow.Write()
-
         outfile.Write()
 
     if args.bench:
