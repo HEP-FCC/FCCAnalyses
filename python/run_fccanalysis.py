@@ -265,6 +265,10 @@ def merge_config(args: object, analysis: object) -> dict[str, any]:
         config['use_data_source'] = True
     if get_attribute(analysis, 'use_data_source', False):
         config['use_data_source'] = True
+    # Check whether to use event weights (only supported as analysis config file option, not command line!)
+    config['do_weighted'] = False
+    if get_attribute(analysis, 'do_weighted', False):
+        config['do_weighted'] = True
 
     return config
 
@@ -494,8 +498,7 @@ def apply_filepath_rewrites(filepath: str) -> str:
 def run_local(config: dict[str, any],
               args: object,
               analysis: object,
-              infile_list,
-              do_weighted = False):
+              infile_list):
     '''
     Run analysis locally.
     '''
@@ -509,7 +512,7 @@ def run_local(config: dict[str, any],
     nevents_local = 0
 
     # Same for the sum of weights
-    if do_weighted:
+    if config['do_weighted']:
         sow_orig = 0.
         sow_local = 0.
 
@@ -521,8 +524,8 @@ def run_local(config: dict[str, any],
         file_list.push_back(filepath)
         info_msg += f'- {filepath}\t\n'
 
-        if do_weighted:
-
+        if config['do_weighted']:
+             # Adjust number of events in case --nevents was specified
             if args.nevents > 0:
                 nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath, args.nevents)
             else:
@@ -549,6 +552,7 @@ def run_local(config: dict[str, any],
                 sys.exit(3)
             infile.Close()
 
+             # Adjust number of events in case --nevents was specified
             if args.nevents > 0 and args.nevents < nevents_local:
                 nevents_local = args.nevents
 
@@ -559,12 +563,12 @@ def run_local(config: dict[str, any],
     if nevents_orig > 0:
         LOGGER.info('Number of events:\n\t- original: %s\n\t- local:    %s',
                     f'{nevents_orig:,}', f'{nevents_local:,}')
-        if do_weighted:
+        if config['do_weighted']:
             LOGGER.info('Sum of weights:\n\t- original: %s\n\t- local:    %s',
                         f'{sow_orig:,}', f'{sow_local:,}')
     else:
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
-        if do_weighted:
+        if config['do_weighted']:
             LOGGER.info('Local sum of weights: %s', f'{sow_local:,}')
 
 
@@ -597,7 +601,7 @@ def run_local(config: dict[str, any],
     if nevents_orig > 0:
         info_msg += f'\nReduction factor total:  {outn/nevents_orig}'
     info_msg += '\n'
-    info_msg += 80 * '=' 
+    info_msg += 80 * '='
     info_msg += '\n'
     LOGGER.info(info_msg)
 
@@ -611,7 +615,7 @@ def run_local(config: dict[str, any],
         param = ROOT.TParameter(int)('eventsSelected', outn) # Should no of weighted, selected events be added as well? 
         param.Write()
 
-        if do_weighted:
+        if config['do_weighted']:
             param_sow = ROOT.TParameter(float)( 
                         'SumOfWeights', 
                         sow_orig if sow_orig != 0 else sow_local )
@@ -668,10 +672,7 @@ def run_fccanalysis(args, analysis_module):
     if output_dir_eos is not None and not os.path.exists(output_dir_eos):
         os.system(f'mkdir -p {output_dir_eos}')
 
-    # Check if using weighted events is requested
-    do_weighted = get_attribute(analysis, 'do_weighted', False)
-
-    if do_weighted:
+    if config['do_weighted']:
         LOGGER.info('Using generator weights')
 
     # Check if test mode is specified, and if so run the analysis on it (this
@@ -682,7 +683,7 @@ def run_fccanalysis(args, analysis_module):
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(config, args, analysis, [testfile_path], do_weighted=do_weighted)
+        run_local(config, args, analysis, [testfile_path])
         sys.exit(0)
 
     # Check if files are specified, and if so run the analysis on it/them (this
@@ -692,7 +693,7 @@ def run_fccanalysis(args, analysis_module):
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(config, args, analysis, args.files_list, do_weighted=do_weighted)
+        run_local(config, args, analysis, args.files_list)
         sys.exit(0)
 
     # Check if batch mode is available
@@ -779,11 +780,11 @@ def run_fccanalysis(args, analysis_module):
             LOGGER.info('Running locally...')
             if len(chunk_list) == 1:
                 args.output = f'{output_stem}.root'
-                run_local(config, args, analysis, chunk_list[0], do_weighted=do_weighted)
+                run_local(config, args, analysis, chunk_list[0])
             else:
                 for index, chunk in enumerate(chunk_list):
                     args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(config, args, analysis, chunk, do_weighted=do_weighted)
+                    run_local(config, args, analysis, chunk)
 
     if len(process_list) == 0:
         LOGGER.warning('No files processed (process_list not found)!\n'
