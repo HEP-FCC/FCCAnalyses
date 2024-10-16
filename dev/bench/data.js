@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729080141856,
+  "lastUpdate": 1729080143321,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -44545,6 +44545,65 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "79460851+bistapf@users.noreply.github.com",
+            "name": "bistapf",
+            "username": "bistapf"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d6d997f9d2b5bc643bfa560a4b107137bdf51be",
+          "message": "Adding FCC-hh analysis example, code and event weight processing (#411)\n\n* removing outdated FCChh examples that no longer run\r\n\r\n* init bbyy working example for FCChh\r\n\r\n* copy old FCChh analyzers\r\n\r\n* update collection names in get_tagged_jets functions - not functional yet\r\n\r\n* rewrite of get_tagged_jets to account for reversed link direction PID->RP in latest edm4hep versions\r\n\r\n* apply clang format\r\n\r\n* first versions of FCChh example final and plotting scripts\r\n\r\n* add first version of using event weights for scaling etc\r\n\r\n* fix function to get_tagged jets following PR#131 in k4SimDelphes\r\n\r\n* clean up debug prints\r\n\r\n* add bbyy normalisation and adapt to splitting b and tau-tags in k4simdelphes\r\n\r\n* FCC-hh bbyy mini example the old way, pre-datasource\r\n\r\n* clang formatting\r\n\r\n* add fcchh analysis to test suite\r\n\r\n* add do_weighted option to config dict, clean up comments\r\n\r\n* add printing of selected weighted events\r\n\r\n* fix writing sow to output tree\r\n\r\n* add check that weight column exists, comments from pr411 review\r\n\r\n* add do_weighted option to man page\r\n\r\n* clean up FCChh bbyy example, add example for checking btag efficiencies from delphes",
+          "timestamp": "2024-10-16T13:54:21+02:00",
+          "tree_id": "fa5606f288e533cdf8afdf6b230c8882dc0e226b",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/5d6d997f9d2b5bc643bfa560a4b107137bdf51be"
+        },
+        "date": 1729080142888,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.423502087994706,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 11.896568057675736,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 7.911250725994207,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 9.870074383292724,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.0609504992822725,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/data_source/stages_source.py",
+            "value": 7.897590475556018,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 7.367441812099129,
+            "unit": "Evt/s"
           }
         ]
       }
