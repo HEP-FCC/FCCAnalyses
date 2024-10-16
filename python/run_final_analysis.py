@@ -235,8 +235,8 @@ def run(rdf_module, args) -> None:
 
     if do_weighted:
         LOGGER.info('Using generator weights')
-        sow_process={}
-        sow_ttree={}
+        sow_process = process_events.copy()
+        sow_ttree = events_ttree.copy()
 
     # Checking input directory
     input_dir = get_attribute(rdf_module, 'inputDir', '')
@@ -488,6 +488,17 @@ def run(rdf_module, args) -> None:
         # Now perform the loop and evaluate everything at once.
         LOGGER.info('Evaluating...')
         all_events_raw = dframe.Count().GetValue()
+        all_events_weighted = all_events_raw
+
+        if do_weighted:
+            # check that the weight column exists, it should always be called "weight" for now
+            try:
+                all_events_weighted = dframe.Sum("weight").GetValue()
+                LOGGER.info(f'Successfully applied event weights, got weighted events = {all_events_weighted:0,.2f}')
+            except cppyy.gbl.std.runtime_error:
+                LOGGER.error('Error: Event weights requested with do_weighted, '
+                                'but input file does not contain weight column. Aborting.')
+                sys.exit(3)
 
         LOGGER.info('Done')
 
@@ -497,13 +508,10 @@ def run(rdf_module, args) -> None:
         if do_scale:
             LOGGER.info('Scaling cut yields...')
             if do_weighted:
-                #should add check if the weight column exists!
-                all_events_weighted = dframe.Sum("weight").GetValue() #this will only work if "weight" column is defined in the analysis script, should weight name be an argument?
-                print( all_events_weighted)
-                all_events = all_events_weighted * 1. * gen_sf * \
-                    int_lumi / sow_process[process_name]
-                uncertainty = ROOT.Math.sqrt(all_events_weighted) * gen_sf * \
-                    int_lumi / sow_process[process_name]
+                    all_events = all_events_weighted * 1. * gen_sf * \
+                        int_lumi / sow_process[process_name]
+                    uncertainty = ROOT.Math.sqrt(all_events_weighted) * gen_sf * \
+                        int_lumi / sow_process[process_name]
             else:
                 all_events = all_events_raw * 1. * gen_sf * \
                     int_lumi / process_events[process_name]

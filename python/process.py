@@ -11,6 +11,7 @@ from typing import Optional
 import urllib.request
 import yaml  # type: ignore
 import ROOT  # type: ignore
+import cppyy
 
 ROOT.gROOT.SetBatch(True)
 
@@ -85,8 +86,10 @@ def get_entries_sow(infilepath: str, nevents_max: Optional[int] = None, get_loca
             # histo=ROOT.gDirectory.Get('histo')
             histo = rdf_tmp.Histo1D(weight_name)
             sumOfWeightsTTree=float(eventsTTree)*histo.GetMean()
-        except AttributeError:
-            print('----> Warning: Input file has no event weights.')
+        except cppyy.gbl.std.runtime_error:
+                LOGGER.error('Error: Event weights requested with do_weighted,'
+                            'but input file does not contain weight column. Aborting.')
+                sys.exit(3)
     except AttributeError:
         print('----> Error: Input file is missing events TTree! Probably empty chunk.')
         infile.Close()
