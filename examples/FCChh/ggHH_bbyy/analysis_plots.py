@@ -14,8 +14,8 @@ stacksig       = ['nostack']
 outdir         = 'outputs/FCChh/ggHH_bbyy/plots/'
 plotStatUnc    = True
 
-variables = ['myy','myy_zoom','y1_pT','y2_pT']
-# variables = ['myy','myy_zoom','y1_pT','y2_pT','pT_y1_vs_y2_2D']
+variables = ['myy','myy_zoom', 'mbb', 'mbb_zoom', 'y1_pT','y2_pT']
+
 # rebin = [1, 1, 1, 1, 2] # uniform rebin per variable (optional)
 
 ### Dictionary with the analysis name as a key, and the list of selections to be plotted for this analysis. The name of the selections should be the same than in the final selection
@@ -28,14 +28,10 @@ extralabel['sel1_mbb'] = "Sel.: 100 < m_{#gamma#gamma} < 180 GeV and 80 < m_{bb}
 
 colors = {}
 colors['bbyy_signal'] = ROOT.kRed
-# colors['WW'] = ROOT.kBlue+1
-# colors['ZZ'] = ROOT.kGreen+2
-# colors['VV'] = ROOT.kGreen+3
 
 plots = {}
-plots['bbyy_analysis'] = {'signal':{'bbyy_signal':['pwp8_pp_hh_5f_hhbbyy_split_HF_tau_tags']},
+plots['bbyy_analysis'] = {'signal':{'bbyy_signal':['pwp8_pp_hh_5f_hhbbyy']},
            }
 
-
 legend = {}
-legend['bbyy_signal'] = 'HH signal'
+legend['bbyy_signal'] = 'HH'
