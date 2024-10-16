@@ -28,8 +28,9 @@
 <p class="Pp"><b>fccanalysis run</b> [<b>-h</b> | <b>--help</b>]
     [<b>--files-list</b> <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]]
     [<b>--output</b> <i>OUTPUT</i>] [<b>--nevents</b> <i>NEVENTS</i>]
-    [<b>--test</b>] [<b>--bench</b>] [<b>--ncpus</b> <i>NCPUS</i>] [<b>-g</b>]
-    [<b>--graph-path</b> <i>GRAPH_PATH</i>] <i>analysis-script</i></p>
+    [<b>--use-data-source</b>] [<b>--test</b>] [<b>--bench</b>] [<b>--ncpus</b>
+    <i>NCPUS</i>] [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]
+    <i>analysis-script</i></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -39,7 +40,7 @@
 <p class="Pp">When using <b>fccanalysis-run</b> the analysis is running in the
     managed mode, where the RDataFrame is steered by the framework and users can
     control some aspects of the running with additional global attributes, see
-    <i>fccanalysis-script</i>(8).</p>
+    <b>fccanalysis-script</b>(7).</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
@@ -60,11 +61,13 @@
   <dd>Specify max number of events to process.</dd>
   <dt id="test"><a class="permalink" href="#test"><b>--test</b></a></dt>
   <dd>Run over the test file.</dd>
+  <dt id="use-data-source"><a class="permalink" href="#use-data-source"><b>--use-data-source</b></a></dt>
+  <dd>Load events through podio::DataSource.</dd>
   <dt id="bench"><a class="permalink" href="#bench"><b>--bench</b></a></dt>
   <dd>Output benchmark results to a JSON file.</dd>
-  <dt id="ncpus"><a class="permalink" href="#ncpus"><b>--ncpus</b>
-    <i>NCPUS</i></a></dt>
-  <dd>Set number of threads.</dd>
+  <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>NCPUS</i>,
+    <b>--ncpus</b> <i>NCPUS</i></a></dt>
+  <dd>Set number of jobs (threads).</dd>
   <dt id="g"><a class="permalink" href="#g"><b>-g</b>, <b>--graph</b></a></dt>
   <dd>The computational graph of the analysis will be generated.</dd>
   <dt id="graph"><a class="permalink" href="#graph"><b>--graph-path</b>
@@ -98,7 +101,7 @@
   <br/>
   Clement Helsens
   <br/>
-  Valentin Volk
+  Valentin Volkl
   <br/>
   Gerardo Ganis</p>
 </section>
@@ -123,7 +126,7 @@
 <table class="foot">
   <tr>
     <td class="foot-date">17 Jan 2024</td>
-    <td class="foot-os">0.9.0</td>
+    <td class="foot-os">0.10.0</td>
   </tr>
 </table>
 </body>

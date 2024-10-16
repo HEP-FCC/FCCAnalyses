@@ -1,75 +1,56 @@
 <!DOCTYPE html>
 <html>
 <!-- This is an automatically generated file.  Do not edit.
-   Manpage for fccanalysis-plots
+   Manpage for fccanalysis-final
    Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
  -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../../css/mandoc.css" type="text/css" media="all"/>
-  <title>FCCANALYSIS-PLOTS(1)</title>
+  <title>FCCANALYSIS-FINAL(1)</title>
 </head>
 <body>
 <table class="head">
   <tr>
-    <td class="head-ltitle">FCCANALYSIS-PLOTS(1)</td>
-    <td class="head-vol">fccanalysis-plots man page</td>
-    <td class="head-rtitle">FCCANALYSIS-PLOTS(1)</td>
+    <td class="head-ltitle">FCCANALYSIS-FINAL(1)</td>
+    <td class="head-vol">fccanalysis-final man page</td>
+    <td class="head-rtitle">FCCANALYSIS-FINAL(1)</td>
   </tr>
 </table>
 <div class="manual-text">
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp"><b>fccanalysis-plots</b> &#x2013; generate analysis plots</p>
+<p class="Pp"><b>fccanalysis-final</b> &#x2013; finalize your analysis into
+    histograms</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>fccanalysis plots</b> [<b>-h</b> | <b>--help</b>]
-    [<b>--legend-text-size</b> <i>LEGEND_TEXT_SIZE</i>] [<b>--legend-x-min</b>
-    <i>LEGEND_X_MIN</i>] [<b>--legend-x-max</b> <i>LEGEND_X_MAX</i>]
-    [<b>--legend-y-min</b> <i>LEGEND_Y_MIN</i>] [<b>--legend-y-max</b>
-    <i>LEGEND_Y_MAX</i>] <i>plots-script</i></p>
+<p class="Pp"><b>fccanalysis final</b> [<b>-h</b> | <b>--help</b>] [<b>-g</b> |
+    <b>--graph</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp"><b>fccanalysis-plots</b> is FCCAnalyses sub-command to generate
-    plots out of histograms created in the previous stages of the analysis.</p>
+<p class="Pp"><b>fccanalysis-final runs the last stage of the analysis, where
+    one defines</b> final cuts and histograms. This stage can also output ROOT
+    and LaTeX files for further use.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
 <dl class="Bl-tag">
   <dt id="h"><a class="permalink" href="#h"><b>-h</b>, <b>--help</b></a></dt>
   <dd>Prints short help message and exits.</dd>
-  <dt id="c"><a class="permalink" href="#c"><b>-c</b>,
-    <b>--clean-plots</b></a></dt>
-  <dd>Completely clean plots directory before compilation.</dd>
-  <dt id="legend"><a class="permalink" href="#legend"><b>--legend-text-size</b>
-    <i>LEGEND_TEXT_SIZE</i></a></dt>
-  <dd>Specify text size for the legend elements. The default value is:
-    0.035.</dd>
-  <dt id="legend~2"><a class="permalink" href="#legend~2"><b>--legend-x-min</b>
-    <i>LEGEND_X_MIN</i></a></dt>
-  <dd>Specify minimal x position of the legend. The default value:
-    automatic.</dd>
-  <dt id="legend_x_max"><a class="permalink" href="#legend_x_max"><b>--legend-x-max</b>
-    <i>LEGEND_X_MAX</i></a></dt>
-  <dd>Specify maximal x position of the legend. The default value:
-    automatic.</dd>
-  <dt id="legend_y_min"><a class="permalink" href="#legend_y_min"><b>--legend-y-min</b>
-    <i>LEGEND_Y_MIN</i></a></dt>
-  <dd>Specify minimal y position of the legend. The default value:
-    automatic.</dd>
-  <dt id="legend_y_max"><a class="permalink" href="#legend_y_max"><b>--legend-y-max</b>
-    <i>LEGEND_Y_MAX</i></a></dt>
-  <dd>Specify maximal y position of the legend. The default value:
-    automatic.</dd>
+  <dt id="g"><a class="permalink" href="#g"><b>-g</b>, <b>--graph</b></a></dt>
+  <dd>Generates computational graph of the analysis.</dd>
+  <dt id="graph"><a class="permalink" href="#graph"><b>--graph-path</b>
+    <i>GRAPH_PATH</i></a></dt>
+  <dd>Analysis graph save path, should end with '.dot' or '.png'.</dd>
 </dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<p class="Pp">fccanalysis(1), fccanalysis-run(1), fccanalysis-final(1)</p>
+<p class="Pp">fccanalysis(1)</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
@@ -106,7 +87,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">28 Jun 2024</td>
+    <td class="foot-date">18 Jul 2024</td>
     <td class="foot-os">0.10.0</td>
   </tr>
 </table>

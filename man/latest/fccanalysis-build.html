@@ -27,7 +27,7 @@
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp"><b>fccanalysis build</b> [<b>-h</b> | <b>--help</b>] [<b>-c</b>]
-    [<b>-j</b> <i>BUILD_THREADS</i>]</p>
+    [<b>-j</b> <i>BUILD_THREADS</i>] [<b>--acts-on</b>] [<b>--no-source</b>]</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -49,13 +49,17 @@
   <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>BUILD_THREADS</i>,
     <b>--build-threads</b> <i>BUILD_THREADS</i></a></dt>
   <dd>Specify number of threads used when compiling (equivalent to `make
-    -j`)</dd>
+    -j`).</dd>
+  <dt id="acts"><a class="permalink" href="#acts"><b>--acts-on</b></a></dt>
+  <dd>Enable also ACTS based analyzers to be build.</dd>
+  <dt id="no"><a class="permalink" href="#no"><b>--no-source</b></a></dt>
+  <dd>Do not build PODIO Data Source.</dd>
 </dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<p class="Pp">fccanalysis(1), fccanalysis-test(7), cmake(1)</p>
+<p class="Pp">fccanalysis(1), fccanalysis-test(1), cmake(1)</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
@@ -68,7 +72,7 @@
   <br/>
   Clement Helsens
   <br/>
-  Valentin Volk
+  Valentin Volkl
   <br/>
   Gerardo Ganis</p>
 </section>
@@ -93,7 +97,7 @@
 <table class="foot">
   <tr>
     <td class="foot-date">17 Jan 2024</td>
-    <td class="foot-os">0.9.0</td>
+    <td class="foot-os">0.10.0</td>
   </tr>
 </table>
 </body>

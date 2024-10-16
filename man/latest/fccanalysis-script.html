@@ -38,19 +38,15 @@
     how to run an analysis, one is to run in the managed mode like so:</p>
 <dl class="Bl-tag">
   <dt></dt>
-  <dd>fccanalysis run <i>analysis_script.py</i>
-    <p class="Pp"></p>
-  </dd>
+  <dd>fccanalysis run <i>analysis_script.py</i></dd>
 </dl>
-<br/>
-or
+<p class="Pp">or</p>
 <dl class="Bl-tag">
   <dt></dt>
   <dd>fccanalysis final <i>analysis_script.py</i>
     <p class="Pp"></p>
   </dd>
 </dl>
-<br/>
 <p class="Pp">where user needs to provide minimal number of variables and
     settings. In this mode the RDataFrame is managed for the user and it can be
     controlled by defining several global attributes in the analysis script. The
@@ -59,7 +55,6 @@ or
   <dt></dt>
   <dd>python <i>analysis_script.py</i></dd>
 </dl>
-<br/>
 <p class="Pp">here user has full control over the RDataFrame, but has to create
     all necessary scaffolding.</p>
 <p class="Pp">It is expected that the whole analysis will be split into several
@@ -67,24 +62,20 @@ or
 <dl class="Bl-tag">
   <dt></dt>
   <dd>anascript_stage1.py -&gt; anascript_stage2.py -&gt; ... -&gt;
-      anascript_stage_final.py -&gt; plots.py
-    <p class="Pp"></p>
-  </dd>
+      anascript_stage_final.py -&gt; plots.py</dd>
 </dl>
-<br/>
-or
+<p class="Pp">or</p>
 <dl class="Bl-tag">
   <dt></dt>
   <dd>analysis_histmaker.py -&gt; plots.py
     <p class="Pp"></p>
   </dd>
 </dl>
-<br/>
-In the case of the first style there are at least three stages required
-  (anascript_stage1.py, anascript_stage_final.py, plots.py) and there is no
-  upper limit on the number of stages. In the case of the second style only two
-  stages are required. The first style is named &quot;staged analysis&quot; and
-  the second &quot;histmaker analysis&quot;.
+<p class="Pp">In the case of the first style there are at least three stages
+    required (anascript_stage1.py, anascript_stage_final.py, plots.py) and there
+    is no upper limit on the number of stages. In the case of the second style
+    only two stages are required. The first style is named &quot;staged
+    analysis&quot; and the second &quot;histmaker analysis&quot;.</p>
 <dl class="Bl-tag">
   <dt id="staged"><a class="permalink" href="#staged"><b>staged
     analysis</b></a></dt>
@@ -240,6 +231,20 @@ In the case of the first style there are at least three stages required
       Only paths with <i>.dot</i> and <i>.png</i> extensions are accepted.
     <br/>
     Default value: empty string</dd>
+  <dt id="useDataSource"><a class="permalink" href="#useDataSource"><b>useDataSource</b>
+    (optional)</a></dt>
+  <dd>User can specify how to provide physical object collections to the
+      analyzers. If <i>True</i> the events will be loaded through the EDM4hep
+      RDataSource.
+    <br/>
+    Default value: False</dd>
+  <dt id="do_weighted"><a class="permalink" href="#do_weighted"><b>do_weighted</b>
+    (optional)</a></dt>
+  <dd>Whether to use weighted or raw events. If <i>True</i> the events will be
+      weighted with EDM4hep's EventHeader.weight and all normalisation factors
+      calculated with sum of weights accordingly.
+    <br/>
+    Default value: False</dd>
   <dt id="procDict"><a class="permalink" href="#procDict"><b>procDict</b></a></dt>
   <dd>This variable controls which process dictionary will be used. It can be
       either simple file name, absolute path or url. In the case of simple
@@ -265,7 +270,7 @@ In the case of the first style there are at least three stages required
   <br/>
   Clement Helsens
   <br/>
-  Valentin Volk
+  Valentin Volkl
   <br/>
   Gerardo Ganis</p>
 </section>
@@ -290,7 +295,7 @@ In the case of the first style there are at least three stages required
 <table class="foot">
   <tr>
     <td class="foot-date">17 Jan 2024</td>
-    <td class="foot-os">0.9.0</td>
+    <td class="foot-os">0.10.0</td>
   </tr>
 </table>
 </body>
