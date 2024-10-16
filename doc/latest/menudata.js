@@ -24,8 +24,9 @@
 */
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
-{text:"Key4HEP Home Page",url:"^https://cern.ch/key4hep"},
-{text:"Contribution Guide",url:"md_doc_contributing.html"},
+{text:"FCCAnalyses website",url:"^https://hep-fcc.github.io/FCCAnalyses/"},
+{text:"EDM4hep",url:"^https://cern.ch/edm4hep"},
+{text:"ROOT RDataFrame",url:"^https://root.cern/doc/master/classROOT_1_1RDataFrame.html"},
 {text:"Namespaces",url:"namespaces.html",children:[
 {text:"Namespace List",url:"namespaces.html"},
 {text:"Namespace Members",url:"namespacemembers.html",children:[
@@ -48,7 +49,9 @@ var menudata={children:[
 {text:"s",url:"namespacemembers_s.html#index_s"},
 {text:"t",url:"namespacemembers_t.html#index_t"},
 {text:"v",url:"namespacemembers_v.html#index_v"},
-{text:"x",url:"namespacemembers_x.html#index_x"}]},
+{text:"w",url:"namespacemembers_w.html#index_w"},
+{text:"x",url:"namespacemembers_x.html#index_x"},
+{text:"z",url:"namespacemembers_z.html#index_z"}]},
 {text:"Functions",url:"namespacemembers_func.html",children:[
 {text:"a",url:"namespacemembers_func.html#index_a"},
 {text:"b",url:"namespacemembers_func_b.html#index_b"},
@@ -67,7 +70,9 @@ var menudata={children:[
 {text:"s",url:"namespacemembers_func_s.html#index_s"},
 {text:"t",url:"namespacemembers_func_t.html#index_t"},
 {text:"v",url:"namespacemembers_func_v.html#index_v"},
-{text:"x",url:"namespacemembers_func_x.html#index_x"}]},
+{text:"w",url:"namespacemembers_func_w.html#index_w"},
+{text:"x",url:"namespacemembers_func_x.html#index_x"},
+{text:"z",url:"namespacemembers_func_z.html#index_z"}]},
 {text:"Variables",url:"namespacemembers_vars.html"},
 {text:"Typedefs",url:"namespacemembers_type.html"}]}]},
 {text:"Classes",url:"annotated.html",children:[
