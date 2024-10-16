@@ -632,6 +632,7 @@ def run_local(config: dict[str, any],
             param_sow = ROOT.TParameter(float)( 
                         'SumOfWeights', 
                         sow_orig if sow_orig != 0 else in_sow )
+            param_sow.Write()
             param_sow = ROOT.TParameter(float)('SumOfWeightsSelected', out_sow) # No of weighted, selected events
             param_sow.Write()
         outfile.Write()
