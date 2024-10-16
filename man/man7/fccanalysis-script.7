@@ -175,6 +175,13 @@ If \fITrue\fR the events will be loaded through the EDM4hep RDataSource\&.
 .br
 Default value: False
 .TP
+\fBdo_weighted\fR (optional)
+Whether to use weighted or raw events\&. 
+If \fITrue\fR the events will be weighted with EDM4hep's EventHeader.weight 
+and all normalisation factors calculated with sum of weights accordingly\&.
+.br
+Default value: False
+.TP
 .B procDict
 This variable controls which process dictionary will be used. It can be either
 simple file name, absolute path or url. In the case of simple filename, the file

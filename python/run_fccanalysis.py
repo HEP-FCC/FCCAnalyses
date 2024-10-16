@@ -14,7 +14,7 @@ import numpy as np
 
 import ROOT  # type: ignore
 from anascript import get_element, get_element_dict, get_attribute
-from process import get_process_info
+from process import get_process_info, get_entries_sow
 from frame import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run')
@@ -265,6 +265,10 @@ def merge_config(args: object, analysis: object) -> dict[str, any]:
         config['use_data_source'] = True
     if get_attribute(analysis, 'use_data_source', False):
         config['use_data_source'] = True
+    # Check whether to use event weights (only supported as analysis config file option, not command line!)
+    config['do_weighted'] = False
+    if get_attribute(analysis, 'do_weighted', False):
+        config['do_weighted'] = True
 
     return config
 
@@ -355,6 +359,9 @@ def run_rdf(config: dict[str, any],
 
     try:
         evtcount_init = dframe2.Count()
+        sow_init = evtcount_init
+        if config['do_weighted']:
+            sow_init = dframe2.Sum("EventHeader.weight")
 
         dframe3 = analysis.analyzers(dframe2)
 
@@ -364,6 +371,9 @@ def run_rdf(config: dict[str, any],
             branch_list.push_back(bname)
 
         evtcount_final = dframe3.Count()
+        sow_final = evtcount_final
+        if config['do_weighted']:
+            sow_final = dframe3.Sum("EventHeader.weight")
 
         # Generate computational graph of the analysis
         if args.graph:
@@ -375,7 +385,7 @@ def run_rdf(config: dict[str, any],
                      'occurred:\n%s', excp)
         sys.exit(3)
 
-    return evtcount_init.GetValue(), evtcount_final.GetValue()
+    return evtcount_init.GetValue(), evtcount_final.GetValue(), sow_init.GetValue(), sow_final.GetValue()
 
 
 # _____________________________________________________________________________
@@ -506,6 +516,12 @@ def run_local(config: dict[str, any],
     nevents_orig = 0
     # The amount of events in the input file(s)
     nevents_local = 0
+
+    # Same for the sum of weights
+    if config['do_weighted']:
+        sow_orig = 0.
+        sow_local = 0.
+
     for filepath in infile_list:
 
         if not config['use_data_source']:
@@ -513,32 +529,54 @@ def run_local(config: dict[str, any],
 
         file_list.push_back(filepath)
         info_msg += f'- {filepath}\t\n'
-        infile = ROOT.TFile.Open(filepath, 'READ')
-        try:
-            nevents_orig += infile.Get('eventsProcessed').GetVal()
-        except AttributeError:
-            pass
 
-        try:
-            nevents_local += infile.Get("events").GetEntries()
-        except AttributeError:
-            LOGGER.error('Input file:\n%s\nis missing events TTree!\n'
-                         'Aborting...', filepath)
+        if config['do_weighted']:
+             # Adjust number of events in case --nevents was specified
+            if args.nevents > 0:
+                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath, args.nevents)
+            else:
+                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath)
+
+            nevents_orig += nevts_param
+            nevents_local += nevts_tree
+            sow_orig += sow_param
+            sow_local += sow_tree
+
+        else:
+            infile = ROOT.TFile.Open(filepath, 'READ')
+            try:
+                nevents_orig += infile.Get('eventsProcessed').GetVal()
+            except AttributeError:
+                pass
+
+            try:
+                nevents_local += infile.Get("events").GetEntries()
+            except AttributeError:
+                LOGGER.error('Input file:\n%s\nis missing events TTree!\n'
+                             'Aborting...', filepath)
+                infile.Close()
+                sys.exit(3)
             infile.Close()
-            sys.exit(3)
-        infile.Close()
+
+             # Adjust number of events in case --nevents was specified
+            if args.nevents > 0 and args.nevents < nevents_local:
+                nevents_local = args.nevents
+
 
     LOGGER.info(info_msg)
 
-    # Adjust number of events in case --nevents was specified
-    if args.nevents > 0 and args.nevents < nevents_local:
-        nevents_local = args.nevents
-
+   
     if nevents_orig > 0:
         LOGGER.info('Number of events:\n\t- original: %s\n\t- local:    %s',
                     f'{nevents_orig:,}', f'{nevents_local:,}')
+        if config['do_weighted']:
+            LOGGER.info('Sum of weights:\n\t- original: %s\n\t- local:    %s',
+                        f'{sow_orig:,}', f'{sow_local:,}')
     else:
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
+        if config['do_weighted']:
+            LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
+
 
     output_dir = get_attribute(analysis, 'output_dir', '')
     if not args.batch:
@@ -552,7 +590,7 @@ def run_local(config: dict[str, any],
 
     # Run RDF
     start_time = time.time()
-    inn, outn = run_rdf(config, args, analysis, file_list, outfile_path)
+    inn, outn, in_sow, out_sow = run_rdf(config, args, analysis, file_list, outfile_path)
     elapsed_time = time.time() - start_time
 
     # replace nevents_local by inn = the amount of processed events
@@ -568,6 +606,13 @@ def run_local(config: dict[str, any],
         info_msg += f'\nReduction factor local:  {outn/inn}'
     if nevents_orig > 0:
         info_msg += f'\nReduction factor total:  {outn/nevents_orig}'
+    if config['do_weighted']:
+        info_msg += f'\nTotal sum of weights processed:  {float(in_sow):0,.2f}'
+        info_msg += f'\nNo. result weighted events :       {float(out_sow):0,.2f}'
+        if in_sow > 0:
+            info_msg += f'\nReduction factor local, weighted:  {float(out_sow/in_sow):0,.4f}'
+        if sow_orig > 0:
+            info_msg += f'\nReduction factor total, weighted:  {float(out_sow/sow_orig):0,.4f}'
     info_msg += '\n'
     info_msg += 80 * '='
     info_msg += '\n'
@@ -580,8 +625,16 @@ def run_local(config: dict[str, any],
                 'eventsProcessed',
                 nevents_orig if nevents_orig != 0 else inn)
         param.Write()
-        param = ROOT.TParameter(int)('eventsSelected', outn)
+        param = ROOT.TParameter(int)('eventsSelected', outn) 
         param.Write()
+
+        if config['do_weighted']:
+            param_sow = ROOT.TParameter(float)( 
+                        'SumOfWeights', 
+                        sow_orig if sow_orig != 0 else in_sow )
+            param_sow.Write()
+            param_sow = ROOT.TParameter(float)('SumOfWeightsSelected', out_sow) # No of weighted, selected events
+            param_sow.Write()
         outfile.Write()
 
     if args.bench:
@@ -633,6 +686,9 @@ def run_fccanalysis(args, analysis_module):
     if output_dir_eos is not None and not os.path.exists(output_dir_eos):
         os.system(f'mkdir -p {output_dir_eos}')
 
+    if config['do_weighted']:
+        LOGGER.info('Using generator weights')
+
     # Check if test mode is specified, and if so run the analysis on it (this
     # will exit after)
     if args.test:
@@ -671,6 +727,8 @@ def run_fccanalysis(args, analysis_module):
         LOGGER.error('No input directory or production tag specified in the '
                      'analysis script!\nAborting...')
         sys.exit(3)
+
+
 
     for process_name in process_list:
         LOGGER.info('Started processing sample "%s" ...', process_name)
