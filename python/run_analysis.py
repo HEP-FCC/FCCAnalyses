@@ -816,7 +816,8 @@ def run_histmaker(args, rdf_module, anapath):
 
         try:
             res, hweight = graph_function(dframe, process_name)
-        except cppyy.gbl.std.runtime_error:
+        except cppyy.gbl.std.runtime_error as err:
+            LOGGER.error(err)
             LOGGER.error('During loading of the analysis an error occurred!'
                          '\nAborting...')
             sys.exit(3)
