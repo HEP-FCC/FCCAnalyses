@@ -20,30 +20,85 @@ _fcc  = ROOT.dummyLoader
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-inputFiles", type=str,
-                    default='ALLEGRO_sim_digi_reco.root',
-                    help="Input rootfiles (can be a single file or a regex)")
-parser.add_argument("-t", "--test", action="store_true", default=False,
-                    help="Run over pre-defined test file")
-parser.add_argument("-outputFolder", default = os.path.join("outputs", date.today().strftime("%y%m%d")), help = "Output folder for the rootfiles", type = str)
-parser.add_argument("-storeCellBranches", default = True, help="Whether or not to store cell information", type = str2bool)
-parser.add_argument("-cellBranchNames", default = ["ECalBarrelPositionedCells"], help="Name of the cell branch in the input rootfile. Must have position information!", type = str)
-parser.add_argument("-storeClusterBranches", default = True, help="Whether or not to store cluster information", type = str2bool)
-parser.add_argument("-clusterBranchNames", default = ["CaloClusters"], help="Name of the cluster branch in the input rootfile", type = str, nargs = '+')
-parser.add_argument("-storeClusterCellsBranches", default = False, help="Whether or not to store cluster cells information", type = str2bool)
-parser.add_argument("-clusterCellsBranchNames", default = ["PositionedCaloClusterCells"], help="Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!", type = str, nargs = '+')
-parser.add_argument("-storeGenBranches", default = True, help="Whether or not to store gen information", type = str2bool)
-parser.add_argument("-genBranchName", type=str, default="MCParticles",
-                    help="Name of the gen particle branch in the input rootfile")
-parser.add_argument("-storeSimParticleSecondaries", default = False, help="Whether to store the SimParticleSecondaries information", type = str2bool)
-parser.add_argument("-simParticleSecondariesNames", default = ["SimParticleSecondaries"],  help = "name of the SimParticleSecondaries branch", type = str, nargs = '+')
-parser.add_argument("-useGeometry", default = True, help="Whether or not to load the FCCSW geometry. Used to get the detector segmentation for e.g. the definition of the cell layer index.", type = str2bool)
-parser.add_argument("-geometryFile", default=os.environ['K4GEO'] + '/FCCee/ALLEGRO/compact/ALLEGRO_o1_v02/ALLEGRO_o1_v02.xml', help="Path to the xml geometry file", type=str)
-parser.add_argument("-readoutName", default='ECalBarrelModuleThetaMerged', help="Name of the readout to use for the layer/phi/theta bin definition", type=str)
-parser.add_argument("-extractHighestEnergyClusterCells", default = False, help = "Use it if you need cells attached to the higest energy cluster, will use the first cluster collection in clusterBranchNames", type = str2bool)
-parser.add_argument("-isPi0", default = 0, help = "Weaver training needs a branch in the input tree with the target label: set it to 1 when running on pi0 files, 0 for photon files", type = int)
-parser.add_argument("-doWeaverInference", default = False, help = "Apply weaver inference on highest energy cluster cell variables, extractHighestEnergyClusterCells must be set to True", type = str2bool)
-parser.add_argument("-weaverFiles", default = [os.path.join("/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/221123/LAr_scripts/machineLearning/weaver_models_theta_phi/", fileName) for fileName in ["fccee_pi_vs_gamma_simpler_best_epoch_state.onnx", "preprocess.json"]], help = "Path to the '.onnx' (first argument) and '.json' (second argument) coming out of your training", type = str, nargs = '+')
+parser.add_argument(
+    '-inputFiles',
+    type=str, default='ALLEGRO_sim_digi_reco.root',
+    help='Input rootfiles (can be a single file or a regex)')
+parser.add_argument(
+    '-t', '--test',
+    action='store_true', default=False,
+    help='Run over pre-defined test file')
+parser.add_argument('-outputFolder',
+    type=str, default = os.path.join('outputs', date.today().strftime('%y%m%d')),
+    help = 'Output folder for the rootfiles')
+parser.add_argument(
+    '-storeCellBranches',
+    type=str2bool, default=True,
+    help='Whether or not to store cell information')
+parser.add_argument(
+    '-cellBranchNames',
+    nargs='+', default=['ECalBarrelPositionedCells'],
+    help='Names of the cell branches in the input rootfile. Must have position information!')
+parser.add_argument(
+    '-storeClusterBranches',
+    type=str2bool, default=True,
+    help='Whether or not to store cluster information')
+parser.add_argument(
+    '-clusterBranchNames',
+    nargs='+', default=['CaloClusters'],
+    help='Name of the cluster branch in the input rootfile')
+parser.add_argument(
+    '-storeClusterCellsBranches',
+    type=str2bool, default=False,
+    help='Whether or not to store cluster cells information')
+parser.add_argument(
+    '-clusterCellsBranchNames',
+    nargs='+', default=['PositionedCaloClusterCells'],
+    help='Name of the cluster-attached-cells branches in the input rootfile. Order must follow -clusterBranchNames and the cells must have positions attached!')
+parser.add_argument(
+    '-storeGenBranches',
+    type=str2bool, default=True,
+    help='Whether or not to store gen information')
+parser.add_argument(
+    '-genBranchName',
+    type=str, default='MCParticles',
+    help='Name of the gen particle branch in the input rootfile')
+parser.add_argument(
+    '-storeSimParticleSecondaries',
+    type=str2bool, default=False,
+    help='Whether to store the SimParticleSecondaries information')
+parser.add_argument(
+    '-simParticleSecondariesNames',
+    nargs='+', default=['SimParticleSecondaries'],
+    help='name of the SimParticleSecondaries branch')
+parser.add_argument(
+    '-useGeometry',
+    type=str2bool, default=True,
+    help='Whether or not to load the FCCSW geometry. Used to get the detector segmentation for e.g. the definition of the cell layer index.')
+parser.add_argument(
+    '-geometryFile',
+    type=str, default=os.environ['K4GEO'] + '/FCCee/ALLEGRO/compact/ALLEGRO_o1_v03/ALLEGRO_o1_v03.xml',
+    help='Path to the xml geometry file')
+parser.add_argument(
+    '-readoutName',
+    type=str, default='ECalBarrelModuleThetaMerged',
+    help='Name of the readout to use for the layer/phi/theta bin definition')
+parser.add_argument(
+    '-extractHighestEnergyClusterCells',
+    type=str2bool, default=False,
+    help='Use it if you need cells attached to the higest energy cluster, will use the first cluster collection in clusterBranchNames')
+parser.add_argument(
+    '-isPi0',
+    type=int, default=0,
+    help='Weaver training needs a branch in the input tree with the target label: set it to 1 when running on pi0 files, 0 for photon files')
+parser.add_argument(
+    '-doWeaverInference',
+    type=str2bool, default=False,
+    help='Apply weaver inference on highest energy cluster cell variables, extractHighestEnergyClusterCells must be set to True')
+parser.add_argument(
+    '-weaverFiles',
+    nargs='+', default = [os.path.join('/afs/cern.ch/user/b/brfranco/work/public/Fellow/FCCSW/221123/LAr_scripts/machineLearning/weaver_models_theta_phi/', fileName) for fileName in ['fccee_pi_vs_gamma_simpler_best_epoch_state.onnx', 'preprocess.json']],
+    help = 'Path to the ".onnx" (first argument) and ".json" (second argument) coming out of your training')
 
 args = parser.parse_args()
 
