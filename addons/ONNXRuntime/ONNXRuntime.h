@@ -22,7 +22,7 @@ public:
   const std::vector<std::string>& inputNames() const { return input_names_; }
 
   template <typename T>
-  Tensor<T> run(Tensor<T>&, const Tensor<long>& = {}, unsigned long long = 1ull) const;
+  Tensor<T> run(Tensor<T>&, const Tensor<int64_t>& = {}, unsigned long long = 1ull) const;
 
 private:
   size_t variablePos(const std::string&) const;

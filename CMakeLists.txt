@@ -101,10 +101,11 @@ endif()
 if(WITH_ONNX)
   # New onnxruntime (at least 1.17.1 and above) provide a onnxruntimeConfig.cmake
   # and use the name onnxruntime
-  find_package(onnxruntime)
-  if (NOT onnxruntime_FOUND)
+  find_package(onnxruntime REQUIRED)
+  if (NOT TARGET onnxruntime::onnxruntime)
     message(STATUS "Could not find onnxruntime (> 1.17.1). Looking for an older version")
-    find_package(ONNXRuntime)
+  else()
+    set(onnxruntime_FOUND TRUE)
   endif()
 
   if(onnxruntime_FOUND OR ONNXRuntime_FOUND)

@@ -21,7 +21,6 @@ add_custom_command(TARGET FastJet POST_BUILD
 install(FILES
    ${CMAKE_CURRENT_LIST_DIR}/ExternalRecombiner.h
    ${CMAKE_CURRENT_LIST_DIR}/ValenciaPlugin.h
-   ${CMAKE_CURRENT_LIST_DIR}/JetClustering.h
    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/FastJet
    )
 
