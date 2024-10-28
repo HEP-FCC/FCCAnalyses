@@ -37,7 +37,7 @@ parser.add_argument(
     help='Whether or not to store cell information')
 parser.add_argument(
     '-cellBranchNames',
-    nargs='+', default=['ECalBarrelModuleThetaMergedPositioned'],
+    nargs='+', default=['ECalBarrelPositionedCells'],
     help='Names of the cell branches in the input rootfile. Must have position information!')
 parser.add_argument(
     '-storeClusterBranches',
