@@ -68,6 +68,42 @@ def get_processes(rdf_module: object) -> list[str]:
 
 
 # _____________________________________________________________________________
+def find_sample_files(input_dir: str,
+                      sample_name: str) -> list[str]:
+    '''
+    Find input files for the specified sample name.
+    '''
+    result: list[str] = []
+
+    full_input_path = os.path.abspath(os.path.join(input_dir, sample_name))
+
+    # Find all input files ending with .root
+    if os.path.isdir(full_input_path):
+        all_files = os.listdir(full_input_path)
+        # Remove files not ending with `.root`
+        all_files = [f for f in all_files if f.endswith('.root')]
+        # Remove directories
+        all_files = [f for f in all_files
+                     if os.path.isfile(os.path.join(full_input_path, f))]
+        result = [os.path.join(full_input_path, f) for f in all_files]
+
+    # Handle case when there is just one input file
+    if len(result) < 1:
+        if os.path.isfile(full_input_path + '.root'):
+            result.append(full_input_path + '.root')
+        else:
+            LOGGER.debug('Input file "%s" does not exist!',
+                         full_input_path + '.root')
+
+    if len(result) < 1:
+        LOGGER.error('Can not find input files for "%s" sample!\nAborting...',
+                     sample_name)
+        sys.exit(3)
+
+    return result
+
+
+# _____________________________________________________________________________
 def save_results(results: dict[str, dict[str, any]],
                  rdf_module: object) -> None:
     '''
@@ -279,47 +315,34 @@ def run(rdf_module, args) -> None:
 
         file_list[process_name] = ROOT.vector('string')()
 
-        infilepath = input_dir + process_name + '.root'  # input file
-        
-        if not os.path.isfile(infilepath):
-            LOGGER.debug('File %s does not exist!\nTrying if it is a '
-                         'directory as it might have been processed in batch.',
-                         infilepath)
-        else:
-            LOGGER.info('Open file:\n  %s', infilepath)
+        flist = find_sample_files(input_dir, process_name)
+        for filepath in flist:
+            # TODO: check in `get_entries()` if file is valid and remove it
+            #       from the input list if it is not
             if do_weighted:
-                process_events[process_name], events_ttree[process_name], \
-                sow_process[process_name], sow_ttree[process_name] = \
-                    get_entries_sow(infilepath, weight_name="weight")
-            else:
-                process_events[process_name], events_ttree[process_name] = \
-                    get_entries(infilepath)
-            file_list[process_name].push_back(infilepath)
-
-        indirpath = input_dir + process_name
-        if os.path.isdir(indirpath):
-            #reset the nevts/sow counters to avoid wrong counting in case a single file of same name (e.g. local test output) also exists in the same directory
-            process_events[process_name] = 0
-            events_ttree[process_name] = 0
-            sow_process[process_name] = 0.
-            sow_ttree[process_name] = 0.
-
-            info_msg = f'Open directory {indirpath}'
-            flist = glob.glob(indirpath + '/chunk*.root')
-            for filepath in flist:
-                info_msg += '\n\t' + filepath
-                if do_weighted:
-                    chunk_process_events, chunk_events_ttree, \
+                chunk_process_events, chunk_events_ttree, \
                     chunk_sow_process, chunk_sow_ttree = \
                     get_entries_sow(filepath, weight_name="weight")
-                    sow_process[process_name] += chunk_sow_process
-                    sow_ttree[process_name] += chunk_sow_ttree
-                else:
-                    chunk_process_events, chunk_events_ttree = \
-                        get_entries(filepath)
-                process_events[process_name] += chunk_process_events
-                events_ttree[process_name] += chunk_events_ttree
-                file_list[process_name].push_back(filepath)
+                sow_process[process_name] += chunk_sow_process
+                sow_ttree[process_name] += chunk_sow_ttree
+            else:
+                chunk_process_events, chunk_events_ttree = \
+                    get_entries(filepath)
+            process_events[process_name] += chunk_process_events
+            events_ttree[process_name] += chunk_events_ttree
+            file_list[process_name].push_back(filepath)
+        if len(file_list[process_name]) < 1:
+            LOGGER.error('No valid input files for sample "%s" '
+                         'found!\nAborting..', process_name)
+            sys.exit(3)
+        if len(file_list[process_name]) == 1:
+            LOGGER.info('Loading events for sample "%s" from file:\n  - %s',
+                        process_name, file_list[process_name][0])
+        else:
+            info_msg = f'Loading events for sample "{process_name}"'
+            info_msg += ' from files:'
+            for filepath in file_list[process_name]:
+                info_msg += f'\n  - {filepath}'
             LOGGER.info(info_msg)
 
     info_msg = 'Processed events:'
