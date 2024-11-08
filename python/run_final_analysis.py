@@ -41,7 +41,8 @@ def get_entries(infilepath: str) -> tuple[int, int]:
         try:
             events_in_ttree = infile.Get("events").GetEntries()
         except AttributeError:
-            LOGGER.error('Input file is missing "events" TTree!\nAborting...')
+            LOGGER.error('Input file is missing "events" TTree!\n  - %s'
+                         '\nAborting...')
             sys.exit(3)
 
     return events_processed, events_in_ttree
