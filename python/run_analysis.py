@@ -886,7 +886,8 @@ def run_histmaker(args, rdf_module, anapath):
 
         LOGGER.info('Writing out process %s, nEvents processed %s',
                     process, f'{evtcount.GetValue():,}')
-        with ROOT.TFile(f'{output_dir}/{process}.root', 'RECREATE'):
+        with ROOT.TFile(os.path.join(output_dir, f'{process}.root'),
+                        'RECREATE'):
             for hist in hists_to_write.values():
                 if do_scale:
                     hist.Scale(scale * int_lumi)
