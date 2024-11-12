@@ -29,7 +29,8 @@ def get_entries(inpath: str) -> int | None:
         try:
             nevents = infile.Get("events").GetEntries()
         except AttributeError:
-            LOGGER.error('Input file is missing "events" TTree!\nAborting...')
+            LOGGER.error('Input file is missing "events" TTree!\n  - %s'
+                         '\nAborting...', inpath)
             sys.exit(3)
 
     return nevents
@@ -63,7 +64,7 @@ def get_entries_sow(infilepath: str, nevents_max: Optional[int] = None, get_loca
     sumOfWeightsTTree = 0.
 
      # check for empty chunk (can this be improved? exception from RDF cannot be caught it seems?)
-    tree =infile.Get("events")
+    tree = infile.Get("events")
     if not tree:
         print("Tree not found in file", infilepath, " possibly empty chunk - continuing with next one.")
         infile.Close()
@@ -71,7 +72,7 @@ def get_entries_sow(infilepath: str, nevents_max: Optional[int] = None, get_loca
 
     try:
 
-         #use a RDF here too so the nevents restriction option can be imposed easily for the local events
+         # use a RDF here too so the nevents restriction option can be imposed easily for the local events
         rdf_tmp = ROOT.ROOT.RDataFrame("events", infilepath)
 
         if nevents_max:
@@ -85,7 +86,7 @@ def get_entries_sow(infilepath: str, nevents_max: Optional[int] = None, get_loca
             # infile.Get("events").Draw('EventHeader.weight[0]>>histo')
             # histo=ROOT.gDirectory.Get('histo')
             histo = rdf_tmp.Histo1D(weight_name)
-            sumOfWeightsTTree=float(eventsTTree)*histo.GetMean()
+            sumOfWeightsTTree = float(eventsTTree) * histo.GetMean()
         except cppyy.gbl.std.runtime_error:
                 LOGGER.error('Error: Event weights requested with do_weighted,'
                             'but input file does not contain weight column. Aborting.')
