@@ -11,7 +11,6 @@
 #include "edm4hep/ParticleIDData.h"
 #include "edm4hep/Vector3f.h"
 #include "edm4hep/Vector3d.h"
-#include "edm4hep/Vector2i.h"
 
 
 namespace FCCAnalyses{
