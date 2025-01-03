@@ -12,12 +12,14 @@
 #include "edm4hep/Vector3d.h"
 #include "edm4hep/Vector3f.h"
 
-/** MCParticle interface.
-This represents a set functions and utilities to access and perform operations
-on the MCParticle collection.
-*/
 namespace FCCAnalyses{
 
+/**
+ * Analyzers operating on/with Monte Carlo particles.
+ *
+ * This represents a set functions and utilities to access and perform
+ * operations on the MCParticle collection.
+ */
 namespace MCParticle{
 
   /// Filter events based on a MCParticles PDGID
