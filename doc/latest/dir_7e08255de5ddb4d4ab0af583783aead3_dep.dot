@@ -1,0 +1,12 @@
+digraph "addons/TMVAHelper/src"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  compound=true
+  subgraph clusterdir_44afe0fcdf3e76c82cef1208b2318c93 {
+    graph [ bgcolor="#e4edea", pencolor="grey50", label="TMVAHelper", fontname=Helvetica,fontsize=10 style="filled,dashed", URL="dir_44afe0fcdf3e76c82cef1208b2318c93.html",tooltip=""]
+  dir_7e08255de5ddb4d4ab0af583783aead3 [label="src", fillcolor="#e4edea", color="grey25", style="filled,bold", URL="dir_7e08255de5ddb4d4ab0af583783aead3.html",tooltip=""];
+  }
+}
