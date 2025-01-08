@@ -57,12 +57,12 @@ class Analysis():
 
         # Optional: output directory on eos, if specified files will be copied
         # there once the batch job is done, default is empty
-        self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
-                              f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
+        # self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
+        #                       f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
 
         # Optional: type for eos, needed when <outputDirEos> is specified. The
         # default is FCC EOS, which is eospublic
-        self.eos_type = 'eospublic'
+        # self.eos_type = 'eospublic'
 
         # Optional: test file
         self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/' \
