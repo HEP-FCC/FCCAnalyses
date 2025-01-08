@@ -111,7 +111,7 @@ def setup_run_parser(parser):
     parser.add_argument('--files-list', default=[], nargs='+',
                         help='specify input file(s) to bypass the processList')
     parser.add_argument(
-        '--output',
+        '-o', '--output',
         type=str,
         default='output.root',
         help='specify output file name to bypass the processList and or '
