@@ -59,6 +59,7 @@ class Analysis():
         # there once the batch job is done, default is empty
         # self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
         #                       f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
+        self.output_dir_eos = '/eos/user/j/jsmiesko/FCCAnalyses/output'
 
         # Optional: type for eos, needed when <outputDirEos> is specified. The
         # default is FCC EOS, which is eospublic

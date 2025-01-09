@@ -40,7 +40,8 @@ def determine_os(local_dir: str) -> str | None:
 
 
 # _____________________________________________________________________________
-def create_condor_config(log_dir: str,
+def create_condor_config(config: dict[str, Any],
+                         log_dir: str,
                          process_name: str,
                          build_os: str | None,
                          rdf_module,
@@ -81,7 +82,7 @@ def create_condor_config(log_dir: str,
 
     cfg += '+AccountingGroup = "%s"\n' % get_element(rdf_module, 'comp_group')
 
-    cfg += 'RequestCpus      = %i\n' % get_element(rdf_module, "n_threads")
+    cfg += f'RequestCpus      = {config["n-threads"]}\n'
 
     cfg += 'should_transfer_files = yes\n'
     cfg += 'when_to_transfer_output = on_exit\n'
@@ -111,7 +112,8 @@ def create_condor_config(log_dir: str,
 
 
 # _____________________________________________________________________________
-def create_subjob_script(local_dir: str,
+def create_subjob_script(config: dict[str, Any],
+                         local_dir: str,
                          analysis,
                          process_name: str,
                          chunk_num: int,
@@ -135,10 +137,10 @@ def create_subjob_script(local_dir: str,
 
     scr += 'which fccanalysis\n'
     # scr += local_dir
-    scr += f'fccanalysis run {anapath} --batch'
+    scr += f'fccanalysis run {anapath}'
     scr += f' --output {output_path}'
     if hasattr(analysis, 'n_threads'):
-        scr += ' --ncpus ' + str(get_element(analysis, "n_threads"))
+        scr += f' --n-threads {config["n-threads"]}'
     if len(cmd_args.remaining) > 0:
         scr += ' ' + ' '.join(cmd_args.unknown)
     scr += ' --files-list'
@@ -260,7 +262,8 @@ def send_to_batch(config: dict[str, Any],
         for i in range(3):
             try:
                 with open(subjob_script_path, 'w', encoding='utf-8') as ofile:
-                    subjob_script = create_subjob_script(local_dir,
+                    subjob_script = create_subjob_script(config,
+                                                         local_dir,
                                                          analysis,
                                                          sample_name,
                                                          ch_num,
@@ -288,7 +291,8 @@ def send_to_batch(config: dict[str, Any],
     for i in range(3):
         try:
             with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
-                condor_config = create_condor_config(log_dir,
+                condor_config = create_condor_config(config,
+                                                     log_dir,
                                                      sample_name,
                                                      determine_os(local_dir),
                                                      analysis,
@@ -305,6 +309,6 @@ def send_to_batch(config: dict[str, Any],
 
     batch_cmd = f'condor_submit -spool {condor_config_path}'
     LOGGER.info('Batch command:\n  %s', batch_cmd)
-    success = submit_job(batch_cmd, 10)
-    if not success:
-        sys.exit(3)
+    # success = submit_job(batch_cmd, 10)
+    # if not success:
+    #     sys.exit(3)
