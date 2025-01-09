@@ -5,20 +5,16 @@ Run analysis in one of the different styles.
 import os
 import sys
 import time
-import shutil
-import json
 import logging
-import subprocess
 import importlib.util
-import datetime
 
 import ROOT  # type: ignore
 import cppyy
 from anascript import get_element, get_element_dict
 from process import get_process_info, get_process_dict
 from process import get_subfile_list, get_chunk_list
-from batch import send_to_batch
 from utils import generate_graph, save_benchmark
+from run_fccanalysis import run_fccanalysis
 
 
 ROOT.gROOT.SetBatch(True)
@@ -31,6 +27,13 @@ def initialize(args, rdf_module, anapath: str):
     '''
     Common initialization steps.
     '''
+
+    # Put runBatch deprecation warning
+    if hasattr(rdf_module, 'runBatch'):
+        if rdf_module.runBatch:
+            LOGGER.error('runBatch script attribute is no longer supported, '
+                         'use "fccanalysis submit" instead!\nAborting...')
+            sys.exit(3)
 
     # for convenience and compatibility with user code
     if args.use_data_source:
@@ -211,14 +214,12 @@ def run_local(rdf_module, infile_list, args):
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
 
     output_dir = get_element(rdf_module, "outputDir")
-    if not args.batch:
-        if os.path.isabs(args.output):
-            LOGGER.warning('Provided output file path is absolute, "outputDir" '
-                           'from analysis script will be ignored!')
-        else:
-            outfile_path = os.path.join(output_dir, args.output)
-    else:
+    if os.path.isabs(args.output):
+        LOGGER.warning('Provided output file path is absolute, "outputDir" '
+                       'from analysis script will be ignored!')
         outfile_path = args.output
+    else:
+        outfile_path = os.path.join(output_dir, args.output)
     LOGGER.info('Output file path:\n%s', outfile_path)
 
     # Run RDF
@@ -319,12 +320,6 @@ def run_stages(args, rdf_module, anapath):
         run_local(rdf_module, args.files_list, args)
         sys.exit(0)
 
-    # Check if batch mode is available
-    run_batch = get_element(rdf_module, 'runBatch')
-    if run_batch and shutil.which('condor_q') is None:
-        LOGGER.error('HTCondor tools can\'t be found!\nAborting...')
-        sys.exit(3)
-
     # Check if the process list is specified
     process_list = get_element(rdf_module, 'processList')
 
@@ -371,9 +366,6 @@ def run_stages(args, rdf_module, anapath):
         chunk_list = [file_list]
         if chunks > 1:
             chunk_list = get_chunk_list(file_list, chunks)
-            args.output = f'{output_stem}/chunk{index}.root'
-        else:
-            args.output = f'{output_stem}.root'
         LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
         # Create directory if more than 1 chunk
@@ -383,25 +375,15 @@ def run_stages(args, rdf_module, anapath):
             if not os.path.exists(output_directory):
                 os.system(f'mkdir -p {output_directory}')
 
-        if run_batch:
-            # Sending to the batch system
-            LOGGER.info('Running on the batch...')
-            if len(chunk_list) == 1:
-                LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
-                               'only one chunk might not be optimal\033[0m')
-
-            send_to_batch(rdf_module, chunk_list, process_name, anapath)
-
+        # Running locally
+        LOGGER.info('Running locally...')
+        if len(chunk_list) == 1:
+            args.output = f'{output_stem}.root'
+            run_local(rdf_module, chunk_list[0], args)
         else:
-            # Running locally
-            LOGGER.info('Running locally...')
-            if len(chunk_list) == 1:
-                args.output = f'{output_stem}.root'
-                run_local(rdf_module, chunk_list[0], args)
-            else:
-                for index, chunk in enumerate(chunk_list):
-                    args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(rdf_module, chunk, args)
+            for index, chunk in enumerate(chunk_list):
+                args.output = f'{output_stem}/chunk{index}.root'
+                run_local(rdf_module, chunk, args)
 
 
 def run_histmaker(args, rdf_module, anapath):
@@ -638,11 +620,7 @@ def run(parser):
     Set things in motion.
     '''
 
-    args, unknown_args = parser.parse_known_args()
-    # Add unknown arguments including unknown input files
-    unknown_args += [x for x in args.files_list if not x.endswith('.root')]
-    args.unknown = unknown_args
-    args.files_list = [x for x in args.files_list if x.endswith('.root')]
+    args = parser.parse_args()
 
     if not hasattr(args, 'command'):
         LOGGER.error('Error occurred during subcommand routing!\nAborting...')
@@ -732,7 +710,6 @@ def run(parser):
         sys.exit(3)
 
     if hasattr(rdf_module, "Analysis"):
-        from run_fccanalysis import run_fccanalysis
         run_fccanalysis(args, rdf_module)
     if hasattr(rdf_module, "RDFanalysis"):
         run_stages(args, rdf_module, anapath)

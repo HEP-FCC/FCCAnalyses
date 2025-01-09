@@ -246,6 +246,9 @@ def send_to_batch(config: dict[str, Any],
     chunk_list = [file_list]
     if chunks > 1:
         chunk_list = get_chunk_list(file_list, chunks)
+    else:
+        LOGGER.warning('Number of requested output chunks for the sample '
+                       '"%s" is suspiciously low!', sample_name)
 
     subjob_scripts = []
     for ch_num in range(len(chunk_list)):

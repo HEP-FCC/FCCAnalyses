@@ -5,17 +5,14 @@ Run analysis of style "Analysis", which can be split into several stages.
 import os
 import sys
 import time
-import shutil
-import json
 import logging
-import subprocess
-import datetime
+import argparse
+from typing import Any
 
 import ROOT  # type: ignore
-from anascript import get_element, get_element_dict, get_attribute
-from process import get_process_info, get_entries_sow, get_subfile_list
+from anascript import get_element_dict, get_attribute
+from process import get_process_info, get_entries_sow
 from process import get_subfile_list, get_chunk_list
-from batch import send_to_batch
 from utils import generate_graph, save_benchmark
 
 
@@ -25,11 +22,19 @@ LOGGER = logging.getLogger('FCCAnalyses.run')
 
 
 # _____________________________________________________________________________
-def merge_config(args: object, analysis: object) -> dict[str, any]:
+def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
     '''
     Merge configuration from command line arguments and analysis class.
     '''
-    config: dict[str, any] = {}
+    config: dict[str, Any] = {}
+
+    # Put runBatch deprecation warning
+    if hasattr(analysis, 'run_batch'):
+        if analysis.run_batch:
+            LOGGER.error('run_batch analysis attribute is no longer '
+                         'supported, use "fccanalysis submit" instead!\n'
+                         'Aborting...')
+            sys.exit(3)
 
     # Check whether to use PODIO DataSource to load the events
     config['use_data_source'] = False
@@ -37,7 +42,8 @@ def merge_config(args: object, analysis: object) -> dict[str, any]:
         config['use_data_source'] = True
     if get_attribute(analysis, 'use_data_source', False):
         config['use_data_source'] = True
-    # Check whether to use event weights (only supported as analysis config file option, not command line!)
+    # Check whether to use event weights (only supported as analysis config
+    # file option, not command line!)
     config['do_weighted'] = False
     if get_attribute(analysis, 'do_weighted', False):
         config['do_weighted'] = True
@@ -101,7 +107,7 @@ def initialize(config, args, analysis):
 
 
 # _____________________________________________________________________________
-def run_rdf(config: dict[str, any],
+def run_rdf(config: dict[str, Any],
             args,
             analysis,
             input_list: list[str],
@@ -193,7 +199,7 @@ def apply_filepath_rewrites(filepath: str) -> str:
 
 
 # _____________________________________________________________________________
-def run_local(config: dict[str, any],
+def run_local(config: dict[str, Any],
               args: object,
               analysis: object,
               infile_list):
@@ -223,11 +229,13 @@ def run_local(config: dict[str, any],
         info_msg += f'- {filepath}\t\n'
 
         if config['do_weighted']:
-             # Adjust number of events in case --nevents was specified
+            # Adjust number of events in case --nevents was specified
             if args.nevents > 0:
-                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath, args.nevents)
+                nevts_param, nevts_tree, sow_param, sow_tree = \
+                    get_entries_sow(filepath, args.nevents)
             else:
-                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath)
+                nevts_param, nevts_tree, sow_param, sow_tree = \
+                    get_entries_sow(filepath)
 
             nevents_orig += nevts_param
             nevents_local += nevts_tree
@@ -250,7 +258,7 @@ def run_local(config: dict[str, any],
                 sys.exit(3)
             infile.Close()
 
-             # Adjust number of events in case --nevents was specified
+            # Adjust number of events in case --nevents was specified
             if args.nevents > 0 and args.nevents < nevents_local:
                 nevents_local = args.nevents
 
@@ -268,18 +276,18 @@ def run_local(config: dict[str, any],
             LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
 
     output_dir = get_attribute(analysis, 'output_dir', '')
-    if not args.batch:
-        if os.path.isabs(args.output):
-            LOGGER.warning('Provided output path is absolute, "outputDir" '
-                           'from analysis script will be ignored!')
-        outfile_path = os.path.join(output_dir, args.output)
-    else:
+    if os.path.isabs(args.output):
+        LOGGER.warning('Provided output path is absolute, "outputDir" '
+                       'from the analysis script will be ignored!')
         outfile_path = args.output
+    else:
+        outfile_path = os.path.join(output_dir, args.output)
     LOGGER.info('Output file path:\n%s', outfile_path)
 
     # Run RDF
     start_time = time.time()
-    inn, outn, in_sow, out_sow = run_rdf(config, args, analysis, file_list, outfile_path)
+    inn, outn, in_sow, out_sow = run_rdf(config, args, analysis, file_list,
+                                         outfile_path)
     elapsed_time = time.time() - start_time
 
     # replace nevents_local by inn = the amount of processed events
@@ -314,15 +322,16 @@ def run_local(config: dict[str, any],
                 'eventsProcessed',
                 nevents_orig if nevents_orig != 0 else inn)
         param.Write()
-        param = ROOT.TParameter(int)('eventsSelected', outn) 
+        param = ROOT.TParameter(int)('eventsSelected', outn)
         param.Write()
 
         if config['do_weighted']:
-            param_sow = ROOT.TParameter(float)( 
-                        'SumOfWeights', 
-                        sow_orig if sow_orig != 0 else in_sow )
+            param_sow = ROOT.TParameter(float)(
+                        'SumOfWeights',
+                        sow_orig if sow_orig != 0 else in_sow)
             param_sow.Write()
-            param_sow = ROOT.TParameter(float)('SumOfWeightsSelected', out_sow) # No of weighted, selected events
+            # No of weighted, selected events
+            param_sow = ROOT.TParameter(float)('SumOfWeightsSelected', out_sow)
             param_sow.Write()
         outfile.Write()
 
@@ -356,11 +365,10 @@ def run_fccanalysis(args, analysis_module):
     '''
 
     # Get analysis class out of the module
-    analysis_args = vars(args)
-    analysis = analysis_module.Analysis(analysis_args)
+    analysis = analysis_module.Analysis(vars(args))
 
     # Merge configuration from command line arguments and analysis class
-    config: dict[str, any] = merge_config(args, analysis)
+    config: dict[str, Any] = merge_config(args, analysis)
 
     # Set number of threads, load header files, custom dicts, ...
     initialize(config, args, analysis_module)
@@ -398,12 +406,6 @@ def run_fccanalysis(args, analysis_module):
             os.system(f'mkdir -p {directory}')
         run_local(config, args, analysis, args.files_list)
         sys.exit(0)
-
-    # Check if batch mode is available
-    run_batch = get_attribute(analysis, 'run_batch', False)
-    if run_batch and shutil.which('condor_q') is None:
-        LOGGER.error('HTCondor tools can\'t be found!\nAborting...')
-        sys.exit(3)
 
     # Check if the process list is specified
     process_list = get_attribute(analysis, 'process_list', [])
@@ -462,35 +464,23 @@ def run_fccanalysis(args, analysis_module):
             chunk_list = get_chunk_list(file_list, chunks)
         LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
-        if run_batch:
-            # Sending to the batch system
-            LOGGER.info('Running on the batch...')
-            if len(chunk_list) == 1:
-                LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
-                               'only one chunk might not be optimal\033[0m')
+        # Create directory if more than 1 chunk
+        if len(chunk_list) > 1:
+            output_directory = os.path.join(output_dir if output_dir else '',
+                                            output_stem)
 
-            anapath = os.path.abspath(args.anascript_path)
+            if not os.path.exists(output_directory):
+                os.system(f'mkdir -p {output_directory}')
 
-            send_to_batch(args, analysis, chunk_list, process_name, anapath)
-
+        # Running locally
+        LOGGER.info('Running locally...')
+        if len(chunk_list) == 1:
+            args.output = f'{output_stem}.root'
+            run_local(config, args, analysis, chunk_list[0])
         else:
-            # Create directory if more than 1 chunk
-            if len(chunk_list) > 1:
-                output_directory = os.path.join(output_dir if output_dir else '',
-                                                output_stem)
-
-                if not os.path.exists(output_directory):
-                    os.system(f'mkdir -p {output_directory}')
-
-            # Running locally
-            LOGGER.info('Running locally...')
-            if len(chunk_list) == 1:
-                args.output = f'{output_stem}.root'
-                run_local(config, args, analysis, chunk_list[0])
-            else:
-                for index, chunk in enumerate(chunk_list):
-                    args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(config, args, analysis, chunk)
+            for index, chunk in enumerate(chunk_list):
+                args.output = f'{output_stem}/chunk{index}.root'
+                run_local(config, args, analysis, chunk)
 
     if len(process_list) == 0:
         LOGGER.warning('No files processed (process_list not found)!\n'
