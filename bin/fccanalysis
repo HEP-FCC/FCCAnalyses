@@ -12,6 +12,7 @@ from init_analysis import init_analysis
 from build_analysis import build_analysis
 from test_fccanalyses import test_fccanalyses
 from pin_analysis import PinAnalysis
+from submit import submit_analysis
 from run_analysis import run
 from run_final_analysis import run_final
 from do_plots import do_plots
@@ -53,12 +54,13 @@ class MaxLevelFilter(logging.Filter):
       https://stackoverflow.com/questions/1383254/
     '''
     def __init__(self, level):
+        super().__init__()
         self.level = level
 
     def filter(self, record):
-        return record.levelno < self.level # "<" instead of "<=": since
-                                           # logger.setLevel is inclusive,
-                                           # this should be exclusive
+        # "<" instead of "<=": since logger.setLevel is inclusive,
+        # this should be exclusive
+        return record.levelno < self.level
 
 
 # _____________________________________________________________________________
@@ -117,6 +119,8 @@ def main():
         test_fccanalyses(parser)
     elif args.command == 'pin':
         PinAnalysis(parser)
+    elif args.command == 'submit':
+        submit_analysis(parser)
     elif args.command == 'final':
         run_final(parser)
     elif args.command == 'plots':
