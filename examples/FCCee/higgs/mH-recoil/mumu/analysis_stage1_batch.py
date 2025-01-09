@@ -12,15 +12,15 @@ class Analysis():
     Higgs mass recoil analysis in Z(mumu)H.
     '''
     def __init__(self, cmdline_args):
+        # Parse additional arguments not known to the FCCAnalyses parsers.
+        # All command line arguments are provided in the `cmdline_arg`
+        # dictionary and arguments after "--" are stored under "remaining" key.
         parser = ArgumentParser(
             description='Additional analysis arguments',
-            usage='Provide additional arguments after analysis script path')
+            usage='Provided after "--"')
         parser.add_argument('--muon-pt', default='10.', type=float,
                             help='Minimal pT of the mouns.')
-        # Parse additional arguments not known to the FCCAnalyses parsers
-        # All command line arguments know to fccanalysis are provided in the
-        # `cmdline_arg` dictionary.
-        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['remaining'])
 
         # Mandatory: List of processes to run over
         self.process_list = {
@@ -42,7 +42,7 @@ class Analysis():
         # self.analysis_name = 'My Analysis'
 
         # Optional: number of threads to run on, default is 'all available'
-        # self.n_threads = 4
+        self.n_threads = 4
 
         # Optional: running on HTCondor, default is False
         self.run_batch = True

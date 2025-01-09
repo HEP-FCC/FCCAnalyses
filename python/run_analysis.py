@@ -656,7 +656,6 @@ def run(parser):
     anapath = os.path.abspath(args.anascript_path)
 
     # Check that the analysis file exists
-    anapath = args.anascript_path
     if not os.path.isfile(anapath):
         LOGGER.error('Analysis script %s not found!\nAborting...',
                      anapath)
