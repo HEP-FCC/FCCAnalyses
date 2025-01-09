@@ -5,19 +5,15 @@ Submitting to the HTCondor batch system.
 import os
 import sys
 import time
-import shutil
-import json
 import logging
 import subprocess
 import datetime
-import numpy as np
+from typing import Any
 
-import ROOT  # type: ignore
-from anascript import get_element, get_element_dict, get_attribute
-from process import get_process_info, get_entries_sow
+from anascript import get_element, get_attribute
+from process import get_process_info
+from process import get_subfile_list, get_chunk_list
 
-
-ROOT.gROOT.SetBatch(True)
 
 LOGGER = logging.getLogger('FCCAnalyses.batch')
 
@@ -90,7 +86,7 @@ def create_condor_config(log_dir: str,
     cfg += 'should_transfer_files = yes\n'
     cfg += 'when_to_transfer_output = on_exit\n'
 
-    cfg += f'transfer_output_files = $(outfile)\n\n'
+    cfg += 'transfer_output_files = $(outfile)\n\n'
 
     # add user batch configuration if any
     user_batch_config = get_attribute(rdf_module, 'user_batch_config', None)
@@ -138,12 +134,12 @@ def create_subjob_script(local_dir: str,
                                f'chunk_{chunk_num}.root')
 
     scr += 'which fccanalysis\n'
-    #scr += local_dir
+    # scr += local_dir
     scr += f'fccanalysis run {anapath} --batch'
     scr += f' --output {output_path}'
-    if cmd_args.ncpus > 0:
-        scr += ' --ncpus ' + get_element(rdf_module, "n_threads")
-    if len(cmd_args.unknown) > 0:
+    if hasattr(analysis, 'n_threads'):
+        scr += ' --ncpus ' + str(get_element(analysis, "n_threads"))
+    if len(cmd_args.remaining) > 0:
         scr += ' ' + ' '.join(cmd_args.unknown)
     scr += ' --files-list'
     for file_path in chunk_list[chunk_num]:
@@ -198,17 +194,18 @@ def submit_job(cmd: str, max_trials: int) -> bool:
 
 
 # _____________________________________________________________________________
-def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
+def send_to_batch(config: dict[str, Any],
+                  args, analysis,
+                  sample_name: str) -> None:
     '''
     Send jobs to HTCondor batch system.
     '''
+    sample_dict = config['process-list'][sample_name]
+
     local_dir = os.environ['LOCAL_DIR']
     current_date = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-    # log_dir = os.path.join(local_dir, 'BatchOutputs', current_date,
-    #                        sample_name)
-    log_dir = os.path.join('BatchOutputs', current_date,
-                           sample_name)
+    log_dir = os.path.join('BatchOutputs', current_date, sample_name)
     if not os.path.exists(log_dir):
         os.system(f'mkdir -p {log_dir}')
 
@@ -222,6 +219,33 @@ def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
         LOGGER.error('The FCCanalyses libraries are not properly build and '
                      'installed!\nAborting job submission...')
         sys.exit(3)
+
+    # Determine the fraction of the input to be processed
+    fraction = 1.
+    if 'fraction' in sample_dict:
+        fraction = sample_dict['fraction']
+
+    # Determine the number of chunks the output will be split into
+    chunks = 1
+    if 'chunks' in sample_dict:
+        chunks = sample_dict['chunks']
+
+    file_list, event_list = get_process_info(sample_name,
+                                             config['production-tag'],
+                                             config['input-directory'])
+
+    if len(file_list) <= 0:
+        LOGGER.error('No files to process!\nContinuing...')
+        return
+
+    # Adjust number of input files according to the fraction requirement
+    if fraction < 1.:
+        file_list = get_subfile_list(file_list, event_list, fraction)
+
+    # Adjust number of output files according to the chunk requirement
+    chunk_list = [file_list]
+    if chunks > 1:
+        chunk_list = get_chunk_list(file_list, chunks)
 
     subjob_scripts = []
     for ch_num in range(len(chunk_list)):
@@ -238,7 +262,7 @@ def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
                                                          sample_name,
                                                          ch_num,
                                                          chunk_list,
-                                                         anapath,
+                                                         config['analysis-path'],
                                                          args)
                     ofile.write(subjob_script)
             except IOError as err:
