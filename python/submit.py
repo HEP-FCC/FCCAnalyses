@@ -57,6 +57,11 @@ def merge_config_analysis_class(config: dict[str, Any],
     else:
         config['input-directory'] = None
 
+    if hasattr(analysis_class, 'n_threads'):
+        config['n-threads'] = analysis_class.n_threads
+    else:
+        config['n-threads'] = 1
+
     return config
 
 

@@ -140,7 +140,7 @@ def setup_run_parser(parser):
                         help='run over the test input file')
     parser.add_argument('--bench', action='store_true', default=False,
                         help='output benchmark results to a JSON file')
-    parser.add_argument('-j', '--ncpus', type=int, default=-1,
+    parser.add_argument('-j', '--ncpus', '--n-threads', type=int,
                         help='set number of threads')
     parser.add_argument('-g', '--graph', action='store_true', default=False,
                         help='generate computational graph of the analysis')
