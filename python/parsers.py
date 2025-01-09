@@ -150,10 +150,7 @@ def setup_run_parser(parser):
     parser.add_argument(
         '--use-data-source', action='store_true', default=False,
         help='use EDM4hep RDataSource to construct dataframe')
-
-    # Internal argument, not to be used by the users
-    parser.add_argument('--batch', action='store_true', default=False,
-                        help=argparse.SUPPRESS)
+    parser.add_argument('remaining', nargs=argparse.REMAINDER)
 
 
 # _____________________________________________________________________________
