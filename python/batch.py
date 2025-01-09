@@ -8,9 +8,9 @@ import time
 import logging
 import subprocess
 import datetime
+import argparse
 from typing import Any
 
-from anascript import get_element, get_attribute
 from process import get_process_info
 from process import get_subfile_list, get_chunk_list
 
@@ -19,11 +19,11 @@ LOGGER = logging.getLogger('FCCAnalyses.batch')
 
 
 # _____________________________________________________________________________
-def determine_os(local_dir: str) -> str | None:
+def determine_os(fccana_dir: str) -> str | None:
     '''
     Determines platform on which FCCAnalyses was compiled
     '''
-    cmake_config_path = local_dir + '/build/CMakeFiles/CMakeConfigureLog.yaml'
+    cmake_config_path = fccana_dir + '/build/CMakeFiles/CMakeConfigureLog.yaml'
     if not os.path.isfile(cmake_config_path):
         LOGGER.warning('CMake configuration file was not found!\n'
                        'Was FCCAnalyses properly build?')
@@ -42,22 +42,20 @@ def determine_os(local_dir: str) -> str | None:
 # _____________________________________________________________________________
 def create_condor_config(config: dict[str, Any],
                          log_dir: str,
-                         process_name: str,
-                         build_os: str | None,
-                         rdf_module,
+                         sample_name: str,
                          subjob_scripts: list[str]) -> str:
     '''
     Creates contents of HTCondor submit description file.
     '''
     cfg = 'executable       = $(scriptfile)\n'
 
-    cfg += f'log              = {log_dir}/condor_job.{process_name}.'
+    cfg += f'log              = {log_dir}/condor_job.{sample_name}.'
     cfg += '$(ClusterId).log\n'
 
-    cfg += f'output           = {log_dir}/condor_job.{process_name}.'
+    cfg += f'output           = {log_dir}/condor_job.{sample_name}.'
     cfg += '$(ClusterId).$(ProcId).out\n'
 
-    cfg += f'error            = {log_dir}/condor_job.{process_name}.'
+    cfg += f'error            = {log_dir}/condor_job.{sample_name}.'
     cfg += '$(ClusterId).$(ProcId).error\n'
 
     cfg += 'getenv           = False\n'
@@ -65,6 +63,7 @@ def create_condor_config(config: dict[str, Any],
     cfg += f'environment      = "LS_SUBCWD={log_dir}"\n'  # not sure
 
     cfg += 'requirements     = ( '
+    build_os = determine_os(config['fccana-dir'])
     if build_os == 'centos7':
         cfg += '(OpSysAndVer =?= "CentOS7") && '
     if build_os == 'almalinux9':
@@ -78,9 +77,9 @@ def create_condor_config(config: dict[str, Any],
 
     cfg += 'max_retries      = 3\n'
 
-    cfg += '+JobFlavour      = "%s"\n' % get_element(rdf_module, 'batch_queue')
+    cfg += f'+JobFlavour      = "{config["batch_queue"]}"\n'
 
-    cfg += '+AccountingGroup = "%s"\n' % get_element(rdf_module, 'comp_group')
+    cfg += f'+AccountingGroup = "{config["accounting-group"]}"\n'
 
     cfg += f'RequestCpus      = {config["n-threads"]}\n'
 
@@ -89,23 +88,17 @@ def create_condor_config(config: dict[str, Any],
 
     cfg += 'transfer_output_files = $(outfile)\n\n'
 
-    # add user batch configuration if any
-    user_batch_config = get_attribute(rdf_module, 'user_batch_config', None)
-    if user_batch_config is not None:
-        if not os.path.isfile(user_batch_config):
-            LOGGER.warning('userBatchConfig file can\'t be found! Will not '
-                           'add it to the default config.')
-        else:
-            with open(user_batch_config, 'r', encoding='utf-8') as cfgfile:
-                for line in cfgfile:
-                    cfg += line + '\n'
+    # Add user batch configuration if any.
+    if config['user-batch-config'] is not None:
+        with open(config['user-batch-config'], 'r', encoding='utf-8') as cfile:
+            for line in cfile:
+                cfg += line + '\n'
         cfg += '\n\n'
 
-    output_dir = get_attribute(rdf_module, 'output_dir', None)
-    output_path = os.path.join(output_dir, process_name)
+    sample_output_dir = os.path.join(config['output-dir'], sample_name)
     cfg += 'queue scriptfile, outfile from (\n'
     for idx, scriptfile in enumerate(subjob_scripts):
-        cfg += f'    {scriptfile}, {output_path}/chunk_{idx}.root\n'
+        cfg += f'    {scriptfile}, {sample_output_dir}/chunk_{idx}.root\n'
     cfg += ')\n'
 
     return cfg
@@ -113,44 +106,36 @@ def create_condor_config(config: dict[str, Any],
 
 # _____________________________________________________________________________
 def create_subjob_script(config: dict[str, Any],
-                         local_dir: str,
-                         analysis,
-                         process_name: str,
-                         chunk_num: int,
+                         sample_name: str,
                          chunk_list: list[list[str]],
-                         anapath: str,
-                         cmd_args) -> str:
+                         chunk_num: int) -> str:
     '''
     Creates sub-job script to be run.
     '''
 
-    output_dir = get_attribute(analysis, 'output_dir', None)
+    sample_output_filepath = os.path.join(config['output-dir'],
+                                          sample_name,
+                                          f'chunk_{chunk_num}.root')
 
     scr = '#!/bin/bash\n\n'
-    scr += 'source ' + local_dir + '/setup.sh\n\n'
 
-    # scr += f'mkdir job_{process_name}_chunk_{chunk_num}\n'
-    # scr += f'cd job_{process_name}_chunk_{chunk_num}\n\n'
+    scr += f'source {config["fccana-dir"]}/setup.sh\n\n'
 
-    output_path = os.path.join(output_dir, process_name,
-                               f'chunk_{chunk_num}.root')
+    scr += 'which fccanalysis\n\n'
 
-    scr += 'which fccanalysis\n'
-    # scr += local_dir
-    scr += f'fccanalysis run {anapath}'
-    scr += f' --output {output_path}'
-    if hasattr(analysis, 'n_threads'):
-        scr += f' --n-threads {config["n-threads"]}'
-    if len(cmd_args.remaining) > 0:
-        scr += ' ' + ' '.join(cmd_args.unknown)
+    scr += f'fccanalysis run {config["analysis-path"]}'
+    scr += f' --output {sample_output_filepath}'
+    scr += f' --n-threads {config["n-threads"]}'
     scr += ' --files-list'
     for file_path in chunk_list[chunk_num]:
         scr += f' {file_path}'
+    if len(config['cli-arguments']['remaining']) > 0:
+        scr += ' -- ' + ' '.join(config['cli-arguments']['remaining'])
     scr += '\n\n'
 
     # output_dir_eos = get_attribute(analysis, 'output_dir_eos', None)
     # if not os.path.isabs(output_dir) and output_dir_eos is None:
-    #     final_dest = os.path.join(local_dir, output_dir, process_name,
+    #     final_dest = os.path.join(fccana_dir, output_dir, sample_name,
     #                               f'chunk_{chunk_num}.root')
     #     scr += f'cp {output_path} {final_dest}\n'
 
@@ -158,14 +143,14 @@ def create_subjob_script(config: dict[str, Any],
     #     eos_type = get_attribute(analysis, 'eos_type', 'eospublic')
 
     #     final_dest = os.path.join(output_dir_eos,
-    #                               process_name,
+    #                               sample_name,
     #                               f'chunk_{chunk_num}.root')
     #     final_dest = f'root://{eos_type}.cern.ch/' + final_dest
     #     scr += f'xrdcp {output_path} {final_dest}\n'
 
-    scr += f'ls -alh {output_path}\n'
+    scr += f'ls -alh {sample_output_filepath}\n'
     scr += 'pwd\n'
-    scr += f'find "$PWD" -name *.root\n'
+    scr += 'find "$PWD" -name *.root\n'
 
     return scr
 
@@ -196,15 +181,105 @@ def submit_job(cmd: str, max_trials: int) -> bool:
 
 
 # _____________________________________________________________________________
-def send_to_batch(config: dict[str, Any],
-                  args, analysis,
-                  sample_name: str) -> None:
+def merge_config_analysis_class(config: dict[str, Any],
+                                args: argparse.Namespace,
+                                analysis_module: Any) -> dict[str, Any]:
     '''
-    Send jobs to HTCondor batch system.
+    Merge configuration from the analysis script class and the command-line
+    arguments.
     '''
-    sample_dict = config['process-list'][sample_name]
 
-    local_dir = os.environ['LOCAL_DIR']
+    analysis_class = analysis_module.Analysis(vars(args))
+    config['analysis-class'] = analysis_class
+
+    # Check if there are any processes defined.
+    if not hasattr(analysis_class, 'process_list'):
+        LOGGER.error('Analysis does not define any processes!\n'
+                     'Aborting...')
+        sys.exit(3)
+    config['sample-list'] = analysis_class.process_list
+
+    # Check if there is production tag or input directory defined.
+    if not hasattr(analysis_class, 'prod_tag') and \
+       not hasattr(analysis_class, 'input_dir'):
+        LOGGER.error('Analysis does not define production tag or input '
+                     'directory!\nAborting...')
+        sys.exit(3)
+
+    if hasattr(analysis_class, 'prod_tag') and \
+       hasattr(analysis_class, 'input_dir'):
+        LOGGER.error('Analysis defines both production tag and input '
+                     'directory!\nAborting...')
+        sys.exit(3)
+
+    # Determine input.
+    if hasattr(analysis_class, 'prod_tag'):
+        config['production-tag'] = analysis_class.prod_tag
+    else:
+        config['production-tag'] = None
+
+    if hasattr(analysis_class, 'input_dir'):
+        config['input-directory'] = analysis_class.input_dir
+    else:
+        config['input-directory'] = None
+
+    # Determine number of threads to run in.
+    if hasattr(analysis_class, 'n_threads'):
+        config['n-threads'] = analysis_class.n_threads
+    else:
+        config['n-threads'] = 1
+
+    # Determine batch queue.
+    if hasattr(analysis_class, 'batch_queue'):
+        config['batch-queue'] = analysis_class.batch_queue
+    else:
+        config['batch_queue'] = 'longlunch'
+
+    # Determine accounting group.
+    if hasattr(analysis_class, 'comp_group'):
+        config['accounting-group'] = analysis_class.comp_group
+    else:
+        config['accounting-group'] = 'group_u_FCC.local_gen'
+
+    # Check if user provided additional job description parameters.
+    config['user-batch-config'] = None
+    if hasattr(analysis_class, 'user_batch_config'):
+        if not os.path.isfile(analysis_class.user_batch_config):
+            LOGGER.warning('Provided file with additional job description '
+                           'parameters can\'t be found!\nFile path: %s\n'
+                           'Continuing...', analysis_class.user_batch_config)
+        else:
+            config['user-batch-config'] = analysis_class.user_batch_config
+
+    # Check for global output directory.
+    config['output-dir'] = None
+    if hasattr(analysis_class, 'output_dir'):
+        config['output-dir'] = analysis_class.output_dir
+        os.system(f'mkdir -p {config["output-dir"]}')
+
+    # Check if EOS output dir is defined.
+    config['output-dir-eos'] = None
+    if hasattr(analysis_class, 'output_dir_eos'):
+        config['output-dir-eos'] = analysis_class.output_dir_eos
+    else:
+        if config['submission-filesystem-type'] == 'eos':
+            LOGGER.error('Submission to CERN\'s HTCondor from requires that '
+                         '"output_dir_eos" analysis attribute is defined!\n'
+                         'Aborting...')
+            sys.exit(3)
+
+    return config
+
+
+# _____________________________________________________________________________
+def send_sample(config: dict[str, Any],
+                sample_name: str) -> None:
+    '''
+    Send sample to HTCondor batch system.
+    '''
+    sample_dict = config['sample-list'][sample_name]
+
+    # Create log directory
     current_date = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
     log_dir = os.path.join('BatchOutputs', current_date, sample_name)
@@ -214,7 +289,7 @@ def send_to_batch(config: dict[str, Any],
     # Making sure the FCCAnalyses libraries are compiled and installed
     try:
         subprocess.check_output(['make', 'install'],
-                                cwd=local_dir+'/build',
+                                cwd=config['fccana-dir']+'/build',
                                 stderr=subprocess.DEVNULL
                                 )
     except subprocess.CalledProcessError:
@@ -253,23 +328,19 @@ def send_to_batch(config: dict[str, Any],
                        '"%s" is suspiciously low!', sample_name)
 
     subjob_scripts = []
-    for ch_num in range(len(chunk_list)):
+    for chunk_num in range(len(chunk_list)):
         subjob_script_path = os.path.join(
             log_dir,
-            f'job_{sample_name}_chunk_{ch_num}.sh')
+            f'job_{sample_name}_chunk_{chunk_num}.sh')
         subjob_scripts.append(subjob_script_path)
 
         for i in range(3):
             try:
                 with open(subjob_script_path, 'w', encoding='utf-8') as ofile:
                     subjob_script = create_subjob_script(config,
-                                                         local_dir,
-                                                         analysis,
                                                          sample_name,
-                                                         ch_num,
                                                          chunk_list,
-                                                         config['analysis-path'],
-                                                         args)
+                                                         chunk_num)
                     ofile.write(subjob_script)
             except IOError as err:
                 if i < 2:
@@ -294,8 +365,6 @@ def send_to_batch(config: dict[str, Any],
                 condor_config = create_condor_config(config,
                                                      log_dir,
                                                      sample_name,
-                                                     determine_os(local_dir),
-                                                     analysis,
                                                      subjob_scripts)
                 cfgfile.write(condor_config)
         except IOError as err:
@@ -307,8 +376,47 @@ def send_to_batch(config: dict[str, Any],
         time.sleep(10)
     # subprocess.getstatusoutput(f'chmod u+x {condor_config_path}')
 
-    batch_cmd = f'condor_submit -spool {condor_config_path}'
+    if config['submission-filesystem-type'] == 'eos':
+        batch_cmd = f'condor_submit -spool {condor_config_path}'
+    else:
+        batch_cmd = f'condor_submit {condor_config_path}'
     LOGGER.info('Batch command:\n  %s', batch_cmd)
-    # success = submit_job(batch_cmd, 10)
-    # if not success:
-    #     sys.exit(3)
+    success = submit_job(batch_cmd, 10)
+    if not success:
+        sys.exit(3)
+
+
+# _____________________________________________________________________________
+def send_to_batch(args: argparse.Namespace,
+                  analysis_module: Any) -> None:
+    '''
+    Send jobs to HTCondor batch system.
+    '''
+
+    config: dict[str, Any] = {}
+    config['cli-arguments'] = vars(args)
+    config['analysis-path'] = args.anascript_path
+    config['full-analysis-path'] = os.path.abspath(args.anascript_path)
+
+    # Find location of the FCCanalyses directory
+    # TODO: Rename LOCAL_DIR to FCCANA_DIR
+    config['fccana-dir'] = os.environ['LOCAL_DIR']
+
+    # Get current working directory
+    config['current-working-directory'] = os.getcwd()
+
+    # Determine type of filesystem the submission is made from
+    if os.getcwd().startswith('/eos/'):
+        config['submission-filesystem-type'] = 'eos'
+    elif os.getcwd().startswith('/afs/'):
+        config['submission-filesystem-type'] = 'afs'
+    else:
+        config['submission-filesystem-type'] = 'unknown'
+
+    if hasattr(analysis_module, "Analysis"):
+        config = merge_config_analysis_class(config, args, analysis_module)
+
+    for sample_name in config['sample-list'].keys():
+        LOGGER.info('Submitting sample "%s"', sample_name)
+
+        send_sample(config, sample_name)
