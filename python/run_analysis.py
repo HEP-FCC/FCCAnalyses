@@ -213,13 +213,7 @@ def run_local(rdf_module, infile_list, args):
     else:
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
 
-    output_dir = get_element(rdf_module, "outputDir")
-    if os.path.isabs(args.output):
-        LOGGER.warning('Provided output file path is absolute, "outputDir" '
-                       'from analysis script will be ignored!')
-        outfile_path = args.output
-    else:
-        outfile_path = os.path.join(output_dir, args.output)
+    outfile_path = args.output
     LOGGER.info('Output file path:\n%s', outfile_path)
 
     # Run RDF
@@ -339,24 +333,37 @@ def run_stages(args, rdf_module, anapath):
             sys.exit(3)
 
         # Determine the fraction of the input to be processed
-        fraction = 1
+        fraction = 1.
         if get_element_dict(process_list[process_name], 'fraction'):
             fraction = get_element_dict(process_list[process_name], 'fraction')
-        # Put together output path
-        output_stem = process_name
-        if get_element_dict(process_list[process_name], 'output'):
-            output_stem = get_element_dict(process_list[process_name],
-                                           'output')
+
         # Determine the number of chunks the output will be split into
         chunks = 1
         if get_element_dict(process_list[process_name], 'chunks'):
             chunks = get_element_dict(process_list[process_name], 'chunks')
 
+        # Put together output path
+        output_stem = process_name
+        if get_element_dict(process_list[process_name], 'output'):
+            output_stem = get_element_dict(process_list[process_name],
+                                           'output')
+        output_dir = get_attribute(rdf_module, 'outputDir', '')
+
+        if chunks == 1:
+            output_filepath = os.path.join(output_dir, output_stem+'.root')
+            output_dir = None
+        else:
+            output_filepath = None
+            output_dir = os.path.join(output_dir, output_stem)
+
         info_msg = f'Adding process "{process_name}" with:'
         if fraction < 1:
             info_msg += f'\n\t- fraction:         {fraction}'
         info_msg += f'\n\t- number of files:  {len(file_list):,}'
-        info_msg += f'\n\t- output stem:      {output_stem}'
+        if output_dir:
+            info_msg += f'\n\t- output directory:      {output_dir}'
+        if output_filepath:
+            info_msg += f'\n\t- output file path:      {output_dir}'
         if chunks > 1:
             info_msg += f'\n\t- number of chunks: {chunks}'
 
@@ -378,11 +385,11 @@ def run_stages(args, rdf_module, anapath):
         # Running locally
         LOGGER.info('Running locally...')
         if len(chunk_list) == 1:
-            args.output = f'{output_stem}.root'
+            args.output = output_filepath
             run_local(rdf_module, chunk_list[0], args)
         else:
             for index, chunk in enumerate(chunk_list):
-                args.output = f'{output_stem}/chunk{index}.root'
+                args.output = os.path.join(output_dir, f'chunk{index}.root')
                 run_local(rdf_module, chunk, args)
 
 
@@ -620,7 +627,26 @@ def run(parser):
     Set things in motion.
     '''
 
-    args = parser.parse_args()
+    try:
+        dash_dash_index = sys.argv.index('--')
+        print(sys.argv[1:dash_dash_index])
+        args = parser.parse_args(sys.argv[1:dash_dash_index])
+        print(sys.argv[dash_dash_index+1:])
+        args.remaining = sys.argv[dash_dash_index+1:]
+    except ValueError:
+        args = parser.parse_args()
+        args.remaining = []
+    # print(dash_dash_index)
+    # print(sys.argv[:dash_dash_index])
+    # args = parser.parse_args()
+    # print(args)
+    # if len(args.remaining) > 0:
+    #     try:
+    #         print(args.remaining.index('--'))
+    #         dash_dash_index = args.remaining.index('--')
+    #     except ValueError:
+    #         args = parser.parse_args(args.remaining)
+    print(args)
 
     if not hasattr(args, 'command'):
         LOGGER.error('Error occurred during subcommand routing!\nAborting...')

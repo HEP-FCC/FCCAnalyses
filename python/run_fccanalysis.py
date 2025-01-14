@@ -275,13 +275,7 @@ def run_local(config: dict[str, Any],
         if config['do_weighted']:
             LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
 
-    output_dir = get_attribute(analysis, 'output_dir', '')
-    if os.path.isabs(args.output):
-        LOGGER.warning('Provided output path is absolute, "outputDir" '
-                       'from the analysis script will be ignored!')
-        outfile_path = args.output
-    else:
-        outfile_path = os.path.join(output_dir, args.output)
+    outfile_path = args.output
     LOGGER.info('Output file path:\n%s', outfile_path)
 
     # Run RDF
@@ -387,7 +381,7 @@ def run_fccanalysis(args, analysis_module):
         LOGGER.info('Using generator weights')
 
     # Check if test mode is specified, and if so run the analysis on it (this
-    # will exit after)
+    # will exit afterwards)
     if args.test:
         LOGGER.info('Running over test file...')
         testfile_path = getattr(analysis, "test_file")
@@ -397,8 +391,8 @@ def run_fccanalysis(args, analysis_module):
         run_local(config, args, analysis, [testfile_path])
         sys.exit(0)
 
-    # Check if files are specified, and if so run the analysis on it/them (this
-    # will exit after)
+    # Check if input file(s) are specified, and if so run the analysis on
+    # it/them (this will exit afterwards)
     if len(args.files_list) > 0:
         LOGGER.info('Running over files provided in command line argument...')
         directory, _ = os.path.split(args.output)
@@ -435,24 +429,37 @@ def run_fccanalysis(args, analysis_module):
             sys.exit(3)
 
         # Determine the fraction of the input to be processed
-        fraction = 1
+        fraction = 1.
         if get_element_dict(process_list[process_name], 'fraction'):
             fraction = get_element_dict(process_list[process_name], 'fraction')
-        # Put together output path
-        output_stem = process_name
-        if get_element_dict(process_list[process_name], 'output'):
-            output_stem = get_element_dict(process_list[process_name],
-                                           'output')
+
         # Determine the number of chunks the output will be split into
         chunks = 1
         if get_element_dict(process_list[process_name], 'chunks'):
             chunks = get_element_dict(process_list[process_name], 'chunks')
 
+        # Put together output path
+        output_stem = process_name
+        if get_element_dict(process_list[process_name], 'output'):
+            output_stem = get_element_dict(process_list[process_name],
+                                           'output')
+        output_dir = get_attribute(analysis, 'output_dir', '')
+
+        if chunks == 1:
+            output_filepath = os.path.join(output_dir, output_stem+'.root')
+            output_dir = None
+        else:
+            output_filepath = None
+            output_dir = os.path.join(output_dir, output_stem)
+
         info_msg = f'Adding process "{process_name}" with:'
         if fraction < 1:
             info_msg += f'\n\t- fraction:         {fraction}'
         info_msg += f'\n\t- number of files:  {len(file_list):,}'
-        info_msg += f'\n\t- output stem:      {output_stem}'
+        if output_dir:
+            info_msg += f'\n\t- output directory:      {output_dir}'
+        if output_filepath:
+            info_msg += f'\n\t- output file path:      {output_dir}'
         if chunks > 1:
             info_msg += f'\n\t- number of chunks: {chunks}'
 
