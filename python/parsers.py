@@ -126,7 +126,7 @@ def setup_run_parser(parser):
     '''
     parser.add_argument('anascript_path',
                         help='path to analysis script')
-    parser.add_argument('--files-list', default=[], nargs='+',
+    parser.add_argument('--files-list', nargs='+', default=[],
                         help='specify input file(s) to bypass the processList')
     parser.add_argument(
         '-o', '--output',
@@ -150,7 +150,6 @@ def setup_run_parser(parser):
     parser.add_argument(
         '--use-data-source', action='store_true', default=False,
         help='use EDM4hep RDataSource to construct dataframe')
-    parser.add_argument('remaining', nargs=argparse.REMAINDER)
 
 
 # _____________________________________________________________________________

@@ -44,12 +44,9 @@ class Analysis():
         # Optional: number of threads to run on, default is 'all available'
         self.n_threads = 4
 
-        # Optional: running on HTCondor, default is False
-        self.run_batch = True
-
         # Optional: batch queue name when running on HTCondor, default is
-        # 'workday'
-        self.batch_queue = 'workday'
+        # 'longlunch'
+        # self.batch_queue = 'workday'
 
         # Optional: computing account when running on CERN's HTCondor, default
         # is 'group_u_FCC.local_gen'

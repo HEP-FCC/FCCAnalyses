@@ -47,46 +47,48 @@ def create_condor_config(config: dict[str, Any],
     '''
     Creates contents of HTCondor submit description file.
     '''
-    cfg = 'executable       = $(scriptfile)\n'
+    cfg = 'executable = $(scriptfile)\n'
 
-    cfg += f'log              = {log_dir}/condor_job.{sample_name}.'
-    cfg += '$(ClusterId).log\n'
+    cfg += f'log = {log_dir}/condor_job.{sample_name}.$(ClusterId).log\n'
 
-    cfg += f'output           = {log_dir}/condor_job.{sample_name}.'
-    cfg += '$(ClusterId).$(ProcId).out\n'
+    cfg += f'output = {log_dir}/condor_job.{sample_name}.$(ClusterId).'
+    cfg += '$(ProcId).out\n'
 
-    cfg += f'error            = {log_dir}/condor_job.{sample_name}.'
-    cfg += '$(ClusterId).$(ProcId).error\n'
+    cfg += f'error = {log_dir}/condor_job.{sample_name}.$(ClusterId).'
+    cfg += '$(ProcId).error\n'
 
-    cfg += 'getenv           = False\n'
+    cfg += 'getenv = False\n'
 
-    cfg += f'environment      = "LS_SUBCWD={log_dir}"\n'  # not sure
-
-    cfg += 'requirements     = ( '
     build_os = determine_os(config['fccana-dir'])
     if build_os == 'centos7':
-        cfg += '(OpSysAndVer =?= "CentOS7") && '
-    if build_os == 'almalinux9':
-        cfg += '(OpSysAndVer =?= "AlmaLinux9") && '
-    if build_os is None:
-        LOGGER.warning('Submitting jobs to default operating system. There '
-                       'may be compatibility issues.')
-    cfg += '(Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'
+        cfg += 'MY.WantOS = el7\n'
+    elif build_os == 'almalinux9':
+        cfg += 'MY.WantOS = el9\n'
+    else:
+        LOGGER.warning('OS of the machine the jobs are submitted from is '
+                       'unknown!\nThere may be compatibility issues...')
 
-    cfg += 'on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n'
+    # cfg += '(Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'
 
-    cfg += 'max_retries      = 3\n'
+    # cfg += 'on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n'
 
-    cfg += f'+JobFlavour      = "{config["batch_queue"]}"\n'
+    cfg += 'max_retries = 3\n'
+
+    cfg += f'+JobFlavour = "{config["batch-queue"]}"\n'
 
     cfg += f'+AccountingGroup = "{config["accounting-group"]}"\n'
 
-    cfg += f'RequestCpus      = {config["n-threads"]}\n'
+    cfg += f'RequestCpus = {config["n-threads"]}\n\n'
 
-    cfg += 'should_transfer_files = yes\n'
-    cfg += 'when_to_transfer_output = on_exit\n'
+    # cfg += 'should_transfer_files = yes\n'
+    # cfg += 'when_to_transfer_output = on_exit\n'
 
-    cfg += 'transfer_output_files = $(outfile)\n\n'
+    # cfg += 'transfer_output_files = $(outfile)\n'
+
+    if config['output-dir-eos']:
+        cfg += 'output_destination = '
+        cfg += f'root://eosuser.cern.ch/{config["output-dir-eos"]}\n'
+        cfg += 'MY.XRDCP_CREATE_DIR = True\n\n'
 
     # Add user batch configuration if any.
     if config['user-batch-config'] is not None:
@@ -95,10 +97,15 @@ def create_condor_config(config: dict[str, Any],
                 cfg += line + '\n'
         cfg += '\n\n'
 
-    sample_output_dir = os.path.join(config['output-dir'], sample_name)
-    cfg += 'queue scriptfile, outfile from (\n'
-    for idx, scriptfile in enumerate(subjob_scripts):
-        cfg += f'    {scriptfile}, {sample_output_dir}/chunk_{idx}.root\n'
+    # sample_output_dir = os.path.join(config['output-dir'], sample_name)
+    # cfg += 'queue scriptfile, outfile from (\n'
+    # for idx, scriptfile in enumerate(subjob_scripts):
+    #     cfg += f'    {scriptfile}, {sample_output_dir}/chunk_{idx}.root\n'
+    # cfg += ')\n'
+
+    cfg += 'queue scriptfile from (\n'
+    for scriptfile in subjob_scripts:
+        cfg += f'    {scriptfile}\n'
     cfg += ')\n'
 
     return cfg
@@ -123,7 +130,7 @@ def create_subjob_script(config: dict[str, Any],
 
     scr += 'which fccanalysis\n\n'
 
-    scr += f'fccanalysis run {config["analysis-path"]}'
+    scr += f'fccanalysis run {config["full-analysis-path"]}'
     scr += f' --output {sample_output_filepath}'
     scr += f' --n-threads {config["n-threads"]}'
     scr += ' --files-list'
@@ -131,7 +138,7 @@ def create_subjob_script(config: dict[str, Any],
         scr += f' {file_path}'
     if len(config['cli-arguments']['remaining']) > 0:
         scr += ' -- ' + ' '.join(config['cli-arguments']['remaining'])
-    scr += '\n\n'
+    scr += '\n'
 
     # output_dir_eos = get_attribute(analysis, 'output_dir_eos', None)
     # if not os.path.isabs(output_dir) and output_dir_eos is None:
@@ -147,10 +154,6 @@ def create_subjob_script(config: dict[str, Any],
     #                               f'chunk_{chunk_num}.root')
     #     final_dest = f'root://{eos_type}.cern.ch/' + final_dest
     #     scr += f'xrdcp {output_path} {final_dest}\n'
-
-    scr += f'ls -alh {sample_output_filepath}\n'
-    scr += 'pwd\n'
-    scr += 'find "$PWD" -name *.root\n'
 
     return scr
 
@@ -233,7 +236,7 @@ def merge_config_analysis_class(config: dict[str, Any],
     if hasattr(analysis_class, 'batch_queue'):
         config['batch-queue'] = analysis_class.batch_queue
     else:
-        config['batch_queue'] = 'longlunch'
+        config['batch-queue'] = 'longlunch'
 
     # Determine accounting group.
     if hasattr(analysis_class, 'comp_group'):
@@ -263,8 +266,8 @@ def merge_config_analysis_class(config: dict[str, Any],
         config['output-dir-eos'] = analysis_class.output_dir_eos
     else:
         if config['submission-filesystem-type'] == 'eos':
-            LOGGER.error('Submission to CERN\'s HTCondor from requires that '
-                         '"output_dir_eos" analysis attribute is defined!\n'
+            LOGGER.error('Submission to CERN\'s HTCondor from EOS requires '
+                         '"output_dir_eos" analysis attribute defined!\n'
                          'Aborting...')
             sys.exit(3)
 
@@ -378,6 +381,8 @@ def send_sample(config: dict[str, Any],
 
     if config['submission-filesystem-type'] == 'eos':
         batch_cmd = f'condor_submit -spool {condor_config_path}'
+        LOGGER.warning('To download the log files use "condor_transfer_data" '
+                       'command!')
     else:
         batch_cmd = f'condor_submit {condor_config_path}'
     LOGGER.info('Batch command:\n  %s', batch_cmd)
