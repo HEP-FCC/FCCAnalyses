@@ -12,15 +12,15 @@ class Analysis():
     Higgs mass recoil analysis in Z(mumu)H.
     '''
     def __init__(self, cmdline_args):
+        # Parse additional arguments not known to the FCCAnalyses parsers.
+        # All command line arguments are provided in the `cmdline_arg`
+        # dictionary and arguments after "--" are stored under "remaining" key.
         parser = ArgumentParser(
             description='Additional analysis arguments',
-            usage='Provide additional arguments after analysis script path')
+            usage='Provided after "--"')
         parser.add_argument('--muon-pt', default='10.', type=float,
                             help='Minimal pT of the mouns.')
-        # Parse additional arguments not known to the FCCAnalyses parsers
-        # All command line arguments know to fccanalysis are provided in the
-        # `cmdline_arg` dictionary.
-        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['remaining'])
 
         # Mandatory: List of processes to run over
         self.process_list = {
@@ -42,14 +42,11 @@ class Analysis():
         # self.analysis_name = 'My Analysis'
 
         # Optional: number of threads to run on, default is 'all available'
-        # self.n_threads = 4
-
-        # Optional: running on HTCondor, default is False
-        self.run_batch = True
+        self.n_threads = 4
 
         # Optional: batch queue name when running on HTCondor, default is
-        # 'workday'
-        self.batch_queue = 'workday'
+        # 'longlunch'
+        # self.batch_queue = 'workday'
 
         # Optional: computing account when running on CERN's HTCondor, default
         # is 'group_u_FCC.local_gen'
@@ -57,12 +54,13 @@ class Analysis():
 
         # Optional: output directory on eos, if specified files will be copied
         # there once the batch job is done, default is empty
-        self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
-                              f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
+        # self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
+        #                       f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
+        self.output_dir_eos = '/eos/user/j/jsmiesko/FCCAnalyses/output'
 
         # Optional: type for eos, needed when <outputDirEos> is specified. The
         # default is FCC EOS, which is eospublic
-        self.eos_type = 'eospublic'
+        # self.eos_type = 'eospublic'
 
         # Optional: test file
         self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/' \
