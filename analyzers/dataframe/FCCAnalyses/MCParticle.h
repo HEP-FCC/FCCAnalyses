@@ -25,7 +25,7 @@ namespace MCParticle{
   /// Filter events based on a MCParticles PDGID
   struct filter_pdgID {
     filter_pdgID(int arg_pdgid, bool arg_abs);
-    float m_pdgid; //> Generator pdgid
+    int m_pdgid; //> Generator pdgid
     bool m_abs;//> Use absolute value for pdgig
     bool  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
@@ -40,7 +40,7 @@ namespace MCParticle{
   /// select MCParticles with their status
   struct sel_genStatus {
     sel_genStatus(int arg_status);
-    float m_status = 1; //> Generator status
+    int m_status = 1; //> Generator status
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
@@ -55,7 +55,7 @@ namespace MCParticle{
   /// get MC history tree for a given MCParticle index
   struct get_tree{
     get_tree(int arg_index);
-    float m_index; //> MC Particle index to build the tree from
+    int m_index; //> MC Particle index to build the tree from
     ROOT::VecOps::RVec<int> operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind);
   };
 
