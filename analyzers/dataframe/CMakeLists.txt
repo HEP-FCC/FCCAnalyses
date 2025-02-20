@@ -34,6 +34,7 @@ endif()
 
 if(NOT WITH_PODIO_DATASOURCE)
   list(FILTER headers EXCLUDE REGEX "JetClusteringUtilsSource.h")
+  list(FILTER sources EXCLUDE REGEX "JetClusteringUtilsSource.cc")
   list(FILTER headers EXCLUDE REGEX "LinkSource.h")
   list(FILTER headers EXCLUDE REGEX "ReconstructedParticleSource.h")
   list(FILTER sources EXCLUDE REGEX "ReconstructedParticleSource.cc")

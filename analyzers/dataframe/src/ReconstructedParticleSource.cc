@@ -304,13 +304,6 @@ merge(const edm4hep::ReconstructedParticleCollection &inColl1,
   outColl.setSubsetCollection();
 
   for (const auto &particle : inColl1) {
-    /*
-    if (std::find(inPartsToBeRemoved.begin(),
-                  inPartsToBeRemoved.end(),
-                  particle) != inPartsToBeRemoved.end()) {
-      continue;
-    }
-    */
     outColl.push_back(particle);
   }
 
