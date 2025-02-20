@@ -235,8 +235,16 @@ remove(const edm4hep::ReconstructedParticleCollection &inColl,
 
   if (!matching) {
     for (const auto &particle : inColl) {
-      if (std::find(inPartsToBeRemoved.begin(), inPartsToBeRemoved.end(),
-                    particle) != inPartsToBeRemoved.end()) {
+      // TODO: Use std::find for this
+      // if (std::find(inPartsToBeRemoved.begin(), inPartsToBeRemoved.end(),
+      //               particle) != inPartsToBeRemoved.end()) {
+      bool removePart = false;
+      for (const auto &partToBeRemoved : inPartsToBeRemoved) {
+        if (particle == partToBeRemoved) {
+          removePart = true;
+        }
+      }
+      if (removePart) {
         continue;
       }
       outColl.push_back(particle);
