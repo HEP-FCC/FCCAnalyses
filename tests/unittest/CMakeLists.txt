@@ -4,11 +4,19 @@ find_catch_instance()
 # list of labels that we want to ignore
 set(filter_tests "")
 
-add_executable(unittest unittest.cpp
-                        myutils.cpp
-                        algorithms.cpp
-                        ReconstructedParticle.cpp
+list(APPEND unittest_src unittest.cpp
+                         myutils.cpp
+                         algorithms.cpp
+                         ReconstructedParticle.cpp
 )
+
+if(WITH_PODIO_DATASOURCE)
+  list(APPEND unittest_src JetClusteringUtilsSource.cpp
+                           ReconstructedParticleSource.cpp
+  )
+endif()
+
+add_executable(unittest ${unittest_src})
 target_link_libraries(unittest PUBLIC FCCAnalyses
                                       gfortran
                                PRIVATE Catch2::Catch2WithMain)
