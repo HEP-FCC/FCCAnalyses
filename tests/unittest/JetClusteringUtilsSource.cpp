@@ -24,10 +24,12 @@ TEST_CASE("create-pseudojets", "[JetClusteringUtilsSource]") {
   REQUIRE(res[0].py() == Catch::Approx(p1.getMomentum().y));
   REQUIRE(res[0].pz() == Catch::Approx(p1.getMomentum().z));
   REQUIRE(res[0].e() == Catch::Approx(p1.getEnergy()));
-  REQUIRE(res[0].m2() == Catch::Approx(p1.getMass()*p1.getMass()).margin(1.e-3));
+  REQUIRE(res[0].m2() ==
+          Catch::Approx(p1.getMass() * p1.getMass()).margin(1.e-3));
   REQUIRE(res[1].px() == Catch::Approx(p2.getMomentum().x));
   REQUIRE(res[1].py() == Catch::Approx(p2.getMomentum().y));
   REQUIRE(res[1].pz() == Catch::Approx(p2.getMomentum().z));
   REQUIRE(res[1].e() == Catch::Approx(p2.getEnergy()));
-  REQUIRE(res[1].m2() == Catch::Approx(p2.getMass()*p2.getMass()).margin(1.e-3));
+  REQUIRE(res[1].m2() ==
+          Catch::Approx(p2.getMass() * p2.getMass()).margin(1.e-3));
 }

@@ -205,7 +205,7 @@ sortByPt(const edm4hep::ReconstructedParticleCollection &inColl);
  */
 edm4hep::ReconstructedParticleCollection
 remove(const edm4hep::ReconstructedParticleCollection &inColl,
-       const edm4hep::ReconstructedParticle& inPartToBeRemoved,
+       const edm4hep::ReconstructedParticle &inPartToBeRemoved,
        const bool matching = false);
 
 /**

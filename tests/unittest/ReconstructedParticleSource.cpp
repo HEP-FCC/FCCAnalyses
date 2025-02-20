@@ -32,7 +32,8 @@ TEST_CASE("remove-by-id-subset-coll", "[ReconstructedParticleSource]") {
   edm4hep::ReconstructedParticleCollection pCollSubset;
   pCollSubset.setSubsetCollection();
   pCollSubset.push_back(pColl[0]);
-  auto res = FCCAnalyses::PodioSource::ReconstructedParticle::remove(pColl, pCollSubset[0]);
+  auto res = FCCAnalyses::PodioSource::ReconstructedParticle::remove(
+      pColl, pCollSubset[0]);
   REQUIRE(res.size() == 1);
   REQUIRE(res[0].getPDG() == 13);
 }
@@ -52,7 +53,8 @@ TEST_CASE("remove-by-matching", "[ReconstructedParticleSource]") {
   p3.setPDG(11);
   p3.setMomentum({1., 2., 3.});
   pCollRemove.push_back(p3);
-  auto res = FCCAnalyses::PodioSource::ReconstructedParticle::remove(pColl, pCollRemove, true);
+  auto res = FCCAnalyses::PodioSource::ReconstructedParticle::remove(
+      pColl, pCollRemove, true);
   REQUIRE(res.size() == 1);
   REQUIRE(res[0].getPDG() == 13);
 }
@@ -72,7 +74,8 @@ TEST_CASE("merge", "[ReconstructedParticleSource]") {
   p3.setPDG(11);
   p3.setMomentum({1., 2., 3.});
   pColl2.push_back(p3);
-  auto res = FCCAnalyses::PodioSource::ReconstructedParticle::merge(pColl1, pColl2);
+  auto res =
+      FCCAnalyses::PodioSource::ReconstructedParticle::merge(pColl1, pColl2);
   REQUIRE(res.size() == 3);
   REQUIRE(res[0].getPDG() == 11);
   REQUIRE(res[1].getPDG() == 13);

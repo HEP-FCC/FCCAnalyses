@@ -22,8 +22,8 @@ namespace FCCAnalyses ::PodioSource ::JetClustering {
  * @brief  Create FastJet pseudoJets for later usage by the jet clustering
  *         algorithm(s).
  *
-   * @param[in] inColl  Input collection of the reconstructed particles.
-   * @return  Vector of pseudoJets.
+ * @param[in] inColl  Input collection of the reconstructed particles.
+ * @return  Vector of pseudoJets.
  */
 std::vector<fastjet::PseudoJet>
 createPseudoJets(const edm4hep::ReconstructedParticleCollection &inColl);

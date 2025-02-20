@@ -235,8 +235,7 @@ remove(const edm4hep::ReconstructedParticleCollection &inColl,
 
   if (!matching) {
     for (const auto &particle : inColl) {
-      if (std::find(inPartsToBeRemoved.begin(),
-                    inPartsToBeRemoved.end(),
+      if (std::find(inPartsToBeRemoved.begin(), inPartsToBeRemoved.end(),
                     particle) != inPartsToBeRemoved.end()) {
         continue;
       }
@@ -249,32 +248,33 @@ remove(const edm4hep::ReconstructedParticleCollection &inColl,
       for (const auto &particle2 : inPartsToBeRemoved) {
         float massDiff = 0.;
         if (particle1.getMass() > 0.) {
-          massDiff = std::fabs(particle1.getMass() - particle2.getMass()) / particle1.getMass();
+          massDiff = std::fabs(particle1.getMass() - particle2.getMass()) /
+                     particle1.getMass();
         }
         float pXDiff = 0.;
         if (particle1.getMomentum().x != 0.) {
-          pXDiff = std::fabs((particle1.getMomentum().x - particle2.getMomentum().x) /
-                             particle1.getMomentum().x);
+          pXDiff = std::fabs(
+              (particle1.getMomentum().x - particle2.getMomentum().x) /
+              particle1.getMomentum().x);
         }
         float pYDiff = 0.;
         if (particle1.getMomentum().y != 0.) {
-          pYDiff = std::fabs((particle1.getMomentum().y - particle2.getMomentum().y) /
-                             particle1.getMomentum().y);
+          pYDiff = std::fabs(
+              (particle1.getMomentum().y - particle2.getMomentum().y) /
+              particle1.getMomentum().y);
         }
         float pZDiff = 0.;
         if (particle1.getMomentum().z != 0.) {
-          pZDiff = std::fabs((particle1.getMomentum().z - particle2.getMomentum().z) /
-                             particle1.getMomentum().z);
+          pZDiff = std::fabs(
+              (particle1.getMomentum().z - particle2.getMomentum().z) /
+              particle1.getMomentum().z);
         }
-        float chargeDiff = std::fabs(particle1.getCharge() - particle2.getCharge());
+        float chargeDiff =
+            std::fabs(particle1.getCharge() - particle2.getCharge());
         int32_t pdgDiff = std::abs(particle1.getPDG() - particle1.getPDG());
 
-        if (massDiff < epsilon &&
-            pXDiff < epsilon &&
-            pYDiff < epsilon &&
-            pZDiff < epsilon &&
-            chargeDiff < epsilon &&
-            pdgDiff < 1) {
+        if (massDiff < epsilon && pXDiff < epsilon && pYDiff < epsilon &&
+            pZDiff < epsilon && chargeDiff < epsilon && pdgDiff < 1) {
           removePart = true;
         }
       }
