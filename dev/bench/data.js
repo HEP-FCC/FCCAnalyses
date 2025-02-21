@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740143561707,
+  "lastUpdate": 1740143562809,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -45938,6 +45938,65 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "87781765+lipeles@users.noreply.github.com",
+            "name": "lipeles",
+            "username": "lipeles"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f09b4dcbeffb3e91298933f07e7c81668bf3f26c",
+          "message": "fixed bugs with using float instead of int for pdgid, status, ... (#425)\n\n* fixed bugs with using float instead of int for pdgid, status, and index variables\n\n* initial commit\n\n---------\n\nCo-authored-by: Elliot Lipeles <lipeles@cern.ch>",
+          "timestamp": "2025-02-21T14:00:17+01:00",
+          "tree_id": "0db51d237d353833824af27bf8feb4d333e6576e",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/f09b4dcbeffb3e91298933f07e7c81668bf3f26c"
+        },
+        "date": 1740143561578,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.108121153813247,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 10.835044732135852,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.983237698159358,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 8.899901087548924,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 2.9671651649836135,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/stages_source.py",
+            "value": 6.923816352165668,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 6.59495427908396,
+            "unit": "Evt/s"
           }
         ]
       }
