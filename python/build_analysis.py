@@ -24,8 +24,10 @@ def run_subprocess(command: str, run_dir: str) -> None:
             status: int = proc.wait()
 
             if status != 0:
-                LOGGER.error('Error encountered!\nAborting...')
-                os.system('hash -d fccanalysis')
+                LOGGER.error('Error encountered!\n'
+                             'In case `fccanalysis` command is broken, you can try recovering with:\n'
+                             '  hash -d fccanalysis\n'
+                             'Aborting...')
                 sys.exit(3)
 
     except KeyboardInterrupt:
