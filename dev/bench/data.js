@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740143562809,
+  "lastUpdate": 1740143563736,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -45996,6 +45996,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
             "value": 6.59495427908396,
+            "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "87781765+lipeles@users.noreply.github.com",
+            "name": "lipeles",
+            "username": "lipeles"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f09b4dcbeffb3e91298933f07e7c81668bf3f26c",
+          "message": "fixed bugs with using float instead of int for pdgid, status, ... (#425)\n\n* fixed bugs with using float instead of int for pdgid, status, and index variables\n\n* initial commit\n\n---------\n\nCo-authored-by: Elliot Lipeles <lipeles@cern.ch>",
+          "timestamp": "2025-02-21T14:00:17+01:00",
+          "tree_id": "0db51d237d353833824af27bf8feb4d333e6576e",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/f09b4dcbeffb3e91298933f07e7c81668bf3f26c"
+        },
+        "date": 1740143562485,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.33302252215086,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 11.565420641279532,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 7.7898833316435425,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 3.18999286737654,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.0195906981576734,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/data_source/stages_source.py",
+            "value": 7.551268116013783,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 7.209277726386798,
             "unit": "Evt/s"
           }
         ]
