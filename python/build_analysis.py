@@ -27,7 +27,7 @@ def run_subprocess(command: str, run_dir: str) -> None:
                 LOGGER.error('Error encountered!\n'
                              'In case `fccanalysis` command is broken, you can try recovering with:\n'
                              '  hash -d fccanalysis\n'
-                LOGGER.error('Aborting...')
+                             'Aborting...')
                 sys.exit(3)
 
     except KeyboardInterrupt:
