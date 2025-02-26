@@ -33,6 +33,8 @@ if(NOT WITH_ACTS)
 endif()
 
 if(NOT WITH_PODIO_DATASOURCE)
+  list(FILTER headers EXCLUDE REGEX "JetClusteringUtilsSource.h")
+  list(FILTER sources EXCLUDE REGEX "JetClusteringUtilsSource.cc")
   list(FILTER headers EXCLUDE REGEX "LinkSource.h")
   list(FILTER headers EXCLUDE REGEX "ReconstructedParticleSource.h")
   list(FILTER sources EXCLUDE REGEX "ReconstructedParticleSource.cc")
@@ -46,7 +48,7 @@ message(STATUS "FCCAnalyses sources:\n   ${sources}")
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
 
-add_library(FCCAnalyses SHARED ${sources} ${headers})
+add_library(FCCAnalyses SHARED ${sources})
 target_include_directories(FCCAnalyses PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
@@ -65,12 +67,12 @@ target_link_libraries(FCCAnalyses PUBLIC
                       ROOT::MathCore
                       ROOT::ROOTVecOps
                       ROOT::ROOTDataFrame
-                      EDM4HEP::edm4hep
-                      EDM4HEP::edm4hepDict
-                      EDM4HEP::utils
                       podio::podio
                       podio::podioRootIO
                       podio::podioDataSource
+                      EDM4HEP::edm4hep
+                      EDM4HEP::edm4hepDict
+                      EDM4HEP::utils
                       ${ADDONS_LIBRARIES}
                       ${DELPHES_LIBRARY}
                       gfortran # todo: why necessary?
@@ -110,4 +112,4 @@ if (${ROOT_VERSION} GREATER 6)
     install(FILES
           "${PROJECT_BINARY_DIR}/analyzers/dataframe/libFCCAnalyses_rdict.pcm"
                 DESTINATION "${INSTALL_LIB_DIR}" COMPONENT dev)
-    endif()
+endif()

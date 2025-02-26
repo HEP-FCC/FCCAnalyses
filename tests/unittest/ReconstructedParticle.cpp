@@ -1,8 +1,9 @@
+// FCCAnalyses
 #include "FCCAnalyses/ReconstructedParticle.h"
 
 // Catch2
+#include "catch2/catch_approx.hpp"
 #include "catch2/catch_test_macros.hpp"
-#include <catch2/catch_approx.hpp>
 
 // EDM4hep
 #include "edm4hep/EDM4hepVersion.h"

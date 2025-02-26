@@ -213,6 +213,107 @@ sortByPt(const edm4hep::ReconstructedParticleCollection &inColl) {
   return outColl;
 }
 
+// ----------------------------------------------------------------------------
+edm4hep::ReconstructedParticleCollection
+remove(const edm4hep::ReconstructedParticleCollection &inColl,
+       const edm4hep::ReconstructedParticle &inPartToBeRemoved,
+       const bool matching) {
+  edm4hep::ReconstructedParticleCollection inPartsToBeRemoved;
+  inPartsToBeRemoved.setSubsetCollection();
+  inPartsToBeRemoved.push_back(inPartToBeRemoved);
+
+  return remove(inColl, inPartsToBeRemoved, matching);
+}
+
+// ----------------------------------------------------------------------------
+edm4hep::ReconstructedParticleCollection
+remove(const edm4hep::ReconstructedParticleCollection &inColl,
+       const edm4hep::ReconstructedParticleCollection &inPartsToBeRemoved,
+       const bool matching) {
+  edm4hep::ReconstructedParticleCollection outColl;
+  outColl.setSubsetCollection();
+
+  if (!matching) {
+    for (const auto &particle : inColl) {
+      // TODO: Use std::find for this
+      // if (std::find(inPartsToBeRemoved.begin(), inPartsToBeRemoved.end(),
+      //               particle) != inPartsToBeRemoved.end()) {
+      bool removePart = false;
+      for (const auto &partToBeRemoved : inPartsToBeRemoved) {
+        if (particle == partToBeRemoved) {
+          removePart = true;
+        }
+      }
+      if (removePart) {
+        continue;
+      }
+      outColl.push_back(particle);
+    }
+  } else {
+    float epsilon = 1e-6;
+    for (const auto &particle1 : inColl) {
+      bool removePart = false;
+      for (const auto &particle2 : inPartsToBeRemoved) {
+        float massDiff = 0.;
+        if (particle1.getMass() > 0.) {
+          massDiff = std::fabs(particle1.getMass() - particle2.getMass()) /
+                     particle1.getMass();
+        }
+        float pXDiff = 0.;
+        if (particle1.getMomentum().x != 0.) {
+          pXDiff = std::fabs(
+              (particle1.getMomentum().x - particle2.getMomentum().x) /
+              particle1.getMomentum().x);
+        }
+        float pYDiff = 0.;
+        if (particle1.getMomentum().y != 0.) {
+          pYDiff = std::fabs(
+              (particle1.getMomentum().y - particle2.getMomentum().y) /
+              particle1.getMomentum().y);
+        }
+        float pZDiff = 0.;
+        if (particle1.getMomentum().z != 0.) {
+          pZDiff = std::fabs(
+              (particle1.getMomentum().z - particle2.getMomentum().z) /
+              particle1.getMomentum().z);
+        }
+        float chargeDiff =
+            std::fabs(particle1.getCharge() - particle2.getCharge());
+        int32_t pdgDiff = std::abs(particle1.getPDG() - particle1.getPDG());
+
+        if (massDiff < epsilon && pXDiff < epsilon && pYDiff < epsilon &&
+            pZDiff < epsilon && chargeDiff < epsilon && pdgDiff < 1) {
+          removePart = true;
+        }
+      }
+      if (removePart) {
+        continue;
+      }
+      outColl.push_back(particle1);
+    }
+  }
+
+  return outColl;
+}
+
+// ----------------------------------------------------------------------------
+edm4hep::ReconstructedParticleCollection
+merge(const edm4hep::ReconstructedParticleCollection &inColl1,
+      const edm4hep::ReconstructedParticleCollection &inColl2) {
+  edm4hep::ReconstructedParticleCollection outColl;
+  outColl.setSubsetCollection();
+
+  for (const auto &particle : inColl1) {
+    outColl.push_back(particle);
+  }
+
+  for (const auto &particle : inColl2) {
+    outColl.push_back(particle);
+  }
+
+  return outColl;
+}
+
 // --------------------------------------------------------------------------
 resonanceBuilder::resonanceBuilder(float resonanceMass)
     : m_resonanceMass(resonanceMass) {

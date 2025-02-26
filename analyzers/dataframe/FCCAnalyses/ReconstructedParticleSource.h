@@ -191,6 +191,54 @@ edm4hep::ReconstructedParticleCollection
 sortByPt(const edm4hep::ReconstructedParticleCollection &inColl);
 
 /**
+ * @brief Remove a particle from a collection.
+ *
+ * If the matching parameter is false them only the particle with the same ID
+ * will be removed from the collection.
+ * If the matching parameter is true then ID is ignored and any particle
+ * matching with the one provided will be removed.
+ *
+ * @param[in] inColl  Collection of input particles.
+ * @param[in] inPartToBeRemoved  Input particle to be removed.
+ * @param[in] matching  Use matching instead of IDs/
+ * @return  Particles remaining.
+ */
+edm4hep::ReconstructedParticleCollection
+remove(const edm4hep::ReconstructedParticleCollection &inColl,
+       const edm4hep::ReconstructedParticle &inPartToBeRemoved,
+       const bool matching = false);
+
+/**
+ * @brief Remove multiple particles from a collection.
+ *
+ * If the matching parameter is false them only the particles with the same IDs
+ * will be removed from the collection.
+ * If the matching parameter is true then ID is ignored and any particle
+ * matching with the particles provided in the remove collection will be
+ * removed.
+ *
+ * @param[in] inColl  Collection of input particles.
+ * @param[in] inPartsToBeRemoved  Collection of input particles to be removed.
+ * @param[in] matching  Use matching instead of IDs/
+ * @return  Particles remaining.
+ */
+edm4hep::ReconstructedParticleCollection
+remove(const edm4hep::ReconstructedParticleCollection &inColl,
+       const edm4hep::ReconstructedParticleCollection &inPartsToBeRemoved,
+       const bool matching = false);
+
+/**
+ * @brief Merge two particle collections together.
+ *
+ * @param[in] inColl1  First collection of input particles.
+ * @param[in] inColl2  Second collection of input particles.
+ * @return  Particles in merged collection.
+ */
+edm4hep::ReconstructedParticleCollection
+merge(const edm4hep::ReconstructedParticleCollection &inColl1,
+      const edm4hep::ReconstructedParticleCollection &inColl2);
+
+/**
  * \brief Build two particle resonances from an arbitrary list of input
  *        reconstructed particles.
  *        Select the one closest to the pre-defined mass.
