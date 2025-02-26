@@ -17,8 +17,9 @@ if(WITH_PODIO_DATASOURCE)
 endif()
 
 add_executable(unittest ${unittest_src})
-target_link_libraries(unittest PUBLIC FCCAnalyses
-                                      gfortran
+add_dependencies(unittest FCCAnalyses)
+target_link_libraries(unittest PUBLIC EDM4HEP::edm4hep
+                                      FCCAnalyses
                                PRIVATE Catch2::Catch2WithMain)
 target_include_directories(unittest PUBLIC ${VDT_INCLUDE_DIR})
 target_compile_definitions(unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")
