@@ -150,6 +150,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a3344fefa9670ff066df36a8faac866e0" id="r_a3344fefa9670ff066df36a8faac866e0"><td class="memItemLeft" align="right" valign="top">edm4hep::ReconstructedParticleCollection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3344fefa9670ff066df36a8faac866e0">sortByPt</a> (const edm4hep::ReconstructedParticleCollection &amp;inColl)</td></tr>
 <tr class="memdesc:a3344fefa9670ff066df36a8faac866e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort input particles by pT.  <br /></td></tr>
 <tr class="separator:a3344fefa9670ff066df36a8faac866e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7153be00782a5296dfc6ce0be5d6b83" id="r_ad7153be00782a5296dfc6ce0be5d6b83"><td class="memItemLeft" align="right" valign="top">edm4hep::ReconstructedParticleCollection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7153be00782a5296dfc6ce0be5d6b83">remove</a> (const edm4hep::ReconstructedParticleCollection &amp;inColl, const edm4hep::ReconstructedParticle &amp;inPartToBeRemoved, const bool matching=false)</td></tr>
+<tr class="memdesc:ad7153be00782a5296dfc6ce0be5d6b83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a particle from a collection.  <br /></td></tr>
+<tr class="separator:ad7153be00782a5296dfc6ce0be5d6b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1747136c116b9b20b0b825ce306e799" id="r_aa1747136c116b9b20b0b825ce306e799"><td class="memItemLeft" align="right" valign="top">edm4hep::ReconstructedParticleCollection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1747136c116b9b20b0b825ce306e799">remove</a> (const edm4hep::ReconstructedParticleCollection &amp;inColl, const edm4hep::ReconstructedParticleCollection &amp;inPartsToBeRemoved, const bool matching=false)</td></tr>
+<tr class="memdesc:aa1747136c116b9b20b0b825ce306e799"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove multiple particles from a collection.  <br /></td></tr>
+<tr class="separator:aa1747136c116b9b20b0b825ce306e799"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a265b7de21f7e1e17e60b2bb00c5fe748" id="r_a265b7de21f7e1e17e60b2bb00c5fe748"><td class="memItemLeft" align="right" valign="top">edm4hep::ReconstructedParticleCollection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a265b7de21f7e1e17e60b2bb00c5fe748">merge</a> (const edm4hep::ReconstructedParticleCollection &amp;inColl1, const edm4hep::ReconstructedParticleCollection &amp;inColl2)</td></tr>
+<tr class="memdesc:a265b7de21f7e1e17e60b2bb00c5fe748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Merge two particle collections together.  <br /></td></tr>
+<tr class="separator:a265b7de21f7e1e17e60b2bb00c5fe748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="aeab1f4bb3da5c9800523dc98a44666b2" name="aeab1f4bb3da5c9800523dc98a44666b2"></a>
@@ -305,6 +314,113 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a265b7de21f7e1e17e60b2bb00c5fe748" name="a265b7de21f7e1e17e60b2bb00c5fe748"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a265b7de21f7e1e17e60b2bb00c5fe748">&#9670;&#160;</a></span>merge()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edm4hep::ReconstructedParticleCollection FCCAnalyses ::PodioSource ::ReconstructedParticle::merge </td>
+          <td>(</td>
+          <td class="paramtype">const edm4hep::ReconstructedParticleCollection &amp;</td>          <td class="paramname"><span class="paramname"><em>inColl1</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const edm4hep::ReconstructedParticleCollection &amp;</td>          <td class="paramname"><span class="paramname"><em>inColl2</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Merge two particle collections together. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">inColl1</td><td>First collection of input particles. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">inColl2</td><td>Second collection of input particles. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Particles in merged collection. </dd></dl>
+
+</div>
+</div>
+<a id="ad7153be00782a5296dfc6ce0be5d6b83" name="ad7153be00782a5296dfc6ce0be5d6b83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7153be00782a5296dfc6ce0be5d6b83">&#9670;&#160;</a></span>remove() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edm4hep::ReconstructedParticleCollection FCCAnalyses ::PodioSource ::ReconstructedParticle::remove </td>
+          <td>(</td>
+          <td class="paramtype">const edm4hep::ReconstructedParticleCollection &amp;</td>          <td class="paramname"><span class="paramname"><em>inColl</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const edm4hep::ReconstructedParticle &amp;</td>          <td class="paramname"><span class="paramname"><em>inPartToBeRemoved</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>matching</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove a particle from a collection. </p>
+<p>If the matching parameter is false them only the particle with the same ID will be removed from the collection. If the matching parameter is true then ID is ignored and any particle matching with the one provided will be removed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">inColl</td><td>Collection of input particles. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">inPartToBeRemoved</td><td>Input particle to be removed. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">matching</td><td>Use matching instead of IDs/ </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Particles remaining. </dd></dl>
+
+</div>
+</div>
+<a id="aa1747136c116b9b20b0b825ce306e799" name="aa1747136c116b9b20b0b825ce306e799"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1747136c116b9b20b0b825ce306e799">&#9670;&#160;</a></span>remove() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edm4hep::ReconstructedParticleCollection FCCAnalyses ::PodioSource ::ReconstructedParticle::remove </td>
+          <td>(</td>
+          <td class="paramtype">const edm4hep::ReconstructedParticleCollection &amp;</td>          <td class="paramname"><span class="paramname"><em>inColl</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const edm4hep::ReconstructedParticleCollection &amp;</td>          <td class="paramname"><span class="paramname"><em>inPartsToBeRemoved</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>matching</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove multiple particles from a collection. </p>
+<p>If the matching parameter is false them only the particles with the same IDs will be removed from the collection. If the matching parameter is true then ID is ignored and any particle matching with the particles provided in the remove collection will be removed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">inColl</td><td>Collection of input particles. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">inPartsToBeRemoved</td><td>Collection of input particles to be removed. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">matching</td><td>Use matching instead of IDs/ </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Particles remaining. </dd></dl>
 
 </div>
 </div>

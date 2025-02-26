@@ -7,7 +7,7 @@
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
-<title>FCCAnalyses: analyzers/dataframe/FCCAnalyses -&gt; addons Relation</title>
+<title>FCCAnalyses: analyzers/dataframe/FCCAnalyses/JetClusteringUtilsSource.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -95,8 +95,46 @@ $(function(){ initResizable(false); });
 </div>
 </div><!-- top -->
 <div id="doc-content">
+<div class="header">
+  <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">JetClusteringUtilsSource.h File Reference</div></div>
+</div><!--header-->
 <div class="contents">
-<h3>FCCAnalyses &rarr; addons Relation</h3><table class="dirtab"><tr class="dirtab"><th class="dirtab">File in analyzers/dataframe/FCCAnalyses</th><th class="dirtab">Includes file in addons</th></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="Algorithms_8h.html">Algorithms.h</a></td><td class="dirtab"><a class="el" href="dir_582ea236d635d8d6ee0286241c4903aa.html">FastJet</a>&#160;/&#160;<a class="el" href="JetClustering_8h.html">JetClustering.h</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="JetClusteringUtils_8h.html">JetClusteringUtils.h</a></td><td class="dirtab"><a class="el" href="dir_582ea236d635d8d6ee0286241c4903aa.html">FastJet</a>&#160;/&#160;<a class="el" href="JetClustering_8h.html">JetClustering.h</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="JetClusteringUtilsSource_8h.html">JetClusteringUtilsSource.h</a></td><td class="dirtab"><a class="el" href="dir_582ea236d635d8d6ee0286241c4903aa.html">FastJet</a>&#160;/&#160;<a class="el" href="JetClustering_8h.html">JetClustering.h</a></td></tr></table></div><!-- contents -->
+<div class="textblock"><code>#include &quot;edm4hep/ReconstructedParticleCollection.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="JetClustering_8h_source.html">FastJet/JetClustering.h</a>&quot;</code><br />
+<code>#include &quot;fastjet/JetDefinition.hh&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for JetClusteringUtilsSource.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="JetClusteringUtilsSource_8h__incl.png" border="0" usemap="#aanalyzers_2dataframe_2FCCAnalyses_2JetClusteringUtilsSource_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="JetClusteringUtilsSource_8h__dep__incl.png" border="0" usemap="#aanalyzers_2dataframe_2FCCAnalyses_2JetClusteringUtilsSource_8hdep" alt=""/></div>
+</div>
+</div>
+<p><a href="JetClusteringUtilsSource_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFCCAnalyses_01.html">FCCAnalyses </a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFCCAnalyses_01_1_1PodioSource_01.html">FCCAnalyses ::PodioSource </a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFCCAnalyses_01_1_1PodioSource_01_1_1JetClustering.html">FCCAnalyses ::PodioSource ::JetClustering</a></td></tr>
+<tr class="memdesc:namespaceFCCAnalyses_01_1_1PodioSource_01_1_1JetClustering"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jet clustering tools and utilities. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ac822beab58aea548cd067090ead69139" id="r_ac822beab58aea548cd067090ead69139"><td class="memItemLeft" align="right" valign="top">std::vector&lt; fastjet::PseudoJet &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFCCAnalyses_01_1_1PodioSource_01_1_1JetClustering.html#ac822beab58aea548cd067090ead69139">FCCAnalyses ::PodioSource ::JetClustering::createPseudoJets</a> (const edm4hep::ReconstructedParticleCollection &amp;inColl)</td></tr>
+<tr class="memdesc:ac822beab58aea548cd067090ead69139"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create FastJet pseudoJets for later usage by the jet clustering algorithm(s).  <br /></td></tr>
+<tr class="separator:ac822beab58aea548cd067090ead69139"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+</div><!-- contents -->
 <!-- HTML footer for doxygen 1.9.8-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

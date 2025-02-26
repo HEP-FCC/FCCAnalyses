@@ -33,5 +33,6 @@ var searchData=
   ['count_5ftype_30',['count_type',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a63032e3957445718fee0924113f0c661',1,'FCCAnalyses::JetConstituentsUtils']]],
   ['covsmear_31',['CovSmear',['../namespaceFCCAnalyses_1_1SmearObjects.html#ae59c02f8fff1f0a8bbb3eb2a76dad5c7',1,'FCCAnalyses::SmearObjects']]],
   ['covtoacts_32',['CovToACTS',['../namespaceFCCAnalyses_1_1VertexingUtils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
-  ['cross_33',['cross',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#a1bac2fc8360649a79326762b826d3705',1,'FCCAnalyses::Algorithms::calculate_thrust']]]
+  ['createpseudojets_33',['createPseudoJets',['../namespaceFCCAnalyses_01_1_1PodioSource_01_1_1JetClustering.html#ac822beab58aea548cd067090ead69139',1,'FCCAnalyses ::PodioSource ::JetClustering']]],
+  ['cross_34',['cross',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#a1bac2fc8360649a79326762b826d3705',1,'FCCAnalyses::Algorithms::calculate_thrust']]]
 ];
