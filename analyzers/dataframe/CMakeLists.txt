@@ -48,7 +48,7 @@ message(STATUS "FCCAnalyses sources:\n   ${sources}")
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "CMAKE_INSTALL_INCLUDEDIR  ${CMAKE_INSTALL_INCLUDEDIR}")
 
-add_library(FCCAnalyses ${sources})
+add_library(FCCAnalyses SHARED ${sources})
 target_include_directories(FCCAnalyses PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>

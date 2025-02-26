@@ -1,8 +1,9 @@
+// FCCAnalyses
 #include "FCCAnalyses/ReconstructedParticleSource.h"
 
 // Catch2
 #include "catch2/catch_test_macros.hpp"
-#include <catch2/catch_approx.hpp>
+#include "catch2/catch_approx.hpp"
 
 TEST_CASE("remove-by-id", "[ReconstructedParticleSource]") {
   edm4hep::ReconstructedParticleCollection pColl;
