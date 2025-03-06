@@ -631,9 +631,14 @@ def run_fccanalysis(args, analysis_module):
 
     for process_name in process_list:
         LOGGER.info('Started processing sample "%s" ...', process_name)
+        try:
+            process_input_dir = process_list[process_name]['input_dir']
+        except KeyError:
+            process_input_dir = None
         file_list, event_list = get_process_info(process_name,
                                                  prod_tag,
-                                                 input_dir)
+                                                 input_dir,
+                                                 process_input_dir)
 
         if len(file_list) <= 0:
             LOGGER.error('No files to process!\nAborting...')

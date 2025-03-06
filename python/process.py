@@ -30,12 +30,17 @@ def get_entries(inpath: str) -> int:
     return nevents
 
 
-def get_process_info(process: str,
-                     prod_tag: str,
-                     input_dir: str) -> tuple[list[str], list[int]]:
+def get_process_info(
+        process_name: str,
+        prod_tag: str,
+        input_dir: str,
+        process_input_dir: str | None = None) -> tuple[list[str], list[int]]:
     '''
     Decide where to look for the filelist and eventlist.
     '''
+    if process_input_dir is not None:
+        return get_process_info_files(process_name, process_input_dir)
+
     if prod_tag is None and input_dir is None:
         LOGGER.error('The variable <prodTag> or <inputDir> is mandatory in '
                      'your analysis script!\nAborting...')
@@ -47,9 +52,9 @@ def get_process_info(process: str,
         sys.exit(3)
 
     if prod_tag is not None:
-        return get_process_info_yaml(process, prod_tag)
+        return get_process_info_yaml(process_name, prod_tag)
 
-    return get_process_info_files(process, input_dir)
+    return get_process_info_files(process_name, input_dir)
 
 
 def get_process_info_files(process: str, input_dir: str) -> tuple[list[str],
