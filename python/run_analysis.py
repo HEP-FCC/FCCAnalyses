@@ -514,7 +514,7 @@ def run_local(rdf_module, infile_list, args):
     start_time = time.time()
     inn, outn = run_rdf(rdf_module, file_list, outfile_path, args)
     elapsed_time = time.time() - start_time
-    
+
     # replace nevents_local by inn = the amount of processed events
 
     info_msg = f"{' SUMMARY ':=^80}\n"
@@ -618,10 +618,15 @@ def run_stages(args, rdf_module, anapath):
     process_list = get_element(rdf_module, 'processList')
 
     for process_name in process_list:
+        try:
+            process_input_dir = process_list[process_name]['inputDir']
+        except KeyError:
+            process_input_dir = None
         file_list, event_list = get_process_info(
             process_name,
             get_element(rdf_module, "prodTag"),
-            get_element(rdf_module, "inputDir"))
+            get_element(rdf_module, "inputDir"),
+            process_input_dir)
 
         if len(file_list) <= 0:
             LOGGER.error('No files to process!\nAborting...')
@@ -718,10 +723,15 @@ def run_histmaker(args, rdf_module, anapath):
     # number of events processed per process, in a potential previous step
     events_processed_dict = {}
     for process in process_list:
+        try:
+            process_input_dir = process_list[process]['inputDir']
+        except KeyError:
+            process_input_dir = None
         file_list, event_list = get_process_info(
             process,
             get_element(rdf_module, "prodTag"),
-            get_element(rdf_module, "inputDir"))
+            get_element(rdf_module, "inputDir"),
+            process_input_dir)
         if len(file_list) == 0:
             LOGGER.error('No files to process!\nAborting...')
             sys.exit(3)
