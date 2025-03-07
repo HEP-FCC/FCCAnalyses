@@ -25,6 +25,10 @@ jobs:
                    -v ${GITHUB_WORKSPACE}:/Package \
                    -v /cvmfs:/cvmfs:shared \
                    -d ghcr.io/key4hep/key4hep-images/${{ matrix.OS }}:latest /bin/bash
+    - name: Install Compiler
+      run: |
+        docker exec CI_container /bin/bash -c 'cd Package;\
+         dnf install -y gcc-c++;'
     - name: CMake Configure
       run: |
         docker exec CI_container /bin/bash -c 'cd Package;\
