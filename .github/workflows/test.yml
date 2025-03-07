@@ -29,7 +29,7 @@ jobs:
       if: "${{ matrix.OS == 'alma9' }}"
       run: |
         docker exec CI_container /bin/bash -c 'cd Package;\
-         dnf install -y gcc-c++;'
+         dnf install -y gcc-c++ gcc-gfortran;'
     - name: CMake Configure
       run: |
         docker exec CI_container /bin/bash -c 'cd Package;\
