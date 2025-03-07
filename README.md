@@ -2,10 +2,11 @@
 
 [![DOI](https://zenodo.org/badge/177151745.svg)](https://zenodo.org/doi/10.5281/zenodo.4767810)
 
-[![test](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml/badge.svg)](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml)
-[![test-pre-edm4hep1](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml/badge.svg?branch=pre-edm4hep1)](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml)
+`master`: [![test](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml/badge.svg)](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml)
 [![docs](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/docs.yml/badge.svg)](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/docs.yml)
 [![bench](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/bench.yml/badge.svg)](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/bench.yml)
+
+`pre-edm4hep1`: [![test-pre-edm4hep1](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml/badge.svg?branch=pre-edm4hep1)](https://github.com/HEP-FCC/FCCAnalyses/actions/workflows/test.yml)
 
 Common framework for FCC related analyses. This framework allows one to write
 full analysis, taking [EDM4hep](https://github.com/key4hep/EDM4hep) input ROOT
