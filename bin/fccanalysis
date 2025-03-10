@@ -5,18 +5,21 @@ Starting point (executable) for fccanalysis command
 
 import argparse
 import logging
+import sys
 
 from parsers import setup_subparsers
 from init_analysis import init_analysis
 from build_analysis import build_analysis
 from test_fccanalyses import test_fccanalyses
 from pin_analysis import PinAnalysis
+from submit import submit_analysis
 from run_analysis import run
 from run_final_analysis import run_final
 from do_plots import do_plots
 from do_combine import do_combine
 
 
+# _____________________________________________________________________________
 class MultiLineFormatter(logging.Formatter):
     '''
     Multi-line formatter.
@@ -42,6 +45,25 @@ class MultiLineFormatter(logging.Formatter):
         return head + ''.join(indent + line for line in trailing)
 
 
+# _____________________________________________________________________________
+class MaxLevelFilter(logging.Filter):
+    '''
+    Filters (lets through) all messages with level < LEVEL
+
+    Found here:
+      https://stackoverflow.com/questions/1383254/
+    '''
+    def __init__(self, level):
+        super().__init__()
+        self.level = level
+
+    def filter(self, record):
+        # "<" instead of "<=": since logger.setLevel is inclusive,
+        # this should be exclusive
+        return record.levelno < self.level
+
+
+# _____________________________________________________________________________
 def main():
     '''
     Starting point for fccanalysis command
@@ -78,10 +100,16 @@ def main():
     logger = logging.getLogger('FCCAnalyses')
     logger.setLevel(verbosity_level)
     formatter = MultiLineFormatter(fmt='----> %(levelname)s: %(message)s')
-    stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(verbosity_level)
-    stream_handler.setFormatter(formatter)
-    logger.addHandler(stream_handler)
+    stdout_stream_handler = logging.StreamHandler(sys.stdout)
+    stderr_stream_handler = logging.StreamHandler(sys.stderr)
+    lower_than_warning_filter = MaxLevelFilter(logging.WARNING)
+    stdout_stream_handler.addFilter(lower_than_warning_filter)
+    stdout_stream_handler.setLevel(verbosity_level)
+    stderr_stream_handler.setLevel(logging.WARNING)
+    stdout_stream_handler.setFormatter(formatter)
+    stderr_stream_handler.setFormatter(formatter)
+    logger.addHandler(stdout_stream_handler)
+    logger.addHandler(stderr_stream_handler)
 
     if args.command == 'init':
         init_analysis(parser)
@@ -91,6 +119,8 @@ def main():
         test_fccanalyses(parser)
     elif args.command == 'pin':
         PinAnalysis(parser)
+    elif args.command == 'submit':
+        submit_analysis(parser)
     elif args.command == 'final':
         run_final(parser)
     elif args.command == 'plots':
@@ -101,5 +131,6 @@ def main():
         run(parser)
 
 
+# _____________________________________________________________________________
 if __name__ == "__main__":
     main()

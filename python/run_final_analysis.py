@@ -16,7 +16,7 @@ import ROOT  # type: ignore
 import cppyy
 from anascript import get_element, get_attribute
 from process import get_process_dict, get_entries_sow
-from frame import generate_graph
+from utils import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run_final')
 
