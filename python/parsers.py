@@ -83,6 +83,7 @@ def setup_test_parser(parser):
     )
 
 
+# _____________________________________________________________________________
 def setup_pin_parser(parser):
     '''
     Arguments for the pin sub-command
@@ -102,16 +103,33 @@ def setup_pin_parser(parser):
                           help='show pinned stack')
 
 
+# _____________________________________________________________________________
+def setup_submit_parser(parser):
+    '''
+    Define command line arguments for the submit sub-command.
+    '''
+    parser.add_argument('anascript_path',
+                        type=str,
+                        help='path to the analysis script')
+    parser.add_argument('-w', '--where',
+                        type=str,
+                        choices=['ht-condor', 'slurm', 'grid'],
+                        default='ht-condor',
+                        help='where to submit the analysis')
+    parser.add_argument('remaining', nargs=argparse.REMAINDER)
+
+
+# _____________________________________________________________________________
 def setup_run_parser(parser):
     '''
     Define command line arguments for the run sub-command.
     '''
     parser.add_argument('anascript_path',
                         help='path to analysis script')
-    parser.add_argument('--files-list', default=[], nargs='+',
+    parser.add_argument('--files-list', nargs='+', default=[],
                         help='specify input file(s) to bypass the processList')
     parser.add_argument(
-        '--output',
+        '-o', '--output',
         type=str,
         default='output.root',
         help='specify output file name to bypass the processList and or '
@@ -122,7 +140,7 @@ def setup_run_parser(parser):
                         help='run over the test input file')
     parser.add_argument('--bench', action='store_true', default=False,
                         help='output benchmark results to a JSON file')
-    parser.add_argument('-j', '--ncpus', type=int, default=-1,
+    parser.add_argument('-j', '--ncpus', '--n-threads', type=int,
                         help='set number of threads')
     parser.add_argument('-g', '--graph', action='store_true', default=False,
                         help='generate computational graph of the analysis')
@@ -133,11 +151,8 @@ def setup_run_parser(parser):
         '--use-data-source', action='store_true', default=False,
         help='use EDM4hep RDataSource to construct dataframe')
 
-    # Internal argument, not to be used by the users
-    parser.add_argument('--batch', action='store_true', default=False,
-                        help=argparse.SUPPRESS)
 
-
+# _____________________________________________________________________________
 def setup_run_parser_final(parser):
     '''
     Define command line arguments for the final sub-command.
@@ -151,6 +166,7 @@ def setup_run_parser_final(parser):
                         '\'.dot\' or \'.png\'')
 
 
+# _____________________________________________________________________________
 def setup_run_parser_plots(parser):
     '''
     Define command line arguments for the plots sub-command.
@@ -172,6 +188,7 @@ def setup_run_parser_plots(parser):
                         help='maximal y position of the legend')
 
 
+# _____________________________________________________________________________
 def setup_run_parser_combine(parser):
     '''
     Define command line arguments for the combine sub-command.
@@ -180,34 +197,37 @@ def setup_run_parser_combine(parser):
 
 
 # _____________________________________________________________________________
-def setup_subparsers(subparsers):
+def setup_subparsers(topparser):
     '''
     Sets all sub-parsers for all sub-commands
     '''
 
-    # Create sub-parsers
-    parser_init = subparsers.add_parser(
+    # Instantiate sub-parsers
+    parser_init = topparser.add_parser(
         'init',
         help="generate a RDataFrame based FCC analysis")
-    parser_build = subparsers.add_parser(
+    parser_build = topparser.add_parser(
         'build',
         help='build and install local analysis')
-    parser_test = subparsers.add_parser(
+    parser_test = topparser.add_parser(
         'test',
         help='test whole or a part of the analysis framework')
-    parser_pin = subparsers.add_parser(
+    parser_pin = topparser.add_parser(
         'pin',
         help='pin fccanalyses to the current version of Key4hep stack')
-    parser_run = subparsers.add_parser(
+    parser_submit = topparser.add_parser(
+        'submit',
+        help="submit the analysis to be run on a remote machine(s)")
+    parser_run = topparser.add_parser(
         'run',
         help="run a RDataFrame based FCC analysis")
-    parser_run_final = subparsers.add_parser(
+    parser_run_final = topparser.add_parser(
         'final',
         help="run a RDataFrame based FCC analysis final configuration")
-    parser_run_plots = subparsers.add_parser(
+    parser_run_plots = topparser.add_parser(
         'plots',
         help="run a RDataFrame based FCC analysis plot configuration")
-    parser_run_combine = subparsers.add_parser(
+    parser_run_combine = topparser.add_parser(
         'combine',
         help="prepare combine cards to run basic template fits")
 
@@ -216,6 +236,7 @@ def setup_subparsers(subparsers):
     setup_build_parser(parser_build)
     setup_test_parser(parser_test)
     setup_pin_parser(parser_pin)
+    setup_submit_parser(parser_submit)
     setup_run_parser(parser_run)
     setup_run_parser_final(parser_run_final)
     setup_run_parser_plots(parser_run_plots)
