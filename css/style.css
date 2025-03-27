@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
-
 @font-face {
   font-family: 'Roobert Regular';
   src: url('/FCCAnalyses/font/Roobert-Regular.woff2') format('woff2'),
@@ -17,6 +15,11 @@
 @font-face {
   font-family: 'Roobert Light';
   src: url('/FCCAnalyses/font/Roobert-Light.otf');
+}
+
+@font-face {
+  font-family: 'SpaceMono Regular';
+  src: url('/FCCAnalyses/font/SpaceMono-Regular.woff2');
 }
 
 body {
@@ -52,6 +55,8 @@ body {
 }
 
 ul.navbar {
+  display: flex;
+  justify-content: space-between;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -130,7 +135,7 @@ article a {
 }
 
 article code {
-  font-family: 'Space Mono', monospace;
+  font-family: 'SpaceMono Regular', monospace;
   font-size: inherit;
 }
 
@@ -152,14 +157,14 @@ td > code {
 
 pre code {
   display: block;
-  background: #151f30;
+  background: dimgray;
   color: white;
   white-space: pre;
   -webkit-overflow-scrolling: touch;
   overflow-x: scroll;
   max-width: 100%;
   min-width: 100px;
-  padding: 0;
+  padding: 10px;
   border-radius: .2rem;
 }
 
