@@ -18,8 +18,8 @@
 }
 
 @font-face {
-  font-family: 'SpaceMono Regular';
-  src: url('/FCCAnalyses/font/SpaceMono-Regular.woff2');
+  font-family: 'Space Mono';
+  src: url('/FCCAnalyses/font/SpaceMono-Regular.woff2') format('woff2');
 }
 
 body {
@@ -135,7 +135,7 @@ article a {
 }
 
 article code {
-  font-family: 'SpaceMono Regular', monospace;
+  font-family: 'Space Mono', monospace;
   font-size: inherit;
 }
 
