@@ -553,6 +553,35 @@ def runPlotsHistmaker(config: dict[str, Any],
                       yields, plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin,
                       ymax=ymax, xtitle=xtitle)
 
+    if 'dumpTable' in hist_cfg and hist_cfg['dumpTable']:
+        if type(xtitle) != list:
+            LOGGER.error('Can only dump a table of yields for cutflow plots.')
+            quit()
+        procs = list(hsignal.keys()) + list(hbackgrounds.keys())
+        hists = hsignal | hbackgrounds
+        scaleSig = hist_cfg['scaleSig'] if 'scaleSig' in hist_cfg else 1.
+        hists[procs[0]][0].Scale(1./scaleSig) # undo signal scaling
+        cuts = xtitle
+
+        out_orig = sys.stdout
+        with open(f"{param.outdir}/{output}.txt", 'w') as f:
+            sys.stdout = f
+
+            formatted_row = '{:<10} {:<15} ' + ' '.join(['{:<15}']*len(procs))
+            print(formatted_row.format(*(["Cut", "Significance"]+procs)))
+            print(formatted_row.format(*(["----------"]+["-------------"]*(len(procs)+1))))
+            for i,cut in enumerate(cuts):
+                s = hists[procs[0]][0].GetBinContent(i+1)
+                s_plus_b = sum([hists[p][0].GetBinContent(i+1) for p in procs])
+                significance = s/(s_plus_b**0.5) if s_plus_b > 0 else 0
+                row = ["Cut %d"%i, "%.3f"%significance]
+                for j,proc in enumerate(procs):
+                    yield_ = hists[proc][0].GetBinContent(i+1)
+                    row.append("%.4e" % (yield_))
+
+                print(formatted_row.format(*row))
+        sys.stdout = out_orig
+
 
 # _____________________________________________________________________________
 def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
