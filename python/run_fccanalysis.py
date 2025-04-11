@@ -562,10 +562,8 @@ def run_local(config: dict[str, any],
             if args.nevents > 0 and args.nevents < nevents_local:
                 nevents_local = args.nevents
 
-
     LOGGER.info(info_msg)
 
-   
     if nevents_orig > 0:
         LOGGER.info('Number of events:\n\t- original: %s\n\t- local:    %s',
                     f'{nevents_orig:,}', f'{nevents_local:,}')
@@ -576,7 +574,6 @@ def run_local(config: dict[str, any],
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
         if config['do_weighted']:
             LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
-
 
     output_dir = get_attribute(analysis, 'output_dir', '')
     if not args.batch:
@@ -728,13 +725,16 @@ def run_fccanalysis(args, analysis_module):
                      'analysis script!\nAborting...')
         sys.exit(3)
 
-
-
     for process_name in process_list:
         LOGGER.info('Started processing sample "%s" ...', process_name)
+        try:
+            process_input_dir = process_list[process_name]['input_dir']
+        except KeyError:
+            process_input_dir = None
         file_list, event_list = get_process_info(process_name,
                                                  prod_tag,
-                                                 input_dir)
+                                                 input_dir,
+                                                 process_input_dir)
 
         if len(file_list) <= 0:
             LOGGER.error('No files to process!\nAborting...')
