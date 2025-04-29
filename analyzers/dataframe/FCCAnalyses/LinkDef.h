@@ -18,6 +18,8 @@
 #pragma link C++ class std::vector<std::string>+;
 
 // EDM4hep
+#pragma link C++ class ROOT::VecOps::RVec<podio::ObjectID>+;
+#pragma link C++ class ROOT::VecOps::RVec<podio::LinkData>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::TrackState>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::VertexData>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>+;
