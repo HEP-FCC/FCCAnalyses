@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 import os
 import os.path
@@ -8,8 +6,8 @@ import importlib
 import copy
 import re
 import logging
-import ROOT
 import array
+import ROOT
 
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
@@ -22,19 +20,22 @@ LOGGER = logging.getLogger('FCCAnalyses.combine')
 def get_param(obj, name, default=None):
     if hasattr(obj, name):
         return getattr(obj, name)
-    elif default != None:
+
+    if default is not None:
         LOGGER.info(f"Use default value of {default} for {name}")
         return default
-    else:
-        LOGGER.error(f"Parameter {name} not defined but required. Aborting")
-        sys.exit(3)
+
+    LOGGER.error(f"Parameter {name} not defined but required. Aborting")
+    sys.exit(3)
+
 
 def rebin(h, newbins):
     if isinstance(newbins, int):
         return h.Rebin(newbins, h.GetName())
-    else:
-        mybins = array.array('d', newbins)
-        return h.Rebin(len(mybins)-1, h.GetName(), mybins)
+
+    mybins = array.array('d', newbins)
+    return h.Rebin(len(mybins)-1, h.GetName(), mybins)
+
 
 def run(script_path):
 
@@ -73,26 +74,24 @@ def run(script_path):
     rates_cats = "".join([f"{'-1':{' '}{'<'}{lspace}}"]*(ncats))
     rates_procs = "".join([f"{'-1':{' '}{'<'}{lspace}}"]*(ncats*nprocs))
 
-
-    ## datacard header
-    dc = ""
-    dc += f"imax *\n"
-    dc += f"jmax *\n"
+    # datacard header
+    dc = "imax *\n"
+    dc += "jmax *\n"
     dc += "kmax *\n"
-    dc += f"########################################\n"
-    dc += f"shapes *        * datacard.root $CHANNEL_$PROCESS $CHANNEL_$PROCESS_$SYSTEMATIC\n"
-    dc += f"shapes data_obs * datacard.root $CHANNEL_asimov\n"
-    dc += f"########################################\n"
+    dc += "########################################\n"
+    dc += "shapes *        * datacard.root $CHANNEL_$PROCESS $CHANNEL_$PROCESS_$SYSTEMATIC\n"
+    dc += "shapes data_obs * datacard.root $CHANNEL_asimov\n"
+    dc += "########################################\n"
     dc += f"bin                        {cats_str}\n"
     dc += f"observation                {rates_cats}\n"
-    dc += f"########################################\n"
+    dc += "########################################\n"
     dc += f"bin                        {cats_procs_str}\n"
     dc += f"process                    {procs_str}\n"
     dc += f"process                    {cats_procs_idx_str}\n"
     dc += f"rate                       {rates_procs}\n"
-    dc += f"########################################\n"
+    dc += "########################################\n"
 
-    ## systematic uncertainties
+    # systematic uncertainties
     systs = get_param(param, "systs")
     for systName, syst in systs.items():
         syst_type = syst['type']
@@ -104,7 +103,8 @@ def run(script_path):
                 apply_proc = (isinstance(procs_to_apply, list) and proc in procs_to_apply) or (isinstance(procs_to_apply, str) and re.search(procs_to_apply, proc))
                 if apply_proc:
                     if syst_type == "shape":
-                        LOGGER.warning('Shape uncertainties not yet supported! Skipping')
+                        LOGGER.warning('Shape uncertainties not yet '
+                                       'supported!\nSkipping...')
                         val = "-"
                     else:
                         val = str(syst_val)
@@ -113,18 +113,18 @@ def run(script_path):
                 dc_tmp += f"{val:{' '}{'<'}{lspace}}"
         dc += f"{dc_tmp}\n"
 
-    ## auto MC stats
+    # auto MC stats
     if get_param(param, "mc_stats"):
         dc += "* autoMCStats 1 1"
 
-    ## get histograms
+    # get histograms
     new_bins = get_param(param, "rebin", 1)
     sel = get_param(param, "selection", -1)
     intLumi = get_param(param, "intLumi")
     hists = []
     hists_asimov = {}
     for procName, procList in proc_dict.items():
-        for i,cat in enumerate(categories):
+        for i, cat in enumerate(categories):
             hist = None
             for proc in procList:
                 if sel == -1:
@@ -132,11 +132,11 @@ def run(script_path):
                 else:
                     fInName = f"{inputDir}/{proc}_{sel}_histo.root"
                 if not os.path.isfile(fInName):
-                    LOGGER.error(f'File {fInName} not found! Aborting...')
+                    LOGGER.error('File %s not found!\nAborting...', fInName)
                     sys.exit(3)
                 fIn = ROOT.TFile(fInName, 'READ')
                 h = copy.deepcopy(fIn.Get(hist_names[i]))
-                if hist == None:
+                if hist is None:
                     hist = h
                 else:
                     hist.Add(h)
@@ -144,7 +144,7 @@ def run(script_path):
             hist.Scale(intLumi)
             hist = rebin(hist, new_bins)
             hists.append(copy.deepcopy(hist))
-            if not cat in hists_asimov:
+            if cat not in hists_asimov:
                 hist_asimov = copy.deepcopy(hist)
                 hist_asimov.SetName(f"{cat}_asimov")
                 hists_asimov[cat] = hist_asimov
@@ -155,9 +155,9 @@ def run(script_path):
     if not os.path.exists(outputDir):
         os.system(f"mkdir -p {outputDir}")
 
-    f = open(f"{outputDir}/datacard.txt", 'w')
-    f.write(dc)
-    f.close()
+    with open(f"{outputDir}/datacard.txt", 'w', encoding='utf-8') as f:
+        f.write(dc)
+
     fOut = ROOT.TFile(f"{outputDir}/datacard.root", "RECREATE")
     for hist in hists:
         hist.Write()
