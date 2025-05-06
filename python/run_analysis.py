@@ -103,6 +103,7 @@ def create_subjob_script(local_dir: str,
                          process_name: str,
                          chunk_num: int,
                          chunk_list: list[list[str]],
+                         log_dir: str,
                          anapath: str) -> str:
     '''
     Creates sub-job script to be run.
@@ -115,6 +116,7 @@ def create_subjob_script(local_dir: str,
 
     scr = '#!/bin/bash\n\n'
     scr += 'source ' + local_dir + '/setup.sh\n\n'
+    scr += 'cd ' + log_dir + ' \n'
 
     # add userBatchConfig if any
     if user_batch_config != '':
@@ -353,18 +355,15 @@ def run_rdf(rdf_module,
 
 
 # _____________________________________________________________________________
-def send_to_batch(rdf_module, chunk_list, process, anapath: str):
+def send_to_batch(rdf_module, chunk_list, process, log_dir, anapath: str):
     '''
     Send jobs to HTCondor batch system.
     '''
-    local_dir = os.environ['LOCAL_DIR']
-    current_date = datetime.datetime.fromtimestamp(
-        datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-    log_dir = os.path.join(local_dir, 'BatchOutputs', current_date, process)
-    if not os.path.exists(log_dir):
-        os.system(f'mkdir -p {log_dir}')
 
+    local_dir = os.environ['LOCAL_DIR']
+    
     # Making sure the FCCAnalyses libraries are compiled and installed
+    
     try:
         subprocess.check_output(['make', 'install'],
                                 cwd=local_dir+'/build',
@@ -389,6 +388,7 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str):
                                                          process,
                                                          ch,
                                                          chunk_list,
+                                                         log_dir,
                                                          anapath)
                     ofile.write(subjob_script)
             except IOError as e:
@@ -684,11 +684,19 @@ def run_stages(args, rdf_module, anapath):
         if run_batch:
             # Sending to the batch system
             LOGGER.info('Running on the batch...')
+            
             if len(chunk_list) == 1:
                 LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
                                'only one chunk might not be optimal\033[0m')
 
-            send_to_batch(rdf_module, chunk_list, process_name, anapath)
+            local_dir = os.environ['LOCAL_DIR']
+            current_date = datetime.datetime.fromtimestamp(
+                datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
+            log_dir = os.path.join(local_dir, 'BatchOutputs', current_date, process_name)
+            if not os.path.exists(log_dir):
+                os.system(f'mkdir -p {log_dir}')
+            
+            send_to_batch(rdf_module, chunk_list, process_name, log_dir, anapath)
 
         else:
             # Running locally
