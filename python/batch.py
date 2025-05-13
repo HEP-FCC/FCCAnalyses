@@ -80,10 +80,17 @@ def create_condor_config(config: dict[str, Any],
 
     cfg += f'RequestCpus = {config["n-threads"]}\n\n'
 
-    # cfg += 'should_transfer_files = yes\n'
-    # cfg += 'when_to_transfer_output = on_exit\n'
+    cfg += 'should_transfer_files = yes\n'
+    cfg += 'when_to_transfer_output = on_exit\n'
+    cfg += f'transfer_output_files = {sample_name}\n'
 
-    # cfg += 'transfer_output_files = $(outfile)\n'
+    cfg += 'transfer_output_remaps = '
+    cfg += f'"{sample_name}={config["output-dir"]}/{sample_name}"\n'
+    # cfg += f'transfer_output_remaps = {config["output-dir"]}\n\n'
+    cfg += f'output_destination = {config["output-dir"]}\n\n'
+
+    # if config['output-dir-eos'] is None:
+    #     cfg += 'transfer_output_files = $(outfile)\n'
 
     if config['output-dir-eos']:
         cfg += 'output_destination = '
@@ -120,15 +127,19 @@ def create_subjob_script(config: dict[str, Any],
     Creates sub-job script to be run.
     '''
 
-    sample_output_filepath = os.path.join(config['output-dir'],
-                                          sample_name,
+    sample_output_filepath = os.path.join(sample_name,
                                           f'chunk_{chunk_num}.root')
+    # sample_output_filepath = os.path.join(f'chunk_{chunk_num}.root')
 
     scr = '#!/bin/bash\n\n'
 
+    scr += f'source {config["key4hep-stack"]}\n'
     scr += f'source {config["fccana-dir"]}/setup.sh\n\n'
 
-    scr += 'which fccanalysis\n\n'
+    # scr += 'which fccanalysis\n\n'
+
+    # scr += f'mkdir -p {sample_output_filepath}\n\n'
+    scr += f'mkdir -p {sample_name}\n\n'
 
     scr += f'fccanalysis run {config["full-analysis-path"]}'
     scr += f' --output {sample_output_filepath}'
@@ -171,15 +182,14 @@ def submit_job(cmd: str, max_trials: int) -> bool:
 
             if proc.returncode == 0 and len(stderr) == 0:
                 LOGGER.info(stdout)
-                LOGGER.info('GOOD SUBMISSION')
+                LOGGER.info('Submission successful.\n')
                 return True
 
-            LOGGER.warning('Error while submitting, retrying...\n  '
-                           'Trial: %i / %i\n  Error: %s',
-                           i, max_trials, stderr)
+            LOGGER.warning('Error occured while submitting, retrying...\n'
+                           'Trial: %i / %i\n'
+                           'Error: %s', i, max_trials, stderr)
             time.sleep(10)
 
-    LOGGER.error('Failed submitting after: %i trials!', max_trials)
     return False
 
 
@@ -258,7 +268,13 @@ def merge_config_analysis_class(config: dict[str, Any],
     config['output-dir'] = None
     if hasattr(analysis_class, 'output_dir'):
         config['output-dir'] = analysis_class.output_dir
-        os.system(f'mkdir -p {config["output-dir"]}')
+        # os.system(f'mkdir -p {config["output-dir"]}')
+    if os.path.isabs(config['output-dir']):
+        LOGGER.error('Provided output directory path is absolute '
+                     '(starts with `/`)!\n'
+                     'Please, use relative path for the output directory.\n'
+                     'Aborting...')
+        sys.exit(3)
 
     # Check if EOS output dir is defined.
     config['output-dir-eos'] = None
@@ -289,17 +305,6 @@ def send_sample(config: dict[str, Any],
     if not os.path.exists(log_dir):
         os.system(f'mkdir -p {log_dir}')
 
-    # Making sure the FCCAnalyses libraries are compiled and installed
-    try:
-        subprocess.check_output(['make', 'install'],
-                                cwd=config['fccana-dir']+'/build',
-                                stderr=subprocess.DEVNULL
-                                )
-    except subprocess.CalledProcessError:
-        LOGGER.error('The FCCanalyses libraries are not properly build and '
-                     'installed!\nAborting job submission...')
-        sys.exit(3)
-
     # Determine the fraction of the input to be processed
     fraction = 1.
     if 'fraction' in sample_dict:
@@ -310,9 +315,20 @@ def send_sample(config: dict[str, Any],
     if 'chunks' in sample_dict:
         chunks = sample_dict['chunks']
 
+    # Determine dataset input dir
+    dataset_input_dir = None
+    if 'input_dir' in sample_dict:
+        dataset_input_dir = sample_dict['input_dir']
+    if 'input-dir' in sample_dict:
+        dataset_input_dir = sample_dict['input-dir']
+
+    # Obtain full list of input files
     file_list, event_list = get_process_info(sample_name,
                                              config['production-tag'],
                                              config['input-directory'])
+                                             # TODO: For sample input files
+                                             # and also prod tags
+                                             # dataset_input_dir)
 
     if len(file_list) <= 0:
         LOGGER.error('No files to process!\nContinuing...')
@@ -377,7 +393,6 @@ def send_sample(config: dict[str, Any],
         else:
             break
         time.sleep(10)
-    # subprocess.getstatusoutput(f'chmod u+x {condor_config_path}')
 
     if config['submission-filesystem-type'] == 'eos':
         batch_cmd = f'condor_submit -spool {condor_config_path}'
@@ -385,9 +400,11 @@ def send_sample(config: dict[str, Any],
                        'command!')
     else:
         batch_cmd = f'condor_submit {condor_config_path}'
-    LOGGER.info('Batch command:\n  %s', batch_cmd)
-    success = submit_job(batch_cmd, 10)
+    LOGGER.info('Job submission command:\n  %s', batch_cmd)
+    success = submit_job(batch_cmd, 3)
     if not success:
+        LOGGER.error('Failed submitting after: %i trials!\nAborting...',
+                     max_trials)
         sys.exit(3)
 
 
@@ -407,6 +424,9 @@ def send_to_batch(args: argparse.Namespace,
     # TODO: Rename LOCAL_DIR to FCCANA_DIR
     config['fccana-dir'] = os.environ['LOCAL_DIR']
 
+    # Find out the exact Key4hep stack being sourced
+    config['key4hep-stack'] = os.environ['KEY4HEP_STACK']
+
     # Get current working directory
     config['current-working-directory'] = os.getcwd()
 
@@ -417,6 +437,17 @@ def send_to_batch(args: argparse.Namespace,
         config['submission-filesystem-type'] = 'afs'
     else:
         config['submission-filesystem-type'] = 'unknown'
+
+    # Making sure the FCCAnalyses libraries are compiled and installed
+    try:
+        subprocess.check_output(['make', 'install'],
+                                cwd=config['fccana-dir']+'/build',
+                                stderr=subprocess.DEVNULL
+                                )
+    except subprocess.CalledProcessError:
+        LOGGER.error('The FCCanalyses libraries are not properly build and '
+                     'installed!\nAborting job submission(s)...')
+        sys.exit(3)
 
     if hasattr(analysis_module, "Analysis"):
         config = merge_config_analysis_class(config, args, analysis_module)

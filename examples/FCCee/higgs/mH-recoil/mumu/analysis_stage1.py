@@ -11,17 +11,17 @@ class Analysis():
     Higgs mass recoil analysis in Z(mumu)H.
     '''
     def __init__(self, cmdline_args):
+        # Parse additional arguments not known to the FCCAnalyses parsers.
+        # All command line arguments are provided in the `cmdline_arg`
+        # dictionary and arguments after "--" are stored under "remaining" key.
         parser = ArgumentParser(
             description='Additional analysis arguments',
-            usage='Provide additional arguments after analysis script path')
+            usage='Provided after "--"')
         parser.add_argument('--muon-pt', default='10.', type=float,
                             help='Minimal pT of the mouns.')
-        # Parse additional arguments not known to the FCCAnalyses parsers
-        # All command line arguments know to fccanalysis are provided in the
-        # `cmdline_arg` dictionary.
-        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['remaining'])
 
-        # Mandatory: List of samples (processes) used in the analysis
+        # Mandatory: List of datasets used in the analysis
         self.process_list = {
             # Run over the full statistics and save it to one output file named
             # <outputDir>/<process_name>.root
@@ -112,7 +112,7 @@ class Analysis():
             # create column with leptonic charge
             .Define('zed_leptonic_charge',
                     'ReconstructedParticle::get_charge(zed_leptonic)')
-            # Filter on at least one candidate
+            # Keep events with at least one candidate
             .Filter('zed_leptonic_recoil_m.size() > 0')
         )
 
