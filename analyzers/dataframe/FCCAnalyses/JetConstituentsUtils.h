@@ -145,6 +145,7 @@ namespace FCCAnalyses {
                                                       const rv::RVec<edm4hep::Quantity>& dNdx,
 						      const rv::RVec<edm4hep::TrackData>& trackdata,
 						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx_dummy(const rv::RVec<FCCAnalysesJetConstituents> &jcs); // for full sim 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -211,6 +212,7 @@ namespace FCCAnalyses {
                                                       const rv::RVec<edm4hep::CalorimeterHitData>& calohits,
                                                       const TLorentzVector& V // primary vertex
 						                                          );
+    rv::RVec<FCCAnalysesJetConstituentsData> get_mtof_dummy(const rv::RVec<FCCAnalysesJetConstituents> &jcs); // for full sim
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_PIDs(const ROOT::VecOps::RVec< int > recin,

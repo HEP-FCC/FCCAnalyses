@@ -5,7 +5,14 @@ import ROOT
 ROOT.gROOT.SetBatch(True)
 
 class JetFlavourHelper:
-    def __init__(self, coll, jet, jetc, tag=""):
+    def __init__(self, coll, jet, jetc, tag="", sim_type="fast"):
+        '''
+        sim_type: fast or full
+        '''
+        # check if sim_type is valid
+        if sim_type not in ["fast", "full"]:
+            print("ERROR: sim_type must be either 'fast' or 'full'")
+            sys.exit()
 
         self.jet = jet
         self.const = jetc
@@ -13,6 +20,7 @@ class JetFlavourHelper:
         self.tag = tag
         if tag != "":
             self.tag = "_{}".format(tag)
+        self.sim_type = sim_type
 
         self.particle = coll["GenParticles"]
         self.pfcand = coll["PFParticles"]
@@ -22,9 +30,15 @@ class JetFlavourHelper:
         self.trackstate = coll["TrackState"]
         self.trackerhits = coll["TrackerHits"]
         self.calohits = coll["CalorimeterHits"]
-        self.dndx = coll["dNdx"]
+        if sim_type == "fast":
+            self.dndx = coll["dNdx"]
+        elif sim_type == "full":
+            self.dndx = None
         self.l = coll["PathLength"]
-        self.bz = coll["Bz"]
+        if sim_type == "fast":
+            self.bz = coll["Bz"]
+        elif sim_type == "full":
+            self.bz = "2.0" # CLD #FIXME: this should be read from the geometry
 
         self.definition = dict()
 
@@ -69,20 +83,29 @@ class JetFlavourHelper:
         self.definition["pfcand_phirel{}".format(self.tag)] = "JetConstituentsUtils::get_phirel_cluster({}, {})".format(
             jet, self.const
         )
+        if self.sim_type == "fast":
+            self.definition["Bz{}".format(self.tag)] = "{}[0]".format(self.bz)
+            self.definition[
+                "pfcand_dndx{}".format(self.tag)
+            ] = "JetConstituentsUtils::get_dndx({}, {}, {}, pfcand_isChargedHad{})".format(
+                self.const, self.dndx, self.pftrack, self.tag
+            )
 
-        self.definition[
-            "pfcand_dndx{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_dndx({}, {}, {}, pfcand_isChargedHad{})".format(
-            self.const, self.dndx, self.pftrack, self.tag
-        )
+            self.definition[
+                "pfcand_mtof{}".format(self.tag)
+            ] = "JetConstituentsUtils::get_mtof({}, {}, {}, {}, {}, {}, {}, pv{})".format(
+                self.const, self.l, self.pftrack, self.trackerhits, self.pfphoton, self.pfnh, self.calohits, self.tag
+            )
+        elif self.sim_type == "full":
+            self.definition["Bz{}".format(self.tag)] = self.bz
+            # fill the dNdx and mtof variables with 0 
+            self.definition[
+                "pfcand_dndx{}".format(self.tag)
+            ] = "JetConstituentsUtils::get_dndx_dummy({})".format(self.const)
 
-        self.definition[
-            "pfcand_mtof{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_mtof({}, {}, {}, {}, {}, {}, {}, pv{})".format(
-            self.const, self.l, self.pftrack, self.trackerhits, self.pfphoton, self.pfnh, self.calohits, self.tag
-        )
-
-        self.definition["Bz{}".format(self.tag)] = "{}[0]".format(self.bz)
+            self.definition[
+                "pfcand_mtof{}".format(self.tag)
+            ] = "JetConstituentsUtils::get_mtof_dummy({})".format(self.const)
 
         self.definition[
             "pfcand_dxy{}".format(self.tag)
@@ -176,7 +199,7 @@ class JetFlavourHelper:
 
         self.definition[
             "pfcand_btagSip2dSig{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_Sip2dSig(pfcand_btagSip2dVal{}, pfcand_dxydxy{})".format(self.tag, self.tag)
+        ] = "JetConstituentsUtils::get_Sip2dSig(pfcand_btagSip2dVal{}, pfcand_dxydxy{}, {})".format(self.tag, self.tag, self.sim_type)
 
         self.definition[
             "pfcand_btagSip3dVal{}".format(self.tag)
@@ -186,8 +209,8 @@ class JetFlavourHelper:
 
         self.definition[
             "pfcand_btagSip3dSig{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_Sip3dSig(pfcand_btagSip3dVal{}, pfcand_dxydxy{}, pfcand_dzdz{})".format(
-            self.tag, self.tag, self.tag
+        ] = "JetConstituentsUtils::get_Sip3dSig(pfcand_btagSip3dVal{}, pfcand_dxydxy{}, pfcand_dzdz{}, {})".format(
+            self.tag, self.tag, self.tag, self.sim_type
         )
 
         self.definition[
@@ -198,8 +221,8 @@ class JetFlavourHelper:
 
         self.definition[
             "pfcand_btagJetDistSig{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_JetDistSig(pfcand_btagJetDistVal{}, pfcand_dxydxy{}, pfcand_dzdz{})".format(
-            self.tag, self.tag, self.tag
+        ] = "JetConstituentsUtils::get_JetDistSig(pfcand_btagJetDistVal{}, pfcand_dxydxy{}, pfcand_dzdz{}, {})".format(
+            self.tag, self.tag, self.tag, self.sim_type
         )
 
         self.definition["jet_nmu{}".format(self.tag)] = "JetConstituentsUtils::count_type(pfcand_isMu{})".format(

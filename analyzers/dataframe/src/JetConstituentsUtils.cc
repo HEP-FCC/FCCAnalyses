@@ -393,6 +393,38 @@ namespace FCCAnalyses
       return out;
     }
 
+    // dummy dndx function for full sim 
+    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx_dummy(const rv::RVec<FCCAnalysesJetConstituents> &jcs) {
+      rv::RVec<FCCAnalysesJetConstituentsData> out;
+      for (int i = 0; i < jcs.size(); ++i)
+      {
+        FCCAnalysesJetConstituents ct = jcs.at(i);
+        FCCAnalysesJetConstituentsData tmp;
+        for (int j = 0; j < ct.size(); ++j)
+        {
+          tmp.push_back(0.);
+        }
+        out.push_back(tmp);
+      }
+      return out;
+    }
+
+    // dummy mtof function for full sim 
+    rv::RVec<FCCAnalysesJetConstituentsData> get_mtof_dummy(const rv::RVec<FCCAnalysesJetConstituents> &jcs) {
+      rv::RVec<FCCAnalysesJetConstituentsData> out;
+      for (int i = 0; i < jcs.size(); ++i)
+      {
+        FCCAnalysesJetConstituents ct = jcs.at(i);
+        FCCAnalysesJetConstituentsData tmp;
+        for (int j = 0; j < ct.size(); ++j)
+        {
+          tmp.push_back(0.);
+        }
+        out.push_back(tmp);
+      }
+      return out;
+    }
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData> &jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents> &jcs,
                                                           const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
@@ -482,7 +514,8 @@ namespace FCCAnalyses
     /// The functions get_Sip2dSig and get_Sip2dVal can be made independent;
     /// I passed to the former the result of the latter, avoiding the recomputation
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dSig(const rv::RVec<FCCAnalysesJetConstituentsData> &Sip2dVals,
-                                                          const rv::RVec<FCCAnalysesJetConstituentsData> &err2_D0)
+                                                          const rv::RVec<FCCAnalysesJetConstituentsData> &err2_D0, 
+                                                          const std::string& sim_type)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for (int i = 0; i < Sip2dVals.size(); ++i)
@@ -496,7 +529,7 @@ namespace FCCAnalyses
           }
           else
           {
-            s.push_back(-9);
+            s.push_back(sim_type == "fast" ? -9 : -200); // dummy value in full sim is -200 because -9 in fast sim is still inside the distribution 
           }
         }
         out.push_back(s);
@@ -595,7 +628,8 @@ namespace FCCAnalyses
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip3dSig(const rv::RVec<FCCAnalysesJetConstituentsData> &Sip3dVals,
                                                           const rv::RVec<FCCAnalysesJetConstituentsData> &err2_D0,
-                                                          const rv::RVec<FCCAnalysesJetConstituentsData> &err2_Z0)
+                                                          const rv::RVec<FCCAnalysesJetConstituentsData> &err2_Z0, 
+                                                          const std::string& sim_type)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for (int i = 0; i < Sip3dVals.size(); ++i)
@@ -609,7 +643,7 @@ namespace FCCAnalyses
           }
           else
           {
-            s.push_back(-9);
+            s.push_back(sim_type == "fast" ? -9 : -200); // dummy value in full sim is -200 because -9 in fast sim is still inside the distribution 
           }
         }
         out.push_back(s);
@@ -719,7 +753,8 @@ namespace FCCAnalyses
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistSig(const rv::RVec<FCCAnalysesJetConstituentsData> &JetDistVal,
                                                             const rv::RVec<FCCAnalysesJetConstituentsData> &err2_D0,
-                                                            const rv::RVec<FCCAnalysesJetConstituentsData> &err2_Z0)
+                                                            const rv::RVec<FCCAnalysesJetConstituentsData> &err2_Z0, 
+                                                            const std::string& sim_type)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for (int i = 0; i < JetDistVal.size(); ++i)
@@ -735,7 +770,7 @@ namespace FCCAnalyses
           }
           else
           {
-            tmp.push_back(-9.);
+            tmp.push_back(sim_type == "fast" ? -9 : -200); // dummy value in full sim is -200 because -9 in fast sim is still inside the distribution 
           }
         }
         out.push_back(tmp);
