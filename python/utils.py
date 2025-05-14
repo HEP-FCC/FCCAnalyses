@@ -7,6 +7,7 @@ import pathlib
 import shutil
 import logging
 import ROOT  # type: ignore
+import json
 
 
 ROOT.gROOT.SetBatch(True)
@@ -69,6 +70,8 @@ def save_benchmark(outfile, benchmark):
         with open(outfile, 'r', encoding='utf-8') as benchin:
             benchmarks = json.load(benchin)
     except OSError:
+        pass
+    except json.decoder.JSONDecodeError:
         pass
 
     benchmarks = [b for b in benchmarks if b['name'] != benchmark['name']]

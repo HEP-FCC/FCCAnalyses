@@ -30,8 +30,8 @@ class Analysis():
             # named <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
             # Number of input files needs to be larger that number of chunks
             'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
-            # Run over 20% of the statistics and save output into one file named
-            # <outputDir>/p8_ee_ZH_ecm240_out_f02.root
+            # Run over 20% of the statistics and save output into one file
+            # named <outputDir>/p8_ee_ZH_ecm240_out_f02.root
             'p8_ee_ZH_ecm240': {'fraction': 0.2,
                                 'output': 'p8_ee_ZH_ecm240_out_f02'}
         }
@@ -58,8 +58,8 @@ class Analysis():
         # self.run_batch = False
 
         # Optional: test file
-        self.test_file = 'https://fccsw.web.cern.ch/fccsw/testsamples/' \
-                         'edm4hep1/p8_ee_WW_ecm240_edm4hep.root'
+        self.test_file = 'https://fccsw.web.cern.ch/fccsw/analysis/' \
+                         'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root'
 
     # Mandatory: analyzers function to define the analysis graph, please make
     # sure you return the dataframe, in this example it is dframe2
