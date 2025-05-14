@@ -31,7 +31,7 @@ def main():
 
     dframe2 = dframe.Define(
         'electron_truth',
-        'ReconstructedParticle::selPDG(11)(MCRecoAssociations)')
+        'ReconstructedParticle::selPDG(11)(RecoMCLink)')
 
     dframe3 = dframe2.Define(
         'electron_truth_pt',

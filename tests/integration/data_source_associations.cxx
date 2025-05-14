@@ -252,7 +252,7 @@ int main(int argc, char *argv[]) {
 
   auto rdf2 =
       rdf.Define("SmearedTracks", SmearedTracks(2.0, 2.0, 2.0, 2.0, 2.0, false),
-                 {"MCRecoAssociations"});
+                 {"RecoMCLink"});
 
   auto rdf3 = rdf2.Define(
       "smearTrack_omega",
