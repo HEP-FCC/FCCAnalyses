@@ -41,7 +41,7 @@ def determine_os(fccana_dir: str) -> str | None:
 
 # _____________________________________________________________________________
 def create_condor_config(config: dict[str, Any],
-                         log_dir: str,
+                         batch_dir: str,
                          sample_name: str,
                          subjob_scripts: list[str]) -> str:
     '''
@@ -49,13 +49,19 @@ def create_condor_config(config: dict[str, Any],
     '''
     cfg = 'executable = $(scriptfile)\n'
 
-    cfg += f'log = {log_dir}/condor_job.{sample_name}.$(ClusterId).log\n'
+    cfg += f'log = {batch_dir}/condor_job.{sample_name}.$(ClusterId).log\n'
 
-    cfg += f'output = {log_dir}/condor_job.{sample_name}.$(ClusterId).'
-    cfg += '$(ProcId).out\n'
+    if config['output-dir-eos'] is None:
+        cfg += f'output = {config["output-dir"]}/log/{sample_name}/'
+        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).out\n'
+        cfg += f'error = {config["output-dir"]}/log/{sample_name}/'
+        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).error\n'
+    else:
+        cfg += f'output = log/{sample_name}/'
+        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).out\n'
+        cfg += f'error = log/{sample_name}/'
+        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).error\n'
 
-    cfg += f'error = {log_dir}/condor_job.{sample_name}.$(ClusterId).'
-    cfg += '$(ProcId).error\n'
 
     cfg += 'getenv = False\n'
 
@@ -67,10 +73,6 @@ def create_condor_config(config: dict[str, Any],
     else:
         LOGGER.warning('OS of the machine the jobs are submitted from is '
                        'unknown!\nThere may be compatibility issues...')
-
-    # cfg += '(Machine =!= LastRemoteHost) && (TARGET.has_avx2 =?= True) )\n'
-
-    # cfg += 'on_exit_remove   = (ExitBySignal == False) && (ExitCode == 0)\n'
 
     cfg += 'max_retries = 3\n'
 
@@ -84,15 +86,10 @@ def create_condor_config(config: dict[str, Any],
     cfg += 'when_to_transfer_output = on_exit\n'
     cfg += f'transfer_output_files = {sample_name}\n'
 
-    cfg += 'transfer_output_remaps = '
-    cfg += f'"{sample_name}={config["output-dir"]}/{sample_name}"\n'
-    # cfg += f'transfer_output_remaps = {config["output-dir"]}\n\n'
-    cfg += f'output_destination = {config["output-dir"]}\n\n'
-
-    # if config['output-dir-eos'] is None:
-    #     cfg += 'transfer_output_files = $(outfile)\n'
-
-    if config['output-dir-eos']:
+    if config['output-dir-eos'] is None:
+        cfg += 'transfer_output_remaps = '
+        cfg += f'"{sample_name}={config["output-dir"]}/{sample_name}"\n'
+    else:
         cfg += 'output_destination = '
         cfg += f'root://eosuser.cern.ch/{config["output-dir-eos"]}\n'
         cfg += 'MY.XRDCP_CREATE_DIR = True\n\n'
@@ -103,12 +100,6 @@ def create_condor_config(config: dict[str, Any],
             for line in cfile:
                 cfg += line + '\n'
         cfg += '\n\n'
-
-    # sample_output_dir = os.path.join(config['output-dir'], sample_name)
-    # cfg += 'queue scriptfile, outfile from (\n'
-    # for idx, scriptfile in enumerate(subjob_scripts):
-    #     cfg += f'    {scriptfile}, {sample_output_dir}/chunk_{idx}.root\n'
-    # cfg += ')\n'
 
     cfg += 'queue scriptfile from (\n'
     for scriptfile in subjob_scripts:
@@ -129,16 +120,12 @@ def create_subjob_script(config: dict[str, Any],
 
     sample_output_filepath = os.path.join(sample_name,
                                           f'chunk_{chunk_num}.root')
-    # sample_output_filepath = os.path.join(f'chunk_{chunk_num}.root')
 
     scr = '#!/bin/bash\n\n'
 
     scr += f'source {config["key4hep-stack"]}\n'
     scr += f'source {config["fccana-dir"]}/setup.sh\n\n'
 
-    # scr += 'which fccanalysis\n\n'
-
-    # scr += f'mkdir -p {sample_output_filepath}\n\n'
     scr += f'mkdir -p {sample_name}\n\n'
 
     scr += f'fccanalysis run {config["full-analysis-path"]}'
@@ -150,21 +137,6 @@ def create_subjob_script(config: dict[str, Any],
     if len(config['cli-arguments']['remaining']) > 0:
         scr += ' -- ' + ' '.join(config['cli-arguments']['remaining'])
     scr += '\n'
-
-    # output_dir_eos = get_attribute(analysis, 'output_dir_eos', None)
-    # if not os.path.isabs(output_dir) and output_dir_eos is None:
-    #     final_dest = os.path.join(fccana_dir, output_dir, sample_name,
-    #                               f'chunk_{chunk_num}.root')
-    #     scr += f'cp {output_path} {final_dest}\n'
-
-    # if output_dir_eos is not None:
-    #     eos_type = get_attribute(analysis, 'eos_type', 'eospublic')
-
-    #     final_dest = os.path.join(output_dir_eos,
-    #                               sample_name,
-    #                               f'chunk_{chunk_num}.root')
-    #     final_dest = f'root://{eos_type}.cern.ch/' + final_dest
-    #     scr += f'xrdcp {output_path} {final_dest}\n'
 
     return scr
 
@@ -301,9 +273,9 @@ def send_sample(config: dict[str, Any],
     # Create log directory
     current_date = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-    log_dir = os.path.join('BatchOutputs', current_date, sample_name)
-    if not os.path.exists(log_dir):
-        os.system(f'mkdir -p {log_dir}')
+    batch_dir = os.path.join('batch-submission-files', current_date, sample_name)
+    if not os.path.exists(batch_dir):
+        os.system(f'mkdir -p {batch_dir}')
 
     # Determine the fraction of the input to be processed
     fraction = 1.
@@ -349,7 +321,7 @@ def send_sample(config: dict[str, Any],
     subjob_scripts = []
     for chunk_num in range(len(chunk_list)):
         subjob_script_path = os.path.join(
-            log_dir,
+            batch_dir,
             f'job_{sample_name}_chunk_{chunk_num}.sh')
         subjob_scripts.append(subjob_script_path)
 
@@ -376,13 +348,13 @@ def send_sample(config: dict[str, Any],
     LOGGER.debug('Sub-job scripts to be run:\n - %s',
                  '\n - '.join(subjob_scripts))
 
-    condor_config_path = f'{log_dir}/job_desc_{sample_name}.cfg'
+    condor_config_path = f'{batch_dir}/job_desc_{sample_name}.cfg'
 
     for i in range(3):
         try:
             with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
                 condor_config = create_condor_config(config,
-                                                     log_dir,
+                                                     batch_dir,
                                                      sample_name,
                                                      subjob_scripts)
                 cfgfile.write(condor_config)

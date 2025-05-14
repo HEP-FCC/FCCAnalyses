@@ -46,7 +46,7 @@ class Analysis():
 
         # Optional: batch queue name when running on HTCondor, default is
         # 'longlunch'
-        # self.batch_queue = 'workday'
+        self.batch_queue = 'espresso'
 
         # Optional: computing account when running on CERN's HTCondor, default
         # is 'group_u_FCC.local_gen'
@@ -56,7 +56,7 @@ class Analysis():
         # there once the batch job is done, default is empty
         # self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
         #                       f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
-        # self.output_dir_eos = '/eos/user/j/jsmiesko/FCCAnalyses/output'
+        self.output_dir_eos = '/eos/user/j/jsmiesko/FCCAnalyses/test-output'
 
         # Optional: type for eos, needed when <outputDirEos> is specified. The
         # default is FCC EOS, which is eospublic
