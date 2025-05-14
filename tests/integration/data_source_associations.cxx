@@ -237,8 +237,8 @@ int main(int argc, char *argv[]) {
     ROOT::EnableImplicitMT(nThreads);
   }
 
-  std::string filePath = "https://fccsw.web.cern.ch/fccsw/testsamples/"
-                         "edm4hep1/p8_ee_WW_ecm240_edm4hep.root";
+  std::string filePath = "https://fccsw.web.cern.ch/fccsw/analysis/"
+                         "test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root";
   if (argc > 2) {
     filePath = argv[2];
   }

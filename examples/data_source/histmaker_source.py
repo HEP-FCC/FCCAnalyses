@@ -2,8 +2,8 @@
 processList = {
     'p8_ee_WW_ecm240': {
         'output': 'p8_ee_WW_ecm240_out',
-        'testfile': 'https://fccsw.web.cern.ch/fccsw/testsamples/edm4hep1/'
-                    'p8_ee_WW_ecm240_edm4hep.root'}
+        'testfile': 'https://fccsw.web.cern.ch/fccsw/analysis/'
+                    'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root'}
 }
 
 # Production tag when running over EDM4Hep centrally produced events, this
