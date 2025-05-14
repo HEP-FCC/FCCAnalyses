@@ -629,24 +629,11 @@ def run(parser):
 
     try:
         dash_dash_index = sys.argv.index('--')
-        print(sys.argv[1:dash_dash_index])
         args = parser.parse_args(sys.argv[1:dash_dash_index])
-        print(sys.argv[dash_dash_index+1:])
         args.remaining = sys.argv[dash_dash_index+1:]
     except ValueError:
         args = parser.parse_args()
         args.remaining = []
-    # print(dash_dash_index)
-    # print(sys.argv[:dash_dash_index])
-    # args = parser.parse_args()
-    # print(args)
-    # if len(args.remaining) > 0:
-    #     try:
-    #         print(args.remaining.index('--'))
-    #         dash_dash_index = args.remaining.index('--')
-    #     except ValueError:
-    #         args = parser.parse_args(args.remaining)
-    print(args)
 
     if not hasattr(args, 'command'):
         LOGGER.error('Error occurred during subcommand routing!\nAborting...')
