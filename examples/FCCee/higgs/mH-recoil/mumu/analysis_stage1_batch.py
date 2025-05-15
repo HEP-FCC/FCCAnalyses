@@ -36,7 +36,7 @@ class Analysis():
         self.prod_tag = 'FCCee/spring2021/IDEA/'
 
         # Optional: output directory, default is local running directory
-        self.output_dir = f'ZH_mumu_recoil_batch/stage1_{self.ana_args.muon_pt}'
+        self.output_dir = f'ZH_mumu_recoil/stage1_{self.ana_args.muon_pt}'
 
         # Optional: analysis name, default is ''
         # self.analysis_name = 'My Analysis'
@@ -54,12 +54,10 @@ class Analysis():
 
         # Optional: output directory on eos, if specified files will be copied
         # there once the batch job is done, default is empty
-        # self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
-        #                       f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
-        self.output_dir_eos = '/eos/user/j/jsmiesko/FCCAnalyses/test-output'
+        self.output_dir_eos = '/eos/user/j/jsmiesko/mH-recoil-output'
 
-        # Optional: type for eos, needed when <outputDirEos> is specified. The
-        # default is FCC EOS, which is eospublic
+        # Optional: type of EOS proxy used when <outputDirEos> is specified.
+        # The default is eosuser
         # self.eos_type = 'eospublic'
 
         # Optional: test file

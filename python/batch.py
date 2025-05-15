@@ -91,7 +91,8 @@ def create_condor_config(config: dict[str, Any],
         cfg += f'"{sample_name}={config["output-dir"]}/{sample_name}"\n'
     else:
         cfg += 'output_destination = '
-        cfg += f'root://eosuser.cern.ch/{config["output-dir-eos"]}\n'
+        cfg += f'root://{config["eos-type"]}.cern.ch/'
+        cfg += f'{config["output-dir-eos"]}\n'
         cfg += 'MY.XRDCP_CREATE_DIR = True\n\n'
 
     # Add user batch configuration if any.
@@ -258,6 +259,13 @@ def merge_config_analysis_class(config: dict[str, Any],
                          '"output_dir_eos" analysis attribute defined!\n'
                          'Aborting...')
             sys.exit(3)
+
+    # Check for the type of the EOS proxy
+    config['eos-type'] = None
+    if hasattr(analysis_class, 'eos_type'):
+        config['eos-type'] = analysis_class.eos_type
+    else:
+        config['eos-type'] = 'eosuser'
 
     return config
 
