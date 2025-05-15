@@ -194,6 +194,20 @@ namespace FCCAnalyses
       return out;
     }
 
+    // // get trackstate collection from full sim 
+    // ROOT::VecOps::RVec<edm4hep::TrackState> get_trackstate(const rv::RVec<edm4hep::ReconstructedParticleData> &particles)
+    // {
+    //   ROOT::VecOps::RVec<edm4hep::TrackState> tracks;
+    //   for (const auto &particle : particles)
+    //   {
+    //     if (particle.getTracks().size() > 0)
+    //     {
+    //       tracks.push_back(particle.getTracks()[0].getTrackStates());
+    //     }
+    //   }
+    //   return tracks;
+    // }
+
     // displacement (wrt (0,0,0))
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
                                                     const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)

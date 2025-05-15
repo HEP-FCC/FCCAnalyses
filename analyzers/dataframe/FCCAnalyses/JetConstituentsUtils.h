@@ -57,6 +57,9 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_type(const rv::RVec<FCCAnalysesJetConstituents>&);
     rv::RVec<FCCAnalysesJetConstituentsData> get_charge(const rv::RVec<FCCAnalysesJetConstituents>&);
 
+    // retrieve collections from full sim 
+    // ROOT::VecOps::RVec<edm4hep::TrackState> get_trackstate(const rv::RVec<edm4hep::ReconstructedParticleData> &particles);
+
     //displacement
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0(const rv::RVec<FCCAnalysesJetConstituents>&,
 						    const ROOT::VecOps::RVec<edm4hep::TrackState>&);

@@ -27,19 +27,19 @@ class JetFlavourHelper:
         self.pftrack = coll["PFTracks"]
         self.pfphoton = coll["PFPhotons"]
         self.pfnh = coll["PFNeutralHadrons"]
+        # if sim_type == "fast":
         self.trackstate = coll["TrackState"]
+        # elif sim_type == "full":
+            # self.trackstate = "JetConstituentsUtils::get_trackstate({})".format(self.pfcand)
         self.trackerhits = coll["TrackerHits"]
         self.calohits = coll["CalorimeterHits"]
-        if sim_type == "fast":
-            self.dndx = coll["dNdx"]
-        elif sim_type == "full":
-            self.dndx = None
         self.l = coll["PathLength"]
         if sim_type == "fast":
+            self.dndx = coll["dNdx"]
             self.bz = coll["Bz"]
         elif sim_type == "full":
             self.bz = "2.0" # CLD #FIXME: this should be read from the geometry
-
+            self.dndx = None
         self.definition = dict()
 
         # ===== VERTEX
