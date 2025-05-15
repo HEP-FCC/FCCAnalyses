@@ -28,7 +28,8 @@ class JetFlavourHelper:
         self.pfphoton = coll["PFPhotons"]
         self.pfnh = coll["PFNeutralHadrons"]
         # if sim_type == "fast":
-        self.trackstate = coll["TrackState"]
+        self.trackstate = coll["TrackStates"]
+        self.tracks = coll["Tracks"]
         # elif sim_type == "full":
             # self.trackstate = "JetConstituentsUtils::get_trackstate({})".format(self.pfcand)
         self.trackerhits = coll["TrackerHits"]
@@ -109,8 +110,8 @@ class JetFlavourHelper:
 
         self.definition[
             "pfcand_dxy{}".format(self.tag)
-        ] = "JetConstituentsUtils::XPtoPar_dxy({}, {}, pv{}, Bz{})".format(
-            self.const, self.trackstate, self.tag, self.tag
+        ] = "JetConstituentsUtils::XPtoPar_dxy({}, {}, {}, pv{}, Bz{})".format(
+            self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
         self.definition["pfcand_dz{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_dz({}, {}, pv{}, Bz{})".format(
@@ -199,7 +200,7 @@ class JetFlavourHelper:
 
         self.definition[
             "pfcand_btagSip2dSig{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_Sip2dSig(pfcand_btagSip2dVal{}, pfcand_dxydxy{}, {})".format(self.tag, self.tag, self.sim_type)
+        ] = 'JetConstituentsUtils::get_Sip2dSig(pfcand_btagSip2dVal{}, pfcand_dxydxy{}, "{}")'.format(self.tag, self.tag, self.sim_type)
 
         self.definition[
             "pfcand_btagSip3dVal{}".format(self.tag)
@@ -209,7 +210,7 @@ class JetFlavourHelper:
 
         self.definition[
             "pfcand_btagSip3dSig{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_Sip3dSig(pfcand_btagSip3dVal{}, pfcand_dxydxy{}, pfcand_dzdz{}, {})".format(
+        ] = 'JetConstituentsUtils::get_Sip3dSig(pfcand_btagSip3dVal{}, pfcand_dxydxy{}, pfcand_dzdz{}, "{}")'.format(
             self.tag, self.tag, self.tag, self.sim_type
         )
 
@@ -221,7 +222,7 @@ class JetFlavourHelper:
 
         self.definition[
             "pfcand_btagJetDistSig{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_JetDistSig(pfcand_btagJetDistVal{}, pfcand_dxydxy{}, pfcand_dzdz{}, {})".format(
+        ] = 'JetConstituentsUtils::get_JetDistSig(pfcand_btagJetDistVal{}, pfcand_dxydxy{}, pfcand_dzdz{}, "{}")'.format(
             self.tag, self.tag, self.tag, self.sim_type
         )
 

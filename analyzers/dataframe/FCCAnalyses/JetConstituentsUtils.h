@@ -79,6 +79,7 @@ namespace FCCAnalyses {
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dxy(const rv::RVec<FCCAnalysesJetConstituents>&,
 							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+               const ROOT::VecOps::RVec<edm4hep::TrackData>&,
 							 const TLorentzVector& V, // primary vertex
 							 const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dz(const rv::RVec<FCCAnalysesJetConstituents>&,
@@ -166,7 +167,8 @@ namespace FCCAnalyses {
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dSig(const rv::RVec<FCCAnalysesJetConstituentsData>& Sip2dVals,
-                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0);
+                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0, 
+                                                          const std::string& sim_type);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip3dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -185,7 +187,8 @@ namespace FCCAnalyses {
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip3dSig(const rv::RVec<FCCAnalysesJetConstituentsData>& Sip3dVals,
                                                           const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0,
-                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0);
+                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0,
+                                                          const std::string& sim_type);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                             const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -204,7 +207,8 @@ namespace FCCAnalyses {
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistSig(const rv::RVec<FCCAnalysesJetConstituentsData>& JetDistVal,
                                                             const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0,
-                                                            const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0);
+                                                            const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0, 
+                                                            const std::string& sim_type);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_mtof(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                       const rv::RVec<float>& track_L,

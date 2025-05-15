@@ -61,8 +61,10 @@ namespace ReconstructedParticle2Track{
     return Bz;
   }
 
+
   ROOT::VecOps::RVec<float> XPtoPar_dxy(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+          const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
 					const TLorentzVector& V, // primary vertex
 					const float& Bz) {
 
@@ -72,11 +74,13 @@ namespace ReconstructedParticle2Track{
 
     for (const auto & rp: in) {
 
-      if( rp.tracks_begin < tracks.size()) {
+      auto track = tracks.at(rp.tracks_begin);
 
-        float D0_wrt0 = tracks.at(rp.tracks_begin).D0;
-        float Z0_wrt0 = tracks.at(rp.tracks_begin).Z0;
-        float phi0_wrt0 = tracks.at(rp.tracks_begin).phi;
+      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
+
+        float D0_wrt0 = trackstates.at(track.trackStates_begin).D0;
+        float Z0_wrt0 = trackstates.at(track.trackStates_begin).Z0;
+        float phi0_wrt0 = trackstates.at(track.trackStates_begin).phi;
 
         TVector3 X( - D0_wrt0 * TMath::Sin(phi0_wrt0) , D0_wrt0 * TMath::Cos(phi0_wrt0) , Z0_wrt0);
         TVector3 x = X - V.Vect();
@@ -102,6 +106,8 @@ namespace ReconstructedParticle2Track{
     }
     return out;
   }
+
+  
 
 
 

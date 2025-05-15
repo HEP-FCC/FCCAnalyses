@@ -45,7 +45,8 @@ namespace ReconstructedParticle2Track{
 	   const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks); //here only computed for the first charged particle encountered
 
   ROOT::VecOps::RVec<float> XPtoPar_dxy(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+          const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
 					const TLorentzVector& V, // primary vertex
 					const float& Bz);
 

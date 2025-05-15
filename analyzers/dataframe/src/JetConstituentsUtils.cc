@@ -120,6 +120,16 @@ namespace FCCAnalyses
       return out;
     };
 
+    auto cast_constituent_5 = [](const auto &jcs, const auto &coll1, const auto &coll2, const auto &coll3, const auto &coll4, auto &&meth)
+    {
+      rv::RVec<FCCAnalysesJetConstituentsData> out;
+      for (const auto &jc : jcs)
+      {
+        out.emplace_back(meth(jc, coll1, coll2, coll3, coll4));
+      }
+      return out;
+    };
+
     rv::RVec<FCCAnalysesJetConstituentsData> get_Bz(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
                                                     const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
     {
@@ -240,12 +250,13 @@ namespace FCCAnalyses
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dxy(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                         const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks,
+                                                         const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates,
+                                                         const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
                                                          const TLorentzVector &V, // primary vertex posotion and time in mm
                                                          const float &Bz)
     {
 
-      return cast_constituent_4(jcs, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_dxy);
+      return cast_constituent_5(jcs, trackstates, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_dxy);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dz(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
