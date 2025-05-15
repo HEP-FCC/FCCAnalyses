@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747318492427,
+  "lastUpdate": 1747318493948,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -47713,6 +47713,65 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b477af0622ee455e591d63daddb62d5b33b5a34f",
+          "message": "Batch related functions separated to a module (#422)\n\n* Batch related functions separed to a module\n\n* Adding submit sub-command\n\n* Removed runBatch abality\n\n* nCPUS -> n_threads\n\n* Move handling of the HTCondor parameters to batch.py\n\n* Adjusted output paths\n\n* Submission works from AFS\n\n* Clean up\n\n* Clean-up\n\n* Adding manual page for submit sub-command\n\n* Fixing minor problems to pass tests\n\n* More updated test files\n\n* Using RecoMCLink\n\n* Updating test file for jet_constituents example\n\n* Adding output eos proxy type\n\n* Not depending on the local dir",
+          "timestamp": "2025-05-15T16:05:12+02:00",
+          "tree_id": "41611d41265f31aa324a2048ec4cab94e91bcf03",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/b477af0622ee455e591d63daddb62d5b33b5a34f"
+        },
+        "date": 1747318493490,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.377169668704731,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 11.30212308763695,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 7.555732367614753,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 12.016438924286366,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 0.7492582764575156,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/stages_source.py",
+            "value": 7.401159116793384,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 7.152311502504765,
+            "unit": "Evt/s"
           }
         ]
       }
