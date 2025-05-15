@@ -237,8 +237,8 @@ int main(int argc, char *argv[]) {
     ROOT::EnableImplicitMT(nThreads);
   }
 
-  std::string filePath = "https://fccsw.web.cern.ch/fccsw/testsamples/"
-                         "edm4hep1/p8_ee_WW_ecm240_edm4hep.root";
+  std::string filePath = "https://fccsw.web.cern.ch/fccsw/analysis/"
+                         "test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root";
   if (argc > 2) {
     filePath = argv[2];
   }
@@ -252,7 +252,7 @@ int main(int argc, char *argv[]) {
 
   auto rdf2 =
       rdf.Define("SmearedTracks", SmearedTracks(2.0, 2.0, 2.0, 2.0, 2.0, false),
-                 {"MCRecoAssociations"});
+                 {"RecoMCLink"});
 
   auto rdf3 = rdf2.Define(
       "smearTrack_omega",

@@ -1,5 +1,5 @@
 '''
-RDataFrame helpers.
+RDataFrame or other helpers.
 '''
 
 import os
@@ -7,11 +7,12 @@ import pathlib
 import shutil
 import logging
 import ROOT  # type: ignore
+import json
 
 
 ROOT.gROOT.SetBatch(True)
 
-LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.frame')
+LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.utils')
 
 
 # _____________________________________________________________________________
@@ -57,3 +58,24 @@ def generate_graph(dframe, args, suffix: str | None = None) -> None:
     # Convert .dot file into .png
     os.system(f'dot -Tpng {graph_path.with_suffix(".dot")} '
               f'-o {graph_path.with_suffix(".png")}')
+
+
+# _____________________________________________________________________________
+def save_benchmark(outfile, benchmark):
+    '''
+    Save benchmark results to a JSON file.
+    '''
+    benchmarks = []
+    try:
+        with open(outfile, 'r', encoding='utf-8') as benchin:
+            benchmarks = json.load(benchin)
+    except OSError:
+        pass
+    except json.decoder.JSONDecodeError:
+        pass
+
+    benchmarks = [b for b in benchmarks if b['name'] != benchmark['name']]
+    benchmarks.append(benchmark)
+
+    with open(outfile, 'w', encoding='utf-8') as benchout:
+        json.dump(benchmarks, benchout, indent=2)

@@ -11,17 +11,17 @@ class Analysis():
     Higgs mass recoil analysis in Z(mumu)H.
     '''
     def __init__(self, cmdline_args):
+        # Parse additional arguments not known to the FCCAnalyses parsers.
+        # All command line arguments are provided in the `cmdline_arg`
+        # dictionary and arguments after "--" are stored under "remaining" key.
         parser = ArgumentParser(
             description='Additional analysis arguments',
-            usage='Provide additional arguments after analysis script path')
+            usage='Provided after "--"')
         parser.add_argument('--muon-pt', default='10.', type=float,
                             help='Minimal pT of the mouns.')
-        # Parse additional arguments not known to the FCCAnalyses parsers
-        # All command line arguments know to fccanalysis are provided in the
-        # `cmdline_arg` dictionary.
-        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['remaining'])
 
-        # Mandatory: List of samples (processes) used in the analysis
+        # Mandatory: List of datasets used in the analysis
         self.process_list = {
             # Run over the full statistics and save it to one output file named
             # <outputDir>/<process_name>.root
@@ -30,8 +30,8 @@ class Analysis():
             # named <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
             # Number of input files needs to be larger that number of chunks
             'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
-            # Run over 20% of the statistics and save output into one file named
-            # <outputDir>/p8_ee_ZH_ecm240_out_f02.root
+            # Run over 20% of the statistics and save output into one file
+            # named <outputDir>/p8_ee_ZH_ecm240_out_f02.root
             'p8_ee_ZH_ecm240': {'fraction': 0.2,
                                 'output': 'p8_ee_ZH_ecm240_out_f02'}
         }
@@ -58,8 +58,8 @@ class Analysis():
         # self.run_batch = False
 
         # Optional: test file
-        self.test_file = 'https://fccsw.web.cern.ch/fccsw/testsamples/' \
-                         'edm4hep1/p8_ee_WW_ecm240_edm4hep.root'
+        self.test_file = 'https://fccsw.web.cern.ch/fccsw/analysis/' \
+                         'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root'
 
     # Mandatory: analyzers function to define the analysis graph, please make
     # sure you return the dataframe, in this example it is dframe2
@@ -112,7 +112,7 @@ class Analysis():
             # create column with leptonic charge
             .Define('zed_leptonic_charge',
                     'ReconstructedParticle::get_charge(zed_leptonic)')
-            # Filter on at least one candidate
+            # Keep events with at least one candidate
             .Filter('zed_leptonic_recoil_m.size() > 0')
         )
 

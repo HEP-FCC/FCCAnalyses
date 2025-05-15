@@ -43,7 +43,10 @@ MANIFEST
 
 # Output
 outputs/
+
+# Batch submission
 BatchOutputs/
+batch-submission-files
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
