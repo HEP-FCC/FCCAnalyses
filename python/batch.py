@@ -23,6 +23,16 @@ def determine_os(fccana_dir: str) -> str | None:
     '''
     Determines platform on which FCCAnalyses was compiled
     '''
+    if fccana_dir is None:
+        with open('/etc/system-release-cpe', 'r',
+                  encoding='utf-8') as os_info_file:
+            os_info = os_info_file.read()
+
+        if 'redhat:enterprise_linux:9' in os_info:
+            return 'almalinux9'
+
+        return None
+
     cmake_config_path = fccana_dir + '/build/CMakeFiles/CMakeConfigureLog.yaml'
     if not os.path.isfile(cmake_config_path):
         LOGGER.warning('CMake configuration file was not found!\n'
@@ -125,7 +135,8 @@ def create_subjob_script(config: dict[str, Any],
     scr = '#!/bin/bash\n\n'
 
     scr += f'source {config["key4hep-stack"]}\n'
-    scr += f'source {config["fccana-dir"]}/setup.sh\n\n'
+    if config['fccana-dir'] is not None:
+        scr += f'source {config["fccana-dir"]}/setup.sh\n\n'
 
     scr += f'mkdir -p {sample_name}\n\n'
 
@@ -400,9 +411,11 @@ def send_to_batch(args: argparse.Namespace,
     config['analysis-path'] = args.anascript_path
     config['full-analysis-path'] = os.path.abspath(args.anascript_path)
 
-    # Find location of the FCCanalyses directory
+    # Find location of the FCCanalyses directory, if locally build
     # TODO: Rename LOCAL_DIR to FCCANA_DIR
-    config['fccana-dir'] = os.environ['LOCAL_DIR']
+    config['fccana-dir'] = None
+    if 'LOCAL_DIR' not in os.environ:
+        config['fccana-dir'] = os.environ['LOCAL_DIR']
 
     # Find out the exact Key4hep stack being sourced
     config['key4hep-stack'] = os.environ['KEY4HEP_STACK']
@@ -419,15 +432,16 @@ def send_to_batch(args: argparse.Namespace,
         config['submission-filesystem-type'] = 'unknown'
 
     # Making sure the FCCAnalyses libraries are compiled and installed
-    try:
-        subprocess.check_output(['make', 'install'],
-                                cwd=config['fccana-dir']+'/build',
-                                stderr=subprocess.DEVNULL
-                                )
-    except subprocess.CalledProcessError:
-        LOGGER.error('The FCCanalyses libraries are not properly build and '
-                     'installed!\nAborting job submission(s)...')
-        sys.exit(3)
+    if config['fccana-dir'] is not None:
+        try:
+            subprocess.check_output(['make', 'install'],
+                                    cwd=config['fccana-dir']+'/build',
+                                    stderr=subprocess.DEVNULL
+                                    )
+        except subprocess.CalledProcessError:
+            LOGGER.error('The FCCanalyses libraries are not properly build '
+                         'and installed!\nAborting job submission(s)...')
+            sys.exit(3)
 
     if hasattr(analysis_module, "Analysis"):
         config = merge_config_analysis_class(config, args, analysis_module)
