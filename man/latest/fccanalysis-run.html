@@ -19,43 +19,48 @@
   </tr>
 </table>
 <div class="manual-text">
+<p class="Pp"></p>
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
 <p class="Pp"><b>fccanalysis-run</b> - run FCC analysis</p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp"><b>fccanalysis run</b> [<b>-h</b> | <b>--help</b>]
     [<b>--files-list</b> <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]]
     [<b>--output</b> <i>OUTPUT</i>] [<b>--nevents</b> <i>NEVENTS</i>]
-    [<b>--use-data-source</b>] [<b>--test</b>] [<b>--bench</b>] [<b>--ncpus</b>
-    <i>NCPUS</i>] [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]
-    <i>analysis-script</i></p>
+    [<b>--use-data-source</b>] [<b>--test</b>] [<b>--bench</b>] [<b>-j</b> NCPUS
+    | <b>--ncpus</b> <i>NCPUS</i> | <b>--n-threads</b> <i>NTHREADS</i>]
+    [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>] <b>analysis-script</b>
+    -- [<i>ANALYSIS ARGUMENTS</i>]</p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp"><b>fccanalysis-run</b> will run analysis provided in the analysis
-    file. The analysis itself can be divided into several stages if desired. For
-    all those stages <i>fccanalysis-run</i> is used.</p>
+    script on the current machine, i.e. locally. The analysis itself can be
+    divided into several stages, if desired. For all those stages
+    <i>fccanalysis-run</i> is used.</p>
 <p class="Pp">When using <b>fccanalysis-run</b> the analysis is running in the
     managed mode, where the RDataFrame is steered by the framework and users can
-    control some aspects of the running with additional global attributes, see
-    <b>fccanalysis-script</b>(7).</p>
+    control only some aspects of the running with additional global attributes,
+    see <b>fccanalysis-script</b>(7).</p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
 <dl class="Bl-tag">
-  <dt id="analysis-script"><a class="permalink" href="#analysis-script"><i>analysis-script</i></a></dt>
+  <dt id="analysis-script"><a class="permalink" href="#analysis-script"><b>analysis-script</b></a></dt>
   <dd>Path to analysis script.</dd>
   <dt id="h"><a class="permalink" href="#h"><b>-h</b>, <b>--help</b></a></dt>
   <dd>Prints short help message and exits.</dd>
   <dt id="files"><a class="permalink" href="#files"><b>--files-list</b>
     <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]</a></dt>
-  <dd>Specify input file to bypass the processList.</dd>
+  <dd>Directly specify analysis input files.</dd>
   <dt id="output"><a class="permalink" href="#output"><b>--output</b>
     <i>OUTPUT</i></a></dt>
-  <dd>Specify output file name to bypass the processList and or outputList,
-      default <i>output.root</i>.</dd>
+  <dd>Specify output file name, otherwise dataset name used.</dd>
   <dt id="nevents"><a class="permalink" href="#nevents"><b>--nevents</b>
     <i>NEVENTS</i></a></dt>
   <dd>Specify max number of events to process.</dd>
@@ -66,7 +71,8 @@
   <dt id="bench"><a class="permalink" href="#bench"><b>--bench</b></a></dt>
   <dd>Output benchmark results to a JSON file.</dd>
   <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>NCPUS</i>,
-    <b>--ncpus</b> <i>NCPUS</i></a></dt>
+    <b>--ncpus</b> <i>NCPUS</i> (deprecated), <b>--n-threads</b>
+    NTHREADS</a></dt>
   <dd>Set number of jobs (threads).</dd>
   <dt id="g"><a class="permalink" href="#g"><b>-g</b>, <b>--graph</b></a></dt>
   <dd>The computational graph of the analysis will be generated.</dd>
@@ -74,6 +80,12 @@
     <i>GRAPH_PATH</i></a></dt>
   <dd>Location where the computational graph of the analysis should be stored.
       Only paths with <i>.dot</i> and <i>.png</i> extensions are accepted.</dd>
+  <dt id="ANALYSIS"><a class="permalink" href="#ANALYSIS"><i>ANALYSIS
+    ARGUMENTS</i></a></dt>
+  <dd>Command line arguments which will not be parsed by the framework and will
+      be passed directly to the analysis script.
+    <p class="Pp"></p>
+  </dd>
 </dl>
 </section>
 <section class="Sh">
@@ -82,17 +94,21 @@
 <dl class="Bl-tag">
   <dt id="FCCDICTSDIR"><a class="permalink" href="#FCCDICTSDIR"><b>FCCDICTSDIR</b></a></dt>
   <dd>Controls search path for the process dictionaries. The default value is
-      <i>/cvmfs/fcc.cern.ch/FCCDicts/</i>.</dd>
+      <i>/cvmfs/fcc.cern.ch/FCCDicts/</i>.
+    <p class="Pp"></p>
+  </dd>
 </dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <p class="Pp">fccanalysis(1), fccanalysis-script(7)</p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
 <p class="Pp">Many</p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
@@ -104,10 +120,12 @@
   Valentin Volkl
   <br/>
   Gerardo Ganis</p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="FCCANALYSES"><a class="permalink" href="#FCCANALYSES">FCCANALYSES</a></h1>
 <p class="Pp">Part of the FCCAnalyses framework.</p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LINKS"><a class="permalink" href="#LINKS">LINKS</a></h1>
@@ -117,6 +135,7 @@
     GitHub repository</a></p>
 <p class="Pp"><a class="Lk" href="https://fccsw-forum.web.cern.ch/">FCCSW
     Forum</a></p>
+<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="CONTACT"><a class="permalink" href="#CONTACT">CONTACT</a></h1>
@@ -125,7 +144,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">17 Jan 2024</td>
+    <td class="foot-date">10 May 2025</td>
     <td class="foot-os">0.10.0</td>
   </tr>
 </table>
