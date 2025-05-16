@@ -30,11 +30,10 @@ class JetFlavourHelper:
         self.pftrack = coll["PFTracks"]
         self.pfphoton = coll["PFPhotons"]
         self.pfnh = coll["PFNeutralHadrons"]
-        # if sim_type == "fast":
+
         self.trackstate = coll["TrackStates"]
         self.tracks = coll["Tracks"]
-        # elif sim_type == "full":
-            # self.trackstate = "JetConstituentsUtils::get_trackstate({})".format(self.pfcand)
+
         self.trackerhits = coll["TrackerHits"]
         self.calohits = coll["CalorimeterHits"]
         self.l = coll["PathLength"]
@@ -115,21 +114,19 @@ class JetFlavourHelper:
             self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
-        # fix track state problem in the following functions:
-
-        self.definition["pfcand_dz{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_dz({}, {}, pv{}, Bz{})".format(
+        self.definition["pfcand_dz{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_dz({}, {}, {}, pv{}, Bz{})".format(
             self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
-        self.definition["pfcand_phi0{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_phi({}, {}, pv{}, Bz{})".format(
+        self.definition["pfcand_phi0{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_phi({}, {}, {}, pv{}, Bz{})".format(
             self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
-        self.definition["pfcand_C{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_C({}, {}, Bz{})".format(
+        self.definition["pfcand_C{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_C({}, {}, {}, Bz{})".format(
             self.const, self.trackstate, self.tracks, self.tag
         )
 
-        self.definition["pfcand_ct{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_ct({}, {}, Bz{})".format(
+        self.definition["pfcand_ct{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_ct({}, {}, {}, Bz{})".format(
             self.const, self.trackstate, self.tracks, self.tag
         )
 
@@ -281,11 +278,17 @@ class JetFlavourHelper:
         initvars = tuple(initvars)
 
         # then funcs
+        print("INFO: JetFlavourHelper: input variables: {}".format(initvars))
+
+        # check if all variables are defined
         for varname in self.variables:
             matches = [obs for obs in self.definition.keys() if obs == varname]
             if len(matches) != 1:
                 print("ERROR: {} variables was not defined.".format(varname))
                 sys.exit()
+
+        # check if variables are filled with values - HOW?
+
 
         self.get_weight_str = "JetFlavourUtils::get_weights(rdfslot_, "
         for var in self.variables:
