@@ -51,9 +51,10 @@ namespace ReconstructedParticle2Track{
 					const float& Bz);
 
   ROOT::VecOps::RVec<float> XPtoPar_dz(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-                                        const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-                                        const TLorentzVector& V, // primary vertex
-                                        const float& Bz);
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+          const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
+          const TLorentzVector& V, // primary vertex
+          const float& Bz);
 
   ROOT::VecOps::RVec<float> XPtoPar_phi(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
 					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,

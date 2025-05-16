@@ -111,21 +111,17 @@ class JetFlavourHelper:
                 "pfcand_mtof{}".format(self.tag)
             ] = "JetConstituentsUtils::get_mtof_dummy({})".format(self.const)
 
-        self.definition[
-            "pfcand_dxy{}".format(self.tag)
-        ] = "JetConstituentsUtils::XPtoPar_dxy({}, {}, {}, pv{}, Bz{})".format(
+        self.definition["pfcand_dxy{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_dxy({}, {}, {}, pv{}, Bz{})".format(
             self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
         # fix track state problem in the following functions:
 
         self.definition["pfcand_dz{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_dz({}, {}, pv{}, Bz{})".format(
-            self.const, self.trackstate, self.tag, self.tag
+            self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
-        self.definition[
-            "pfcand_phi0{}".format(self.tag)
-        ] = "JetConstituentsUtils::XPtoPar_phi({}, {}, pv{}, Bz{})".format(
+        self.definition["pfcand_phi0{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_phi({}, {}, pv{}, Bz{})".format(
             self.const, self.trackstate, self.tag, self.tag
         )
 
@@ -137,7 +133,7 @@ class JetFlavourHelper:
             self.const, self.trackstate, self.tag
         )
 
-        # covariance matrix
+        # covariance matrix (fixed track state problem)
 
         self.definition["pfcand_dptdpt{}".format(self.tag)] = "JetConstituentsUtils::get_omega_cov({}, {}, {})".format(
             self.const, self.tracks, self.trackstate
@@ -234,6 +230,8 @@ class JetFlavourHelper:
         ] = 'JetConstituentsUtils::get_JetDistSig(pfcand_btagJetDistVal{}, pfcand_dxydxy{}, pfcand_dzdz{}, "{}")'.format(
             self.tag, self.tag, self.tag, self.sim_type
         )
+
+        # count number of particles in the jet
 
         self.definition["jet_nmu{}".format(self.tag)] = "JetConstituentsUtils::count_type(pfcand_isMu{})".format(
             self.tag

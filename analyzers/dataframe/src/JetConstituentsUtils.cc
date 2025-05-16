@@ -260,12 +260,13 @@ namespace FCCAnalyses
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dz(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks,
+                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates,
+                                                        const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
                                                         const TLorentzVector &V, // primary vertex posotion and time in mm
                                                         const float &Bz)
     {
 
-      return cast_constituent_4(jcs, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_dz);
+      return cast_constituent_5(jcs, trackstates, tracks, V, Bz, ReconstructedParticle2Track::XPtoPar_dz);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_phi(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
