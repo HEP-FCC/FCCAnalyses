@@ -73,10 +73,8 @@ namespace ReconstructedParticle2Track{
     ROOT::VecOps::RVec<float> out;
 
     for (const auto & rp: in) {
-
-      auto track = tracks.at(rp.tracks_begin);
-
-      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
+      if(rp.tracks_begin - rp.tracks_end >0) { // if any tracks
+        auto track = tracks.at(rp.tracks_begin);
 
         float D0_wrt0 = trackstates.at(track.trackStates_begin).D0;
         float Z0_wrt0 = trackstates.at(track.trackStates_begin).Z0;
@@ -101,7 +99,7 @@ namespace ReconstructedParticle2Track{
 	      out.push_back(D);
 
       } else {
-	out.push_back(-9.);
+	      out.push_back(-9.);
       }
     }
     return out;
@@ -120,9 +118,8 @@ namespace ReconstructedParticle2Track{
 
     for (const auto & rp: in) {
 
-      auto track = tracks.at(rp.tracks_begin);
-
-      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
+      if(rp.tracks_begin - rp.tracks_end >0) { // if any tracks
+        auto track = tracks.at(rp.tracks_begin);
 
         float D0_wrt0 = trackstates.at(track.trackStates_begin).D0;
         float Z0_wrt0 = trackstates.at(track.trackStates_begin).Z0;
@@ -170,10 +167,8 @@ namespace ReconstructedParticle2Track{
     ROOT::VecOps::RVec<float> out;
 
     for (const auto & rp: in) {
-
-      auto track = tracks.at(rp.tracks_begin);
-
-      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
+      if(rp.tracks_begin - rp.tracks_end >0) { // if any tracks
+        auto track = tracks.at(rp.tracks_begin);
 
         float D0_wrt0 = trackstates.at(track.trackStates_begin).D0;
         float Z0_wrt0 = trackstates.at(track.trackStates_begin).Z0;
@@ -209,10 +204,8 @@ namespace ReconstructedParticle2Track{
     ROOT::VecOps::RVec<float> out;
 
     for (const auto & rp: in) {
-
-      auto track = tracks.at(rp.tracks_begin);
-
-      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
+      if(rp.tracks_begin - rp.tracks_end >0) { // if any tracks
+        auto track = tracks.at(rp.tracks_begin);
 
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 
@@ -237,10 +230,8 @@ namespace ReconstructedParticle2Track{
     ROOT::VecOps::RVec<float> out;
 
     for (const auto & rp: in) {
-
-      auto track = tracks.at(rp.tracks_begin);
-
-      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
+      if(rp.tracks_begin - rp.tracks_end >0) { // if any tracks
+        auto track = tracks.at(rp.tracks_begin);
 
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 	      double pt = p.Pt();
