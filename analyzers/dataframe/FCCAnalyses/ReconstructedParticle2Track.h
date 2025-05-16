@@ -63,12 +63,14 @@ namespace ReconstructedParticle2Track{
           const float& Bz);
 
   ROOT::VecOps::RVec<float> XPtoPar_C(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-                                        const float& Bz);
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+          const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
+          const float& Bz);
 
   ROOT::VecOps::RVec<float> XPtoPar_ct(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-                                        const float& Bz);
+					const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+          const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
+          const float& Bz);
 
   /// Return the D0 of a track to a reconstructed particle
   ROOT::VecOps::RVec<float> getRP2TRK_D0 (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,

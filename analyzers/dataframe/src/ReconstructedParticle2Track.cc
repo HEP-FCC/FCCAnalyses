@@ -201,15 +201,18 @@ namespace ReconstructedParticle2Track{
   }
 
   ROOT::VecOps::RVec<float> XPtoPar_C(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-				       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-				       const float& Bz) {
+                                      const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+                                      const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
+				                              const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e3 * 1.0e-15;
     ROOT::VecOps::RVec<float> out;
 
     for (const auto & rp: in) {
 
-      if( rp.tracks_begin < tracks.size()) {
+      auto track = tracks.at(rp.tracks_begin);
+
+      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
 
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 
@@ -226,15 +229,18 @@ namespace ReconstructedParticle2Track{
   }
 
   ROOT::VecOps::RVec<float> XPtoPar_ct(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-				       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-				       const float& Bz) {
+                                      const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+                                      const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
+				                              const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e-9;
     ROOT::VecOps::RVec<float> out;
 
     for (const auto & rp: in) {
 
-      if( rp.tracks_begin < tracks.size()) {
+      auto track = tracks.at(rp.tracks_begin);
+
+      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
 
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 	      double pt = p.Pt();

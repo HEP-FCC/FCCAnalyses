@@ -280,19 +280,21 @@ namespace FCCAnalyses
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_C(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                       const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks,
+                                                       const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates,
+                                                       const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
                                                        const float &Bz)
     {
 
-      return cast_constituent_3(jcs, tracks, Bz, ReconstructedParticle2Track::XPtoPar_C);
+      return cast_constituent_4(jcs, trackstates, tracks, Bz, ReconstructedParticle2Track::XPtoPar_C);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_ct(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks,
+                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates,
+                                                        const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
                                                         const float &Bz)
     {
 
-      return cast_constituent_3(jcs, tracks, Bz, ReconstructedParticle2Track::XPtoPar_ct);
+      return cast_constituent_4(jcs, trackstates, tracks, Bz, ReconstructedParticle2Track::XPtoPar_ct);
     }
 
     // Covariance matrix elements of tracks parameters

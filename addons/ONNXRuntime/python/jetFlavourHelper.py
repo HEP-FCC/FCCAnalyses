@@ -122,15 +122,15 @@ class JetFlavourHelper:
         )
 
         self.definition["pfcand_phi0{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_phi({}, {}, pv{}, Bz{})".format(
-            self.const, self.trackstate, self.tracks,self.tag, self.tag
+            self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
         self.definition["pfcand_C{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_C({}, {}, Bz{})".format(
-            self.const, self.trackstate, self.tag
+            self.const, self.trackstate, self.tracks, self.tag
         )
 
         self.definition["pfcand_ct{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_ct({}, {}, Bz{})".format(
-            self.const, self.trackstate, self.tag
+            self.const, self.trackstate, self.tracks, self.tag
         )
 
         # covariance matrix (fixed track state problem)
