@@ -160,9 +160,10 @@ namespace ReconstructedParticle2Track{
   }
 
   ROOT::VecOps::RVec<float> XPtoPar_phi(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
-					const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-					const TLorentzVector& V, // primary vertex
-					const float& Bz) {
+                                        const ROOT::VecOps::RVec<edm4hep::TrackState>& trackstates,
+                                        const ROOT::VecOps::RVec<edm4hep::TrackData>& tracks,
+					                              const TLorentzVector& V, // primary vertex
+					                              const float& Bz) {
 
     const double cSpeed = 2.99792458e8 * 1.0e-9; //Reduced speed of light ???
 
@@ -170,11 +171,13 @@ namespace ReconstructedParticle2Track{
 
     for (const auto & rp: in) {
 
-      if( rp.tracks_begin < tracks.size()) {
+      auto track = tracks.at(rp.tracks_begin);
 
-        float D0_wrt0 = tracks.at(rp.tracks_begin).D0;
-        float Z0_wrt0 = tracks.at(rp.tracks_begin).Z0;
-        float phi0_wrt0 = tracks.at(rp.tracks_begin).phi;
+      if(track.tracks_begin - track.tracks_end >0) { // if any tracks
+
+        float D0_wrt0 = trackstates.at(track.trackStates_begin).D0;
+        float Z0_wrt0 = trackstates.at(track.trackStates_begin).Z0;
+        float phi0_wrt0 = trackstates.at(track.trackStates_begin).phi;
 
         TVector3 X( - D0_wrt0 * TMath::Sin(phi0_wrt0) , D0_wrt0 * TMath::Cos(phi0_wrt0) , Z0_wrt0);
         TVector3 x = X - V.Vect();
@@ -188,7 +191,7 @@ namespace ReconstructedParticle2Track{
         double T = TMath::Sqrt(pt * pt - 2 * a * cross + a * a * r2);
         double phi0 = TMath::ATan2((p(1) - a * x(0)) / T, (p(0) + a * x(1)) / T);
 
-	out.push_back(phi0);
+	      out.push_back(phi0);
 
       } else {
         out.push_back(-9.);
@@ -211,10 +214,10 @@ namespace ReconstructedParticle2Track{
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
 
         double a = std::copysign(1.0, rp.charge) * Bz * cSpeed;
-	double pt = p.Pt();
+	      double pt = p.Pt();
         double C = a/(2 * pt);
 
-	out.push_back(C);
+	      out.push_back(C);
       } else {
         out.push_back(-9.);
       }
@@ -234,11 +237,9 @@ namespace ReconstructedParticle2Track{
       if( rp.tracks_begin < tracks.size()) {
 
         TVector3 p(rp.momentum.x, rp.momentum.y, rp.momentum.z);
-	double pt = p.Pt();
-
+	      double pt = p.Pt();
         double ct = p(2) / pt;
-
-	out.push_back(ct);
+        out.push_back(ct);
 
       } else {
         out.push_back(-9.);
