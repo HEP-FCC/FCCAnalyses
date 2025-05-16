@@ -277,9 +277,6 @@ class JetFlavourHelper:
         # convert to tuple
         initvars = tuple(initvars)
 
-        # then funcs
-        print("INFO: JetFlavourHelper: input variables: {}".format(initvars))
-
         # check if all variables are defined
         for varname in self.variables:
             matches = [obs for obs in self.definition.keys() if obs == varname]
