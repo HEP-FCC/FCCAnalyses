@@ -96,66 +96,16 @@ namespace ReconstructedParticle2Track{
   ROOT::VecOps::RVec<float> getRP2TRK_Z0_sig (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
 					      ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
 
-
-  /// Return the variance (not the sigma)  of the the D0 of a track to a reconstructed particle
-  ROOT::VecOps::RVec<float> getRP2TRK_D0_cov (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-					      ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the variance (not the sigma)  of the the Z0 of a track to a reconstructed particle
-  ROOT::VecOps::RVec<float> getRP2TRK_Z0_cov (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-					      ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the variance (not the sigma)  of the the Phi of a track to a reconstructed particle
-  ROOT::VecOps::RVec<float> getRP2TRK_phi_cov (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-					       ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the variance (not the sigma)  of the omega of a track to a reconstructed particle
-  ROOT::VecOps::RVec<float> getRP2TRK_omega_cov (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						 ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the variance (not the sigma)  of the tanLambda of a track to a reconstructed particle
-  ROOT::VecOps::RVec<float> getRP2TRK_tanLambda_cov (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						     ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the off-diag term (d0, phi0) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_d0_phi0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						  ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the off-diag term (d0, omega) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_d0_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						   ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the off-diag term (d0,z0) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_d0_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the off-diag term (d0,tanlambda) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_d0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						       ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the off-diag term (phi0,omega) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_phi0_omega_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						     ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the off-diag term (phi0,z0) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_phi0_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						  ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
-
-  /// Return the off-diag term (phi0,tanlambda) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_phi0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-							 ROOT::VecOps::RVec<edm4hep::TrackState> tracks) ;
-
-  /// Return the off-diag term (omega,z0) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_omega_z0_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						   ROOT::VecOps::RVec<edm4hep::TrackState> tracks) ;
-
-  /// Return the off-diag term (omega,tanlambda) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_omega_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-							  ROOT::VecOps::RVec<edm4hep::TrackState> tracks) ;
-
-  /// Return the off-diag term (z0,tanlambda) of the covariance matrix
-  ROOT::VecOps::RVec<float> getRP2TRK_z0_tanlambda_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
-						       ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
+  /*
+  Return the covariance matrix of a track to a reconstructed particle
+  @param cov_index: the index of the covariance matrix element:
+  - Diagonal elements are: 0: d0d0, 2: phiphi, 5: omegaomega, 9: z0z0, 14: tanLambdatanLambda
+  - Off-diagonal elements are: 1: phid0, 3: d0omega, 4: phiomega, 6: d0z0, 7: phiz0, 8: omegaz0, 10: d0tanLambda, 11: phitanLambda, 12: omegatanLambda, 13: tanLambdaz0
+  */ 
+  ROOT::VecOps::RVec<float> get_cov(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
+					      ROOT::VecOps::RVec<edm4hep::TrackData> tracks,
+                ROOT::VecOps::RVec<edm4hep::TrackState> trackstates,
+                int cov_index);
 
 
   /// Return the tracks associated to reco'ed particles

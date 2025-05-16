@@ -97,52 +97,83 @@ namespace FCCAnalyses {
 							const ROOT::VecOps::RVec<edm4hep::TrackState>&,
 							const float&);
 
+
     //covariance matrix
-    //diagonal
+    //diagonal - 0: d0d0, 2: phiphi, 5: omegaomega, 9: z0z0, 14: tanLambdatanLambda
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
-							   const ROOT::VecOps::RVec<edm4hep::TrackState>&);
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 5);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
-							const ROOT::VecOps::RVec<edm4hep::TrackState>& );
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 0);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 9);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							  const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 2);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
-    //off-diag
-    rv::RVec<FCCAnalysesJetConstituentsData> get_d0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							  const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 14);
+    //off-diag - 1: phid0, 3: d0omega, 4: phiomega, 6: d0z0, 7: phiz0, 8: omegaz0, 10: d0tanLambda, 11: phitanLambda, 12: omegatanLambda, 13: tanLambdaz0
+    rv::RVec<FCCAnalysesJetConstituentsData> get_d0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 6);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 1);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 7);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								   const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 11);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								 const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 10);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								 const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 13);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 12);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 4);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 3);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 8);
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jcs,

@@ -296,93 +296,123 @@ namespace FCCAnalyses
     // Covariance matrix elements of tracks parameters
     // diagonal
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                           const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                           const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                           int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_omega_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                        int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_z0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                        const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                        int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                          const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                          int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                               const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                               const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                               int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_tanLambda_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
     // off-diagonal
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                           const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                           const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                           int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_z0_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_d0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                             const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                             const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                             int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_phi0_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                             const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                             const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                             int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi0_z0_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                                    const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                                    const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                                    int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi0_tanlambda_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_d0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                                  const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                                  const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                                  int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_tanlambda_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_z0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                                  const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                                  const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                                  int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_z0_tanlambda_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                                     const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                                     const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                                     int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_omega_tanlambda_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                                const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                                const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                                int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi0_omega_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_d0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                              const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                              const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                              int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_d0_omega_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                              const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
+                                                          const ROOT::VecOps::RVec<edm4hep::TrackData> &tracks,
+                                                              const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates, 
+                                                              int cov_index)
     {
-      return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_omega_z0_cov);
+      return cast_constituent_4(jcs, tracks, trackstates, cov_index, ReconstructedParticle2Track::get_cov);
     }
 
     // neutrals are set to 0; muons and electrons are also set to 0;

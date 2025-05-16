@@ -5,6 +5,9 @@ import ROOT
 ROOT.gROOT.SetBatch(True)
 
 class JetFlavourHelper:
+    '''
+    NOTE: (May 2025) Once the full sim tagger is retrained on the new naming convention (see https://github.com/key4hep/k4MLJetTagger?tab=readme-ov-file#open-problems--further-work), the names defined here must be altered. Then, they will also nicely match the namings in ReconstructedParticle2Track.
+    '''
     def __init__(self, coll, jet, jetc, tag="", sim_type="fast"):
         '''
         sim_type: fast or full
@@ -114,6 +117,8 @@ class JetFlavourHelper:
             self.const, self.trackstate, self.tracks, self.tag, self.tag
         )
 
+        # fix track state problem in the following functions:
+
         self.definition["pfcand_dz{}".format(self.tag)] = "JetConstituentsUtils::XPtoPar_dz({}, {}, pv{}, Bz{})".format(
             self.const, self.trackstate, self.tag, self.tag
         )
@@ -132,65 +137,69 @@ class JetFlavourHelper:
             self.const, self.trackstate, self.tag
         )
 
-        self.definition["pfcand_dptdpt{}".format(self.tag)] = "JetConstituentsUtils::get_omega_cov({}, {})".format(
-            self.const, self.trackstate
+        # covariance matrix
+
+        self.definition["pfcand_dptdpt{}".format(self.tag)] = "JetConstituentsUtils::get_omega_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition["pfcand_dxydxy{}".format(self.tag)] = "JetConstituentsUtils::get_d0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_dxydxy{}".format(self.tag)] = "JetConstituentsUtils::get_d0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition["pfcand_dzdz{}".format(self.tag)] = "JetConstituentsUtils::get_z0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_dzdz{}".format(self.tag)] = "JetConstituentsUtils::get_z0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition["pfcand_dphidphi{}".format(self.tag)] = "JetConstituentsUtils::get_phi0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_dphidphi{}".format(self.tag)] = "JetConstituentsUtils::get_phi0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition[
-            "pfcand_detadeta{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_tanlambda_cov({}, {})".format(self.const, self.trackstate)
-
-        self.definition["pfcand_dxydz{}".format(self.tag)] = "JetConstituentsUtils::get_d0_z0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_detadeta{}".format(self.tag)] = "JetConstituentsUtils::get_tanlambda_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition["pfcand_dphidxy{}".format(self.tag)] = "JetConstituentsUtils::get_phi0_d0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_dxydz{}".format(self.tag)] = "JetConstituentsUtils::get_d0_z0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition["pfcand_phidz{}".format(self.tag)] = "JetConstituentsUtils::get_phi0_z0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_dphidxy{}".format(self.tag)] = "JetConstituentsUtils::get_phi0_d0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition[
-            "pfcand_phictgtheta{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_tanlambda_phi0_cov({}, {})".format(self.const, self.trackstate)
-
-        self.definition[
-            "pfcand_dxyctgtheta{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_tanlambda_d0_cov({}, {})".format(self.const, self.trackstate)
-
-        self.definition[
-            "pfcand_dlambdadz{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_tanlambda_z0_cov({}, {})".format(self.const, self.trackstate)
-
-        self.definition[
-            "pfcand_cctgtheta{}".format(self.tag)
-        ] = "JetConstituentsUtils::get_omega_tanlambda_cov({}, {})".format(self.const, self.trackstate)
-
-        self.definition["pfcand_phic{}".format(self.tag)] = "JetConstituentsUtils::get_omega_phi0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_phidz{}".format(self.tag)] = "JetConstituentsUtils::get_phi0_z0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition["pfcand_dxyc{}".format(self.tag)] = "JetConstituentsUtils::get_omega_d0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_phictgtheta{}".format(self.tag)] = "JetConstituentsUtils::get_tanlambda_phi0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
 
-        self.definition["pfcand_cdz{}".format(self.tag)] = "JetConstituentsUtils::get_omega_z0_cov({}, {})".format(
-            self.const, self.trackstate
+        self.definition["pfcand_dxyctgtheta{}".format(self.tag)] = "JetConstituentsUtils::get_tanlambda_d0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
         )
+
+        self.definition["pfcand_dlambdadz{}".format(self.tag)] = "JetConstituentsUtils::get_tanlambda_z0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
+        )
+
+        self.definition["pfcand_cctgtheta{}".format(self.tag)] = "JetConstituentsUtils::get_omega_tanlambda_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
+        )
+
+        self.definition["pfcand_phic{}".format(self.tag)] = "JetConstituentsUtils::get_omega_phi0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
+        )
+
+        self.definition["pfcand_dxyc{}".format(self.tag)] = "JetConstituentsUtils::get_omega_d0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
+        )
+
+        self.definition["pfcand_cdz{}".format(self.tag)] = "JetConstituentsUtils::get_omega_z0_cov({}, {}, {})".format(
+            self.const, self.tracks, self.trackstate
+        )
+
+        # impact parameters
 
         self.definition[
             "pfcand_btagSip2dVal{}".format(self.tag)
