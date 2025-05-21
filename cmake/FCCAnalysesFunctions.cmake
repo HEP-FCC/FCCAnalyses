@@ -87,7 +87,7 @@ macro(fccanalyses_addon_build _name)
     target_include_directories(${_name} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
                                                $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/analyzers/dataframe>)
     if(ARG_EXT_LIBS)
-      target_link_libraries(${_name} ${ARG_EXT_LIBS})
+      target_link_libraries(${_name} PUBLIC ${ARG_EXT_LIBS})
     endif()
     if(ARG_EXT_HEADERS)
       target_include_directories(${_name} PUBLIC ${ARG_EXT_HEADERS})

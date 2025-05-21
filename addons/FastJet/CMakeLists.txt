@@ -9,6 +9,7 @@ fccanalyses_addon_build(FastJet
                         EXT_HEADERS ${FASTJET_INCLUDE_DIRS}
                         EXT_LIBS ${FASTJET_LIBRARIES}
                                  ROOT::MathCore
+                                 ROOT::ROOTVecOps
                         INSTALL_COMPONENT fastjet)
 
 add_custom_command(TARGET FastJet POST_BUILD
