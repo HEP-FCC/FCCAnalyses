@@ -10,7 +10,7 @@ import importlib.util
 
 import ROOT  # type: ignore
 import cppyy
-from anascript import get_element, get_element_dict
+from anascript import get_element, get_element_dict, get_attribute
 from process import get_process_info, get_process_dict
 from process import get_subfile_list, get_chunk_list
 from utils import generate_graph, save_benchmark
@@ -337,10 +337,18 @@ def run_stages(args, rdf_module, anapath):
         if get_element_dict(process_list[process_name], 'fraction'):
             fraction = get_element_dict(process_list[process_name], 'fraction')
 
+        if fraction < 1:
+            file_list = get_subfile_list(file_list, event_list, fraction)
+
         # Determine the number of chunks the output will be split into
         chunks = 1
         if get_element_dict(process_list[process_name], 'chunks'):
             chunks = get_element_dict(process_list[process_name], 'chunks')
+
+        chunk_list = [file_list]
+        if chunks > 1:
+            chunk_list = get_chunk_list(file_list, chunks)
+        LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
         # Put together output path
         output_stem = process_name
@@ -366,14 +374,6 @@ def run_stages(args, rdf_module, anapath):
             info_msg += f'\n\t- output file path:      {output_dir}'
         if chunks > 1:
             info_msg += f'\n\t- number of chunks: {chunks}'
-
-        if fraction < 1:
-            file_list = get_subfile_list(file_list, event_list, fraction)
-
-        chunk_list = [file_list]
-        if chunks > 1:
-            chunk_list = get_chunk_list(file_list, chunks)
-        LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
         # Create directory if more than 1 chunk
         if chunks > 1:

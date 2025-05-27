@@ -433,10 +433,18 @@ def run_fccanalysis(args, analysis_module):
         if get_element_dict(process_list[process_name], 'fraction'):
             fraction = get_element_dict(process_list[process_name], 'fraction')
 
+        if fraction < 1:
+            file_list = get_subfile_list(file_list, event_list, fraction)
+
         # Determine the number of chunks the output will be split into
-        chunks = 1
+        n_chunks = 1
         if get_element_dict(process_list[process_name], 'chunks'):
-            chunks = get_element_dict(process_list[process_name], 'chunks')
+            n_chunks = get_element_dict(process_list[process_name], 'chunks')
+
+        chunk_list = [file_list]
+        if n_chunks > 1:
+            chunk_list = get_chunk_list(file_list, n_chunks)
+            n_chunks = len(chunk_list)
 
         # Put together output path
         output_stem = process_name
@@ -445,48 +453,38 @@ def run_fccanalysis(args, analysis_module):
                                            'output')
         output_dir = get_attribute(analysis, 'output_dir', '')
 
-        if chunks == 1:
+        if n_chunks == 1:
             output_filepath = os.path.join(output_dir, output_stem+'.root')
             output_dir = None
         else:
             output_filepath = None
             output_dir = os.path.join(output_dir, output_stem)
 
-        info_msg = f'Adding process "{process_name}" with:'
+        info_msg = 'Will proceed with:'
         if fraction < 1:
-            info_msg += f'\n\t- fraction:         {fraction}'
-        info_msg += f'\n\t- number of files:  {len(file_list):,}'
-        if output_dir:
-            info_msg += f'\n\t- output directory:      {output_dir}'
-        if output_filepath:
-            info_msg += f'\n\t- output file path:      {output_dir}'
-        if chunks > 1:
-            info_msg += f'\n\t- number of chunks: {chunks}'
-
-        if fraction < 1:
-            file_list = get_subfile_list(file_list, event_list, fraction)
-
-        chunk_list = [file_list]
-        if chunks > 1:
-            chunk_list = get_chunk_list(file_list, chunks)
-        LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
+            info_msg += f'\n    - input reduction fraction: {fraction}'
+        info_msg += f'\n    - number of input files: {len(file_list):,}'
+        if output_dir is not None:
+            info_msg += f'\n    - output directory: {output_dir}'
+        if n_chunks > 1:
+            info_msg += f'\n    - number of output chunks: {n_chunks:,}'
+        if output_filepath is not None:
+            info_msg += f'\n    - output file path: {output_filepath}'
+        LOGGER.info(info_msg)
 
         # Create directory if more than 1 chunk
-        if len(chunk_list) > 1:
-            output_directory = os.path.join(output_dir if output_dir else '',
-                                            output_stem)
-
-            if not os.path.exists(output_directory):
-                os.system(f'mkdir -p {output_directory}')
+        if n_chunks > 1:
+            if not os.path.exists(output_dir):
+                os.system(f'mkdir -p {output_dir}')
 
         # Running locally
         LOGGER.info('Running locally...')
-        if len(chunk_list) == 1:
-            args.output = f'{output_stem}.root'
+        if n_chunks == 1:
+            args.output = output_filepath
             run_local(config, args, analysis, chunk_list[0])
         else:
             for index, chunk in enumerate(chunk_list):
-                args.output = f'{output_stem}/chunk{index}.root'
+                args.output = f'{output_dir}/chunk{index}.root'
                 run_local(config, args, analysis, chunk)
 
     if len(process_list) == 0:
