@@ -10,8 +10,8 @@ def main():
     '''
     Main entry point for the standalone analysis.
     '''
-    input_list = ['https://fccsw.web.cern.ch/fccsw/testsamples/edm4hep1/'
-                  'p8_ee_WW_ecm240_edm4hep.root']
+    input_list = ['https://fccsw.web.cern.ch/fccsw/analysis/'
+                  'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root']
 
     ROOT.gSystem.Load('libFCCAnalyses')
     if ROOT.dummyLoader:
@@ -31,7 +31,7 @@ def main():
 
     dframe2 = dframe.Define(
         'electron_truth',
-        'ReconstructedParticle::selPDG(11)(MCRecoAssociations)')
+        'ReconstructedParticle::selPDG(11)(RecoMCLink)')
 
     dframe3 = dframe2.Define(
         'electron_truth_pt',

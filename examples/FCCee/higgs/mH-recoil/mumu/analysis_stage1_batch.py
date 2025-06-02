@@ -12,44 +12,41 @@ class Analysis():
     Higgs mass recoil analysis in Z(mumu)H.
     '''
     def __init__(self, cmdline_args):
+        # Parse additional arguments not known to the FCCAnalyses parsers.
+        # All command line arguments are provided in the `cmdline_arg`
+        # dictionary and arguments after "--" are stored under "remaining" key.
         parser = ArgumentParser(
             description='Additional analysis arguments',
-            usage='Provide additional arguments after analysis script path')
+            usage='Provided after "--"')
         parser.add_argument('--muon-pt', default='10.', type=float,
                             help='Minimal pT of the mouns.')
-        # Parse additional arguments not known to the FCCAnalyses parsers
-        # All command line arguments know to fccanalysis are provided in the
-        # `cmdline_arg` dictionary.
-        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['remaining'])
 
-        # Mandatory: List of processes to run over
+        # Mandatory: List of datasets used in the analysis
         self.process_list = {
-            # Run the full statistics in 20 jobs and save the output into
-            # <outputDir>/p8_ee_??_ecm240/chunk<N>.root
+            # Run over the full statistics in 20 jobs per dataset and save the
+            # output into <outputDir>/p8_ee_??_ecm240/chunk<N>.root
             'p8_ee_ZZ_ecm240': {'chunks': 20},
             'p8_ee_WW_ecm240': {'chunks': 20},
             'p8_ee_ZH_ecm240': {'chunks': 20}
         }
 
         # Mandatory: Production tag when running over the centrally produced
-        # samples, this points to the yaml files for getting sample statistics
+        # datasets (this points to a yaml file from which the sample )
         self.prod_tag = 'FCCee/spring2021/IDEA/'
 
         # Optional: output directory, default is local running directory
-        self.output_dir = 'ZH_mumu_recoil_batch/stage1'
+        self.output_dir = f'ZH_mumu_recoil/stage1_{self.ana_args.muon_pt}'
 
-        # Optional: analysisName, default is ''
+        # Optional: analysis name, default is ''
         # self.analysis_name = 'My Analysis'
 
         # Optional: number of threads to run on, default is 'all available'
-        # self.n_threads = 4
-
-        # Optional: running on HTCondor, default is False
-        self.run_batch = True
+        self.n_threads = 4
 
         # Optional: batch queue name when running on HTCondor, default is
-        # 'workday'
-        self.batch_queue = 'workday'
+        # 'longlunch'
+        self.batch_queue = 'espresso'
 
         # Optional: computing account when running on CERN's HTCondor, default
         # is 'group_u_FCC.local_gen'
@@ -57,12 +54,11 @@ class Analysis():
 
         # Optional: output directory on eos, if specified files will be copied
         # there once the batch job is done, default is empty
-        self.output_dir_eos = '/eos/experiment/fcc/ee/analyses/case-studies/' \
-                              f'higgs/mH-recoil/stage1_{self.ana_args.muon_pt}'
+        self.output_dir_eos = '/eos/user/j/jsmiesko/mH-recoil-output'
 
-        # Optional: type for eos, needed when <outputDirEos> is specified. The
-        # default is FCC EOS, which is eospublic
-        self.eos_type = 'eospublic'
+        # Optional: type of EOS proxy used when <outputDirEos> is specified.
+        # The default is eosuser
+        # self.eos_type = 'eospublic'
 
         # Optional: test file
         self.test_file = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/' \
@@ -89,40 +85,41 @@ class Analysis():
             # select muons on pT
             .Define('selected_muons',
                     f'ReconstructedParticle::sel_pt({muon_pt})(muons)')
-            # create branch with muon transverse momentum
+            # create column with muon transverse momentum
             .Define('selected_muons_pt',
                     'ReconstructedParticle::get_pt(selected_muons)')
-            # create branch with muon rapidity
+            # create column with muon rapidity
             .Define('selected_muons_y',
                     'ReconstructedParticle::get_y(selected_muons)')
-            # create branch with muon total momentum
+            # create column with muon total momentum
             .Define('selected_muons_p',
                     'ReconstructedParticle::get_p(selected_muons)')
-            # create branch with muon energy
+            # create column with muon energy
             .Define('selected_muons_e',
                     'ReconstructedParticle::get_e(selected_muons)')
             # find zed candidates from  di-muon resonances
             .Define(
                 'zed_leptonic',
                 'ReconstructedParticle::resonanceBuilder(91)(selected_muons)')
-            # create branch with zed mass
+            # create column with zed mass
             .Define('zed_leptonic_m',
                     'ReconstructedParticle::get_mass(zed_leptonic)')
-            # create branch with zed transverse momenta
+            # create column with zed transverse momenta
             .Define('zed_leptonic_pt',
                     'ReconstructedParticle::get_pt(zed_leptonic)')
             # calculate recoil of zed_leptonic
             .Define('zed_leptonic_recoil',
                     'ReconstructedParticle::recoilBuilder(240)(zed_leptonic)')
-            # create branch with recoil mass
+            # create column with recoil mass
             .Define('zed_leptonic_recoil_m',
                     'ReconstructedParticle::get_mass(zed_leptonic_recoil)')
-            # create branch with leptonic charge
+            # create column with leptonic charge
             .Define('zed_leptonic_charge',
                     'ReconstructedParticle::get_charge(zed_leptonic)')
-            # Filter at least one candidate
-            .Filter('zed_leptonic_recoil_m.size()>0')
+            # Keep events with at least one candidate
+            .Filter('zed_leptonic_recoil_m.size() > 0')
         )
+
         return dframe2
 
     # Mandatory: output function, please make sure you return the branch list

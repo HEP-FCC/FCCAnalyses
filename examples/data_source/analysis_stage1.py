@@ -19,7 +19,7 @@ class Analysis():
         # Parse additional arguments not known to the FCCAnalyses parsers
         # All command line arguments know to fccanalysis are provided in the
         # `cmdline_arg` dictionary.
-        self.ana_args, _ = parser.parse_known_args(cmdline_args['unknown'])
+        self.ana_args, _ = parser.parse_known_args(cmdline_args['remaining'])
 
         # Mandatory: List of samples (processes) used in the analysis
         self.process_list = {
@@ -58,8 +58,8 @@ class Analysis():
         # self.run_batch = False
 
         # Optional: test file
-        self.test_file = 'https://fccsw.web.cern.ch/fccsw/testsamples/' \
-                         'edm4hep1/p8_ee_WW_ecm240_edm4hep.root'
+        self.test_file = 'https://fccsw.web.cern.ch/fccsw/analysis/' \
+                         'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root'
 
         # Optional: read the input files with podio::DataSource
         self.use_data_source = True

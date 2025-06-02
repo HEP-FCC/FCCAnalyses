@@ -22,7 +22,7 @@ class Analysis():
         self.prod_tag = 'FCCee/winter2023/IDEA/'
 
         # Optional: output directory, default is local running directory
-        self.output_dir = "."
+        self.output_dir = "stages-source-output"
 
         # Ncpus, default is 4, -1 uses all cores available
         # self.n_threads = -1

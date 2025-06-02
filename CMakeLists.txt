@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.9)
 
 
-project(FCCAnalyses VERSION 0.10.0
+project(FCCAnalyses VERSION 0.11.0
                     LANGUAGES CXX
 )
 
@@ -68,7 +68,7 @@ find_package(TBB REQUIRED COMPONENTS tbb)
 
 # need to use our own FindFastJet.cmake
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-find_package(FastJet)
+find_package(FastJet REQUIRED)
 
 find_package( Delphes REQUIRED )
 

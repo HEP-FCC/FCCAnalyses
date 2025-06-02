@@ -1,11 +1,14 @@
 .\" Manpage for fccanalysis-script
 .\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
-.TH FCCANALYSIS\-SCRIPT 7 "17 Jan 2024" "0.10.0" "fccanalysis-script man page"
+.TH FCCANALYSIS\-SCRIPT 7 "10 May 2025" "0.11.0" "fccanalysis-script man page"
+
 .SH NAME
 \fBfccanalysis\-script\fR \(en analysis steering script specification
+
 .SH SYNOPSIS
 .IP
 *
+
 .SH DESCRIPTION
 .PP
 The analysis script is expected to be a valid Python script containing either
@@ -29,9 +32,10 @@ python \fIanalysis_script.py\fR
 .PP
 here user has full control over the RDataFrame, but has to create all necessary
 scaffolding\&.
+
 .PP
-It is expected that the whole analysis will be split into several stages and
-it can be done in one of the two styles:
+It is expected that the whole analysis will be split into several stages, which
+can be done in one of the two styles:
 .IP
 anascript_stage1.py \-> anascript_stage2.py \-> ... \-> anascript_stage_final.py \-> plots.py
 .RE
@@ -48,19 +52,24 @@ are required. The first style is named "staged analysis" and the second
 "histmaker analysis".
 .TP
 \fBstaged analysis\fR
-The analysis script needs to contain \fIRDFanalysis\fR class of the following
+The analysis script needs to contain \fIAnalysis\fR class of the following
 structure:
 .IP
-class RDFanalysis():
-    def analysers(df):
-        df2 = (
-            df
+class Analysis():
+    def __init__(self, cmdline_args):
+        ...
+
+    def analyzers(self, dframe):
+        dframe2 = (
+            dframe
             # define the muon collection
-            .Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
+            .Define("muons",
+                    "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
             ...
         )
-    return df2
-    def output():
+        return dframe2
+
+    def output(self):
         return ["muons", "muon_mass"]
 .TP
 \fBhistmaker analysis\fR
@@ -76,15 +85,17 @@ def build_graph(df, dataset):
     results.append(df.Histo1D(("muons_p_cut0", "", *bins_p_mu), "muons_p"))
     return results, weightsum
 .TP
-\fBplots script\fR
-This stage does not require neither \fIRDFanalysis\fR class neither
-\fIbuild_graph\fR function, it has it's own set of attributes, please see the
-examples in the \fIexamples\fR directory.
+\fBfinal and plots stages\fR
+These stages do not require \fIAnalysis\fR class neither \fIbuild_graph\fR
+function, they have their own set of attributes, please see the
+examples in the \fIexamples\fR directory or fccanalysis-final-script(7) and
+fccanalysis-plots-script(7).
+
 .SH ATTRIBUTES
 In case of running the FCCAnalysis in the managed mode user can use the
 following global attributes to control the behavior of the analysis.
 .TP
-\fBprocessList\fR (mandatory)
+\fBprocess_list\fR (mandatory)
 Dictionary of process samples to be run over. Each process can have several
 parameters:
 \fIfraction\fR
@@ -97,7 +108,7 @@ Default value: 1 (full process sample)
 \fIinput_dir\fR
 .in +4
 Specifies the location of the process different from the globally set one\&.
-This overrides both prodTag and inputDir attributes of the analysis script\&.
+This overrides both prod_tag and input_dir attributes of the analysis script\&.
 .br
 Default value: None
 .in -4
@@ -111,56 +122,51 @@ Default value: output\&.root
 .in -4
 \fIchunks\fR
 .in +4
-The analysis RDataFrame can be split into several chunks\&.
+The analysis can be split into several output chunks (useful on distributed
+systems)\&.
 .br
 Default value: 1
 .TP
-\fBprodTag\fR (mandatory)
+\fBprod_tag\fR (mandatory)
 Provides information where to find input files. There are several way how to
 find the information, one of them uses YAML file which is being searched for in
-the subfolders of $FCCDICTSDIR\&.
+the sub-folders of $FCCDICTSDIR\&.
 .TP
-\fBoutputDir\fR (mandatory)
-User can specify the directory for the output files. The output directory can be
-overwriten by specifiing absolute path with `\-\-output` commandline argument\&.
+\fBoutput_dir\fR (mandatory)
+User can specify the directory for the output files\&.
 .TP
-\fBanalysisName\fR (optional)
+\fBanalysis_name\fR (optional)
 Optional name for the analysis
 .br
 Default value: empty string
 .TP
-\fBnCPUS\fR (optional)
-Number of threads the RDataFrame will use\&.
+\fBn_threads\fR (optional)
+Number of threads the RDataFrame will use during processing\&.
 .br
-Default value: 4
+Default value: 1
 .TP
-\fBrunBatch\fR (optional)
-Run the analysis on the HTCondor batch system.
-.br
-Default value: False
-.TP
-\fBbatchQueue\fR (optional)
+\fBbatch_queue\fR (optional)
 Batch queue name when running on HTCondor.
 .br
 Default value: "longlunch"
 .TP
-\fBcompGroup\fR (optional)
+\fBcomp_group\fR (optional)
 Computing account when running on HTCondor.
 .br
 Default value: "group_u_FCC.local_gen"
 .TP
-\fBoutputDirEos\fR (optional)
+\fBoutput_dir_eos\fR (optional)
 Output directory on EOS, if specified files will be copied there once the batch
 job is done.
 .br
 Default value: empty string
 .TP
-\fBeosType\fR (mandatory if \fIoutputDirEos\fR is used)
+\fBeos_type\fR (optional)
 Type of the EOS proxy to be used.
 .br
-Default value: empty string
+Default value: user
 .TP
-\fBtestFile\fR (optional)
+\fBtest_file\fR (optional)
 Location of the test file.
 .br
 Default value: empty string
@@ -170,13 +176,13 @@ The computational graph of the analysis will be generated.
 .br
 Default value: False
 .TP
-\fBgraphPath\fR (optional)
+\fBgraph_path\fR (optional)
 Location where the computational graph of the analysis should be stored. Only
 paths with \fI.dot\fR and \fI.png\fR extensions are accepted.
 .br
 Default value: empty string
 .TP
-\fBuseDataSource\fR (optional)
+\fBuse_data_source\fR (optional)
 User can specify how to provide physical object collections to the analyzers\&.
 If \fITrue\fR the events will be loaded through the EDM4hep RDataSource\&.
 .br
@@ -189,17 +195,20 @@ and all normalisation factors calculated with sum of weights accordingly\&.
 .br
 Default value: False
 .TP
-.B procDict
+.B proc_dict
 This variable controls which process dictionary will be used. It can be either
 simple file name, absolute path or url. In the case of simple filename, the file
 is being searched for first in the working directory and then at the locations
 indicated in the $FCCDICTSDIR environment variable.
 .PP
 This section is under construction. You are invited to help :)
+
 .SH SEE ALSO
 fccanalysis(1), fccanalysis-run(1)
+
 .SH BUGS
 Many
+
 .SH AUTHORS
 There are many contributors to the FCCAnalyses framework, but the principal
 authors are:
@@ -209,8 +218,10 @@ Clement Helsens
 Valentin Volkl
 .br
 Gerardo Ganis
+
 .SH FCCANALYSES
 Part of the FCCAnalyses framework\&.
+
 .SH LINKS
 .PP
 .UR https://hep-fcc\&.github\&.io/FCCAnalyses/
@@ -224,6 +235,7 @@ FCCAnalysises GitHub repository
 .UR https://fccsw\-forum\&.web\&.cern\&.ch/
 FCCSW Forum
 .UE
+
 .SH CONTACT
 .pp
 .MT FCC-PED-SoftwareAndComputing-Analysis@cern.ch

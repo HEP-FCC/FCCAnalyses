@@ -16,7 +16,8 @@ runBatch    = False
 #compGroup = "group_u_FCC.local_gen"
 
 #Optional test file
-testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+# testFile = "root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+testFile = 'https://fccsw.web.cern.ch/fccsw/analysis/test-samples/edm4hep099/p8_ee_ZH_ecm240_edm4hep.root'
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis():
@@ -28,7 +29,7 @@ class RDFanalysis():
                #############################################
                ##          Aliases for # in python        ##
                #############################################
-               .Alias("Jet0", "Jet#3.index")
+               .Alias("Jet0", "_Jet_tracks.index")
                .Define("JetsConstituents", "JetConstituentsUtils::build_constituents(Jet, ReconstructedParticles)")
                 # constituents for one single jet
                .Define("JC_Jet0", "JetConstituentsUtils::get_constituents(JetsConstituents, Jet0)")
