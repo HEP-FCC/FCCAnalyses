@@ -45,6 +45,8 @@ class JetFlavourHelper:
             self.dndx = None
         self.definition = dict()
 
+        # CHANGE these lines here, PID & reco PV! 
+
         # ===== VERTEX
         # MC primary vertex
         self.definition["pv{}".format(self.tag)] = "FCCAnalyses::MCParticle::get_EventPrimaryVertexP4()( {} )".format(

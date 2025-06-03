@@ -1183,21 +1183,22 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for (int i = 0; i < jcs.size(); ++i)
       {
-        FCCAnalysesJetConstituentsData is_El;
+        FCCAnalysesJetConstituentsData is_Muon;
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
-          if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass - 0.000510999) < 1.e-05)
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+          if (std::abs(ct.at(j).PDG) == 11)
+#else
+          if (std::abs(ct.at(j).type) == 11)
+#endif
           {
-            is_El.push_back(1.);
+            is_Muon.push_back(1.);
           }
           else
-          {
-            is_El.push_back(0.);
-          }
+            is_Muon.push_back(0.);
         }
-
-        out.push_back(is_El);
+        out.push_back(is_Muon);
       }
       return out;
     }
@@ -1207,21 +1208,22 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       for (int i = 0; i < jcs.size(); ++i)
       {
-        FCCAnalysesJetConstituentsData is_Mu;
+        FCCAnalysesJetConstituentsData is_Muon;
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
-          if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass - 0.105658) < 1.e-03)
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+          if (std::abs(ct.at(j).PDG) == 13)
+#else
+          if (std::abs(ct.at(j).type) == 13)
+#endif
           {
-            is_Mu.push_back(1.);
+            is_Muon.push_back(1.);
           }
           else
-          {
-            is_Mu.push_back(0.);
-          }
+            is_Muon.push_back(0.);
         }
-
-        out.push_back(is_Mu);
+        out.push_back(is_Muon);
       }
       return out;
     }
@@ -1235,7 +1237,17 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
-          if (abs(ct.at(j).charge) > 0 and abs(ct.at(j).mass - 0.13957) < 1.e-03)
+          int num_tracks = ct.at(j).tracks_end - ct.at(j).tracks_begin;
+          // check if num_tracks is valid (e.g. 0 or 1)
+          if (num_tracks < 0 || num_tracks > 1)
+          {
+            throw std::invalid_argument("Invalid number of tracks for constituent. Must be 0 or 1.");
+          }
+#if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
+          if (std::abs(ct.at(j).PDG) != 11 && std::abs(ct.at(j).PDG) != 13 && std::abs(ct.at(j).PDG) != 22 && num_tracks == 1)
+#else
+          if (std::abs(ct.at(j).type) != 11 && std::abs(ct.at(j).type) != 13 && std::abs(ct.at(j).type) != 22 && num_tracks == 1)
+#endif
           {
             is_ChargedHad.push_back(1.);
           }
@@ -1259,10 +1271,16 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituents ct = jcs.at(i);
         for (int j = 0; j < ct.size(); ++j)
         {
+          int num_tracks = ct.at(j).tracks_end - ct.at(j).tracks_begin;
+          // check if num_tracks is valid (e.g. 0 or 1)
+          if (num_tracks < 0 || num_tracks > 1)
+          {
+            throw std::invalid_argument("Invalid number of tracks for constituent. Must be 0 or 1.");
+          }
 #if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
-          if (ct.at(j).PDG == 130)
+          if (std::abs(ct.at(j).PDG) != 11 && std::abs(ct.at(j).PDG) != 13 && std::abs(ct.at(j).PDG) != 22 && num_tracks == 0)
 #else
-          if (ct.at(j).type == 130)
+          if (std::abs(ct.at(j).type) != 11 && std::abs(ct.at(j).type) != 13 && std::abs(ct.at(j).type) != 22 && num_tracks == 0)
 #endif
           {
             is_NeutralHad.push_back(1.);
