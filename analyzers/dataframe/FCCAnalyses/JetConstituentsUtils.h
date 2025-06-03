@@ -3,6 +3,7 @@
 
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticle.h"
+#include "edm4hep/VertexCollection.h"
 #include "edm4hep/MCParticle.h"
 #include "edm4hep/Quantity.h"
 #if __has_include("edm4hep/TrackerHit3DData.h")
@@ -57,6 +58,12 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_type(const rv::RVec<FCCAnalysesJetConstituents>&);
     rv::RVec<FCCAnalysesJetConstituentsData> get_charge(const rv::RVec<FCCAnalysesJetConstituents>&);
 
+    // retrieve collections from full sim 
+    // ROOT::VecOps::RVec<edm4hep::TrackState> get_trackstate(const rv::RVec<edm4hep::ReconstructedParticleData> &particles);
+
+    // Primary vertex
+    TLorentzVector get_primary_vertex(ROOT::VecOps::RVec<edm4hep::VertexData>& prim_vertex);
+
     //displacement
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0(const rv::RVec<FCCAnalysesJetConstituents>&,
 						    const ROOT::VecOps::RVec<edm4hep::TrackState>&);
@@ -76,75 +83,112 @@ namespace FCCAnalyses {
 
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dxy(const rv::RVec<FCCAnalysesJetConstituents>&,
 							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+               const ROOT::VecOps::RVec<edm4hep::TrackData>&,
 							 const TLorentzVector& V, // primary vertex
 							 const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_dz(const rv::RVec<FCCAnalysesJetConstituents>&,
-							const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-							const TLorentzVector& V, // primary vertex
-							const float&);
+							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+               const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							 const TLorentzVector& V, // primary vertex
+							 const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_phi(const rv::RVec<FCCAnalysesJetConstituents>&,
-                                                         const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-                                                         const TLorentzVector& V, // primary vertex
-                                                         const float&);
+							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+               const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+               const TLorentzVector& V, // primary vertex
+               const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_C(const rv::RVec<FCCAnalysesJetConstituents>&,
-						       const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-						       const float&);
+							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+               const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+						   const float&);
     rv::RVec<FCCAnalysesJetConstituentsData> XPtoPar_ct(const rv::RVec<FCCAnalysesJetConstituents>&,
-							const ROOT::VecOps::RVec<edm4hep::TrackState>&,
-							const float&);
+							 const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+               const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							 const float&);
+
 
     //covariance matrix
-    //diagonal
+    //diagonal - 0: d0d0, 2: phiphi, 5: omegaomega, 9: z0z0, 14: tanLambdatanLambda
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
-							   const ROOT::VecOps::RVec<edm4hep::TrackState>&);
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 5);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
-							const ROOT::VecOps::RVec<edm4hep::TrackState>& );
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 0);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 9);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							  const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 2);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
-    //off-diag
-    rv::RVec<FCCAnalysesJetConstituentsData> get_d0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							  const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 14);
+    //off-diag - 1: phid0, 3: d0omega, 4: phiomega, 6: d0z0, 7: phiz0, 8: omegaz0, 10: d0tanLambda, 11: phitanLambda, 12: omegatanLambda, 13: tanLambdaz0
+    rv::RVec<FCCAnalysesJetConstituentsData> get_d0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 6);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 1);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_phi0_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 7);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								   const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 11);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								 const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 10);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								 const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_tanlambda_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 13);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-								    const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_tanlambda_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 12);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_phi0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 4);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_d0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 3);
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>&,
+                 const ROOT::VecOps::RVec<edm4hep::TrackData>&,
+							   const ROOT::VecOps::RVec<edm4hep::TrackState>&,
+                 int cov_index = 8);
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                       const rv::RVec<edm4hep::Quantity>& dNdx,
 						      const rv::RVec<edm4hep::TrackData>& trackdata,
 						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
+    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx_dummy(const rv::RVec<FCCAnalysesJetConstituents> &jcs); // for full sim 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -162,7 +206,8 @@ namespace FCCAnalyses {
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dSig(const rv::RVec<FCCAnalysesJetConstituentsData>& Sip2dVals,
-                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0);
+                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0, 
+                                                          const std::string& sim_type);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip3dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -181,7 +226,8 @@ namespace FCCAnalyses {
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip3dSig(const rv::RVec<FCCAnalysesJetConstituentsData>& Sip3dVals,
                                                           const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0,
-                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0);
+                                                          const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0,
+                                                          const std::string& sim_type);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                             const rv::RVec<FCCAnalysesJetConstituents>& jcs,
@@ -200,7 +246,8 @@ namespace FCCAnalyses {
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_JetDistSig(const rv::RVec<FCCAnalysesJetConstituentsData>& JetDistVal,
                                                             const rv::RVec<FCCAnalysesJetConstituentsData>& err2_D0,
-                                                            const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0);
+                                                            const rv::RVec<FCCAnalysesJetConstituentsData>& err2_Z0, 
+                                                            const std::string& sim_type);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_mtof(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
                                                       const rv::RVec<float>& track_L,
@@ -211,6 +258,7 @@ namespace FCCAnalyses {
                                                       const rv::RVec<edm4hep::CalorimeterHitData>& calohits,
                                                       const TLorentzVector& V // primary vertex
 						                                          );
+    rv::RVec<FCCAnalysesJetConstituentsData> get_mtof_dummy(const rv::RVec<FCCAnalysesJetConstituents> &jcs); // for full sim
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_PIDs(const ROOT::VecOps::RVec< int > recin,
