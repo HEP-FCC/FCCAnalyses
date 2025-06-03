@@ -43,14 +43,12 @@ class JetFlavourHelper:
         elif sim_type == "full":
             self.bz = "2.0" # CLD #FIXME: this should be read from the geometry
             self.dndx = None
+            self.primvertex = coll["PV"]
         self.definition = dict()
 
-        # CHANGE these lines here, PID & reco PV! 
-
-        # ===== VERTEX
-        # MC primary vertex
-        self.definition["pv{}".format(self.tag)] = "FCCAnalyses::MCParticle::get_EventPrimaryVertexP4()( {} )".format(
-            self.particle
+        # ===== VERTEX (reconstructed)
+        self.definition["pv{}".format(self.tag)] = "JetConstituentsUtils::get_primary_vertex({})".format(
+            self.primvertex
         )
 
         # build jet constituents lists

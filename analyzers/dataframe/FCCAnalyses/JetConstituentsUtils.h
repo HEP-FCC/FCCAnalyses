@@ -3,6 +3,7 @@
 
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticle.h"
+#include "edm4hep/VertexCollection.h"
 #include "edm4hep/MCParticle.h"
 #include "edm4hep/Quantity.h"
 #if __has_include("edm4hep/TrackerHit3DData.h")
@@ -59,6 +60,9 @@ namespace FCCAnalyses {
 
     // retrieve collections from full sim 
     // ROOT::VecOps::RVec<edm4hep::TrackState> get_trackstate(const rv::RVec<edm4hep::ReconstructedParticleData> &particles);
+
+    // Primary vertex
+    TLorentzVector get_primary_vertex(ROOT::VecOps::RVec<edm4hep::VertexData>& prim_vertex);
 
     //displacement
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0(const rv::RVec<FCCAnalysesJetConstituents>&,

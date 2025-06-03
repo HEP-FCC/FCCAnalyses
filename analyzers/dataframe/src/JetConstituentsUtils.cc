@@ -218,6 +218,30 @@ namespace FCCAnalyses
     //   return tracks;
     // }
 
+    // Primary vertex
+
+    TLorentzVector get_primary_vertex(ROOT::VecOps::RVec<edm4hep::VertexData>& prim_vertex)
+    {
+      TLorentzVector pv_pos(0, 0, 0, 0); // Initialize primary vertex position
+      int i = 0;
+      for (const auto& pv : prim_vertex)
+      {
+        if (i > 0) // only one primary vertex is expected
+        {
+          throw std::invalid_argument("More than one primary vertex found in the event.");
+        } else
+        {
+          pv_pos.SetXYZT(pv.position.x, pv.position.y, pv.position.z, 0.0); // position of PV in mm
+          i++;
+        }
+      }
+      if (i == 0)
+      {
+        std::cout << "No primary vertex found in the event. Using (0,0,0, 0)" << std::endl;
+      }
+      return pv_pos;
+    }
+
     // displacement (wrt (0,0,0))
     rv::RVec<FCCAnalysesJetConstituentsData> get_d0(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
                                                     const ROOT::VecOps::RVec<edm4hep::TrackState> &tracks)
