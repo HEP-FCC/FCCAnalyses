@@ -30,8 +30,9 @@ class Analysis():
         # How to read input files
         self.use_data_source = True
 
-        self.test_file = 'https://fccsw.web.cern.ch/fccsw/testsamples/' \
-                         'edm4hep1/p8_ee_WW_ecm240_edm4hep.root'
+        # Optional test file
+        self.test_file = 'https://fccsw.web.cern.ch/fccsw/analysis/' \
+                         'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root'
 
     def analyzers(self, dframe):
         '''
@@ -42,7 +43,7 @@ class Analysis():
             dframe
             .Define(
               "electron_truth",
-              "ReconstructedParticle::selPDG(11)(MCRecoAssociations)")
+              "ReconstructedParticle::selPDG(11)(RecoMCLink)")
 
             .Define(
               "electron_truth_pt",
