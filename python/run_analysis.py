@@ -411,9 +411,9 @@ def run_histmaker(args, rdf_module, anapath):
         LOGGER.error('Key4hep stack not setup!\nAborting...')
         sys.exit(3)
     k4h_stack_env = os.environ['KEY4HEP_STACK']
-    if 'nightlies' in k4h_stack_env:
+    if 'sw-nightlies.hsf.org' in k4h_stack_env:
         key4hep_stack = 'nightlies'
-    elif 'nighlies' in k4h_stack_env:
+    elif 'sw.hsf.org' in k4h_stack_env:
         key4hep_stack = 'release'
     else:
         LOGGER.error('Key4hep stack not recognized!\nAborting...')
