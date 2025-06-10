@@ -1,5 +1,5 @@
 // std
-#include <cstddef>
+#include <cstdlib>
 #include <iostream>
 #include <ostream>
 
@@ -18,8 +18,6 @@
 
 // EDM4hep
 #include "edm4hep/RecoMCParticleLinkCollection.h"
-#include "edm4hep/ReconstructedParticleCollection.h"
-#include "edm4hep/TrackCollection.h"
 #include "edm4hep/TrackState.h"
 #include <edm4hep/MCParticle.h>
 #include <edm4hep/MCParticleCollection.h>
@@ -28,6 +26,34 @@
 // FCCAnalyses
 #include "FCCAnalyses/SmearObjects.h"
 #include "FCCAnalyses/VertexingUtils.h"
+
+const std::string getKey4hepOsAndStackType() {
+  std::string result;
+
+  const char *k4hEnvVar_cstr = std::getenv("KEY4HEP_STACK");
+  std::string k4hEnvVar;
+  if (k4hEnvVar_cstr) {
+    k4hEnvVar = k4hEnvVar_cstr;
+  }
+
+  if (k4hEnvVar.find("almalinux9") != std::string::npos) {
+    result += "alma9";
+  } else if (k4hEnvVar.find("ubuntu22") != std::string::npos) {
+    result += "ubuntu22";
+  } else if (k4hEnvVar.find("ubuntu24") != std::string::npos) {
+    result += "ubuntu24";
+  }
+
+  result += "/";
+
+  if (k4hEnvVar.find("sw-nightlies.hsf.org") != std::string::npos) {
+    result += "nightlies";
+  } else if (k4hEnvVar.find("sw.hsf.org") != std::string::npos) {
+    result += "release";
+  }
+
+  return result;
+}
 
 /// for a given MC particle, returns a "track state", i.e. a vector of 5 helix
 /// parameters, in Delphes convention
@@ -243,7 +269,9 @@ int main(int argc, char *argv[]) {
   }
 
   std::string filePath = "https://fccsw.web.cern.ch/fccsw/analysis/"
-                         "test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root";
+                         "test-samples/edm4hep099/" +
+                         getKey4hepOsAndStackType() +
+                         "/p8_ee_WW_ecm240_edm4hep.root";
   if (argc > 2) {
     filePath = argv[2];
   }

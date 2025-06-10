@@ -2,6 +2,7 @@
 Example of standalone FCCAnalyses script using podio::DataSource.
 '''
 
+import os
 import ROOT
 ROOT.gROOT.SetBatch(True)
 
@@ -10,8 +11,30 @@ def main():
     '''
     Main entry point for the standalone analysis.
     '''
-    input_list = ['https://fccsw.web.cern.ch/fccsw/analysis/'
-                  'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root']
+
+    ###########################################################################
+    # Not part of the example (needed for the CI tests)
+    k4h_stack_env = os.environ['KEY4HEP_STACK']
+    k4h_os_stack_type = ""
+    if 'almalinux9' in k4h_stack_env:
+        k4h_os_stack_type += 'alma9'
+    elif 'ubuntu22' in k4h_stack_env:
+        k4h_os_stack_type += 'ubuntu22'
+    elif 'ubuntu24' in k4h_stack_env:
+        k4h_os_stack_type += 'ubuntu24'
+
+    k4h_os_stack_type += '/'
+
+    if 'sw-nightlies.hsf.org' in k4h_stack_env:
+        k4h_os_stack_type += 'nightlies'
+    elif 'sw.hsf.org' in k4h_stack_env:
+        k4h_os_stack_type += 'release'
+    ###########################################################################
+
+    input_list = [
+        'https://fccsw.web.cern.ch/fccsw/analysis/test-samples/edm4hep099/' +
+        k4h_os_stack_type + '/p8_ee_WW_ecm240_edm4hep.root'
+    ]
 
     ROOT.gSystem.Load('libFCCAnalyses')
     if ROOT.dummyLoader:
