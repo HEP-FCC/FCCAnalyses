@@ -218,13 +218,13 @@ ROOT::VecOps::RVec<edm4hep::TrackState> SmearedTracks::operator()(
 }
 
 int main(int argc, char *argv[]) {
-  #if ROOT_VERSION_CODE >= ROOT_VERSION(6, 36, 0)
-  auto verbosity = ROOT::RLogScopedVerbosity(
-      ROOT::Detail::RDF::RDFLogChannel(), ROOT::ELogLevel::kInfo);
-  #else
+#if ROOT_VERSION_CODE >= ROOT_VERSION(6, 36, 0)
+  auto verbosity = ROOT::RLogScopedVerbosity(ROOT::Detail::RDF::RDFLogChannel(),
+                                             ROOT::ELogLevel::kInfo);
+#else
   auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
       ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
-  #endif
+#endif
 
   bool success = gInterpreter->Declare("#include \"edm4hep/TrackState.h\"");
   if (!success) {
