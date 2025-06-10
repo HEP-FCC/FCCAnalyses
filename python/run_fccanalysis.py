@@ -34,9 +34,9 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
         LOGGER.error('Key4hep stack not setup!\nAborting...')
         sys.exit(3)
     k4h_stack_env = os.environ['KEY4HEP_STACK']
-    if 'nightlies' in k4h_stack_env:
+    if 'sw-nightlies.hsf.org' in k4h_stack_env:
         config['key4hep-stack'] = 'nightlies'
-    elif 'nighlies' in k4h_stack_env:
+    elif 'sw.hsf.org' in k4h_stack_env:
         config['key4hep-stack'] = 'release'
     else:
         LOGGER.error('Key4hep stack not recognized!\nAborting...')
