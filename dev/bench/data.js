@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749563699612,
+  "lastUpdate": 1749563701053,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -48505,6 +48505,65 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66089b5518a4d11959b7e4c286b7f8b45b095fdb",
+          "message": "Adjustments for RLogScopedVerbosity being moved out of ROOT::Experimental (#446)\n\n* RLogScopedVerbosity moved out of ROOT::Experimental\n\n* Formatting\n\n* Using Ubuntu 24.04\n\n* For stable stack use ubuntu22\n\n* Reordering flags",
+          "timestamp": "2025-06-10T15:47:02+02:00",
+          "tree_id": "5ba70a3250a557d9379c8b5c429531e7279a2833",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/66089b5518a4d11959b7e4c286b7f8b45b095fdb"
+        },
+        "date": 1749563700670,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 8.505344534158894,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 10.93379750030943,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 6.872686709326561,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 12.000217785019348,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.025174253888252,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/stages_source.py",
+            "value": 6.454640179814412,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 6.099746015037824,
+            "unit": "Evt/s"
           }
         ]
       }
