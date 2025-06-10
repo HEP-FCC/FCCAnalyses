@@ -103,8 +103,13 @@ get_mcParticle(const edm4hep::ReconstructedParticle &recoParticle,
 }
 
 int main(int argc, const char *argv[]) {
+#if ROOT_VERSION_CODE >= ROOT_VERSION(6, 36, 0)
+  auto verbosity = ROOT::RLogScopedVerbosity(ROOT::Detail::RDF::RDFLogChannel(),
+                                             ROOT::ELogLevel::kInfo);
+#else
   auto verbosity = ROOT::Experimental::RLogScopedVerbosity(
       ROOT::Detail::RDF::RDFLogChannel(), ROOT::Experimental::ELogLevel::kInfo);
+#endif
 
   int nThreads = 1;
   if (argc > 1) {
