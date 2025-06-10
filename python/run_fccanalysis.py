@@ -7,6 +7,7 @@ import sys
 import time
 import logging
 import argparse
+import string
 from typing import Any
 
 import ROOT  # type: ignore
@@ -27,6 +28,29 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
     Merge configuration from command line arguments and analysis class.
     '''
     config: dict[str, Any] = {}
+
+    # Determining Key4hep stack and OS
+    if 'KEY4HEP_STACK' not in os.environ:
+        LOGGER.error('Key4hep stack not setup!\nAborting...')
+        sys.exit(3)
+    k4h_stack_env = os.environ['KEY4HEP_STACK']
+    if 'sw-nightlies.hsf.org' in k4h_stack_env:
+        config['key4hep-stack'] = 'nightlies'
+    elif 'sw.hsf.org' in k4h_stack_env:
+        config['key4hep-stack'] = 'release'
+    else:
+        LOGGER.error('Key4hep stack not recognized!\nAborting...')
+        sys.exit(3)
+
+    if 'almalinux9' in k4h_stack_env:
+        config['key4hep-os'] = 'alma9'
+    elif 'ubuntu22' in k4h_stack_env:
+        config['key4hep-os'] = 'ubuntu22'
+    elif 'ubuntu24' in k4h_stack_env:
+        config['key4hep-os'] = 'ubuntu24'
+    else:
+        LOGGER.error('Key4hep OS not recognized!\nAborting...')
+        sys.exit(3)
 
     # Put runBatch deprecation warning
     if hasattr(analysis, 'run_batch'):
@@ -385,6 +409,12 @@ def run_fccanalysis(args, analysis_module):
     if args.test:
         LOGGER.info('Running over test file...')
         testfile_path = getattr(analysis, "test_file")
+        if isinstance(testfile_path, string.Template):
+            testfile_path = testfile_path.substitute(
+                key4hep_os=config['key4hep-os'],
+                key4hep_stack=config['key4hep-stack']
+            )
+
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
