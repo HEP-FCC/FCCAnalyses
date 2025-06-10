@@ -93,6 +93,7 @@ def main():
 
     args, _ = parser.parse_known_args()
 
+    # Logger settings
     verbosity_level = logging.INFO
     if args.verbose or args.more_verbose or args.most_verbose:
         verbosity_level = logging.DEBUG

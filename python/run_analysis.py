@@ -7,6 +7,7 @@ import sys
 import time
 import logging
 import importlib.util
+import string
 
 import ROOT  # type: ignore
 import cppyy
@@ -405,6 +406,29 @@ def run_histmaker(args, rdf_module, anapath):
     # set ncpus, load header files, custom dicts, ...
     initialize(args, rdf_module, anapath)
 
+    # Determining Key4hep stack and OS
+    if 'KEY4HEP_STACK' not in os.environ:
+        LOGGER.error('Key4hep stack not setup!\nAborting...')
+        sys.exit(3)
+    k4h_stack_env = os.environ['KEY4HEP_STACK']
+    if 'nightlies' in k4h_stack_env:
+        key4hep_stack = 'nightlies'
+    elif 'nighlies' in k4h_stack_env:
+        key4hep_stack = 'release'
+    else:
+        LOGGER.error('Key4hep stack not recognized!\nAborting...')
+        sys.exit(3)
+
+    if 'almalinux9' in k4h_stack_env:
+        key4hep_os = 'alma9'
+    elif 'ubuntu22' in k4h_stack_env:
+        key4hep_os = 'ubuntu22'
+    elif 'ubuntu24' in k4h_stack_env:
+        key4hep_os = 'ubuntu24'
+    else:
+        LOGGER.error('Key4hep OS not recognized!\nAborting...')
+        sys.exit(3)
+
     # load process dictionary
     proc_dict_location = get_element(rdf_module, "procDict", True)
     if not proc_dict_location:
@@ -438,7 +462,13 @@ def run_histmaker(args, rdf_module, anapath):
         if args.test:
             try:
                 if get_element_dict(process_dict, 'testfile') is not None:
-                    file_list = [get_element_dict(process_dict, 'testfile')]
+                    testfile_path = get_element_dict(process_dict, 'testfile')
+                    if isinstance(testfile_path, string.Template):
+                        testfile_path = testfile_path.substitute(
+                            key4hep_os=key4hep_os,
+                            key4hep_stack=key4hep_stack
+                        )
+                    file_list = [testfile_path]
             except TypeError:
                 LOGGER.warning('No test file for process %s found!\n'
                                'Aborting...')
