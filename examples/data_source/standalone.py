@@ -63,7 +63,8 @@ def main():
     dframe4 = dframe3.Filter('electron_truth_pt.size() < 3')
 
     count = dframe4.Count()
-    dframe4.Snapshot('events', 'output.root', ['electron_truth_pt'])
+    dframe4.Snapshot('events', 'data-source-standalone-output.root',
+                     ['electron_truth_pt'])
 
     print('---------------------')
     print('Number of events: ', count.GetValue())
