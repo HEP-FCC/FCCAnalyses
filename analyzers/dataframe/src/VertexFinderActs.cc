@@ -88,10 +88,10 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   using SeedFinder = Acts::TrackDensityVertexFinder;
   Acts::GaussianTrackDensity::Config trkDensityCfg;
   trkDensityCfg.extractParameters.connect<&Acts::InputTrack::extractParameters>();
+  Acts::GaussianTrackDensity trkDensity{trkDensityCfg};
 
-  auto seedFinder = std::make_shared<SeedFinder>(SeedFinder::Config{trkDensityCfg});
-
-
+  auto seedFinder =
+      std::make_shared<SeedFinder>(SeedFinder::Config{trkDensity});
 
   /*
   // Set up Gaussian track density
@@ -113,10 +113,6 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   //Finder::Config finderConfig(std::move(fitter), seedFinder, ipEstimator, linearizer);
   Finder::Config finderConfig(std::move(fitter), std::move(seedFinder), ipEstimator, bField);
 
-#if ACTS_VERSION_MAJOR < 29
-  // We do not want to use a beamspot constraint here
-  finderConfig.useBeamSpotConstraint = false;
-#endif
   //finderConfig.useSeedConstraint = false;
   //finderConfig.tracksMaxSignificance = 100.;//5.;
   //finderConfig.maxVertexChi2 = 500.;//18.42;
@@ -124,11 +120,8 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   //finderConfig.maxIterations = 10000;//100;
   // Instantiate the finder
 
-#if ACTS_VERSION_MAJOR >= 31
-  Finder finder(std::move(finderConfig));//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
-#else
-  Finder finder(finderConfig);//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
-#endif
+  Finder finder(std::move(finderConfig)); //, Acts::getDefaultLogger("Finder",
+                                          // Acts::Logging::VERBOSE));
   // The vertex finder state
   // TODO:
   // Finder::State state;
@@ -137,10 +130,8 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   using VertexingOptions = Acts::VertexingOptions;
   //VertexingOptions finderOpts(myContext, myContext);
   VertexingOptions finderOpts(geoContext, magFieldContext);
-#if ACTS_VERSION_MAJOR >= 29
   // We do not want to use a beamspot constraint here
   finderOpts.useConstraintInFit = false;
-#endif
 
   //  vertexingOptions.vertexConstraint = std::get<BeamSpotData>(csvData);
 
@@ -173,11 +164,7 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     }
 
     // Get track covariance vector
-#if ACTS_VERSION_MAJOR < 29
-    using Covariance = Acts::BoundSymMatrix;
-#else
     using Covariance = Acts::BoundSquareMatrix;
-#endif
 
     Covariance covMat;
     covMat <<
@@ -193,11 +180,8 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     beamspotPos << 0.0, 0.0, 0.0;
     auto perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
 
-#if ACTS_VERSION_MAJOR < 30
-    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
-#else
-    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat), Acts::ParticleHypothesis::pion());
-#endif
+    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat),
+                           Acts::ParticleHypothesis::pion());
 
     //std::cout << "params: " << allTracks[i] << std::endl;
     }

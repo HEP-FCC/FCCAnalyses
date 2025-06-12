@@ -65,15 +65,10 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
   // TODO:
   //VertexFitter::State state(bField->makeCache(magFieldContext));
 
-#if ACTS_VERSION_MAJOR < 29
-  using CovMatrix4D = Acts::SymMatrix4;
-#else
-  using CovMatrix4D = Acts::SquareMatrix4;
-#endif
   // Constraint for vertex fit
   Acts::Vertex myConstraint;
-  // Some abitrary values
-  CovMatrix4D myCovMat = CovMatrix4D::Zero();
+  // Some arbitrary values
+  Acts::SquareMatrix4 myCovMat = Acts::SquareMatrix4::Zero();
   myCovMat(0, 0) = 30.;
   myCovMat(1, 1) = 30.;
   myCovMat(2, 2) = 30.;
@@ -116,11 +111,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
     }
 
     // Get track covariance vector
-#if ACTS_VERSION_MAJOR < 29
-    using Covariance = Acts::BoundSymMatrix;
-#else
     using Covariance = Acts::BoundSquareMatrix;
-#endif
     Covariance covMat;
     covMat <<
       covACTS(0,0), covACTS(1,0), covACTS(2,0), covACTS(3,0), covACTS(4,0), covACTS(5,0),
@@ -135,11 +126,8 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
     beamspotPos << 0.0, 0.0, 0.0;
     auto perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
 
-#if ACTS_VERSION_MAJOR < 30
-    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat));
-#else
-    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat), Acts::ParticleHypothesis::pion());
-#endif
+    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat),
+                           Acts::ParticleHypothesis::pion());
   }
 
 
