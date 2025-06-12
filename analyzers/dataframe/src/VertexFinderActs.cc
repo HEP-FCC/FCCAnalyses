@@ -90,9 +90,8 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   trkDensityCfg.extractParameters.connect<&Acts::InputTrack::extractParameters>();
   Acts::GaussianTrackDensity trkDensity{trkDensityCfg};
 
-  auto seedFinder = std::make_shared<SeedFinder>(SeedFinder::Config{trkDensity});
-
-
+  auto seedFinder =
+      std::make_shared<SeedFinder>(SeedFinder::Config{trkDensity});
 
   /*
   // Set up Gaussian track density
@@ -121,7 +120,8 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   //finderConfig.maxIterations = 10000;//100;
   // Instantiate the finder
 
-  Finder finder(std::move(finderConfig));//, Acts::getDefaultLogger("Finder", Acts::Logging::VERBOSE));
+  Finder finder(std::move(finderConfig)); //, Acts::getDefaultLogger("Finder",
+                                          //Acts::Logging::VERBOSE));
   // The vertex finder state
   // TODO:
   // Finder::State state;
@@ -180,7 +180,8 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     beamspotPos << 0.0, 0.0, 0.0;
     auto perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
 
-    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat), Acts::ParticleHypothesis::pion());
+    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat),
+                           Acts::ParticleHypothesis::pion());
 
     //std::cout << "params: " << allTracks[i] << std::endl;
     }

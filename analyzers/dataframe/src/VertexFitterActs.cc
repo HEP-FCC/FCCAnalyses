@@ -126,7 +126,8 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
     beamspotPos << 0.0, 0.0, 0.0;
     auto perigeeSurface = Acts::Surface::makeShared<Acts::PerigeeSurface>(beamspotPos);
 
-    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat), Acts::ParticleHypothesis::pion());
+    allTracks.emplace_back(perigeeSurface, newTrackParams, std::move(covMat),
+                           Acts::ParticleHypothesis::pion());
   }
 
 
