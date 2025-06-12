@@ -121,7 +121,7 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   // Instantiate the finder
 
   Finder finder(std::move(finderConfig)); //, Acts::getDefaultLogger("Finder",
-                                          //Acts::Logging::VERBOSE));
+                                          // Acts::Logging::VERBOSE));
   // The vertex finder state
   // TODO:
   // Finder::State state;
