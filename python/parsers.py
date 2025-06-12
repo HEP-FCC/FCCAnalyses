@@ -126,14 +126,30 @@ def setup_run_parser(parser):
     '''
     parser.add_argument('anascript_path',
                         help='path to analysis script')
-    parser.add_argument('--files-list', nargs='+', default=[],
-                        help='specify input file(s) to bypass the processList')
+    parser.add_argument(
+        '-i', '--input',
+        default=None,
+        nargs='+',
+        metavar='INPUT_FILE',
+        help='location(s) of the input ROOT file(s)')
+    parser.add_argument(
+        '--files-list',
+        default=None,
+        nargs='+',
+        metavar='INPUT_FILE',
+        help='[DEPRECATED] location(s) of the input ROOT file(s)')
+    parser.add_argument(
+        '-f', '--input-file-list',
+        type=str,
+        default=None,
+        metavar='LIST_FILE',
+        help='location of the text file containing list of input ROOT files')
     parser.add_argument(
         '-o', '--output',
         type=str,
         default='output.root',
-        help='specify output file name to bypass the processList and or '
-             'outputList')
+        metavar='OUTPUT_FILE',
+        help='location of the output ROOT file')
     parser.add_argument('--nevents', type=int, default=-1,
                         help='specify max number of events to process')
     parser.add_argument('--test', action='store_true', default=False,

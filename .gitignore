@@ -7,9 +7,6 @@ __pycache__/
 # C extensions
 *.so
 
-# ROOT files
-*.root
-
 # HTCondor
 # ignores <lxplus-username>.cc file in the top FCCAnalyses directory
 /*.cc
@@ -40,6 +37,11 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Input
+*.root
+*.lst
+*.txt
 
 # Output
 outputs/
