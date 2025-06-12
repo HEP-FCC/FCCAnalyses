@@ -22,6 +22,32 @@ ROOT.gROOT.SetBatch(True)
 LOGGER = logging.getLogger('FCCAnalyses.run')
 
 
+def get_file_list(file_list_path: str) -> list[str]:
+    '''
+    Loads file list from the provided file.
+    '''
+    if not os.path.isfile(file_list_path):
+        LOGGER.error('Provided file containing list of ROOT files could not be '
+                     'found!\nAborting...')
+        sys.exit(3)
+
+    with open(file_list_path, 'r', encoding='utf-8') as lstfile:
+        file_list = [line.strip() for line in lstfile]
+
+    # remove empty lines
+    file_list = [line for line in file_list if line]
+
+    # remove commented out lines
+    file_list = [line for line in file_list if line[0] != '#']
+
+    if not file_list:
+        LOGGER.error('Provided file containing list of ROOT files is empty or '
+                     'does not contain valid lines!\nAborting...')
+        sys.exit(3)
+
+    return file_list
+
+
 # _____________________________________________________________________________
 def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
     '''
@@ -52,13 +78,25 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
         LOGGER.error('Key4hep OS not recognized!\nAborting...')
         sys.exit(3)
 
-    # Put runBatch deprecation warning
+    # Deprecation warnings
     if hasattr(analysis, 'run_batch'):
         if analysis.run_batch:
             LOGGER.error('run_batch analysis attribute is no longer '
                          'supported, use "fccanalysis submit" instead!\n'
                          'Aborting...')
             sys.exit(3)
+
+    if args.files_list is not None:
+        LOGGER.error('--files-list CLI argument is no longer supported, use '
+                     '--i/--input instead!\nAborting...')
+        sys.exit(3)
+
+    # Check input files list
+    config['input-file-list'] = None
+    if args.input_file_list is not None:
+        config['input-file-list'] = get_file_list(args.input_file_list)
+    if args.input is not None:
+        config['input-file-list'] = args.input
 
     # Check whether to use PODIO DataSource to load the events
     config['use_data_source'] = False
@@ -423,12 +461,12 @@ def run_fccanalysis(args, analysis_module):
 
     # Check if input file(s) are specified, and if so run the analysis on
     # it/them (this will exit afterwards)
-    if len(args.files_list) > 0:
-        LOGGER.info('Running over files provided in command line argument...')
+    if config['input-file-list'] is not None:
+        LOGGER.info('Running over sample-independent file list...')
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(config, args, analysis, args.files_list)
+        run_local(config, args, analysis, config['input-file-list'])
         sys.exit(0)
 
     # Check if the process list is specified
