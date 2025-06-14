@@ -1,4 +1,5 @@
 #include "FCCAnalyses/JetTaggingUtils.h"
+#include "FCCAnalyses/PDGCodes.h"
 
 namespace FCCAnalyses {
 
@@ -11,13 +12,17 @@ get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
 
   int loopcount = 0;
   for (size_t i = 0; i < MCin.size(); ++i) {
+
     auto &parton = MCin[i];
+
     // Select partons only (for pythia8 71-79, for pythia6 2):
     if ((parton.generatorStatus > 80 || parton.generatorStatus < 70) &&
         parton.generatorStatus != 2)
       continue;
-    if (std::abs(parton.PDG) > 5 && parton.PDG != 21)
+
+    if (std::abs(parton.PDG) > PDGCode::QUARK_BOTTOM && parton.PDG != PDGCode::GLUON)
       continue;
+    
     ROOT::Math::PxPyPzMVector lv(parton.momentum.x, parton.momentum.y,
                                  parton.momentum.z, parton.mass);
 
@@ -39,14 +44,19 @@ get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
       Float_t angle = acos(dot / norm);
 
       if (angle <= 0.3) {
-        if (result[j] == 21 or result[j] == 0) {
+
+        if (result[j] == PDGCode::GLUON or result[j] == PDGCode::UNKNOWN) {
+
           // if no match before, or matched to gluon, match to
           // this particle (favour quarks over gluons)
           result[j] = std::abs(parton.PDG);
-        } else if (parton.PDG != 21) {
+
+        } else if (parton.PDG != PDGCode::GLUON) {
+
           // if matched to quark, and this is a quark, favour
           // heavier flavours
           result[j] = std::max(result[j], std::abs(parton.PDG));
+
         } else {
           // if matched to quark, and this is a gluon, keep
           // previous result (favour quark)
@@ -66,15 +76,20 @@ ROOT::VecOps::RVec<int> get_btag(ROOT::VecOps::RVec<int> in, float efficiency,
   ROOT::VecOps::RVec<int> result(in.size(), 0);
 
   for (size_t j = 0; j < in.size(); ++j) {
-    if (in.at(j) == 5 && gRandom->Uniform() <= efficiency)
+
+    if (in.at(j) == PDGCode::QUARK_BOTTOM && gRandom->Uniform() <= efficiency)
       result[j] = 1;
-    if (in.at(j) == 4 && gRandom->Uniform() <= mistag_c)
+
+    if (in.at(j) == PDGCode::QUARK_CHARM && gRandom->Uniform() <= mistag_c)
       result[j] = 1;
-    if (in.at(j) < 4 && gRandom->Uniform() <= mistag_l)
+
+    if (in.at(j) < PDGCode::QUARK_CHARM && gRandom->Uniform() <= mistag_l)
       result[j] = 1;
-    if (in.at(j) == 21 && gRandom->Uniform() <= mistag_g)
+
+    if (in.at(j) == PDGCode::GLUON && gRandom->Uniform() <= mistag_g)
       result[j] = 1;
   }
+
   return result;
 }
 
@@ -85,13 +100,17 @@ ROOT::VecOps::RVec<int> get_ctag(ROOT::VecOps::RVec<int> in, float efficiency,
   ROOT::VecOps::RVec<int> result(in.size(), 0);
 
   for (size_t j = 0; j < in.size(); ++j) {
-    if (in.at(j) == 4 && gRandom->Uniform() <= efficiency)
+
+    if (in.at(j) == PDGCode::QUARK_CHARM && gRandom->Uniform() <= efficiency)
       result[j] = 1;
-    if (in.at(j) == 5 && gRandom->Uniform() <= mistag_b)
+
+    if (in.at(j) == PDGCode::QUARK_BOTTOM && gRandom->Uniform() <= mistag_b)
       result[j] = 1;
-    if (in.at(j) < 4 && gRandom->Uniform() <= mistag_l)
+
+    if (in.at(j) < PDGCode::QUARK_CHARM && gRandom->Uniform() <= mistag_l)
       result[j] = 1;
-    if (in.at(j) == 21 && gRandom->Uniform() <= mistag_g)
+
+    if (in.at(j) == PDGCode::GLUON && gRandom->Uniform() <= mistag_g)
       result[j] = 1;
   }
   return result;
@@ -104,13 +123,17 @@ ROOT::VecOps::RVec<int> get_ltag(ROOT::VecOps::RVec<int> in, float efficiency,
   ROOT::VecOps::RVec<int> result(in.size(), 0);
 
   for (size_t j = 0; j < in.size(); ++j) {
-    if (in.at(j) < 4 && gRandom->Uniform() <= efficiency)
+
+    if (in.at(j) < PDGCode::QUARK_CHARM && gRandom->Uniform() <= efficiency)
       result[j] = 1;
-    if (in.at(j) == 5 && gRandom->Uniform() <= mistag_b)
+
+    if (in.at(j) == PDGCode::QUARK_BOTTOM && gRandom->Uniform() <= mistag_b)
       result[j] = 1;
-    if (in.at(j) == 4 && gRandom->Uniform() <= mistag_c)
+
+    if (in.at(j) == PDGCode::QUARK_CHARM && gRandom->Uniform() <= mistag_c)
       result[j] = 1;
-    if (in.at(j) == 21 && gRandom->Uniform() <= mistag_g)
+
+    if (in.at(j) == PDGCode::GLUON && gRandom->Uniform() <= mistag_g)
       result[j] = 1;
   }
   return result;
@@ -123,13 +146,17 @@ ROOT::VecOps::RVec<int> get_gtag(ROOT::VecOps::RVec<int> in, float efficiency,
   ROOT::VecOps::RVec<int> result(in.size(), 0);
 
   for (size_t j = 0; j < in.size(); ++j) {
-    if (in.at(j) == 21 && gRandom->Uniform() <= efficiency)
+
+    if (in.at(j) == PDGCode::GLUON && gRandom->Uniform() <= efficiency)
       result[j] = 1;
-    if (in.at(j) == 5 && gRandom->Uniform() <= mistag_b)
+
+    if (in.at(j) == PDGCode::QUARK_BOTTOM && gRandom->Uniform() <= mistag_b)
       result[j] = 1;
-    if (in.at(j) == 4 && gRandom->Uniform() <= mistag_c)
+
+    if (in.at(j) == PDGCode::QUARK_CHARM && gRandom->Uniform() <= mistag_c)
       result[j] = 1;
-    if (in.at(j) < 4 && gRandom->Uniform() <= mistag_l)
+
+    if (in.at(j) < PDGCode::QUARK_CHARM && gRandom->Uniform() <= mistag_l)
       result[j] = 1;
   }
   return result;
