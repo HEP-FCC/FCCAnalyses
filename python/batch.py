@@ -143,7 +143,7 @@ def create_subjob_script(config: dict[str, Any],
     scr += f'fccanalysis run {config["full-analysis-path"]}'
     scr += f' --output {sample_output_filepath}'
     scr += f' --n-threads {config["n-threads"]}'
-    scr += ' --files-list'
+    scr += ' --input'
     for file_path in chunk_list[chunk_num]:
         scr += f' {file_path}'
     if len(config['cli-arguments']['remaining']) > 0:
