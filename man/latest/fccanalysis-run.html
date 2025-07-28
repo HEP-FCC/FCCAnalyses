@@ -27,13 +27,16 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>fccanalysis run</b> [<b>-h</b> | <b>--help</b>]
-    [<b>--files-list</b> <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]]
-    [<b>--output</b> <i>OUTPUT</i>] [<b>--nevents</b> <i>NEVENTS</i>]
-    [<b>--use-data-source</b>] [<b>--test</b>] [<b>--bench</b>] [<b>-j</b> NCPUS
-    | <b>--ncpus</b> <i>NCPUS</i> | <b>--n-threads</b> <i>NTHREADS</i>]
-    [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>] <b>analysis-script</b>
-    -- [<i>ANALYSIS ARGUMENTS</i>]</p>
+<p class="Pp"><b>fccanalysis run</b> [<b>-h</b> | <b>--help</b>] [<b>-i</b>
+    <i>INPUT_FILE</i> [<i>INPUT_FILE</i> ...], <b>--input</b> <i>INPUT_FILE</i>
+    [<i>INPUT_FILE</i> ...]] [<b>--files-list</b> <i>INPUT_FILE</i>
+    [<i>INPUT_FILE</i> ...]] [<b>-f</b> <i>LIST_FILE</i>,
+    <b>--input-file-list</b> <i>LIST_FILE</i>] [<b>--output</b> <i>OUTPUT</i>]
+    [<b>--nevents</b> <i>NEVENTS</i>] [<b>--test</b>] [<b>--bench</b>]
+    [<b>-j</b> NCPUS | <b>--ncpus</b> <i>NCPUS</i> | <b>--n-threads</b>
+    <i>NTHREADS</i>] [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]
+    [<b>--use-data-source</b>] <b>analysis-script</b> -- [<i>ANALYSIS
+    ARGUMENTS</i>]</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -55,9 +58,21 @@
   <dd>Path to analysis script.</dd>
   <dt id="h"><a class="permalink" href="#h"><b>-h</b>, <b>--help</b></a></dt>
   <dd>Prints short help message and exits.</dd>
+  <dt id="i"><a class="permalink" href="#i"><b>-i</b> <i>INPUT_FILE</i>
+    [<i>INPUT_FILE</i> ...], <b>--input</b> <i>INPUT_FILE</i> [<i>INPUT_FILE</i>
+    ...]</a></dt>
+  <dd>Directly specify input ROOT files for the analysis. Takes precedence over
+      the files provided in a file list or the files determined from the
+      <b>process_list</b> of the analysis.</dd>
   <dt id="files"><a class="permalink" href="#files"><b>--files-list</b>
-    <i>FILES_LIST</i> [<i>FILES_LIST</i> ...]</a></dt>
-  <dd>Directly specify analysis input files.</dd>
+    <i>INPUT_FILE</i> [<i>INPUT_FILE</i> ...]</a></dt>
+  <dd>[DEPRECATED] Directly specify input ROOT files for the analysis.</dd>
+  <dt id="input"><a class="permalink" href="#input"><b>--input-file-list</b>
+    <i>LIST_FILE</i></a></dt>
+  <dd>Specify file containing list of input ROOT files to be used for the
+      analysis. Takes precedence over the files determined from the
+      <b>process_list</b> of the analysis. Each input ROOT file needs to be on a
+      separate line. Lines starting with &quot;#&quot; are ignored.</dd>
   <dt id="output"><a class="permalink" href="#output"><b>--output</b>
     <i>OUTPUT</i></a></dt>
   <dd>Specify output file name, otherwise dataset name used.</dd>
@@ -144,7 +159,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">10 May 2025</td>
+    <td class="foot-date">12 June 2025</td>
     <td class="foot-os">0.11.0</td>
   </tr>
 </table>
