@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749735551112,
+  "lastUpdate": 1753705863537,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -49488,6 +49488,79 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
             "value": 5.096633565130724,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3da7fd0caaeb3ec5b74a4be3df163613f369556",
+          "message": "Input ROOT files can be provided with a file list (#451)\n\n* Input ROOT files can be provided with a file list\n\n* Using new flag for the batch",
+          "timestamp": "2025-07-28T14:21:14+02:00",
+          "tree_id": "401f3e54d526b867f7f4155a24daae1d9be5bbcc",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/f3da7fd0caaeb3ec5b74a4be3df163613f369556"
+        },
+        "date": 1753705857845,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 122.58340406417847,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 8.621630191802979,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 12.839492559432983,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 8.466546297073364,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 38.60868573188782,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/data_source/stages_source.py",
+            "value": 13.422536849975586,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/data_source/analysis_stage1.py",
+            "value": 14.279882431030273,
+            "unit": "Seconds",
+            "range": 10,
+            "extra": "Analysis path: examples/data_source/analysis_stage1.py"
           }
         ]
       }
