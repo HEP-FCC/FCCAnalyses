@@ -53,7 +53,7 @@ def formatStatUncHist(hists, name, hstyle=3254):
 
 # _____________________________________________________________________________
 def determine_lumi_scaling(config: dict[str, Any],
-                           infile: object,
+                           infile: ROOT.TFile,
                            initial_scale: float = 1.0) -> float:
     '''
     Determine whether to (re)scale histograms in the file to luminosity.
@@ -116,7 +116,7 @@ def load_hists(var: str,
     except KeyError:
         backgrounds = {}
 
-    hsignal = {}
+    hsignal: dict[str, Any] = {}
     for s in signal:
         hsignal[s] = []
         for filepathstem in signal[s]:
@@ -142,7 +142,7 @@ def load_hists(var: str,
                 hist.Add(hsignal[s][0])
                 hsignal[s][0] = hist
 
-    hbackgrounds = {}
+    hbackgrounds: dict[str, Any] = {}
     for b in backgrounds:
         hbackgrounds[b] = []
         for filepathstem in backgrounds[b]:
@@ -190,7 +190,7 @@ def mapHistosFromHistmaker(config: dict[str, Any],
     backgrounds = param.procs['backgrounds']
     scaleSig = hist_cfg['scaleSig'] if 'scaleSig' in hist_cfg else 1
 
-    hsignal = {}
+    hsignal: dict[str, Any] = {}
     for s in signal:
         hsignal[s] = []
         for f in signal[s]:
@@ -212,7 +212,7 @@ def mapHistosFromHistmaker(config: dict[str, Any],
                 hh.Add(hsignal[s][0])
                 hsignal[s][0] = hh
 
-    hbackgrounds = {}
+    hbackgrounds: dict[str, Any] = {}
     for b in backgrounds:
         hbackgrounds[b] = []
         for f in backgrounds[b]:
@@ -355,53 +355,48 @@ def runPlots(config: dict[str, Any],
         LOGGER.debug('No custom label, using nothing...')
 
     if 'AAAyields' in var:
-        drawStack(config, var, 'events', leg, lt, rt, script_module.formats,
-                  script_module.outdir + "/" + sel, False, True, histos,
+        plot_params = {'x-axis': 'lin',
+                       'y-axis': 'lin',
+                       'stack-sig': 'stack'}
+        draw_plot(config, plot_params,
+                  var,
+                  'events', leg, lt, rt,
+                  script_module.formats,
+                  script_module.outdir + "/" + sel, histos,
                   colors, script_module.ana_tex, extralab,
                   customLabel, nsig, nbkg, leg2, yields,
                   config['plot-stat-unc'])
         return
 
-    if 'stack' in script_module.stacksig:
-        if 'lin' in script_module.yaxis:
-            drawStack(config, var + "_stack_lin", 'events', leg, lt, rt,
-                      script_module.formats, script_module.outdir + "/" + sel,
-                      False, True, histos, colors, script_module.ana_tex,
-                      extralab, customLabel, nsig, nbkg, leg2,
-                      yields, config['plot-stat-unc'])
-        if 'log' in script_module.yaxis:
-            drawStack(config, var + "_stack_log", 'events', leg, lt, rt,
-                      script_module.formats, script_module.outdir + "/" + sel,
-                      True, True, histos, colors, script_module.ana_tex,
-                      extralab, customLabel, nsig, nbkg, leg2,
-                      yields, config['plot-stat-unc'])
-        if 'lin' not in script_module.yaxis and \
-                'log' not in script_module.yaxis:
-            LOGGER.info('Unrecognized option in formats, should be '
-                        '[\'lin\',\'log\']')
-
-    if 'nostack' in script_module.stacksig:
-        if 'lin' in script_module.yaxis:
-            drawStack(config, var + "_nostack_lin", 'events', leg, lt, rt,
-                      script_module.formats,
-                      script_module.outdir + "/" + sel, False, False, histos,
-                      colors, script_module.ana_tex, extralab,
-                      customLabel, nsig, nbkg, leg2, yields,
-                      config['plot-stat-unc'])
-        if 'log' in script_module.yaxis:
-            drawStack(config, var + "_nostack_log", 'events', leg, lt, rt,
-                      script_module.formats, script_module.outdir + "/" + sel,
-                      True, False, histos, colors, script_module.ana_tex,
-                      extralab, customLabel, nsig, nbkg, leg2,
-                      yields, config['plot-stat-unc'])
-        if 'lin' not in script_module.yaxis and \
-                'log' not in script_module.yaxis:
-            LOGGER.info('Unrecognised option in formats, should be '
-                        '[\'lin\',\'log\']')
-    if 'stack' not in script_module.stacksig and \
-            'nostack' not in script_module.stacksig:
-        LOGGER.info('Unrecognized option in stacksig, should be '
-                    '[\'stack\',\'nostack\']')
+    for sig_stacking in script_module.stacksig:
+        if sig_stacking not in ['stack', 'nostack']:
+            LOGGER.warning('Unrecognized option for the signal stacking!\n'
+                           'Should be one of: [\'stack\',\'nostack\']')
+            continue
+        plot_params = {'stack-sig': sig_stacking}
+        for xaxis_scaling in script_module.xaxis:
+            if xaxis_scaling not in ['lin', 'log']:
+                LOGGER.warning('Unrecognized option for the xaxis scaling!\n'
+                               'Should be one of: [\'lin\',\'log\']')
+                continue
+            plot_params_x = {**plot_params, 'xaxis': xaxis_scaling}
+            for yaxis_scaling in script_module.yaxis:
+                if yaxis_scaling not in ['lin', 'log']:
+                    LOGGER.warning('Unrecognized option for the yaxis scaling!'
+                                   '\nShould be one of: [\'lin\',\'log\']')
+                    continue
+                plot_params_x_y = {**plot_params_x, 'yaxis': yaxis_scaling}
+                plot_name = var + '_' + sig_stacking + \
+                    '_x_' + xaxis_scaling + \
+                    '_y_' + yaxis_scaling
+                draw_plot(config, plot_params_x_y,
+                          plot_name,
+                          'events', leg, lt, rt,
+                          script_module.formats,
+                          script_module.outdir + "/" + sel,
+                          histos, colors, script_module.ana_tex,
+                          extralab, customLabel, nsig, nbkg, leg2,
+                          yields, config['plot-stat-unc'])
 
 
 # _____________________________________________________________________________
@@ -450,14 +445,19 @@ def runPlotsHistmaker(config: dict[str, Any],
         leg2 = None
 
     leg = ROOT.TLegend(
-        config['leg-position'][0] if config['leg-position'][0] is not None \
-                                  else legCoord[0],
-        config['leg-position'][1] if config['leg-position'][1] is not None \
-                                  else legCoord[1],
-        config['leg-position'][2] if config['leg-position'][2] is not None \
-                                  else legCoord[2],
-        config['leg-position'][3] if config['leg-position'][3] is not None \
-                                  else legCoord[3])
+        (config['leg-position'][0]
+         if config['leg-position'][0] is not None
+         else legCoord[0]),
+        (config['leg-position'][1]
+         if config['leg-position'][1] is not None
+         else legCoord[1]),
+        (config['leg-position'][2]
+         if config['leg-position'][2] is not None
+         else legCoord[2]),
+        (config['leg-position'][3]
+         if config['leg-position'][3] is not None
+         else legCoord[3])
+    )
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
@@ -504,11 +504,11 @@ def runPlotsHistmaker(config: dict[str, Any],
     ymin = hist_cfg['ymin'] if 'ymin' in hist_cfg else -1
     ymax = hist_cfg['ymax'] if 'ymax' in hist_cfg else -1
     stack = hist_cfg['stack'] if 'stack' in hist_cfg else False
+    logx = hist_cfg['logx'] if 'logx' in hist_cfg else False
     logy = hist_cfg['logy'] if 'logy' in hist_cfg else False
     extralab = hist_cfg['extralab'] if 'extralab' in hist_cfg else ""
 
-    intLumiab = param.intLumi/1e+06
-    intLumi = f'L = {intLumiab:.0f} ab^{{-1}}'
+    intLumi = f'L = {param.intLumi / 1e+06:.0f} ab^{{-1}}'
     if hasattr(param, "intLumiLabel"):
         intLumi = getattr(param, "intLumiLabel")
 
@@ -525,33 +525,20 @@ def runPlotsHistmaker(config: dict[str, Any],
     except AttributeError:
         LOGGER.debug('No customLabel, using nothing...')
 
-    if stack:
-        if logy:
-            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
-                      param.outdir, True, True, histos, colors, param.ana_tex,
-                      extralab, customLabel, nsig, nbkg, leg2, yields,
-                      plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
-                      xtitle=xtitle)
-        else:
-            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
-                      param.outdir, False, True, histos, colors, param.ana_tex,
-                      extralab, customLabel, nsig, nbkg, leg2, yields,
-                      plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
-                      xtitle=xtitle)
-
-    else:
-        if logy:
-            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
-                      param.outdir, True, False, histos, colors, param.ana_tex,
-                      extralab, customLabel, nsig, nbkg, leg2, yields,
-                      plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
-                      xtitle=xtitle)
-        else:
-            drawStack(config, output, ytitle, leg, lt, rt, param.formats,
-                      param.outdir, False, False, histos, colors,
-                      param.ana_tex, extralab, customLabel, nsig, nbkg, leg2,
-                      yields, plotStatUnc, xmin=xmin, xmax=xmax, ymin=ymin,
-                      ymax=ymax, xtitle=xtitle)
+    plot_params: dict[str, Any] = {}
+    plot_params['stack-sig'] = 'stack' if stack else 'nostack'
+    plot_params['xaxis'] = 'log' if logx else 'lin'
+    plot_params['yaxis'] = 'log' if logy else 'lin'
+    draw_plot(config, plot_params,
+              output, ytitle,
+              leg, lt, rt,
+              param.formats,
+              param.outdir,
+              histos, colors, param.ana_tex,
+              extralab, customLabel, nsig, nbkg, leg2,
+              yields, plotStatUnc,
+              xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
+              xtitle=xtitle)
 
     if 'dumpTable' in hist_cfg and hist_cfg['dumpTable']:
         if type(xtitle) != list:
@@ -584,14 +571,26 @@ def runPlotsHistmaker(config: dict[str, Any],
 
 
 # _____________________________________________________________________________
-def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
-              directory, logY, stacksig, histos, colors, ana_tex, extralab,
+def draw_plot(config: dict[str, Any],
+              plot_params: dict[str, Any],
+              plot_name: str, ylabel, legend, leftText, rightText, formats,
+              out_dir, histos, colors, ana_tex, extralab,
               customLabel, nsig, nbkg, legend2=None, yields=None,
               plotStatUnc=False, xmin=-1, xmax=-1, ymin=-1, ymax=-1,
               xtitle=""):
+    '''
+    Do the actual drawing of the plot onto the ROOT's canvas.
+    '''
 
-    canvas = ROOT.TCanvas(name, name, 800, 800)
-    canvas.SetLogy(logY)
+    canvas = ROOT.TCanvas(plot_name, plot_name, 800, 800)
+    if plot_params['xaxis'] == 'lin':
+        canvas.SetLogx(0)
+    else:
+        canvas.SetLogx(1)
+    if plot_params['yaxis'] == 'lin':
+        canvas.SetLogy(0)
+    else:
+        canvas.SetLogy(1)
     canvas.SetTicks(1, 1)
     canvas.SetLeftMargin(0.14)
     canvas.SetRightMargin(0.08)
@@ -631,9 +630,6 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
     for h in iterh:
         sumhistos.Add(h)
 
-    if logY:
-        canvas.SetLogy(1)
-
     # define stacked histo
     hStack = ROOT.THStack("hstack", "")
     hStackBkg = ROOT.THStack("hstackbkg", "")
@@ -651,8 +647,8 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
         else:
             BgMCHistYieldsDic[-1*nbkg] = h
     # sort stack by yields (smallest to largest)
-    BgMCHistYieldsDic = sorted_dict_values(BgMCHistYieldsDic)
-    for h in BgMCHistYieldsDic:
+    BgMCHistYieldsSorted = sorted_dict_values(BgMCHistYieldsDic)
+    for h in BgMCHistYieldsSorted:
         hStack.Add(h)
         hStackBkg.Add(h)
 
@@ -668,7 +664,7 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
         h_dummy.GetXaxis().SetLimits(xmin, xmax)
 
     h_dummy.Draw("HIST")
-    if stacksig:
+    if plot_params['stack-sig'] == 'stack':
         hStack.Draw("HIST SAME")
         if plotStatUnc:
             # sig+bkg uncertainty
@@ -698,7 +694,7 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
 
     # y limits
     def get_minmax_range(hists, xmin, xmax):
-        hist_tot = hists[0].Clone(name + "_unc")
+        hist_tot = hists[0].Clone(plot_name + "_unc")
         for h in hists[1:]:
             hist_tot.Add(h)
         vals = []
@@ -711,7 +707,7 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
             return 1e-5, 1
         return min(vals), max(vals)
 
-    if stacksig:
+    if plot_params['stack-sig'] == 'stack':
         ymin_, ymax_ = get_minmax_range(hStack.GetHists(), xmin, xmax)
     else:
         if hStackSig.GetNhists() != 0 and hStackBkg.GetNhists() != 0:
@@ -726,10 +722,10 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
         elif hStackBkg.GetNhists() == 0:
             ymin_, ymax_ = get_minmax_range(hStackSig.GetHists(), xmin, xmax)
     if ymin == -1:
-        ymin = ymin_*0.1 if logY else 0
+        ymin = ymin_*0.1 if plot_params['yaxis'] == 'log' else 0
     if ymax == -1:
-        ymax = ymax_*1000. if logY else 1.4*ymax_
-    if ymin <= 0 and logY:
+        ymax = ymax_*1000. if plot_params['yaxis'] == 'log' else 1.4*ymax_
+    if ymin <= 0 and plot_params['yaxis'] == 'log':
         LOGGER.error('Log scale can\'t start at: %i', ymin)
         sys.exit(3)
     h_dummy.SetMaximum(ymax)
@@ -791,7 +787,7 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
     canvas.Modified()
     canvas.Update()
 
-    if 'AAAyields' in name:
+    if 'AAAyields' in plot_name:
         dummyh = ROOT.TH1F("", "", 1, 0, 1)
         dummyh.SetStats(0)
         dummyh.GetXaxis().SetLabelOffset(999)
@@ -870,11 +866,11 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
         # canvas.Modified()
         # canvas.Update()
 
-    print_canvas(canvas, name, formats, directory)
+    print_canvas(canvas, plot_name, formats, out_dir)
 
 
 # _____________________________________________________________________________
-def print_canvas(canvas, name, formats, directory):
+def print_canvas(canvas, plot_name: str, formats: list[str], out_dir: str):
     '''
     Saving canvas in multiple formats.
     '''
@@ -883,12 +879,11 @@ def print_canvas(canvas, name, formats, directory):
         LOGGER.error('No output formats specified!\nAborting...')
         sys.exit(3)
 
-    if not os.path.exists(directory):
-        os.system("mkdir -p " + directory)
+    if not os.path.exists(out_dir):
+        os.system("mkdir -p " + out_dir)
 
-    for f in formats:
-        out_file = os.path.join(directory, name) + "." + f
-        canvas.SaveAs(out_file)
+    for ext in formats:
+        canvas.SaveAs(os.path.join(out_dir, plot_name) + "." + ext)
 
 
 # _____________________________________________________________________________
