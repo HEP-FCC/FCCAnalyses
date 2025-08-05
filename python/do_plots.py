@@ -14,6 +14,8 @@ from typing import Any
 
 import ROOT  # type: ignore
 
+from utils import random_string
+
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptTitle(0)
@@ -49,6 +51,35 @@ def formatStatUncHist(hists, name, hstyle=3254):
     hist_tot.SetLineWidth(0)
     hist_tot.SetFillStyle(hstyle)
     return hist_tot
+
+
+# _____________________________________________________________________________
+def get_minmax_range(histos: list[Any],
+                     xmin: float,
+                     xmax: float):
+    '''
+    Find min and max values for the y-axis among the provided histograms in a
+    specified x-axis range.
+    '''
+    if len(histos) == 0:
+        LOGGER.warning('Histograms not provided!')
+        return 1e-5, 1
+
+    hist_name = 'hist_tot_' + random_string(12)
+    hist_tot = histos[0].Clone(hist_name)
+    for hist in histos[1:]:
+        hist_tot.Add(hist)
+
+    vals = []
+    for i in range(0, hist_tot.GetNbinsX()+1):
+        if hist_tot.GetBinLowEdge(i) > xmin or \
+                hist_tot.GetBinLowEdge(i+1) < xmax:
+            if hist_tot.GetBinContent(i) != 0:
+                vals.append(hist_tot.GetBinContent(i))
+    if len(vals) == 0:
+        return 1e-5, 1
+
+    return min(vals), max(vals)
 
 
 # _____________________________________________________________________________
@@ -355,8 +386,8 @@ def runPlots(config: dict[str, Any],
         LOGGER.debug('No custom label, using nothing...')
 
     if 'AAAyields' in var:
-        plot_params = {'x-axis': 'lin',
-                       'y-axis': 'lin',
+        plot_params = {'xaxis': 'lin',
+                       'yaxis': 'lin',
                        'stack-sig': 'stack'}
         draw_plot(config, plot_params,
                   var,
@@ -368,27 +399,19 @@ def runPlots(config: dict[str, Any],
                   config['plot-stat-unc'])
         return
 
-    for sig_stacking in script_module.stacksig:
-        if sig_stacking not in ['stack', 'nostack']:
-            LOGGER.warning('Unrecognized option for the signal stacking!\n'
-                           'Should be one of: [\'stack\',\'nostack\']')
-            continue
+    for sig_stacking in config['stack-sig']:
         plot_params = {'stack-sig': sig_stacking}
-        for xaxis_scaling in script_module.xaxis:
-            if xaxis_scaling not in ['lin', 'log']:
-                LOGGER.warning('Unrecognized option for the xaxis scaling!\n'
-                               'Should be one of: [\'lin\',\'log\']')
-                continue
+        for xaxis_scaling in config['x-axis-scale-types']:
             plot_params_x = {**plot_params, 'xaxis': xaxis_scaling}
-            for yaxis_scaling in script_module.yaxis:
-                if yaxis_scaling not in ['lin', 'log']:
-                    LOGGER.warning('Unrecognized option for the yaxis scaling!'
-                                   '\nShould be one of: [\'lin\',\'log\']')
-                    continue
+            for yaxis_scaling in config['y-axis-scale-types']:
                 plot_params_x_y = {**plot_params_x, 'yaxis': yaxis_scaling}
-                plot_name = var + '_' + sig_stacking + \
-                    '_x_' + xaxis_scaling + \
-                    '_y_' + yaxis_scaling
+                plot_name = var
+                if len(config['stack-sig']) > 1:
+                    plot_name += '_' + sig_stacking
+                if len(config['x-axis-scale-types']) > 1:
+                    plot_name += '_' + xaxis_scaling + 'x'
+                if len(config['y-axis-scale-types']) > 1:
+                    plot_name += '_' + yaxis_scaling + 'y'
                 draw_plot(config, plot_params_x_y,
                           plot_name,
                           'events', leg, lt, rt,
@@ -582,6 +605,12 @@ def draw_plot(config: dict[str, Any],
     Do the actual drawing of the plot onto the ROOT's canvas.
     '''
 
+    if len(histos) == 0:
+        LOGGER.warning('No histograms provided!\n  - plot name: "%s"\n'
+                       'Continuing...', plot_name)
+        return
+
+    # Setup canvas
     canvas = ROOT.TCanvas(plot_name, plot_name, 800, 800)
     if plot_params['xaxis'] == 'lin':
         canvas.SetLogx(0)
@@ -595,16 +624,14 @@ def draw_plot(config: dict[str, Any],
     canvas.SetLeftMargin(0.14)
     canvas.SetRightMargin(0.08)
 
-    sumhistos = histos[0].Clone()
-    iterh = iter(histos)
-    next(iterh)
+    # Adjust y-axis label
+    hist0_name = str(histos[0].GetXaxis().GetTitle())
+    if any(unit in hist0_name for unit in ['GeV', 'TeV']):
+        unit = 'GeV'
+        if 'TeV' in str(histos[0].GetXaxis().GetTitle()):
+            unit = 'TeV'
 
-    unit = 'GeV'
-    if 'TeV' in str(histos[0].GetXaxis().GetTitle()):
-        unit = 'TeV'
-
-    if unit in str(histos[0].GetXaxis().GetTitle()):
-        bwidth = sumhistos.GetBinWidth(1)
+        bwidth = histos[0].GetBinWidth(1)
         if bwidth.is_integer():
             ylabel += f' / {bwidth} {unit}'
         else:
@@ -627,9 +654,6 @@ def draw_plot(config: dict[str, Any],
             1.5*h_dummy.GetXaxis().GetLabelOffset())
     h_dummy.GetYaxis().SetTitle(ylabel)
 
-    for h in iterh:
-        sumhistos.Add(h)
-
     # define stacked histo
     hStack = ROOT.THStack("hstack", "")
     hStackBkg = ROOT.THStack("hstackbkg", "")
@@ -638,27 +662,27 @@ def draw_plot(config: dict[str, Any],
 
     # first plot backgrounds (sorted by the yields)
     for i in range(nsig, nsig+nbkg):
-        h = histos[i]
-        h.SetLineWidth(1)
-        h.SetLineColor(ROOT.kBlack)
-        h.SetFillColor(colors[i])
-        if h.Integral() > 0:
-            BgMCHistYieldsDic[h.Integral()] = h
+        hist = histos[i]
+        hist.SetLineWidth(1)
+        hist.SetLineColor(ROOT.kBlack)
+        hist.SetFillColor(colors[i])
+        if hist.Integral() > 0:
+            BgMCHistYieldsDic[hist.Integral()] = hist
         else:
-            BgMCHistYieldsDic[-1*nbkg] = h
+            BgMCHistYieldsDic[-1*nbkg] = hist
     # sort stack by yields (smallest to largest)
     BgMCHistYieldsSorted = sorted_dict_values(BgMCHistYieldsDic)
-    for h in BgMCHistYieldsSorted:
-        hStack.Add(h)
-        hStackBkg.Add(h)
+    for hist in BgMCHistYieldsSorted:
+        hStack.Add(hist)
+        hStackBkg.Add(hist)
 
     # add the signal histograms
     for i in range(nsig):
-        h = histos[i]
-        h.SetLineWidth(3)
-        h.SetLineColor(colors[i])
-        hStack.Add(h)
-        hStackSig.Add(h)
+        hist = histos[i]
+        hist.SetLineWidth(3)
+        hist.SetLineColor(colors[i])
+        hStack.Add(hist)
+        hStackSig.Add(hist)
 
     if xmin != -1 and xmax != -1:
         h_dummy.GetXaxis().SetLimits(xmin, xmax)
@@ -685,28 +709,23 @@ def draw_plot(config: dict[str, Any],
 
     # x limits
     if xmin == -1:
-        h_tmp = hStack.GetStack().Last()
-        xmin = h_tmp.GetBinLowEdge(1)
+        xmin = hStack.GetStack().Last().GetBinLowEdge(1)
     if xmax == -1:
-        h_tmp = hStack.GetStack().Last()
-        xmax = h_tmp.GetBinLowEdge(h_tmp.GetNbinsX()+1)
+        xmax = hStack.GetStack().Last().GetBinLowEdge(
+            hStack.GetStack().Last().GetNbinsX() + 1
+        )
+    if plot_params['xaxis'] == 'log':
+        if xmin <= 0.:
+            LOGGER.error('Log scale for x-axis can\'t start at: %g\n'
+                         '  - plot name: %s\nContinuing...', xmin, plot_name)
+            return
+        if xmax <= 0.:
+            LOGGER.error('Log scale for x-axis can\'t end at: %g\n'
+                         '  - plot name: %s\nContinuing...', xmax, plot_name)
+            return
     h_dummy.GetXaxis().SetLimits(xmin, xmax)
 
     # y limits
-    def get_minmax_range(hists, xmin, xmax):
-        hist_tot = hists[0].Clone(plot_name + "_unc")
-        for h in hists[1:]:
-            hist_tot.Add(h)
-        vals = []
-        for i in range(0, hist_tot.GetNbinsX()+1):
-            if hist_tot.GetBinLowEdge(i) > xmin or \
-                    hist_tot.GetBinLowEdge(i+1) < xmax:
-                if hist_tot.GetBinContent(i) != 0:
-                    vals.append(hist_tot.GetBinContent(i))
-        if len(vals) == 0:
-            return 1e-5, 1
-        return min(vals), max(vals)
-
     if plot_params['stack-sig'] == 'stack':
         ymin_, ymax_ = get_minmax_range(hStack.GetHists(), xmin, xmax)
     else:
@@ -725,9 +744,15 @@ def draw_plot(config: dict[str, Any],
         ymin = ymin_*0.1 if plot_params['yaxis'] == 'log' else 0
     if ymax == -1:
         ymax = ymax_*1000. if plot_params['yaxis'] == 'log' else 1.4*ymax_
-    if ymin <= 0 and plot_params['yaxis'] == 'log':
-        LOGGER.error('Log scale can\'t start at: %i', ymin)
-        sys.exit(3)
+    if plot_params['yaxis'] == 'log':
+        if ymin <= 0.:
+            LOGGER.error('Log scale for y-axis can\'t start at: %g\n'
+                         '  - plot name: %s\nContinuing...', ymin, plot_name)
+            return
+        if ymax <= 0.:
+            LOGGER.error('Log scale for y-axis can\'t end at: %g\n'
+                         '  - plot name: %s\nContinuing...', ymax, plot_name)
+            return
     h_dummy.SetMaximum(ymax)
     h_dummy.SetMinimum(ymin)
 
@@ -863,14 +888,12 @@ def draw_plot(config: dict[str, Any],
             latex.DrawLatex(0.75, 0.4-dy*0.05, text)
 
             dy += 1
-        # canvas.Modified()
-        # canvas.Update()
 
-    print_canvas(canvas, plot_name, formats, out_dir)
+    save_canvas(canvas, plot_name, formats, out_dir)
 
 
 # _____________________________________________________________________________
-def print_canvas(canvas, plot_name: str, formats: list[str], out_dir: str):
+def save_canvas(canvas, plot_name: str, formats: list[str], out_dir: str):
     '''
     Saving canvas in multiple formats.
     '''
@@ -883,7 +906,9 @@ def print_canvas(canvas, plot_name: str, formats: list[str], out_dir: str):
         os.system("mkdir -p " + out_dir)
 
     for ext in formats:
-        canvas.SaveAs(os.path.join(out_dir, plot_name) + "." + ext)
+        out_path = os.path.join(out_dir, plot_name) + "." + ext
+        canvas.SaveAs(out_path)
+        LOGGER.debug(out_path)
 
 
 # _____________________________________________________________________________
@@ -914,6 +939,7 @@ def run(args):
         config['input-dir'] = script_module.inputDir
     if args.input_dir is not None:
         config['input-dir'] = args.input_dir
+    LOGGER.info('Input directory: %s', config['input_dir'])
 
     # Output directory
     config['output-dir'] = os.getcwd()
@@ -923,6 +949,15 @@ def run(args):
         config['output-dir'] = script_module.outputDir
     if args.output_dir is not None:
         config['output-dir'] = args.output_dir
+    LOGGER.info('Output directory: %s', config['output-dir'])
+
+    # Output file types
+    config['output-file-types'] = ['png', 'pdf']
+    if hasattr(script_module, 'formats'):
+        config['output-file-types'] = script_module.formats
+    msg = 'Output file types to be used: [' + \
+          ', '.join(config['output-file-types']) + ']'
+    LOGGER.info(msg)
 
     # Integrated luminosity
     config['int-lumi'] = 1.
@@ -958,6 +993,51 @@ def run(args):
     else:
         LOGGER.debug('No scale factor for background provided, using 1.0.')
     LOGGER.info('Scale factor for background: %g', config['scale-sig'])
+
+    # Stacking of the signal histograms
+    config['stack-sig'] = ['stack']
+    if hasattr(script_module, 'stacksig'):
+        config['stack-sig'] = script_module.stacksig
+    if any(stacking not in ['stack', 'nostack']
+           for stacking in config['stack-sig']):
+        config['stack-sig'] = [stacking for stacking
+                               in config['stack-sig']
+                               if stacking in ['stack', 'nostack']]
+        LOGGER.warning('Unrecognized option for the signal stacking!\n'
+                       'Should be one of: "stack", "nostack".')
+    msg = 'Signal stacking options to be used for the plots: [' + \
+          ', '.join(config['stack-sig']) + ']'
+    LOGGER.info(msg)
+
+    # Check x-axis scale types
+    config['x-axis-scale-types'] = ['lin']
+    if hasattr(script_module, 'xaxis'):
+        config['x-axis-scale-types'] = script_module.xaxis
+    if any(scale_type not in ['lin', 'log']
+           for scale_type in config['x-axis-scale-types']):
+        config['x-axis-scale-types'] = [scale_type for scale_type
+                                        in config['x-axis-scale-types']
+                                        if scale_type in ['lin', 'log']]
+        LOGGER.warning('Unrecognized option for the x-axis scaling!'
+                       '\nShould be one of: "lin", "log".')
+    msg = 'X-axis scale types to be used for the plots: [' + \
+          ', '.join(config['x-axis-scale-types']) + ']'
+    LOGGER.info(msg)
+
+    # Check y-axis scale types
+    config['y-axis-scale-types'] = ['lin']
+    if hasattr(script_module, 'yaxis'):
+        config['y-axis-scale-types'] = script_module.yaxis
+    if any(scale_type not in ['lin', 'log']
+           for scale_type in config['y-axis-scale-types']):
+        config['y-axis-scale-types'] = [scale_type for scale_type
+                                        in config['y-axis-scale-types']
+                                        if scale_type in ['lin', 'log']]
+        LOGGER.warning('Unrecognized option for the y-axis scaling!'
+                       '\nShould be one of: "lin", "log".')
+    msg = 'Y-axis scale types to be used for the plots: [' + \
+          ', '.join(config['y-axis-scale-types']) + ']'
+    LOGGER.info(msg)
 
     # Check if we have plots (staged analysis) or histos (histmaker)
     config['plots']: dict[str, Any] = {}

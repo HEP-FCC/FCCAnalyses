@@ -6,8 +6,10 @@ import os
 import pathlib
 import shutil
 import logging
-import ROOT  # type: ignore
+import string
+import random
 import json
+import ROOT  # type: ignore
 
 
 ROOT.gROOT.SetBatch(True)
@@ -79,3 +81,12 @@ def save_benchmark(outfile, benchmark):
 
     with open(outfile, 'w', encoding='utf-8') as benchout:
         json.dump(benchmarks, benchout, indent=2)
+
+
+# _____________________________________________________________________________
+def random_string(length: int = 8):
+    '''
+    Generate random string of specified length.
+    '''
+    return ''.join(random.choices(string.ascii_letters + string.digits,
+                                  k=length))
