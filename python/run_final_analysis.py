@@ -11,9 +11,10 @@ import importlib.util
 import pathlib
 import json
 import math
+from typing import Any
 
 import ROOT  # type: ignore
-import cppyy
+import cppyy  # type: ignore
 from anascript import get_element, get_attribute
 from process import get_process_dict, get_entries_sow
 from utils import generate_graph
@@ -105,7 +106,7 @@ def find_sample_files(input_dir: str,
 
 
 # _____________________________________________________________________________
-def save_results(results: dict[str, dict[str, any]],
+def save_results(results: dict[str, dict[str, Any]],
                  rdf_module: object) -> None:
     '''
     Save results into various formats, depending on the analysis script.
@@ -126,7 +127,7 @@ def save_results(results: dict[str, dict[str, any]],
 
 
 # _____________________________________________________________________________
-def save_json(results: dict[str, dict[str, any]],
+def save_json(results: dict[str, dict[str, Any]],
               outpath: str) -> None:
     '''
     Save results into a JSON file.
@@ -136,7 +137,7 @@ def save_json(results: dict[str, dict[str, any]],
 
 
 # _____________________________________________________________________________
-def save_tables(results: dict[str, dict[str, any]],
+def save_tables(results: dict[str, dict[str, Any]],
                 outpath: str,
                 cut_labels: dict[str, str] = None) -> None:
     '''
@@ -174,7 +175,7 @@ def save_tables(results: dict[str, dict[str, any]],
             outfile.write(8 * ' ')
             outfile.write(process_name)
             for cut_name in cut_names:
-                cut_result: dict[str, any] = result[cut_name]
+                cut_result: dict[str, Any] = result[cut_name]
                 outfile.write(' & ')
                 if cut_result["n_events_raw"] == 0.:
                     outfile.write('0.')
@@ -236,7 +237,7 @@ def run(rdf_module, args) -> None:
             'Location of the process dictionary not provided!\nAborting...')
         sys.exit(3)
 
-    process_dict: dict[str, any] = get_process_dict(proc_dict_location)
+    process_dict: dict[str, Any] = get_process_dict(proc_dict_location)
 
     # Add processes into the dictionary
     process_dict_additions = get_attribute(rdf_module, "procDictAdd", {})
@@ -367,7 +368,7 @@ def run(rdf_module, args) -> None:
 
 
     # Check if there are any histograms defined
-    histo_list: dict[str, dict[str, any]] = get_attribute(rdf_module,
+    histo_list: dict[str, dict[str, Any]] = get_attribute(rdf_module,
                                                           "histoList", {})
     if not histo_list:
         LOGGER.error('No histograms defined!\nAborting...')

@@ -5,6 +5,7 @@ Used only in managed mode.
 
 import sys
 import logging
+from typing import Any
 
 
 LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.run')
@@ -247,7 +248,7 @@ def get_element_dict(_dict, element: str):
         return None
 
 
-def get_attribute(obj: object, attr_name: str, default_val=None) -> any:
+def get_attribute(obj: object, attr_name: str, default_val=None) -> Any:
     '''
     Returns requested attribute value or default value.
     '''
