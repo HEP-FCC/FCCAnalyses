@@ -10,6 +10,8 @@ import importlib
 import copy
 import re
 import logging
+from typing import Any
+
 import ROOT  # type: ignore
 
 ROOT.gROOT.SetBatch(True)
@@ -50,7 +52,7 @@ def formatStatUncHist(hists, name, hstyle=3254):
 
 
 # _____________________________________________________________________________
-def determine_lumi_scaling(config: dict[str, any],
+def determine_lumi_scaling(config: dict[str, Any],
                            infile: object,
                            initial_scale: float = 1.0) -> float:
     '''
@@ -98,8 +100,8 @@ def determine_lumi_scaling(config: dict[str, any],
 def load_hists(var: str,
                label: str,
                sel: str,
-               config: dict[str, any],
-               rebin: int) -> tuple[dict[str, any], dict[str: any]]:
+               config: dict[str, Any],
+               rebin: int) -> tuple[dict[str, Any], dict[str, Any]]:
     '''
     Load all histograms needed for the plot
     '''
@@ -178,7 +180,7 @@ def load_hists(var: str,
 
 
 # _____________________________________________________________________________
-def mapHistosFromHistmaker(config: dict[str, any],
+def mapHistosFromHistmaker(config: dict[str, Any],
                            hist_name: str,
                            param,
                            hist_cfg):
@@ -247,7 +249,7 @@ def mapHistosFromHistmaker(config: dict[str, any],
 
 
 # _____________________________________________________________________________
-def runPlots(config: dict[str, any],
+def runPlots(config: dict[str, Any],
              args,
              var,
              sel,
@@ -403,7 +405,7 @@ def runPlots(config: dict[str, any],
 
 
 # _____________________________________________________________________________
-def runPlotsHistmaker(config: dict[str, any],
+def runPlotsHistmaker(config: dict[str, Any],
                       args,
                       hist_name: str,
                       param,
@@ -907,7 +909,7 @@ def run(args):
 
     # Merge script and command line arguments into one configuration object
     # Also check the script attributes
-    config: dict[str, any] = {}
+    config: dict[str, Any] = {}
 
     # Input directory
     config['input_dir'] = os.getcwd()
@@ -963,8 +965,8 @@ def run(args):
     LOGGER.info('Scale factor for background: %g', config['scale_sig'])
 
     # Check if we have plots (staged analysis) or histos (histmaker)
-    config['plots']: dict[str, any] = {}
-    config['hists']: dict[str, any] = {}
+    config['plots']: dict[str, Any] = {}
+    config['hists']: dict[str, Any] = {}
     config['ana_type']: str = "none"
     if hasattr(script_module, 'plots'):
         config['plots'] = script_module.plots
