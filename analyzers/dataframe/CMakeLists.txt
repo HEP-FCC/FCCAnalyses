@@ -61,6 +61,7 @@ target_include_directories(FCCAnalyses PUBLIC
 
 message(STATUS " ====== DELPHES LIBRARY = " ${DELPHES_LIBRARY} )
 message(STATUS " ====== DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR = " ${DELPHES_EXTERNALS_TKCOV_INCLUDE_DIR} )
+message(STATUS " ====== ADDONS_LIBRARIES " ${ADDONS_LIBRARIES})
 
 target_link_libraries(FCCAnalyses PUBLIC
                       ROOT::Physics
@@ -75,7 +76,6 @@ target_link_libraries(FCCAnalyses PUBLIC
                       EDM4HEP::utils
                       ${ADDONS_LIBRARIES}
                       ${DELPHES_LIBRARY}
-                      gfortran # todo: why necessary?
 )
 
 if(WITH_DD4HEP)
