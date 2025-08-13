@@ -165,10 +165,10 @@ TEST_CASE("distanceVertex", "[basic]") {
 
 TEST_CASE("distanceErrorVertex", "[basic]") {
   edm4hep::VertexData v1;
-  v1.covMatrix = {.1, .2, .3, .43, .67, .11};
+  v1.covMatrix = edm4hep::CovMatrix3f{.1, .2, .3, .43, .67, .11};
   v1.position = {1., 2., 3.};
   edm4hep::VertexData v2;
-  v2.covMatrix = {.34, .2, .46, .43, .67, .003};
+  v2.covMatrix = edm4hep::CovMatrix3f{.34, .2, .46, .43, .67, .003};
   v2.position = {0., 0., 0.};
 
   float err = FCCAnalyses::myUtils::get_distanceErrorVertex(v1, v2, 0);
