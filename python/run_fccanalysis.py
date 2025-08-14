@@ -110,6 +110,11 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
     if get_attribute(analysis, 'do_weighted', False):
         config['do_weighted'] = True
 
+    # Check if the progress-bar is enabled
+    config['enable-progress-bar'] = True
+    if args.progress_bar is not None:
+        config['enable-progress-bar'] = args.progress_bar
+
     # Check the output path
     # config['output_file_path'] = None
     # if args.output
@@ -195,6 +200,9 @@ def run_rdf(config: dict[str, Any],
     else:
         dframe = ROOT.RDataFrame("events", input_list)
 
+    if config['enable-progress-bar']:
+        ROOT.RDF.Experimental.AddProgressBar(dframe)
+
     # Limit number of events processed
     if args.nevents > 0:
         dframe2 = dframe.Range(0, args.nevents)
@@ -269,7 +277,7 @@ def run_local(config: dict[str, Any],
     Run analysis locally.
     '''
     # Create list of files to be processed
-    info_msg = 'Creating dataframe object from files:\n'
+    info_msg = f'Creating dataframe from {len(infile_list)} files:\n'
     file_list = ROOT.vector('string')()
     # Amount of events processed in previous stage (= 0 if it is the first
     # stage)
