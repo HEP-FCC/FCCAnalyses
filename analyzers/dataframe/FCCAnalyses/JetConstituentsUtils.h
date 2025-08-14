@@ -3,13 +3,13 @@
 
 // ROOT
 #include "ROOT/RVec.hxx"
-#include "TMath.h"
-#include "TVector3.h"
-#include "TRotation.h"
 #include "TLorentzVector.h"
+#include "TMath.h"
+#include "TRotation.h"
+#include "TVector3.h"
 // EDM4hep
-#include "edm4hep/ReconstructedParticle.h"
 #include "edm4hep/MCParticle.h"
+#include "edm4hep/ReconstructedParticle.h"
 #if __has_include("edm4hep/TrackerHit3DData.h")
 #include "edm4hep/TrackerHit3DData.h"
 #else
@@ -23,7 +23,6 @@ namespace edm4hep {
 #include "fastjet/JetDefinition.hh"
 // FCCAnalyses
 #include "FCCAnalyses/TrackUtils.h"
-
 
 namespace FCCAnalyses {
   namespace JetConstituentsUtils {
@@ -144,16 +143,17 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
 
-
     /**
      * neutrals are set to 0; muons and electrons are also set to 0;
-     * only charged hadrons are considered (mtof used to discriminate charged kaons and pions)
+     * only charged hadrons are considered (mtof used to discriminate charged
+     * kaons and pions)
      */
     rv::RVec<FCCAnalysesJetConstituentsData>
-    get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-             const FCCAnalyses::TrackUtils::TrackDqdxHandler& dqdxHandler,
-             const rv::RVec<edm4hep::TrackData>& trackdata,
-             const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
+    get_dndx(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
+             const FCCAnalyses::TrackUtils::TrackDqdxHandler &dqdxHandler,
+             const rv::RVec<edm4hep::TrackData> &trackdata,
+             const rv::RVec<FCCAnalysesJetConstituentsData>
+                 JetsConstituents_isChargedHad);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,

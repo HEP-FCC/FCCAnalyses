@@ -12,11 +12,11 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Selector.hh"
 // FCCAnalyses
+#include "FCCAnalyses/JetClusteringUtils.h"
 #include "FCCAnalyses/JetConstituentsUtils.h"
 #include "FCCAnalyses/ReconstructedParticle.h"
-#include "FCCAnalyses/ReconstructedParticle2Track.h"
 #include "FCCAnalyses/ReconstructedParticle2MC.h"
-#include "FCCAnalyses/JetClusteringUtils.h"
+#include "FCCAnalyses/ReconstructedParticle2Track.h"
 #include "FCCAnalyses/TrackUtils.h"
 // #include "FCCAnalyses/ExternalRecombiner.h"
 
@@ -366,9 +366,10 @@ namespace FCCAnalyses
 
     rv::RVec<FCCAnalysesJetConstituentsData>
     get_dndx(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-             const FCCAnalyses::TrackUtils::TrackDqdxHandler& dqdxHandler,
+             const FCCAnalyses::TrackUtils::TrackDqdxHandler &dqdxHandler,
              const rv::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-             const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad) {
+             const rv::RVec<FCCAnalysesJetConstituentsData>
+                 JetsConstituents_isChargedHad) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
 
       for (size_t i = 0; i < jcs.size(); ++i) {
@@ -376,14 +377,13 @@ namespace FCCAnalyses
         FCCAnalysesJetConstituentsData isChargedHad = JetsConstituents_isChargedHad.at(i);
         FCCAnalysesJetConstituentsData tmp;
         for (size_t j = 0; j < ct.size(); ++j) {
-          if (ct.at(j).tracks_begin < trackdata.size() && (int)isChargedHad.at(j) == 1) {
+          if (ct.at(j).tracks_begin < trackdata.size() &&
+              (int)isChargedHad.at(j) == 1) {
             auto dqdxs = dqdxHandler.getDqdxValues(ct.at(j).tracks_begin);
-            for (const auto& dqdx: dqdxs) {
+            for (const auto &dqdx : dqdxs) {
               tmp.push_back(dqdx.dQdx.value / 1000);
             }
-          }
-          else
-          {
+          } else {
             tmp.push_back(0.);
           }
         }
