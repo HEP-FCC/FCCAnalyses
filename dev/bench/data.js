@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755176723749,
+  "lastUpdate": 1755176725633,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -50089,6 +50089,65 @@ window.BENCHMARK_DATA = {
             "unit": "Seconds",
             "range": 10,
             "extra": "Analysis path: examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "22276694+jmcarcell@users.noreply.github.com",
+            "name": "Juan Miguel Carceller",
+            "username": "jmcarcell"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "705aca3527b7ecbb7c1868d835a80cd8d556e52d",
+          "message": "Fix errors with GCC 14 and GCC 13 (#458)\n\nThe issue is that multiple candidates exist:\n```\nedm4hep::CovMatrix3f::operator=(const std::array<float, 6>&)\nedm4hep::CovMatrix3f& edm4hep::CovMatrix3f::operator=(const edm4hep::CovMatrix3f&)\nedm4hep::CovMatrix3f& edm4hep::CovMatrix3f::operator=(edm4hep::CovMatrix3f&&)\n```\nDoes not happen with GCC 15 and Clang 20\n\nCo-authored-by: Juan Miguel Carceller <jmcarcell@users.noreply.github.com>",
+          "timestamp": "2025-08-14T14:55:30+02:00",
+          "tree_id": "faad8a5efb3353d4e18764a27fb77d73571a9e79",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/705aca3527b7ecbb7c1868d835a80cd8d556e52d"
+        },
+        "date": 1755176725102,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 7.91515090120879,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 10.77315851224988,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 2.6388402653182337,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 11.748702981458479,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 1.85821701201878,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/stages_source.py",
+            "value": 6.062340685385675,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 5.605009654844762,
+            "unit": "Evt/s"
           }
         ]
       }
