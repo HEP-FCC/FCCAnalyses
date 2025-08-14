@@ -1,7 +1,4 @@
-#include "FCCAnalyses/JetConstituentsUtils.h"
-#include "FCCAnalyses/ReconstructedParticle.h"
-#include "FCCAnalyses/ReconstructedParticle2Track.h"
-#include "FCCAnalyses/ReconstructedParticle2MC.h"
+// EDM4hep
 #include "edm4hep/MCParticleData.h"
 #include "edm4hep/Track.h"
 #include "edm4hep/TrackData.h"
@@ -10,11 +7,18 @@
 #include "edm4hep/CalorimeterHitData.h"
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/EDM4hepVersion.h"
-#include "FCCAnalyses/JetClusteringUtils.h"
-// #include "FCCAnalyses/ExternalRecombiner.h"
+// FastJet
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Selector.hh"
+// FCCAnalyses
+#include "FCCAnalyses/JetConstituentsUtils.h"
+#include "FCCAnalyses/ReconstructedParticle.h"
+#include "FCCAnalyses/ReconstructedParticle2Track.h"
+#include "FCCAnalyses/ReconstructedParticle2MC.h"
+#include "FCCAnalyses/JetClusteringUtils.h"
+#include "FCCAnalyses/TrackUtils.h"
+// #include "FCCAnalyses/ExternalRecombiner.h"
 
 /* *************************
 //COMMENTS
@@ -360,28 +364,23 @@ namespace FCCAnalyses
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_omega_z0_cov);
     }
 
-    // neutrals are set to 0; muons and electrons are also set to 0;
-    //  only charged hads are considered (mtof used to disctriminate charged kaons and pions)
-    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                      const rv::RVec<edm4hep::Quantity> &dNdx,       // ETrackFlow_2
-                                                      const rv::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-                                                      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad)
-    {
+    rv::RVec<FCCAnalysesJetConstituentsData>
+    get_dndx(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
+             const FCCAnalyses::TrackUtils::TrackDqdxHandler& dqdxHandler,
+             const rv::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
+             const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < jcs.size(); ++i)
-      {
+
+      for (size_t i = 0; i < jcs.size(); ++i) {
         FCCAnalysesJetConstituents ct = jcs.at(i);
         FCCAnalysesJetConstituentsData isChargedHad = JetsConstituents_isChargedHad.at(i);
         FCCAnalysesJetConstituentsData tmp;
-        for (int j = 0; j < ct.size(); ++j)
-        {
-          if (ct.at(j).tracks_begin < trackdata.size() && (int)isChargedHad.at(j) == 1)
-          {
-#if EDM4HEP_BUILD_VERSION > EDM4HEP_VERSION(0, 10, 6)
-            tmp.push_back(-1);
-#else
-            tmp.push_back(dNdx.at(trackdata.at(ct.at(j).tracks_begin).dxQuantities_begin).value / 1000.);
-#endif
+        for (size_t j = 0; j < ct.size(); ++j) {
+          if (ct.at(j).tracks_begin < trackdata.size() && (int)isChargedHad.at(j) == 1) {
+            auto dqdxs = dqdxHandler.getDqdxValues(ct.at(j).tracks_begin);
+            for (const auto& dqdx: dqdxs) {
+              tmp.push_back(dqdx.dQdx.value / 1000);
+            }
           }
           else
           {
