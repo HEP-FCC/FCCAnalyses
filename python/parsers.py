@@ -167,6 +167,22 @@ def setup_run_parser(parser):
         '--use-data-source', action='store_true', default=False,
         help='use EDM4hep RDataSource to construct dataframe')
 
+    progressbar_group = parser.add_mutually_exclusive_group()
+    progressbar_group.add_argument(
+        '-p', '--progress-bar',
+        action='store_true',
+        default=None,
+        help='Show a progress bar during the execution',
+        dest='progress_bar'
+    )
+    progressbar_group.add_argument(
+        '--no-progress-bar',
+        action='store_false',
+        default=None,
+        help='Do not show a progress bar during the execution',
+        dest='progress_bar'
+    )
+
 
 # _____________________________________________________________________________
 def setup_run_parser_final(parser):
