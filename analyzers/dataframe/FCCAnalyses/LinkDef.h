@@ -28,6 +28,7 @@
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::Vector3d>+;
 #pragma link C++ class ROOT::VecOps::RVec<edm4hep::MCParticleData>+;
 #pragma link C++ class ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>>+;
+#pragma link C++ class ROOT::VecOps::RVec<edm4hep::TrackData>+;
 
 // Vectors
 #pragma link C++ class ROOT::VecOps::RVec<std::vector<int>>+;
