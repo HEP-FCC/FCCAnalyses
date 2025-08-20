@@ -103,6 +103,9 @@ def run_rdf(rdf_module,
     '''
     dframe = ROOT.RDataFrame("events", input_list)
 
+    if args.progress_bar:
+        ROOT.RDF.Experimental.AddProgressBar(dframe)
+
     # limit number of events processed
     if args.nevents > 0:
         dframe2 = dframe.Range(0, args.nevents)
@@ -168,7 +171,7 @@ def run_local(rdf_module, infile_list, args):
     Run analysis locally.
     '''
     # Create list of files to be processed
-    info_msg = 'Creating dataframe object from files:\n'
+    info_msg = f'Creating dataframe from {len(infile_list)} files:\n'
     file_list = ROOT.vector('string')()
     # Amount of events processed in previous stage (= 0 if it is the first
     # stage)
@@ -546,6 +549,9 @@ def run_histmaker(args, rdf_module, anapath):
             dframe = ROOT.ROOT.RDataFrame("events", file_list_root)
         evtcount = dframe.Count()
 
+        if args.progress_bar:
+            ROOT.RDF.Experimental.AddProgressBar(dframe)
+
         try:
             res, hweight = graph_function(dframe, process_name)
         except cppyy.gbl.std.runtime_error as err:
@@ -754,6 +760,13 @@ def run(parser):
 
     if hasattr(rdf_module, "Analysis"):
         run_fccanalysis(args, rdf_module)
+
+    # Adjustments for the old approaches
+    if args.progress_bar is None:
+        args.progress_bar = True
+    if args.files_list is None:
+        args.files_list = []
+
     if hasattr(rdf_module, "RDFanalysis"):
         run_stages(args, rdf_module, anapath)
     if hasattr(rdf_module, "build_graph"):
