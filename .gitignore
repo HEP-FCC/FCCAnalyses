@@ -42,6 +42,7 @@ MANIFEST
 *.root
 *.lst
 *.txt
+!CMakeLists.txt
 
 # Output
 outputs/
