@@ -54,12 +54,14 @@ bins_iso = (500, 0, 5)
 
 
 # build_graph function that contains the analysis logic, cuts and histograms (mandatory)
-def build_graph(df, dataset):
+def build_graph(df, dataset, cmdline_args):
+    # Additional analysis parameters, can be retrieved with:
+    analysis_args = cmdline_args['remaining']
 
     results = []
     df = df.Define("weight", "1.0")
     weightsum = df.Sum("weight")
-    
+
     # define some aliases to be used later on
     df = df.Alias("Particle0", "_Particle_daughters.index")
     df = df.Alias("Particle1", "_Particle_parents.index")

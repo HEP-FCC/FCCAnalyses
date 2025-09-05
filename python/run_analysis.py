@@ -8,6 +8,7 @@ import time
 import logging
 import importlib.util
 import string
+from inspect import signature
 
 import ROOT  # type: ignore
 import cppyy
@@ -553,7 +554,11 @@ def run_histmaker(args, rdf_module, anapath):
             ROOT.RDF.Experimental.AddProgressBar(dframe)
 
         try:
-            res, hweight = graph_function(dframe, process_name)
+            n_params = len(signature(graph_function).parameters)
+            if n_params == 2:
+                res, hweight = graph_function(dframe, process_name)
+            else:
+                res, hweight = graph_function(dframe, process_name, args)
         except cppyy.gbl.std.runtime_error as err:
             LOGGER.error(err)
             LOGGER.error('During loading of the analysis an error occurred!'
