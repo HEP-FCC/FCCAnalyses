@@ -605,7 +605,7 @@ def run(rdf_module, args) -> None:
                     if do_scale:
                         if do_weighted:
                             hist.Scale(gen_sf * int_lumi /
-                                       sow_process[process_name])         
+                                       sow_process[process_name])
                         else:
                             hist.Scale(gen_sf * int_lumi /
                                        process_events[process_name])

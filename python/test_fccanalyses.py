@@ -38,12 +38,12 @@ def test_fccanalyses(mainparser):
     Test FCCAnalyses framework
     '''
 
-    if 'LOCAL_DIR' not in os.environ:
+    if 'FCCANA_LOCAL_DIR' not in os.environ:
         LOGGER.error('FCCAnalyses environment not set up '
                      'correctly!\nAborting...')
         sys.exit(3)
 
-    local_dir = os.environ.get('LOCAL_DIR')
+    local_dir = os.environ.get('FCCANA_LOCAL_DIR')
 
     args, _ = mainparser.parse_known_args()
 

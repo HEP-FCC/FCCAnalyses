@@ -41,12 +41,12 @@ def build_analysis(mainparser) -> None:
     '''
     args = mainparser.parse_args()
 
-    if 'LOCAL_DIR' not in os.environ:
+    if 'FCCANA_LOCAL_DIR' not in os.environ:
         LOGGER.error('FCCAnalyses environment not set up correctly!\n'
                      'Aborting...')
         sys.exit(3)
 
-    local_dir = os.environ.get('LOCAL_DIR')
+    local_dir = os.environ.get('FCCANA_LOCAL_DIR')
     build_path = pathlib.Path(local_dir + '/build')
     install_path = pathlib.Path(local_dir + '/install')
     cmake_args: list[str] = ['-DCMAKE_INSTALL_PREFIX=../install',

@@ -12,7 +12,7 @@ if [ "${0}" != "${BASH_SOURCE}" ]; then
     return 1
   fi
 
-  export OUTPUT_DIR=${LOCAL_DIR}/${1}
+  export OUTPUT_DIR=${FCCANA_LOCAL_DIR}/${1}
   fccanalysis init ${1} --output-dir ${OUTPUT_DIR} --name ${1} --standalone
   mkdir -p ${OUTPUT_DIR}/build
 else

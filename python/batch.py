@@ -412,10 +412,9 @@ def send_to_batch(args: argparse.Namespace,
     config['full-analysis-path'] = os.path.abspath(args.anascript_path)
 
     # Find location of the FCCanalyses directory, if locally build
-    # TODO: Rename LOCAL_DIR to FCCANA_DIR
     config['fccana-dir'] = None
-    if 'LOCAL_DIR' not in os.environ:
-        config['fccana-dir'] = os.environ['LOCAL_DIR']
+    if 'FCCANA_LOCAL_DIR' not in os.environ:
+        config['fccana-dir'] = os.environ['FCCANA_LOCAL_DIR']
 
     # Find out the exact Key4hep stack being sourced
     config['key4hep-stack'] = os.environ['KEY4HEP_STACK']

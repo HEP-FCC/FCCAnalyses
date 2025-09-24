@@ -20,12 +20,12 @@ class PinAnalysis:
         Setup analysis pinning
         '''
 
-        if 'LOCAL_DIR' not in os.environ:
+        if 'FCCANA_LOCAL_DIR' not in os.environ:
             LOGGER.error('FCCAnalyses environment not set up '
                          'correctly!\nAborting...')
             sys.exit(3)
 
-        self.local_dir = os.environ.get('LOCAL_DIR')
+        self.local_dir = os.environ.get('FCCANA_LOCAL_DIR')
         self.pin_path = pathlib.Path(self.local_dir + '/.fccana/stackpin')
 
         self.args, _ = mainparser.parse_known_args()
