@@ -13,7 +13,7 @@ LOGGER = logging.getLogger('FCCAnalyses.pin')
 
 class PinAnalysis:
     '''
-    Pin/unpin FCCAnalyses to the current version of the Key4hep stack
+    Pin/unpin FCCAnalyses to the currently set up version of the Key4hep stack.
     '''
     def __init__(self, mainparser):
         '''
@@ -21,8 +21,11 @@ class PinAnalysis:
         '''
 
         if 'FCCANA_LOCAL_DIR' not in os.environ:
-            LOGGER.error('FCCAnalyses environment not set up '
-                         'correctly!\nAborting...')
+            LOGGER.error('FCCAnalyses environment for the local development '
+                         'is not set up correctly!\n'
+                         'Pinning of the Key4hep version is available only '
+                         'for the locally compiled FCCAnalyses.\n'
+                         'Aborting...')
             sys.exit(3)
 
         self.local_dir = os.environ.get('FCCANA_LOCAL_DIR')
