@@ -413,7 +413,7 @@ def send_to_batch(args: argparse.Namespace,
 
     # Find location of the FCCanalyses directory, if locally build
     config['fccana-dir'] = None
-    if 'FCCANA_LOCAL_DIR' not in os.environ:
+    if 'FCCANA_LOCAL_DIR' in os.environ:
         config['fccana-dir'] = os.environ['FCCANA_LOCAL_DIR']
 
     # Find out the exact Key4hep stack being sourced
