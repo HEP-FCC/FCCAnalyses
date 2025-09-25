@@ -22,9 +22,8 @@
 #include "edm4hep/VertexData.h"
 #include "edm4hep/Vertex.h"
 
-#include "VertexFit.h"    // from Delphes - updates Franco, Jul 2022
-#include "VertexMore.h"
-
+#include "TrackCovariance/VertexFit.h" // from Delphes - updates Franco, Jul 2022
+#include "TrackCovariance/VertexMore.h"
 
 namespace FCCAnalyses{
 
