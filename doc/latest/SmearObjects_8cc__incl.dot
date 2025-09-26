@@ -97,8 +97,8 @@ digraph "analyzers/dataframe/src/SmearObjects.cc"
   Node22 -> Node27 [id="edge62_Node000022_Node000027",color="steelblue1",style="solid",tooltip=" "];
   Node22 -> Node28 [id="edge63_Node000022_Node000028",color="steelblue1",style="solid",tooltip=" "];
   Node22 -> Node30 [id="edge64_Node000022_Node000030",color="steelblue1",style="solid",tooltip=" "];
-  Node30 [id="Node000030",label="VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node30 [id="Node000030",label="TrackCovariance/VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node22 -> Node31 [id="edge65_Node000022_Node000031",color="steelblue1",style="solid",tooltip=" "];
-  Node31 [id="Node000031",label="VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node31 [id="Node000031",label="TrackCovariance/VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node1 -> Node26 [id="edge66_Node000001_Node000026",color="steelblue1",style="solid",tooltip=" "];
 }

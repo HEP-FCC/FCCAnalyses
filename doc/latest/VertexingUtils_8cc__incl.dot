@@ -82,9 +82,9 @@ digraph "analyzers/dataframe/src/VertexingUtils.cc"
   Node16 -> Node9 [id="edge50_Node000016_Node000009",color="steelblue1",style="solid",tooltip=" "];
   Node16 -> Node10 [id="edge51_Node000016_Node000010",color="steelblue1",style="solid",tooltip=" "];
   Node16 -> Node27 [id="edge52_Node000016_Node000027",color="steelblue1",style="solid",tooltip=" "];
-  Node27 [id="Node000027",label="VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node27 [id="Node000027",label="TrackCovariance/VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node16 -> Node28 [id="edge53_Node000016_Node000028",color="steelblue1",style="solid",tooltip=" "];
-  Node28 [id="Node000028",label="VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node28 [id="Node000028",label="TrackCovariance/VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node1 -> Node29 [id="edge54_Node000001_Node000029",color="steelblue1",style="solid",tooltip=" "];
   Node29 [id="Node000029",label="TrkUtil.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
 }

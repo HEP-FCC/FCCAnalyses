@@ -79,7 +79,7 @@ digraph "analyzers/dataframe/FCCAnalyses/VertexFitterSimple.h"
   Node1 -> Node23 [id="edge48_Node000001_Node000023",color="steelblue1",style="solid",tooltip=" "];
   Node1 -> Node24 [id="edge49_Node000001_Node000024",color="steelblue1",style="solid",tooltip=" "];
   Node1 -> Node26 [id="edge50_Node000001_Node000026",color="steelblue1",style="solid",tooltip=" "];
-  Node26 [id="Node000026",label="VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node26 [id="Node000026",label="TrackCovariance/VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node1 -> Node27 [id="edge51_Node000001_Node000027",color="steelblue1",style="solid",tooltip=" "];
-  Node27 [id="Node000027",label="VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node27 [id="Node000027",label="TrackCovariance/VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
 }

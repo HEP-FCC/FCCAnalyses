@@ -81,9 +81,9 @@ digraph "analyzers/dataframe/src/VertexFitterSimple.cc"
   Node2 -> Node24 [id="edge49_Node000002_Node000024",color="steelblue1",style="solid",tooltip=" "];
   Node2 -> Node25 [id="edge50_Node000002_Node000025",color="steelblue1",style="solid",tooltip=" "];
   Node2 -> Node27 [id="edge51_Node000002_Node000027",color="steelblue1",style="solid",tooltip=" "];
-  Node27 [id="Node000027",label="VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node27 [id="Node000027",label="TrackCovariance/VertexFit.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node2 -> Node28 [id="edge52_Node000002_Node000028",color="steelblue1",style="solid",tooltip=" "];
-  Node28 [id="Node000028",label="VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node28 [id="Node000028",label="TrackCovariance/VertexMore.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node1 -> Node29 [id="edge53_Node000001_Node000029",color="steelblue1",style="solid",tooltip=" "];
   Node29 [id="Node000029",label="FCCAnalyses/MCParticle.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$MCParticle_8h.html",tooltip=" "];
   Node29 -> Node3 [id="edge54_Node000029_Node000003",color="steelblue1",style="solid",tooltip=" "];
