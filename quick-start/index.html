@@ -58,40 +58,128 @@
     <article>
       <h1>Quick Start</h1>
 
-      <h3>Running analysis</h3>
-      <p>
-        Running analysis script can be done using <code>fccanalysis</code>
-        command which is shipped in Key4hep stack:
-      </p>
-      <pre><code>source /cvmfs/sw.hsf.org/key4hep/setup.sh
-fccanalysis run analysis_script.py</code></pre>
+      <h2>Obtaining FCCAnalyses</h2>
 
+      <h3>From the Key4hep stack</h3>
       <p>
-        To have read access to the FCC pre-generated samples, one needs to be
-        subscribed to the following e-group (with owner approval)
-        <code>fcc-eos-access</code>.
+        As mentioned on the main page, one can obtain already compiled,
+        ready to use, FCCAnalyses by sourcing the
+        <a href="https://key4hep.github.io/key4hep-doc/">Key4hep</a> stack:
       </p>
 
-      <h4>Demo</h4>
-      <script async
-              data-rows=14
-              id="asciicast-L8YePtAMCWSCZV8ueDTZWhpDN"
-              src="https://asciinema.org/a/L8YePtAMCWSCZV8ueDTZWhpDN.js"></script>
+      <pre><code>source /cvmfs/sw.hsf.org/key4hep/setup.sh</code></pre>
 
-      <h3>Compiling framework</h3>
+      <h3>From GitHub</h3>
       <p>
-        When compiling whole framework first fork it on GitHub and after that
-        use:
+        If any adjustments are needed, one can compile it locally, first fork the
+        <a href="https://github.com/HEP-FCC/FCCAnalyses"
+           target="_blank">project on GitHub</a> and after that run the
+         following commands:
       </p>
       <pre><code>git clone git@github.com:&lt;your_github_handle&gt;/FCCAnalyses.git
 cd FCCAnalyses
 git remote add upstream git@github.com:HEP-FCC/FCCAnalyses.git
 git fetch upstream
 source setup.sh
-fccanalysis build -j 16
-fccanalysis run analysis_script.py</code></pre>
+fccanalysis build -j 8</code></pre>
 
-      <h4>Demo</h4>
+      <p>
+        The <code>setup.sh</code> script can take command line options and
+        allows to select different Key4hep stacks. Use
+        <code>source setup.sh -h</code> to get the full list of the available
+        options:
+      </p>
+      <pre><code>USAGE: source setup.sh [-h, -l, -n, -p, -b]
+       -h/--help           Show this help and exit
+       -l/--latest         Setup the latest release of the Key4hep stack
+       -n/--nightlies      Setup the latest nightlies version of the Key4hep stack
+       -p/--pinned         Setup the pinned version of the Key4hep stack
+       -b/--from-build     Setup the version of the Key4hep stack used for the latest local build
+
+The setup script defaults to using the pinned stack. If the pinned stack is not set,
+the latest stable release is used instead.</code></pre>
+
+
+      <h2>Creating analysis script</h2>
+
+      <p>
+        The analysis creation involves writing a valid Python script, which
+        contains a mandatory class called <code>Analysis</code> with several
+        required methods. There can be several stages of the analysis and for
+        each stage a separate analysis script needs to be written.
+      </p>
+
+      <p>
+        The first required method of the <code>Analysis</code> class, the
+        <code>__init__()</code> method, initializes the analysis and controls its
+        behavior, there are several required attributes and many optional ones.
+        For the evolving list see the
+        <a href="/FCCAnalyses/man/latest/fccanalysis-script.html">manual page: fccanalysis-script(7)</a>.
+      </p>
+
+      <p>
+        Second required method creates and manipulates the dataframe itself.
+        It is called <code>analyzers()</code> and it is required to return the
+        last version of the dataframe.
+      </p>
+
+      <p>
+        The final required method, <code>output()</code> is required to return
+        list of columns which will be saved to the output ROOT file.
+      </p>
+
+      <p>
+        Together the skeleton of an analysis script looks similar to this:
+      </p>
+      <pre><code>class Analysis():
+    def __init__(self, cmdline_args):
+        ...
+
+
+    def analyzers(self, dframe):
+        dframe2 = (
+            dframe
+            # define the muon collection
+            .Define("muons",
+                    "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
+            ...
+        )
+        return dframe2
+
+
+    def output(self):
+        return ["muons", "muon_mass"]</code></pre>
+
+
+      <h2>Running the analysis</h2>
+      <p>
+        Running the analysis script can be done using <code>fccanalysis run</code>
+        command:
+      </p>
+      <pre><code>fccanalysis run analysis_script.py</code></pre>
+
+      <p>
+        To have read access to the FCC centrally produced physics datasets, one
+        needs to be subscribed to the following e-group (with owner approval)
+        <code>fcc-eos-access</code>. The information regarding the available
+        datasets can be found
+        <a href="https://fcc-physics-events.web.cern.ch/"
+           target="_blank">here</a>.
+      </p>
+
+      <h2>Demos</h2>
+
+      <p>
+        Sourcing of the Key4hep stack and running of the example analysis:
+      </p>
+      <script async
+              data-rows=14
+              id="asciicast-L8YePtAMCWSCZV8ueDTZWhpDN"
+              src="https://asciinema.org/a/L8YePtAMCWSCZV8ueDTZWhpDN.js"></script>
+
+      <p>
+        Downloading of the FCCAnalyses from GitHub and building it locally:
+      </p>
       <script async
               data-rows=14
               id="asciicast-KN170yd8EcsxrgqJU1c4AA9X6"

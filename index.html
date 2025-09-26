@@ -66,25 +66,30 @@
       </p>
 
       <p>
-        Individual analyses are designed to use the
+        The framework is designed around the
         <a href="https://root.cern/doc/master/classROOT_1_1RDataFrame.html">ROOT RDataFrame</a>
-        as the main event processing engine and the analysis input files contain
-        physics objects in <a href="https://edm4hep.web.cern.ch/">EDM4hep</a>
+        as its main event processing engine and the analysis input files contain
+        physics objects in the <a href="https://edm4hep.web.cern.ch/">EDM4hep</a>
         format.
       </p>
 
       <p>
-        Using ROOT dataframe allows to use modern, high-level interface and
+        Using ROOT RDataframe provides the modern, high-level interface and
         very quick processing time as it natively supports multi-threading.
       </p>
 
-      <h2>Obtaining FCCAnalyses</h2>
+      <h2>Quick Instructions</h2>
 
-      The FCCAnalyses is distributed in the
-      <a href="https://key4hep.github.io/key4hep-doc/">Key4hep</a> stack:
+      The FCCAnalyses is distributed as part of the
+      <a href="https://key4hep.github.io/key4hep-doc/">Key4hep</a> stack, and
+      the analysis can by issuing the following two commands:
 
       <pre><code>source /cvmfs/sw.hsf.org/key4hep/setup.sh
 fccanalysis run analysis_script.py</code></pre>
+
+      It is also possible to compile the FCCAnalyses framework locally, more
+      information is provided in the
+      <a href="/FCCAnalyses/quick-start">Quick Start</a> section.
 
       <h2>Getting help</h2>
 
