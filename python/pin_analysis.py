@@ -29,9 +29,14 @@ class PinAnalysis:
             sys.exit(3)
 
         self.local_dir = os.environ.get('FCCANA_LOCAL_DIR')
-        self.pin_path = pathlib.Path(self.local_dir + '/.fccana/stackpin')
+        self.pin_path = pathlib.Path(self.local_dir + '/.fccana/stack_pin')
 
-        self.args, _ = mainparser.parse_known_args()
+        # TODO: Legacy pin location, remove after Jun 2026
+        pin_path_old = pathlib.Path(self.local_dir + '/.fccana/stackpin')
+        if pin_path_old.is_file():
+            os.replace(pin_path_old, self.pin_path)
+
+        self.args = mainparser.parse_args()
 
         if self.args.show:
             self.show_pin()
