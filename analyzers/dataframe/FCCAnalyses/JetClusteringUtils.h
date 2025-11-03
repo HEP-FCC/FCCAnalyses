@@ -5,7 +5,7 @@
 #include "Math/Vector4D.h"
 #include "ROOT/RVec.hxx"
 
-#include "FastJet/JetClustering.h"
+#include "FCCAnalyses/JetClustering.h"
 #include "fastjet/JetDefinition.hh"
 
 #include "TRandom3.h"
