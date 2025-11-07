@@ -109,16 +109,16 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
         config['include-paths'] = analysis.include_paths
 
     # Check whether to use PODIO DataSource to load the events
-    config['use_data_source'] = False
+    config['use-data-source'] = False
     if args.use_data_source:
-        config['use_data_source'] = True
-    if get_attribute(analysis, 'use_data_source', False):
-        config['use_data_source'] = True
+        config['use-data-source'] = True
+    if get_attribute(analysis, 'use-data-source', False):
+        config['use-data-source'] = True
     # Check whether to use event weights (only supported as analysis config
     # file option, not command line!)
-    config['do_weighted'] = False
-    if get_attribute(analysis, 'do_weighted', False):
-        config['do_weighted'] = True
+    config['do-weighted'] = False
+    if get_attribute(analysis, 'do-weighted', False):
+        config['do-weighted'] = True
 
     # Check if the progress-bar is enabled
     config['enable-progress-bar'] = True
@@ -126,7 +126,7 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
         config['enable-progress-bar'] = args.progress_bar
 
     # Check the output path
-    # config['output_file_path'] = None
+    # config['output-file-path'] = None
     # if args.output
 
     return config
@@ -139,7 +139,7 @@ def initialize(config, args, analysis):
     '''
 
     # For convenience and compatibility with user code
-    if config['use_data_source']:
+    if config['use-data-source']:
         ROOT.gInterpreter.Declare("using namespace FCCAnalyses::PodioSource;")
     else:
         ROOT.gInterpreter.Declare("using namespace FCCAnalyses;")
@@ -204,7 +204,7 @@ def run_rdf(config: dict[str, Any],
     Run the analysis ROOTDataFrame and snapshot it.
     '''
     # Create initial dataframe
-    if config['use_data_source']:
+    if config['use-data-source']:
         if ROOT.podio.DataSource:
             LOGGER.debug('Found podio::DataSource.')
         else:
@@ -233,7 +233,7 @@ def run_rdf(config: dict[str, Any],
     try:
         evtcount_init = dframe2.Count()
         sow_init = evtcount_init
-        if config['do_weighted']:
+        if config['do-weighted']:
             sow_init = dframe2.Sum("EventHeader.weight")
 
         dframe3 = analysis.analyzers(dframe2)
@@ -245,7 +245,7 @@ def run_rdf(config: dict[str, Any],
 
         evtcount_final = dframe3.Count()
         sow_final = evtcount_final
-        if config['do_weighted']:
+        if config['do-weighted']:
             sow_final = dframe3.Sum("EventHeader.weight")
 
         # Generate computational graph of the analysis
@@ -307,19 +307,19 @@ def run_local(config: dict[str, Any],
     nevents_local = 0
 
     # Same for the sum of weights
-    if config['do_weighted']:
+    if config['do-weighted']:
         sow_orig = 0.
         sow_local = 0.
 
     for filepath in infile_list:
 
-        if not config['use_data_source']:
+        if not config['use-data-source']:
             filepath = apply_filepath_rewrites(filepath)
 
         file_list.push_back(filepath)
         info_msg += f'- {filepath}\t\n'
 
-        if config['do_weighted']:
+        if config['do-weighted']:
             # Adjust number of events in case --nevents was specified
             if args.nevents > 0:
                 nevts_param, nevts_tree, sow_param, sow_tree = \
@@ -358,12 +358,12 @@ def run_local(config: dict[str, Any],
     if nevents_orig > 0:
         LOGGER.info('Number of events:\n\t- original: %s\n\t- local:    %s',
                     f'{nevents_orig:,}', f'{nevents_local:,}')
-        if config['do_weighted']:
+        if config['do-weighted']:
             LOGGER.info('Sum of weights:\n\t- original: %s\n\t- local:    %s',
                         f'{sow_orig:,}', f'{sow_local:,}')
     else:
         LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
-        if config['do_weighted']:
+        if config['do-weighted']:
             LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
 
     outfile_path = args.output
@@ -388,7 +388,7 @@ def run_local(config: dict[str, Any],
         info_msg += f'\nReduction factor local:  {outn/inn}'
     if nevents_orig > 0:
         info_msg += f'\nReduction factor total:  {outn/nevents_orig}'
-    if config['do_weighted']:
+    if config['do-weighted']:
         info_msg += f'\nTotal sum of weights processed:  {float(in_sow):0,.2f}'
         info_msg += f'\nNo. result weighted events :       {float(out_sow):0,.2f}'
         if in_sow > 0:
@@ -410,7 +410,7 @@ def run_local(config: dict[str, Any],
         param = ROOT.TParameter(int)('eventsSelected', outn)
         param.Write()
 
-        if config['do_weighted']:
+        if config['do-weighted']:
             param_sow = ROOT.TParameter(float)(
                         'SumOfWeights',
                         sow_orig if sow_orig != 0 else in_sow)
@@ -468,7 +468,7 @@ def run_fccanalysis(args, analysis_module):
     if output_dir_eos is not None and not os.path.exists(output_dir_eos):
         os.system(f'mkdir -p {output_dir_eos}')
 
-    if config['do_weighted']:
+    if config['do-weighted']:
         LOGGER.info('Using generator weights')
 
     # Check if test mode is specified, and if so run the analysis on it (this
