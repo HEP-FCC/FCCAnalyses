@@ -67,13 +67,26 @@ def initialize(args, rdf_module, anapath: str):
         LOGGER.info('No multithreading enabled. Running in single thread...')
 
     # custom header files
-    include_paths = get_element(rdf_module, "includePaths")
+    include_paths = get_attribute(rdf_module, "includePaths", [])
     if include_paths:
-        ROOT.gInterpreter.ProcessLine(".O3")
         basepath = os.path.dirname(os.path.abspath(anapath)) + "/"
+        # Check if the include paths exist
+        for path in include_paths:
+            if not os.path.isfile(os.path.join(basepath, path)):
+                LOGGER.error('Include header file "%s" not found!'
+                             '\nAborting...', path)
+                sys.exit(3)
+
+        ROOT.gInterpreter.ProcessLine(".O2")
         for path in include_paths:
             LOGGER.info('Loading %s...', path)
-            ROOT.gInterpreter.Declare(f'#include "{basepath}/{path}"')
+            success = ROOT.gInterpreter.Declare(
+                f'#include "{os.path.join(basepath, path)}"'
+            )
+            if not success:
+                LOGGER.error('Error occurred when JIT compiling "%s" include '
+                             'header file!\nAborting...', path)
+                sys.exit(3)
 
     # check if analyses plugins need to be loaded before anything
     # still in use?
