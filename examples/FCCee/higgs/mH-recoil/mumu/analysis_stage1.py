@@ -54,8 +54,8 @@ class Analysis():
         # Optional: number of threads to run on, default is 'all available'
         # self.n_threads = 4
 
-        # Optional: running on HTCondor, default is False
-        # self.run_batch = False
+        # Optional: providing additional analyzers
+        # self.include_paths = ['additional_analyzers.h']
 
         # Optional: test file
         self.test_file = 'https://fccsw.web.cern.ch/fccsw/analysis/' \

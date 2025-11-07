@@ -685,11 +685,11 @@ def run(parser):
         args.remaining = []
 
     if not hasattr(args, 'command'):
-        LOGGER.error('Error occurred during subcommand routing!\nAborting...')
+        LOGGER.error('Error occurred during sub-command routing!\nAborting...')
         sys.exit(3)
 
     if args.command != 'run':
-        LOGGER.error('Unknow sub-command "%s"!\nAborting...')
+        LOGGER.error('Unknown sub-command "%s"!\nAborting...')
         sys.exit(3)
 
     # Work with absolute path of the analysis script
@@ -724,7 +724,7 @@ def run(parser):
             ROOT.Experimental.ELogLevel.kDebug+10)
         LOGGER.debug(verbosity)
 
-    # Load pre compiled analyzers
+    # Load the pre-compiled analyzers
     LOGGER.info('Loading analyzers from libFCCAnalyses...')
     ROOT.gSystem.Load("libFCCAnalyses")
     # Is this still needed?? 01/04/2022 still to be the case
