@@ -19,7 +19,6 @@
   </tr>
 </table>
 <div class="manual-text">
-<p class="Pp"></p>
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
 <p class="Pp"><b>fccanalysis-script</b> &#x2013; analysis steering script
@@ -212,7 +211,10 @@
     (optional)</a></dt>
   <dd>Number of threads the RDataFrame will use during processing.
     <br/>
-    Default value: 1</dd>
+    Default value: 1 <b>inlude_paths</b> (optional) Specify additional include
+      header files to be JIT compiled.
+    <br/>
+    Default value: None</dd>
   <dt id="batch_queue"><a class="permalink" href="#batch_queue"><b>batch_queue</b>
     (optional)</a></dt>
   <dd>Batch queue name when running on HTCondor.
@@ -321,7 +323,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">10 May 2025</td>
+    <td class="foot-date">07 Nov 2025</td>
     <td class="foot-os">0.11.0</td>
   </tr>
 </table>
