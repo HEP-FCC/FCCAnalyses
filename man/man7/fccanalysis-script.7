@@ -1,6 +1,6 @@
 .\" Manpage for fccanalysis-script
 .\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
-.TH FCCANALYSIS\-SCRIPT 7 "17 Jan 2024" "pre-edm4hep1" "fccanalysis-script man page"
+.TH FCCANALYSIS\-SCRIPT 7 "07 Nov 2025" "pre-edm4hep1" "fccanalysis-script man page"
 .SH NAME
 \fBfccanalysis\-script\fR \(en analysis steering script specification
 .SH SYNOPSIS
@@ -135,6 +135,11 @@ Default value: empty string
 Number of threads the RDataFrame will use\&.
 .br
 Default value: 4
+.TP
+\fBinludePaths\fR (optional)
+Specify additional include header files to be JIT compiled.
+.br
+Default value: [] (empty list)
 .TP
 \fBrunBatch\fR (optional)
 Run the analysis on the HTCondor batch system.
