@@ -91,12 +91,22 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
                      '--i/--input instead!\nAborting...')
         sys.exit(3)
 
+    # Determine analysis directory
+    config['analysis-dir'] = os.path.dirname(
+        os.path.abspath(args.anascript_path)
+    )
+
     # Check input files list
     config['input-file-list'] = None
     if args.input_file_list is not None:
         config['input-file-list'] = get_file_list(args.input_file_list)
     if args.input is not None:
         config['input-file-list'] = args.input
+
+    # Check include header files
+    config['include-paths'] = None
+    if hasattr(analysis, 'include_paths'):
+        config['include-paths'] = analysis.include_paths
 
     # Check whether to use PODIO DataSource to load the events
     config['use_data_source'] = False
@@ -163,14 +173,25 @@ def initialize(config, args, analysis):
     else:
         LOGGER.info('No multithreading enabled. Running in single thread...')
 
-    # custom header files
-    include_paths = get_attribute(analysis, 'include_paths', None)
-    if include_paths is not None:
+    # Additional include header files
+    if config['include-paths'] is not None:
+        # Check if the include paths exist
+        for path in config['include-paths']:
+            if not os.path.isfile(os.path.join(config['analysis-dir'], path)):
+                LOGGER.error('Include header file "%s" not found!'
+                             '\nAborting...', path)
+                sys.exit(3)
+
         ROOT.gInterpreter.ProcessLine(".O2")
-        basepath = os.path.dirname(os.path.abspath(args.anascript_path)) + "/"
-        for path in include_paths:
+        for path in config['include-paths']:
             LOGGER.info('Loading %s...', path)
-            ROOT.gInterpreter.Declare(f'#include "{basepath}/{path}"')
+            success = ROOT.gInterpreter.Declare(
+                f'#include "{os.path.join(config["analysis-dir"], path)}"'
+            )
+            if not success:
+                LOGGER.error('Error occurred when JIT compiling "%s" include '
+                             'header file!\nAborting...', path)
+                sys.exit(3)
 
 
 # _____________________________________________________________________________
