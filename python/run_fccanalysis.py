@@ -138,8 +138,6 @@ def initialize(config, args, analysis):
     Common initialization steps.
     '''
 
-    LOGGER.info('---------------------------------- INIT ---------------------------------')
-
     # For convenience and compatibility with user code
     if config['use_data_source']:
         ROOT.gInterpreter.Declare("using namespace FCCAnalyses::PodioSource;")
