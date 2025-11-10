@@ -939,7 +939,7 @@ def run(args):
         config['input-dir'] = script_module.inputDir
     if args.input_dir is not None:
         config['input-dir'] = args.input_dir
-    LOGGER.info('Input directory: %s', config['input_dir'])
+    LOGGER.info('Input directory: %s', config['input-dir'])
 
     # Output directory
     config['output-dir'] = os.getcwd()
