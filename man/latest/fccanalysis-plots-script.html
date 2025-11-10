@@ -58,6 +58,11 @@
   <dd>User can specify the directory for the output files.
     <br/>
     Default value: . (current working directory)</dd>
+  <dt id="formats"><a class="permalink" href="#formats"><b>formats</b></a></dt>
+  <dd>Which file types will produced, e.g. PNG, PDF and so on. List of options
+      is expected, typically two options are provided: ['png', 'pdf'].
+    <br/>
+    Default value: ['png', 'pdf']</dd>
   <dt id="doScale"><a class="permalink" href="#doScale"><b>doScale</b>
     (optional)</a></dt>
   <dd>Whether to scale the histograms to the expected integrated luminosity. It
@@ -111,6 +116,21 @@
   <dd>Adjusts size of the text in the plot's legend.
     <br/>
     Default value: 0.035</dd>
+  <dt id="stacksig"><a class="permalink" href="#stacksig"><b>stacksig</b></a></dt>
+  <dd>Whether to stack signal histograms. List of options is expected, options
+      are: &quot;stack&quot;, &quot;nostack&quot;.
+    <br/>
+    Default value: ['stack']</dd>
+  <dt id="xaxis"><a class="permalink" href="#xaxis"><b>xaxis</b></a></dt>
+  <dd>Scaling for the <i>x</i>-axis. List of options is expected, options are:
+      &quot;lin&quot;, &quot;log&quot;.
+    <br/>
+    Default value: ['lin']</dd>
+  <dt id="yaxis"><a class="permalink" href="#yaxis"><b>yaxis</b></a></dt>
+  <dd>Scaling for the <i>y</i>-axis. List of options is expected, options are:
+      &quot;lin&quot;, &quot;log&quot;.
+    <br/>
+    Default value: ['lin']</dd>
 </dl>
 <p class="Pp">This section is under construction. You are invited to help :)</p>
 </section>
@@ -154,7 +174,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">16 Sep 2024</td>
+    <td class="foot-date">05 Aug 2025</td>
     <td class="foot-os">0.11.0</td>
   </tr>
 </table>
