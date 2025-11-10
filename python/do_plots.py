@@ -76,22 +76,22 @@ def determine_lumi_scaling(config: dict[str, Any],
                          'value from the input file!\n  %s\n'
                          'Aborting...', infile.GetName())
 
-        if config['int_lumi'] != int_lumi_in_file:
+        if config['int-lumi'] != int_lumi_in_file:
             LOGGER.warning(
                 'Histograms are already scaled to different '
                 'luminosity value!\n'
                 'Luminosity in the input file is %s pb-1 and '
                 'luminosity requested in plots script is %s pb-1.',
-                int_lumi_in_file, config['int_lumi'])
-            if config['do_scale']:
+                int_lumi_in_file, config['int-lumi'])
+            if config['do-scale']:
                 LOGGER.warning(
                     'Rescaling from %s pb-1 to %s pb-1...',
-                    int_lumi_in_file, config['int_lumi'])
-                scale *= config['int_lumi'] / int_lumi_in_file
+                    int_lumi_in_file, config['int-lumi'])
+                scale *= config['int-lumi'] / int_lumi_in_file
 
     else:
-        if config['do_scale']:
-            scale = scale * config['int_lumi']
+        if config['do-scale']:
+            scale = scale * config['int-lumi']
 
     return scale
 
@@ -120,7 +120,7 @@ def load_hists(var: str,
     for s in signal:
         hsignal[s] = []
         for filepathstem in signal[s]:
-            infilepath = config['input_dir'] + filepathstem + '_' + sel + \
+            infilepath = config['input-dir'] + filepathstem + '_' + sel + \
                          '_histo.root'
             if not os.path.isfile(infilepath):
                 LOGGER.info('File "%s" not found!\nSkipping it...', infilepath)
@@ -132,7 +132,7 @@ def load_hists(var: str,
 
                 scale = determine_lumi_scaling(config,
                                                infile,
-                                               config['scale_sig'])
+                                               config['scale-sig'])
             hist.Scale(scale)
             hist.Rebin(rebin)
 
@@ -146,7 +146,7 @@ def load_hists(var: str,
     for b in backgrounds:
         hbackgrounds[b] = []
         for filepathstem in backgrounds[b]:
-            infilepath = config['input_dir'] + filepathstem + '_' + sel + \
+            infilepath = config['input-dir'] + filepathstem + '_' + sel + \
                          '_histo.root'
             if not os.path.isfile(infilepath):
                 LOGGER.info('File "%s" not found!\nSkipping it...', infilepath)
@@ -158,7 +158,7 @@ def load_hists(var: str,
 
                 scale = determine_lumi_scaling(config,
                                                infile,
-                                               config['scale_bkg'])
+                                               config['scale-bkg'])
             hist.Scale(scale)
             hist.Rebin(rebin)
 
@@ -259,56 +259,56 @@ def runPlots(config: dict[str, Any],
              extralab):
 
     # Below are settings for separate signal and background legends
-    if config['split_leg']:
+    if config['split-leg']:
         legsize = 0.04 * (len(hsignal))
         legsize2 = 0.04 * (len(hbackgrounds))
         leg = ROOT.TLegend(0.15, 0.60 - legsize, 0.50, 0.62)
         leg2 = ROOT.TLegend(0.60, 0.60 - legsize2, 0.88, 0.62)
 
-        if config['leg_position'][0] is not None and \
-                config['leg_position'][2] is not None:
-            leg.SetX1(config['leg_position'][0])
-            leg.SetX2((config['leg_position'][0] +
-                       config['leg_position'][2]) / 2)
-            leg2.SetX2((config['leg_position'][0] +
-                        config['leg_position'][2]) / 2)
-            leg2.SetX2(config['leg_position'][0])
-        if config['leg_position'][1] is not None:
-            leg.SetY1(config['leg_position'][1])
-            leg2.SetY1(config['leg_position'][1])
-        if config['leg_position'][3] is not None:
-            leg.SetY2(config['leg_position'][3])
-            leg2.SetY2(config['leg_position'][3])
+        if config['leg-position'][0] is not None and \
+                config['leg-position'][2] is not None:
+            leg.SetX1(config['leg-position'][0])
+            leg.SetX2((config['leg-position'][0] +
+                       config['leg-position'][2]) / 2)
+            leg2.SetX2((config['leg-position'][0] +
+                        config['leg-position'][2]) / 2)
+            leg2.SetX2(config['leg-position'][0])
+        if config['leg-position'][1] is not None:
+            leg.SetY1(config['leg-position'][1])
+            leg2.SetY1(config['leg-position'][1])
+        if config['leg-position'][3] is not None:
+            leg.SetY2(config['leg-position'][3])
+            leg2.SetY2(config['leg-position'][3])
 
         leg2.SetFillColor(0)
         leg2.SetFillStyle(0)
         leg2.SetLineColor(0)
         leg2.SetShadowColor(10)
-        leg2.SetTextSize(config['legend_text_size'])
+        leg2.SetTextSize(config['legend-text-size'])
         leg2.SetTextFont(42)
     else:
         legsize = 0.04 * (len(hbackgrounds) + len(hsignal))
         leg = ROOT.TLegend(0.68, 0.86 - legsize, 0.96, 0.88)
         leg2 = None
 
-        if config['leg_position'][0] is not None:
-            leg.SetX1(config['leg_position'][0])
-        if config['leg_position'][1] is not None:
-            leg.SetY1(config['leg_position'][1])
-        if config['leg_position'][2] is not None:
-            leg.SetX2(config['leg_position'][2])
-        if config['leg_position'][3] is not None:
-            leg.SetY2(config['leg_position'][3])
+        if config['leg-position'][0] is not None:
+            leg.SetX1(config['leg-position'][0])
+        if config['leg-position'][1] is not None:
+            leg.SetY1(config['leg-position'][1])
+        if config['leg-position'][2] is not None:
+            leg.SetX2(config['leg-position'][2])
+        if config['leg-position'][3] is not None:
+            leg.SetY2(config['leg-position'][3])
 
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
     leg.SetShadowColor(10)
-    leg.SetTextSize(config['legend_text_size'])
+    leg.SetTextSize(config['legend-text-size'])
     leg.SetTextFont(42)
 
     for b in hbackgrounds:
-        if config['split_leg']:
+        if config['split-leg']:
             leg2.AddEntry(hbackgrounds[b][0], script_module.legend[b], "f")
         else:
             leg.AddEntry(hbackgrounds[b][0], script_module.legend[b], "f")
@@ -341,12 +341,12 @@ def runPlots(config: dict[str, Any],
 
     lt = 'FCCAnalyses: FCC-hh Simulation (Delphes)'
     rt = f'#sqrt{{s}} = {script_module.energy:.1f} TeV,   ' \
-         f'{config["int_lumi_label"]}'
+         f'{config["int-lumi-label"]}'
 
     if 'ee' in script_module.collider:
         lt = 'FCCAnalyses: FCC-ee Simulation (Delphes)'
         rt = f'#sqrt{{s}} = {script_module.energy:.1f} GeV,   ' \
-             f'{config["int_lumi_label"]}'
+             f'{config["int-lumi-label"]}'
 
     customLabel = ""
     try:
@@ -359,7 +359,7 @@ def runPlots(config: dict[str, Any],
                   script_module.outdir + "/" + sel, False, True, histos,
                   colors, script_module.ana_tex, extralab,
                   customLabel, nsig, nbkg, leg2, yields,
-                  config['plot_stat_unc'])
+                  config['plot-stat-unc'])
         return
 
     if 'stack' in script_module.stacksig:
@@ -368,13 +368,13 @@ def runPlots(config: dict[str, Any],
                       script_module.formats, script_module.outdir + "/" + sel,
                       False, True, histos, colors, script_module.ana_tex,
                       extralab, customLabel, nsig, nbkg, leg2,
-                      yields, config['plot_stat_unc'])
+                      yields, config['plot-stat-unc'])
         if 'log' in script_module.yaxis:
             drawStack(config, var + "_stack_log", 'events', leg, lt, rt,
                       script_module.formats, script_module.outdir + "/" + sel,
                       True, True, histos, colors, script_module.ana_tex,
                       extralab, customLabel, nsig, nbkg, leg2,
-                      yields, config['plot_stat_unc'])
+                      yields, config['plot-stat-unc'])
         if 'lin' not in script_module.yaxis and \
                 'log' not in script_module.yaxis:
             LOGGER.info('Unrecognized option in formats, should be '
@@ -387,13 +387,13 @@ def runPlots(config: dict[str, Any],
                       script_module.outdir + "/" + sel, False, False, histos,
                       colors, script_module.ana_tex, extralab,
                       customLabel, nsig, nbkg, leg2, yields,
-                      config['plot_stat_unc'])
+                      config['plot-stat-unc'])
         if 'log' in script_module.yaxis:
             drawStack(config, var + "_nostack_log", 'events', leg, lt, rt,
                       script_module.formats, script_module.outdir + "/" + sel,
                       True, False, histos, colors, script_module.ana_tex,
                       extralab, customLabel, nsig, nbkg, leg2,
-                      yields, config['plot_stat_unc'])
+                      yields, config['plot-stat-unc'])
         if 'lin' not in script_module.yaxis and \
                 'log' not in script_module.yaxis:
             LOGGER.info('Unrecognised option in formats, should be '
@@ -437,7 +437,7 @@ def runPlotsHistmaker(config: dict[str, Any],
         leg2.SetFillStyle(0)
         leg2.SetLineColor(0)
         leg2.SetShadowColor(10)
-        leg2.SetTextSize(config['legend_text_size'])
+        leg2.SetTextSize(config['legend-text-size'])
         leg2.SetTextFont(42)
     else:
         legsize = 0.04*(len(hbackgrounds)+len(hsignal))
@@ -450,19 +450,19 @@ def runPlotsHistmaker(config: dict[str, Any],
         leg2 = None
 
     leg = ROOT.TLegend(
-        config['leg_position'][0] if config['leg_position'][0] is not None \
+        config['leg-position'][0] if config['leg-position'][0] is not None \
                                   else legCoord[0],
-        config['leg_position'][1] if config['leg_position'][1] is not None \
+        config['leg-position'][1] if config['leg-position'][1] is not None \
                                   else legCoord[1],
-        config['leg_position'][2] if config['leg_position'][2] is not None \
+        config['leg-position'][2] if config['leg-position'][2] is not None \
                                   else legCoord[2],
-        config['leg_position'][3] if config['leg_position'][3] is not None \
+        config['leg-position'][3] if config['leg-position'][3] is not None \
                                   else legCoord[3])
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetLineColor(0)
     leg.SetShadowColor(10)
-    leg.SetTextSize(config['legend_text_size'])
+    leg.SetTextSize(config['legend-text-size'])
     leg.SetTextFont(42)
 
     for b in hbackgrounds:
@@ -774,15 +774,15 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
     latex.SetTextSize(0.025)
     latex.DrawLatex(0.18, 0.66, text)
 
-    if config['scale_sig'] != 1.0:
-        text = '#bf{#it{Signal Scaling = ' + f'{config["scale_sig"]:.3g}' + \
+    if config['scale-sig'] != 1.0:
+        text = '#bf{#it{Signal Scaling = ' + f'{config["scale-sig"]:.3g}' + \
                '}}'
         latex.SetTextSize(0.025)
         latex.DrawLatex(0.18, 0.63, text)
 
-    if config['scale_bkg'] != 1.0:
+    if config['scale-bkg'] != 1.0:
         text = '#bf{#it{Background Scaling = ' + \
-                f'{config["scale_bkg"]:.3g}' + '}}'
+                f'{config["scale-bkg"]:.3g}' + '}}'
         latex.SetTextSize(0.025)
         latex.DrawLatex(0.18, 0.63, text)
 
@@ -826,13 +826,13 @@ def drawStack(config, name, ylabel, legend, leftText, rightText, formats,
         latex.SetTextSize(0.025)
         latex.DrawLatex(0.18, 0.68, text)
 
-        text = '#bf{#it{Signal Scaling = ' + f'{config["scale_sig"]:.3g}' + \
+        text = '#bf{#it{Signal Scaling = ' + f'{config["scale-sig"]:.3g}' + \
                '}}'
         latex.SetTextSize(0.04)
         latex.DrawLatex(0.18, 0.57, text)
 
         text = '#bf{#it{Background Scaling = ' + \
-            f'{config["scale_bkg"]:.3g}' + '}}'
+            f'{config["scale-bkg"]:.3g}' + '}}'
         latex.SetTextSize(0.04)
         latex.DrawLatex(0.18, 0.52, text)
 
@@ -912,117 +912,117 @@ def run(args):
     config: dict[str, Any] = {}
 
     # Input directory
-    config['input_dir'] = os.getcwd()
+    config['input-dir'] = os.getcwd()
     if hasattr(script_module, 'indir'):
-        config['input_dir'] = script_module.indir
+        config['input-dir'] = script_module.indir
     if hasattr(script_module, 'inputDir'):
-        config['input_dir'] = script_module.inputDir
+        config['input-dir'] = script_module.inputDir
     if args.input_dir is not None:
-        config['input_dir'] = args.input_dir
+        config['input-dir'] = args.input_dir
 
     # Output directory
-    config['output_dir'] = os.getcwd()
+    config['output-dir'] = os.getcwd()
     if hasattr(script_module, 'outdir'):
-        config['output_dir'] = script_module.outdir
+        config['output-dir'] = script_module.outdir
     if hasattr(script_module, 'outputDir'):
-        config['output_dir'] = script_module.outputDir
+        config['output-dir'] = script_module.outputDir
     if args.output_dir is not None:
-        config['output_dir'] = args.output_dir
+        config['output-dir'] = args.output_dir
 
     # Integrated luminosity
-    config['int_lumi'] = 1.
+    config['int-lumi'] = 1.
     if hasattr(script_module, 'intLumi'):
-        config['int_lumi'] = script_module.intLumi
+        config['int-lumi'] = script_module.intLumi
     else:
         LOGGER.debug('No integrated luminosity provided, using 1.0 pb-1.')
-    LOGGER.info('Integrated luminosity: %g pb-1', config['int_lumi'])
+    LOGGER.info('Integrated luminosity: %g pb-1', config['int-lumi'])
 
     # Whether to scale histograms to luminosity
-    config['do_scale'] = 1.0
+    config['do-scale'] = 1.0
     if hasattr(script_module, 'doScale'):
-        config['do_scale'] = script_module.doScale
+        config['do-scale'] = script_module.doScale
     else:
         LOGGER.debug('No scaling to luminosity requested, scaling won\'t be '
                      'done.')
-        config['do_scale'] = False
-    if config['do_scale']:
+        config['do-scale'] = False
+    if config['do-scale']:
         LOGGER.info('Histograms will be scaled to luminosity.')
 
     # Scale factor to apply to all signal histograms
-    config['scale_sig'] = 1.0
+    config['scale-sig'] = 1.0
     if hasattr(script_module, 'scaleSig'):
-        config['scale_sig'] = script_module.scaleSig
+        config['scale-sig'] = script_module.scaleSig
     else:
         LOGGER.debug('No scale factor for signal provided, using 1.0.')
-    LOGGER.info('Scale factor for signal: %g', config['scale_sig'])
+    LOGGER.info('Scale factor for signal: %g', config['scale-sig'])
 
     # Scale factor to apply to all background histograms
-    config['scale_bkg'] = 1.0
+    config['scale-bkg'] = 1.0
     if hasattr(script_module, 'scaleBkg'):
-        config['scale_bkg'] = script_module.scaleBkg
+        config['scale-bkg'] = script_module.scaleBkg
     else:
         LOGGER.debug('No scale factor for background provided, using 1.0.')
-    LOGGER.info('Scale factor for background: %g', config['scale_sig'])
+    LOGGER.info('Scale factor for background: %g', config['scale-sig'])
 
     # Check if we have plots (staged analysis) or histos (histmaker)
     config['plots']: dict[str, Any] = {}
     config['hists']: dict[str, Any] = {}
-    config['ana_type']: str = "none"
+    config['ana-type']: str = "none"
     if hasattr(script_module, 'plots'):
         config['plots'] = script_module.plots
-        config['ana_type']: str = "staged"
+        config['ana-type']: str = "staged"
     if hasattr(script_module, 'hists'):
         config['hists'] = script_module.hists
-        config['ana_type']: str = "histmaker"
+        config['ana-type']: str = "histmaker"
 
-    if config['ana_type'] == "none":
+    if config['ana-type'] == "none":
         LOGGER.error('No plot definitions found!\nAborting...')
         sys.exit(3)
 
     # Splitting legend into two columns
-    config['split_leg'] = False
+    config['split-leg'] = False
     if hasattr(script_module, 'splitLeg'):
-        config['split_leg'] = script_module.splitLeg
+        config['split-leg'] = script_module.splitLeg
 
-    config['leg_position'] = [None, None, None, None]
+    config['leg-position'] = [None, None, None, None]
     if hasattr(script_module, 'legendCoord'):
-        config['leg_position'] = script_module.legendCoord
+        config['leg-position'] = script_module.legendCoord
     if args.legend_x_min is not None:
-        config['leg_position'][0] = args.legend_x_min
+        config['leg-position'][0] = args.legend_x_min
     if args.legend_y_min is not None:
-        config['leg_position'][1] = args.legend_y_min
+        config['leg-position'][1] = args.legend_y_min
     if args.legend_x_max is not None:
-        config['leg_position'][2] = args.legend_x_max
+        config['leg-position'][2] = args.legend_x_max
     if args.legend_y_max is not None:
-        config['leg_position'][3] = args.legend_y_max
+        config['leg-position'][3] = args.legend_y_max
 
-    config['plot_stat_unc'] = False
+    config['plot-stat-unc'] = False
     if hasattr(script_module, 'plotStatUnc'):
-        config['plot_stat_unc'] = script_module.plotStatUnc
+        config['plot-stat-unc'] = script_module.plotStatUnc
 
-    config['legend_text_size'] = 0.035
+    config['legend-text-size'] = 0.035
     if hasattr(script_module, 'legendTextSize'):
-        config['legend_text_size'] = script_module.legendTextSize
+        config['legend-text-size'] = script_module.legendTextSize
     if args.legend_text_size is not None:
-        config['legend_text_size'] = args.legend_text_size
+        config['legend-text-size'] = args.legend_text_size
 
     # Label for the integrated luminosity
-    config['int_lumi_label'] = None
+    config['int-lumi-label'] = None
     if hasattr(script_module, "intLumiLabel"):
-        config['int_lumi_label'] = script_module.intLumiLabel
-    if config['int_lumi_label'] is None:
-        if config['int_lumi'] >= 1e6:
-            int_lumi_label = config['int_lumi'] / 1e6
-            config['int_lumi_label'] = f'L = {int_lumi_label:.2g} ab^{{-1}}'
-        elif config['int_lumi'] >= 1e3:
-            int_lumi_label = config['int_lumi'] / 1e3
-            config['int_lumi_label'] = f'L = {int_lumi_label:.2g} fb^{{-1}}'
+        config['int-lumi-label'] = script_module.intLumiLabel
+    if config['int-lumi-label'] is None:
+        if config['int-lumi'] >= 1e6:
+            int_lumi_label = config['int-lumi'] / 1e6
+            config['int-lumi-label'] = f'L = {int_lumi_label:.2g} ab^{{-1}}'
+        elif config['int-lumi'] >= 1e3:
+            int_lumi_label = config['int-lumi'] / 1e3
+            config['int-lumi-label'] = f'L = {int_lumi_label:.2g} fb^{{-1}}'
         else:
-            config['int_lumi_label'] = \
-                f'L = {config["int_lumi"]:.2g} pb^{{-1}}'
+            config['int-lumi-label'] = \
+                f'L = {config["int-lumi"]:.2g} pb^{{-1}}'
 
     # Handle plots for the Histmaker analyses and exit
-    if config['ana_type'] == 'histmaker':
+    if config['ana-type'] == 'histmaker':
         LOGGER.info('Plotting histograms from histmaker step...')
         for hist_name, hist_cfg in script_module.hists.items():
             runPlotsHistmaker(config, args, hist_name, script_module, hist_cfg)
