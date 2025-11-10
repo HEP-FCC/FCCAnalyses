@@ -9,7 +9,7 @@ macro(build_analysis dir)
   #--- generate the ROOT dictionary using a REFLEX selection
   set(CMAKE_ROOTTEST_NOROOTMAP OFF)
   #--- build the analysis library (linked against FCCAnalyses)
-  add_library(${lib_name} SHARED)
+  add_library(${lib_name} SHARED ${sources})
   target_include_directories(${lib_name} PUBLIC ${dir}/include
                                                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                                                 $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/addons>
