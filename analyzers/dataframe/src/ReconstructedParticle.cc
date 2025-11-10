@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace FCCAnalyses :: ReconstructedParticle {
+namespace FCCAnalyses ::ReconstructedParticle {
 
 /*
  *  sel_type
@@ -150,18 +150,18 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> resonanceBuilder::operato
   }
 }
 
-
 /*
  * recoilBuilder
  */
 recoilBuilder::recoilBuilder(float arg_sqrts) : m_sqrts(arg_sqrts) {};
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
-recoilBuilder::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles) {
+recoilBuilder::operator()(
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   auto recoil_p4 = TLorentzVector(0, 0, 0, m_sqrts);
 
-  for (const auto& v1: inParticles) {
+  for (const auto &v1 : inParticles) {
     TLorentzVector tv1;
     tv1.SetXYZM(v1.momentum.x, v1.momentum.y, v1.momentum.z, v1.mass);
     recoil_p4 -= tv1;
@@ -176,7 +176,6 @@ recoilBuilder::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData
 
   return result;
 };
-
 
 sel_axis::sel_axis(bool arg_pos): m_pos(arg_pos) {};
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_axis::operator()(ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
@@ -259,7 +258,6 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<
   return ROOT::VecOps::RVec(result);
 }
 
-
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 remove(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
        ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y) {
@@ -279,10 +277,8 @@ remove(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
       float px2 = it->momentum.x;
       float py2 = it->momentum.y;
       float pz2 = it->momentum.z;
-      if (abs(mass1-mass2) < epsilon &&
-        abs(px1-px2) < epsilon &&
-        abs(py1-py2) < epsilon &&
-        abs(pz1-pz2) < epsilon ) {
+      if (abs(mass1 - mass2) < epsilon && abs(px1 - px2) < epsilon &&
+          abs(py1 - py2) < epsilon && abs(pz1 - pz2) < epsilon) {
         result.erase(it);
         break;
       }
@@ -291,20 +287,18 @@ remove(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
   return ROOT::VecOps::RVec(result);
 }
 
-
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 get(ROOT::VecOps::RVec<int> indexes,
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
 
-  for (const auto& index: indexes) {
+  for (const auto &index : indexes) {
     if (index > -1)
       result.push_back(inParticles.at(index));
   }
 
   return result;
 }
-
 
 TLorentzVector get_P4vis(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
     TLorentzVector P4sum;
@@ -454,25 +448,22 @@ int get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x) {
   return result;
 }
 
+ROOT::VecOps::RVec<bool>
+getJet_btag(ROOT::VecOps::RVec<int> index,
+            ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid,
+            ROOT::VecOps::RVec<float> values) {
+  ROOT::VecOps::RVec<bool> result;
+  result.resize(index.size());
 
-  ROOT::VecOps::RVec<bool>
-  getJet_btag(ROOT::VecOps::RVec<int> index,
-              ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid,
-              ROOT::VecOps::RVec<float> values) {
-    ROOT::VecOps::RVec<bool> result;
-    result.resize(index.size());
-
-    for (const auto& idx: index) {
-      result.push_back(values.at(pid.at(idx).parameters_begin));
-    }
-
-    return result;
+  for (const auto &idx : index) {
+    result.push_back(values.at(pid.at(idx).parameters_begin));
   }
 
+  return result;
+}
 
-  int getJet_ntags(ROOT::VecOps::RVec<bool> inBJetMask) {
-    return std::count_if(inBJetMask.begin(),
-                         inBJetMask.end(),
-                         [](bool bJet) { return bJet; });
-  }
-}  /* FCCAnalyses :: ReconstructedParticle */
+int getJet_ntags(ROOT::VecOps::RVec<bool> inBJetMask) {
+  return std::count_if(inBJetMask.begin(), inBJetMask.end(),
+                       [](bool bJet) { return bJet; });
+}
+} // namespace FCCAnalyses::ReconstructedParticle
