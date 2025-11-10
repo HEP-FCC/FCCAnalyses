@@ -1,4 +1,8 @@
 if [ "${0}" != "${BASH_SOURCE}" ]; then
+  # TODO: Remove the whole file
+  echo "[DEPRECATED] Ability to load additional pre-compiled analysis libraries "
+  echo "             will disappear soon!"
+
   if ! [[ $# -eq 1 ]] ; then
     echo "Usage: source ./${0} <ANALYSISNAME>"
     echo "Where <ANALYSISNAME> is the local path where the extra analyses will be installed."

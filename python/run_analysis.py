@@ -93,18 +93,21 @@ def initialize(args, rdf_module, anapath: str):
     # still in use?
     analyses_list = get_element(rdf_module, "analysesList")
     if analyses_list and len(analyses_list) > 0:
+        LOGGER.warning('[DEPRECATED] Ability to load additional pre-compiled '
+                       'analysis libraries will disappear soon!')
         _ana = []
-        for analysis in analyses_list:
-            LOGGER.info('Load cxx analyzers from %s...', analysis)
-            if analysis.startswith('libFCCAnalysis_'):
-                ROOT.gSystem.Load(analysis)
+        for ana_lib in analyses_list:
+            LOGGER.info('Loading analysis library "%s"...', ana_lib)
+            if ana_lib.startswith('libFCCAnalysis_'):
+                ROOT.gSystem.Load(ana_lib)
             else:
-                ROOT.gSystem.Load(f'libFCCAnalysis_{analysis}')
-            if not hasattr(ROOT, analysis):
+                ROOT.gSystem.Load(f'libFCCAnalysis_{ana_lib}')
+            if not hasattr(ROOT, ana_lib):
                 ROOT.error('Analysis %s not properly loaded!\nAborting...',
-                           analysis)
+                           ana_lib)
                 sys.exit(3)
-            _ana.append(getattr(ROOT, analysis).dictionary)
+
+            _ana.append(getattr(ROOT, ana_lib).dictionary)
 
 
 # _____________________________________________________________________________

@@ -15,13 +15,16 @@ outputDir   = "."
 #Optional
 nCPUS       = 8
 runBatch    = False
-#batchQueue = "longlunch"
-#compGroup = "group_u_FCC.local_gen"
+# batchQueue = "longlunch"
+# compGroup = "group_u_FCC.local_gen"
 
-#Optional test file
-testFile ="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/events_101027117.root"
+# Optional test file
+testFile = 'https://fccsw.web.cern.ch/fccsw/analysis/' \
+           'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root'
 
-#Mandatory: RDFanalysis class where the use defines the operations on the TTree
+
+# Mandatory: RDFanalysis class where the use defines the operations on the
+# TTree
 class RDFanalysis():
     #__________________________________________________________
     #Mandatory: analysers function to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
