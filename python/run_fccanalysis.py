@@ -110,14 +110,14 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
 
     # Check whether to use PODIO DataSource to load the events
     config['use-data-source'] = False
-    if args.use_data_source:
+    if get_attribute(analysis, 'use_data_source', False):
         config['use-data-source'] = True
-    if get_attribute(analysis, 'use-data-source', False):
+    if args.use_data_source:
         config['use-data-source'] = True
     # Check whether to use event weights (only supported as analysis config
     # file option, not command line!)
     config['do-weighted'] = False
-    if get_attribute(analysis, 'do-weighted', False):
+    if get_attribute(analysis, 'do_weighted', False):
         config['do-weighted'] = True
 
     # Check if the progress-bar is enabled
@@ -219,6 +219,8 @@ def run_rdf(config: dict[str, Any],
                          'podio::DataSource!\n%s', excp)
             sys.exit(3)
     else:
+        LOGGER.info('Letting RDataFrame to load events directly from the ROOT '
+                    'file(s)...')
         dframe = ROOT.RDataFrame("events", input_list)
 
     if config['enable-progress-bar']:
@@ -469,7 +471,7 @@ def run_fccanalysis(args, analysis_module):
         os.system(f'mkdir -p {output_dir_eos}')
 
     if config['do-weighted']:
-        LOGGER.info('Using generator weights')
+        LOGGER.info('Using generator weights...')
 
     # Check if test mode is specified, and if so run the analysis on it (this
     # will exit afterwards)
