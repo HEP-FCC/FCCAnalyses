@@ -1,6 +1,6 @@
 #include "FCCAnalyses/ReconstructedParticle.h"
 
-// std
+// Standard library
 #include <cstdlib>
 #include <stdexcept>
 
@@ -11,11 +11,11 @@
 // EDM4hep
 #include "edm4hep/EDM4hepVersion.h"
 
-namespace FCCAnalyses{
+namespace FCCAnalyses ::ReconstructedParticle {
 
-namespace ReconstructedParticle{
-
-/// sel_type
+/*
+ *  sel_type
+ */
 sel_type::sel_type(const int type) : m_type(type) {}
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_type::operator()(
@@ -34,7 +34,9 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_type::operator()(
   return result;
 }
 
-/// sel_absType
+/*
+ *  sel_absType
+ */
 sel_absType::sel_absType(const int type) : m_type(type) {
   if (m_type < 0) {
     throw std::invalid_argument(
@@ -59,7 +61,9 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_absType::operator()(
   return result;
 }
 
-/// sel_pt
+/*
+ *  sel_pt
+ */
 sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_pt::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
@@ -73,6 +77,9 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_pt::operator() (ROOT
   return result;
 }
 
+/*
+ *  sel_eta
+ */
 sel_eta::sel_eta(float arg_min_eta) : m_min_eta(arg_min_eta) {};
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  sel_eta::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
@@ -156,25 +163,32 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> resonanceBuilder::operato
   }
 }
 
-
+/*
+ * recoilBuilder
+ */
 recoilBuilder::recoilBuilder(float arg_sqrts) : m_sqrts(arg_sqrts) {};
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  recoilBuilder::operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) {
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+recoilBuilder::operator()(
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
   auto recoil_p4 = TLorentzVector(0, 0, 0, m_sqrts);
-  for (auto & v1: in) {
+
+  for (const auto &v1 : inParticles) {
     TLorentzVector tv1;
     tv1.SetXYZM(v1.momentum.x, v1.momentum.y, v1.momentum.z, v1.mass);
     recoil_p4 -= tv1;
   }
+
   auto recoil_fcc = edm4hep::ReconstructedParticleData();
   recoil_fcc.momentum.x = recoil_p4.Px();
   recoil_fcc.momentum.y = recoil_p4.Py();
   recoil_fcc.momentum.z = recoil_p4.Pz();
   recoil_fcc.mass = recoil_p4.M();
   result.push_back(recoil_fcc);
+
   return result;
 };
-
 
 sel_axis::sel_axis(bool arg_pos): m_pos(arg_pos) {};
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> sel_axis::operator()(ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
@@ -257,10 +271,9 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<
   return ROOT::VecOps::RVec(result);
 }
 
-
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> remove(
-  		ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
-  		ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y) {
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+remove(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
+       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y) {
   //to be kept as ROOT::VecOps::RVec
   std::vector<edm4hep::ReconstructedParticleData> result;
   result.reserve( x.size() );
@@ -277,10 +290,8 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> remove(
       float px2 = it->momentum.x;
       float py2 = it->momentum.y;
       float pz2 = it->momentum.z;
-      if ( abs(mass1-mass2) < epsilon &&
-	   abs(px1-px2) < epsilon &&
-	   abs(py1-py2) < epsilon &&
-	   abs(pz1-pz2) < epsilon ) {
+      if (abs(mass1 - mass2) < epsilon && abs(px1 - px2) < epsilon &&
+          abs(py1 - py2) < epsilon && abs(pz1 - pz2) < epsilon) {
         result.erase(it);
         break;
       }
@@ -289,17 +300,16 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> remove(
   return ROOT::VecOps::RVec(result);
 }
 
-
-
-
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in){
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+get(ROOT::VecOps::RVec<int> indexes,
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles) {
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> result;
-  for (size_t i = 0; i < index.size(); ++i) {
-    if (index[i]>-1)
-      result.push_back(in.at(index[i]));
-    //else
-    //  std::cout << "electron index negative " << index[i]<<std::endl;
+
+  for (const auto &index : indexes) {
+    if (index > -1)
+      result.push_back(inParticles.at(index));
   }
+
   return result;
 }
 
@@ -455,28 +465,22 @@ int get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x) {
   return result;
 }
 
-
-ROOT::VecOps::RVec<bool> getJet_btag(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> values){
+ROOT::VecOps::RVec<bool>
+getJet_btag(ROOT::VecOps::RVec<int> index,
+            ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid,
+            ROOT::VecOps::RVec<float> values) {
   ROOT::VecOps::RVec<bool> result;
-  //std::cout << "========================new event=======================" <<std::endl;
-  for (size_t i = 0; i < index.size(); ++i) {
-    result.push_back(values.at(pid.at(index.at(i)).parameters_begin));
+  result.resize(index.size());
 
-    //std::cout << pid.at(index.at(i)).parameters_begin << "  ==  " << pid.at(index.at(i)).parameters_end << std::endl;
-    //for (unsigned j = pid.at(index.at(i)).parameters_begin; j != pid.at(index.at(i)).parameters_end; ++j) {
-    //  std::cout << " values : " << values.at(j) << std::endl;
-    //}
+  for (const auto &idx : index) {
+    result.push_back(values.at(pid.at(idx).parameters_begin));
   }
+
   return result;
 }
 
-int getJet_ntags(ROOT::VecOps::RVec<bool> in) {
-  int result =  0;
-  for (size_t i = 0; i < in.size(); ++i)
-    if (in.at(i))result+=1;
-  return result;
+int getJet_ntags(ROOT::VecOps::RVec<bool> inBJetMask) {
+  return std::count_if(inBJetMask.begin(), inBJetMask.end(),
+                       [](bool bJet) { return bJet; });
 }
-
-}//end NS ReconstructedParticle
-
-}//end NS FCCAnalyses
+} // namespace FCCAnalyses::ReconstructedParticle

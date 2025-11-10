@@ -1,36 +1,38 @@
+#ifndef RECONSTRUCTEDPARTICLE_ANALYZERS_H
+#define RECONSTRUCTEDPARTICLE_ANALYZERS_H
 
-#ifndef  RECONSTRUCTEDPARTICLE_ANALYZERS_H
-#define  RECONSTRUCTEDPARTICLE_ANALYZERS_H
-
-// STL
+// Standard library
 #include <cmath>
 #include <vector>
-
 // ROOT
-#include "TLorentzVector.h"
 #include "ROOT/RVec.hxx"
-
+#include "TLorentzVector.h"
 // EDM4hep
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/ParticleIDData.h"
 
-namespace FCCAnalyses{
+namespace FCCAnalyses ::ReconstructedParticle {
+/**
+ * @brief Build the two particle resonances from an arbitrary list of input
+ * ReconstructedPartilces. Keep the closest to the mass given as input.
+ */
+struct resonanceBuilder {
+  resonanceBuilder(float arg_resonance_mass);
+  float m_resonance_mass;
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+  operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs);
+};
 
-namespace ReconstructedParticle{
-
-  /// build the resonance from 2 particles from an arbitrary list of input ReconstructedPartilces. Keep the closest to the mass given as input
-  struct resonanceBuilder {
-    float m_resonance_mass;
-    resonanceBuilder(float arg_resonance_mass);
-    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> legs);
-  };
-
-  /// build the recoil from an arbitrary list of input ReconstructedPartilces and the center of mass energy
-  struct recoilBuilder {
-    recoilBuilder(float arg_sqrts);
-    float m_sqrts = 240.0;
-    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in) ;
-  };
+/**
+ * @brief Build the recoil from an arbitrary list of input
+ * ReconstructedPartilces and the center of mass energy.
+ */
+struct recoilBuilder {
+  recoilBuilder(float arg_sqrts);
+  float m_sqrts = 240.0;
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(
+      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles);
+};
 
   /// return the angular separations (min / max / average) between a collection of particles
   struct angular_separationBuilder {
@@ -91,18 +93,32 @@ namespace ReconstructedParticle{
   struct sel_axis{
     bool m_pos = 0; //> Which hemisphere to select, false/0=cosTheta<0 true/1=cosTheta>0
     sel_axis(bool arg_pos);
-    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(ROOT::VecOps::RVec<float> angle, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+    operator()(ROOT::VecOps::RVec<float> angle,
+               ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
   /// select a list of reconstructed particles depending on the status of a certain boolean flag
   struct sel_tag {
     bool m_pass; // if pass is true, select tagged jets. Otherwise select anti-tagged ones
     sel_tag(bool arg_pass);
-    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  operator() (ROOT::VecOps::RVec<bool> tags, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+    operator()(ROOT::VecOps::RVec<bool> tags,
+               ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
   };
 
-  /// return reconstructed particles
-  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+  /**
+   * @brief Retrieve subset collection of reconstructed particles.
+   *
+   * @param[in] indexes Indexes of the particles belonging to the subset
+   *            collection.
+   * @param[in] inParticles Collection of original particles.
+   *
+   * @return subset collection.
+   */
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+  get(ROOT::VecOps::RVec<int> indexes,
+      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles);
 
   /// return the transverse momenta of the input ReconstructedParticles
   ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
@@ -156,20 +172,32 @@ namespace ReconstructedParticle{
   TLorentzVector get_P4vis(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
   /// concatenate both input vectors and return the resulting vector
-  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+  merge(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
+        ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
 
   /// remove elements of vector y from vector x
-  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> remove( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+  remove(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> x,
+         ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> y);
 
-  /// return the size of the input collection
-  int get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
+  /**
+   * @brief Return the size of the input collection.
+   */
+  int get_n(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles);
 
-  /// returns the bjet flavour
-  ROOT::VecOps::RVec<bool> getJet_btag(ROOT::VecOps::RVec<int> index, ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid, ROOT::VecOps::RVec<float> values);
+  /**
+   * @brief Returns the b-jet mask (vector of bools).
+   */
+  ROOT::VecOps::RVec<bool>
+  getJet_btag(ROOT::VecOps::RVec<int> index,
+              ROOT::VecOps::RVec<edm4hep::ParticleIDData> pid,
+              ROOT::VecOps::RVec<float> values);
 
-  /// get number of b-jets
-  int getJet_ntags(ROOT::VecOps::RVec<bool> in);
-}//end NS ReconstructedParticle
+  /**
+   * @brief Get number of b-jets.
+   */
+  int getJet_ntags(ROOT::VecOps::RVec<bool> inBJetMask);
+  } // namespace FCCAnalyses::ReconstructedParticle
 
-}//end NS FCCAnalyses
-#endif
+#endif /* RECONSTRUCTEDPARTICLE_ANALYZERS_H */
