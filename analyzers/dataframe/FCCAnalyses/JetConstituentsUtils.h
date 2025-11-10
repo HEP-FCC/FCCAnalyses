@@ -4,7 +4,7 @@
 #include "ROOT/RVec.hxx"
 #include "edm4hep/ReconstructedParticle.h"
 #include "edm4hep/MCParticle.h"
-#include "edm4hep/Quantity.h"
+#include "edm4hep/RecDqdxData.h"
 #if __has_include("edm4hep/TrackerHit3DData.h")
 #include "edm4hep/TrackerHit3DData.h"
 #else
@@ -142,7 +142,7 @@ namespace FCCAnalyses {
 
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                      const rv::RVec<edm4hep::Quantity>& dNdx,
+                                                      const rv::RVec<edm4hep::RecDqdxData>& dNdx,
 						      const rv::RVec<edm4hep::TrackData>& trackdata,
 						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
 

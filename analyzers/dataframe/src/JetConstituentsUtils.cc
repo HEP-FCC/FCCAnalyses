@@ -363,7 +363,7 @@ namespace FCCAnalyses
     // neutrals are set to 0; muons and electrons are also set to 0;
     //  only charged hads are considered (mtof used to disctriminate charged kaons and pions)
     rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents> &jcs,
-                                                      const rv::RVec<edm4hep::Quantity> &dNdx,       // ETrackFlow_2
+                                                      const rv::RVec<edm4hep::RecDqdxData> &dNdx,       // ETrackFlow_2
                                                       const rv::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
                                                       const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad)
     {
