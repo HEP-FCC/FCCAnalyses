@@ -32,7 +32,7 @@ struct recoilBuilder {
   float m_sqrts = 240.0;
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> operator()(
       ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> inParticles);
-  };
+};
 
   /// return the angular separations (min / max / average) between a collection of particles
   struct angular_separationBuilder {
