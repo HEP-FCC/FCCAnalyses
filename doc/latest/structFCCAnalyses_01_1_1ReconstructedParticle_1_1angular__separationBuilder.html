@@ -7,7 +7,7 @@
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
-<title>FCCAnalyses: FCCAnalyses::ReconstructedParticle::recoilBuilder Struct Reference</title>
+<title>FCCAnalyses: FCCAnalyses ::ReconstructedParticle::angular_separationBuilder Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -91,7 +91,7 @@ $(function(){ initResizable(false); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespaceFCCAnalyses.html">FCCAnalyses</a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_1_1ReconstructedParticle_1_1recoilBuilder.html">recoilBuilder</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceFCCAnalyses_01.html">FCCAnalyses </a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_01_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1angular__separationBuilder.html">angular_separationBuilder</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -99,41 +99,41 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structFCCAnalyses_1_1ReconstructedParticle_1_1recoilBuilder-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">FCCAnalyses::ReconstructedParticle::recoilBuilder Struct Reference</div></div>
+<a href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1angular__separationBuilder-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">FCCAnalyses ::ReconstructedParticle::angular_separationBuilder Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>build the recoil from an arbitrary list of input ReconstructedPartilces and the center of mass energy  
+<p>return the angular separations (min / max / average) between a collection of particles  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ReconstructedParticle_8h_source.html">analyzers/dataframe/FCCAnalyses/ReconstructedParticle.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6660e83105a806e54d1eccfaa9da37b7" id="r_a6660e83105a806e54d1eccfaa9da37b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6660e83105a806e54d1eccfaa9da37b7">recoilBuilder</a> (float arg_sqrts)</td></tr>
-<tr class="separator:a6660e83105a806e54d1eccfaa9da37b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a668ad408c6b40d18fde4bec840782de2" id="r_a668ad408c6b40d18fde4bec840782de2"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a668ad408c6b40d18fde4bec840782de2">operator()</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
-<tr class="separator:a668ad408c6b40d18fde4bec840782de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99c0dc842965aab4c642876a11f817f1" id="r_a99c0dc842965aab4c642876a11f817f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99c0dc842965aab4c642876a11f817f1">angular_separationBuilder</a> (int arg_delta)</td></tr>
+<tr class="separator:a99c0dc842965aab4c642876a11f817f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa241fd0bf0278c2b6bb42383d25b0dff" id="r_aa241fd0bf0278c2b6bb42383d25b0dff"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa241fd0bf0278c2b6bb42383d25b0dff">operator()</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="separator:aa241fd0bf0278c2b6bb42383d25b0dff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a32278d328bbb696b87a66838874d3542" id="r_a32278d328bbb696b87a66838874d3542"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32278d328bbb696b87a66838874d3542">m_sqrts</a> = 240.0</td></tr>
-<tr class="separator:a32278d328bbb696b87a66838874d3542"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a164eb6c089def5789e28c234e4cc3692" id="r_a164eb6c089def5789e28c234e4cc3692"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a164eb6c089def5789e28c234e4cc3692">m_delta</a> = 0</td></tr>
+<tr class="separator:a164eb6c089def5789e28c234e4cc3692"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>build the recoil from an arbitrary list of input ReconstructedPartilces and the center of mass energy </p>
+<div class="textblock"><p>return the angular separations (min / max / average) between a collection of particles </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6660e83105a806e54d1eccfaa9da37b7" name="a6660e83105a806e54d1eccfaa9da37b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6660e83105a806e54d1eccfaa9da37b7">&#9670;&#160;</a></span>recoilBuilder()</h2>
+<a id="a99c0dc842965aab4c642876a11f817f1" name="a99c0dc842965aab4c642876a11f817f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99c0dc842965aab4c642876a11f817f1">&#9670;&#160;</a></span>angular_separationBuilder()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FCCAnalyses::ReconstructedParticle::recoilBuilder::recoilBuilder </td>
+          <td class="memname">FCCAnalyses ::ReconstructedParticle::angular_separationBuilder::angular_separationBuilder </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>arg_sqrts</em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>arg_delta</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -142,14 +142,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a668ad408c6b40d18fde4bec840782de2" name="a668ad408c6b40d18fde4bec840782de2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a668ad408c6b40d18fde4bec840782de2">&#9670;&#160;</a></span>operator()()</h2>
+<a id="aa241fd0bf0278c2b6bb42383d25b0dff" name="aa241fd0bf0278c2b6bb42383d25b0dff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa241fd0bf0278c2b6bb42383d25b0dff">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; FCCAnalyses::ReconstructedParticle::recoilBuilder::operator() </td>
+          <td class="memname">float FCCAnalyses ::ReconstructedParticle::angular_separationBuilder::operator() </td>
           <td>(</td>
           <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;</td>          <td class="paramname"><span class="paramname"><em>in</em></span></td><td>)</td>
           <td></td>
@@ -160,14 +160,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a32278d328bbb696b87a66838874d3542" name="a32278d328bbb696b87a66838874d3542"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32278d328bbb696b87a66838874d3542">&#9670;&#160;</a></span>m_sqrts</h2>
+<a id="a164eb6c089def5789e28c234e4cc3692" name="a164eb6c089def5789e28c234e4cc3692"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a164eb6c089def5789e28c234e4cc3692">&#9670;&#160;</a></span>m_delta</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float FCCAnalyses::ReconstructedParticle::recoilBuilder::m_sqrts = 240.0</td>
+          <td class="memname">int FCCAnalyses ::ReconstructedParticle::angular_separationBuilder::m_delta = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">

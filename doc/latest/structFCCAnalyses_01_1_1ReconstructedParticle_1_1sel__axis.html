@@ -7,7 +7,7 @@
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
-<title>FCCAnalyses: FCCAnalyses::ReconstructedParticle::sel_charge Struct Reference</title>
+<title>FCCAnalyses: FCCAnalyses ::ReconstructedParticle::sel_axis Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -91,7 +91,7 @@ $(function(){ initResizable(false); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespaceFCCAnalyses.html">FCCAnalyses</a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__charge.html">sel_charge</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceFCCAnalyses_01.html">FCCAnalyses </a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_01_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1sel__axis.html">sel_axis</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -99,48 +99,42 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__charge-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">FCCAnalyses::ReconstructedParticle::sel_charge Struct Reference</div></div>
+<a href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1sel__axis-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">FCCAnalyses ::ReconstructedParticle::sel_axis Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>select ReconstructedParticles with charge equal or in asolute value  
+<p>select a list of reconstructed particles depending on the angle cosTheta axis  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ReconstructedParticle_8h_source.html">analyzers/dataframe/FCCAnalyses/ReconstructedParticle.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abf6f885d428aa8c7da160ee74566b6c8" id="r_abf6f885d428aa8c7da160ee74566b6c8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf6f885d428aa8c7da160ee74566b6c8">sel_charge</a> (int arg_charge, bool arg_abs)</td></tr>
-<tr class="separator:abf6f885d428aa8c7da160ee74566b6c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a579d065ee4868bdf76670749757ebd7c" id="r_a579d065ee4868bdf76670749757ebd7c"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a579d065ee4868bdf76670749757ebd7c">operator()</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
-<tr class="separator:a579d065ee4868bdf76670749757ebd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad163c24398e892cca0c4ff8732960451" id="r_ad163c24398e892cca0c4ff8732960451"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad163c24398e892cca0c4ff8732960451">sel_axis</a> (bool arg_pos)</td></tr>
+<tr class="separator:ad163c24398e892cca0c4ff8732960451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a689bcd2547368b3e56c0092396293f62" id="r_a689bcd2547368b3e56c0092396293f62"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a689bcd2547368b3e56c0092396293f62">operator()</a> (ROOT::VecOps::RVec&lt; float &gt; angle, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="separator:a689bcd2547368b3e56c0092396293f62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a6cd2b22ccf81ddab8ab8c183f3527e3b" id="r_a6cd2b22ccf81ddab8ab8c183f3527e3b"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cd2b22ccf81ddab8ab8c183f3527e3b">m_charge</a></td></tr>
-<tr class="separator:a6cd2b22ccf81ddab8ab8c183f3527e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93fb62a868d4e617281fd5107a86d401" id="r_a93fb62a868d4e617281fd5107a86d401"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93fb62a868d4e617281fd5107a86d401">m_abs</a></td></tr>
-<tr class="separator:a93fb62a868d4e617281fd5107a86d401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a631effc9da634f9cd35b98f3c8bebf83" id="r_a631effc9da634f9cd35b98f3c8bebf83"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a631effc9da634f9cd35b98f3c8bebf83">m_pos</a> = 0</td></tr>
+<tr class="separator:a631effc9da634f9cd35b98f3c8bebf83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>select ReconstructedParticles with charge equal or in asolute value </p>
+<div class="textblock"><p>select a list of reconstructed particles depending on the angle cosTheta axis </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abf6f885d428aa8c7da160ee74566b6c8" name="abf6f885d428aa8c7da160ee74566b6c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf6f885d428aa8c7da160ee74566b6c8">&#9670;&#160;</a></span>sel_charge()</h2>
+<a id="ad163c24398e892cca0c4ff8732960451" name="ad163c24398e892cca0c4ff8732960451"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad163c24398e892cca0c4ff8732960451">&#9670;&#160;</a></span>sel_axis()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FCCAnalyses::ReconstructedParticle::sel_charge::sel_charge </td>
+          <td class="memname">FCCAnalyses ::ReconstructedParticle::sel_axis::sel_axis </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>arg_charge</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>arg_pos</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>arg_abs</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -148,17 +142,21 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a579d065ee4868bdf76670749757ebd7c" name="a579d065ee4868bdf76670749757ebd7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a579d065ee4868bdf76670749757ebd7c">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a689bcd2547368b3e56c0092396293f62" name="a689bcd2547368b3e56c0092396293f62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a689bcd2547368b3e56c0092396293f62">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; FCCAnalyses::ReconstructedParticle::sel_charge::operator() </td>
+          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; FCCAnalyses ::ReconstructedParticle::sel_axis::operator() </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;</td>          <td class="paramname"><span class="paramname"><em>in</em></span></td><td>)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; float &gt;</td>          <td class="paramname"><span class="paramname"><em>angle</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;</td>          <td class="paramname"><span class="paramname"><em>in</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -166,28 +164,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a93fb62a868d4e617281fd5107a86d401" name="a93fb62a868d4e617281fd5107a86d401"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93fb62a868d4e617281fd5107a86d401">&#9670;&#160;</a></span>m_abs</h2>
+<a id="a631effc9da634f9cd35b98f3c8bebf83" name="a631effc9da634f9cd35b98f3c8bebf83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a631effc9da634f9cd35b98f3c8bebf83">&#9670;&#160;</a></span>m_pos</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool FCCAnalyses::ReconstructedParticle::sel_charge::m_abs</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6cd2b22ccf81ddab8ab8c183f3527e3b" name="a6cd2b22ccf81ddab8ab8c183f3527e3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6cd2b22ccf81ddab8ab8c183f3527e3b">&#9670;&#160;</a></span>m_charge</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float FCCAnalyses::ReconstructedParticle::sel_charge::m_charge</td>
+          <td class="memname">bool FCCAnalyses ::ReconstructedParticle::sel_axis::m_pos = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -7,7 +7,7 @@
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
-<title>FCCAnalyses: FCCAnalyses::ReconstructedParticle::sel_type Struct Reference</title>
+<title>FCCAnalyses: FCCAnalyses ::ReconstructedParticle::sel_tag Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -91,7 +91,7 @@ $(function(){ initResizable(false); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespaceFCCAnalyses.html">FCCAnalyses</a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__type.html">sel_type</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceFCCAnalyses_01.html">FCCAnalyses </a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_01_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1sel__tag.html">sel_tag</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -99,63 +99,64 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__type-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">FCCAnalyses::ReconstructedParticle::sel_type Struct Reference</div></div>
+<a href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1sel__tag-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">FCCAnalyses ::ReconstructedParticle::sel_tag Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>select ReconstructedParticles by type Note: type might not correspond to PDG ID  
+<p>select a list of reconstructed particles depending on the status of a certain boolean flag  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ReconstructedParticle_8h_source.html">analyzers/dataframe/FCCAnalyses/ReconstructedParticle.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aeb331ffea089473077ec553ca4d2aaf1" id="r_aeb331ffea089473077ec553ca4d2aaf1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb331ffea089473077ec553ca4d2aaf1">sel_type</a> (const int type)</td></tr>
-<tr class="memdesc:aeb331ffea089473077ec553ca4d2aaf1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__type.html" title="select ReconstructedParticles by type Note: type might not correspond to PDG ID">sel_type</a>  <br /></td></tr>
-<tr class="separator:aeb331ffea089473077ec553ca4d2aaf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a012d546d75701e21ad1f2349a2ee0b7d" id="r_a012d546d75701e21ad1f2349a2ee0b7d"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a012d546d75701e21ad1f2349a2ee0b7d">operator()</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
-<tr class="separator:a012d546d75701e21ad1f2349a2ee0b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d9e6b2ea9e34646db8c9a80ae7ffeb7" id="r_a9d9e6b2ea9e34646db8c9a80ae7ffeb7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d9e6b2ea9e34646db8c9a80ae7ffeb7">sel_tag</a> (bool arg_pass)</td></tr>
+<tr class="separator:a9d9e6b2ea9e34646db8c9a80ae7ffeb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0ec8ba2d6995215c9cf45e9751c2368" id="r_aa0ec8ba2d6995215c9cf45e9751c2368"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0ec8ba2d6995215c9cf45e9751c2368">operator()</a> (ROOT::VecOps::RVec&lt; bool &gt; tags, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
+<tr class="separator:aa0ec8ba2d6995215c9cf45e9751c2368"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a9babd5062e25ec9508677089dca8f196" id="r_a9babd5062e25ec9508677089dca8f196"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9babd5062e25ec9508677089dca8f196">m_type</a></td></tr>
-<tr class="separator:a9babd5062e25ec9508677089dca8f196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bcd7fde8d9c528b91cd4af979dd3552" id="r_a0bcd7fde8d9c528b91cd4af979dd3552"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bcd7fde8d9c528b91cd4af979dd3552">m_pass</a></td></tr>
+<tr class="separator:a0bcd7fde8d9c528b91cd4af979dd3552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>select ReconstructedParticles by type Note: type might not correspond to PDG ID </p>
+<div class="textblock"><p>select a list of reconstructed particles depending on the status of a certain boolean flag </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aeb331ffea089473077ec553ca4d2aaf1" name="aeb331ffea089473077ec553ca4d2aaf1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb331ffea089473077ec553ca4d2aaf1">&#9670;&#160;</a></span>sel_type()</h2>
+<a id="a9d9e6b2ea9e34646db8c9a80ae7ffeb7" name="a9d9e6b2ea9e34646db8c9a80ae7ffeb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d9e6b2ea9e34646db8c9a80ae7ffeb7">&#9670;&#160;</a></span>sel_tag()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FCCAnalyses::ReconstructedParticle::sel_type::sel_type </td>
+          <td class="memname">FCCAnalyses ::ReconstructedParticle::sel_tag::sel_tag </td>
           <td>(</td>
-          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>type</em></span></td><td>)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>arg_pass</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__type.html" title="select ReconstructedParticles by type Note: type might not correspond to PDG ID">sel_type</a> </p>
-
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a012d546d75701e21ad1f2349a2ee0b7d" name="a012d546d75701e21ad1f2349a2ee0b7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a012d546d75701e21ad1f2349a2ee0b7d">&#9670;&#160;</a></span>operator()()</h2>
+<a id="aa0ec8ba2d6995215c9cf45e9751c2368" name="aa0ec8ba2d6995215c9cf45e9751c2368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0ec8ba2d6995215c9cf45e9751c2368">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; FCCAnalyses::ReconstructedParticle::sel_type::operator() </td>
+          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; FCCAnalyses ::ReconstructedParticle::sel_tag::operator() </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;</td>          <td class="paramname"><span class="paramname"><em>in</em></span></td><td>)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; bool &gt;</td>          <td class="paramname"><span class="paramname"><em>tags</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;</td>          <td class="paramname"><span class="paramname"><em>in</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -163,14 +164,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a9babd5062e25ec9508677089dca8f196" name="a9babd5062e25ec9508677089dca8f196"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9babd5062e25ec9508677089dca8f196">&#9670;&#160;</a></span>m_type</h2>
+<a id="a0bcd7fde8d9c528b91cd4af979dd3552" name="a0bcd7fde8d9c528b91cd4af979dd3552"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bcd7fde8d9c528b91cd4af979dd3552">&#9670;&#160;</a></span>m_pass</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int FCCAnalyses::ReconstructedParticle::sel_type::m_type</td>
+          <td class="memname">bool FCCAnalyses ::ReconstructedParticle::sel_tag::m_pass</td>
         </tr>
       </table>
 </div><div class="memdoc">

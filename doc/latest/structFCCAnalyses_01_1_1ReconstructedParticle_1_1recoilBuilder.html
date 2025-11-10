@@ -7,7 +7,7 @@
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
-<title>FCCAnalyses: FCCAnalyses::ReconstructedParticle::sel_axis Struct Reference</title>
+<title>FCCAnalyses: FCCAnalyses ::ReconstructedParticle::recoilBuilder Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -91,7 +91,7 @@ $(function(){ initResizable(false); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespaceFCCAnalyses.html">FCCAnalyses</a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__axis.html">sel_axis</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceFCCAnalyses_01.html">FCCAnalyses </a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_01_1_1ReconstructedParticle.html">ReconstructedParticle</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1recoilBuilder.html">recoilBuilder</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -99,41 +99,41 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structFCCAnalyses_1_1ReconstructedParticle_1_1sel__axis-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">FCCAnalyses::ReconstructedParticle::sel_axis Struct Reference</div></div>
+<a href="structFCCAnalyses_01_1_1ReconstructedParticle_1_1recoilBuilder-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">FCCAnalyses ::ReconstructedParticle::recoilBuilder Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>select a list of reconstructed particles depending on the angle cosTheta axis  
+<p>Build the recoil from an arbitrary list of input ReconstructedPartilces and the center of mass energy.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ReconstructedParticle_8h_source.html">analyzers/dataframe/FCCAnalyses/ReconstructedParticle.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac7740d82742395202ca7ba72775039b4" id="r_ac7740d82742395202ca7ba72775039b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac7740d82742395202ca7ba72775039b4">sel_axis</a> (bool arg_pos)</td></tr>
-<tr class="separator:ac7740d82742395202ca7ba72775039b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6165e445969238268ba897ca12e02009" id="r_a6165e445969238268ba897ca12e02009"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6165e445969238268ba897ca12e02009">operator()</a> (ROOT::VecOps::RVec&lt; float &gt; angle, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; in)</td></tr>
-<tr class="separator:a6165e445969238268ba897ca12e02009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a499569db8232f2e9c69622cdc18c93ef" id="r_a499569db8232f2e9c69622cdc18c93ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a499569db8232f2e9c69622cdc18c93ef">recoilBuilder</a> (float arg_sqrts)</td></tr>
+<tr class="separator:a499569db8232f2e9c69622cdc18c93ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3db11fc50dcd927ac604caa48454c516" id="r_a3db11fc50dcd927ac604caa48454c516"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3db11fc50dcd927ac604caa48454c516">operator()</a> (ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; inParticles)</td></tr>
+<tr class="separator:a3db11fc50dcd927ac604caa48454c516"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ad9360bea72e660821f9bb3bca9ffd7b8" id="r_ad9360bea72e660821f9bb3bca9ffd7b8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9360bea72e660821f9bb3bca9ffd7b8">m_pos</a> = 0</td></tr>
-<tr class="separator:ad9360bea72e660821f9bb3bca9ffd7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb72ca85c4ab6913f38cc28540d34611" id="r_acb72ca85c4ab6913f38cc28540d34611"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb72ca85c4ab6913f38cc28540d34611">m_sqrts</a> = 240.0</td></tr>
+<tr class="separator:acb72ca85c4ab6913f38cc28540d34611"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>select a list of reconstructed particles depending on the angle cosTheta axis </p>
+<div class="textblock"><p>Build the recoil from an arbitrary list of input ReconstructedPartilces and the center of mass energy. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac7740d82742395202ca7ba72775039b4" name="ac7740d82742395202ca7ba72775039b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7740d82742395202ca7ba72775039b4">&#9670;&#160;</a></span>sel_axis()</h2>
+<a id="a499569db8232f2e9c69622cdc18c93ef" name="a499569db8232f2e9c69622cdc18c93ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a499569db8232f2e9c69622cdc18c93ef">&#9670;&#160;</a></span>recoilBuilder()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FCCAnalyses::ReconstructedParticle::sel_axis::sel_axis </td>
+          <td class="memname">FCCAnalyses ::ReconstructedParticle::recoilBuilder::recoilBuilder </td>
           <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>arg_pos</em></span></td><td>)</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>arg_sqrts</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -142,21 +142,17 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6165e445969238268ba897ca12e02009" name="a6165e445969238268ba897ca12e02009"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6165e445969238268ba897ca12e02009">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a3db11fc50dcd927ac604caa48454c516" name="a3db11fc50dcd927ac604caa48454c516"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3db11fc50dcd927ac604caa48454c516">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; FCCAnalyses::ReconstructedParticle::sel_axis::operator() </td>
+          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; FCCAnalyses ::ReconstructedParticle::recoilBuilder::operator() </td>
           <td>(</td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; float &gt;</td>          <td class="paramname"><span class="paramname"><em>angle</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;</td>          <td class="paramname"><span class="paramname"><em>inParticles</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt;</td>          <td class="paramname"><span class="paramname"><em>in</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -164,14 +160,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ad9360bea72e660821f9bb3bca9ffd7b8" name="ad9360bea72e660821f9bb3bca9ffd7b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9360bea72e660821f9bb3bca9ffd7b8">&#9670;&#160;</a></span>m_pos</h2>
+<a id="acb72ca85c4ab6913f38cc28540d34611" name="acb72ca85c4ab6913f38cc28540d34611"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb72ca85c4ab6913f38cc28540d34611">&#9670;&#160;</a></span>m_sqrts</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool FCCAnalyses::ReconstructedParticle::sel_axis::m_pos = 0</td>
+          <td class="memname">float FCCAnalyses ::ReconstructedParticle::recoilBuilder::m_sqrts = 240.0</td>
         </tr>
       </table>
 </div><div class="memdoc">

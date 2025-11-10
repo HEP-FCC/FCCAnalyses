@@ -33,8 +33,8 @@ digraph "analyzers/dataframe/src/JetConstituentsUtils.cc"
   Node14 [id="Node000014",label="cmath",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node13 -> Node15 [id="edge14_Node000013_Node000015",color="steelblue1",style="solid",tooltip=" "];
   Node15 [id="Node000015",label="vector",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
-  Node13 -> Node12 [id="edge15_Node000013_Node000012",color="steelblue1",style="solid",tooltip=" "];
-  Node13 -> Node3 [id="edge16_Node000013_Node000003",color="steelblue1",style="solid",tooltip=" "];
+  Node13 -> Node3 [id="edge15_Node000013_Node000003",color="steelblue1",style="solid",tooltip=" "];
+  Node13 -> Node12 [id="edge16_Node000013_Node000012",color="steelblue1",style="solid",tooltip=" "];
   Node13 -> Node16 [id="edge17_Node000013_Node000016",color="steelblue1",style="solid",tooltip=" "];
   Node16 [id="Node000016",label="edm4hep/ReconstructedParticle\lData.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node13 -> Node17 [id="edge18_Node000013_Node000017",color="steelblue1",style="solid",tooltip=" "];

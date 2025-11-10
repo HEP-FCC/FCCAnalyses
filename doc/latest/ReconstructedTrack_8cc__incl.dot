@@ -12,9 +12,9 @@ digraph "analyzers/dataframe/src/ReconstructedTrack.cc"
   Node2 -> Node4 [id="edge3_Node000002_Node000004",color="steelblue1",style="solid",tooltip=" "];
   Node4 [id="Node000004",label="vector",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node2 -> Node5 [id="edge4_Node000002_Node000005",color="steelblue1",style="solid",tooltip=" "];
-  Node5 [id="Node000005",label="TLorentzVector.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node5 [id="Node000005",label="ROOT/RVec.hxx",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node2 -> Node6 [id="edge5_Node000002_Node000006",color="steelblue1",style="solid",tooltip=" "];
-  Node6 [id="Node000006",label="ROOT/RVec.hxx",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node6 [id="Node000006",label="TLorentzVector.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node2 -> Node7 [id="edge6_Node000002_Node000007",color="steelblue1",style="solid",tooltip=" "];
   Node7 [id="Node000007",label="edm4hep/ReconstructedParticle\lData.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node2 -> Node8 [id="edge7_Node000002_Node000008",color="steelblue1",style="solid",tooltip=" "];
@@ -39,7 +39,7 @@ digraph "analyzers/dataframe/src/ReconstructedTrack.cc"
   Node16 [id="Node000016",label="FCCAnalyses/VertexingUtils.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$VertexingUtils_8h.html",tooltip=" "];
   Node16 -> Node3 [id="edge18_Node000016_Node000003",color="steelblue1",style="solid",tooltip=" "];
   Node16 -> Node4 [id="edge19_Node000016_Node000004",color="steelblue1",style="solid",tooltip=" "];
-  Node16 -> Node6 [id="edge20_Node000016_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node16 -> Node5 [id="edge20_Node000016_Node000005",color="steelblue1",style="solid",tooltip=" "];
   Node16 -> Node7 [id="edge21_Node000016_Node000007",color="steelblue1",style="solid",tooltip=" "];
   Node16 -> Node17 [id="edge22_Node000016_Node000017",color="steelblue1",style="solid",tooltip=" "];
   Node17 [id="Node000017",label="edm4hep/MCParticleData.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
@@ -48,7 +48,7 @@ digraph "analyzers/dataframe/src/ReconstructedTrack.cc"
   Node18 [id="Node000018",label="edm4hep/VertexData.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node16 -> Node19 [id="edge25_Node000016_Node000019",color="steelblue1",style="solid",tooltip=" "];
   Node19 [id="Node000019",label="edm4hep/Vertex.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
-  Node16 -> Node5 [id="edge26_Node000016_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node16 -> Node6 [id="edge26_Node000016_Node000006",color="steelblue1",style="solid",tooltip=" "];
   Node16 -> Node20 [id="edge27_Node000016_Node000020",color="steelblue1",style="solid",tooltip=" "];
   Node20 [id="Node000020",label="TVectorD.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node16 -> Node21 [id="edge28_Node000016_Node000021",color="steelblue1",style="solid",tooltip=" "];

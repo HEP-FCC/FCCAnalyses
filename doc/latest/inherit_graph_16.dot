@@ -5,5 +5,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
   node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
   rankdir="LR";
-  Node0 [id="Node000000",label="FCCAnalyses::Algorithms\l::calculate_thrust",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html",tooltip="Calculates the thrust axis by looping over all possible combinations."];
+  Node0 [id="Node000000",label="FCCAnalyses ::Reconstructed\lParticle::angular_separationBuilder",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structFCCAnalyses_01_1_1ReconstructedParticle_1_1angular__separationBuilder.html",tooltip="return the angular separations (min / max / average) between a collection of particles"];
 }
