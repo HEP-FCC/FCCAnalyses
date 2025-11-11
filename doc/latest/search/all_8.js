@@ -26,7 +26,7 @@ var searchData=
   ['get_5fdistance_23',['get_distance',['../namespaceFCCAnalyses_1_1myUtils.html#a747e6140e162cf89d7e5874004443768',1,'FCCAnalyses::myUtils::get_distance(TVector3 v1, TVector3 v2)'],['../namespaceFCCAnalyses_1_1myUtils.html#a7d71ff3b359093357a802a8702a60db2',1,'FCCAnalyses::myUtils::get_distance(edm4hep::Vector3f v1, TVector3 v2, int comp)']]],
   ['get_5fdistanceerrorvertex_24',['get_distanceErrorVertex',['../namespaceFCCAnalyses_1_1myUtils.html#a5aaa78d55a8f7d58792eb6c4369f66d3',1,'FCCAnalyses::myUtils']]],
   ['get_5fdistancevertex_25',['get_distanceVertex',['../namespaceFCCAnalyses_1_1myUtils.html#ac9271ed3ce78588f25ba647431a87e42',1,'FCCAnalyses::myUtils']]],
-  ['get_5fdndx_26',['get_dndx',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#ab01577108d8093eebf6e423f76345d76',1,'FCCAnalyses::JetConstituentsUtils']]],
+  ['get_5fdndx_26',['get_dndx',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#aea74abb191ade3aa1dae0dbfad74c244',1,'FCCAnalyses::JetConstituentsUtils']]],
   ['get_5fdpv2dv_5fave_27',['get_dPV2DV_ave',['../namespaceFCCAnalyses_1_1myUtils.html#a1b98f7b364f1016636b871e776b250ca',1,'FCCAnalyses::myUtils']]],
   ['get_5fdpv2dv_5fmax_28',['get_dPV2DV_max',['../namespaceFCCAnalyses_1_1myUtils.html#aff6ec094ab28464d662da56f336fd6e5',1,'FCCAnalyses::myUtils']]],
   ['get_5fdpv2dv_5fmin_29',['get_dPV2DV_min',['../namespaceFCCAnalyses_1_1myUtils.html#aa9bc9109d30c939c351fd198e7cf1944',1,'FCCAnalyses::myUtils']]],
