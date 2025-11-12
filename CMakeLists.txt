@@ -49,7 +49,9 @@ include(GNUInstallDirs)
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
 set(INSTALL_INCLUDE_DIR include CACHE PATH
-  "Installation directory for header files")
+    "Installation directory for header files")
+set(INSTALL_SHARE_DIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH
+    "Installation directory for shared resources")
 
 
 #--- Declare C++ Standard -----------------------------------------------------

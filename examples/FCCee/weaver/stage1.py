@@ -7,17 +7,14 @@ from examples.FCCee.weaver.config import (
 from addons.ONNXRuntime.jetFlavourHelper import JetFlavourHelper
 from addons.FastJet.jetClusteringHelper import ExclusiveJetClusteringHelper
 
-jetFlavourHelper = None
-jetClusteringHelper = None
+testFile = 'https://fccsw.web.cern.ch/fccsw/analysis/test-samples/' \
+           'edm4hep099/wzp6_ee_nunuH_Hss_ecm240.root'
 
 # Mandatory: RDFanalysis class where the use defines the operations on the TTree
 class RDFanalysis:
     # __________________________________________________________
     # Mandatory: analysers funtion to define the analysers to process, please make sure you return the last dataframe, in this example it is df2
     def analysers(df):
-        global jetClusteringHelper
-        global jetFlavourHelper
-
         from examples.FCCee.weaver.config import collections, njets
 
         ## define jet clustering parameters

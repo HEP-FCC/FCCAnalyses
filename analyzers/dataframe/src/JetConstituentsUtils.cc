@@ -1,11 +1,5 @@
 #include "FCCAnalyses/JetConstituentsUtils.h"
 
-// FCCAnalyses
-#include "FCCAnalyses/JetClusteringUtils.h"
-#include "FCCAnalyses/ReconstructedParticle.h"
-#include "FCCAnalyses/ReconstructedParticle2MC.h"
-#include "FCCAnalyses/ReconstructedParticle2Track.h"
-#include "FCCAnalyses/ReconstructedTrack.h"
 // EDM4hep
 #include "edm4hep/MCParticleData.h"
 #include "edm4hep/Track.h"
@@ -19,6 +13,14 @@
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Selector.hh"
+// FCCAnalyses
+#include "FCCAnalyses/JetClusteringUtils.h"
+#include "FCCAnalyses/ReconstructedParticle.h"
+#include "FCCAnalyses/ReconstructedParticle2MC.h"
+#include "FCCAnalyses/ReconstructedParticle2Track.h"
+#include "FCCAnalyses/ReconstructedTrack.h"
+#include "FCCAnalyses/TrackUtils.h"
+// #include "FCCAnalyses/ExternalRecombiner.h"
 
 /* *************************
 //COMMENTS

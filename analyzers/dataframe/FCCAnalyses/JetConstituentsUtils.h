@@ -1,10 +1,16 @@
 #ifndef FCCAnalyses_JetConstituentsUtils_h
 #define FCCAnalyses_JetConstituentsUtils_h
 
+// ROOT
 #include "ROOT/RVec.hxx"
-#include "edm4hep/ReconstructedParticle.h"
+#include "TLorentzVector.h"
+#include "TMath.h"
+#include "TRotation.h"
+#include "TVector3.h"
+// EDM4hep
 #include "edm4hep/MCParticle.h"
 #include "edm4hep/RecDqdxData.h"
+#include "edm4hep/ReconstructedParticle.h"
 #if __has_include("edm4hep/TrackerHit3DData.h")
 #include "edm4hep/TrackerHit3DData.h"
 #else
@@ -13,13 +19,11 @@ namespace edm4hep {
   using TrackerHit3DData = edm4hep::TrackerHitData;
 }
 #endif
-
+#include "edm4hep/RecDqdxData.h"
+// FastJet
 #include "fastjet/JetDefinition.hh"
-
-#include "TMath.h"
-#include "TVector3.h"
-#include "TRotation.h"
-#include "TLorentzVector.h"
+// FCCAnalyses
+#include "FCCAnalyses/TrackUtils.h"
 
 #include "FCCAnalyses/TrackUtils.h"
 

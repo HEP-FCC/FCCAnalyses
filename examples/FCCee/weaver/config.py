@@ -15,10 +15,10 @@ collections = {
     "PFTracks": "EFlowTrack",
     "PFPhotons": "EFlowPhoton",
     "PFNeutralHadrons": "EFlowNeutralHadron",
-    "TrackState": "EFlowTrack_1",
+    "TrackState": "_EFlowTrack_trackStates",
     "TrackerHits": "TrackerHits",
     "CalorimeterHits": "CalorimeterHits",
-    "dNdx": "EFlowTrack_2",
+    "dNdx": "EFlowTrack_dNdx",
     "PathLength": "EFlowTrack_L",
     "Bz": "magFieldBz",
 }
