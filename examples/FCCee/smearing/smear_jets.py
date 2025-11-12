@@ -187,7 +187,7 @@ class RDFanalysis:
 
             df = df.Define(
                 "dNdxHandler",
-                ROOT.TrackUtils.getDqdxHandler(),
+                ROOT.TrackUtils.getTrackDqdxHandler(),
                 [
                     collections["dNdx"],
                     '_' + collections["dNdx"] + '_track.index'
