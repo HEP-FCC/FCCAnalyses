@@ -1,6 +1,6 @@
 .\" Manpage for fccanalysis-script
 .\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
-.TH FCCANALYSIS\-SCRIPT 7 "07 Nov 2025" "0.11.0" "fccanalysis-script man page"
+.TH FCCANALYSIS\-SCRIPT 7 "12 Nov 2025" "0.11.0" "fccanalysis-script man page"
 .SH NAME
 \fBfccanalysis\-script\fR \(en analysis steering script specification
 
@@ -22,10 +22,11 @@ or
 fccanalysis final \fIanalysis_script.py\fR
 
 .PP
-where user needs to provide minimal number of variables and settings. In this
-mode the RDataFrame is managed for the user and it can be controlled by defining
-several global attributes in the analysis script. The other mode is to run the
-analysis script as a regular python script:
+where user needs to provide a set of required attributes and definitions in
+their analysis script. In this mode the RDataFrame is managed for the user and
+the analysis behavior can be controlled by providing additional attributes in
+the analysis script. The other mode is to run the analysis script as a regular
+python script:
 .IP
 python \fIanalysis_script.py\fR
 .PP
@@ -33,8 +34,8 @@ here user has full control over the RDataFrame, but has to create all necessary
 scaffolding\&.
 
 .PP
-It is expected that the whole analysis will be split into several stages, which
-can be done in one of the two styles:
+Usually it is the case that the whole analysis will be split into several
+stages, which can be done in one of the two styles:
 .IP
 anascript_stage1.py \-> anascript_stage2.py \-> ... \-> anascript_stage_final.py \-> plots.py
 .RE
@@ -45,12 +46,12 @@ analysis_histmaker.py \-> plots.py
 
 .PP
 In the case of the first style there are at least three stages required
-(anascript_stage1.py, anascript_stage_final.py, plots.py) and there is no upper
-limit on the number of stages. In the case of the second style only two stages
-are required. The first style is named "staged analysis" and the second
-"histmaker analysis".
+(e.g. \fIanascript_stage1.py\fR, \fIanascript_stage_final.py\fR,
+\fIplots.py\fR) and there is no upper limit on the number of stages. In the
+case of the second style only two stages are required. The first style is named
+"staged style" and the second "histmaker style".
 .TP
-\fBstaged analysis\fR
+\fBStaged style analysis\fR
 The analysis script needs to contain \fIAnalysis\fR class of the following
 structure:
 .IP
@@ -71,7 +72,7 @@ class Analysis():
     def output(self):
         return ["muons", "muon_mass"]
 .TP
-\fBhistmaker analysis\fR
+\fBHistmaker style analysis\fR
 The analysis script needs to contain \fIbuild_graph\fR function of the following
 structure:
 .IP
@@ -84,19 +85,21 @@ def build_graph(df, dataset):
     results.append(df.Histo1D(("muons_p_cut0", "", *bins_p_mu), "muons_p"))
     return results, weightsum
 .TP
-\fBfinal and plots stages\fR
+\fBFinal and Plots stages\fR
 These stages do not require \fIAnalysis\fR class neither \fIbuild_graph\fR
 function, they have their own set of attributes, please see the
-examples in the \fIexamples\fR directory or fccanalysis-final-script(7) and
-fccanalysis-plots-script(7).
+examples in the \fIexamples\fR of FCCAnalyses repository or
+fccanalysis-final-script(7) and fccanalysis-plots-script(7) manual pages.
 
 .SH ATTRIBUTES
-In case of running the FCCAnalysis in the managed mode user can use the
-following global attributes to control the behavior of the analysis.
+In case of running the FCCAnalysis in the staged style user can/should add the
+following attributes to the \fIAnalysis\fR class in order to control the
+behavior of the analysis.
 .TP
 \fBprocess_list\fR (mandatory)
 Dictionary of process samples to be run over. Each process can have several
 parameters:
+.br
 \fIfraction\fR
 .in +4
 The analysis will run over reduced number of input files roughly corresponding
@@ -143,6 +146,7 @@ Default value: empty string
 Number of threads the RDataFrame will use during processing\&.
 .br
 Default value: 1
+.TP
 \fBinlude_paths\fR (optional)
 Specify additional include header files to be JIT compiled.
 .br
