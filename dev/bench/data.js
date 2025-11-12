@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762955820633,
+  "lastUpdate": 1762955822223,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -52465,6 +52465,65 @@ window.BENCHMARK_DATA = {
             "range": "10",
             "unit": "Seconds",
             "extra": "Analysis path: examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8c14862587fded0be9e97819d47218c52f4a20b",
+          "message": "Fixing several problems in the fccanalysis-script man page (#482)",
+          "timestamp": "2025-11-12T13:43:03Z",
+          "tree_id": "0536579198dffdcd4914e7e130a4875dfcb30a84",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/e8c14862587fded0be9e97819d47218c52f4a20b"
+        },
+        "date": 1762955821746,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 10.848748829524501,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 9.403254940442523,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 0.7017820233550252,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 10.949650426288805,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 0.5100667554686816,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/stages_source.py",
+            "value": 5.936005217644967,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
+            "value": 5.53688046250432,
+            "unit": "Evt/s"
           }
         ]
       }
