@@ -8,9 +8,11 @@
 #include "TRotation.h"
 #include "TVector3.h"
 // EDM4hep
-#include "edm4hep/MCParticle.h"
+#include "edm4hep/CalorimeterHitData.h"
+#include "edm4hep/ClusterData.h"
+#include "edm4hep/MCParticleData.h"
 #include "edm4hep/RecDqdxData.h"
-#include "edm4hep/ReconstructedParticle.h"
+#include "edm4hep/ReconstructedParticleData.h"
 #if __has_include("edm4hep/TrackerHit3DData.h")
 #include "edm4hep/TrackerHit3DData.h"
 #else
@@ -19,12 +21,11 @@ namespace edm4hep {
   using TrackerHit3DData = edm4hep::TrackerHitData;
 }
 #endif
-#include "edm4hep/RecDqdxData.h"
+#include "edm4hep/TrackData.h"
+#include "edm4hep/TrackState.h"
 // FastJet
 #include "fastjet/JetDefinition.hh"
 // FCCAnalyses
-#include "FCCAnalyses/TrackUtils.h"
-
 #include "FCCAnalyses/TrackUtils.h"
 
 namespace FCCAnalyses {
