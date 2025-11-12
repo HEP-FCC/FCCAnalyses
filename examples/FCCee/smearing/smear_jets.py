@@ -137,9 +137,9 @@ class RDFanalysis:
         ### run same sequences but with smeared collection
         scale_factors = [1.0, 2.0, 5.0, 10.0]
 
-        
+
         for sf in scale_factors:
-        
+
             ## 1. do Impact parameter smearing first
 
             collections_ip = deepcopy(collections)
@@ -186,12 +186,20 @@ class RDFanalysis:
             collections_dndx["dNdx"] = "dNdx_{}".format(dndx_tag)
 
             df = df.Define(
+                "dNdxHandler",
+                ROOT.TrackUtils.getDqdxHandler(),
+                [
+                    collections["dNdx"],
+                    '_' + collections["dNdx"] + '_track.index'
+                ]
+            )
+
+            df = df.Define(
                 collections_dndx["dNdx"],
                 ROOT.SmearObjects.SmearedTracksdNdx(sf, False),
                 [
                     collections["PFParticles"],
-                    collections["dNdx"],
-                    '_' + collections["dNdx"] + '_track.index',
+                    "dNdxHandler",
                     collections["PathLength"],
                     "reco_mc_index",
                     collections["GenParticles"],
