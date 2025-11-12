@@ -141,10 +141,28 @@ namespace FCCAnalyses {
 							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
 
 
-    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                      const rv::RVec<edm4hep::RecDqdxData>& dNdx,
-						      const rv::RVec<edm4hep::TrackData>& trackdata,
-						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
+    /**
+     * @brief Obtain dNdx corresponding to the provided jet constituents.
+     *
+     * Neutrals are set to 0.
+     * Muons and electrons are also set to 0.
+     * Only charged hadrons are considered (`mtof` used to discriminate charged
+     * kaons and pions).
+     *
+     * @param[in] jetConstituents jet constituents for which dNdx is expected.
+     * @param[in] dNdxColl collection of dNdx (e.g. ETrackFlow_dNdx).
+     * @param[in] idNdxTrackIndexes  track indexes corresponding to the dNdx record (e.g. _EFlowTrack_dNdx_track.index)
+     * @param[in] trackColl collection of all track in the event
+     *                      (e.g. EFlowtrack).
+     * @param[in] isJetConstChargedHad vector of flags whether is the jet
+     *                                 constituent a charged hadron.
+     */
+    rv::RVec<FCCAnalysesJetConstituentsData>
+    get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jetConstituents,
+             const rv::RVec<edm4hep::RecDqdxData>& dNdxColl,
+             const rv::RVec<int> &dNdxTrackIndexes,
+             const rv::RVec<edm4hep::TrackData>& trackColl,
+             const rv::RVec<FCCAnalysesJetConstituentsData> isJetConstChargedHad);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,

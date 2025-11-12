@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "ROOT/RVec.hxx"
-#include "edm4hep/Quantity.h"
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/TrackData.h"
 #include "edm4hep/TrackState.h"
