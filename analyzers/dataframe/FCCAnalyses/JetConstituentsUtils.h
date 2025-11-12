@@ -21,6 +21,8 @@ namespace edm4hep {
 #include "TRotation.h"
 #include "TLorentzVector.h"
 
+#include "FCCAnalyses/TrackUtils.h"
+
 namespace FCCAnalyses {
   namespace JetConstituentsUtils {
     namespace rv = ROOT::VecOps;
@@ -149,9 +151,7 @@ namespace FCCAnalyses {
      * kaons and pions).
      *
      * @param[in] jetConstituents jet constituents for which dNdx is expected.
-     * @param[in] dNdxColl collection of dNdx (e.g. ETrackFlow_dNdx).
-     * @param[in] idNdxTrackIndexes  track indexes corresponding to the dNdx
-     * record (e.g. _EFlowTrack_dNdx_track.index)
+     * @param[in] dNdxHandler instance of a TrackUtils::TrackDqdxHandler.
      * @param[in] trackColl collection of all track in the event
      *                      (e.g. EFlowtrack).
      * @param[in] isJetConstChargedHad vector of flags whether is the jet
@@ -159,8 +159,7 @@ namespace FCCAnalyses {
      */
     rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(
         const rv::RVec<FCCAnalysesJetConstituents> &jetConstituents,
-        const rv::RVec<edm4hep::RecDqdxData> &dNdxColl,
-        const rv::RVec<int> &dNdxTrackIndexes,
+        const TrackUtils::TrackDqdxHandler &dNdxHandler,
         const rv::RVec<edm4hep::TrackData> &trackColl,
         const rv::RVec<FCCAnalysesJetConstituentsData> isJetConstChargedHad);
 

@@ -19,6 +19,10 @@ namespace edm4hep {
 }
 #endif
 
+// FCCAnalyses
+#include "FCCAnalyses/TrackUtils.h"
+
+
 namespace FCCAnalyses ::ReconstructedTrack {
 /**
  * @brief Make a collection of TrackStates from only the Trackstates at (0,0,0).
@@ -74,34 +78,6 @@ ROOT::VecOps::RVec<float> tracks_TOF(
     const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
     const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits);
 
-/**
- * @brief Obtain dNdx object for specified track index.
- *
- * @param[in] trackIndex        track index in the full track collection of the
- *                              event (e.g. EFlowTrack).
- * @param[in] dNdxColl          full dNdx collection of the event (e.g.
- * EFlowTrack_dNdx).
- * @param[in] dNdxTrackIndexes  track indexes corresponding to the dNdx record
- * (e.g. _EFlowTrack_dNdx_track.index)
- */
-edm4hep::RecDqdxData
-get_dNdxObject(const int trackIndex,
-               const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-               const ROOT::VecOps::RVec<int> &dNdxTrackIndexes);
-
-/**
- * @brief Obtain dNdx value for specified track index.
- *
- * @param[in] trackIndex        track index in the full track collection of the
- *                              event (e.g. EFlowTrack).
- * @param[in] dNdxColl          full dNdx collection of the event (e.g.
- * EFlowTrack_dNdx).
- * @param[in] dNdxTrackIndexes  track indexes corresponding to the dNdx record
- * (e.g. _EFlowTrack_dNdx_track.index)
- */
-float get_dNdx(const int trackIndex,
-               const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-               const ROOT::VecOps::RVec<int> &dNdxTrackIndexes);
 
 /**
  * @brief Obtain dNdx values for specified track state indices.
@@ -109,35 +85,27 @@ float get_dNdx(const int trackIndex,
  * @param[in] trackStateIndices  full track states collection of the event.
  * @param[in] trackColl          full track collection of the event (e.g.
  * EFlowtrack)
- * @param[in] dNdxColl           full dNdx collection of the event (e.g.
- * EFlowTrack_dNdx)
- * @param[in] dNdxTrackIndexes   track indexes corresponding to the dNdx record
- * (e.g. _EFlowTrack_dNdx_track.index)
+ * @param[in] dNdxHandler        instance of a FCCAnalyses::TrackUtils::TrackDqdxHandler.
  */
 ROOT::VecOps::RVec<float>
 tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
             const ROOT::VecOps::RVec<edm4hep::TrackData> &trackColl,
-            const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-            const ROOT::VecOps::RVec<int> &dNdxTrackIndexes);
+            const FCCAnalyses::TrackUtils::TrackDqdxHandler &dNdxHandler);
+
 
 /**
  * @brief Obtain dNdx values for selected subset of track states.
  *
  * @param[in] someTrackStates   selected track states.
  * @param[in] allTrackStates    full track states collection of the event.
- * @param[in] trackColl         full track collection of the event (e.g.
- * EFlowtrack)
- * @param[in] dNdxColl          full dNdx collection of the event (e.g.
- * EFlowTrack_dNdx)
- * @param[in] dNdxTrackIndexes  track indexes corresponding to the dNdx record
- * (e.g. _EFlowTrack_dNdx_track.index)
+ * @param[in] trackColl         full track collection of the event (e.g. EFlowtrack)
+ * @param[in] dNdxHandler       instance of a TrackUtils::TrackDqdxHandler.
  */
 ROOT::VecOps::RVec<float>
 tracks_dNdx(const ROOT::VecOps::RVec<edm4hep::TrackState> &someTrackStates,
             const ROOT::VecOps::RVec<edm4hep::TrackState> &allTrackStates,
             const ROOT::VecOps::RVec<edm4hep::TrackData> &tracksColl,
-            const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-            const ROOT::VecOps::RVec<int> &dNdxTrackIndexes);
+            const FCCAnalyses::TrackUtils::TrackDqdxHandler &dNdxHandler);
 } // namespace FCCAnalyses::ReconstructedTrack
 
 #endif /* RECONSTRUCTEDTRACK_ANALYZERS_H */

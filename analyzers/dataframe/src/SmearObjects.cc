@@ -10,7 +10,6 @@
 #include "edm4hep/EDM4hepVersion.h"
 
 // FCCAnalyses
-#include "FCCAnalyses/ReconstructedTrack.h"
 #include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/VertexingUtils.h"
 
@@ -304,16 +303,14 @@ SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false)
     : m_scale(scale), m_debug(debug) {}
 
 ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
-    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
-        &allRecoParticles,
-    const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-    const ROOT::VecOps::RVec<int> &dNdxTrackIndexes,
+    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &allRecoParticles,
+    const TrackUtils::TrackDqdxHandler &dNdxHandler,
     const ROOT::VecOps::RVec<float> &length,
     const ROOT::VecOps::RVec<int> &RP2MC_indices,
     const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles) {
   ROOT::VecOps::RVec<edm4hep::RecDqdxData> result;
 
-  int ntracks = dNdxColl.size();
+  int ntracks = length.size();
   result.reserve(ntracks);
 
   // for dNdx calculation
@@ -321,9 +318,9 @@ ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
   TrkUtil tu;
 
   for (int itrack = 0; itrack < ntracks; itrack++) {
-    auto dNdxObject =
-        ReconstructedTrack::get_dNdxObject(itrack, dNdxColl, dNdxTrackIndexes);
-    auto dNdxSmeared = dNdxObject;
+    // auto dNdxObject =
+    //     ReconstructedTrack::get_dNdxObject(itrack, dNdxColl, dNdxTrackIndexes);
+    auto dNdxSmeared = edm4hep::RecDqdxData{};
     dNdxSmeared.dQdx.value = 0.;
     dNdxSmeared.dQdx.type = 0;
 
@@ -356,7 +353,12 @@ ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
     float muClu =
         tu.Nclusters(bg, 0) * length[itrack]; // avg. number of clusters
 
-    float Ncl = dNdxObject.dQdx.value * length[itrack];
+    auto dNdxValues = dNdxHandler.getDqdxValues(itrack);
+    // Taking only the first value
+    if (dNdxValues.size() < 1) {
+      result.push_back(dNdxSmeared);
+    }
+    float Ncl = dNdxValues[0] * length[itrack];
     Ncl = std::max(muClu + m_scale * (Ncl - muClu), float(0.));
 
     dNdxSmeared.dQdx.value = Ncl / length[itrack];
@@ -366,7 +368,7 @@ ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
                 << "requested smearing dNdx factor: " << m_scale << std::endl
                 << "gen part (PID, p): " << mc_part.PDG << " " << mc_mom.Mag()
                 << std::endl
-                << "original dNdx: " << dNdxObject.dQdx.value << std::endl;
+                << "original dNdx: " << dNdxValues[0] << std::endl;
       std::cout << "smeared dNdx : " << result[itrack].dQdx.value << std::endl;
     }
 

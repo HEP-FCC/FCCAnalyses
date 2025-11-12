@@ -4,8 +4,8 @@
 #include <iostream>
 
 // FCCAnalyses
-#include "FCCAnalyses/ReconstructedTrack.h"
 #include "FCCAnalyses/VertexingUtils.h"
+#include "FCCAnalyses/TrackUtils.h"
 
 // Delphes
 #include "TrackCovariance/VertexFit.h" // from Delphes - updates Franco, Jul 2022
@@ -191,39 +191,11 @@ ROOT::VecOps::RVec<float> tracks_TOF(
   return tracks_TOF(indices, trackdata, trackerhits);
 }
 
-edm4hep::RecDqdxData
-get_dNdxObject(const int trackIndex,
-               const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-               const ROOT::VecOps::RVec<int> &dNdxTrackIndexes) {
-  // Find the index of the corresponding dNdx
-  int dNdxIndex = -1;
-  for (size_t z = 0; z < dNdxTrackIndexes.size(); ++z) {
-    if (dNdxTrackIndexes[z] == trackIndex) {
-      dNdxIndex = z;
-      break;
-    }
-  }
-
-  if (dNdxIndex < 0) {
-    return {};
-  }
-
-  return dNdxColl[dNdxIndex];
-}
-
-float get_dNdx(const int trackIndex,
-               const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-               const ROOT::VecOps::RVec<int> &dNdxTrackIndexes) {
-  auto dNdxObject = get_dNdxObject(trackIndex, dNdxColl, dNdxTrackIndexes);
-
-  return dNdxObject.dQdx.value / 1000.;
-}
 
 ROOT::VecOps::RVec<float>
 tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
             const ROOT::VecOps::RVec<edm4hep::TrackData> &trackColl,
-            const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-            const ROOT::VecOps::RVec<int> &dNdxTrackIndexes) {
+            const TrackUtils::TrackDqdxHandler &dNdxHandler) {
   ROOT::VecOps::RVec<float> results;
   results.reserve(trackStateIndices.size());
 
@@ -248,23 +220,29 @@ tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
       continue;
     }
 
-    dNdx = get_dNdx(trackIndex, dNdxColl, dNdxTrackIndexes);
+    auto dNdxValues = dNdxHandler.getDqdxValues(trackIndex);
+
+    // Taking only first value
+    if (dNdxValues.size() > 0) {
+      dNdx = dNdxValues[0] / 1000.;
+    }
+
     results.push_back(dNdx);
   }
 
   return results;
 }
 
+
 ROOT::VecOps::RVec<float>
 tracks_dNdx(const ROOT::VecOps::RVec<edm4hep::TrackState> &someTrackStates,
             const ROOT::VecOps::RVec<edm4hep::TrackState> &allTrackStates,
             const ROOT::VecOps::RVec<edm4hep::TrackData> &trackColl,
-            const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-            const ROOT::VecOps::RVec<int> &dNdxTrackIndexes) {
+            const TrackUtils::TrackDqdxHandler &dNdxHandler) {
   ROOT::VecOps::RVec<int> indices =
       get_indices(someTrackStates, allTrackStates);
 
-  return tracks_dNdx(indices, trackColl, dNdxColl, dNdxTrackIndexes);
+  return tracks_dNdx(indices, trackColl, dNdxHandler);
 }
 
 } // namespace FCCAnalyses::ReconstructedTrack

@@ -15,6 +15,7 @@
 #include "edm4hep/RecDqdxData.h"
 // FCCAnalyses
 #include "FCCAnalyses/ReconstructedParticle2Track.h"
+#include "FCCAnalyses/TrackUtils.h"
 
 namespace FCCAnalyses ::SmearObjects {
 
@@ -73,8 +74,7 @@ struct SmearedTracksdNdx {
   ROOT::VecOps::RVec<edm4hep::RecDqdxData>
   operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
                  &allRecoParticles,
-             const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-             const ROOT::VecOps::RVec<int> &dNdxTrackIndexes,
+             const TrackUtils::TrackDqdxHandler &dNdxHandler,
              const ROOT::VecOps::RVec<float> &length,
              const ROOT::VecOps::RVec<int> &RP2MC_indices,
              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);

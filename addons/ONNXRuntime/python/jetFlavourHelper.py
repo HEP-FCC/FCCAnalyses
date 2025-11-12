@@ -70,8 +70,11 @@ class JetFlavourHelper:
             jet, self.const
         )
 
+        self.definition[f"dNdxHandler{self.tag}"] = \
+            f"TrackUtils::getDqdxHandler({self.dndx}, _{self.dndx}_track.index)"
+
         self.definition[f"pfcand_dndx{self.tag}"] = \
-            f"JetConstituentsUtils::get_dndx({self.const}, {self.dndx}, _{self.dndx}_track.index, {self.pftrack}, pfcand_isChargedHad{self.tag})"
+            f"JetConstituentsUtils::get_dndx({self.const}, dNdxHandler{self.tag}, {self.pftrack}, pfcand_isChargedHad{self.tag})"
 
         self.definition[
             "pfcand_mtof{}".format(self.tag)

@@ -366,8 +366,7 @@ namespace FCCAnalyses
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(
         const rv::RVec<FCCAnalysesJetConstituents> &jetConstituents,
-        const rv::RVec<edm4hep::RecDqdxData> &dNdxColl,
-        const rv::RVec<int> &dNdxTrackIndexes,
+        const TrackUtils::TrackDqdxHandler &dNdxHandler,
         const rv::RVec<edm4hep::TrackData> &trackColl,
         const rv::RVec<FCCAnalysesJetConstituentsData> isJetConstChargedHad) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
@@ -384,8 +383,13 @@ namespace FCCAnalyses
               (int)isJetConstChargedHadVec.at(j) == 1) {
             auto trackIndex = jetConstituentsVec.at(j).tracks_begin;
 
-            float dNdx = ReconstructedTrack::get_dNdx(trackIndex, dNdxColl,
-                                                      dNdxTrackIndexes);
+            float dNdx = 0.;
+            auto dNdxValues = dNdxHandler.getDqdxValues(trackIndex);
+            // Taking only the first value
+            if (dNdxValues.size() > 0) {
+              dNdx = dNdxValues[0] / 1000.;
+            }
+
             tmp.push_back(dNdx);
           } else {
             tmp.push_back(0.);
