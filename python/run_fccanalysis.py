@@ -149,7 +149,7 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
 
 
 # _____________________________________________________________________________
-def initialize(config, args, analysis):
+def initialize(config, analysis):
     '''
     Common initialization steps.
     '''
@@ -363,7 +363,7 @@ def run_local(config: dict[str, Any],
                 sys.exit(3)
             infile.Close()
 
-    # Adjust number of events in case the maximum number of event is specified
+    # Adjust number of events in case the maximum number of events is specified
     if config['n-events-max'] is not None:
         nevents_local = config['n-events-max']
 
@@ -470,7 +470,7 @@ def run_fccanalysis(args, analysis_module):
     config: dict[str, Any] = merge_config(args, analysis)
 
     # Set number of threads, load header files, custom dicts, ...
-    initialize(config, args, analysis_module)
+    initialize(config, analysis_module)
 
     # Check if output directory exist and if not create it
     output_dir = get_attribute(analysis, 'output_dir', None)
