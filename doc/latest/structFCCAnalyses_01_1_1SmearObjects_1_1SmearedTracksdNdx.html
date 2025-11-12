@@ -7,7 +7,7 @@
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="icon" type="image/x-icon" href="/FCCAnalyses/img/favicon.ico">
-<title>FCCAnalyses: FCCAnalyses::SmearObjects::SmearedTracks Struct Reference</title>
+<title>FCCAnalyses: FCCAnalyses ::SmearObjects::SmearedTracksdNdx Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -91,7 +91,7 @@ $(function(){ initResizable(false); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespaceFCCAnalyses.html">FCCAnalyses</a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_1_1SmearObjects.html">SmearObjects</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_1_1SmearObjects_1_1SmearedTracks.html">SmearedTracks</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceFCCAnalyses_01.html">FCCAnalyses </a></li><li class="navelem"><a class="el" href="namespaceFCCAnalyses_01_1_1SmearObjects.html">SmearObjects</a></li><li class="navelem"><a class="el" href="structFCCAnalyses_01_1_1SmearObjects_1_1SmearedTracksdNdx.html">SmearedTracksdNdx</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div id="doc-content">
@@ -99,65 +99,48 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structFCCAnalyses_1_1SmearObjects_1_1SmearedTracks-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">FCCAnalyses::SmearObjects::SmearedTracks Struct Reference</div></div>
+<a href="structFCCAnalyses_01_1_1SmearObjects_1_1SmearedTracksdNdx-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">FCCAnalyses ::SmearObjects::SmearedTracksdNdx Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>generates new track states, by rescaling the covariance matrix of the tracks  
+<p>Generates new track dNdx, by rescaling the Poisson error of the cluster count.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SmearObjects_8h_source.html">analyzers/dataframe/FCCAnalyses/SmearObjects.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6f39d65679617192acc145fab83b1c8c" id="r_a6f39d65679617192acc145fab83b1c8c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f39d65679617192acc145fab83b1c8c">SmearedTracks</a> (float smear_d0, float smear_phi, float smear_omega, float smear_z0, float smear_tlambda, bool debug)</td></tr>
-<tr class="separator:a6f39d65679617192acc145fab83b1c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa88b7b9516a3d9aad9447fcae5c044ed" id="r_aa88b7b9516a3d9aad9447fcae5c044ed"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa88b7b9516a3d9aad9447fcae5c044ed">operator()</a> (const ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; &amp;allRecoParticles, const ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; &amp;alltracks, const ROOT::VecOps::RVec&lt; int &gt; &amp;RP2MC_indices, const ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; &amp;mcParticles)</td></tr>
-<tr class="separator:aa88b7b9516a3d9aad9447fcae5c044ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af23af60fefba542363e237dff7e76898" id="r_af23af60fefba542363e237dff7e76898"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af23af60fefba542363e237dff7e76898">SmearedTracksdNdx</a> (float <a class="el" href="#ad77ff26f6c29b7f7ecd1d0076c6bc7b4">m_scale</a>, bool debug)</td></tr>
+<tr class="memdesc:af23af60fefba542363e237dff7e76898"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rescale resolution by this factor.  <br /></td></tr>
+<tr class="separator:af23af60fefba542363e237dff7e76898"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1103b5c6528fbfe3a00cc501273bf0b8" id="r_a1103b5c6528fbfe3a00cc501273bf0b8"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; edm4hep::RecDqdxData &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1103b5c6528fbfe3a00cc501273bf0b8">operator()</a> (const ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; &amp;allRecoParticles, const TrackUtils::TrackDqdxHandler &amp;dNdxHandler, const ROOT::VecOps::RVec&lt; float &gt; &amp;length, const ROOT::VecOps::RVec&lt; int &gt; &amp;RP2MC_indices, const ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; &amp;mcParticles)</td></tr>
+<tr class="memdesc:a1103b5c6528fbfe3a00cc501273bf0b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector of dNdx that is parallel to the collection of all tracks of the event (e.g.  <br /></td></tr>
+<tr class="separator:a1103b5c6528fbfe3a00cc501273bf0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aab015355e74d54a852d3d23fcd3a06c6" id="r_aab015355e74d54a852d3d23fcd3a06c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab015355e74d54a852d3d23fcd3a06c6">m_debug</a></td></tr>
-<tr class="separator:aab015355e74d54a852d3d23fcd3a06c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6fd39f8fc8e333be3a7dd5a67dde949" id="r_ad6fd39f8fc8e333be3a7dd5a67dde949"><td class="memItemLeft" align="right" valign="top">TRandom&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6fd39f8fc8e333be3a7dd5a67dde949">m_random</a></td></tr>
-<tr class="separator:ad6fd39f8fc8e333be3a7dd5a67dde949"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac396cb8163b8f4dd8acf61b923bc062e" id="r_ac396cb8163b8f4dd8acf61b923bc062e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac396cb8163b8f4dd8acf61b923bc062e">m_smear_parameters</a> [5]</td></tr>
-<tr class="separator:ac396cb8163b8f4dd8acf61b923bc062e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9940df115b4ef0e62536c956438b7104" id="r_a9940df115b4ef0e62536c956438b7104"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9940df115b4ef0e62536c956438b7104">m_debug</a></td></tr>
+<tr class="separator:a9940df115b4ef0e62536c956438b7104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2915cd172e860116b882783d209a035c" id="r_a2915cd172e860116b882783d209a035c"><td class="memItemLeft" align="right" valign="top">TRandom&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2915cd172e860116b882783d209a035c">m_random</a></td></tr>
+<tr class="memdesc:a2915cd172e860116b882783d209a035c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug flag.  <br /></td></tr>
+<tr class="separator:a2915cd172e860116b882783d209a035c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad77ff26f6c29b7f7ecd1d0076c6bc7b4" id="r_ad77ff26f6c29b7f7ecd1d0076c6bc7b4"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad77ff26f6c29b7f7ecd1d0076c6bc7b4">m_scale</a></td></tr>
+<tr class="separator:ad77ff26f6c29b7f7ecd1d0076c6bc7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>generates new track states, by rescaling the covariance matrix of the tracks </p>
+<div class="textblock"><p>Generates new track dNdx, by rescaling the Poisson error of the cluster count. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6f39d65679617192acc145fab83b1c8c" name="a6f39d65679617192acc145fab83b1c8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f39d65679617192acc145fab83b1c8c">&#9670;&#160;</a></span>SmearedTracks()</h2>
+<a id="af23af60fefba542363e237dff7e76898" name="af23af60fefba542363e237dff7e76898"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af23af60fefba542363e237dff7e76898">&#9670;&#160;</a></span>SmearedTracksdNdx()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FCCAnalyses::SmearObjects::SmearedTracks::SmearedTracks </td>
+          <td class="memname">FCCAnalyses ::SmearObjects::SmearedTracksdNdx::SmearedTracksdNdx </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>smear_d0</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>smear_phi</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>smear_omega</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>smear_z0</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>smear_tlambda</em></span>, </td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>m_scale</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -167,24 +150,31 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Rescale resolution by this factor. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa88b7b9516a3d9aad9447fcae5c044ed" name="aa88b7b9516a3d9aad9447fcae5c044ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa88b7b9516a3d9aad9447fcae5c044ed">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a1103b5c6528fbfe3a00cc501273bf0b8" name="a1103b5c6528fbfe3a00cc501273bf0b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1103b5c6528fbfe3a00cc501273bf0b8">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; FCCAnalyses::SmearObjects::SmearedTracks::operator() </td>
+          <td class="memname">ROOT::VecOps::RVec&lt; edm4hep::RecDqdxData &gt; FCCAnalyses ::SmearObjects::SmearedTracksdNdx::operator() </td>
           <td>(</td>
           <td class="paramtype">const ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>allRecoParticles</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>alltracks</em></span>, </td>
+          <td class="paramtype">const TrackUtils::TrackDqdxHandler &amp;</td>          <td class="paramname"><span class="paramname"><em>dNdxHandler</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ROOT::VecOps::RVec&lt; float &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>length</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -199,45 +189,51 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns a vector of dNdx that is parallel to the collection of all tracks of the event (e.g. </p>
+<p>alltracks), i.e. same number of entries, same order.</p>
+<p>The method retrieves the MC particle that is associated to a track, and builds a "track state" out of the MC particle and regenerates a new value of the dNdx. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aab015355e74d54a852d3d23fcd3a06c6" name="aab015355e74d54a852d3d23fcd3a06c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab015355e74d54a852d3d23fcd3a06c6">&#9670;&#160;</a></span>m_debug</h2>
+<a id="a9940df115b4ef0e62536c956438b7104" name="a9940df115b4ef0e62536c956438b7104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9940df115b4ef0e62536c956438b7104">&#9670;&#160;</a></span>m_debug</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool FCCAnalyses::SmearObjects::SmearedTracks::m_debug</td>
+          <td class="memname">bool FCCAnalyses ::SmearObjects::SmearedTracksdNdx::m_debug</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ad6fd39f8fc8e333be3a7dd5a67dde949" name="ad6fd39f8fc8e333be3a7dd5a67dde949"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6fd39f8fc8e333be3a7dd5a67dde949">&#9670;&#160;</a></span>m_random</h2>
+<a id="a2915cd172e860116b882783d209a035c" name="a2915cd172e860116b882783d209a035c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2915cd172e860116b882783d209a035c">&#9670;&#160;</a></span>m_random</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRandom FCCAnalyses::SmearObjects::SmearedTracks::m_random</td>
+          <td class="memname">TRandom FCCAnalyses ::SmearObjects::SmearedTracksdNdx::m_random</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Debug flag. </p>
+
 </div>
 </div>
-<a id="ac396cb8163b8f4dd8acf61b923bc062e" name="ac396cb8163b8f4dd8acf61b923bc062e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac396cb8163b8f4dd8acf61b923bc062e">&#9670;&#160;</a></span>m_smear_parameters</h2>
+<a id="ad77ff26f6c29b7f7ecd1d0076c6bc7b4" name="ad77ff26f6c29b7f7ecd1d0076c6bc7b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad77ff26f6c29b7f7ecd1d0076c6bc7b4">&#9670;&#160;</a></span>m_scale</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float FCCAnalyses::SmearObjects::SmearedTracks::m_smear_parameters[5]</td>
+          <td class="memname">float FCCAnalyses ::SmearObjects::SmearedTracksdNdx::m_scale</td>
         </tr>
       </table>
 </div><div class="memdoc">

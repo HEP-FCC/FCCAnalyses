@@ -5,5 +5,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
   node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
   rankdir="LR";
-  Node0 [id="Node000000",label="FCCAnalyses::Reconstructed\lParticle2MC::selRP_PDG",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structFCCAnalyses_1_1ReconstructedParticle2MC_1_1selRP__PDG.html",tooltip="select ReconstructedParticles matched with a MC particle of a given PDG_id"];
+  Node0 [id="Node000000",label="FCCAnalyses::myUtils\l::filter_PV",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structFCCAnalyses_1_1myUtils_1_1filter__PV.html",tooltip=" "];
 }

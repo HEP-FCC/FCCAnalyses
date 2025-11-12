@@ -5,5 +5,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
   node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
   rankdir="LR";
-  Node0 [id="Node000000",label="logNormal",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structlogNormal.html",tooltip="LogNormal smearing in the form of sqrt(aX^2 + bX + c)"];
+  Node0 [id="Node000000",label="jetFlavourHelper.JetFlavour\lHelper",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$classjetFlavourHelper_1_1JetFlavourHelper.html",tooltip=" "];
 }

@@ -25,4 +25,10 @@ digraph "analyzers/dataframe/FCCAnalyses/JetConstituentsUtils.h"
   Node10 [id="Node000010",label="TRotation.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
   Node1 -> Node11 [id="edge10_Node000001_Node000011",color="steelblue1",style="solid",tooltip=" "];
   Node11 [id="Node000011",label="TLorentzVector.h",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node1 -> Node12 [id="edge11_Node000001_Node000012",color="steelblue1",style="solid",tooltip=" "];
+  Node12 [id="Node000012",label="FCCAnalyses/TrackUtils.h",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$TrackUtils_8h.html",tooltip=" "];
+  Node12 -> Node13 [id="edge12_Node000012_Node000013",color="steelblue1",style="solid",tooltip=" "];
+  Node13 [id="Node000013",label="vector",height=0.2,width=0.4,color="grey60", fillcolor="#E0E0E0", style="filled",tooltip=" "];
+  Node12 -> Node2 [id="edge13_Node000012_Node000002",color="steelblue1",style="solid",tooltip=" "];
+  Node12 -> Node5 [id="edge14_Node000012_Node000005",color="steelblue1",style="solid",tooltip=" "];
 }

@@ -5,5 +5,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
   node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
   rankdir="LR";
-  Node0 [id="Node000000",label="FCCAnalyses::JetClustering\lUtils::resonanceBuilder",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structFCCAnalyses_1_1JetClusteringUtils_1_1resonanceBuilder.html",tooltip=" "];
+  Node0 [id="Node000000",label="FCCAnalyses::Algorithms\l::thrustFit",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$structFCCAnalyses_1_1Algorithms_1_1thrustFit.html",tooltip="Function that runs the fit for the thrust axis determination."];
 }

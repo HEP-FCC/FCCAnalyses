@@ -46,11 +46,12 @@ var searchData=
   ['count_5fconsts_43',['count_consts',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a75defe49908de7f485a22a47bec43d6e',1,'FCCAnalyses::JetConstituentsUtils']]],
   ['count_5fjets_44',['count_jets',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#aa8b139592f4c01d72c65ddf9281c6b4b',1,'FCCAnalyses::JetConstituentsUtils']]],
   ['count_5ftype_45',['count_type',['../namespaceFCCAnalyses_1_1JetConstituentsUtils.html#a63032e3957445718fee0924113f0c661',1,'FCCAnalyses::JetConstituentsUtils']]],
-  ['covsmear_46',['CovSmear',['../namespaceFCCAnalyses_1_1SmearObjects.html#ae59c02f8fff1f0a8bbb3eb2a76dad5c7',1,'FCCAnalyses::SmearObjects']]],
+  ['covsmear_46',['CovSmear',['../namespaceFCCAnalyses_01_1_1SmearObjects.html#abadb9240b461a0a003e9ad077bb182a8',1,'FCCAnalyses ::SmearObjects']]],
   ['covtoacts_47',['CovToACTS',['../namespaceFCCAnalyses_1_1VertexingUtils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
   ['createpseudojets_48',['createPseudoJets',['../namespaceFCCAnalyses_01_1_1PodioSource_01_1_1JetClustering.html#ac822beab58aea548cd067090ead69139',1,'FCCAnalyses ::PodioSource ::JetClustering']]],
-  ['cross_49',['cross',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#a1bac2fc8360649a79326762b826d3705',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
-  ['cstemplate_50',['CSTemplate',['../namespaceCSTemplate.html',1,'']]],
-  ['cstemplate_2ecc_51',['CSTemplate.cc',['../CSTemplate_8cc.html',1,'']]],
-  ['cstemplate_2eh_52',['CSTemplate.h',['../CSTemplate_8h.html',1,'']]]
+  ['createtrackdqdxhandler_49',['createTrackDqdxHandler',['../namespaceFCCAnalyses_1_1TrackUtils.html#aaefc535db083ec9c08d2abf646c25b03',1,'FCCAnalyses::TrackUtils::createTrackDqdxHandler()'],['../namespaceFCCAnalyses_01_1_1TrackUtils.html#a553af306ea79a9792618554ee062b836',1,'FCCAnalyses ::TrackUtils::createTrackDqdxHandler()']]],
+  ['cross_50',['cross',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#a1bac2fc8360649a79326762b826d3705',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
+  ['cstemplate_51',['CSTemplate',['../namespaceCSTemplate.html',1,'']]],
+  ['cstemplate_2ecc_52',['CSTemplate.cc',['../CSTemplate_8cc.html',1,'']]],
+  ['cstemplate_2eh_53',['CSTemplate.h',['../CSTemplate_8h.html',1,'']]]
 ];
