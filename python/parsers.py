@@ -150,13 +150,15 @@ def setup_run_parser(parser):
         default='output.root',
         metavar='OUTPUT_FILE',
         help='location of the output ROOT file')
-    parser.add_argument('--nevents', type=int, default=-1,
+    parser.add_argument('--nevents',
+                        type=int, default=None,
                         help='specify max number of events to process')
     parser.add_argument('--test', action='store_true', default=False,
                         help='run over the test input file')
     parser.add_argument('--bench', action='store_true', default=False,
                         help='output benchmark results to a JSON file')
-    parser.add_argument('-j', '--ncpus', '--n-threads', type=int,
+    parser.add_argument('-j', '--ncpus', '--n-threads',
+                        type=int, default=None,
                         help='set number of threads')
     parser.add_argument('-g', '--graph', action='store_true', default=False,
                         help='generate computational graph of the analysis')

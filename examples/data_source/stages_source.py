@@ -26,7 +26,7 @@ class Analysis():
         # Optional: output directory, default is local running directory
         self.output_dir = "stages-source-output"
 
-        # Ncpus, default is 4, -1 uses all cores available
+        # Ncpus, default is 1, -1 uses all cores available
         # self.n_threads = -1
 
         # How to read input files
