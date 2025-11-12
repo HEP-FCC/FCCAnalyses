@@ -10,11 +10,11 @@
 #include "edm4hep/EDM4hepVersion.h"
 
 // FCCAnalyses
+#include "FCCAnalyses/ReconstructedTrack.h"
 #include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/VertexingUtils.h"
-#include "FCCAnalyses/ReconstructedTrack.h"
 
-namespace FCCAnalyses :: SmearObjects {
+namespace FCCAnalyses ::SmearObjects {
 
 // -------------------------------------------------------------------------------------------
 
@@ -298,15 +298,14 @@ TVectorD CovSmear(TVectorD x, TMatrixDSym C, TRandom *ran, bool debug = false) {
   return xOut;
 }
 
-
 // ----------------------------------------------------------------------------
 
-SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false) : m_scale(scale),
-                                                                        m_debug(debug) {}
+SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false)
+    : m_scale(scale), m_debug(debug) {}
 
-ROOT::VecOps::RVec<edm4hep::RecDqdxData>
-SmearedTracksdNdx::operator()(
-    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &allRecoParticles,
+ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
+    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+        &allRecoParticles,
     const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
     const ROOT::VecOps::RVec<int> &dNdxTrackIndexes,
     const ROOT::VecOps::RVec<float> &length,
@@ -322,7 +321,8 @@ SmearedTracksdNdx::operator()(
   TrkUtil tu;
 
   for (int itrack = 0; itrack < ntracks; itrack++) {
-    auto dNdxObject = ReconstructedTrack::get_dNdxObject(itrack, dNdxColl, dNdxTrackIndexes);
+    auto dNdxObject =
+        ReconstructedTrack::get_dNdxObject(itrack, dNdxColl, dNdxTrackIndexes);
     auto dNdxSmeared = dNdxObject;
     dNdxSmeared.dQdx.value = 0.;
     dNdxSmeared.dQdx.type = 0;
@@ -374,7 +374,6 @@ SmearedTracksdNdx::operator()(
 
   return result;
 }
-
 
 // ----------------------------------------------------------------------------
 
@@ -647,4 +646,4 @@ SmearedReconstructedParticle::operator()(
   return result;
 }
 
-} /* FCCAnalyses :: SmearObjects */
+} // namespace FCCAnalyses::SmearObjects

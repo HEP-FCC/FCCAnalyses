@@ -7,17 +7,16 @@
 // ROOT
 #include "ROOT/RVec.hxx"
 #include "TLorentzVector.h"
+#include "TMath.h"
 #include "TMatrixDSym.h"
 #include "TRandom.h"
-#include "TMath.h"
 // EDM4hep
 #include "edm4hep/MCParticleData.h"
 #include "edm4hep/RecDqdxData.h"
 // FCCAnalyses
 #include "FCCAnalyses/ReconstructedParticle2Track.h"
 
-
-namespace FCCAnalyses :: SmearObjects {
+namespace FCCAnalyses ::SmearObjects {
 
 /// for a given MC particle, returns a "track state", i.e. a vector of 5 helix
 /// parameters, in Delphes convention
@@ -51,15 +50,14 @@ ROOT::VecOps::RVec<edm4hep::TrackState> mcTrackParameters(
 /// components, using a Choleski decomposition. Code from Franco Bedeschi
 TVectorD CovSmear(TVectorD x, TMatrixDSym C, TRandom *ran, bool debug);
 
-
 /**
  * @brief Generates new track dNdx, by rescaling the Poisson error of the
  * cluster count.
  */
 struct SmearedTracksdNdx {
-  bool m_debug;  /// Debug flag
+  bool m_debug; /// Debug flag
   TRandom m_random;
-  float m_scale;  /// Rescale resolution by this factor
+  float m_scale; /// Rescale resolution by this factor
 
   SmearedTracksdNdx(float m_scale, bool debug);
 
@@ -73,14 +71,14 @@ struct SmearedTracksdNdx {
    * of the dNdx.
    */
   ROOT::VecOps::RVec<edm4hep::RecDqdxData>
-  operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &allRecoParticles,
+  operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+                 &allRecoParticles,
              const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
              const ROOT::VecOps::RVec<int> &dNdxTrackIndexes,
              const ROOT::VecOps::RVec<float> &length,
              const ROOT::VecOps::RVec<int> &RP2MC_indices,
              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);
 };
-
 
 /// generates new tracker hits, by rescaling the timing measurement
 struct SmearedTracksTOF {
@@ -113,6 +111,6 @@ struct SmearedReconstructedParticle {
              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);
 };
 
-}
+} // namespace FCCAnalyses::SmearObjects
 
 #endif /* SMEAR_OBJECTS_ANALYZERS_H */

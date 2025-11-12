@@ -11,8 +11,7 @@
 #include "TrackCovariance/VertexFit.h" // from Delphes - updates Franco, Jul 2022
 #include "TrackCovariance/VertexMore.h"
 
-
-namespace FCCAnalyses :: ReconstructedTrack {
+namespace FCCAnalyses ::ReconstructedTrack {
 
 ROOT::VecOps::RVec<edm4hep::TrackState>
 Intersection(const ROOT::VecOps::RVec<edm4hep::TrackState> &Col1,
@@ -81,7 +80,6 @@ Merge(const ROOT::VecOps::RVec<edm4hep::TrackState> &Col1,
   return result;
 }
 
-
 ROOT::VecOps::RVec<edm4hep::TrackState>
 TrackStates_at_IP(const ROOT::VecOps::RVec<edm4hep::TrackData> &inTracks,
                   const ROOT::VecOps::RVec<edm4hep::TrackState> &trackStates) {
@@ -93,7 +91,7 @@ TrackStates_at_IP(const ROOT::VecOps::RVec<edm4hep::TrackData> &inTracks,
               << (trackStates.size() % 4) << std::endl;
   }
 
-  for (const auto& t: inTracks) {
+  for (const auto &t : inTracks) {
     int idx = t.trackStates_begin;
 
     edm4hep::TrackState trackstate_in = trackStates[idx];
@@ -103,14 +101,13 @@ TrackStates_at_IP(const ROOT::VecOps::RVec<edm4hep::TrackData> &inTracks,
   return result;
 }
 
-
 ROOT::VecOps::RVec<int>
 get_indices(const ROOT::VecOps::RVec<edm4hep::TrackState> &someTrackStates,
             const ROOT::VecOps::RVec<edm4hep::TrackState> &allTrackStates) {
   ROOT::VecOps::RVec<int> result;
   result.reserve(someTrackStates.size());
 
-  for (const auto& track1: someTrackStates) {
+  for (const auto &track1 : someTrackStates) {
     int idx = -1;
     for (size_t itrack = 0; itrack < allTrackStates.size(); itrack++) {
       edm4hep::TrackState track2 = allTrackStates[itrack];
@@ -194,7 +191,6 @@ ROOT::VecOps::RVec<float> tracks_TOF(
   return tracks_TOF(indices, trackdata, trackerhits);
 }
 
-
 edm4hep::RecDqdxData
 get_dNdxObject(const int trackIndex,
                const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
@@ -215,16 +211,13 @@ get_dNdxObject(const int trackIndex,
   return dNdxColl[dNdxIndex];
 }
 
-
-float
-get_dNdx(const int trackIndex,
-         const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
-         const ROOT::VecOps::RVec<int> &dNdxTrackIndexes) {
+float get_dNdx(const int trackIndex,
+               const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
+               const ROOT::VecOps::RVec<int> &dNdxTrackIndexes) {
   auto dNdxObject = get_dNdxObject(trackIndex, dNdxColl, dNdxTrackIndexes);
 
   return dNdxObject.dQdx.value / 1000.;
 }
-
 
 ROOT::VecOps::RVec<float>
 tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
@@ -235,7 +228,7 @@ tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
   results.reserve(trackStateIndices.size());
 
   // Loop over track states
-  for (const auto& trackStateIndex: trackStateIndices) {
+  for (const auto &trackStateIndex : trackStateIndices) {
     float dNdx = -1;
 
     // Find the index of the corresponding track in the track collection
@@ -268,9 +261,10 @@ tracks_dNdx(const ROOT::VecOps::RVec<edm4hep::TrackState> &someTrackStates,
             const ROOT::VecOps::RVec<edm4hep::TrackData> &trackColl,
             const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dNdxColl,
             const ROOT::VecOps::RVec<int> &dNdxTrackIndexes) {
-  ROOT::VecOps::RVec<int> indices = get_indices(someTrackStates, allTrackStates);
+  ROOT::VecOps::RVec<int> indices =
+      get_indices(someTrackStates, allTrackStates);
 
   return tracks_dNdx(indices, trackColl, dNdxColl, dNdxTrackIndexes);
 }
 
-} /* FCCAnalyses :: ReconstructedTrack */
+} // namespace FCCAnalyses::ReconstructedTrack

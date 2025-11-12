@@ -1,10 +1,10 @@
 #include "FCCAnalyses/JetConstituentsUtils.h"
 
 // FCCAnalyses
-#include "FCCAnalyses/ReconstructedParticle.h"
-#include "FCCAnalyses/ReconstructedParticle2Track.h"
-#include "FCCAnalyses/ReconstructedParticle2MC.h"
 #include "FCCAnalyses/JetClusteringUtils.h"
+#include "FCCAnalyses/ReconstructedParticle.h"
+#include "FCCAnalyses/ReconstructedParticle2MC.h"
+#include "FCCAnalyses/ReconstructedParticle2Track.h"
 #include "FCCAnalyses/ReconstructedTrack.h"
 // EDM4hep
 #include "edm4hep/MCParticleData.h"
@@ -364,30 +364,30 @@ namespace FCCAnalyses
       return cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_omega_z0_cov);
     }
 
-
-    rv::RVec<FCCAnalysesJetConstituentsData>
-    get_dndx(const rv::RVec<FCCAnalysesJetConstituents> &jetConstituents,
-             const rv::RVec<edm4hep::RecDqdxData> &dNdxColl,
-             const rv::RVec<int> &dNdxTrackIndexes,
-             const rv::RVec<edm4hep::TrackData> &trackColl,
-             const rv::RVec<FCCAnalysesJetConstituentsData> isJetConstChargedHad) {
+    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(
+        const rv::RVec<FCCAnalysesJetConstituents> &jetConstituents,
+        const rv::RVec<edm4hep::RecDqdxData> &dNdxColl,
+        const rv::RVec<int> &dNdxTrackIndexes,
+        const rv::RVec<edm4hep::TrackData> &trackColl,
+        const rv::RVec<FCCAnalysesJetConstituentsData> isJetConstChargedHad) {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
       out.reserve(jetConstituents.size());
 
       for (size_t i = 0; i < jetConstituents.size(); ++i) {
         FCCAnalysesJetConstituents jetConstituentsVec = jetConstituents.at(i);
-        FCCAnalysesJetConstituentsData isJetConstChargedHadVec = isJetConstChargedHad.at(i);
+        FCCAnalysesJetConstituentsData isJetConstChargedHadVec =
+            isJetConstChargedHad.at(i);
         FCCAnalysesJetConstituentsData tmp;
 
         for (size_t j = 0; j < jetConstituentsVec.size(); ++j) {
-          if (jetConstituentsVec.at(j).tracks_begin < trackColl.size()
-              && (int) isJetConstChargedHadVec.at(j) == 1) {
+          if (jetConstituentsVec.at(j).tracks_begin < trackColl.size() &&
+              (int)isJetConstChargedHadVec.at(j) == 1) {
             auto trackIndex = jetConstituentsVec.at(j).tracks_begin;
 
-            float dNdx = ReconstructedTrack::get_dNdx(trackIndex, dNdxColl, dNdxTrackIndexes);
+            float dNdx = ReconstructedTrack::get_dNdx(trackIndex, dNdxColl,
+                                                      dNdxTrackIndexes);
             tmp.push_back(dNdx);
-          }
-          else {
+          } else {
             tmp.push_back(0.);
           }
         }
@@ -396,7 +396,6 @@ namespace FCCAnalyses
 
       return out;
     }
-
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData> &jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents> &jcs,
