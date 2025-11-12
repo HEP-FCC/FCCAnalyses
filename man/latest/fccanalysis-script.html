@@ -50,10 +50,11 @@
     <p class="Pp"></p>
   </dd>
 </dl>
-<p class="Pp">where user needs to provide minimal number of variables and
-    settings. In this mode the RDataFrame is managed for the user and it can be
-    controlled by defining several global attributes in the analysis script. The
-    other mode is to run the analysis script as a regular python script:</p>
+<p class="Pp">where user needs to provide a set of required attributes and
+    definitions in their analysis script. In this mode the RDataFrame is managed
+    for the user and the analysis behavior can be controlled by providing
+    additional attributes in the analysis script. The other mode is to run the
+    analysis script as a regular python script:</p>
 <dl class="Bl-tag">
   <dt></dt>
   <dd>python <i>analysis_script.py</i></dd>
@@ -61,8 +62,8 @@
 <p class="Pp">here user has full control over the RDataFrame, but has to create
     all necessary scaffolding.</p>
 <p class="Pp"></p>
-<p class="Pp">It is expected that the whole analysis will be split into several
-    stages, which can be done in one of the two styles:</p>
+<p class="Pp">Usually it is the case that the whole analysis will be split into
+    several stages, which can be done in one of the two styles:</p>
 <dl class="Bl-tag">
   <dt></dt>
   <dd>anascript_stage1.py -&gt; anascript_stage2.py -&gt; ... -&gt;
@@ -76,12 +77,13 @@
   </dd>
 </dl>
 <p class="Pp">In the case of the first style there are at least three stages
-    required (anascript_stage1.py, anascript_stage_final.py, plots.py) and there
-    is no upper limit on the number of stages. In the case of the second style
-    only two stages are required. The first style is named &quot;staged
-    analysis&quot; and the second &quot;histmaker analysis&quot;.</p>
+    required (e.g. <i>anascript_stage1.py</i>, <i>anascript_stage_final.py</i>,
+    <i>plots.py</i>) and there is no upper limit on the number of stages. In the
+    case of the second style only two stages are required. The first style is
+    named &quot;staged style&quot; and the second &quot;histmaker
+  style&quot;.</p>
 <dl class="Bl-tag">
-  <dt id="staged"><a class="permalink" href="#staged"><b>staged
+  <dt id="Staged"><a class="permalink" href="#Staged"><b>Staged style
     analysis</b></a></dt>
   <dd>The analysis script needs to contain <i>Analysis</i> class of the
       following structure:</dd>
@@ -120,7 +122,7 @@
   </dd>
 </dl>
 <dl class="Bl-tag">
-  <dt id="histmaker"><a class="permalink" href="#histmaker"><b>histmaker
+  <dt id="Histmaker"><a class="permalink" href="#Histmaker"><b>Histmaker style
     analysis</b></a></dt>
   <dd>The analysis script needs to contain <i>build_graph</i> function of the
       following structure:</dd>
@@ -146,26 +148,28 @@
      return results, weightsum</dd>
 </dl>
 <dl class="Bl-tag">
-  <dt id="final"><a class="permalink" href="#final"><b>final and plots
+  <dt id="Final"><a class="permalink" href="#Final"><b>Final and Plots
     stages</b></a></dt>
   <dd>These stages do not require <i>Analysis</i> class neither
       <i>build_graph</i> function, they have their own set of attributes, please
-      see the examples in the <i>examples</i> directory or
-      fccanalysis-final-script(7) and fccanalysis-plots-script(7).
+      see the examples in the <i>examples</i> of FCCAnalyses repository or
+      fccanalysis-final-script(7) and fccanalysis-plots-script(7) manual pages.
     <p class="Pp"></p>
   </dd>
 </dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="ATTRIBUTES"><a class="permalink" href="#ATTRIBUTES">ATTRIBUTES</a></h1>
-<p class="Pp">In case of running the FCCAnalysis in the managed mode user can
-    use the following global attributes to control the behavior of the
-  analysis.</p>
+<p class="Pp">In case of running the FCCAnalysis in the staged style user
+    can/should add the following attributes to the <i>Analysis</i> class in
+    order to control the behavior of the analysis.</p>
 <dl class="Bl-tag">
   <dt id="process_list"><a class="permalink" href="#process_list"><b>process_list</b>
     (mandatory)</a></dt>
   <dd>Dictionary of process samples to be run over. Each process can have
-      several parameters: <i>fraction</i>
+      several parameters:
+    <br/>
+    <i>fraction</i>
     <br/>
     The analysis will run over reduced number of input files roughly
       corresponding to the fraction of total events specified.
@@ -211,8 +215,10 @@
     (optional)</a></dt>
   <dd>Number of threads the RDataFrame will use during processing.
     <br/>
-    Default value: 1 <b>inlude_paths</b> (optional) Specify additional include
-      header files to be JIT compiled.
+    Default value: 1</dd>
+  <dt id="inlude_paths"><a class="permalink" href="#inlude_paths"><b>inlude_paths</b>
+    (optional)</a></dt>
+  <dd>Specify additional include header files to be JIT compiled.
     <br/>
     Default value: None</dd>
   <dt id="batch_queue"><a class="permalink" href="#batch_queue"><b>batch_queue</b>
@@ -323,7 +329,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">07 Nov 2025</td>
+    <td class="foot-date">12 Nov 2025</td>
     <td class="foot-os">0.11.0</td>
   </tr>
 </table>
