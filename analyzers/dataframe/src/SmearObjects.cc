@@ -319,9 +319,6 @@ ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
   TrkUtil tu;
 
   for (int itrack = 0; itrack < ntracks; itrack++) {
-    // auto dNdxObject =
-    //     ReconstructedTrack::get_dNdxObject(itrack, dNdxColl,
-    //     dNdxTrackIndexes);
     auto dNdxSmeared = edm4hep::RecDqdxData{};
     dNdxSmeared.dQdx.value = 0.;
     dNdxSmeared.dQdx.type = 0;
