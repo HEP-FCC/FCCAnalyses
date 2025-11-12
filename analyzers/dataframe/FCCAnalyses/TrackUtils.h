@@ -31,26 +31,29 @@ public:
   /**
    *  @brief Add the information from the collections to the handler
    *
-   *  @param[in dQdxColl           Collection of all dQdx objects in the event (e.g. EFlowTrack_dNdx).
-   *  @param[in] dQdxTrackIndexes  Track indexes corresponding to the dQdx record (e.g. _EFlowTrack_dNdx_track.index).
+   *  @param[in dQdxColl           Collection of all dQdx objects in the event
+   * (e.g. EFlowTrack_dNdx).
+   *  @param[in] dQdxTrackIndexes  Track indexes corresponding to the dQdx
+   * record (e.g. _EFlowTrack_dNdx_track.index).
    */
   void addColl(const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dQdxColl,
-               const ROOT::VecOps::RVec<size_t>& dQdxTrackIndexes);
+               const ROOT::VecOps::RVec<size_t> &dQdxTrackIndexes);
 
   /// Get all RecDqdxData objects for a given track
   ROOT::VecOps::RVec<edm4hep::RecDqdxData>
   getDqdxObjects(const size_t trackIndex) const;
 
   /// Get all dQdx values for a given track
-  ROOT::VecOps::RVec<float>
-  getDqdxValues(const size_t trackIndex) const;
+  ROOT::VecOps::RVec<float> getDqdxValues(const size_t trackIndex) const;
 };
 
 /**
  * Creates an instance of TrackDqdxHandler.
  *
- *  @param[in dQdxColl           Collection of all dQdx objects in the event (e.g. EFlowTrack_dNdx).
- *  @param[in] dQdxTrackIndexes  Track indexes corresponding to the dQdx record (e.g. _EFlowTrack_dNdx_track.index).
+ *  @param[in dQdxColl           Collection of all dQdx objects in the event
+ * (e.g. EFlowTrack_dNdx).
+ *  @param[in] dQdxTrackIndexes  Track indexes corresponding to the dQdx record
+ * (e.g. _EFlowTrack_dNdx_track.index).
  */
 TrackDqdxHandler
 createTrackDqdxHandler(const ROOT::VecOps::RVec<edm4hep::RecDqdxData> &dQdxColl,

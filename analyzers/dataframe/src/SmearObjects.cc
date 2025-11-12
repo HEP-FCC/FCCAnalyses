@@ -303,7 +303,8 @@ SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false)
     : m_scale(scale), m_debug(debug) {}
 
 ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
-    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &allRecoParticles,
+    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+        &allRecoParticles,
     const TrackUtils::TrackDqdxHandler &dNdxHandler,
     const ROOT::VecOps::RVec<float> &length,
     const ROOT::VecOps::RVec<int> &RP2MC_indices,
@@ -319,7 +320,8 @@ ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
 
   for (int itrack = 0; itrack < ntracks; itrack++) {
     // auto dNdxObject =
-    //     ReconstructedTrack::get_dNdxObject(itrack, dNdxColl, dNdxTrackIndexes);
+    //     ReconstructedTrack::get_dNdxObject(itrack, dNdxColl,
+    //     dNdxTrackIndexes);
     auto dNdxSmeared = edm4hep::RecDqdxData{};
     dNdxSmeared.dQdx.value = 0.;
     dNdxSmeared.dQdx.type = 0;

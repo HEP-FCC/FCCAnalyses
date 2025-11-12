@@ -4,8 +4,8 @@
 #include <iostream>
 
 // FCCAnalyses
-#include "FCCAnalyses/VertexingUtils.h"
 #include "FCCAnalyses/TrackUtils.h"
+#include "FCCAnalyses/VertexingUtils.h"
 
 // Delphes
 #include "TrackCovariance/VertexFit.h" // from Delphes - updates Franco, Jul 2022
@@ -191,7 +191,6 @@ ROOT::VecOps::RVec<float> tracks_TOF(
   return tracks_TOF(indices, trackdata, trackerhits);
 }
 
-
 ROOT::VecOps::RVec<float>
 tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
             const ROOT::VecOps::RVec<edm4hep::TrackData> &trackColl,
@@ -232,7 +231,6 @@ tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
 
   return results;
 }
-
 
 ROOT::VecOps::RVec<float>
 tracks_dNdx(const ROOT::VecOps::RVec<edm4hep::TrackState> &someTrackStates,
