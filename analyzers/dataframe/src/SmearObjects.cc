@@ -13,9 +13,7 @@
 #include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/VertexingUtils.h"
 
-namespace FCCAnalyses {
-
-namespace SmearObjects {
+namespace FCCAnalyses ::SmearObjects {
 
 // -------------------------------------------------------------------------------------------
 
@@ -299,43 +297,34 @@ TVectorD CovSmear(TVectorD x, TMatrixDSym C, TRandom *ran, bool debug = false) {
   return xOut;
 }
 
-// -------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false) {
+SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false)
+    : m_scale(scale), m_debug(debug) {}
 
-  // rescale resolution by this factor
-  m_scale = scale;
-
-  // debug flag
-  m_debug = debug;
-}
-
-ROOT::VecOps::RVec<edm4hep::Quantity> SmearedTracksdNdx::operator()(
+ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
     const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
         &allRecoParticles,
-    const ROOT::VecOps::RVec<edm4hep::Quantity> &dNdx,
+    const TrackUtils::TrackDqdxHandler &dNdxHandler,
     const ROOT::VecOps::RVec<float> &length,
     const ROOT::VecOps::RVec<int> &RP2MC_indices,
     const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles) {
+  ROOT::VecOps::RVec<edm4hep::RecDqdxData> result;
 
-  // returns a vector of dNdx that is parallel to the collection of full
-  // tracks (alltracks), i.e. same number of entries, same order. The method
-  // retrieve the MC particle that is associated to a track, and builds a "track
-  // state" out of the MC particle and regenerates a new value of the dNdx
-
-  ROOT::VecOps::RVec<edm4hep::Quantity> result;
-  edm4hep::Quantity dummy;
-
-  int ntracks = dNdx.size();
-  result.resize(ntracks);
+  int ntracks = length.size();
+  result.reserve(ntracks);
 
   // for dNdx calculation
   TVector3 mc_mom;
   TrkUtil tu;
 
   for (int itrack = 0; itrack < ntracks; itrack++) {
-    edm4hep::Quantity dndx = dNdx[itrack];
-    edm4hep::Quantity smeared_dndx = dndx;
+    // auto dNdxObject =
+    //     ReconstructedTrack::get_dNdxObject(itrack, dNdxColl,
+    //     dNdxTrackIndexes);
+    auto dNdxSmeared = edm4hep::RecDqdxData{};
+    dNdxSmeared.dQdx.value = 0.;
+    dNdxSmeared.dQdx.type = 0;
 
     // find the corresponding MC particle
     int MCindex = -1;
@@ -353,7 +342,7 @@ ROOT::VecOps::RVec<edm4hep::Quantity> SmearedTracksdNdx::operator()(
             mcParticles
                 .size()) { // in principle, this should not happen in delphes,
       // each track should be matched to a MC particle.
-      result[itrack] = smeared_dndx;
+      result.push_back(dNdxSmeared);
       continue;
     }
 
@@ -366,19 +355,23 @@ ROOT::VecOps::RVec<edm4hep::Quantity> SmearedTracksdNdx::operator()(
     float muClu =
         tu.Nclusters(bg, 0) * length[itrack]; // avg. number of clusters
 
-    float Ncl = dndx.value * length[itrack];
+    auto dNdxValues = dNdxHandler.getDqdxValues(itrack);
+    // Taking only the first value
+    if (dNdxValues.size() < 1) {
+      result.push_back(dNdxSmeared);
+    }
+    float Ncl = dNdxValues[0] * length[itrack];
     Ncl = std::max(muClu + m_scale * (Ncl - muClu), float(0.));
 
-    result[itrack].type = 0;
-    result[itrack].value = Ncl / length[itrack];
+    dNdxSmeared.dQdx.value = Ncl / length[itrack];
 
     if (m_debug) {
       std::cout << std::endl
                 << "requested smearing dNdx factor: " << m_scale << std::endl
                 << "gen part (PID, p): " << mc_part.PDG << " " << mc_mom.Mag()
                 << std::endl
-                << "original dNdx: " << dNdx[itrack].value << std::endl;
-      std::cout << "smeared dNdx : " << result[itrack].value << std::endl;
+                << "original dNdx: " << dNdxValues[0] << std::endl;
+      std::cout << "smeared dNdx : " << result[itrack].dQdx.value << std::endl;
     }
 
   } // end loop on tracks
@@ -386,7 +379,7 @@ ROOT::VecOps::RVec<edm4hep::Quantity> SmearedTracksdNdx::operator()(
   return result;
 }
 
-// -------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 SmearedTracksTOF::SmearedTracksTOF(float scale, bool debug = false) {
 
@@ -657,5 +650,4 @@ SmearedReconstructedParticle::operator()(
   return result;
 }
 
-} // namespace SmearObjects
-} // namespace FCCAnalyses
+} // namespace FCCAnalyses::SmearObjects

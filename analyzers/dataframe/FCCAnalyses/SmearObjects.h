@@ -1,20 +1,23 @@
-#ifndef SMEARING_ANALYZERS_H
-#define SMEARING_ANALYZERS_H
+#ifndef SMEAR_OBJECTS_ANALYZERS_H
+#define SMEAR_OBJECTS_ANALYZERS_H
 
+// Standard library
 #include <cmath>
 #include <vector>
-
-#include "FCCAnalyses/ReconstructedParticle2Track.h"
+// ROOT
 #include "ROOT/RVec.hxx"
 #include "TLorentzVector.h"
+#include "TMath.h"
 #include "TMatrixDSym.h"
 #include "TRandom.h"
+// EDM4hep
 #include "edm4hep/MCParticleData.h"
-#include <TMath.h>
+#include "edm4hep/RecDqdxData.h"
+// FCCAnalyses
+#include "FCCAnalyses/ReconstructedParticle2Track.h"
+#include "FCCAnalyses/TrackUtils.h"
 
-namespace FCCAnalyses {
-
-namespace SmearObjects {
+namespace FCCAnalyses ::SmearObjects {
 
 /// for a given MC particle, returns a "track state", i.e. a vector of 5 helix
 /// parameters, in Delphes convention
@@ -48,17 +51,30 @@ ROOT::VecOps::RVec<edm4hep::TrackState> mcTrackParameters(
 /// components, using a Choleski decomposition. Code from Franco Bedeschi
 TVectorD CovSmear(TVectorD x, TMatrixDSym C, TRandom *ran, bool debug);
 
-/// generates new track dNdx, by rescaling the poisson error of the cluster
-/// count
+/**
+ * @brief Generates new track dNdx, by rescaling the Poisson error of the
+ * cluster count.
+ */
 struct SmearedTracksdNdx {
-  bool m_debug;
+  bool m_debug; /// Debug flag
   TRandom m_random;
-  float m_scale;
+  float m_scale; /// Rescale resolution by this factor
+
   SmearedTracksdNdx(float m_scale, bool debug);
-  ROOT::VecOps::RVec<edm4hep::Quantity>
+
+  /**
+   * @brief Returns a vector of dNdx that is parallel to the collection of all
+   * tracks of the event (e.g. alltracks), i.e. same number of entries,
+   * same order.
+   *
+   * The method retrieves the MC particle that is associated to a track, and
+   * builds a "track state" out of the MC particle and regenerates a new value
+   * of the dNdx.
+   */
+  ROOT::VecOps::RVec<edm4hep::RecDqdxData>
   operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
                  &allRecoParticles,
-             const ROOT::VecOps::RVec<edm4hep::Quantity> &dNdx,
+             const TrackUtils::TrackDqdxHandler &dNdxHandler,
              const ROOT::VecOps::RVec<float> &length,
              const ROOT::VecOps::RVec<int> &RP2MC_indices,
              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);
@@ -95,7 +111,6 @@ struct SmearedReconstructedParticle {
              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);
 };
 
-} // namespace SmearObjects
-} // namespace FCCAnalyses
+} // namespace FCCAnalyses::SmearObjects
 
-#endif
+#endif /* SMEAR_OBJECTS_ANALYZERS_H */

@@ -1,26 +1,26 @@
 #include "FCCAnalyses/ReconstructedParticle.h"
+
+// Standard library
 #include <iostream>
 
-#include "edm4hep/EDM4hepVersion.h"
-
-#include "FCCAnalyses/ReconstructedTrack.h"
+// FCCAnalyses
+#include "FCCAnalyses/TrackUtils.h"
 #include "FCCAnalyses/VertexingUtils.h"
 
-#include "VertexFit.h" // from Delphes - updates Franco, Jul 2022
-#include "VertexMore.h"
+// Delphes
+#include "TrackCovariance/VertexFit.h" // from Delphes - updates Franco, Jul 2022
+#include "TrackCovariance/VertexMore.h"
 
-namespace FCCAnalyses {
-
-namespace ReconstructedTrack {
+namespace FCCAnalyses ::ReconstructedTrack {
 
 ROOT::VecOps::RVec<edm4hep::TrackState>
 Intersection(const ROOT::VecOps::RVec<edm4hep::TrackState> &Col1,
              const ROOT::VecOps::RVec<edm4hep::TrackState> &Col2) {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> result;
-  for (auto &track1 : Col1) {
+  for (const auto &track1 : Col1) {
     bool isInBoth = false;
-    for (auto &track2 : Col2) {
+    for (const auto &track2 : Col2) {
       if (VertexingUtils::compare_Tracks(track1, track2)) {
         isInBoth = true;
         break;
@@ -40,9 +40,9 @@ Remove(const ROOT::VecOps::RVec<edm4hep::TrackState> &Subset,
        const ROOT::VecOps::RVec<edm4hep::TrackState> &LargerCollection) {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> result;
-  for (auto &track1 : LargerCollection) {
+  for (const auto &track1 : LargerCollection) {
     bool isInBoth = false;
-    for (auto &track2 : Subset) {
+    for (const auto &track2 : Subset) {
       if (VertexingUtils::compare_Tracks(track1, track2)) {
         isInBoth = true;
         break;
@@ -65,9 +65,9 @@ Merge(const ROOT::VecOps::RVec<edm4hep::TrackState> &Col1,
   result.reserve(Col1.size() + Col2.size());
   result.insert(result.end(), Col1.begin(), Col1.end());
 
-  for (auto &track2 : Col2) {
+  for (const auto &track2 : Col2) {
     bool isInBoth = false;
-    for (auto &track1 : Col1) {
+    for (const auto &track1 : Col1) {
       if (VertexingUtils::compare_Tracks(track1, track2)) {
         isInBoth = true;
         break;
@@ -80,48 +80,38 @@ Merge(const ROOT::VecOps::RVec<edm4hep::TrackState> &Col1,
   return result;
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-
-// for FullSim :
-
-// ---- make a collection of TrackStates from only the Trackstates at (0,0,0)
-
 ROOT::VecOps::RVec<edm4hep::TrackState>
-TrackStates_at_IP(const ROOT::VecOps::RVec<edm4hep::TrackData> &in,
-                  const ROOT::VecOps::RVec<edm4hep::TrackState> &trackstates) {
-
+TrackStates_at_IP(const ROOT::VecOps::RVec<edm4hep::TrackData> &inTracks,
+                  const ROOT::VecOps::RVec<edm4hep::TrackState> &trackStates) {
   ROOT::VecOps::RVec<edm4hep::TrackState> result;
-  int n_trackstates = trackstates.size();
-  int nm4 = n_trackstates % 4;
-  if (nm4 != 0)
-    std::cout << " ================= modulo 4 != 0 " << nm4 << std::endl;
+  result.reserve(inTracks.size());
 
-  for (size_t i = 0; i < in.size(); ++i) {
-    auto &p = in[i];
-    int idx = p.trackStates_begin;
-    int idx_out = p.trackStates_end;
+  if ((trackStates.size() % 4) != 0) {
+    std::cout << " ================= modulo 4 != 0 but "
+              << (trackStates.size() % 4) << std::endl;
+  }
 
-    edm4hep::TrackState trackstate_in = trackstates[idx];
-    edm4hep::Vector3f RefPoint = trackstate_in.referencePoint;
+  for (const auto &t : inTracks) {
+    int idx = t.trackStates_begin;
+
+    edm4hep::TrackState trackstate_in = trackStates[idx];
     result.push_back(trackstate_in);
   }
 
   return result;
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-
-/// indices of a subset of tracks, in the full tracks collection
-
 ROOT::VecOps::RVec<int>
-get_indices(const ROOT::VecOps::RVec<edm4hep::TrackState> &some_tracks,
-            const ROOT::VecOps::RVec<edm4hep::TrackState> &FullTracks) {
-
+get_indices(const ROOT::VecOps::RVec<edm4hep::TrackState> &someTrackStates,
+            const ROOT::VecOps::RVec<edm4hep::TrackState> &allTrackStates) {
   ROOT::VecOps::RVec<int> result;
-  for (auto &track1 : some_tracks) {
+  result.reserve(someTrackStates.size());
+
+  for (const auto &track1 : someTrackStates) {
     int idx = -1;
-    for (int itrack = 0; itrack < FullTracks.size(); itrack++) {
-      edm4hep::TrackState track2 = FullTracks[itrack];
+    for (size_t itrack = 0; itrack < allTrackStates.size(); itrack++) {
+      edm4hep::TrackState track2 = allTrackStates[itrack];
+
       if (VertexingUtils::compare_Tracks(track1, track2)) {
         idx = itrack;
         break;
@@ -129,6 +119,7 @@ get_indices(const ROOT::VecOps::RVec<edm4hep::TrackState> &some_tracks,
     }
     result.push_back(idx);
   }
+
   return result;
 }
 
@@ -139,7 +130,7 @@ ROOT::VecOps::RVec<float> tracks_length(
     const ROOT::VecOps::RVec<float> &length) { // collection EFlowTrack_L
 
   ROOT::VecOps::RVec<float> results;
-  for (int i = 0; i < track_indices.size(); i++) {
+  for (size_t i = 0; i < track_indices.size(); i++) {
     int tk_idx = track_indices[i];
     float l = length[tk_idx];
     results.push_back(l);
@@ -164,13 +155,13 @@ ROOT::VecOps::RVec<float> tracks_TOF(
     const ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> &trackerhits) {
 
   ROOT::VecOps::RVec<float> results;
-  for (int i = 0; i < track_indices.size(); i++) {
+  for (size_t i = 0; i < track_indices.size(); i++) {
     int tk_idx = track_indices[i]; // index of the track in EFlowTrack_1
 
     int tk_jdx = -1;
     // find the index of the track in Eflowtrack (in principle, it is the same
     // as tk_idx)
-    for (int k = 0; k < trackdata.size(); k++) {
+    for (size_t k = 0; k < trackdata.size(); k++) {
       int id_trackStates = trackdata[k].trackStates_begin;
       if (id_trackStates == tk_idx) {
         tk_jdx = k;
@@ -200,49 +191,56 @@ ROOT::VecOps::RVec<float> tracks_TOF(
   return tracks_TOF(indices, trackdata, trackerhits);
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-
-ROOT::VecOps::RVec<float> tracks_dNdx(
-    const ROOT::VecOps::RVec<int> &track_indices,
-    const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-    const ROOT::VecOps::RVec<edm4hep::Quantity> &dNdx)       // ETrackFlow_2
-{
+ROOT::VecOps::RVec<float>
+tracks_dNdx(const ROOT::VecOps::RVec<int> &trackStateIndices,
+            const ROOT::VecOps::RVec<edm4hep::TrackData> &trackColl,
+            const TrackUtils::TrackDqdxHandler &dNdxHandler) {
   ROOT::VecOps::RVec<float> results;
-  for (int i = 0; i < track_indices.size(); i++) {
-    int tk_idx = track_indices[i]; // index of the track in EFlowTrack_1
-    int tk_jdx = -1;
-    // find the index of the track in Eflowtrack (in principle, it is the same
-    // as tk_idx)
-    for (int k = 0; k < trackdata.size(); k++) {
-      int id_trackStates = trackdata[k].trackStates_begin;
-      if (id_trackStates == tk_idx) {
-        tk_jdx = k;
+  results.reserve(trackStateIndices.size());
+
+  // Loop over track states
+  for (const auto &trackStateIndex : trackStateIndices) {
+    float dNdx = -1;
+
+    // Find the index of the corresponding track in the track collection
+    // (e.g. EFlowtrack)
+    int trackIndex = -1;
+    for (size_t k = 0; k < trackColl.size(); k++) {
+      // TODO: Currently only the first track state is considered
+      int id_trackStates = trackColl[k].trackStates_begin;
+      if (id_trackStates == trackStateIndex) {
+        trackIndex = k;
         break;
       }
     }
-    float dndx = -1;
-#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
-    if (tk_jdx >= 0) {
-      int j = trackdata[tk_jdx].dxQuantities_begin;
-      dndx = dNdx[j].value / 1000;
+
+    if (trackIndex < 0) {
+      results.push_back(dNdx);
+      continue;
     }
-#endif
-    results.push_back(dndx);
+
+    auto dNdxValues = dNdxHandler.getDqdxValues(trackIndex);
+
+    // Taking only first value
+    if (dNdxValues.size() > 0) {
+      dNdx = dNdxValues[0] / 1000.;
+    }
+
+    results.push_back(dNdx);
   }
+
   return results;
 }
 
-ROOT::VecOps::RVec<float> tracks_dNdx(
-    const ROOT::VecOps::RVec<edm4hep::TrackState> &some_tracks,
-    const ROOT::VecOps::RVec<edm4hep::TrackState> &FullTracks,
-    const ROOT::VecOps::RVec<edm4hep::TrackData> &trackdata, // Eflowtrack
-    const ROOT::VecOps::RVec<edm4hep::Quantity> &dNdx)       // ETrackFlow_2
-{
-  ROOT::VecOps::RVec<int> indices = get_indices(some_tracks, FullTracks);
-  return tracks_dNdx(indices, trackdata, dNdx);
+ROOT::VecOps::RVec<float>
+tracks_dNdx(const ROOT::VecOps::RVec<edm4hep::TrackState> &someTrackStates,
+            const ROOT::VecOps::RVec<edm4hep::TrackState> &allTrackStates,
+            const ROOT::VecOps::RVec<edm4hep::TrackData> &trackColl,
+            const TrackUtils::TrackDqdxHandler &dNdxHandler) {
+  ROOT::VecOps::RVec<int> indices =
+      get_indices(someTrackStates, allTrackStates);
+
+  return tracks_dNdx(indices, trackColl, dNdxHandler);
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-
-} // namespace ReconstructedTrack
-} // namespace FCCAnalyses
+} // namespace FCCAnalyses::ReconstructedTrack

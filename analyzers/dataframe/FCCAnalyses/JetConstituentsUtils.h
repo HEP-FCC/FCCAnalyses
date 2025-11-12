@@ -21,6 +21,8 @@ namespace edm4hep {
 #include "TRotation.h"
 #include "TLorentzVector.h"
 
+#include "FCCAnalyses/TrackUtils.h"
+
 namespace FCCAnalyses {
   namespace JetConstituentsUtils {
     namespace rv = ROOT::VecOps;
@@ -140,11 +142,26 @@ namespace FCCAnalyses {
     rv::RVec<FCCAnalysesJetConstituentsData> get_omega_z0_cov(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
 							     const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
 
-
-    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(const rv::RVec<FCCAnalysesJetConstituents>& jcs,
-                                                      const rv::RVec<edm4hep::RecDqdxData>& dNdx,
-						      const rv::RVec<edm4hep::TrackData>& trackdata,
-						      const rv::RVec<FCCAnalysesJetConstituentsData> JetsConstituents_isChargedHad);
+    /**
+     * @brief Obtain dNdx corresponding to the provided jet constituents.
+     *
+     * Neutrals are set to 0.
+     * Muons and electrons are also set to 0.
+     * Only charged hadrons are considered (`mtof` used to discriminate charged
+     * kaons and pions).
+     *
+     * @param[in] jetConstituents jet constituents for which dNdx is expected.
+     * @param[in] dNdxHandler instance of a TrackUtils::TrackDqdxHandler.
+     * @param[in] trackColl collection of all track in the event
+     *                      (e.g. EFlowtrack).
+     * @param[in] isJetConstChargedHad vector of flags whether is the jet
+     *                                 constituent a charged hadron.
+     */
+    rv::RVec<FCCAnalysesJetConstituentsData> get_dndx(
+        const rv::RVec<FCCAnalysesJetConstituents> &jetConstituents,
+        const TrackUtils::TrackDqdxHandler &dNdxHandler,
+        const rv::RVec<edm4hep::TrackData> &trackColl,
+        const rv::RVec<FCCAnalysesJetConstituentsData> isJetConstChargedHad);
 
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal(const rv::RVec<edm4hep::ReconstructedParticleData>& jets,
                                                           const rv::RVec<FCCAnalysesJetConstituents>& jcs,
