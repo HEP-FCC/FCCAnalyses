@@ -27,8 +27,8 @@ def get_file_list(file_list_path: str) -> list[str]:
     Loads file list from the provided file.
     '''
     if not os.path.isfile(file_list_path):
-        LOGGER.error('Provided file containing list of ROOT files could not be '
-                     'found!\nAborting...')
+        LOGGER.error('Provided file containing list of ROOT files could not '
+                     'be found!\nAborting...')
         sys.exit(3)
 
     with open(file_list_path, 'r', encoding='utf-8') as lstfile:
@@ -108,6 +108,22 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
     if hasattr(analysis, 'include_paths'):
         config['include-paths'] = analysis.include_paths
 
+    # Check number of events to be run over
+    config['n-events-max'] = None
+    if hasattr(analysis, 'n_events_max'):
+        config['n-events-max'] = analysis.n_events_max
+    if args.nevents is not None:
+        config['n-events-max'] = args.nevents
+
+    # Check number of requested threads
+    config['n-threads'] = 1
+    # No MT if number of events is specified
+    if config['n-events-max'] is None:
+        if hasattr(analysis, "n_threads"):
+            config['n-threads'] = analysis.n_threads
+        if args.ncpus is not None:
+            config['n-threads'] = args.ncpus
+
     # Check whether to use PODIO DataSource to load the events
     config['use-data-source'] = False
     if get_attribute(analysis, 'use_data_source', False):
@@ -133,7 +149,7 @@ def merge_config(args: argparse.Namespace, analysis: Any) -> dict[str, Any]:
 
 
 # _____________________________________________________________________________
-def initialize(config, args, analysis):
+def initialize(config, analysis):
     '''
     Common initialization steps.
     '''
@@ -152,26 +168,19 @@ def initialize(config, args, analysis):
     if geometry_file is not None and readout_name is not None:
         ROOT.CaloNtupleizer.loadGeometry(geometry_file, readout_name)
 
-    # set multithreading (no MT if number of events is specified)
-    n_threads = 1
-    if args.nevents < 0:
-        if isinstance(args.ncpus, int) and args.ncpus >= 1:
-            n_threads = args.ncpus
-        else:
-            n_threads = get_attribute(analysis, "n_threads", 1)
-        if n_threads < 0:  # use all available threads
-            ROOT.EnableImplicitMT()
-            n_threads = ROOT.GetThreadPoolSize()
+    if config['n-threads'] < 0:  # use all available threads
+        ROOT.EnableImplicitMT()
+        config['n-threads'] = ROOT.GetThreadPoolSize()
 
-        if n_threads > 1:
-            ROOT.ROOT.EnableImplicitMT(n_threads)
+    if config['n-threads'] > 1:
+        ROOT.ROOT.EnableImplicitMT(config['n-threads'])
 
     if ROOT.IsImplicitMTEnabled():
         ROOT.EnableThreadSafety()
         LOGGER.info('Multithreading enabled. Running over %i threads',
                     ROOT.GetThreadPoolSize())
     else:
-        LOGGER.info('No multithreading enabled. Running in single thread...')
+        LOGGER.info('No multithreading enabled. Running in a single thread...')
 
     # Additional include header files
     if config['include-paths'] is not None:
@@ -199,7 +208,7 @@ def run_rdf(config: dict[str, Any],
             args,
             analysis,
             input_list: list[str],
-            out_file: str) -> int:
+            out_file: str) -> tuple[int, int, int, int]:
     '''
     Run the analysis ROOTDataFrame and snapshot it.
     '''
@@ -227,8 +236,8 @@ def run_rdf(config: dict[str, Any],
         ROOT.RDF.Experimental.AddProgressBar(dframe)
 
     # Limit number of events processed
-    if args.nevents > 0:
-        dframe2 = dframe.Range(0, args.nevents)
+    if config['n-events-max'] is not None:
+        dframe2 = dframe.Range(0, config['n-events-max'])
     else:
         dframe2 = dframe
 
@@ -260,7 +269,10 @@ def run_rdf(config: dict[str, Any],
                      'occurred:\n%s', excp)
         sys.exit(3)
 
-    return evtcount_init.GetValue(), evtcount_final.GetValue(), sow_init.GetValue(), sow_final.GetValue()
+    return (evtcount_init.GetValue(),
+            evtcount_final.GetValue(),
+            sow_init.GetValue(),
+            sow_final.GetValue())
 
 
 # _____________________________________________________________________________
@@ -323,9 +335,9 @@ def run_local(config: dict[str, Any],
 
         if config['do-weighted']:
             # Adjust number of events in case --nevents was specified
-            if args.nevents > 0:
+            if config['n-events-max'] is not None:
                 nevts_param, nevts_tree, sow_param, sow_tree = \
-                    get_entries_sow(filepath, args.nevents)
+                    get_entries_sow(filepath, config['n-events-max'])
             else:
                 nevts_param, nevts_tree, sow_param, sow_tree = \
                     get_entries_sow(filepath)
@@ -351,9 +363,9 @@ def run_local(config: dict[str, Any],
                 sys.exit(3)
             infile.Close()
 
-            # Adjust number of events in case --nevents was specified
-            if args.nevents > 0 and args.nevents < nevents_local:
-                nevents_local = args.nevents
+    # Adjust number of events in case the maximum number of events is specified
+    if config['n-events-max'] is not None:
+        nevents_local = config['n-events-max']
 
     LOGGER.info(info_msg)
 
@@ -458,7 +470,7 @@ def run_fccanalysis(args, analysis_module):
     config: dict[str, Any] = merge_config(args, analysis)
 
     # Set number of threads, load header files, custom dicts, ...
-    initialize(config, args, analysis_module)
+    initialize(config, analysis_module)
 
     # Check if output directory exist and if not create it
     output_dir = get_attribute(analysis, 'output_dir', None)

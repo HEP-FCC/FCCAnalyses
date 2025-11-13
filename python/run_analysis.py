@@ -50,7 +50,7 @@ def initialize(args, rdf_module, anapath: str):
 
     # set multithreading (no MT if number of events is specified)
     ncpus = 1
-    if args.nevents < 0:
+    if args.nevents is None:
         if isinstance(args.ncpus, int) and args.ncpus >= 1:
             ncpus = args.ncpus
         else:
@@ -114,7 +114,7 @@ def initialize(args, rdf_module, anapath: str):
 def run_rdf(rdf_module,
             input_list: list[str],
             outfile_path: str,
-            args) -> int:
+            args) -> tuple[int, int]:
     '''
     Create RDataFrame and snapshot it.
     '''
@@ -124,7 +124,7 @@ def run_rdf(rdf_module,
         ROOT.RDF.Experimental.AddProgressBar(dframe)
 
     # limit number of events processed
-    if args.nevents > 0:
+    if args.nevents is not None:
         dframe2 = dframe.Range(0, args.nevents)
     else:
         dframe2 = dframe
@@ -225,7 +225,7 @@ def run_local(rdf_module, infile_list, args):
     LOGGER.info(info_msg)
 
     # Adjust number of events in case --nevents was specified
-    if args.nevents > 0 and args.nevents < nevents_local:
+    if args.nevents is not None and args.nevents < nevents_local:
         nevents_local = args.nevents
 
     if nevents_orig > 0:
@@ -378,7 +378,7 @@ def run_stages(args, rdf_module, anapath):
                                            'output')
         output_dir = get_attribute(rdf_module, 'outputDir', '')
 
-        if chunks == 1:
+        if len(chunk_list) == 1:
             output_filepath = os.path.join(output_dir, output_stem+'.root')
             output_dir = None
         else:
@@ -393,11 +393,11 @@ def run_stages(args, rdf_module, anapath):
             info_msg += f'\n\t- output directory:      {output_dir}'
         if output_filepath:
             info_msg += f'\n\t- output file path:      {output_dir}'
-        if chunks > 1:
+        if len(chunk_list) > 1:
             info_msg += f'\n\t- number of chunks: {chunks}'
 
         # Create directory if more than 1 chunk
-        if chunks > 1:
+        if len(chunk_list) > 1:
             output_directory = os.path.join(output_dir, output_stem)
 
             if not os.path.exists(output_directory):
@@ -410,7 +410,8 @@ def run_stages(args, rdf_module, anapath):
             run_local(rdf_module, chunk_list[0], args)
         else:
             for index, chunk in enumerate(chunk_list):
-                args.output = os.path.join(output_dir, f'chunk{index}.root')
+                args.output = os.path.join(output_directory,
+                                           f'chunk{index}.root')
                 run_local(rdf_module, chunk, args)
 
 
@@ -653,19 +654,19 @@ def run_histmaker(args, rdf_module, anapath):
                 hist.Write()
 
             # write all meta info to the output file
-            p = ROOT.TParameter(int)("eventsProcessed", events_processed)
-            p.Write()
-            p = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
-            p.Write()
-            p = ROOT.TParameter(float)("intLumi", int_lumi)
-            p.Write()
-            p = ROOT.TParameter(float)("crossSection", cross_section)
-            p.Write()
-            p = ROOT.TParameter(float)("kfactor", kfactor)
-            p.Write()
-            p = ROOT.TParameter(float)("matchingEfficiency",
-                                       matching_efficiency)
-            p.Write()
+            param = ROOT.TParameter(int)("eventsProcessed", events_processed)
+            param.Write()
+            param = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
+            param.Write()
+            param = ROOT.TParameter(float)("intLumi", int_lumi)
+            param.Write()
+            param = ROOT.TParameter(float)("crossSection", cross_section)
+            param.Write()
+            param = ROOT.TParameter(float)("kfactor", kfactor)
+            param.Write()
+            param = ROOT.TParameter(float)("matchingEfficiency",
+                                           matching_efficiency)
+            param.Write()
 
     info_msg = f"{' SUMMARY ':=^80}\n"
     info_msg += 'Elapsed time (H:M:S):    '

@@ -24,7 +24,10 @@ processList = {
 
 # Mandatory: Production tag when running over EDM4Hep centrally produced
 # events, this points to the yaml files for getting sample statistics
-prodTag = "FCCee/spring2021/IDEA/"
+# prodTag = "FCCee/spring2021/IDEA/"
+# or Input directory when not running over the centrally produced
+# samples.
+inputDir = '/eos/experiment/fcc/hh/tutorials/edm4hep_tutorial_data/'
 
 # Optional: output directory, default is local running directory
 outputDir = "outputs/FCCee/higgs/mH-recoil/ee/stage1"
@@ -46,9 +49,8 @@ outputDir = "outputs/FCCee/higgs/mH-recoil/ee/stage1"
 # compGroup = "group_u_FCC.local_gen"
 
 # Optional test file
-testFile = 'root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/' \
-           'DelphesEvents/spring2021/IDEA/p8_ee_ZH_ecm240/' \
-           'events_101027117.root'
+testFile = 'https://fccsw.web.cern.ch/fccsw/analysis/' \
+           'test-samples/edm4hep099/p8_ee_WW_ecm240_edm4hep.root'
 
 
 class RDFanalysis:
@@ -65,7 +67,7 @@ class RDFanalysis:
         df2 = (
             df
             # define an alias for electron index collection
-            .Alias("Electron0", "Electron#0.index")
+            .Alias("Electron0", "Electron_objIdx.index")
             # define the electron collection
             .Define(
                 "electrons",

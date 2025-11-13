@@ -25,16 +25,16 @@ class Analysis():
         self.process_list = analysis_config.process_list
         self.input_dir = analysis_config.input_dir
         self.output_dir = analysis_config.stage1_output
-                
+
         # Optional: analysisName, default is ''
         self.analysis_name = 'FCC-hh VBF HWW analysis'
 
-        # Optional: number of threads to run on, default is 'all available'
+        # Optional: number of threads to run on, default is 1
         # self.n_threads = 4
 
         # Optional: running on HTCondor, default is False
         self.run_batch = True
-        
+
         # Optional: Use weighted events
         self.do_weighted = True 
 

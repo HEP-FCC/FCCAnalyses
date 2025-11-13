@@ -48,8 +48,8 @@ class Analysis():
         # Optional: output directory, default is local dir
         self.output_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/stage2'
 
-        # Optional: number of threads, default is 4
-        self.n_threads = 2
+        # Optional: number of threads, default is 1
+        # self.n_threads = 2
 
         # Optional: running on HTCondor, default is False
         self.run_batch = False

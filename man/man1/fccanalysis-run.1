@@ -72,7 +72,8 @@ Load events through podio::DataSource\&.
 Output benchmark results to a JSON file\&.
 .TP
 \fB\-j\fR \fINCPUS\fR, \fB\-\-ncpus\fR \fINCPUS\fR (deprecated), \fB\-\-n\-threads\fR NTHREADS
-Set number of jobs (threads)\&.
+Set number of jobs (threads) to use\&. The default number of threads to use is
+1\&. To use all threads available on the machine specify -1\&.
 .TP
 .BR \-g ", " \-\-graph
 The computational graph of the analysis will be generated\&.

@@ -41,7 +41,7 @@ class Analysis():
         # Optional: analysisName, default is ''
         self.analysis_name = 'FCC-hh bbyy analysis'
 
-        # Optional: number of threads to run on, default is 'all available'
+        # Optional: number of threads to run on, default is 1
         # self.n_threads = 4
 
         # Optional: running on HTCondor, default is False

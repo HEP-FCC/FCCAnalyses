@@ -143,7 +143,8 @@ Optional name for the analysis
 Default value: empty string
 .TP
 \fBn_threads\fR (optional)
-Number of threads the RDataFrame will use during processing\&.
+Number of threads the RDataFrame will use during processing\&. To use all
+threads available on the machine specify -1.
 .br
 Default value: 1
 .TP
@@ -209,6 +210,10 @@ This variable controls which process dictionary will be used. It can be either
 simple file name, absolute path or url. In the case of simple filename, the file
 is being searched for first in the working directory and then at the locations
 indicated in the $FCCDICTSDIR environment variable.
+.TP
+.B n_events_max
+Allows to limit the amount of events to be processed. The limit is applied per
+sample.
 .PP
 This section is under construction. You are invited to help :)
 
