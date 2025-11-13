@@ -11,7 +11,7 @@ import importlib.util
 import pathlib
 import json
 import math
-from typing import Any
+from typing import Any, Union
 
 import ROOT  # type: ignore
 import cppyy  # type: ignore
@@ -263,16 +263,16 @@ def run(rdf_module, args) -> None:
     nevents_real = 0
     start_time = time.time()
 
-    process_events = {}
-    events_ttree = {}
-    file_list = {}
-    results = {}
+    process_events: dict[str, Union[int, float]] = {}
+    events_ttree: dict[str, Union[int, float]] = {}
+    file_list: dict[str, ROOT.vector] = {}
+    results: dict[str, dict[str, Any]] = {}
 
     # Check if using weighted events is requested
     do_weighted = get_attribute(rdf_module, 'do_weighted', False)
 
     if do_weighted:
-        LOGGER.info('Using generator weights')
+        LOGGER.info('Using generator weights...')
         sow_process = process_events.copy()
         sow_ttree = events_ttree.copy()
 
@@ -349,23 +349,22 @@ def run(rdf_module, args) -> None:
 
     info_msg = 'Processed events:'
     for process_name, n_events in process_events.items():
-        info_msg += f'\n\t- {process_name}: {n_events:,}'
+        info_msg += f'\n  - {process_name}: {n_events:,}'
     LOGGER.info(info_msg)
     info_msg = 'Events in the TTree:'
     for process_name, n_events in events_ttree.items():
-        info_msg += f'\n\t- {process_name}: {n_events:,}'
+        info_msg += f'\n  - {process_name}: {n_events:,}'
     LOGGER.info(info_msg)
 
     if do_weighted:
         info_msg = 'Processed sum of weights:'
         for process_name, sow in sow_process.items():
-            info_msg += f'\n\t- {process_name}: {sow:,}'
+            info_msg += f'\n  - {process_name}: {sow:,}'
         LOGGER.info(info_msg)
         info_msg = 'Sum of weights in the TTree:'
         for process_name, sow in sow_ttree.items():
-            info_msg += f'\n\t- {process_name}: {sow:,}'
+            info_msg += f'\n  - {process_name}: {sow:,}'
         LOGGER.info(info_msg)
-
 
     # Check if there are any histograms defined
     histo_list: dict[str, dict[str, Any]] = get_attribute(rdf_module,
@@ -406,6 +405,7 @@ def run(rdf_module, args) -> None:
         histos_list = []
         snapshots = []
         count_list = []
+        sow_list = []
         cuts_list = []
         cuts_list.append(process_name)
         eff_list = []
@@ -458,6 +458,18 @@ def run(rdf_module, args) -> None:
                 sys.exit(3)
 
             count_list.append(dframe_cut.Count())
+
+            if do_weighted:
+                # check that the weight column exists, it should always be
+                # called "weight" for now
+                try:
+                    sow_list.append(dframe_cut.Sum("weight"))
+                except cppyy.gbl.std.runtime_error:
+                    LOGGER.error(
+                        'Event weights requested with "do_weighted" but input '
+                        'file does not contain weight column.\nAborting...'
+                    )
+                    sys.exit(3)
 
             histos = []
             for hist_name, hist_definition in histo_list.items():
@@ -516,35 +528,40 @@ def run(rdf_module, args) -> None:
         all_events_weighted = all_events_raw
 
         if do_weighted:
-            # check that the weight column exists, it should always be called "weight" for now
+            # check that the weight column exists, it should always be called
+            # "weight" for now
             try:
                 all_events_weighted = dframe.Sum("weight").GetValue()
-                LOGGER.info(f'Successfully applied event weights, got weighted events = {all_events_weighted:0,.2f}')
+                info_msg = 'Successfully applied event weights, got ' + \
+                           f'weighted events = {all_events_weighted:0,.2f}'
+                LOGGER.info(info_msg)
             except cppyy.gbl.std.runtime_error:
-                LOGGER.error('Error: Event weights requested with do_weighted, '
-                                'but input file does not contain weight column. Aborting.')
+                LOGGER.error(
+                    'Event weights requested with "do_weighted" but input '
+                    'file does not contain weight column.\nAborting...'
+                )
                 sys.exit(3)
 
         LOGGER.info('Done')
 
         nevents_real += all_events_raw
-        uncertainty = ROOT.Math.sqrt(all_events_raw)
+        uncertainty = math.sqrt(all_events_raw)
 
         if do_scale:
             LOGGER.info('Scaling cut yields...')
             if do_weighted:
-                    all_events = all_events_weighted * 1. * gen_sf * \
-                        int_lumi / sow_process[process_name]
-                    uncertainty = ROOT.Math.sqrt(all_events_weighted) * gen_sf * \
-                        int_lumi / sow_process[process_name]
+                all_events = (all_events_weighted * 1. * gen_sf *
+                              int_lumi) / sow_process[process_name]
+                uncertainty = (math.sqrt(all_events_weighted) * gen_sf *
+                               int_lumi) / sow_process[process_name]
             else:
-                all_events = all_events_raw * 1. * gen_sf * \
-                    int_lumi / process_events[process_name]
-                uncertainty = ROOT.Math.sqrt(all_events_raw) * gen_sf * \
-                    int_lumi / process_events[process_name]
+                all_events = (all_events_raw * 1. * gen_sf *
+                              int_lumi / process_events[process_name])
+                uncertainty = (math.sqrt(all_events_raw) * gen_sf *
+                               int_lumi / process_events[process_name])
         else:
             all_events = all_events_raw
-            uncertainty = ROOT.Math.sqrt(all_events_raw)
+            uncertainty = math.sqrt(all_events_raw)
 
         results[process_name]['all_events'] = {}
         results[process_name]['all_events']['n_events_raw'] = all_events_raw
@@ -555,12 +572,21 @@ def run(rdf_module, args) -> None:
             cut_result = {}
             cut_result['n_events_raw'] = count_list[i].GetValue()
             if do_scale:
-                cut_result['n_events'] = \
-                    cut_result['n_events_raw'] * 1. * gen_sf * \
-                    int_lumi / process_events[process_name]
-                cut_result['uncertainty'] = \
-                    math.sqrt(cut_result['n_events_raw']) * gen_sf * \
-                    int_lumi / process_events[process_name]
+                if do_weighted:
+                    cut_sow = sow_list[i].GetValue()
+                    cut_result['n_events'] = \
+                        (cut_sow * 1. * gen_sf * int_lumi) \
+                        / process_events[process_name]
+                    cut_result['uncertainty'] = \
+                        (math.sqrt(cut_sow) * gen_sf * int_lumi) \
+                        / process_events[process_name]
+                else:
+                    cut_result['n_events'] = \
+                        (cut_result['n_events_raw'] * 1. * gen_sf * int_lumi) \
+                        / process_events[process_name]
+                    cut_result['uncertainty'] = \
+                        (math.sqrt(cut_result['n_events_raw']) * gen_sf *
+                         int_lumi) / process_events[process_name]
             else:
                 cut_result['n_events'] = cut_result['n_events_raw']
                 cut_result['uncertainty'] = \
@@ -622,9 +648,11 @@ def run(rdf_module, args) -> None:
                     outfile.WriteObject(param)
 
                 else:
-                    param = ROOT.TParameter(float)("sumOfWeights",
-                                                   process_events[process_name])
-                    outfile.WriteObject(param) 
+                    param = ROOT.TParameter(float)(
+                        "sumOfWeights",
+                        process_events[process_name]
+                    )
+                    outfile.WriteObject(param)
 
                 param = ROOT.TParameter(bool)("scaled",
                                               do_scale)
@@ -662,23 +690,25 @@ def run(rdf_module, args) -> None:
                                  'events!', cut, process_name)
                     sys.exit(3)
 
-                #store also the TParameters for total number of events and sum of weights to the trees
-                print("Updating file", fout_list[i])
+                # Store also the TParameters for total number of events and
+                # sum of weights to the trees
+                LOGGER.info('Updating file "%s"', fout_list[i])
                 outfile = ROOT.TFile(fout_list[i], 'update')
-                param = ROOT.TParameter(int)('eventsProcessed', process_events[process_name])
-                print("Number of events processed:", process_events[process_name])
+                param = ROOT.TParameter(int)('eventsProcessed',
+                                             process_events[process_name])
+                LOGGER.info("Number of events processed: %g",
+                            process_events[process_name])
                 param.Write()
                 if do_weighted:
-                    param2 = ROOT.TParameter(float)('SumOfWeights', sow_process[process_name])
-                    print("Sum of weights:", sow_process[process_name])
+                    param2 = ROOT.TParameter(float)('sumOfWeights',
+                                                    sow_process[process_name])
+                    LOGGER.info("Sum of weights: %g",
+                                sow_process[process_name])
                     param2.Write()
                 outfile.Write()
                 outfile.Close()
 
-
-
-
-    # Save results either to JSON or LaTeX tables
+    # Save the results either to JSON or LaTeX tables
     save_results(results, rdf_module)
 
     elapsed_time = time.time() - start_time
