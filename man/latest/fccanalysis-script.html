@@ -213,7 +213,8 @@
     Default value: empty string</dd>
   <dt id="n_threads"><a class="permalink" href="#n_threads"><b>n_threads</b>
     (optional)</a></dt>
-  <dd>Number of threads the RDataFrame will use during processing.
+  <dd>Number of threads the RDataFrame will use during processing. To use all
+      threads available on the machine specify -1.
     <br/>
     Default value: 1</dd>
   <dt id="inlude_paths"><a class="permalink" href="#inlude_paths"><b>inlude_paths</b>
@@ -280,6 +281,9 @@
       filename, the file is being searched for first in the working directory
       and then at the locations indicated in the $FCCDICTSDIR environment
       variable.</dd>
+  <dt id="n_events_max"><a class="permalink" href="#n_events_max"><b>n_events_max</b></a></dt>
+  <dd>Allows to limit the amount of events to be processed. The limit is applied
+      per sample.</dd>
 </dl>
 <p class="Pp">This section is under construction. You are invited to help :)</p>
 <p class="Pp"></p>
