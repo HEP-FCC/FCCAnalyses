@@ -27,8 +27,8 @@ def get_file_list(file_list_path: str) -> list[str]:
     Loads file list from the provided file.
     '''
     if not os.path.isfile(file_list_path):
-        LOGGER.error('Provided file containing list of ROOT files could not be '
-                     'found!\nAborting...')
+        LOGGER.error('Provided file containing list of ROOT files could not '
+                     'be found!\nAborting...')
         sys.exit(3)
 
     with open(file_list_path, 'r', encoding='utf-8') as lstfile:

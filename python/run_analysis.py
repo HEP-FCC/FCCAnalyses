@@ -654,19 +654,19 @@ def run_histmaker(args, rdf_module, anapath):
                 hist.Write()
 
             # write all meta info to the output file
-            p = ROOT.TParameter(int)("eventsProcessed", events_processed)
-            p.Write()
-            p = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
-            p.Write()
-            p = ROOT.TParameter(float)("intLumi", int_lumi)
-            p.Write()
-            p = ROOT.TParameter(float)("crossSection", cross_section)
-            p.Write()
-            p = ROOT.TParameter(float)("kfactor", kfactor)
-            p.Write()
-            p = ROOT.TParameter(float)("matchingEfficiency",
-                                       matching_efficiency)
-            p.Write()
+            param = ROOT.TParameter(int)("eventsProcessed", events_processed)
+            param.Write()
+            param = ROOT.TParameter(float)("sumOfWeights", hweight.GetValue())
+            param.Write()
+            param = ROOT.TParameter(float)("intLumi", int_lumi)
+            param.Write()
+            param = ROOT.TParameter(float)("crossSection", cross_section)
+            param.Write()
+            param = ROOT.TParameter(float)("kfactor", kfactor)
+            param.Write()
+            param = ROOT.TParameter(float)("matchingEfficiency",
+                                           matching_efficiency)
+            param.Write()
 
     info_msg = f"{' SUMMARY ':=^80}\n"
     info_msg += 'Elapsed time (H:M:S):    '
