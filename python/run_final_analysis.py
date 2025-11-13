@@ -11,6 +11,7 @@ import importlib.util
 import pathlib
 import json
 import math
+import argparse
 from typing import Any, Union
 
 import ROOT  # type: ignore
@@ -225,8 +226,31 @@ def save_tables(results: dict[str, dict[str, Any]],
                       '\\end{table}\n')
 
 
-# __________________________________________________________
-def run(rdf_module, args) -> None:
+# _____________________________________________________________________________
+def merge_config(args: argparse.Namespace, anascript: Any) -> dict[str, Any]:
+    '''
+    Merge configuration from analysis script file with command line arguments
+    '''
+    config: dict[str, Any] = {}
+
+    # Check if using weighted events is requested
+    if hasattr(anascript, 'do_weighted') and hasattr(anascript, 'doWeighted'):
+        LOGGER.error('Please use only "doWeighted" or "do_weighted" attribute '
+                     'in your final analysis script!\nAborting...')
+        sys.exit(3)
+    config['do-weighted'] = False
+    if hasattr(anascript, 'do_weighted'):
+        config['do-weighted'] = anascript.do_weighted
+    if hasattr(anascript, 'doWeighted'):
+        config['do-weighted'] = anascript.doWeighted
+    if args.do_weighted is not None:
+        config['do-weighted'] = args.do_weighted
+
+    return config
+
+
+# _____________________________________________________________________________
+def run(rdf_module, config, args) -> None:
     '''
     Let's start.
     '''
@@ -268,10 +292,7 @@ def run(rdf_module, args) -> None:
     file_list: dict[str, ROOT.vector] = {}
     results: dict[str, dict[str, Any]] = {}
 
-    # Check if using weighted events is requested
-    do_weighted = get_attribute(rdf_module, 'do_weighted', False)
-
-    if do_weighted:
+    if config['do-weighted']:
         LOGGER.info('Using generator weights...')
         sow_process = process_events.copy()
         sow_ttree = events_ttree.copy()
@@ -311,7 +332,7 @@ def run(rdf_module, args) -> None:
     for process_name in process_list:
         process_events[process_name] = 0
         events_ttree[process_name] = 0
-        if do_weighted:
+        if config['do-weighted']:
             sow_process[process_name] = 0.
             sow_ttree[process_name] = 0.
 
@@ -321,7 +342,7 @@ def run(rdf_module, args) -> None:
         for filepath in flist:
             # TODO: check in `get_entries()` if file is valid and remove it
             #       from the input list if it is not
-            if do_weighted:
+            if config['do-weighted']:
                 chunk_process_events, chunk_events_ttree, \
                     chunk_sow_process, chunk_sow_ttree = \
                     get_entries_sow(filepath, weight_name="weight")
@@ -356,7 +377,7 @@ def run(rdf_module, args) -> None:
         info_msg += f'\n  - {process_name}: {n_events:,}'
     LOGGER.info(info_msg)
 
-    if do_weighted:
+    if config['do-weighted']:
         info_msg = 'Processed sum of weights:'
         for process_name, sow in sow_process.items():
             info_msg += f'\n  - {process_name}: {sow:,}'
@@ -459,15 +480,15 @@ def run(rdf_module, args) -> None:
 
             count_list.append(dframe_cut.Count())
 
-            if do_weighted:
+            if config['do-weighted']:
                 # check that the weight column exists, it should always be
                 # called "weight" for now
                 try:
                     sow_list.append(dframe_cut.Sum("weight"))
                 except cppyy.gbl.std.runtime_error:
                     LOGGER.error(
-                        'Event weights requested with "do_weighted" but input '
-                        'file does not contain weight column.\nAborting...'
+                        'Event weights requested but input file does not '
+                        'contain "weight" column!\nAborting...'
                     )
                     sys.exit(3)
 
@@ -527,7 +548,7 @@ def run(rdf_module, args) -> None:
         all_events_raw = dframe.Count().GetValue()
         all_events_weighted = all_events_raw
 
-        if do_weighted:
+        if config['do-weighted']:
             # check that the weight column exists, it should always be called
             # "weight" for now
             try:
@@ -537,8 +558,8 @@ def run(rdf_module, args) -> None:
                 LOGGER.info(info_msg)
             except cppyy.gbl.std.runtime_error:
                 LOGGER.error(
-                    'Event weights requested with "do_weighted" but input '
-                    'file does not contain weight column.\nAborting...'
+                    'Event weights requested but the input file does not '
+                    'contain the "weight" column.\nAborting...'
                 )
                 sys.exit(3)
 
@@ -549,7 +570,7 @@ def run(rdf_module, args) -> None:
 
         if do_scale:
             LOGGER.info('Scaling cut yields...')
-            if do_weighted:
+            if config['do-weighted']:
                 all_events = (all_events_weighted * 1. * gen_sf *
                               int_lumi) / sow_process[process_name]
                 uncertainty = (math.sqrt(all_events_weighted) * gen_sf *
@@ -572,7 +593,7 @@ def run(rdf_module, args) -> None:
             cut_result = {}
             cut_result['n_events_raw'] = count_list[i].GetValue()
             if do_scale:
-                if do_weighted:
+                if config['do-weighted']:
                     cut_sow = sow_list[i].GetValue()
                     cut_result['n_events'] = \
                         (cut_sow * 1. * gen_sf * int_lumi) \
@@ -629,7 +650,7 @@ def run(rdf_module, args) -> None:
                     hist_name = hist.GetName() + '_raw'
                     outfile.WriteObject(hist.GetValue(), hist_name)
                     if do_scale:
-                        if do_weighted:
+                        if config['do-weighted']:
                             hist.Scale(gen_sf * int_lumi /
                                        sow_process[process_name])
                         else:
@@ -642,7 +663,7 @@ def run(rdf_module, args) -> None:
                                              process_events[process_name])
                 outfile.WriteObject(param)
 
-                if do_weighted:
+                if config['do-weighted']:
                     param = ROOT.TParameter(float)("sumOfWeights",
                                                    sow_process[process_name])
                     outfile.WriteObject(param)
@@ -699,7 +720,7 @@ def run(rdf_module, args) -> None:
                 LOGGER.info("Number of events processed: %g",
                             process_events[process_name])
                 param.Write()
-                if do_weighted:
+                if config['do-weighted']:
                     param2 = ROOT.TParameter(float)('sumOfWeights',
                                                     sow_process[process_name])
                     LOGGER.info("Sum of weights: %g",
@@ -737,7 +758,7 @@ def run_final(parser):
         sys.exit(3)
 
     # Check that the analysis file exists
-    anapath = args.anascript_path
+    anapath = os.path.abspath(args.anascript_path)
     if not os.path.isfile(anapath):
         LOGGER.error('Analysis script "%s" not found!\nAborting...',
                      anapath)
@@ -774,18 +795,18 @@ def run_final(parser):
         LOGGER.debug(verbosity)
 
     # Load the analysis
-    anapath_abs = os.path.abspath(anapath)
-    LOGGER.info('Loading analysis script:\n%s', anapath_abs)
-    rdf_spec = importlib.util.spec_from_file_location('rdfanalysis',
-                                                      anapath_abs)
+    LOGGER.info('Loading analysis script:\n%s', anapath)
+    rdf_spec = importlib.util.spec_from_file_location('rdfanalysis', anapath)
     rdf_module = importlib.util.module_from_spec(rdf_spec)
     rdf_spec.loader.exec_module(rdf_module)
 
     # Merge configuration from analysis script file with command line arguments
+    config: dict[str, Any] = merge_config(args, rdf_module)
+
     if get_element(rdf_module, 'graph'):
         args.graph = True
 
     if get_element(rdf_module, 'graphPath') != '':
         args.graph_path = get_element(rdf_module, 'graphPath')
 
-    run(rdf_module, args)
+    run(rdf_module, config, args)
