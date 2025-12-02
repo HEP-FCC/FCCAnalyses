@@ -385,23 +385,17 @@ def run_stages(args, rdf_module, anapath):
             output_filepath = None
             output_dir = os.path.join(output_dir, output_stem)
 
-        info_msg = f'Adding process "{process_name}" with:'
+        info_msg = f'Will run over process "{process_name}" with:'
         if fraction < 1:
-            info_msg += f'\n\t- fraction:         {fraction}'
-        info_msg += f'\n\t- number of files:  {len(file_list):,}'
+            info_msg += f'\n  - fraction: {fraction}'
+        info_msg += f'\n  - number of input files: {len(file_list):,}'
         if output_dir:
-            info_msg += f'\n\t- output directory:      {output_dir}'
+            info_msg += f'\n  - output directory: {output_dir}'
         if output_filepath:
-            info_msg += f'\n\t- output file path:      {output_dir}'
+            info_msg += f'\n  - output file path: {output_filepath}'
         if len(chunk_list) > 1:
-            info_msg += f'\n\t- number of chunks: {chunks}'
-
-        # Create directory if more than 1 chunk
-        if len(chunk_list) > 1:
-            output_directory = os.path.join(output_dir, output_stem)
-
-            if not os.path.exists(output_directory):
-                os.system(f'mkdir -p {output_directory}')
+            info_msg += f'\n  - number of output chunks: {chunks}'
+        LOGGER.info(info_msg)
 
         # Running locally
         LOGGER.info('Running locally...')
@@ -409,9 +403,12 @@ def run_stages(args, rdf_module, anapath):
             args.output = output_filepath
             run_local(rdf_module, chunk_list[0], args)
         else:
+            # Create directory if more than 1 chunk
+            if not os.path.exists(output_dir):
+                os.system(f'mkdir -p {output_dir}')
+
             for index, chunk in enumerate(chunk_list):
-                args.output = os.path.join(output_directory,
-                                           f'chunk{index}.root')
+                args.output = os.path.join(output_dir, f'chunk{index}.root')
                 run_local(rdf_module, chunk, args)
 
 
