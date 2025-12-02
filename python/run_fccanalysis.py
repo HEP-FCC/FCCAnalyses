@@ -583,17 +583,16 @@ def run_fccanalysis(args, analysis_module):
             info_msg += f'\n    - output file path: {output_filepath}'
         LOGGER.info(info_msg)
 
-        # Create directory if more than 1 chunk
-        if n_chunks > 1:
-            if not os.path.exists(output_dir):
-                os.system(f'mkdir -p {output_dir}')
-
         # Running locally
         LOGGER.info('Running locally...')
         if n_chunks == 1:
             args.output = output_filepath
             run_local(config, args, analysis, chunk_list[0])
         else:
+            # Create directory if more than 1 chunk
+            if not os.path.exists(output_dir):
+                os.system(f'mkdir -p {output_dir}')
+
             for index, chunk in enumerate(chunk_list):
                 args.output = f'{output_dir}/chunk{index}.root'
                 run_local(config, args, analysis, chunk)
