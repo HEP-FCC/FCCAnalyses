@@ -189,12 +189,16 @@ def merge_config_analysis_class(config: dict[str, Any],
     analysis_class = analysis_module.Analysis(vars(args))
     config['analysis-class'] = analysis_class
 
-    # Check if there are any processes defined.
+    # Check if there are any processes/samples defined.
     if not hasattr(analysis_class, 'process_list'):
         LOGGER.error('Analysis does not define any processes!\n'
                      'Aborting...')
         sys.exit(3)
     config['sample-list'] = analysis_class.process_list
+    if not config['sample-list']:
+        LOGGER.error('Analysis does not define any processes!\n'
+                     'Aborting...')
+        sys.exit(3)
 
     # Check if there is production tag or input directory defined.
     if not hasattr(analysis_class, 'prod_tag') and \
