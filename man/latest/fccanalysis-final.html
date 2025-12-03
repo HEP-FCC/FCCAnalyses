@@ -27,12 +27,13 @@
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp"><b>fccanalysis final</b> [<b>-h</b> | <b>--help</b>] [<b>-g</b> |
-    <b>--graph</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]</p>
+    <b>--graph</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>] [<b>-w</b> |
+    <b>--do-weighted</b>] <b>anascript_path</b></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp"><b>fccanalysis-final runs the last stage of the analysis, where
-    one defines</b> final cuts and histograms. This stage can also output ROOT
+<p class="Pp"><b>fccanalysis-final</b> runs the last stage of the analysis,
+    where one defines final cuts and histograms. This stage can also output ROOT
     and LaTeX files for further use.</p>
 </section>
 <section class="Sh">
@@ -45,6 +46,9 @@
   <dt id="graph"><a class="permalink" href="#graph"><b>--graph-path</b>
     <i>GRAPH_PATH</i></a></dt>
   <dd>Analysis graph save path, should end with '.dot' or '.png'.</dd>
+  <dt id="w"><a class="permalink" href="#w"><b>-w</b>,
+    <b>--do-weighted</b></a></dt>
+  <dd>Whether to use sum of weights to scale the results.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -87,7 +91,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">18 Jul 2024</td>
+    <td class="foot-date">13 Nov 2025</td>
     <td class="foot-os">0.11.0</td>
   </tr>
 </table>
