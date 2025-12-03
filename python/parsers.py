@@ -198,6 +198,11 @@ def setup_run_parser_final(parser):
     parser.add_argument('--graph-path', type=str, default='',
                         help='analysis graph save path, should end with '
                         '\'.dot\' or \'.png\'')
+    parser.add_argument(
+        '-w', '--do-weighted',
+        action='store_true', default=None,
+        help='whether to use sum of weights to scale the results'
+    )
 
 
 # _____________________________________________________________________________
