@@ -72,7 +72,6 @@ def create_condor_config(config: dict[str, Any],
         cfg += f'error = log/{sample_name}/'
         cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).error\n'
 
-
     cfg += 'getenv = False\n'
 
     build_os = determine_os(config['fccana-dir'])
@@ -169,7 +168,7 @@ def submit_job(cmd: str, max_trials: int) -> bool:
                 LOGGER.info('Submission successful.\n')
                 return True
 
-            LOGGER.warning('Error occured while submitting, retrying...\n'
+            LOGGER.warning('Error occurred while submitting, retrying...\n'
                            'Trial: %i / %i\n'
                            'Error: %s', i, max_trials, stderr)
             time.sleep(10)
@@ -296,7 +295,8 @@ def send_sample(config: dict[str, Any],
     # Create log directory
     current_date = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-    batch_dir = os.path.join('batch-submission-files', current_date, sample_name)
+    batch_dir = os.path.join('batch-submission-files',
+                             current_date, sample_name)
     if not os.path.exists(batch_dir):
         os.system(f'mkdir -p {batch_dir}')
 
@@ -396,7 +396,9 @@ def send_sample(config: dict[str, Any],
     else:
         batch_cmd = f'condor_submit {condor_config_path}'
     LOGGER.info('Job submission command:\n  %s', batch_cmd)
-    success = submit_job(batch_cmd, 3)
+
+    max_trials = 3
+    success = submit_job(batch_cmd, max_trials)
     if not success:
         LOGGER.error('Failed submitting after: %i trials!\nAborting...',
                      max_trials)
