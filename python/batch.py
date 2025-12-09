@@ -9,6 +9,7 @@ import logging
 import subprocess
 import datetime
 import argparse
+import string
 from typing import Any
 
 from process import get_process_info
@@ -53,7 +54,8 @@ def determine_os(fccana_dir: str) -> str | None:
 def create_condor_config(config: dict[str, Any],
                          batch_dir: str,
                          sample_name: str,
-                         subjob_scripts: list[str]) -> str:
+                         subjob_scripts: list[str],
+                         timestamp: str) -> str:
     '''
     Creates contents of HTCondor submit description file.
     '''
@@ -61,7 +63,13 @@ def create_condor_config(config: dict[str, Any],
 
     cfg += f'log = {batch_dir}/condor_job.{sample_name}.$(ClusterId).log\n'
 
-    if config['output-dir-eos'] is None:
+    if isinstance(config['output-dir-eos'], string.Template):
+        output_dir_eos = config['output-dir-eos'].substitute(
+            timestamp=timestamp)
+    else:
+        output_dir_eos = config['output-dir-eos']
+
+    if output_dir_eos is None:
         cfg += f'output = {config["output-dir"]}/log/{sample_name}/'
         cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).out\n'
         cfg += f'error = {config["output-dir"]}/log/{sample_name}/'
@@ -95,13 +103,13 @@ def create_condor_config(config: dict[str, Any],
     cfg += 'when_to_transfer_output = on_exit\n'
     cfg += f'transfer_output_files = {sample_name}\n'
 
-    if config['output-dir-eos'] is None:
+    if output_dir_eos is None:
         cfg += 'transfer_output_remaps = '
         cfg += f'"{sample_name}={config["output-dir"]}/{sample_name}"\n'
     else:
         cfg += 'output_destination = '
         cfg += f'root://{config["eos-type"]}.cern.ch/'
-        cfg += f'{config["output-dir-eos"]}\n'
+        cfg += f'{output_dir_eos}\n'
         cfg += 'MY.XRDCP_CREATE_DIR = True\n\n'
 
     # Add user batch configuration if any.
@@ -292,11 +300,11 @@ def send_sample(config: dict[str, Any],
     '''
     sample_dict = config['sample-list'][sample_name]
 
-    # Create log directory
-    current_date = datetime.datetime.fromtimestamp(
+    timestamp = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-    batch_dir = os.path.join('batch-submission-files',
-                             current_date, sample_name)
+
+    # Create log directory
+    batch_dir = os.path.join('batch-submission-files', timestamp, sample_name)
     if not os.path.exists(batch_dir):
         os.system(f'mkdir -p {batch_dir}')
 
@@ -379,7 +387,8 @@ def send_sample(config: dict[str, Any],
                 condor_config = create_condor_config(config,
                                                      batch_dir,
                                                      sample_name,
-                                                     subjob_scripts)
+                                                     subjob_scripts,
+                                                     timestamp)
                 cfgfile.write(condor_config)
         except IOError as err:
             LOGGER.warning('I/O error(%i): %s', err.errno, err.strerror)
