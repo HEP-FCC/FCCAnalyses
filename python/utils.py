@@ -104,13 +104,13 @@ def boolean_of(input, context: str) -> bool :
         @return boolean
     """
     booleanDictionary = {
-            "falseStatements" : ["false", "f", "F", "False", "0", 0, "no", "n"],
-            "trueStatements"  : ["true", "t", "T", "True", "1", 1 "yes","y"]
+            "falseStatements" : ["false", "f", "0", "no", "n"],
+            "trueStatements"  : ["true", "t", "1","yes","y"]
     }
-    
-    if input in booleanDictionary["falseStatements"]:
+    statement  = str(input)
+    if statement.lower() in booleanDictionary["falseStatements"]:
         return False
-    elif input in booleanDictionary["trueStatements"]:
+    elif statement.lower() in booleanDictionary["trueStatements"]:
         return True
-    else
-    raise Exception(f"In ${context} you provided ${input} which cannot be considered a boolean in our source-code please use: False : ${booleanDictionary["falseStatements"]} and True: ${booleanDictionary["trueStatements"]}.")
+    else:
+        LOGGER(f"In ${context} you provided ${input} which cannot be considered a boolean in our source-code please use: False : ${booleanDictionary["falseStatements"]} and True: ${booleanDictionary["trueStatements"]}.")
