@@ -16,6 +16,7 @@ import ROOT  # type: ignore
 
 from utils import random_string, boolean_of
 
+
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptTitle(0)
