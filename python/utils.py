@@ -113,5 +113,5 @@ def boolean_of(inputStatement, context: str) -> bool | None:
     elif statement.lower() in booleanDictionary["trueStatements"]:
         return True
     else:
-        LOGGER.warning(f"In {context} you provided {inputStatement} which cannot be considered a boolean in our source-code please use: False : {booleanDictionary["falseStatements"]} and True: {booleanDictionary["trueStatements"]}.")
+        LOGGER.warning(f"In {context} you provided {inputStatement} which cannot be considered a boolean in our source-code please use: False : {booleanDictionary['falseStatements']} and True: {booleanDictionary['trueStatements']}.")
         return None
