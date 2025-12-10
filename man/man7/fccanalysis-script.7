@@ -164,10 +164,10 @@ Computing account when running on HTCondor.
 Default value: "group_u_FCC.local_gen"
 .TP
 \fBoutput_dir_eos\fR (optional)
-Output directory on EOS, if specified files will be copied there once the batch
-job is done. A string (\fBstr\fR) or a template (\fBstring.Template\fR) can be
-provided. In case of the template only one variable is currently supported:
-\fB$timestamp\fR.
+Output directory on EOS, recognized only when submitting to HTCondor. If
+specified files will be copied there once the batch job is done. A string
+(\fBstr\fR) or a template (\fBstring.Template\fR) can be provided. In case of
+the template only one variable is currently supported: \fB$timestamp\fR.
 .br
 Default value: None
 .TP

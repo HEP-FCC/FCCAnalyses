@@ -55,19 +55,13 @@ def create_condor_config(config: dict[str, Any],
                          batch_dir: str,
                          sample_name: str,
                          subjob_scripts: list[str],
-                         timestamp: str) -> str:
+                         output_dir_eos: str | None) -> str:
     '''
     Creates contents of HTCondor submit description file.
     '''
     cfg = 'executable = $(scriptfile)\n'
 
     cfg += f'log = {batch_dir}/condor_job.{sample_name}.$(ClusterId).log\n'
-
-    if isinstance(config['output-dir-eos'], string.Template):
-        output_dir_eos = config['output-dir-eos'].substitute(
-            timestamp=timestamp)
-    else:
-        output_dir_eos = config['output-dir-eos']
 
     if output_dir_eos is None:
         cfg += f'output = {config["output-dir"]}/log/{sample_name}/'
@@ -381,22 +375,24 @@ def send_sample(config: dict[str, Any],
 
     condor_config_path = f'{batch_dir}/job_desc_{sample_name}.cfg'
 
-    for i in range(3):
-        try:
-            with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
-                condor_config = create_condor_config(config,
-                                                     batch_dir,
-                                                     sample_name,
-                                                     subjob_scripts,
-                                                     timestamp)
-                cfgfile.write(condor_config)
-        except IOError as err:
-            LOGGER.warning('I/O error(%i): %s', err.errno, err.strerror)
-            if i == 2:
-                sys.exit(3)
-        else:
-            break
-        time.sleep(10)
+    # Convert possible output-dir-eos template to string
+    if isinstance(config['output-dir-eos'], string.Template):
+        output_dir_eos = config['output-dir-eos'].substitute(
+            timestamp=timestamp)
+    else:
+        output_dir_eos = config['output-dir-eos']
+
+    # Check if EOS output directory exist and if not create it
+    if output_dir_eos is not None and not os.path.exists(output_dir_eos):
+        os.system(f'mkdir -p {output_dir_eos}')
+
+    with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
+        condor_config = create_condor_config(config,
+                                             batch_dir,
+                                             sample_name,
+                                             subjob_scripts,
+                                             output_dir_eos)
+        cfgfile.write(condor_config)
 
     if config['submission-filesystem-type'] == 'eos':
         batch_cmd = f'condor_submit -spool {condor_config_path}'
