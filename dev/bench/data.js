@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765361901134,
+  "lastUpdate": 1765361982598,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -54924,6 +54924,93 @@ window.BENCHMARK_DATA = {
             "name": "nightly | Events processed per second: examples/data_source/analysis_stage1.py",
             "value": 5.055081693069781,
             "unit": "Evt/s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "763cb483f4c8e605b3182c8b1d076cdd920739b2",
+          "message": "Allowing a timestamp in output-dir-eos (#492)\n\n* Allowing a timestamp in output-dir-eos\n\n* Do not check if EOS output directory exists when running analysis",
+          "timestamp": "2025-12-10T11:06:38+01:00",
+          "tree_id": "0e877f0ddfe45dae3108dde30f3629034a57cbc1",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/763cb483f4c8e605b3182c8b1d076cdd920739b2"
+        },
+        "date": 1765361976337,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: case-studies/analysis_example/scripts/analysis_example.py",
+            "value": 9.542438268661499,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: case-studies/analysis_example/scripts/analysis_example.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 9.57377004623413,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 11.350461721420288,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 88.9793336391449,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 9.273540496826172,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 178.51081609725952,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/weaver/stage1.py",
+            "value": 28.35314393043518,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/weaver/stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/data_source/stages_source.py",
+            "value": 16.170900344848633,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/data_source/analysis_stage1.py",
+            "value": 16.870888471603394,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/data_source/analysis_stage1.py"
           }
         ]
       }
