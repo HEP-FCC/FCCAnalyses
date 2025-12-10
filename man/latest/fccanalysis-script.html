@@ -234,10 +234,13 @@
     Default value: &quot;group_u_FCC.local_gen&quot;</dd>
   <dt id="output_dir_eos"><a class="permalink" href="#output_dir_eos"><b>output_dir_eos</b>
     (optional)</a></dt>
-  <dd>Output directory on EOS, if specified files will be copied there once the
-      batch job is done.
+  <dd>Output directory on EOS, recognized only when submitting to HTCondor. If
+      specified files will be copied there once the batch job is done. A string
+      (<b>str</b>) or a template (<b>string.Template</b>) can be provided. In
+      case of the template only one variable is currently supported:
+      <b>$timestamp</b>.
     <br/>
-    Default value: empty string</dd>
+    Default value: None</dd>
   <dt id="eos_type"><a class="permalink" href="#eos_type"><b>eos_type</b>
     (optional)</a></dt>
   <dd>Type of the EOS proxy to be used.
@@ -247,7 +250,7 @@
     (optional)</a></dt>
   <dd>Location of the test file provided as a string (<b>str</b>) or a template
       (<b>string.Template</b>). In case of the template two variables are
-      supported: <b>key4hep_os</b> and <b>key4hep_stack</b>.
+      supported: <b>$key4hep_os</b> and <b>$key4hep_stack</b>.
     <br/>
     Default value: empty string</dd>
   <dt id="graph"><a class="permalink" href="#graph"><b>graph</b>
