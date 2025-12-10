@@ -527,7 +527,7 @@ def runPlotsHistmaker(config: dict[str, Any],
     ymin = hist_cfg['ymin'] if 'ymin' in hist_cfg else -1
     ymax = hist_cfg['ymax'] if 'ymax' in hist_cfg else -1
     stack = boolean_of(hist_cfg['stack'],"histogram stack") if 'stack' in hist_cfg else False
-    logx = boolean_of(hist_cfg['logx'], hist_cfg['xtitle']) hist_cfg if 'logx' in hist_cfg else False
+    logx = boolean_of(hist_cfg['logx'], hist_cfg['xtitle']) if 'logx' in hist_cfg else False
     logy = boolean_of(hist_cfg['logy'], hist_cfg['ytitle']) if 'logy' in hist_cfg else False
     extralab = hist_cfg['extralab'] if 'extralab' in hist_cfg else ""
 
