@@ -477,11 +477,6 @@ def run_fccanalysis(args, analysis_module):
     if output_dir is not None and not os.path.exists(output_dir):
         os.system(f'mkdir -p {output_dir}')
 
-    # Check if EOS output directory exist and if not create it
-    output_dir_eos = get_attribute(analysis, 'output_dir_eos', None)
-    if output_dir_eos is not None and not os.path.exists(output_dir_eos):
-        os.system(f'mkdir -p {output_dir_eos}')
-
     if config['do-weighted']:
         LOGGER.info('Using generator weights...')
 

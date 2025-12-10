@@ -3,6 +3,7 @@ Analysis example, measure Higgs mass in the Z(mumu)H recoil measurement.
 This analysis stage runs on HTCondor.
 '''
 from argparse import ArgumentParser
+from string import Template
 
 
 # Mandatory: Analysis class where the user defines the operations on the
@@ -52,9 +53,15 @@ class Analysis():
         # is 'group_u_FCC.local_gen'
         self.comp_group = 'group_u_FCC.local_gen'
 
-        # Optional: output directory on eos, if specified files will be copied
+        # Optional: output directory on EOS, if specified files will be copied
         # there once the batch job is done, default is empty
         self.output_dir_eos = '/eos/user/j/jsmiesko/mH-recoil-output'
+        # or it could also be a template:
+        # self.output_dir_eos = Template(
+        #     '/eos/user/j/jsmiesko/mH-recoil-output/$timestamp'
+        # )
+        # variable $timestamp is internally defined to have this form:
+        # '%Y-%m-%d_%H-%M-%S'
 
         # Optional: type of EOS proxy used when <outputDirEos> is specified.
         # The default is eosuser

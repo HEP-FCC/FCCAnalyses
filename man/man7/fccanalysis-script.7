@@ -164,10 +164,12 @@ Computing account when running on HTCondor.
 Default value: "group_u_FCC.local_gen"
 .TP
 \fBoutput_dir_eos\fR (optional)
-Output directory on EOS, if specified files will be copied there once the batch
-job is done.
+Output directory on EOS, recognized only when submitting to HTCondor. If
+specified files will be copied there once the batch job is done. A string
+(\fBstr\fR) or a template (\fBstring.Template\fR) can be provided. In case of
+the template only one variable is currently supported: \fB$timestamp\fR.
 .br
-Default value: empty string
+Default value: None
 .TP
 \fBeos_type\fR (optional)
 Type of the EOS proxy to be used.
@@ -177,7 +179,7 @@ Default value: user
 \fBtest_file\fR (optional)
 Location of the test file provided as a string (\fBstr\fR) or a template
 (\fBstring.Template\fR). In case of the template two variables are supported:
-\fBkey4hep_os\fR and \fBkey4hep_stack\fR.
+\fB$key4hep_os\fR and \fB$key4hep_stack\fR.
 .br
 Default value: empty string
 .TP
