@@ -14,7 +14,7 @@ from typing import Any
 
 import ROOT  # type: ignore
 
-from utils import random_string
+from utils import random_string, boolean_of
 
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
@@ -526,9 +526,9 @@ def runPlotsHistmaker(config: dict[str, Any],
     xmax = hist_cfg['xmax'] if 'xmax' in hist_cfg else -1
     ymin = hist_cfg['ymin'] if 'ymin' in hist_cfg else -1
     ymax = hist_cfg['ymax'] if 'ymax' in hist_cfg else -1
-    stack = hist_cfg['stack'] if 'stack' in hist_cfg else False
-    logx = hist_cfg['logx'] if 'logx' in hist_cfg else False
-    logy = hist_cfg['logy'] if 'logy' in hist_cfg else False
+    stack = boolean_of(hist_cfg['stack'],"histogram stack") if 'stack' in hist_cfg else False
+    logx = boolean_of(hist_cfg['logx'], hist_cfg['xtitle']) hist_cfg if 'logx' in hist_cfg else False
+    logy = boolean_of(hist_cfg['logy'], hist_cfg['ytitle']) if 'logy' in hist_cfg else False
     extralab = hist_cfg['extralab'] if 'extralab' in hist_cfg else ""
 
     intLumi = f'L = {param.intLumi / 1e+06:.0f} ab^{{-1}}'
