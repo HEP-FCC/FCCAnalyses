@@ -1,4 +1,5 @@
-testFile="root://eospublic.cern.ch//eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/p8_ee_Zbb_ecm91/events_066726720.root"
+testFile = 'https://fccsw.web.cern.ch/fccsw/analysis/' \
+           'test-samples/edm4hep099/p8_ee_Zbb_ecm91_edm4hep.root'
 
 #Mandatory: List of processes
 processList = {
@@ -31,43 +32,52 @@ class RDFanalysis():
     def analysers(df):
         df2 = (
             df
-            .Alias("Particle1", "Particle#1.index")
-            
-            # get all the MC particles to check for Ks                                                                                                                    
+            .Alias("Particle1", "_Particle_daughters.index")
+
+            # get all the MC particles to check for Ks
             .Define("MC_pdg", "FCCAnalyses::MCParticle::get_pdg(Particle)")
-            # get momenta & mass of all particles                                                                                                                         
+            # get momenta & mass of all particles
             .Define("MC_p4", "FCCAnalyses::MCParticle::get_tlv(Particle)")
             .Define("MC_mass", "FCCAnalyses::MCParticle::get_mass(Particle)")
-            
-            # Ks -> pi+pi-                                                                                                                                                
-            .Define("K0spipi_indices", "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay(310, {211, -211}, true, true) (Particle, Particle1)")
-            # Lambda0 -> p+pi-                                                                                                                                            
-            .Define("Lambda0ppi_indices", "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay(3122, {2212, -211}, true, true) (Particle, Particle1)")
-            
-            # determime the primary (and secondary) tracks without using the MC-matching:                                                                                 
-            
-            # Select the tracks that are reconstructed  as primaries                                                                                                      
-            .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0.)")
 
-            .Define("n_RecoedPrimaryTracks",  "ReconstructedParticle2Track::getTK_n( RecoedPrimaryTracks )")
-            # the final primary vertex :                                                                                                                                  
-            .Define("PrimaryVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
-            .Define("PrimaryVertex",   "VertexingUtils::get_VertexData( PrimaryVertexObject )")
+            # Ks -> pi+pi-
+            .Define("K0spipi_indices",
+                    "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay(310, {211, -211}, true, true) (Particle, Particle1)")
+            # Lambda0 -> p+pi-
+            .Define("Lambda0ppi_indices",
+                    "FCCAnalyses::MCParticle::get_indices_ExclusiveDecay(3122, {2212, -211}, true, true) (Particle, Particle1)")
 
-            # the secondary tracks                                                                                                                                        
-            .Define("SecondaryTracks",   "VertexFitterSimple::get_NonPrimaryTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
-            .Define("n_SecondaryTracks",  "ReconstructedParticle2Track::getTK_n( SecondaryTracks )" )
+            # determime the primary (and secondary) tracks without using the MC-matching:
 
-            # which of the tracks are primary according to the reco algprithm                                                                                             
-            .Define("IsPrimary_based_on_reco",  "VertexFitterSimple::IsPrimary_forTracks( EFlowTrack_1,  RecoedPrimaryTracks )")
+            # Select the tracks that are reconstructed as primaries
+            .Define("RecoedPrimaryTracks",
+                    "VertexFitterSimple::get_PrimaryTracks(_EFlowTrack_trackStates, true, 4.5, 20e-3, 300, 0., 0., 0.)")
+
+            .Define("n_RecoedPrimaryTracks",
+                    "ReconstructedParticle2Track::getTK_n(RecoedPrimaryTracks)")
+            # the final primary vertex:
+            .Define("PrimaryVertexObject",
+                    "VertexFitterSimple::VertexFitter_Tk(1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300)")
+            .Define("PrimaryVertex",
+                    "VertexingUtils::get_VertexData(PrimaryVertexObject)")
+
+            # the secondary tracks
+            .Define("SecondaryTracks",
+                    "VertexFitterSimple::get_NonPrimaryTracks(_EFlowTrack_trackStates, RecoedPrimaryTracks)")
+            .Define("n_SecondaryTracks",
+                    "ReconstructedParticle2Track::getTK_n(SecondaryTracks)")
+
+            # which of the tracks are primary according to the reco algprithm
+            .Define("IsPrimary_based_on_reco",
+                    "VertexFitterSimple::IsPrimary_forTracks(_EFlowTrack_trackStates, RecoedPrimaryTracks)")
 
             # jet clustering
-            .Define("RP_px",        "ReconstructedParticle::get_px(ReconstructedParticles)")
-            .Define("RP_py",        "ReconstructedParticle::get_py(ReconstructedParticles)")
-            .Define("RP_pz",        "ReconstructedParticle::get_pz(ReconstructedParticles)")               
-            .Define("RP_m",         "ReconstructedParticle::get_mass(ReconstructedParticles)")
+            .Define("RP_px", "ReconstructedParticle::get_px(ReconstructedParticles)")
+            .Define("RP_py", "ReconstructedParticle::get_py(ReconstructedParticles)")
+            .Define("RP_pz", "ReconstructedParticle::get_pz(ReconstructedParticles)")
+            .Define("RP_m",  "ReconstructedParticle::get_mass(ReconstructedParticles)")
             # build psedo-jets with the Reconstructed final particles
-            .Define("pseudo_jets",    "JetClusteringUtils::set_pseudoJets_xyzm(RP_px, RP_py, RP_pz, RP_m)")
+            .Define("pseudo_jets", "JetClusteringUtils::set_pseudoJets_xyzm(RP_px, RP_py, RP_pz, RP_m)")
             # run jet clustering with all reco particles. ee_kt_algorithm, exclusive clustering, exactly 2 jets, E-scheme
             .Define("FCCAnalysesJets_ee_kt", "JetClustering::clustering_ee_kt(2, 2, 1, 0)(pseudo_jets)")
             # get the jets out of the structure
@@ -75,12 +85,12 @@ class RDFanalysis():
             # get the jet constituents out of the structure
             .Define("jetconstituents", "JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_kt)")
 
-            
             # find V0s
             #.Define("V0_evt", "VertexFinderLCFIPlus::get_V0s(SecondaryTracks, PrimaryVertexObject, true)")
-            .Define("V0", "VertexFinderLCFIPlus::get_V0s_jet(ReconstructedParticles, EFlowTrack_1, IsPrimary_based_on_reco, jets_ee_kt, jetconstituents, PrimaryVertexObject)")
+            .Define("V0",
+                    "VertexFinderLCFIPlus::get_V0s_jet(ReconstructedParticles, _EFlowTrack_trackStates, IsPrimary_based_on_reco, jets_ee_kt, jetconstituents, PrimaryVertexObject)")
             .Define("V0_jet", "VertexingUtils::get_svInJets(V0.vtx, V0.nSV_jet)")
-            # get pdg vector out                                                                                                                                          
+            # get pdg vector out
             #.Define("V0_pdg", "VertexingUtils::get_pdg_V0(V0)")
             .Define("V0_pdg", "VertexingUtils::get_pdg_V0(V0.pdgAbs, V0.nSV_jet)")
             # get invariant mass vector out
@@ -119,11 +129,11 @@ class RDFanalysis():
             # Ks -> pi+pi- & Lambda0->p+pi-
             "K0spipi_indices",
             "Lambda0ppi_indices",
-            
+
             #  primary vertex and primary tracks w/o any MC-matching :
             "IsPrimary_based_on_reco",
             "PrimaryVertex",
-            
+
             # V0 object
             "V0",
             "V0_jet",
