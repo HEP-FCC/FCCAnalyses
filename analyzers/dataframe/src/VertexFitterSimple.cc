@@ -16,6 +16,7 @@ namespace FCCAnalyses {
 
 namespace VertexFitterSimple {
 
+#ifndef __APPLE__
 int supress_stdout() {
   fflush(stdout);
 
@@ -34,6 +35,15 @@ void resume_stdout(int fd) {
   close(fd);
   std::cout << std::flush;
 }
+
+#else
+int supress_stdout() {
+  return 0;
+}
+
+void resume_stdout(int fd) {
+}
+#endif
 
 // -----------------------------------------------------------------------------
 
