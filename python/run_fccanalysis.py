@@ -505,7 +505,9 @@ def run_local(args, analysis, infile_list):
         if os.path.isabs(args.output):
             LOGGER.warning('Provided output path is absolute, "outputDir" '
                            'from analysis script will be ignored!')
-        outfile_path = os.path.join(output_dir, args.output)
+            outfile_path = args.output
+        else:
+            outfile_path = os.path.join(output_dir, args.output)
     else:
         outfile_path = args.output
     LOGGER.info('Output file path:\n%s', outfile_path)
