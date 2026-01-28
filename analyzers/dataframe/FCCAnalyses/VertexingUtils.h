@@ -53,7 +53,7 @@ namespace VertexingUtils{
     ROOT::VecOps::RVec<double> invM;           // invariant mass
     ROOT::VecOps::RVec<int> nSV_jet;           // no of V0s per jet
   };
-  
+
   /// Structure to keep useful track information that is related to the vertex
   struct FCCAnalysesVertexMC{
     TVector3 vertex;

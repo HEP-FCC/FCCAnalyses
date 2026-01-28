@@ -93,7 +93,7 @@ def determine_lumi_scaling(config: dict[str, Any],
 
     # Check if histograms were already scaled to lumi
     try:
-        scaled: bool = infile.scaled.GetVal()
+        scaled: bool = infile['scaled'].GetVal()
     except AttributeError:
         LOGGER.error('Input file does not contain scaling '
                      'information!\n  %s\nAborting...', infile.GetName())
@@ -101,7 +101,7 @@ def determine_lumi_scaling(config: dict[str, Any],
 
     if scaled:
         try:
-            int_lumi_in_file: float = infile.intLumi.GetVal()
+            int_lumi_in_file: float = infile['intLumi'].GetVal()
         except AttributeError:
             LOGGER.error('Can not load integrated luminosity '
                          'value from the input file!\n  %s\n'
