@@ -8,7 +8,6 @@ import logging
 import sys
 
 from parsers import setup_subparsers
-from init_analysis import init_analysis
 from build_analysis import build_analysis
 from test_fccanalyses import test_fccanalyses
 from pin_analysis import PinAnalysis
@@ -112,9 +111,7 @@ def main():
     logger.addHandler(stdout_stream_handler)
     logger.addHandler(stderr_stream_handler)
 
-    if args.command == 'init':
-        init_analysis(parser)
-    elif args.command == 'build':
+    if args.command == 'build':
         build_analysis(parser)
     elif args.command == 'test':
         test_fccanalyses(parser)
