@@ -21,6 +21,9 @@ jobs:
                    -v ${GITHUB_WORKSPACE}:/Package \
                    -d ghcr.io/key4hep/key4hep-images/${{ matrix.OS }}-cvmfs \
                    /bin/bash
+    - name: Mount CVMFS
+      run: |
+        docker exec container /bin/bash -c '/mount.sh'
     - name: Configure
       run: |
         docker exec container /bin/bash -c 'cd Package; \
