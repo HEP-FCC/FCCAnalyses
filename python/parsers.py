@@ -5,33 +5,6 @@ Parsers for the fccanalysis sub-commands
 import argparse
 
 
-def setup_init_parser(parser):
-    '''
-    Arguments for the init sub-command
-    '''
-    init_args = parser.add_argument_group('Init arguments')
-
-    init_args.add_argument('package',
-                           help='name of the analysis package to be built')
-    init_args.add_argument('--name',
-                           default='DummyAnalysis',
-                           help='name of the main analysis utility')
-    init_args.add_argument(
-        '--author',
-        help="author's \"name <email@address>\" (will use git-config if not "
-             "specified)")
-    init_args.add_argument('--description',
-                           help='analysis package description')
-    init_args.add_argument(
-        '--standalone',
-        action='store_true',
-        default=False,
-        help='also add CMake directive to build standalone package')
-    init_args.add_argument(
-        '--output-dir',
-        help='output directory where the analysis package will be written')
-
-
 def setup_build_parser(parser):
     '''
     Arguments for the build sub-command
@@ -242,9 +215,6 @@ def setup_subparsers(topparser):
     '''
 
     # Instantiate sub-parsers
-    parser_init = topparser.add_parser(
-        'init',
-        help="generate a RDataFrame based FCC analysis")
     parser_build = topparser.add_parser(
         'build',
         help='build and install local analysis')
@@ -271,7 +241,6 @@ def setup_subparsers(topparser):
         help="prepare combine cards to run basic template fits")
 
     # Register sub-parsers
-    setup_init_parser(parser_init)
     setup_build_parser(parser_build)
     setup_test_parser(parser_test)
     setup_pin_parser(parser_pin)

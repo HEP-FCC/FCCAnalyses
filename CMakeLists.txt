@@ -25,8 +25,6 @@ set_property(CACHE WITH_DD4HEP PROPERTY STRINGS AUTO ON OFF)
 set(WITH_ONNX AUTO CACHE STRING "Build analyzers that need ONNXRuntime")
 set_property(CACHE WITH_ONNX PROPERTY STRINGS AUTO ON OFF)
 
-option(FCCANALYSES_CASESTUDIES "Build the case studies" OFF)
-
 option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, otherwise build it locally" ON)
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
@@ -136,8 +134,7 @@ if(WITH_ONNX AND BUILD_TESTING) # currently these files are only needed by ONNX-
   endif()
 endif()
 
-#--- add CMake infrastructure --------------------------------------------------
-include(cmake/FCCAnalysesCreateConfig.cmake)
+#--- add CMake infrastructure -------------------------------------------------
 include(cmake/FCCAnalysesFunctions.cmake)
 
 file(COPY bin/fccanalysis
@@ -156,7 +153,6 @@ install(FILES ${_man_files_1} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1
 file(GLOB _man_files_7 man/man7/*.7)
 install(FILES ${_man_files_7} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man7)
 
-
 install(DIRECTORY examples DESTINATION ${CMAKE_INSTALL_PREFIX}/share/examples)
 
 #--- Descend into subdirectories ----------------------------------------------
@@ -165,14 +161,8 @@ set(ADDONS_LIBRARIES CACHE STRING "List of external libraries the RDF utilities 
 add_subdirectory(addons)
 add_subdirectory(analyzers/dataframe)
 
-add_subdirectory(case-studies)
-if(FCCANALYSES_CASESTUDIES)
-  add_subdirectory(analyzers/dataframe/case-studies FCCANALYSES_CASESTUDIES)
-endif()
-
-
 if(FCCANALYSES_DOCUMENTATION)
-  include(cmake/FCCANALYSESDoxygen.cmake)
+  include(cmake/FCCAnalysesDoxygen.cmake)
 endif()
 
 if(BUILD_TESTING)
