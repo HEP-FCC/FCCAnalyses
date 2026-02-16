@@ -8,35 +8,66 @@ namespace FCCAnalyses{
 
 namespace MCParticle{
 
-sel_genStatus::sel_genStatus(int arg_status) : m_status(arg_status) {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_genStatus::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData>  selByPredicate::operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData> & in){
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   result.reserve(in.size());
-  for (size_t i = 0; i < in.size(); ++i) {
-    auto & p = in[i];
-    if (p.generatorStatus == m_status) {
-      result.emplace_back(p);
-    }
-  }
-  return result;
+  for (auto & p : in) {
+    if (m_predicate(p)) result.emplace_back(p);
+  } 
+  return result; 
 }
 
-sel_pdgID::sel_pdgID(int arg_pdg, bool arg_chargeconjugate) : m_pdg(arg_pdg), m_chargeconjugate( arg_chargeconjugate )  {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
-  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+ROOT::VecOps::RVec<int>  selByPredicate::operator() (const ROOT::VecOps::RVec<int>& indices, const ROOT::VecOps::RVec<edm4hep::MCParticleData>  &in){
+  ROOT::VecOps::RVec<int> result;
   result.reserve(in.size());
-  for (size_t i = 0; i < in.size(); ++i) {
-    auto & p = in[i];
-    if ( m_chargeconjugate ) {
-        if ( std::abs( p.PDG ) == std::abs( m_pdg)  ) result.emplace_back(p);
-    }
-    else {
-        if ( p.PDG == m_pdg ) result.emplace_back(p);
-    }
+  for (int index : indices) {
+    if (index < 0 || index >= in.size()) continue; 
+    if (m_predicate(in[index])) result.emplace_back(index);
+  } 
+  return result; 
+}
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>>  selByPredicate::operator() (const ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>>& setsOfIndices, const ROOT::VecOps::RVec<edm4hep::MCParticleData>  &in){
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result(setsOfIndices.size());
+  for (int elem = 0; elem <  setsOfIndices.size(); ++elem){
+    result[elem] = this->operator()(setsOfIndices[elem], in); 
   }
-  return result;
+  return result; 
 }
 
+sel_pt::sel_pt(float arg_min_pt) : 
+    selByPredicate([arg_min_pt](const edm4hep::MCParticleData & p)->bool{
+      return (p.momentum.x*p.momentum.x + p.momentum.y*p.momentum.y > arg_min_pt*arg_min_pt); 
+    }){
+}
+
+sel_eta::sel_eta(float arg_max_eta) : 
+    selByPredicate([arg_max_eta](const edm4hep::MCParticleData & p)->bool{
+      ROOT::Math::PxPyPzM4D vec(p.momentum.x, p.momentum.y, p.momentum.z, p.mass); 
+      return std::abs(vec.Eta()) < std::abs(arg_max_eta); 
+    }){
+}
+
+sel_genStatus::sel_genStatus(int arg_status): 
+    selByPredicate([arg_status](const edm4hep::MCParticleData & p)->bool{
+      return p.generatorStatus == arg_status; 
+    }){
+}
+
+sel_pdgID::sel_pdgID(int arg_pdg, bool arg_chargeconjugate): 
+    selByPredicate([arg_pdg, arg_chargeconjugate](const edm4hep::MCParticleData & p)->bool{
+      if (arg_chargeconjugate) return std::abs( p.PDG ) == std::abs( arg_pdg); 
+      else return p.PDG == arg_pdg;
+    }){
+}
+
+sel_charged::sel_charged(): 
+    selByPredicate([](const edm4hep::MCParticleData & p)->bool{
+      // try to avoid floating comp to zero 
+      // and thank you for the person who gave some neutral particles a -999 charge!
+      return std::abs(p.charge) > 1e-6 && p.charge != -999;
+    }){
+}
 
 
 get_decay::get_decay(int arg_mother, int arg_daughters, bool arg_inf){m_mother=arg_mother; m_daughters=arg_daughters; m_inf=arg_inf;};
@@ -54,19 +85,6 @@ bool get_decay::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  ROO
     if (ndaughters>=1){
       result=true;
       return result;
-    }
-  }
-  return result;
-}
-
-sel_pt::sel_pt(float arg_min_pt) : m_min_pt(arg_min_pt) {};
-ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_pt::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
-  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
-  result.reserve(in.size());
-  for (size_t i = 0; i < in.size(); ++i) {
-    auto & p = in[i];
-    if (std::sqrt(std::pow(p.momentum.x,2) + std::pow(p.momentum.y,2)) > m_min_pt) {
-      result.emplace_back(p);
     }
   }
   return result;
@@ -540,6 +558,16 @@ std::vector<int> get_list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4
   return res;
 }
 
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> get_lists_of_stable_particles_from_decays(ROOT::VecOps::RVec<int> i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) {
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> ret; 
+  ret.reserve(i.size()); 
+  for (int ix : i){
+    ret.push_back(get_list_of_stable_particles_from_decay(ix, in, ind)); 
+  }
+  return ret; 
+}
+
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -554,6 +582,7 @@ std::vector<int> list_of_particles_from_decay(int i, ROOT::VecOps::RVec<edm4hep:
    std::cout << " -------- OBSOLETE -----   call to get_list_of_particles_from_decay , please update your code ----- " << std::endl;
   return get_list_of_particles_from_decay( i, in, ind );
 }
+
 
 
 
