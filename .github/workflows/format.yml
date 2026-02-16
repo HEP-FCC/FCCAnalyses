@@ -10,11 +10,11 @@ jobs:
       with:
         fetch-depth: 0
     - name: Start container
-      run: >
-        docker run -it --name container
-                   --privileged
-                   -v ${GITHUB_WORKSPACE}:/Package
-                   -d ghcr.io/key4hep/key4hep-images/alma9-cvmfs:latest
+      run: |
+        docker run -it --name container \
+                   --privileged \
+                   -v ${GITHUB_WORKSPACE}:/Package \
+                   -d ghcr.io/key4hep/key4hep-images/alma9-cvmfs:latest \
                    /bin/bash
     - name: Mount CVMFS
       run: |
