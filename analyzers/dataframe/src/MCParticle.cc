@@ -520,6 +520,8 @@ std::vector<int> get_list_of_stable_particles_from_decay( int i, ROOT::VecOps::R
     //for (int idaughter = d1; idaughter <= d2; idaughter++) {
     for (int id = db; id < de; id++) {
       int idaughter = ind[ id ];
+      // prevent endless loop in case of looping MC record
+      if (idaughter == i) continue; 
       std::vector<int> rr = get_list_of_stable_particles_from_decay( idaughter, in, ind) ;
       res.insert( res.end(), rr.begin(), rr.end() );
     }
