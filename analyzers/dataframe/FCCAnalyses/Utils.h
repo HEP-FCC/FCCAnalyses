@@ -36,6 +36,17 @@ namespace FCCAnalyses {
       }
       return found; 
     }
+    // @brief merge (concatenate) two collections of arbitrary content 
+    /// @param x : first collection - entries will be copied in-order
+    /// @param y : second collection - entries will be copied in-order after the last element of the first
+    /// @return A combined collection of size (x.size()+y.size()), containing the content of x followed by that of y 
+    template <typename T> inline ROOT::VecOps::RVec<T> merge( const ROOT::VecOps::RVec<T> & x, const ROOT::VecOps::RVec<T> & y){
+      ROOT::VecOps::RVec<T> merged;
+      merged.reserve(x.size()+y.size()); 
+      merged.insert(merged.end(), x.begin(), x.end());  
+      merged.insert(merged.end(), y.begin(), y.end());  
+      return merged; 
+    }
   }
 }
 
