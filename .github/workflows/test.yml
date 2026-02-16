@@ -36,12 +36,12 @@ jobs:
            mkdir -p build install;
            source ${{ matrix.STACK }};
            cd build;
-           cmake -DCMAKE_INSTALL_PREFIX=../install
-                 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always "
-                 -DWITH_ACTS=OFF
-                 -DWITH_DD4HEP=ON
-                 -DWITH_ONNX=ON
-                 -DWITH_PODIO_DATASOURCE=ON
+           cmake -DCMAKE_INSTALL_PREFIX=../install \
+                 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \
+                 -DWITH_ACTS=OFF \
+                 -DWITH_DD4HEP=ON \
+                 -DWITH_ONNX=ON \
+                 -DWITH_PODIO_DATASOURCE=ON \
                  -G Ninja ..;'
     - name: Compile
       run: |
