@@ -36,7 +36,7 @@ def run_subprocess(command: list[str], run_dir: str) -> None:
         sys.exit(0)
 
 
-def build_analysis(mainparser) -> None:
+def build_fccanalyses(mainparser) -> None:
     '''
     Main build steering function
     '''
@@ -55,7 +55,7 @@ def build_analysis(mainparser) -> None:
     cmake_args: list[str] = ['-DCMAKE_INSTALL_PREFIX=../install',
                              '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON']
 
-    LOGGER.info('Building analysis located in:\n%s', local_dir)
+    LOGGER.info('Building FCCAnalyses located in:\n%s', local_dir)
 
     if args.acts_on:
         LOGGER.info('Building also ACTS based analyzers...')

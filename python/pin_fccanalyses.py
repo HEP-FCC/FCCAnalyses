@@ -11,7 +11,7 @@ import logging
 LOGGER = logging.getLogger('FCCAnalyses.pin')
 
 
-class PinAnalysis:
+class PinFCCAnalyses:
     '''
     Pin/unpin FCCAnalyses to the currently set up version of the Key4hep stack.
     '''
@@ -42,9 +42,9 @@ class PinAnalysis:
             self.show_pin()
 
         if self.args.clear:
-            self.unpin_analysis()
+            self.unpin_fccanalyses()
         else:
-            self.pin_analysis()
+            self.pin_fccanalyses()
 
     def show_pin(self):
         '''
@@ -68,7 +68,7 @@ class PinAnalysis:
 
         sys.exit(0)
 
-    def unpin_analysis(self):
+    def unpin_fccanalyses(self):
         '''
         Unpin analysis from any Key4hep stack version
         '''
@@ -86,7 +86,7 @@ class PinAnalysis:
 
         sys.exit(0)
 
-    def pin_analysis(self):
+    def pin_fccanalyses(self):
         '''
         Pin analysis to the Key4hep stack version
         '''

@@ -8,9 +8,9 @@ import logging
 import sys
 
 from parsers import setup_subparsers
-from build_analysis import build_analysis
+from build_fccanalyses import build_fccanalyses
 from test_fccanalyses import test_fccanalyses
-from pin_analysis import PinAnalysis
+from pin_fccanalyses import PinFCCAnalyses
 from submit import submit_analysis
 from run_analysis import run
 from run_final_analysis import run_final
@@ -112,11 +112,11 @@ def main():
     logger.addHandler(stderr_stream_handler)
 
     if args.command == 'build':
-        build_analysis(parser)
+        build_fccanalyses(parser)
     elif args.command == 'test':
         test_fccanalyses(parser)
     elif args.command == 'pin':
-        PinAnalysis(parser)
+        PinFCCAnalyses(parser)
     elif args.command == 'submit':
         submit_analysis(parser)
     elif args.command == 'final':
