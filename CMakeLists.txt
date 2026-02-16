@@ -25,8 +25,6 @@ set_property(CACHE WITH_DD4HEP PROPERTY STRINGS AUTO ON OFF)
 set(WITH_ONNX AUTO CACHE STRING "Build analyzers that need ONNXRuntime")
 set_property(CACHE WITH_ONNX PROPERTY STRINGS AUTO ON OFF)
 
-option(FCCANALYSES_CASESTUDIES "Build the case studies" OFF)
-
 option(USE_EXTERNAL_CATCH2 "Link against an external Catch2 v3 static library, otherwise build it locally" ON)
 
 option(FCCANALYSES_DOCUMENTATION "Whether or not to create doxygen doc target." ON)
