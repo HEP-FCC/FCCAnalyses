@@ -11,13 +11,10 @@ jobs:
         STACK: ['/cvmfs/sw.hsf.org/key4hep/setup.sh',
                 '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
         OS: ['alma9',
-             'ubuntu22']
+            ]
         include:
           - STACK: '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh'
             OS: 'ubuntu24'
-        exclude:
-          - STACK: '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh'
-            OS: 'ubuntu22'
     steps:
     - uses: actions/checkout@v6
     - name: Start container
