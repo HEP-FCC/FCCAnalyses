@@ -112,16 +112,22 @@ namespace VertexingUtils{
   ROOT::VecOps::RVec<int> get_VerticesRecoParticlesInd( ROOT::VecOps::RVec<FCCAnalysesVertex > vertices, 
 						      const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco );
 
-  /// @brief Find (by index) a vertex that is made of reco particles from a passed list.
+  /// @brief Find (by index) a vertex that is made of reco particles from a
+  /// passed list.
   /// @param vertices: List of possible vertices to match
-  /// @param recoParticleIndices: Indices of the reco particles to find in the vertex
+  /// @param recoParticleIndices: Indices of the reco particles to find in the
+  /// vertex
   /// @param reco: list of all reco particles (ReconstructedParticles)
-  /// @param require_all: If set, require one vertex to contain all recoParticleIndices (no 'missed' tracks). Else only require that all tracks in the vertex come from the vector (but allow for unused tracks) 
-  /// @return: Index within the list of the (first) vertex fulfilling the criteria. If none are found, return -1 
-  int getVertex_matching_recoParticles(const ROOT::VecOps::RVec<FCCAnalysesVertex > & vertices,  
-                                       const ROOT::VecOps::RVec<int> & recoParticleIndices,
-                                       const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &reco,
-                                       bool require_all = false);
+  /// @param require_all: If set, require one vertex to contain all
+  /// recoParticleIndices (no 'missed' tracks). Else only require that all
+  /// tracks in the vertex come from the vector (but allow for unused tracks)
+  /// @return: Index within the list of the (first) vertex fulfilling the
+  /// criteria. If none are found, return -1
+  int getVertex_matching_recoParticles(
+      const ROOT::VecOps::RVec<FCCAnalysesVertex> &vertices,
+      const ROOT::VecOps::RVec<int> &recoParticleIndices,
+      const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &reco,
+      bool require_all = false);
 
   /// Return the number of tracks in a given track collection
   int get_nTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks);
