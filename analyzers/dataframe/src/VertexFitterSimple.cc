@@ -258,8 +258,8 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 ROOT::VecOps::RVec<edm4hep::TrackState>
 get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                   bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
-                  double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
-
+                  double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
+                  float CHI2MAX) {
   // iterative procedure to determine the primary vertex - and the primary
   // tracks
 
@@ -272,8 +272,6 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   // bool debug  = true ;
   bool debug = false;
-  float CHI2MAX = 25;
-  //  float CHI2MAX = 10;
 
   if (debug) {
     std::cout << " ... enter in VertexFitterSimple::get_PrimaryTracks   Ntr = "
@@ -314,12 +312,31 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   TVectorD x = theVertexFit.GetVtx(); // this actually runs the fit
 
+  // --- check for failure ---
+  if (!std::isfinite(x[0]) || 
+      !std::isfinite(x[1]) || 
+      !std::isfinite(x[2])) {
+
+    std::cerr << "WARNING: Primary vertex fit returned non-finite position!"
+              << " N tracks = " << Ntr << std::endl;
+
+    return seltracks;  // return original tracks without pruning
+  }
+
   float chi2_max = 1e30;
 
   while (chi2_max >= CHI2MAX) {
 
     TVectorD tracks_chi2 = theVertexFit.GetVtxChi2List();
     chi2_max = tracks_chi2.Max();
+
+    for (int i = 0; i < tracks_chi2.GetNrows(); ++i) {
+      if (!std::isfinite(tracks_chi2[i])) {
+        std::cerr << "WARNING: Non-finite chi2 encountered in vertex fit!"
+                  << " Track index = " << i << std::endl;
+        return seltracks;
+      }
+    }
 
     int n_removed = 0;
     for (int i = 0; i < theVertexFit.GetNtrk(); i++) {
@@ -341,6 +358,11 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
       }
     }
   } // end while
+
+  // last safety check
+  if (theVertexFit.GetNtrk() == 0) {
+    std::cerr << "WARNING: Vertex fit removed all tracks!" << std::endl;
+  }
 
   // memory cleanup :
   for (Int_t i = 0; i < Ntr; i++) {
