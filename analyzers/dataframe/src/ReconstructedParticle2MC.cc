@@ -337,26 +337,23 @@ selRP_ChargedHadrons (ROOT::VecOps::RVec<int> recind,
 
 // -------------------------------------------------------------------------------------------------
 
-// -- select RecoParticles associated with a list of MC particles (passed by their index in the Particle block)
+// -- select indices of RecoParticles associated with a list of MC particles
+// (passed by their index in the Particle block)
 
-ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
-selRP_matched_to_list( ROOT::VecOps::RVec<int>  mcParticles_indices,
-						 ROOT::VecOps::RVec<int> recind,
-						 ROOT::VecOps::RVec<int> mcind,
-						 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
-						 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) {
+ROOT::VecOps::RVec<int> selRP_indices_matched_to_list(
+    const ROOT::VecOps::RVec<int> &mcParticles_indices,
+    const ROOT::VecOps::RVec<int> &recind, const ROOT::VecOps::RVec<int> &mcind,
+    const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+    bool require_stable) {
 
-  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>  results;
-
-  edm4hep::ReconstructedParticleData dummy;
-  dummy.energy = -9999;
-  dummy.tracks_begin = -9999 ;
-
+  ROOT::VecOps::RVec<int> results;
   for ( auto & idx: mcParticles_indices ) {
 
     // exclude unstable particles - e.g. the list may contain the index of
     // the mother
-    if ( mc.at(idx).generatorStatus != 1 ) continue ;
+    // MG: Should we push_back -1 here for consistency?
+    if (require_stable && mc.at(idx).generatorStatus != 1)
+      continue;
 
     // is this MC particle associated with a Reco particle :
     bool found = false;
@@ -365,23 +362,46 @@ selRP_matched_to_list( ROOT::VecOps::RVec<int>  mcParticles_indices,
       int mc_idx = mcind.at(i);
       if ( mc_idx == idx ) {
         found = true;
-        results.push_back( reco.at( reco_idx ) );
+        results.push_back(reco_idx);
         break;
       }
     }
     // no Reco particle has been found for idx: add a dummy particle such that
     // one preserves the mapping with the input list
-    if ( ! found) results.push_back( dummy );
-
-
+    // Note: This is inconsistent, the mapping will be
+    // lost whenever there is an unstable particle in the input list.
+    // Will keep current behaviour for backward compatibility...
+    if (!found)
+      results.push_back(-1);
   } // loop over the indices in the list
 
   return results;
-
 }
 
+// -- select RecoParticles associated with a list of MC particles (passed by
+// their index in the Particle block)
 
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selRP_matched_to_list(
+    const ROOT::VecOps::RVec<int> &mcParticles_indices,
+    const ROOT::VecOps::RVec<int> &recind, const ROOT::VecOps::RVec<int> &mcind,
+    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &reco,
+    const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+    bool require_stable) {
+  edm4hep::ReconstructedParticleData dummy;
+  dummy.energy = -9999;
+  dummy.tracks_begin = -9999;
 
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> results;
+  ROOT::VecOps::RVec<int> indices = selRP_indices_matched_to_list(
+      mcParticles_indices, recind, mcind, mc, require_stable);
+  for (int reco_idx : indices) {
+    if (reco_idx < 0)
+      results.push_back(dummy);
+    else
+      results.push_back(reco.at(reco_idx));
+  }
+  return results;
+}
 
 // -------------------------------------------------------------------------------------------------
 

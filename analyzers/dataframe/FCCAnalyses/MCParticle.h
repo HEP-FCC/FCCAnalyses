@@ -3,6 +3,7 @@
 #define  MCPARTICLE_ANALYZERS_H
 
 #include <cmath>
+#include <functional>
 #include <vector>
 
 #include "ROOT/RVec.hxx"
@@ -30,26 +31,49 @@ namespace MCParticle{
     bool  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
+  /// @brief Helper struct to select entries matching a certain predicate.
+  /// Supports two signatures - either a list of candidates is passed and a list
+  /// of accepted candidates returned, Or a list of indices in a vector of
+  /// candidates is passed and a list of accepted indices returned. The latter
+  /// is more compatible with index-based selection logic.
+  struct selByPredicate {
+    selByPredicate(
+        std::function<bool(const edm4hep::MCParticleData &)> thePredicate)
+        : m_predicate(thePredicate) {}
+    std::function<bool(const edm4hep::MCParticleData &)> m_predicate;
+    ROOT::VecOps::RVec<edm4hep::MCParticleData>
+    operator()(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in);
+    ROOT::VecOps::RVec<int>
+    operator()(const ROOT::VecOps::RVec<int> &indices,
+               const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in);
+    ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>>
+    operator()(const ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> &indices,
+               const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in);
+  };
+
   /// select MCParticles with transverse momentum greater than a minimum value [GeV]
-  struct sel_pt {
+  struct sel_pt : selByPredicate {
     sel_pt(float arg_min_pt);
-    float m_min_pt = 20; //> transverse momentum threshold [GeV]
-    ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+  };
+
+  /// select MCParticles with absolute pseudorapidity less than a max value
+  struct sel_eta : selByPredicate {
+    sel_eta(float arg_max_eta);
   };
 
   /// select MCParticles with their status
-  struct sel_genStatus {
+  struct sel_genStatus : selByPredicate {
     sel_genStatus(int arg_status);
-    int m_status = 1; //> Generator status
-    ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
   /// select MCParticles with their PDG id
-  struct sel_pdgID {
+  struct sel_pdgID : selByPredicate {
     sel_pdgID(int arg_pdg, bool arg_chargeconjugate);
-    int m_pdg = 13;
-    bool m_chargeconjugate = true;
-    ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+  };
+
+  /// select MCParticles with a non-zero charge
+  struct sel_charged : selByPredicate {
+    sel_charged();
   };
 
   /// get MC history tree for a given MCParticle index
@@ -115,7 +139,6 @@ namespace MCParticle{
 								     bool m_stableDaughters,
                                         			     ROOT::VecOps::RVec<edm4hep::MCParticleData> in ,
 								     ROOT::VecOps::RVec<int> ind);
-
 
   /// return the parent index of a given list of MC particles
   ROOT::VecOps::RVec<int> get_parentid(ROOT::VecOps::RVec<int> mcind, ROOT::VecOps::RVec<edm4hep::MCParticleData> mc, ROOT::VecOps::RVec<int> parents);
@@ -209,6 +232,16 @@ namespace MCParticle{
 
   /// return the list of stable particles from the decay of a mother particle, looking at the full decay chain recursively. i is the mother index in the Particle block
   std::vector<int> get_list_of_stable_particles_from_decay( int i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind) ;
+
+  /// return the list of stable particles from the decays of a mother particle,
+  /// looking at the full decay chain recursively. i is the list of mother
+  /// indices to process in the Particle block. Will return a vector of vectors
+  /// - each vector is the set of children for one of the mothers in the input
+  /// vector
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>>
+  get_lists_of_stable_particles_from_decays(
+      ROOT::VecOps::RVec<int> i, ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
+      ROOT::VecOps::RVec<int> ind);
 
   /// return the list of particles from the decay of a mother particle. i is the mother index in the Particle block.
   std::vector<int> get_list_of_particles_from_decay( int i,
