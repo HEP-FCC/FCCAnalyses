@@ -370,11 +370,11 @@ ROOT::VecOps::RVec<int> get_VertexRecoParticlesInd(
 }
 
 ROOT::VecOps::RVec<int> get_VerticesRecoParticlesInd(
-    ROOT::VecOps::RVec<FCCAnalysesVertex > vertices,
+    ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
     const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &reco) {
 
   ROOT::VecOps::RVec<int> result;
-  for (int j = 0; j < vertices.size(); ++j){
+  for (int j = 0; j < vertices.size(); ++j) {
     ROOT::VecOps::RVec<int> indices_tracks = vertices[j].reco_ind;
     for (int i = 0; i < indices_tracks.size(); i++) {
       int tk_index = indices_tracks[i];
@@ -389,7 +389,7 @@ ROOT::VecOps::RVec<int> get_VerticesRecoParticlesInd(
       }
     }
   }
-  
+
   return result;
 }
 

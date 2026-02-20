@@ -109,8 +109,9 @@ namespace VertexingUtils{
 						      const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco );
 
   /// Retrieve the indices of the tracks fitted to a vector of vertices, but now in the collection of RecoParticles
-  ROOT::VecOps::RVec<int> get_VerticesRecoParticlesInd( ROOT::VecOps::RVec<FCCAnalysesVertex > vertices, 
-						      const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco );
+  ROOT::VecOps::RVec<int> get_VerticesRecoParticlesInd(
+              ROOT::VecOps::RVec<FCCAnalysesVertex > vertices,
+						  const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco);
 
   /// @brief Find (by index) a vertex that is made of reco particles from a
   /// passed list.
