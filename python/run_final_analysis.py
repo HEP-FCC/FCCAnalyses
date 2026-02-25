@@ -656,7 +656,7 @@ def run(rdf_module, config, args) -> None:
                         else:
                             hist.Scale(gen_sf * int_lumi /
                                        process_events[process_name])
-                        outfile.WriteObject(hist.GetValue())
+                    outfile.WriteObject(hist.GetValue())
 
                 # write all metadata info to the output file
                 param = ROOT.TParameter(int)("eventsProcessed",
