@@ -1,0 +1,25 @@
+<map id="addons/ONNXRuntime/src/WeaverInterface.cc" name="addons/ONNXRuntime/src/WeaverInterface.cc">
+<area shape="rect" id="Node000001" title=" " alt="" coords="611,5,784,50"/>
+<area shape="rect" id="Node000002" href="$WeaverInterface_8h.html" title=" " alt="" coords="296,98,534,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="623,53,475,96,474,91,622,48"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="558,98,703,126"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="682,52,653,87,649,84,678,49"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="728,98,800,126"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="717,49,746,84,742,87,713,52"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="824,98,904,126"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="743,48,825,88,822,93,740,53"/>
+<area shape="rect" id="Node000003" href="$ONNXRuntime_8h.html" title=" " alt="" coords="203,174,429,201"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="399,128,347,167,344,162,395,124"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="452,174,574,201"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="434,124,485,162,482,167,431,128"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,249,179,277"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="277,204,147,247,145,242,275,199"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="203,249,261,277"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="303,204,260,241,257,237,299,200"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="285,249,347,277"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="319,202,319,234,313,234,313,202"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="371,249,421,277"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="332,200,372,237,369,241,329,204"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="446,249,522,277"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="347,199,442,240,439,245,345,204"/>
+</map>

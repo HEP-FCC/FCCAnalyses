@@ -50,8 +50,5 @@ var searchData=
   ['covtoacts_47',['CovToACTS',['../namespaceFCCAnalyses_1_1VertexingUtils.html#a2d9a8e8d87409a8f6d22cbee921e0d16',1,'FCCAnalyses::VertexingUtils']]],
   ['createpseudojets_48',['createPseudoJets',['../namespaceFCCAnalyses_01_1_1PodioSource_01_1_1JetClustering.html#ac822beab58aea548cd067090ead69139',1,'FCCAnalyses ::PodioSource ::JetClustering']]],
   ['createtrackdqdxhandler_49',['createTrackDqdxHandler',['../namespaceFCCAnalyses_1_1TrackUtils.html#aaefc535db083ec9c08d2abf646c25b03',1,'FCCAnalyses::TrackUtils::createTrackDqdxHandler()'],['../namespaceFCCAnalyses_01_1_1TrackUtils.html#a553af306ea79a9792618554ee062b836',1,'FCCAnalyses ::TrackUtils::createTrackDqdxHandler()']]],
-  ['cross_50',['cross',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#a1bac2fc8360649a79326762b826d3705',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
-  ['cstemplate_51',['CSTemplate',['../namespaceCSTemplate.html',1,'']]],
-  ['cstemplate_2ecc_52',['CSTemplate.cc',['../CSTemplate_8cc.html',1,'']]],
-  ['cstemplate_2eh_53',['CSTemplate.h',['../CSTemplate_8h.html',1,'']]]
+  ['cross_50',['cross',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#a1bac2fc8360649a79326762b826d3705',1,'FCCAnalyses::Algorithms::calculate_thrust']]]
 ];

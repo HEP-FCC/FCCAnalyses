@@ -1,0 +1,9 @@
+<map id="addons/ONNXRuntime/WeaverInterface.h" name="addons/ONNXRuntime/WeaverInterface.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="201,5,367,50"/>
+<area shape="rect" id="Node000002" href="$WeaverInterface_8cc.html" title=" " alt="" coords="5,98,179,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,59,139,100,136,95,223,55"/>
+<area shape="rect" id="Node000003" href="$JetFlavourUtils_8cc.html" title=" " alt="" coords="203,98,365,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="287,66,287,98,281,98,281,66"/>
+<area shape="rect" id="Node000004" href="$WeaverUtils_8cc.html" title=" " alt="" coords="390,98,546,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="343,55,425,95,423,100,340,60"/>
+</map>

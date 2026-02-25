@@ -13,12 +13,8 @@ var searchData=
   ['dndx_10',['dndx',['../classjetFlavourHelper_1_1JetFlavourHelper.html#af75e76fe5d205c9c9b5a6c7d106675ac',1,'jetFlavourHelper::JetFlavourHelper']]],
   ['documentation_11',['Documentation',['../index.html#autotoc_md6',1,'']]],
   ['dot_12',['dot',['../structFCCAnalyses_1_1Algorithms_1_1calculate__thrust.html#ab2dbfe2ed921b70a68ec510eb0998dea',1,'FCCAnalyses::Algorithms::calculate_thrust']]],
-  ['dummy_13',['dummy',['../namespaceCSTemplate.html#a5f164942015a387fd69cb8f3b9fb3950',1,'CSTemplate']]],
-  ['dummyloader_14',['dummyLoader',['../dummyLoader_8h.html#a13655070a3dd083e1c4d47ff51d3172e',1,'dummyLoader():&#160;dummyLoader.cc'],['../dummyLoader_8cc.html#a13655070a3dd083e1c4d47ff51d3172e',1,'dummyLoader():&#160;dummyLoader.cc']]],
-  ['dummyloader_2ecc_15',['dummyLoader.cc',['../dummyLoader_8cc.html',1,'']]],
-  ['dummyloader_2eh_16',['dummyLoader.h',['../dummyLoader_8h.html',1,'']]],
-  ['dummyloadercs_17',['dummyLoaderCS',['../dummyLoaderCS_8h.html#a2429729ac0518352f6d32f7146e4ae22',1,'dummyLoaderCS():&#160;dummyLoaderCS.cc'],['../dummyLoaderCS_8cc.html#a2429729ac0518352f6d32f7146e4ae22',1,'dummyLoaderCS():&#160;dummyLoaderCS.cc']]],
-  ['dummyloadercs_2ecc_18',['dummyLoaderCS.cc',['../dummyLoaderCS_8cc.html',1,'']]],
-  ['dummyloadercs_2eh_19',['dummyLoaderCS.h',['../dummyLoaderCS_8h.html',1,'']]],
-  ['dumpvars_20',['dumpVars',['../structWeaverInterface_1_1PreprocessParams.html#a77c0608048b2e84238c621cc29b02d45',1,'WeaverInterface::PreprocessParams']]]
+  ['dummyloader_13',['dummyLoader',['../dummyLoader_8h.html#a13655070a3dd083e1c4d47ff51d3172e',1,'dummyLoader():&#160;dummyLoader.cc'],['../dummyLoader_8cc.html#a13655070a3dd083e1c4d47ff51d3172e',1,'dummyLoader():&#160;dummyLoader.cc']]],
+  ['dummyloader_2ecc_14',['dummyLoader.cc',['../dummyLoader_8cc.html',1,'']]],
+  ['dummyloader_2eh_15',['dummyLoader.h',['../dummyLoader_8h.html',1,'']]],
+  ['dumpvars_16',['dumpVars',['../structWeaverInterface_1_1PreprocessParams.html#a77c0608048b2e84238c621cc29b02d45',1,'WeaverInterface::PreprocessParams']]]
 ];
