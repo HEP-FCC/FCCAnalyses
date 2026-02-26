@@ -1,4 +1,5 @@
 #include "FCCAnalyses/MCParticle.h"
+#include "FCCAnalyses/MCParticleCodes.h"
 #include <iostream>
 #include <algorithm>
 #include <set>
@@ -696,7 +697,7 @@ int get_lepton_origin(const edm4hep::MCParticleData &p,
  // std::cout  << std::endl << " enter in MCParticle::get_lepton_origin  PDG = " << p.PDG << std::endl;
 
  int pdg = std::abs( p.PDG ) ;
- if ( pdg != 11 && pdg != 13 && pdg  != 15 ) return -1;
+ if ( pdg != PDG_ELECTRON && pdg != PDG_MUON && pdg  != PDG_TAU ) return -1;
 
  int result  = 0;
 
@@ -706,25 +707,25 @@ int get_lepton_origin(const edm4hep::MCParticleData &p,
       int pdg_parent = in.at(index).PDG ;
       // std::cout  << " parent has pdg = " << in.at(index).PDG <<  "  status = " << in.at(index).generatorStatus << std::endl;
 
-      if ( abs( pdg_parent ) == 23 || abs( pdg_parent ) == 24 ) {
+      if ( abs( pdg_parent ) == PDG_W || abs( pdg_parent ) == PDG_Z ) {
         result = pdg_parent ;
         //std::cout <<  " ... Lepton is from W or Z ,  return code = " << result <<  std::endl;
         break;
       }
 
-      if ( abs( pdg_parent ) == 22 ) {
+      if ( abs( pdg_parent ) == PDG_PHOTON ) {
         result = pdg_parent ;
         //std::cout <<  " ... Lepton is from a virtual photon ,  return code = " << result <<  std::endl;
         break;
       }
 
-      if ( abs( pdg_parent ) == 15 ) {
+      if ( abs( pdg_parent ) == PDG_TAU ) {
          result = pdg_parent ;
          //std::cout <<  " ... Lepton is from a tau,  return code = " << result <<  std::endl;
          break;
       }
 
-      if ( abs( pdg_parent ) == 11 ) {    // beam particle ?
+      if ( abs( pdg_parent ) == PDG_ELECTRON ) {    // beam particle ?
 			// beam particles should have generatorStatus = 4,
 			// but that is not the case in files produced from Whizard + p6
         if ( in.at(index).generatorStatus == 4 || ind.at  ( in.at(index).parents_begin ) == 0 ) {
@@ -734,7 +735,7 @@ int get_lepton_origin(const edm4hep::MCParticleData &p,
         }
       }
 
-      if ( pdg == 11 && abs( pdg_parent ) == 13 ) {	// mu -> e
+      if ( pdg == PDG_ELECTRON && abs( pdg_parent ) == PDG_MUON ) {	// mu -> e
           result  = pdg_parent;
           //std::cout <<  " ... Electron from a muon decay, return code = " << result <<  std::endl;
           break;
