@@ -2,6 +2,7 @@
 
 #include <numeric>
 #include <algorithm>
+#include <vector>
 
 ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::string>& input_names)
     : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")),
@@ -58,16 +59,16 @@ ONNXRuntime::~ONNXRuntime() {}
 
 template <typename T>
 ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
-                                        const Tensor<long>& input_shapes,
+                                        const Tensor<int64_t>& input_shapes,
                                         unsigned long long batch_size) const {
   std::vector<Ort::Value> tensors_in;
   for (const auto& name : input_node_strings_) {
     auto input_pos = variablePos(name);
     auto value = input.begin() + input_pos;
-    std::vector<int64_t> input_dims;
+    std::vector< int64_t> input_dims;
     if (input_shapes.empty()) {
-      input_dims = input_node_dims_.at(name);
-      input_dims[0] = batch_size;
+      input_dims =  input_node_dims_.at(name);
+      input_dims[0] = (int64_t) batch_size;
     } else {
       input_dims = input_shapes[input_pos];
       // rely on the given input_shapes to set the batch size
@@ -117,4 +118,4 @@ size_t ONNXRuntime::variablePos(const std::string& name) const {
   return iter - input_names_.begin();
 }
 
-template ONNXRuntime::Tensor<float> ONNXRuntime::run(Tensor<float>&, const Tensor<long>&, unsigned long long) const;
+template ONNXRuntime::Tensor<float> ONNXRuntime::run(Tensor<float>&, const Tensor<int64_t>&, unsigned long long) const;
