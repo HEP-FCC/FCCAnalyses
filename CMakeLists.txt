@@ -72,6 +72,7 @@ find_package(FastJet REQUIRED)
 
 find_package( Delphes REQUIRED )
 
+include(cmake/Key4hepConfig.cmake)
 
 if(WITH_ACTS)
   find_package( Acts COMPONENTS Core )
