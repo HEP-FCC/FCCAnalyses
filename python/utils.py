@@ -90,3 +90,28 @@ def random_string(length: int = 8):
     '''
     return ''.join(random.choices(string.ascii_letters + string.digits,
                                   k=length))
+
+def boolean_of(inputStatement, context: str) -> bool | None:
+    """
+        given an string checks in true and false statements dictionary
+        to see if the user wants True or False.
+
+        raises error if the string input cannot be considered a boolean!
+
+        @param input: the input of the user
+        @param context: the context of the boolean (used for giving better errors to the user for debugging.
+
+        @return boolean
+    """
+    booleanDictionary = {
+            "falseStatements" : ["false", "f", "0", "no", "n"],
+            "trueStatements"  : ["true", "t", "1","yes","y"]
+    }
+    statement  = str(inputStatement)
+    if statement.lower() in booleanDictionary["falseStatements"]:
+        return False
+    elif statement.lower() in booleanDictionary["trueStatements"]:
+        return True
+    else:
+        LOGGER.warning(f"In {context} you provided {inputStatement} which cannot be considered a boolean in our source-code please use: False : {booleanDictionary['falseStatements']} and True: {booleanDictionary['trueStatements']}.")
+        return None
