@@ -26,7 +26,7 @@ namespace edm4hep {
 
 namespace FCCAnalyses{
 
-namespace ReconstructedParticle2Track{
+namespace ReconstructedParticle2Track {
 
 /// Return the momentum of a track to a reconstructed particle
 ROOT::VecOps::RVec<float>
@@ -209,7 +209,7 @@ int getTK_n(ROOT::VecOps::RVec<edm4hep::TrackState> x);
 ROOT::VecOps::RVec<bool>
 hasTRK(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in);
 
-}//end NS ReconstructedParticle2Track
+} // namespace ReconstructedParticle2Track
 
 }//end NS FCCAnalyses
 #endif
