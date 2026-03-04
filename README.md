@@ -82,4 +82,4 @@ If you are preparing a PR, you can instead use
 ```
  git clang-format  --style=file $(git merge-base upstream/master HEAD)
 ```
-to only format the lines you changed (otherwise you will reformat the entire file). 
+to only format the lines you changed (avoids bloating your MR - unless you wish to clean up the whole file 😉). 
