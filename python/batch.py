@@ -6,6 +6,7 @@ import os
 import sys
 import time
 import logging
+import htcondor
 import subprocess
 import datetime
 import argparse
@@ -25,103 +26,69 @@ def determine_os(fccana_dir: str) -> str | None:
     Determines platform on which FCCAnalyses was compiled
     '''
     if fccana_dir is None:
-        with open('/etc/system-release-cpe', 'r',
-                  encoding='utf-8') as os_info_file:
-            os_info = os_info_file.read()
+        try:
+            with open('/etc/system-release-cpe', 'r',
+                      encoding='utf-8') as os_info_file:
+                os_info = os_info_file.read()
 
-        if 'redhat:enterprise_linux:9' in os_info:
-            return 'almalinux9'
+            if 'redhat:enterprise_linux:9' in os_info:
+                return 'almalinux9'
+        except FileNotFoundError:
+            # Fallback for non-RHEL systems (Arch, Ubuntu, macOS)
+            pass
 
         return None
-
-    cmake_config_path = fccana_dir + '/build/CMakeFiles/CMakeConfigureLog.yaml'
-    if not os.path.isfile(cmake_config_path):
-        LOGGER.warning('CMake configuration file was not found!\n'
-                       'Was FCCAnalyses properly build?')
-        return None
-
-    with open(cmake_config_path, 'r', encoding='utf-8') as cmake_config_file:
-        cmake_config = cmake_config_file.read()
-        if 'centos7' in cmake_config:
-            return 'centos7'
-        if 'almalinux9' in cmake_config:
-            return 'almalinux9'
-
-    return None
-
-
 # _____________________________________________________________________________
-def create_condor_config(config: dict[str, Any],
-                         batch_dir: str,
-                         sample_name: str,
-                         subjob_scripts: list[str],
-                         output_dir_eos: str | None) -> str:
+
+def create_condor_submit(config: dict[str, Any],  batch_dir: str, sample_name: str, subjob_scripts: list[str],output_dir_eos: str | None) -> htcondor.Submit:
     '''
-    Creates contents of HTCondor submit description file.
+    Creates HTCondor submit object.
     '''
-    cfg = 'executable = $(scriptfile)\n'
+    submit_dict = {
+        "executable": "$(scriptfile)",
+        "log": f"{batch_dir}/condor_job.{sample_name}.$(ClusterId).log",
+        "getenv": "False",
+        "max_retries": "3",
+        "RequestCpus": str(config["n-threads"]),
+        "should_transfer_files": "yes",
+        "when_to_transfer_output": "on_exit",
+        "transfer_output_files": sample_name,
+        "+JobFlavour": f'"{config["batch-queue"]}"',
+        "+AccountingGroup": f'"{config["accounting-group"]}"',
+    }
 
-    cfg += f'log = {batch_dir}/condor_job.{sample_name}.$(ClusterId).log\n'
-
-    if output_dir_eos is None:
-        cfg += f'output = {config["output-dir"]}/log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).out\n'
-        cfg += f'error = {config["output-dir"]}/log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).error\n'
-    else:
-        cfg += f'output = log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).out\n'
-        cfg += f'error = log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).error\n'
-
-    cfg += 'getenv = False\n'
-
+    # Handle OS
     build_os = determine_os(config['fccana-dir'])
     if build_os == 'centos7':
-        cfg += 'MY.WantOS = el7\n'
+        submit_dict['MY.WantOS'] = 'el7'
     elif build_os == 'almalinux9':
-        cfg += 'MY.WantOS = el9\n'
-    else:
-        LOGGER.warning('OS of the machine the jobs are submitted from is '
-                       'unknown!\nThere may be compatibility issues...')
+        submit_dict['MY.WantOS'] = 'el9'
 
-    cfg += 'max_retries = 3\n'
-
-    cfg += f'+JobFlavour = "{config["batch-queue"]}"\n'
-
-    cfg += f'+AccountingGroup = "{config["accounting-group"]}"\n'
-
-    cfg += f'RequestCpus = {config["n-threads"]}\n\n'
-
-    cfg += 'should_transfer_files = yes\n'
-    cfg += 'when_to_transfer_output = on_exit\n'
-    cfg += f'transfer_output_files = {sample_name}\n'
-
+    # Handle Logs/Output
     if output_dir_eos is None:
-        cfg += 'transfer_output_remaps = '
-        cfg += f'"{sample_name}={config["output-dir"]}/{sample_name}"\n'
+        log_base = f"{config['output-dir']}/log/{sample_name}/condor_job.{sample_name}.$(ClusterId).$(ProcId)"
+        submit_dict["output"] = f"{log_base}.out"
+        submit_dict["error"] = f"{log_base}.error"
+        submit_dict["transfer_output_remaps"] = f'"{sample_name}={config["output-dir"]}/{sample_name}"'
     else:
-        cfg += 'output_destination = '
-        cfg += f'root://{config["eos-type"]}.cern.ch/'
-        cfg += f'{output_dir_eos}\n'
-        cfg += 'MY.XRDCP_CREATE_DIR = True\n\n'
+        log_base = f"log/{sample_name}/condor_job.{sample_name}.$(ClusterId).$(ProcId)"
+        submit_dict["output"] = f"{log_base}.out"
+        submit_dict["error"] = f"{log_base}.error"
+        submit_dict["output_destination"] = f"root://{config['eos-type']}.cern.ch/{output_dir_eos}"
+        submit_dict["MY.XRDCP_CREATE_DIR"] = "True"
 
-    # Add user batch configuration if any.
+    # Merge user custom config strings if they exist
+    sub = htcondor.Submit(submit_dict)
     if config['user-batch-config'] is not None:
         with open(config['user-batch-config'], 'r', encoding='utf-8') as cfile:
             for line in cfile:
-                cfg += line + '\n'
-        cfg += '\n\n'
+                if line.strip() and not line.startswith('#'):
+                    sub.append(line.strip())
 
-    cfg += 'queue scriptfile from (\n'
-    for scriptfile in subjob_scripts:
-        cfg += f'    {scriptfile}\n'
-    cfg += ')\n'
-
-    return cfg
+    sub.set_iterable("scriptfile", subjob_scripts)
+    return sub
 
 
-# _____________________________________________________________________________
 def create_subjob_script(config: dict[str, Any],
                          sample_name: str,
                          chunk_list: list[list[str]],
@@ -155,27 +122,37 @@ def create_subjob_script(config: dict[str, Any],
 
 
 # _____________________________________________________________________________
-def submit_job(cmd: str, max_trials: int) -> bool:
+
+
+def submit_job(sub: htcondor.Submit, spool: bool, max_trials: int) -> bool:
     '''
-    Submit job to condor, retry `max_trials` times.
+    Submit job to HTCondor using the native Python API.
     '''
+    schedd = htcondor.Schedd()
     for i in range(max_trials):
-        with subprocess.Popen(cmd, shell=True,
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                              universal_newlines=True) as proc:
-            (stdout, stderr) = proc.communicate()
-
-            if proc.returncode == 0 and len(stderr) == 0:
-                LOGGER.info(stdout)
-                LOGGER.info('Submission successful.\n')
-                return True
-
-            LOGGER.warning('Error occurred while submitting, retrying...\n'
-                           'Trial: %i / %i\n'
-                           'Error: %s', i, max_trials, stderr)
-            time.sleep(10)
-
+        try:
+            # Native submission returns a ClusterID object
+            with schedd.transaction() as txn:
+                cluster_id = sub.queue(txn)
+            
+            # If we are on EOS, we MUST spool the files to the schedd
+            if spool:
+                schedd.spool(sub.jobs(cluster_id))
+                
+            LOGGER.info('Submission successful. ClusterId: %s', cluster_id)
+            return True
+            
+        except Exception as e:
+            if i < max_trials - 1:
+                LOGGER.warning('Submission failed, retrying... Trial: %i / %i. Error: %s', 
+                               i + 1, max_trials, e)
+                time.sleep(10)
+            else:
+                LOGGER.error('Critical: Failed submitting after %i trials. Error: %s', 
+                             max_trials, e)
     return False
+
+
 
 
 # _____________________________________________________________________________
@@ -386,24 +363,21 @@ def send_sample(config: dict[str, Any],
     if output_dir_eos is not None and not os.path.exists(output_dir_eos):
         os.system(f'mkdir -p {output_dir_eos}')
 
-    with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
-        condor_config = create_condor_config(config,
-                                             batch_dir,
-                                             sample_name,
-                                             subjob_scripts,
-                                             output_dir_eos)
-        cfgfile.write(condor_config)
+    # Create the Submit object directly using the native API
+    sub = create_condor_submit(config,
+                               batch_dir,
+                               sample_name,
+                               subjob_scripts,
+                               output_dir_eos)
 
-    if config['submission-filesystem-type'] == 'eos':
-        batch_cmd = f'condor_submit -spool {condor_config_path}'
-        LOGGER.warning('To download the log files use "condor_transfer_data" '
-                       'command!')
-    else:
-        batch_cmd = f'condor_submit {condor_config_path}'
-    LOGGER.info('Job submission command:\n  %s', batch_cmd)
+    # Check if we need to spool (required for EOS submission)
+    spool = (config["submission-filesystem-type"] == "eos")
+    if spool:
+         LOGGER.warning("To download the log files use \"condor_transfer_data\" command!")
 
     max_trials = 3
-    success = submit_job(batch_cmd, max_trials)
+    # Submit using the Submit object instead of a shell string
+    success = submit_job(sub, spool, max_trials)
     if not success:
         LOGGER.error('Failed submitting after: %i trials!\nAborting...',
                      max_trials)
