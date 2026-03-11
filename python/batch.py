@@ -6,7 +6,6 @@ import os
 import sys
 import time
 import logging
-import htcondor
 import subprocess
 import datetime
 import argparse
@@ -25,6 +24,7 @@ def determine_os(fccana_dir: str) -> str | None:
     '''
     Determines platform on which FCCAnalyses was compiled
     '''
+    import htcondor
     if fccana_dir is None:
         try:
             with open('/etc/system-release-cpe', 'r',
