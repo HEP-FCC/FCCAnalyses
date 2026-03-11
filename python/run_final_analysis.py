@@ -444,6 +444,102 @@ def run(rdf_module, args) -> None:
                 # run
                 snapshots.append(dframe_cut.Snapshot("events", fout, "", opts))
 
+        # Adding custom histogram to the output
+        custom_hists = get_attribute(rdf_module, "customHists", {})
+        if len(custom_hists)>0:
+            LOGGER.info('Found customHists in script, searching for'
+                        ' custom histogram in input files')
+            custom_hists_dict = {}
+
+            # Going through all the files
+            found_directories, found_histos = [], []
+            for file_name in file_list[process_name]:
+                with ROOT.TFile(str(file_name), 'READ') as fIn:
+                    # Searching for custom_objects, aborting if not found
+                    custom_dir = fIn.GetDirectory('custom_objects')
+                    if not custom_dir:
+                        LOGGER.warning('No TDirectory named custom_objects found.\n'
+                                       'Aborting custom histogram search')
+                        break
+                    else:
+                        # Getting element inside custom_objects
+                        keys = custom_dir.GetListOfKeys()
+                        for key in keys:
+                            obj = key.ReadObj()
+
+                            # Searching for a TDirectory containing histograms
+                            if obj.IsA().InheritsFrom('TDirectory') and 'TH' in key.GetName():
+                                if key.GetName() not in found_directories:
+                                    found_directories.append(key.GetName())
+
+                                hist_keys = obj.GetListOfKeys()
+                                # Going through the histograms inside the sub-TDirectory
+                                for hist_key in hist_keys:
+                                    hist_obj = hist_key.ReadObj()
+                                    if hist_obj is None:
+                                        LOGGER.warning(f'Could not read object "{hist_key.GetName()}" in {str(file_name)}')
+                                        continue
+                                    hist_name = hist_key.GetName()
+
+                                    # Checking if the histogram is in customHist
+                                    if hist_name in custom_hists.keys():
+                                        if hist_name not in found_histos:
+                                            found_histos.append(hist_name)
+                                        # Clone and detach from file
+                                        hist_clone = hist_obj.Clone()
+                                        hist_clone.SetDirectory(0)
+                                        # Adding histogram if going through chunks
+                                        if hist_name in custom_hists_dict:
+                                            custom_hists_dict[hist_name].Add(hist_clone)
+                                        else:
+                                            custom_hists_dict[hist_name] = hist_clone
+
+            if len(found_histos)==0:
+                LOGGER.warning("Did not find any histogram in custom_objects")
+            else:
+                if len(found_directories)==1:
+                    directories = found_directories[0]
+                elif len(found_directories)>1:
+                    directories = ', '.join(found_directories[:-1]) + ' and ' + found_directories[-1]
+                LOGGER.info(f'Found {len(found_histos)} histograms in {directories}')
+                # Applying cutsom settings like in histoList
+                histos_to_write = []
+                for custom_hist_name, custom_params in custom_hists.items():
+                    if custom_hist_name not in custom_hists_dict:
+                        LOGGER.warning('Custom histogram "%s" not found in input files!',
+                                       custom_hist_name)
+                        continue
+
+                    hist = custom_hists_dict[custom_hist_name]
+                    if 'title' in custom_params:
+                        hist.GetXaxis().SetTitle(custom_params['title'])
+                    else:
+                        LOGGER.warning(f"No 'xtitle' was found in customHisto for {hist.GetName()}")
+                    if 'name' in custom_params:
+                        hist.GetXaxis().SetTitle(custom_params['name'])
+
+                    if 'xmin' in custom_params:
+                        bin_min = hist.GetXaxis().FindBin(custom_params['xmin'])
+                    else:
+                        bin_min = hist.GetXaxis().GetFirst()
+                    if 'xmax' in custom_params:
+                        bin_max = hist.GetXaxis().FindBin(custom_params['xmax'])
+                    else:
+                        bin_max = hist.GetXaxis().GetNbins()
+                    hist.GetXaxis().SetRange(bin_min, bin_max)
+                    histos_to_write.append(hist)
+
+                # Adding custom histogram for all cuts
+                for h_list in histos_list:
+                    h_list.extend(histos_to_write)
+                if len(histos_to_write)==0:
+                    LOGGER.info('No histogram compatible with customHists was found.'
+                                'Did you properly name your histogram(s)?')
+                elif len(histos_to_write)==1:
+                    LOGGER.info('1 compatible histogram with customHists found, will save it')
+                elif len(histos_to_write)>1:
+                    LOGGER.info(f'{len(histos_to_write)} compatible histograms with customHists found, will save them')
+
         # Now perform the loop and evaluate everything at once.
         LOGGER.info('Evaluating...')
         all_events_raw = dframe.Count().GetValue()
@@ -515,13 +611,25 @@ def run(rdf_module, args) -> None:
             fhisto = os.path.join(output_dir,
                                   process_name + '_' + cut + '_histo.root')
             with ROOT.TFile(fhisto, 'RECREATE') as outfile:
-                for hist in histos_list[i]:
-                    hist_name = hist.GetName() + '_raw'
-                    outfile.WriteObject(hist.GetValue(), hist_name)
+                # Sorting the histograms by name
+                histos_sorted = sorted(histos_list[i], key=lambda h: h.GetName())
+                for hist in histos_sorted:
+                    hist_name = hist.GetName()
+                    hist_name_raw = hist_name + '_raw'
+                    try:
+                        # This line won't work for custom histogram
+                        outfile.WriteObject(hist.GetValue(), hist_name_raw)
+                    except AttributeError:
+                        outfile.WriteObject(hist, hist_name_raw)
+
                     if do_scale:
                         hist.Scale(gen_sf * int_lumi /
                                    process_events[process_name])
-                        outfile.WriteObject(hist.GetValue(), hist.GetName())
+                        try:
+                            # This line won't work with custom histogram
+                            outfile.WriteObject(hist.GetValue(), hist_name)
+                        except AttributeError:
+                            outfile.WriteObject(hist, hist_name)
 
                 # write all metadata info to the output file
                 param = ROOT.TParameter(int)("eventsProcessed",
