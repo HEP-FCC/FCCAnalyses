@@ -15,16 +15,13 @@ from typing import Any
 from process import get_process_info
 from process import get_subfile_list, get_chunk_list
 
-
 LOGGER = logging.getLogger('FCCAnalyses.batch')
-
 
 # _____________________________________________________________________________
 def determine_os(fccana_dir: str) -> str | None:
     '''
     Determines platform on which FCCAnalyses was compiled
     '''
-    import htcondor
     if fccana_dir is None:
         try:
             with open('/etc/system-release-cpe', 'r',
@@ -40,10 +37,12 @@ def determine_os(fccana_dir: str) -> str | None:
         return None
 # _____________________________________________________________________________
 
-def create_condor_submit(config: dict[str, Any],  batch_dir: str, sample_name: str, subjob_scripts: list[str],output_dir_eos: str | None) -> htcondor.Submit:
+def create_condor_submit(config: dict[str, Any],  batch_dir: str, sample_name: str, subjob_scripts: list[str],output_dir_eos: str | None) -> Any:
     '''
     Creates HTCondor submit object.
     '''
+    import htcondor
+    
     submit_dict = {
         "executable": "$(scriptfile)",
         "log": f"{batch_dir}/condor_job.{sample_name}.$(ClusterId).log",
@@ -88,7 +87,6 @@ def create_condor_submit(config: dict[str, Any],  batch_dir: str, sample_name: s
     sub.set_iterable("scriptfile", subjob_scripts)
     return sub
 
-
 def create_subjob_script(config: dict[str, Any],
                          sample_name: str,
                          chunk_list: list[list[str]],
@@ -96,18 +94,15 @@ def create_subjob_script(config: dict[str, Any],
     '''
     Creates sub-job script to be run.
     '''
-
     sample_output_filepath = os.path.join(sample_name,
                                           f'chunk_{chunk_num}.root')
 
     scr = '#!/bin/bash\n\n'
-
     scr += f'source {config["key4hep-stack"]}\n'
     if config['fccana-dir'] is not None:
         scr += f'source {config["fccana-dir"]}/setup.sh\n\n'
 
     scr += f'mkdir -p {sample_name}\n\n'
-
     scr += f'fccanalysis run {config["full-analysis-path"]}'
     scr += f' --output {sample_output_filepath}'
     scr += f' --n-threads {config["n-threads"]}'
@@ -120,14 +115,13 @@ def create_subjob_script(config: dict[str, Any],
 
     return scr
 
-
 # _____________________________________________________________________________
 
-
-def submit_job(sub: htcondor.Submit, spool: bool, max_trials: int) -> bool:
+def submit_job(sub: Any, spool: bool, max_trials: int) -> bool:
     '''
     Submit job to HTCondor using the native Python API.
     '''
+    import htcondor
     schedd = htcondor.Schedd()
     for i in range(max_trials):
         try:
@@ -152,9 +146,6 @@ def submit_job(sub: htcondor.Submit, spool: bool, max_trials: int) -> bool:
                              max_trials, e)
     return False
 
-
-
-
 # _____________________________________________________________________________
 def merge_config_analysis_class(config: dict[str, Any],
                                 args: argparse.Namespace,
@@ -163,35 +154,25 @@ def merge_config_analysis_class(config: dict[str, Any],
     Merge configuration from the analysis script class and the command-line
     arguments.
     '''
-
     analysis_class = analysis_module.Analysis(vars(args))
     config['analysis-class'] = analysis_class
 
-    # Check if there are any processes/samples defined.
     if not hasattr(analysis_class, 'process_list'):
-        LOGGER.error('Analysis does not define any processes!\n'
-                     'Aborting...')
+        LOGGER.error('Analysis does not define any processes!\nAborting...')
         sys.exit(3)
     config['sample-list'] = analysis_class.process_list
     if not config['sample-list']:
-        LOGGER.error('Analysis does not define any processes!\n'
-                     'Aborting...')
+        LOGGER.error('Analysis does not define any processes!\nAborting...')
         sys.exit(3)
 
-    # Check if there is production tag or input directory defined.
-    if not hasattr(analysis_class, 'prod_tag') and \
-       not hasattr(analysis_class, 'input_dir'):
-        LOGGER.error('Analysis does not define production tag or input '
-                     'directory!\nAborting...')
+    if not hasattr(analysis_class, 'prod_tag') and not hasattr(analysis_class, 'input_dir'):
+        LOGGER.error('Analysis does not define production tag or input directory!\nAborting...')
         sys.exit(3)
 
-    if hasattr(analysis_class, 'prod_tag') and \
-       hasattr(analysis_class, 'input_dir'):
-        LOGGER.error('Analysis defines both production tag and input '
-                     'directory!\nAborting...')
+    if hasattr(analysis_class, 'prod_tag') and hasattr(analysis_class, 'input_dir'):
+        LOGGER.error('Analysis defines both production tag and input directory!\nAborting...')
         sys.exit(3)
 
-    # Determine input.
     if hasattr(analysis_class, 'prod_tag'):
         config['production-tag'] = analysis_class.prod_tag
     else:
@@ -202,58 +183,43 @@ def merge_config_analysis_class(config: dict[str, Any],
     else:
         config['input-directory'] = None
 
-    # Determine number of threads to run in.
     if hasattr(analysis_class, 'n_threads'):
         config['n-threads'] = analysis_class.n_threads
     else:
         config['n-threads'] = 1
 
-    # Determine batch queue.
     if hasattr(analysis_class, 'batch_queue'):
         config['batch-queue'] = analysis_class.batch_queue
     else:
         config['batch-queue'] = 'longlunch'
 
-    # Determine accounting group.
     if hasattr(analysis_class, 'comp_group'):
         config['accounting-group'] = analysis_class.comp_group
     else:
         config['accounting-group'] = 'group_u_FCC.local_gen'
 
-    # Check if user provided additional job description parameters.
     config['user-batch-config'] = None
     if hasattr(analysis_class, 'user_batch_config'):
         if not os.path.isfile(analysis_class.user_batch_config):
-            LOGGER.warning('Provided file with additional job description '
-                           'parameters can\'t be found!\nFile path: %s\n'
-                           'Continuing...', analysis_class.user_batch_config)
+            LOGGER.warning('Provided file with additional job description parameters can\'t be found!\nFile path: %s\nContinuing...', analysis_class.user_batch_config)
         else:
             config['user-batch-config'] = analysis_class.user_batch_config
 
-    # Check for global output directory.
     config['output-dir'] = None
     if hasattr(analysis_class, 'output_dir'):
         config['output-dir'] = analysis_class.output_dir
-        # os.system(f'mkdir -p {config["output-dir"]}')
     if os.path.isabs(config['output-dir']):
-        LOGGER.error('Provided output directory path is absolute '
-                     '(starts with `/`)!\n'
-                     'Please, use relative path for the output directory.\n'
-                     'Aborting...')
+        LOGGER.error('Provided output directory path is absolute (starts with `/`)!\nPlease, use relative path for the output directory.\nAborting...')
         sys.exit(3)
 
-    # Check if EOS output dir is defined.
     config['output-dir-eos'] = None
     if hasattr(analysis_class, 'output_dir_eos'):
         config['output-dir-eos'] = analysis_class.output_dir_eos
     else:
         if config['submission-filesystem-type'] == 'eos':
-            LOGGER.error('Submission to CERN\'s HTCondor from EOS requires '
-                         '"output_dir_eos" analysis attribute defined!\n'
-                         'Aborting...')
+            LOGGER.error('Submission to CERN\'s HTCondor from EOS requires "output_dir_eos" analysis attribute defined!\nAborting...')
             sys.exit(3)
 
-    # Check for the type of the EOS proxy
     config['eos-type'] = None
     if hasattr(analysis_class, 'eos_type'):
         config['eos-type'] = analysis_class.eos_type
@@ -262,83 +228,60 @@ def merge_config_analysis_class(config: dict[str, Any],
 
     return config
 
-
 # _____________________________________________________________________________
-def send_sample(config: dict[str, Any],
-                sample_name: str) -> None:
+def send_sample(config: dict[str, Any], sample_name: str) -> None:
     '''
     Send sample to HTCondor batch system.
     '''
     sample_dict = config['sample-list'][sample_name]
+    timestamp = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
 
-    timestamp = datetime.datetime.fromtimestamp(
-        datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
-
-    # Create log directory
     batch_dir = os.path.join('batch-submission-files', timestamp, sample_name)
     if not os.path.exists(batch_dir):
         os.system(f'mkdir -p {batch_dir}')
 
-    # Determine the fraction of the input to be processed
     fraction = 1.
     if 'fraction' in sample_dict:
         fraction = sample_dict['fraction']
 
-    # Determine the number of chunks the output will be split into
     chunks = 1
     if 'chunks' in sample_dict:
         chunks = sample_dict['chunks']
 
-    # Determine dataset input dir
     dataset_input_dir = None
     if 'input_dir' in sample_dict:
         dataset_input_dir = sample_dict['input_dir']
     if 'input-dir' in sample_dict:
         dataset_input_dir = sample_dict['input-dir']
 
-    # Obtain full list of input files
-    file_list, event_list = get_process_info(sample_name,
-                                             config['production-tag'],
-                                             config['input-directory'])
-                                             # TODO: For sample input files
-                                             # and also prod tags
-                                             # dataset_input_dir)
+    file_list, event_list = get_process_info(sample_name, config['production-tag'], config['input-directory'])
 
     if len(file_list) <= 0:
         LOGGER.error('No files to process!\nContinuing...')
         return
 
-    # Adjust number of input files according to the fraction requirement
     if fraction < 1.:
         file_list = get_subfile_list(file_list, event_list, fraction)
 
-    # Adjust number of output files according to the chunk requirement
     chunk_list = [file_list]
     if chunks > 1:
         chunk_list = get_chunk_list(file_list, chunks)
     else:
-        LOGGER.warning('Number of requested output chunks for the sample '
-                       '"%s" is suspiciously low!', sample_name)
+        LOGGER.warning('Number of requested output chunks for the sample "%s" is suspiciously low!', sample_name)
 
     subjob_scripts = []
     for chunk_num in range(len(chunk_list)):
-        subjob_script_path = os.path.join(
-            batch_dir,
-            f'job_{sample_name}_chunk_{chunk_num}.sh')
+        subjob_script_path = os.path.join(batch_dir, f'job_{sample_name}_chunk_{chunk_num}.sh')
         subjob_scripts.append(subjob_script_path)
 
         for i in range(3):
             try:
                 with open(subjob_script_path, 'w', encoding='utf-8') as ofile:
-                    subjob_script = create_subjob_script(config,
-                                                         sample_name,
-                                                         chunk_list,
-                                                         chunk_num)
+                    subjob_script = create_subjob_script(config, sample_name, chunk_list, chunk_num)
                     ofile.write(subjob_script)
             except IOError as err:
                 if i < 2:
-                    LOGGER.warning('I/O error(%i): %s',
-                                   err.errno, err.strerror)
+                    LOGGER.warning('I/O error(%i): %s', err.errno, err.strerror)
                 else:
                     LOGGER.error('I/O error(%i): %s', err.errno, err.strerror)
                     sys.exit(3)
@@ -347,67 +290,47 @@ def send_sample(config: dict[str, Any],
             time.sleep(10)
         subprocess.getstatusoutput(f'chmod u+x {subjob_script_path}')
 
-    LOGGER.debug('Sub-job scripts to be run:\n - %s',
-                 '\n - '.join(subjob_scripts))
+    LOGGER.debug('Sub-job scripts to be run:\n - %s', '\n - '.join(subjob_scripts))
 
     condor_config_path = f'{batch_dir}/job_desc_{sample_name}.cfg'
 
-    # Convert possible output-dir-eos template to string
     if isinstance(config['output-dir-eos'], string.Template):
-        output_dir_eos = config['output-dir-eos'].substitute(
-            timestamp=timestamp)
+        output_dir_eos = config['output-dir-eos'].substitute(timestamp=timestamp)
     else:
         output_dir_eos = config['output-dir-eos']
 
-    # Check if EOS output directory exist and if not create it
     if output_dir_eos is not None and not os.path.exists(output_dir_eos):
         os.system(f'mkdir -p {output_dir_eos}')
 
-    # Create the Submit object directly using the native API
-    sub = create_condor_submit(config,
-                               batch_dir,
-                               sample_name,
-                               subjob_scripts,
-                               output_dir_eos)
+    sub = create_condor_submit(config, batch_dir, sample_name, subjob_scripts, output_dir_eos)
 
-    # Check if we need to spool (required for EOS submission)
     spool = (config["submission-filesystem-type"] == "eos")
     if spool:
          LOGGER.warning("To download the log files use \"condor_transfer_data\" command!")
 
     max_trials = 3
-    # Submit using the Submit object instead of a shell string
     success = submit_job(sub, spool, max_trials)
     if not success:
-        LOGGER.error('Failed submitting after: %i trials!\nAborting...',
-                     max_trials)
+        LOGGER.error('Failed submitting after: %i trials!\nAborting...', max_trials)
         sys.exit(3)
 
-
 # _____________________________________________________________________________
-def send_to_batch(args: argparse.Namespace,
-                  analysis_module: Any) -> None:
+def send_to_batch(args: argparse.Namespace, analysis_module: Any) -> None:
     '''
     Send jobs to HTCondor batch system.
     '''
-
     config: dict[str, Any] = {}
     config['cli-arguments'] = vars(args)
     config['analysis-path'] = args.anascript_path
     config['full-analysis-path'] = os.path.abspath(args.anascript_path)
 
-    # Find location of the FCCanalyses directory, if locally build
     config['fccana-dir'] = None
     if 'FCCANA_LOCAL_DIR' in os.environ:
         config['fccana-dir'] = os.environ['FCCANA_LOCAL_DIR']
 
-    # Find out the exact Key4hep stack being sourced
     config['key4hep-stack'] = os.environ['KEY4HEP_STACK']
-
-    # Get current working directory
     config['current-working-directory'] = os.getcwd()
 
-    # Determine type of filesystem the submission is made from
     if os.getcwd().startswith('/eos/'):
         config['submission-filesystem-type'] = 'eos'
     elif os.getcwd().startswith('/afs/'):
@@ -415,16 +338,11 @@ def send_to_batch(args: argparse.Namespace,
     else:
         config['submission-filesystem-type'] = 'unknown'
 
-    # Making sure the FCCAnalyses libraries are compiled and installed
     if config['fccana-dir'] is not None:
         try:
-            subprocess.check_output(['make', 'install'],
-                                    cwd=config['fccana-dir']+'/build',
-                                    stderr=subprocess.DEVNULL
-                                    )
+            subprocess.check_output(['make', 'install'], cwd=config['fccana-dir']+'/build', stderr=subprocess.DEVNULL)
         except subprocess.CalledProcessError:
-            LOGGER.error('The FCCanalyses libraries are not properly build '
-                         'and installed!\nAborting job submission(s)...')
+            LOGGER.error('The FCCanalyses libraries are not properly build and installed!\nAborting job submission(s)...')
             sys.exit(3)
 
     if hasattr(analysis_module, "Analysis"):
@@ -432,5 +350,4 @@ def send_to_batch(args: argparse.Namespace,
 
     for sample_name in config['sample-list'].keys():
         LOGGER.info('Submitting sample "%s"', sample_name)
-
         send_sample(config, sample_name)

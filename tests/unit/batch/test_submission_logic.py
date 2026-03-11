@@ -1,24 +1,36 @@
 import sys
 import os
+from unittest.mock import MagicMock
 
-# Set up paths so Python can find both the mock and the 'python' package
+# Setup paths
 sys.path.append(os.path.abspath("."))
 sys.path.append(os.path.abspath("python"))
 sys.path.append(os.path.abspath("tests/unit/batch"))
 
-# Pre-emptively mock htcondor
+# The "Black Hole" Mock: If it's a heavy dependency, we kill it here.
+# This prevents ModuleNotFoundError for anything batch.py might import.
+for module in ['htcondor', 'ROOT', 'yaml', 'cppyy', 'process']:
+    sys.modules[module] = MagicMock()
+
+# Manually point 'htcondor' to our mock_htcondor file so the logic actually runs
 import mock_htcondor
 sys.modules['htcondor'] = mock_htcondor
 
-# Now import the actual code
+# Mock the process functions that batch.py expects
+mock_process = sys.modules['process']
+mock_process.get_process_info = MagicMock(return_value=([], []))
+mock_process.get_subfile_list = MagicMock(return_value=[])
+mock_process.get_chunk_list = MagicMock(return_value=[])
+
+# Now import the actual logic
 from python.batch import submit_job
 import mock_htcondor as htcondor
 
 def test_robustness():
     print("--- Testing Robust Submission (Simulating 2 failures) ---")
+    # Using Any because we mocked the type hints in batch.py
     mock_sub = htcondor.Submit({"executable": "test.sh"})
     
-    # Run the submission logic
     success = submit_job(mock_sub, spool=False, max_trials=5)
     
     if success:
