@@ -453,6 +453,7 @@ def run(rdf_module, args) -> None:
 
             # Going through all the files
             found_directories, found_histos = [], []
+            all_histos = 0
             for file_name in file_list[process_name]:
                 with ROOT.TFile(str(file_name), 'READ') as fIn:
                     # Searching for custom_objects, aborting if not found
@@ -480,6 +481,7 @@ def run(rdf_module, args) -> None:
                                         LOGGER.warning(f'Could not read object "{hist_key.GetName()}" in {str(file_name)}')
                                         continue
                                     hist_name = hist_key.GetName()
+                                    all_histos += 1
 
                                     # Checking if the histogram is in customHist
                                     if hist_name in custom_hists.keys():
@@ -494,14 +496,14 @@ def run(rdf_module, args) -> None:
                                         else:
                                             custom_hists_dict[hist_name] = hist_clone
 
-            if len(found_histos)==0:
+            if all_histos==0:
                 LOGGER.warning("Did not find any histogram in custom_objects")
             else:
                 if len(found_directories)==1:
                     directories = found_directories[0]
                 elif len(found_directories)>1:
                     directories = ', '.join(found_directories[:-1]) + ' and ' + found_directories[-1]
-                LOGGER.info(f'Found {len(found_histos)} histograms in {directories}')
+                LOGGER.info(f'Found {all_histos} histograms in {directories}')
                 # Applying cutsom settings like in histoList
                 histos_to_write = []
                 for custom_hist_name, custom_params in custom_hists.items():
@@ -516,7 +518,7 @@ def run(rdf_module, args) -> None:
                     else:
                         LOGGER.warning(f"No 'xtitle' was found in customHisto for {hist.GetName()}")
                     if 'name' in custom_params:
-                        hist.GetXaxis().SetTitle(custom_params['name'])
+                        hist.SetName(custom_params['name'])
 
                     if 'xmin' in custom_params:
                         bin_min = hist.GetXaxis().FindBin(custom_params['xmin'])
