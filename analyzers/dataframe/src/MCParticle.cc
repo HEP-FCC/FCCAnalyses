@@ -7,61 +7,27 @@
 namespace FCCAnalyses{
 
 namespace MCParticle{
-
-ROOT::VecOps::RVec<edm4hep::MCParticleData> selByPredicate::operator()(
-    const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in) {
-  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
-  result.reserve(in.size());
-  for (auto &p : in) {
-    if (m_predicate(p))
-      result.emplace_back(p);
-  }
-  return result;
-}
-
-ROOT::VecOps::RVec<int> selByPredicate::operator()(
-    const ROOT::VecOps::RVec<int> &indices,
-    const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in) {
-  ROOT::VecOps::RVec<int> result;
-  result.reserve(in.size());
-  for (int index : indices) {
-    if (index < 0 || index >= in.size())
-      continue;
-    if (m_predicate(in[index]))
-      result.emplace_back(index);
-  }
-  return result;
-}
-ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> selByPredicate::operator()(
-    const ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> &setsOfIndices,
-    const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in) {
-  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> result(setsOfIndices.size());
-  for (int elem = 0; elem < setsOfIndices.size(); ++elem) {
-    result[elem] = this->operator()(setsOfIndices[elem], in);
-  }
-  return result;
-}
-
+  
 sel_pt::sel_pt(float arg_min_pt)
-    : selByPredicate([arg_min_pt](const edm4hep::MCParticleData &p) -> bool {
+    : MCParticleSelection([arg_min_pt](const edm4hep::MCParticleData &p) -> bool {
         return (p.momentum.x * p.momentum.x + p.momentum.y * p.momentum.y >
                 arg_min_pt * arg_min_pt);
       }) {}
 
 sel_eta::sel_eta(float arg_max_eta)
-    : selByPredicate([arg_max_eta](const edm4hep::MCParticleData &p) -> bool {
+    : MCParticleSelection([arg_max_eta](const edm4hep::MCParticleData &p) -> bool {
         ROOT::Math::PxPyPzM4D vec(p.momentum.x, p.momentum.y, p.momentum.z,
                                   p.mass);
         return std::abs(vec.Eta()) < std::abs(arg_max_eta);
       }) {}
 
 sel_genStatus::sel_genStatus(int arg_status)
-    : selByPredicate([arg_status](const edm4hep::MCParticleData &p) -> bool {
+    : MCParticleSelection([arg_status](const edm4hep::MCParticleData &p) -> bool {
         return p.generatorStatus == arg_status;
       }) {}
 
 sel_pdgID::sel_pdgID(int arg_pdg, bool arg_chargeconjugate)
-    : selByPredicate([arg_pdg, arg_chargeconjugate](
+    : MCParticleSelection([arg_pdg, arg_chargeconjugate](
                          const edm4hep::MCParticleData &p) -> bool {
         if (arg_chargeconjugate)
           return std::abs(p.PDG) == std::abs(arg_pdg);
@@ -70,9 +36,9 @@ sel_pdgID::sel_pdgID(int arg_pdg, bool arg_chargeconjugate)
       }) {}
 
 sel_charged::sel_charged()
-    : selByPredicate([](const edm4hep::MCParticleData &p) -> bool {
+    : MCParticleSelection([](const edm4hep::MCParticleData &p) -> bool {
         // try to avoid floating comp to zero
-        // and thank you for the person who gave some neutral particles a -999
+        // and I am sad that some neutral particles carry a -999
         // charge!
         return std::abs(p.charge) > 1e-6 && p.charge != -999;
       }) {}
