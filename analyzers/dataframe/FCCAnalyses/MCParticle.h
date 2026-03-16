@@ -32,8 +32,8 @@ namespace MCParticle{
     bool  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
-  /// Template implementation for basic selection function on MC particle data.  
-  using MCParticleSelection = Utils::selByPredicate<edm4hep::MCParticleData>; 
+  /// Template implementation for basic selection function on MC particle data.
+  using MCParticleSelection = Utils::selByPredicate<edm4hep::MCParticleData>;
 
   /// select MCParticles with transverse momentum greater than a minimum value [GeV]
   struct sel_pt : MCParticleSelection {

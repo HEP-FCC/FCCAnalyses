@@ -7,28 +7,31 @@
 namespace FCCAnalyses{
 
 namespace MCParticle{
-  
+
 sel_pt::sel_pt(float arg_min_pt)
-    : MCParticleSelection([arg_min_pt](const edm4hep::MCParticleData &p) -> bool {
-        return (p.momentum.x * p.momentum.x + p.momentum.y * p.momentum.y >
-                arg_min_pt * arg_min_pt);
-      }) {}
+    : MCParticleSelection(
+          [arg_min_pt](const edm4hep::MCParticleData &p) -> bool {
+            return (p.momentum.x * p.momentum.x + p.momentum.y * p.momentum.y >
+                    arg_min_pt * arg_min_pt);
+          }) {}
 
 sel_eta::sel_eta(float arg_max_eta)
-    : MCParticleSelection([arg_max_eta](const edm4hep::MCParticleData &p) -> bool {
-        ROOT::Math::PxPyPzM4D vec(p.momentum.x, p.momentum.y, p.momentum.z,
-                                  p.mass);
-        return std::abs(vec.Eta()) < std::abs(arg_max_eta);
-      }) {}
+    : MCParticleSelection(
+          [arg_max_eta](const edm4hep::MCParticleData &p) -> bool {
+            ROOT::Math::PxPyPzM4D vec(p.momentum.x, p.momentum.y, p.momentum.z,
+                                      p.mass);
+            return std::abs(vec.Eta()) < std::abs(arg_max_eta);
+          }) {}
 
 sel_genStatus::sel_genStatus(int arg_status)
-    : MCParticleSelection([arg_status](const edm4hep::MCParticleData &p) -> bool {
-        return p.generatorStatus == arg_status;
-      }) {}
+    : MCParticleSelection(
+          [arg_status](const edm4hep::MCParticleData &p) -> bool {
+            return p.generatorStatus == arg_status;
+          }) {}
 
 sel_pdgID::sel_pdgID(int arg_pdg, bool arg_chargeconjugate)
     : MCParticleSelection([arg_pdg, arg_chargeconjugate](
-                         const edm4hep::MCParticleData &p) -> bool {
+                              const edm4hep::MCParticleData &p) -> bool {
         if (arg_chargeconjugate)
           return std::abs(p.PDG) == std::abs(arg_pdg);
         else
