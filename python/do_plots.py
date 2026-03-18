@@ -1160,6 +1160,8 @@ def run(args):
 
     counter = 0
     LOGGER.info('Plotting staged analysis plots...')
+    l = max(len(v) for v in script_module.variables)
+    ll = max(len(sel) for sel in script_module.selections)
     for var_index, var in enumerate(script_module.variables):
         for label, sels in script_module.selections.items():
             for sel in sels:
@@ -1168,9 +1170,7 @@ def run(args):
                     if len(script_module.rebin) == \
                             len(script_module.variables):
                         rebin_tmp = script_module.rebin[var_index]
-
-                LOGGER.info('  var: %s     label: %s     selection: %s',
-                            var, label, sel)
+                LOGGER.info(f'  var: {var:<{l}}  label: {label:<{ll}}  selections: {sel}')
 
                 hsignal, hbackgrounds = load_hists(var,
                                                    label,
