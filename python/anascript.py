@@ -258,3 +258,201 @@ def get_attribute(obj: object, attr_name: str, default_val=None) -> Any:
         val = default_val
 
     return val
+
+
+# _____________________________________________________________________________
+def is_valid_string(variable: str) -> bool:
+    '''
+    Checks if the variable contains "valid" string:
+        - value is not None
+        - value is of string type
+        - value is not empty
+    '''
+    if variable is None:
+        return False
+
+    if not isinstance(variable, str):
+        return False
+
+    if variable:
+        return True
+
+    return False
+
+
+# _____________________________________________________________________________
+def has_valid_string(dictionary: dict[str, Any], key: str) -> bool:
+    '''
+    Checks if the dictionary contains a "valid" string value:
+        - key exists in dictionary
+        - value is not None
+        - value is of string type
+        - value is not empty
+    '''
+    if key not in dictionary:
+        return False
+
+    return is_valid_string(dictionary[key])
+
+
+# _____________________________________________________________________________
+def has_valid_float(dictionary: dict[str, Any], key: str) -> bool:
+    '''
+    Checks if the dictionary contains a "valid" float value:
+        - key exists in dictionary
+        - value is not None
+        - value is of float type
+    '''
+    if key not in dictionary:
+        return False
+
+    if dictionary[key] is None:
+        return False
+
+    if isinstance(dictionary[key], float):
+        return True
+
+    return False
+
+
+# _____________________________________________________________________________
+def has_valid_int(dictionary: dict[str, Any], key: str) -> bool:
+    '''
+    Checks if the dictionary contains a "valid" int value:
+        - key exists in dictionary
+        - value is not None
+        - value is of int type
+    '''
+    if key not in dictionary:
+        return False
+
+    if dictionary[key] is None:
+        return False
+
+    if isinstance(dictionary[key], int):
+        return True
+
+    return False
+
+
+# _____________________________________________________________________________
+def has_valid_2int(dictionary: dict[str, Any], key: str) -> bool:
+    '''
+    Checks if the dictionary contains a "valid" two int value:
+        - key exists in dictionary
+        - value is not None
+        - values are of type [int, int]
+    '''
+    if key not in dictionary:
+        return False
+
+    if dictionary[key] is None:
+        return False
+
+    if isinstance(dictionary[key], tuple) and \
+            list(map(type, dictionary[key])) == [int, int]:
+        return True
+
+    if isinstance(dictionary[key], list) and \
+            map(type, dictionary[key]) == [int, int]:
+        return True
+
+    return False
+
+
+# _____________________________________________________________________________
+def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
+    '''
+    Validate and reshape the provided sample list.
+    '''
+    sample_list: dict[str, dict[str, Any]] = {}
+
+    for sample_name, provided_sample_dict in provided_sample_list.items():
+        if not is_valid_string(sample_name):
+            LOGGER.error('Provided sample list contains sample with invalid '
+                         'name!\nAborting...')
+            sys.exit(3)
+
+        # Deprecations
+        # input_dir
+        if 'input_dir' in provided_sample_list:
+            LOGGER.error('Please use "input-dir" for sample "%s" instead of '
+                         '"input_dir"!\nAborting...', sample_name)
+            sys.exit(3)
+        # output
+        if 'output' in provided_sample_list:
+            LOGGER.error('Please use "output-stem" for sample "%s" instead of '
+                         '"output"!\nAborting...', sample_name)
+            sys.exit(3)
+
+        sample_dict: dict[str, Any] = {}
+
+        # Check input dir
+        if has_valid_string(provided_sample_list, 'input-dir'):
+            sample_dict['input-dir'] = provided_sample_dict['input-dir']
+        else:
+            sample_dict['input-dir'] = None
+
+        # Check output stem
+        if has_valid_string(provided_sample_dict, 'output-stem'):
+            sample_dict['output-stem'] = provided_sample_dict['output-stem']
+        else:
+            sample_dict['output-stem'] = sample_name
+
+        # Check reduction fraction
+        if has_valid_float(provided_sample_list, 'fraction'):
+            sample_dict['fraction'] = provided_sample_dict['fraction']
+        else:
+            sample_dict['fraction'] = 1.0
+
+        # Check number of chunks
+        if has_valid_int(provided_sample_dict, 'chunks'):
+            sample_dict['chunks'] = provided_sample_dict['chunks']
+        else:
+            sample_dict['chunks'] = 1
+
+        # Check if to stride through the events
+        if has_valid_2int(provided_sample_dict, 'stride'):
+            sample_dict['scan'] = provided_sample_dict['stride']
+        else:
+            sample_dict['scan'] = None
+
+        sample_list[sample_name] = sample_dict
+
+    return sample_list
+
+
+def validate_analysis_class(analysis_class: Any) -> dict[str, Any]:
+    '''
+    Validate an instance of the Analysis class.
+    Returning configuration dictionary for reading clarity.
+    '''
+
+    config: dict[str, Any] = {}
+
+    # Save the full analysis class
+    config['analysis-class'] = analysis_class
+
+    # Deprecations
+    if hasattr(analysis_class, 'run_batch'):
+        if analysis_class.run_batch:
+            LOGGER.error('run_batch analysis attribute is no longer '
+                         'supported, use "fccanalysis submit" instead!\n'
+                         'Aborting...')
+            sys.exit(3)
+
+    # Check if the analysis chain is provided
+    if hasattr(analysis_class, 'analyzers'):
+        config['analysis-chain'] = analysis_class.analyzers
+    else:
+        LOGGER.error('Analysis chain not provided!\nAborting...')
+        sys.exit(3)
+
+    # Check the output variables
+    if hasattr(analysis_class, 'output'):
+        config['output-variables'] = analysis_class.output
+    else:
+        LOGGER.error('Analysis output variables not provided!\nAborting...')
+        sys.exit(3)
+
+    return config

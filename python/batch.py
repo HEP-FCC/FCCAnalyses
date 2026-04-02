@@ -12,8 +12,9 @@ import argparse
 import string
 from typing import Any
 
-from process import get_process_info
-from process import get_subfile_list, get_chunk_list
+from sample import get_process_info
+from sample import get_subfile_list, get_chunk_list
+from anascript import validate_sample_list
 
 
 LOGGER = logging.getLogger('FCCAnalyses.batch')
@@ -59,20 +60,22 @@ def create_condor_config(config: dict[str, Any],
     '''
     Creates contents of HTCondor submit description file.
     '''
+    sample_stem = config[sample_name]['output-stem']
+
     cfg = 'executable = $(scriptfile)\n'
 
-    cfg += f'log = {batch_dir}/condor_job.{sample_name}.$(ClusterId).log\n'
+    cfg += f'log = {batch_dir}/condor_job.{sample_stem}.$(ClusterId).log\n'
 
     if output_dir_eos is None:
-        cfg += f'output = {config["output-dir"]}/log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).out\n'
-        cfg += f'error = {config["output-dir"]}/log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).error\n'
+        cfg += f'output = {config["output-dir"]}/log/{sample_stem}/'
+        cfg += f'condor_job.{sample_stem}.$(ClusterId).$(ProcId).out\n'
+        cfg += f'error = {config["output-dir"]}/log/{sample_stem}/'
+        cfg += f'condor_job.{sample_stem}.$(ClusterId).$(ProcId).error\n'
     else:
-        cfg += f'output = log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).out\n'
-        cfg += f'error = log/{sample_name}/'
-        cfg += f'condor_job.{sample_name}.$(ClusterId).$(ProcId).error\n'
+        cfg += f'output = log/{sample_stem}/'
+        cfg += f'condor_job.{sample_stem}.$(ClusterId).$(ProcId).out\n'
+        cfg += f'error = log/{sample_stem}/'
+        cfg += f'condor_job.{sample_stem}.$(ClusterId).$(ProcId).error\n'
 
     cfg += 'getenv = False\n'
 
@@ -95,11 +98,11 @@ def create_condor_config(config: dict[str, Any],
 
     cfg += 'should_transfer_files = yes\n'
     cfg += 'when_to_transfer_output = on_exit\n'
-    cfg += f'transfer_output_files = {sample_name}\n'
+    cfg += f'transfer_output_files = {sample_stem}\n'
 
     if output_dir_eos is None:
         cfg += 'transfer_output_remaps = '
-        cfg += f'"{sample_name}={config["output-dir"]}/{sample_name}"\n'
+        cfg += f'"{sample_stem}={config["output-dir"]}/{sample_stem}"\n'
     else:
         cfg += 'output_destination = '
         cfg += f'root://{config["eos-type"]}.cern.ch/'
@@ -129,8 +132,9 @@ def create_subjob_script(config: dict[str, Any],
     '''
     Creates sub-job script to be run.
     '''
+    sample_stem = config[sample_name]['output-stem']
 
-    sample_output_filepath = os.path.join(sample_name,
+    sample_output_filepath = os.path.join(sample_stem,
                                           f'chunk_{chunk_num}.root')
 
     scr = '#!/bin/bash\n\n'
@@ -139,7 +143,7 @@ def create_subjob_script(config: dict[str, Any],
     if config['fccana-dir'] is not None:
         scr += f'source {config["fccana-dir"]}/setup.sh\n\n'
 
-    scr += f'mkdir -p {sample_name}\n\n'
+    scr += f'mkdir -p {sample_stem}\n\n'
 
     scr += f'fccanalysis run {config["full-analysis-path"]}'
     scr += f' --output {sample_output_filepath}'
@@ -179,9 +183,9 @@ def submit_job(cmd: str, max_trials: int) -> bool:
 
 
 # _____________________________________________________________________________
-def merge_config_analysis_class(config: dict[str, Any],
-                                args: argparse.Namespace,
-                                analysis_module: Any) -> dict[str, Any]:
+def merge_configs(config: dict[str, Any],
+                  args: argparse.Namespace,
+                  analysis_module: Any) -> dict[str, Any]:
     '''
     Merge configuration from the analysis script class and the command-line
     arguments.
@@ -195,7 +199,7 @@ def merge_config_analysis_class(config: dict[str, Any],
         LOGGER.error('Analysis does not define any processes!\n'
                      'Aborting...')
         sys.exit(3)
-    config['sample-list'] = analysis_class.process_list
+    config['sample-list'] = validate_sample_list(analysis_class.process_list)
     if not config['sample-list']:
         LOGGER.error('Analysis does not define any processes!\n'
                      'Aborting...')
@@ -293,12 +297,13 @@ def send_sample(config: dict[str, Any],
     Send sample to HTCondor batch system.
     '''
     sample_dict = config['sample-list'][sample_name]
+    sample_stem = config[sample_name]['output-stem']
 
     timestamp = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
 
     # Create log directory
-    batch_dir = os.path.join('batch-submission-files', timestamp, sample_name)
+    batch_dir = os.path.join('batch-submission-files', timestamp, sample_stem)
     if not os.path.exists(batch_dir):
         os.system(f'mkdir -p {batch_dir}')
 
@@ -341,13 +346,14 @@ def send_sample(config: dict[str, Any],
         chunk_list = get_chunk_list(file_list, chunks)
     else:
         LOGGER.warning('Number of requested output chunks for the sample '
-                       '"%s" is suspiciously low!', sample_name)
+                       '"%s", with the output stem "%s", is suspiciously low!',
+                       sample_name, sample_stem)
 
     subjob_scripts = []
     for chunk_num in range(len(chunk_list)):
         subjob_script_path = os.path.join(
             batch_dir,
-            f'job_{sample_name}_chunk_{chunk_num}.sh')
+            f'job_{sample_stem}_chunk_{chunk_num}.sh')
         subjob_scripts.append(subjob_script_path)
 
         for i in range(3):
@@ -373,7 +379,7 @@ def send_sample(config: dict[str, Any],
     LOGGER.debug('Sub-job scripts to be run:\n - %s',
                  '\n - '.join(subjob_scripts))
 
-    condor_config_path = f'{batch_dir}/job_desc_{sample_name}.cfg'
+    condor_config_path = f'{batch_dir}/job_desc_{sample_stem}.cfg'
 
     # Convert possible output-dir-eos template to string
     if isinstance(config['output-dir-eos'], string.Template):
@@ -454,9 +460,10 @@ def send_to_batch(args: argparse.Namespace,
             sys.exit(3)
 
     if hasattr(analysis_module, "Analysis"):
-        config = merge_config_analysis_class(config, args, analysis_module)
+        config = merge_configs(config, args, analysis_module)
 
     for sample_name in config['sample-list'].keys():
-        LOGGER.info('Submitting sample "%s"', sample_name)
+        LOGGER.info('Submitting sample "%s", with output stem "%s"...',
+                    sample_name, config[sample_name]['output-stem'])
 
         send_sample(config, sample_name)

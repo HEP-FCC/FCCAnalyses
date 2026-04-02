@@ -97,51 +97,145 @@ def setup_run_parser(parser):
     '''
     Define command line arguments for the run sub-command.
     '''
-    parser.add_argument('anascript_path',
-                        help='path to analysis script')
     parser.add_argument(
+        'anascript_path',
+        help='path to analysis script'
+    )
+    parser.add_argument(
+        '--output-dir',
+        type=str,
+        default=None,
+        help='global output directory'
+    )
+    parser.add_argument(
+        '-j', '--ncpus', '--n-threads',
+        type=int,
+        default=None,
+        help='set number of threads to run in'
+    )
+    parser.add_argument(
+        '-a', '--analysis-name',
+        type=str,
+        default=None,
+        help='analysis name, mostly used for the output path'
+    )
+
+    # File-path rewrites
+    filepath_rewrites_group = parser.add_mutually_exclusive_group()
+    filepath_rewrites_group.add_argument(
+        '--apply-filepath-rewrites',
+        action='store_true',
+        default=None,
+        help='Apply path rewrites for files stored on shared file systems',
+        dest='apply_filepath_rewrites'
+    )
+    filepath_rewrites_group.add_argument(
+        '--no-filepath-rewrites',
+        action='store_false',
+        default=None,
+        help='Do not apply path rewrites for files stored on shared file '
+             'systems',
+        dest='apply_filepath_rewrites'
+    )
+
+    # Independent sample
+    independent_sample_group = parser.add_argument_group('Independent sample')
+    independent_sample_group.add_argument(
         '-i', '--input',
         default=None,
         nargs='+',
         metavar='INPUT_FILE',
-        help='location(s) of the input ROOT file(s)')
-    parser.add_argument(
+        help='location(s) of the input ROOT file(s)'
+    )
+    independent_sample_group.add_argument(
         '--files-list',
         default=None,
         nargs='+',
         metavar='INPUT_FILE',
-        help='[DEPRECATED] location(s) of the input ROOT file(s)')
-    parser.add_argument(
+        help='[DEPRECATED] location(s) of the input ROOT file(s)'
+    )
+    independent_sample_group.add_argument(
         '-f', '--input-file-list',
         type=str,
         default=None,
         metavar='LIST_FILE',
-        help='location of the text file containing list of input ROOT files')
+        help='location of the text file containing list of input ROOT files'
+    )
     parser.add_argument(
         '-o', '--output',
         type=str,
-        default='output.root',
+        default=None,
         metavar='OUTPUT_FILE',
-        help='location of the output ROOT file')
-    parser.add_argument('--nevents',
-                        type=int, default=None,
-                        help='specify max number of events to process')
-    parser.add_argument('--test', action='store_true', default=False,
-                        help='run over the test input file')
-    parser.add_argument('--bench', action='store_true', default=False,
-                        help='output benchmark results to a JSON file')
-    parser.add_argument('-j', '--ncpus', '--n-threads',
-                        type=int, default=None,
-                        help='set number of threads')
-    parser.add_argument('-g', '--graph', action='store_true', default=False,
-                        help='generate computational graph of the analysis')
-    parser.add_argument('--graph-path', type=str, default='',
-                        help='analysis graph save path, should end with '
-                        '\'.dot\' or \'.png\'')
+        help='directly sets location of the output ROOT file'
+    )
+    independent_sample_group.add_argument(
+        '-s', '--sample-name',
+        type=str,
+        default=None,
+        help='sample name, mostly used for the output path'
+    )
+    independent_sample_group.add_argument(
+        '--n-chunks',
+        type=int,
+        default=None,
+        help='number of output chunks'
+    )
+    parser.add_argument(
+        '--nevents', '--n-events',
+        type=int,
+        default=None,
+        help='specify max number of events to process'
+    )
+    parser.add_argument(
+        '--stride',
+        type=int,
+        default=None,
+        help='specify how to stride through the events'
+    )
+
+    # Testing
+    test_group = parser.add_argument_group('Tests and benchmarking')
+    test_group.add_argument(
+        '--test',
+        action='store_true',
+        default=None,
+        help='run over the test input file'
+    )
+    test_group.add_argument(
+        '--test-file',
+        type=str,
+        default=None,
+        help='test file to use'
+    )
+
+    test_group.add_argument(
+        '--bench',
+        action='store_true',
+        default=False,
+        help='save benchmark results to a JSON file'
+    )
+
+    # Graph
+    graph_group = parser.add_argument_group('Graph production')
+    graph_group.add_argument(
+        '-g', '--graph',
+        action='store_true',
+        default=None,
+        help='generate computational graph of the analysis'
+    )
+    graph_group.add_argument(
+        '--graph-path',
+        type=str,
+        default=None,
+        help='analysis graph save path, should end with \'.dot\' or \'.png\''
+    )
+
+    # Data source
     parser.add_argument(
         '--use-data-source', action='store_true', default=False,
         help='use EDM4hep RDataSource to construct dataframe')
 
+    # Progress bar
     progressbar_group = parser.add_mutually_exclusive_group()
     progressbar_group.add_argument(
         '-p', '--progress-bar',

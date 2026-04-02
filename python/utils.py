@@ -18,14 +18,14 @@ LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.utils')
 
 
 # _____________________________________________________________________________
-def generate_graph(dframe, args, suffix: str | None = None) -> None:
+def generate_graph(dframe,
+                   output_path: str,
+                   suffix: str | None = None) -> None:
     '''
     Generate computational graph of the analysis
     '''
     # Check if output file path is provided
-    graph_path: pathlib.PurePath = pathlib.PurePath(args.graph_path)
-    if args.graph_path == '':
-        graph_path = pathlib.PurePath(os.getcwd(), 'fccanalysis_graph.dot')
+    graph_path: pathlib.PurePath = pathlib.PurePath(output_path)
 
     # check if file path ends with "correct" extension
     if graph_path.suffix not in ('.dot', '.png'):
