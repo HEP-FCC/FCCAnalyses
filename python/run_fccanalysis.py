@@ -4,6 +4,8 @@ Run analysis of style "Analysis", which can be split into several stages.
 
 import os
 import sys
+import string
+import datetime
 import logging
 import argparse
 from typing import Any, Optional, Union
@@ -302,6 +304,8 @@ def merge_config(args: argparse.Namespace,
 
     if 'almalinux9' in k4h_stack_env:
         config['key4hep-os'] = 'alma9'
+    elif 'almalinux10' in k4h_stack_env:
+        config['key4hep-os'] = 'alma10'
     elif 'ubuntu22' in k4h_stack_env:
         config['key4hep-os'] = 'ubuntu22'
     elif 'ubuntu24' in k4h_stack_env:
@@ -529,6 +533,15 @@ def run_fccanalysis(args, anascript_module) -> None:
 
     # Set number of threads, load header files, ...
     global_setup(config)
+
+    # Resolve test-file template if needed
+    if config.get('test-file') is not None and \
+            isinstance(config['test-file'], string.Template):
+        config['test-file'] = config['test-file'].substitute(
+            key4hep_os=config['key4hep-os'],
+            key4hep_stack=config['key4hep-stack'],
+            date=datetime.date.today().strftime('%Y-%m-%d')
+        )
 
     # Generate jobs to be run
     jobs = generate_jobs(config)
