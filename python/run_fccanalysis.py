@@ -356,7 +356,8 @@ def merge_config(args: argparse.Namespace,
             config['test-file'] = analysis_class.test_file
         if args.test_file is not None:
             config['test-file'] = args.test_file
-        else:
+
+        if config['test-file'] is None:
             LOGGER.error('Could not find a test file!\nAborting...')
             sys.exit(3)
 
