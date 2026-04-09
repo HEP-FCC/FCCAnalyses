@@ -135,7 +135,7 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
             if isinstance(sample_dict['chunks'], int):
                 n_chunks = sample_dict['chunks']
             else:
-                LOGGER.error('Provided nunmber of output chunks is not an '
+                LOGGER.error('Provided number of output chunks is not an '
                              'integer!\nAborting...')
                 sys.exit(3)
 
@@ -176,6 +176,12 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
 
     # Test job
     if config['test-file'] is not None:
+        LOGGER.info('Generating test job...')
+
+        if config['samples'] is not None:
+            LOGGER.warning('Samples/processes defined in your analysis script '
+                           'will be ignored...')
+
         job: dict[str, Any] = {}
         job['name'] = 'test'
         job['input-file-list'] = config['test-file']
@@ -187,6 +193,8 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
 
     # Independent sample
     if config['input-file-list'] is not None:
+        LOGGER.info('Generating jobs for independent sample...')
+
         if config['samples'] is not None:
             LOGGER.warning('Samples/processes defined in your analysis script '
                            'will be ignored...')
@@ -379,8 +387,8 @@ def merge_config(args: argparse.Namespace,
 
     # Check for output file
     config['output-file'] = None
-    if hasattr(analysis_class, 'output'):
-        config['output-file'] = analysis_class.output
+    if hasattr(analysis_class, 'output_file'):
+        config['output-file'] = analysis_class.output_file
     if args.output is not None:
         config['output-file'] = args.output
 
@@ -514,6 +522,15 @@ def global_setup(config):
                              'header file!\nAborting...', path)
                 sys.exit(3)
 
+    # Resolve test-file template if needed
+    if config.get('test-file') is not None and \
+            isinstance(config['test-file'], string.Template):
+        config['test-file'] = config['test-file'].substitute(
+            key4hep_os=config['key4hep-os'],
+            key4hep_stack=config['key4hep-stack'],
+            date=datetime.date.today().strftime('%Y-%m-%d')
+        )
+
 
 # _____________________________________________________________________________
 def run_fccanalysis(args, anascript_module) -> None:
@@ -533,15 +550,6 @@ def run_fccanalysis(args, anascript_module) -> None:
 
     # Set number of threads, load header files, ...
     global_setup(config)
-
-    # Resolve test-file template if needed
-    if config.get('test-file') is not None and \
-            isinstance(config['test-file'], string.Template):
-        config['test-file'] = config['test-file'].substitute(
-            key4hep_os=config['key4hep-os'],
-            key4hep_stack=config['key4hep-stack'],
-            date=datetime.date.today().strftime('%Y-%m-%d')
-        )
 
     # Generate jobs to be run
     jobs = generate_jobs(config)
