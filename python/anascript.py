@@ -375,12 +375,12 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
 
         # Deprecations
         # input_dir
-        if 'input_dir' in provided_sample_list:
+        if 'input_dir' in provided_sample_dict:
             LOGGER.error('Please use "input-dir" for sample "%s" instead of '
                          '"input_dir"!\nAborting...', sample_name)
             sys.exit(3)
         # output
-        if 'output' in provided_sample_list:
+        if 'output' in provided_sample_dict:
             LOGGER.error('Please use "output-stem" for sample "%s" instead of '
                          '"output"!\nAborting...', sample_name)
             sys.exit(3)
@@ -388,7 +388,7 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
         sample_dict: dict[str, Any] = {}
 
         # Check input dir
-        if has_valid_string(provided_sample_list, 'input-dir'):
+        if has_valid_string(provided_sample_dict, 'input-dir'):
             sample_dict['input-dir'] = provided_sample_dict['input-dir']
         else:
             sample_dict['input-dir'] = None
@@ -400,7 +400,7 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
             sample_dict['output-stem'] = sample_name
 
         # Check reduction fraction
-        if has_valid_float(provided_sample_list, 'fraction'):
+        if has_valid_float(provided_sample_dict, 'fraction'):
             sample_dict['fraction'] = provided_sample_dict['fraction']
         else:
             sample_dict['fraction'] = 1.0

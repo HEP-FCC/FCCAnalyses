@@ -4,16 +4,12 @@ Run analysis of style "Analysis", which can be split into several stages.
 
 import os
 import sys
-import time
 import logging
 import argparse
-import string
 from typing import Any, Optional, Union
 
 import ROOT  # type: ignore
-from anascript import get_element_dict, get_attribute
 from anascript import validate_analysis_class
-from sample import get_process_info
 from sample import get_file_list, get_subfile_list, get_chunk_list
 from sample import get_files_in_dir, get_files_in_yaml
 from sample import get_file_quantities
@@ -37,7 +33,8 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
 
     for sample_name, sample_dict in config['samples'].items():
         LOGGER.info('Initializing sample "%s" ...', sample_name)
-        info_msg = 'The sample will be processed with the following parameters:'
+        info_msg = 'The sample will be processed with the following ' \
+                   'parameters:'
 
         sample_file_list: Optional[list[str]] = None
         file_quantities: Optional[list[dict[str,
@@ -58,7 +55,7 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         if 'input-files' in sample_dict:
             if isinstance(sample_dict['input-files'], list):
                 if all(isinstance(x, str) for x in sample_dict['input-files']):
-                    sample_file_list = sample_dict['input']
+                    sample_file_list = sample_dict['input-files']
 
         # Using globally set input directory or campaign / production tag
         if sample_file_list is None:
@@ -313,6 +310,9 @@ def merge_config(args: argparse.Namespace,
         LOGGER.error('Key4hep OS not recognized!\nAborting...')
         sys.exit(3)
 
+    # Determine analysis script path
+    config['anascript-path'] = os.path.abspath(args.anascript_path)
+
     # Determine analysis directory
     config['analysis-dir'] = os.path.dirname(
         os.path.abspath(args.anascript_path)
@@ -383,7 +383,7 @@ def merge_config(args: argparse.Namespace,
     config['output-dir'] = None
     if hasattr(analysis_class, 'output_dir'):
         config['output-dir'] = analysis_class.output_dir
-    if args.output is not None:
+    if args.output_dir is not None:
         config['output-dir'] = args.output_dir
 
     # Check for number of output chunks
@@ -414,7 +414,7 @@ def merge_config(args: argparse.Namespace,
 
     # Check whether to use PODIO DataSource to load the events
     config['use-data-source'] = False
-    if get_attribute(analysis_class, 'use_data_source', False):
+    if hasattr(analysis_class, 'use_data_source'):
         config['use-data-source'] = True
     if args.use_data_source:
         config['use-data-source'] = True
@@ -449,6 +449,11 @@ def merge_config(args: argparse.Namespace,
     config['apply-filepath-rewrites'] = True
     if args.apply_filepath_rewrites is not None:
         config['apply-filepath-rewrites'] = args.apply_filepath_rewrites
+
+    # Check whether to save benchmark results
+    config['bench'] = False
+    if args.bench is not None:
+        config['bench'] = args.bench
 
     return config
 
@@ -506,114 +511,7 @@ def global_setup(config):
 
 
 # _____________________________________________________________________________
-def run_local(config: dict[str, Any],
-              sample_name: str,
-              infile_list):
-    '''
-    Run analysis locally.
-    '''
-    # Create list of files to be processed
-    info_msg = f'Creating dataframe from {len(infile_list)} files:\n'
-    # Amount of events processed in previous stage (= 0 if it is the first
-    # stage)
-    nevents_orig = 0
-    # The amount of events in the input file(s)
-    nevents_local = 0
-
-    # Same for the sum of weights
-    if config['do-weighted']:
-        sow_orig = 0.
-        sow_local = 0.
-
-    # Adjust number of events in case the maximum number of events is specified
-    if config['n-events-max'] is not None:
-        nevents_local = config['n-events-max']
-
-    LOGGER.info(info_msg)
-
-    if nevents_orig > 0:
-        LOGGER.info('Number of events:\n\t- original: %s\n\t- local:    %s',
-                    f'{nevents_orig:,}', f'{nevents_local:,}')
-        if config['do-weighted']:
-            LOGGER.info('Sum of weights:\n\t- original: %s\n\t- local:    %s',
-                        f'{sow_orig:,}', f'{sow_local:,}')
-    else:
-        LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
-        if config['do-weighted']:
-            LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
-
-    # Run RDF
-    start_time = time.time()
-    inn, outn, in_sow, out_sow = run_rdf(config, sample_name, file_list)
-    elapsed_time = time.time() - start_time
-
-    # replace nevents_local by inn = the amount of processed events
-
-    info_msg = f"{' SUMMARY ':=^80}\n"
-    info_msg += 'Elapsed time (H:M:S):    '
-    info_msg += time.strftime('%H:%M:%S', time.gmtime(elapsed_time))
-    info_msg += '\nEvents processed/second: '
-    info_msg += f'{int(inn/elapsed_time):,}'
-    info_msg += f'\nTotal events processed:  {int(inn):,}'
-    info_msg += f'\nNo. result events:       {int(outn):,}'
-    if inn > 0:
-        info_msg += f'\nReduction factor local:  {outn/inn}'
-    if nevents_orig > 0:
-        info_msg += f'\nReduction factor total:  {outn/nevents_orig}'
-    if config['do-weighted']:
-        info_msg += f'\nTotal sum of weights processed:  {float(in_sow):0,.2f}'
-        info_msg += f'\nNo. result weighted events :       {float(out_sow):0,.2f}'
-        if in_sow > 0:
-            info_msg += f'\nReduction factor local, weighted:  {float(out_sow/in_sow):0,.4f}'
-        if sow_orig > 0:
-            info_msg += f'\nReduction factor total, weighted:  {float(out_sow/sow_orig):0,.4f}'
-    info_msg += '\n'
-    info_msg += 80 * '='
-    info_msg += '\n'
-    LOGGER.info(info_msg)
-
-    # Update resulting root file with number of processed events
-    # and number of selected events
-    with ROOT.TFile(outfile_path, 'update') as outfile:
-        param = ROOT.TParameter(int)(
-                'eventsProcessed',
-                nevents_orig if nevents_orig != 0 else inn)
-        param.Write()
-        param = ROOT.TParameter(int)('eventsSelected', outn)
-        param.Write()
-
-        if config['do-weighted']:
-            param_sow = ROOT.TParameter(float)(
-                        'SumOfWeights',
-                        sow_orig if sow_orig != 0 else in_sow)
-            param_sow.Write()
-            # No of weighted, selected events
-            param_sow = ROOT.TParameter(float)('SumOfWeightsSelected', out_sow)
-            param_sow.Write()
-        outfile.Write()
-
-    if args.bench:
-        bench_time = {}
-        bench_time['name'] = 'Time spent running the analysis: '
-        bench_time['name'] += config['analysis-name']
-        bench_time['unit'] = 'Seconds'
-        bench_time['value'] = elapsed_time
-        bench_time['range'] = 10
-        bench_time['extra'] = 'Analysis path: ' + args.anascript_path
-        save_benchmark('benchmarks_smaller_better.json', bench_time)
-
-        bench_evt_per_sec = {}
-        bench_evt_per_sec['name'] = 'Events processed per second: '
-        bench_evt_per_sec['name'] += config['analysis-name']
-        bench_evt_per_sec['unit'] = 'Evt/s'
-        bench_evt_per_sec['value'] = nevents_local / elapsed_time
-        bench_time['range'] = 1000
-        bench_time['extra'] = 'Analysis path: ' + args.anascript_path
-        save_benchmark('benchmarks_bigger_better.json', bench_evt_per_sec)
-
-
-# _____________________________________________________________________________
-def run_fccanalysis(args, anascript_module):
+def run_fccanalysis(args, anascript_module) -> None:
     '''
     Run analysis of style "Analysis".
     '''
@@ -642,6 +540,9 @@ def run_fccanalysis(args, anascript_module):
     else:
         LOGGER.info('Will execute %i jobs...', len(jobs))
 
+    total_events = 0
+    total_elapsed_time = 0.
+
     for job in jobs:
         LOGGER.info('Starting job: %s ...', job['name'])
         directory, _ = os.path.split(job['output-file'])
@@ -668,142 +569,28 @@ def run_fccanalysis(args, anascript_module):
         if config['generate-graph']:
             dframe_job.generate_analysis_graph(config['graph-path'])
 
-    sys.exit(0)
+        n_events, elapsed_time = dframe_job.get_benchmark_info()
+        total_events += n_events
+        total_elapsed_time += elapsed_time
 
-    # Check if test mode is specified, and if so run the analysis on it (this
-    # will exit afterwards)
-    if args.test:
-        LOGGER.info('Running over test file...')
-        testfile_path = getattr(config['analysis-class'], "test_file")
-        if isinstance(testfile_path, string.Template):
-            testfile_path = testfile_path.substitute(
-                key4hep_os=config['key4hep-os'],
-                key4hep_stack=config['key4hep-stack']
-            )
+    if config['bench']:
+        analysis_name = config['analysis-name'] or config['anascript-path']
 
-        directory, _ = os.path.split(args.output)
-        if directory:
-            os.system(f'mkdir -p {directory}')
-        # run_local(config, args, config['analysis-class'], [testfile_path])
-        sys.exit(0)
+        bench_time = {}
+        bench_time['name'] = 'Time spent running the analysis: ' + \
+                             analysis_name
+        bench_time['unit'] = 'Seconds'
+        bench_time['value'] = total_elapsed_time
+        bench_time['range'] = 10
+        bench_time['extra'] = 'Analysis path: ' + config['anascript-path']
+        save_benchmark('benchmarks_smaller_better.json', bench_time)
 
-    # Check if input file(s) are specified, and if so run the analysis on
-    # it/them (this will exit afterwards)
-    if config['input-file-list'] is not None:
-        LOGGER.info('Running over sample-independent file list...')
-        LOGGER.info('Samples/processes defined in your analysis script will be '
-                    'ignored...')
-        directory, _ = os.path.split(args.output)
-        if directory:
-            os.system(f'mkdir -p {directory}')
-
-        dframe_job = Job(config['input-file-list'],
-                         config['analysis-chain'],
-                         config['use-data-source'])
-
-        dframe_job.setup_output(os.path.join(directory, 'output.root'),
-                                config['output-variables'])
-
-        if config['enable-progress-bar']:
-            dframe_job.enable_progress_bar()
-
-        dframe_job.restrict_events(config['n-events-max'],
-                                   config['stride'])
-
-        dframe_job.run()
-
-        dframe_job.finalize()
-
-        if config['generate-graph']:
-            dframe_job.generate_analysis_graph(config['graph-path'])
-
-        sys.exit(0)
-
-    # Check if the sample list is specified
-    process_list = get_attribute(config['analysis-class'], 'process_list', [])
-
-    prod_tag = get_attribute(config['analysis-class'], 'prod_tag', None)
-
-    input_dir = get_attribute(config['analysis-class'], 'input_dir', None)
-
-    if prod_tag is None and input_dir is None:
-        LOGGER.error('No input directory or production tag specified in the '
-                     'analysis script!\nAborting...')
-        sys.exit(3)
-
-    for process_name in process_list:
-        LOGGER.info('Started processing sample "%s" ...', process_name)
-        try:
-            process_input_dir = process_list[process_name]['input_dir']
-        except KeyError:
-            process_input_dir = None
-        file_list, event_list = get_process_info(process_name,
-                                                 prod_tag,
-                                                 input_dir,
-                                                 process_input_dir)
-
-        if len(file_list) <= 0:
-            LOGGER.error('No files to process!\nAborting...')
-            sys.exit(3)
-
-        # Determine the fraction of the input to be processed
-        fraction = 1.
-        if get_element_dict(process_list[process_name], 'fraction'):
-            fraction = get_element_dict(process_list[process_name], 'fraction')
-
-        if fraction < 1:
-            file_list = get_subfile_list(file_list, event_list, fraction)
-
-        # Determine the number of chunks the output will be split into
-        n_chunks = 1
-        if get_element_dict(process_list[process_name], 'chunks'):
-            n_chunks = get_element_dict(process_list[process_name], 'chunks')
-
-        chunk_list = [file_list]
-        if n_chunks > 1:
-            chunk_list = get_chunk_list(file_list, n_chunks)
-            n_chunks = len(chunk_list)
-
-        # Put together output path
-        output_stem = process_name
-        if get_element_dict(process_list[process_name], 'output'):
-            output_stem = get_element_dict(process_list[process_name],
-                                           'output')
-        output_dir = get_attribute(config['analysis-class'], 'output_dir', '')
-
-        if n_chunks == 1:
-            output_filepath = os.path.join(output_dir, output_stem+'.root')
-            output_dir = None
-        else:
-            output_filepath = None
-            output_dir = os.path.join(output_dir, output_stem)
-
-        info_msg = 'Will proceed with:'
-        if fraction < 1:
-            info_msg += f'\n    - input reduction fraction: {fraction}'
-        info_msg += f'\n    - number of input files: {len(file_list):,}'
-        if output_dir is not None:
-            info_msg += f'\n    - output directory: {output_dir}'
-        if n_chunks > 1:
-            info_msg += f'\n    - number of output chunks: {n_chunks:,}'
-        if output_filepath is not None:
-            info_msg += f'\n    - output file path: {output_filepath}'
-        LOGGER.info(info_msg)
-
-        # Running locally
-        LOGGER.info('Running locally...')
-        if n_chunks == 1:
-            args.output = output_filepath
-            # run_local(config, args, analysis_class, chunk_list[0])
-        else:
-            # Create directory if more than 1 chunk
-            if not os.path.exists(output_dir):
-                os.system(f'mkdir -p {output_dir}')
-
-            for index, chunk in enumerate(chunk_list):
-                args.output = f'{output_dir}/chunk{index}.root'
-                # run_local(config, args, analysis_class, chunk)
-
-    if len(process_list) == 0:
-        LOGGER.warning('No files processed (process_list not found)!\n'
-                       'Exiting...')
+        bench_evt_per_sec = {}
+        bench_evt_per_sec['name'] = 'Events processed per second: ' + \
+                                    analysis_name
+        bench_evt_per_sec['unit'] = 'Evt/s'
+        bench_evt_per_sec['value'] = total_events / total_elapsed_time
+        bench_evt_per_sec['range'] = 1000
+        bench_evt_per_sec['extra'] = 'Analysis path: ' + \
+                                     config['anascript-path']
+        save_benchmark('benchmarks_bigger_better.json', bench_evt_per_sec)

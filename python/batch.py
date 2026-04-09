@@ -60,7 +60,7 @@ def create_condor_config(config: dict[str, Any],
     '''
     Creates contents of HTCondor submit description file.
     '''
-    sample_stem = config[sample_name]['output-stem']
+    sample_stem = config['sample-list'][sample_name]['output-stem']
 
     cfg = 'executable = $(scriptfile)\n'
 
@@ -132,7 +132,7 @@ def create_subjob_script(config: dict[str, Any],
     '''
     Creates sub-job script to be run.
     '''
-    sample_stem = config[sample_name]['output-stem']
+    sample_stem = config['sample-list'][sample_name]['output-stem']
 
     sample_output_filepath = os.path.join(sample_stem,
                                           f'chunk_{chunk_num}.root')
@@ -297,7 +297,7 @@ def send_sample(config: dict[str, Any],
     Send sample to HTCondor batch system.
     '''
     sample_dict = config['sample-list'][sample_name]
-    sample_stem = config[sample_name]['output-stem']
+    sample_stem = config['sample-list'][sample_name]['output-stem']
 
     timestamp = datetime.datetime.fromtimestamp(
         datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
@@ -464,6 +464,6 @@ def send_to_batch(args: argparse.Namespace,
 
     for sample_name in config['sample-list'].keys():
         LOGGER.info('Submitting sample "%s", with output stem "%s"...',
-                    sample_name, config[sample_name]['output-stem'])
+                    sample_name, config['sample-list'][sample_name]['output-stem'])
 
         send_sample(config, sample_name)
