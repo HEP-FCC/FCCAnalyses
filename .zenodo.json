@@ -28,7 +28,41 @@
 	{
 	    "affiliation": "University of Copenhagen",
 	    "name": "Munch Torndal, Julie"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Smieško, Juraj"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Jamin, David Olivier"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Francois, Brieuc"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Eysermans, Jan"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Carceller, Juan Miguel"
+	},
+	{
+	    "affiliation": "DESY",
+	    "name": "Madlener, Thomas"
+	},
+	{
+	    "affiliation": "University of Adelaide",
+	    "name": "Desai, Aman"
 	}
+    ],
+    "description": "FCCAnalyses is a common framework for Future Circular Collider (FCC) related analyses. It allows users to write full analyses by taking EDM4hep input ROOT files, processing them using ROOT RDataFrame, and producing histograms and plots. The framework is designed to be efficient and modular, supporting various FCC-ee and FCC-hh physics studies.",
+    "communities": [
+        {
+            "identifier": "fcc-phex"
+        }
     ],
     "keywords": [
 	"data analyses",
