@@ -184,7 +184,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
 
         job: dict[str, Any] = {}
         job['name'] = 'test'
-        job['input-file-list'] = config['test-file']
+        job['input-file-list'] = [config['test-file']]
         job['output-file'] = 'test-output.root'
         if config['output-file'] is not None:
             job['output-file'] = config['output-file']

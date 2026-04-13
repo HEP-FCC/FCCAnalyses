@@ -64,7 +64,7 @@ class Job:
         self._elapsed_time: Optional[float] = None
 
     def _setup_input(self,
-                     infile_list: list[str]):
+                     infile_list: list[str]) -> None:
         '''
         Define input files and check event counts.
         '''
@@ -113,7 +113,7 @@ class Job:
         if evtcount_raw_ttree != 0:
             self._evtcount['raw-ttree'] = evtcount_raw_ttree
 
-    def _setup_dframe(self, use_data_source: bool = False):
+    def _setup_dframe(self, use_data_source: bool = False) -> None:
         '''
         Create initial dataframe.
         '''
@@ -144,7 +144,7 @@ class Job:
 
     def setup_output(self,
                      output_filepath: str,
-                     output_variables: Callable):
+                     output_variables: Callable[[], list[str]]) -> None:
         '''
         Setup output of this work unit, output variables and output file path.
         '''
@@ -163,7 +163,7 @@ class Job:
             info_msg += f' - {variable}\n'
         LOGGER.info(info_msg.rstrip())
 
-    def enable_progress_bar(self):
+    def enable_progress_bar(self) -> None:
         """
         Enable ROOT's progress bar.
         """
@@ -171,7 +171,7 @@ class Job:
 
     def restrict_events(self,
                         n_events_max: Optional[int] = None,
-                        stride: Optional[int] = None):
+                        stride: Optional[int] = None) -> None:
         '''
         Set number of events to run on or how many events to stride.
         '''
@@ -195,7 +195,7 @@ class Job:
                 f'FCCAnalyses::EventFilter::nEvents({n_events_max})()'
             )
 
-    def run(self):
+    def run(self) -> None:
         '''
         Run the data frame and snapshot it.
         '''
@@ -356,7 +356,7 @@ class Job:
 
         return info_msg
 
-    def finalize(self):
+    def finalize(self) -> None:
         '''
         Finalize the running of the dataframe.
         '''
@@ -446,7 +446,7 @@ class Job:
 
         return self._evtcount['raw-restricted'], self._elapsed_time
 
-    def generate_analysis_graph(self, graph_path):
+    def generate_analysis_graph(self, graph_path: str) -> None:
         '''
         Generate computational graph of the analysis.
         '''

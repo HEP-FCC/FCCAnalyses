@@ -21,7 +21,7 @@ LOGGER = logging.getLogger('FCCAnalyses.batch')
 
 
 # _____________________________________________________________________________
-def determine_os(fccana_dir: str) -> str | None:
+def determine_os(fccana_dir: str | None) -> str | None:
     '''
     Determines platform on which FCCAnalyses was compiled
     '''
