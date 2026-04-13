@@ -317,20 +317,13 @@ def send_sample(config: dict[str, Any],
     if 'chunks' in sample_dict:
         chunks = sample_dict['chunks']
 
-    # Determine dataset input dir
-    dataset_input_dir = None
-    if 'input_dir' in sample_dict:
-        dataset_input_dir = sample_dict['input_dir']
-    if 'input-dir' in sample_dict:
-        dataset_input_dir = sample_dict['input-dir']
-
     # Obtain full list of input files
     file_list, event_list = get_process_info(sample_name,
                                              config['production-tag'],
                                              config['input-directory'])
                                              # TODO: For sample input files
                                              # and also prod tags
-                                             # dataset_input_dir)
+                                             # sample_dict['input-dir'])
 
     if len(file_list) <= 0:
         LOGGER.error('No files to process!\nContinuing...')

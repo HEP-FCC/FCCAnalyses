@@ -336,31 +336,6 @@ def has_valid_int(dictionary: dict[str, Any], key: str) -> bool:
 
 
 # _____________________________________________________________________________
-def has_valid_2int(dictionary: dict[str, Any], key: str) -> bool:
-    '''
-    Checks if the dictionary contains a "valid" two int value:
-        - key exists in dictionary
-        - value is not None
-        - values are of type [int, int]
-    '''
-    if key not in dictionary:
-        return False
-
-    if dictionary[key] is None:
-        return False
-
-    if isinstance(dictionary[key], tuple) and \
-            list(map(type, dictionary[key])) == [int, int]:
-        return True
-
-    if isinstance(dictionary[key], list) and \
-            map(type, dictionary[key]) == [int, int]:
-        return True
-
-    return False
-
-
-# _____________________________________________________________________________
 def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
     '''
     Validate and reshape the provided sample list.
@@ -376,26 +351,28 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
         # Deprecations
         # input_dir
         if 'input_dir' in provided_sample_dict:
-            LOGGER.error('Please use "input-dir" for sample "%s" instead of '
-                         '"input_dir"!\nAborting...', sample_name)
-            sys.exit(3)
+            LOGGER.warning('[DEPRECATED] Please use "input-dir" for sample '
+                           '"%s" instead of "input_dir"!', sample_name)
         # output
         if 'output' in provided_sample_dict:
-            LOGGER.error('Please use "output-stem" for sample "%s" instead of '
-                         '"output"!\nAborting...', sample_name)
-            sys.exit(3)
+            LOGGER.warning('[DEPRECATED] Please use "output-stem" for sample '
+                           '"%s" instead of "output"!', sample_name)
 
         sample_dict: dict[str, Any] = {}
 
         # Check input dir
         if has_valid_string(provided_sample_dict, 'input-dir'):
             sample_dict['input-dir'] = provided_sample_dict['input-dir']
+        elif has_valid_string(provided_sample_dict, 'input_dir'):
+            sample_dict['input-dir'] = provided_sample_dict['input_dir']
         else:
             sample_dict['input-dir'] = None
 
         # Check output stem
         if has_valid_string(provided_sample_dict, 'output-stem'):
             sample_dict['output-stem'] = provided_sample_dict['output-stem']
+        elif has_valid_string(provided_sample_dict, 'output'):
+            sample_dict['output-stem'] = provided_sample_dict['output']
         else:
             sample_dict['output-stem'] = sample_name
 
@@ -412,10 +389,16 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
             sample_dict['chunks'] = 1
 
         # Check if to stride through the events
-        if has_valid_2int(provided_sample_dict, 'stride'):
-            sample_dict['scan'] = provided_sample_dict['stride']
+        if has_valid_int(provided_sample_dict, 'stride'):
+            sample_dict['stride'] = provided_sample_dict['stride']
         else:
-            sample_dict['scan'] = None
+            sample_dict['stride'] = None
+
+        # Check max number of events
+        if has_valid_int(provided_sample_dict, 'n-events-max'):
+            sample_dict['n-events-max'] = provided_sample_dict['n-events-max']
+        else:
+            sample_dict['n-events-max'] = None
 
         sample_list[sample_name] = sample_dict
 

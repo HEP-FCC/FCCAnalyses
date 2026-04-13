@@ -11,7 +11,7 @@ import argparse
 from typing import Any, Optional, Union
 
 import ROOT  # type: ignore
-from anascript import validate_analysis_class
+from anascript import validate_analysis_class, validate_sample_list
 from sample import get_file_list, get_subfile_list, get_chunk_list
 from sample import get_files_in_dir, get_files_in_yaml
 from sample import get_file_quantities
@@ -179,30 +179,21 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
 
         # Maximum number of events
         n_events_max = None
-        if 'n-events-max' in sample_dict:
-            if isinstance(sample_dict['n-events-max'], int):
-                if n_chunks > 1:
-                    LOGGER.warning('Specifying maximum number of events is '
-                                   'not supported in case of multiple output '
-                                   'chunks.\nIgnoring the setting...')
-                else:
-                    n_events_max = sample_dict['n-events-max']
-                    info_msg += '\n - Maximum number of events:  ' \
-                                f'           {n_events_max}'
+        if sample_dict['n-events-max'] is not None:
+            if n_chunks > 1:
+                LOGGER.warning('Specifying maximum number of events is '
+                               'not supported in case of multiple output '
+                               'chunks.\nIgnoring the setting...')
             else:
-                LOGGER.warning('Specified maximum number of events is not an '
-                               'integer number.\nIt will be ignored...')
+                n_events_max = sample_dict['n-events-max']
+                info_msg += '\n - Maximum number of events:  ' \
+                            f'           {n_events_max}'
 
         # Stride through the sample
-        stride = None
-        if 'stride' in sample_dict:
-            if isinstance(sample_dict['stride'], int):
-                stride = sample_dict['stride']
-                info_msg += '\n - Number of events to stride:  ' \
-                            f'         {stride}'
-            else:
-                LOGGER.warning('Specified stride over the events is not an '
-                               'integer number.\nIt will be ignored...')
+        stride = sample_dict['stride']
+        if stride is not None:
+            info_msg += '\n - Number of events to stride:  ' \
+                        f'         {stride}'
 
         LOGGER.info(info_msg)
 
@@ -359,12 +350,12 @@ def merge_config(args: argparse.Namespace,
                      '--i/--input instead!\nAborting...')
         sys.exit(3)
     if hasattr(analysis_class, 'process_list'):
-        LOGGER.warning('[DEPRECATED] the "process_list" analysis argument '
-                       'will be replaced by more general "samples".')
+        LOGGER.warning('[DEPRECATED] Please use "samples" instead of '
+                       '"process_list"!')
 
     if hasattr(analysis_class, 'prod_tag'):
-        LOGGER.warning('[DEPRECATED] the "prod_tag" analysis argument '
-                       'will be replaced by "campaign" argument.')
+        LOGGER.warning('[DEPRECATED] Please use "campaign" instead of '
+                       '"prod_tag"!')
 
     # Determining Key4hep stack and OS
     if 'KEY4HEP_STACK' not in os.environ:
@@ -414,9 +405,9 @@ def merge_config(args: argparse.Namespace,
     # Check for sample list
     config['samples'] = None
     if hasattr(analysis_class, 'process_list'):
-        config['samples'] = analysis_class.process_list
+        config['samples'] = validate_sample_list(analysis_class.process_list)
     if hasattr(analysis_class, 'samples'):
-        config['samples'] = analysis_class.samples
+        config['samples'] = validate_sample_list(analysis_class.samples)
 
     if config['samples'] == {}:
         LOGGER.warning('Provided samples dictionary contains no elements!')
