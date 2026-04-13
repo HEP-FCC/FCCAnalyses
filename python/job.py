@@ -70,8 +70,11 @@ class Job:
         '''
         self._input_file_list: list[str] = []
 
-        info_msg = 'RDataFrame will be created from ' \
-                   f'{len(infile_list)} files:\n'
+        if len(infile_list) == 1:
+            info_msg = 'RDataFrame will be created from one file:\n'
+        else:
+            info_msg = 'RDataFrame will be created from ' \
+                       f'{len(infile_list)} files:\n'
 
         threads = []
         results: Queue = Queue()
@@ -201,10 +204,18 @@ class Job:
         '''
 
         evtcount_raw_init = self._init_dframe.Count()
-        evtcount_sow_init = self._init_dframe.Sum("EventHeader.weight")
+        try:
+            evtcount_sow_init = self._init_dframe.Sum("EventHeader.weight")
+        except cppyy.gbl.std.runtime_error:
+            LOGGER.warning('The provided input file does not contain event '
+                           'weight information.')
+            evtcount_sow_init = evtcount_raw_init
         evtcount_raw_restricted = self._restricted_dframe.Count()
-        evtcount_sow_restricted = \
-            self._restricted_dframe.Sum("EventHeader.weight")
+        try:
+            evtcount_sow_restricted = \
+                self._restricted_dframe.Sum("EventHeader.weight")
+        except cppyy.gbl.std.runtime_error:
+            evtcount_sow_restricted = evtcount_raw_restricted
 
         try:
             LOGGER.debug('Defining the analysis chain...')
@@ -228,7 +239,10 @@ class Job:
             sys.exit(3)
 
         evtcount_raw_final = final_dframe.Count()
-        evtcount_sow_final = final_dframe.Sum("EventHeader.weight")
+        try:
+            evtcount_sow_final = final_dframe.Sum("EventHeader.weight")
+        except cppyy.gbl.std.runtime_error:
+            evtcount_sow_final = evtcount_raw_final
 
         start_time = time.time()
         try:
@@ -246,11 +260,12 @@ class Job:
         self._elapsed_time = time.time() - start_time
 
         self._evtcount['raw-init'] = evtcount_raw_init.GetValue()
-        self._evtcount['sow-init'] = evtcount_sow_init.GetValue()
+        self._evtcount['sow-init'] = float(evtcount_sow_init.GetValue())
         self._evtcount['raw-restricted'] = evtcount_raw_restricted.GetValue()
-        self._evtcount['sow-restricted'] = evtcount_sow_restricted.GetValue()
+        self._evtcount['sow-restricted'] = \
+            float(evtcount_sow_restricted.GetValue())
         self._evtcount['raw-final'] = evtcount_raw_final.GetValue()
-        self._evtcount['sow-final'] = evtcount_sow_final.GetValue()
+        self._evtcount['sow-final'] = float(evtcount_sow_final.GetValue())
 
         info_msg = self._get_run_info()
         LOGGER.info(info_msg)

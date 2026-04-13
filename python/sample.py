@@ -330,6 +330,7 @@ def get_files_in_yaml(sample_name: str,
     '''
     Get list of files of a sample from the YAML file.
     '''
+
     file_counts = get_file_counts_yaml(sample_name, campaign)
 
     filelist = [fc['path'] for fc in file_counts]
@@ -380,8 +381,10 @@ def get_file_counts_yaml(
     for file_info in doc['merge']['outfiles']:
         file_count = {}
         file_count['path'] = doc['merge']['outdir'] + file_info[0]
-        file_count['n-events'] = file_info[1]
-        file_count['sum-of-weights'] = None
+        file_count['events-processed'] = None
+        file_count['sow-processed'] = None
+        file_count['events-in-ttree'] = file_info[1]
+        file_count['sow-in-ttree'] = None
 
         file_counts.append(file_count)
 
@@ -399,11 +402,14 @@ def get_one_file_quantities(infilepath: str,
     current entries in the "events" TTree.
     '''
 
+    #print('infilepath:')
+    #print(infilepath)
     result: dict[str, Union[None, str, int, float]] = {}
     result['path'] = infilepath
     result['events-processed'] = None
     result['sow-processed'] = None
     result['events-in-ttree'] = None
+    result['sow-in-ttree'] = None
 
     error_ignore_level = ROOT.gErrorIgnoreLevel
     try:
@@ -442,6 +448,8 @@ def get_one_file_quantities(infilepath: str,
 
         ROOT.gErrorIgnoreLevel = error_ignore_level
 
+        #print(result)
+
         results.put(result)
     except OSError:
         ROOT.gErrorIgnoreLevel = error_ignore_level
@@ -456,11 +464,13 @@ def get_file_quantities(file_list: list[str]) -> \
     Get event counts and sum of weights for each file in the file list.
     '''
 
+    if len(file_list) > 20:
+        LOGGER.warning('Retrieving event counts and other quantities directly '
+                       'from the files.\nThis might take some time...')
+
     threads = []
     results: Queue = Queue()
     for filepath in file_list:
-        filepath = apply_filepath_rewrites(filepath)
-
         thread = Thread(target=get_one_file_quantities,
                         args=(filepath, results))
         threads.append(thread)

@@ -45,11 +45,15 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         # Check if input directory is provided
         if 'input-dir' in sample_dict:
             if isinstance(sample_dict['input-dir'], str):
+                LOGGER.info('Will inspect the sample input directory for the '
+                            'sample information.')
                 sample_file_list = get_files_in_dir(sample_dict['input-dir'])
 
         # Check if file list is provided
         if 'input-file-list' in sample_dict:
             if isinstance(sample_dict['input-file-list'], str):
+                LOGGER.info('Will inspect the sample input file list for the '
+                            'sample information.')
                 sample_file_list = \
                     get_file_list(sample_dict['input-file-list'])
 
@@ -57,15 +61,21 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         if 'input-files' in sample_dict:
             if isinstance(sample_dict['input-files'], list):
                 if all(isinstance(x, str) for x in sample_dict['input-files']):
+                    LOGGER.info('Will inspect directly provided input files '
+                                'for the sample information.')
                     sample_file_list = sample_dict['input-files']
 
         # Using globally set input directory or campaign / production tag
         if sample_file_list is None:
             if config['input-dir'] is not None:
+                LOGGER.info('Will inspect the global input directory for the '
+                            'sample information.')
                 sample_file_list = get_files_in_dir(
                     os.path.join(config['input-dir'], sample_name)
                 )
             elif config['campaign'] is not None:
+                LOGGER.info('Found the sample information in the campaign: %s',
+                            config['campaign'])
                 sample_file_list, file_quantities = get_files_in_yaml(
                     sample_name,
                     config['campaign']
@@ -117,6 +127,7 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                     LOGGER.warning('For some files the number of events '
                                    'could not be determined!\nThey will be '
                                    'ignored...')
+                # print(file_quantities)
 
                 # TODO: Rewrite get_subfile_list() function
                 sample_file_list = get_subfile_list(
@@ -125,9 +136,23 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                     fraction
                 )
                 info_msg += '\n - sample reduction fraction:  ' \
-                            f'{fraction:0,.4g}'
+                            f'          {fraction:0,.4g}'
                 info_msg += '\n - number of files after reduction:  ' \
-                            f'{len(sample_file_list):,}'
+                            f'    {len(sample_file_list):,}'
+
+        # Output directory
+        output_stem = sample_name
+        if 'output' in sample_dict:
+            LOGGER.warning('[DEPRECIATED] please use \'output-stem\' instead '
+                           'of \'output\' to specify different sample output '
+                           'directory.')
+            output_stem = sample_dict['output']
+            info_msg += '\n - custom output stem set to:  ' \
+                        f'          {output_stem}'
+        if 'output-stem' in sample_dict:
+            output_stem = sample_dict['output-stem']
+            info_msg += '\n - custom output stem set to:  ' \
+                        f'          {output_stem}'
 
         # Split into chunks
         n_chunks = 1
@@ -152,6 +177,33 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         info_msg += '\n - number of output chunks:  ' \
                     f'            {len(chunks_list):,}'
 
+        # Maximum number of events
+        n_events_max = None
+        if 'n-events-max' in sample_dict:
+            if isinstance(sample_dict['n-events-max'], int):
+                if n_chunks > 1:
+                    LOGGER.warning('Specifying maximum number of events is '
+                                   'not supported in case of multiple output '
+                                   'chunks.\nIgnoring the setting...')
+                else:
+                    n_events_max = sample_dict['n-events-max']
+                    info_msg += '\n - Maximum number of events:  ' \
+                                f'           {n_events_max}'
+            else:
+                LOGGER.warning('Specified maximum number of events is not an '
+                               'integer number.\nIt will be ignored...')
+
+        # Stride through the sample
+        stride = None
+        if 'stride' in sample_dict:
+            if isinstance(sample_dict['stride'], int):
+                stride = sample_dict['stride']
+                info_msg += '\n - Number of events to stride:  ' \
+                            f'         {stride}'
+            else:
+                LOGGER.warning('Specified stride over the events is not an '
+                               'integer number.\nIt will be ignored...')
+
         LOGGER.info(info_msg)
 
         for idx, chunk_list in enumerate(chunks_list):
@@ -161,9 +213,12 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
             job['input-file-list'] = chunk_list
             job['output-file'] = os.path.join(
                 config['output-dir'],
-                sample_name,
-                sample_name + f'-chunk-{idx}.root'
+                output_stem,
+                output_stem + f'-chunk-{idx}.root'
             )
+            job['n-events-max'] = n_events_max
+            job['stride'] = stride
+
             jobs.append(job)
     return jobs
 
@@ -188,6 +243,8 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
         job['output-file'] = 'test-output.root'
         if config['output-file'] is not None:
             job['output-file'] = config['output-file']
+        job['n-events-max'] = config['n-events-max']
+        job['stride'] = config['stride']
 
         return [job]
 
@@ -224,6 +281,8 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
                     sample_name,
                     sample_name + '.root'
                 )
+            job['n-events-max'] = config['n-events-max']
+            job['stride'] = config['stride']
 
             return [job]
 
@@ -244,6 +303,10 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
                            'ignored!\nOutput path is created from the '
                            'output directory and the sample name '
                            'instead!')
+        if config['n-events-max'] is not None:
+            LOGGER.warning('Specifying maximum number of events is not '
+                           'supported in case of multiple output chunks.'
+                           '\nIgnoring the setting...')
 
         jobs = []
         for idx, chunk in enumerate(chunk_list):
@@ -260,6 +323,9 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
                 sample_name,
                 sample_name + f'-chunk-{idx}.root'
             )
+            job['n-events-max'] = None
+            job['stride'] = config['stride']
+
             jobs.append(job)
 
         return jobs
@@ -269,8 +335,11 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
         LOGGER.info('Could not find sample definitions to run!\nAborting...')
         sys.exit(3)
 
-    LOGGER.info('Found %i samples defined in the analysis.',
-                len(config['samples']))
+    if len(config['samples']) == 1:
+        LOGGER.info('Found one sample defined in the analysis.')
+    else:
+        LOGGER.info('Found %i samples defined in the analysis.',
+                    len(config['samples']))
 
     return generate_sample_jobs(config)
 
@@ -349,6 +418,10 @@ def merge_config(args: argparse.Namespace,
     if hasattr(analysis_class, 'samples'):
         config['samples'] = analysis_class.samples
 
+    if config['samples'] == {}:
+        LOGGER.warning('Provided samples dictionary contains no elements!')
+        config['samples'] = None
+
     # Check for campaign / production tag
     config['campaign'] = None
     if hasattr(analysis_class, 'campaign'):
@@ -406,15 +479,11 @@ def merge_config(args: argparse.Namespace,
 
     # Check number of events to be run over
     config['n-events-max'] = None
-    if hasattr(analysis_class, 'n_events_max'):
-        config['n-events-max'] = analysis_class.n_events_max
     if args.nevents is not None:
         config['n-events-max'] = args.nevents
 
     # Check if stride through the sample
     config['stride'] = None
-    if hasattr(analysis_class, 'stride'):
-        config['stride'] = analysis_class.stride
     if args.stride is not None:
         config['stride'] = args.stride
 
@@ -581,8 +650,8 @@ def run_fccanalysis(args, anascript_module) -> None:
         if config['enable-progress-bar']:
             dframe_job.enable_progress_bar()
 
-        dframe_job.restrict_events(config['n-events-max'],
-                                   config['stride'])
+        dframe_job.restrict_events(job['n-events-max'],
+                                   job['stride'])
 
         dframe_job.run()
 
