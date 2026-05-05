@@ -13,8 +13,8 @@ from inspect import signature
 import ROOT  # type: ignore
 import cppyy
 from anascript import get_element, get_element_dict, get_attribute
-from process import get_process_info, get_process_dict
-from process import get_subfile_list, get_chunk_list
+from sample import get_process_info, get_process_dict
+from sample import get_subfile_list, get_chunk_list
 from utils import generate_graph, save_benchmark
 from run_fccanalysis import run_fccanalysis
 
@@ -143,7 +143,10 @@ def run_rdf(rdf_module,
 
         # Generate computational graph of the analysis
         if args.graph:
-            generate_graph(dframe, args)
+            graph_path = args.graph_path
+            if graph_path is None:
+                graph_path = os.path.join(os.getcwd(), 'fccanalysis_graph.dot')
+            generate_graph(dframe, graph_path)
 
         dframe3.Snapshot("events", outfile_path, branch_list)
     except cppyy.gbl.std.runtime_error as err:
@@ -585,7 +588,10 @@ def run_histmaker(args, rdf_module, anapath):
 
     # Generate computational graph of the analysis
     if args.graph:
-        generate_graph(dframe, args)
+        graph_path = args.graph_path
+        if graph_path is None:
+            graph_path = os.path.join(os.getcwd(), 'fccanalysis_graph.dot')
+        generate_graph(dframe, graph_path)
 
     LOGGER.info('Starting the event loop...')
     start_time = time.time()
@@ -709,26 +715,26 @@ def run(parser):
 
     # Set verbosity level of the RDataFrame
     if args.verbose:
-        # ROOT.Experimental.ELogLevel.kInfo verbosity level is more
+        # ROOT.ROOT.ELogLevel.kInfo verbosity level is more
         # equivalent to DEBUG in other log systems
-        LOGGER.debug('Setting verbosity level "kInfo" for RDataFrame...')
-        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+        verbosity = ROOT.RLogScopedVerbosity(
             ROOT.Detail.RDF.RDFLogChannel(),
-            ROOT.Experimental.ELogLevel.kInfo)
-        LOGGER.debug(verbosity)
+            ROOT.ROOT.ELogLevel.kInfo)
+        if verbosity:
+            LOGGER.debug('Setting verbosity level "kInfo" for RDataFrame...')
     if args.more_verbose:
-        LOGGER.debug('Setting verbosity level "kDebug" for RDataFrame...')
-        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+        verbosity = ROOT.RLogScopedVerbosity(
             ROOT.Detail.RDF.RDFLogChannel(),
-            ROOT.Experimental.ELogLevel.kDebug)
-        LOGGER.debug(verbosity)
+            ROOT.ROOT.ELogLevel.kDebug)
+        if verbosity:
+            LOGGER.debug('Setting verbosity level "kDebug" for RDataFrame...')
     if args.most_verbose:
-        LOGGER.debug('Setting verbosity level "kDebug+10" for '
-                     'RDataFrame...')
-        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+        verbosity = ROOT.RLogScopedVerbosity(
             ROOT.Detail.RDF.RDFLogChannel(),
-            ROOT.Experimental.ELogLevel.kDebug+10)
-        LOGGER.debug(verbosity)
+            ROOT.ROOT.ELogLevel.kDebug+10)
+        if verbosity:
+            LOGGER.debug('Setting verbosity level "kDebug+10" for '
+                         'RDataFrame...')
 
     # Load the pre-compiled analyzers
     LOGGER.info('Loading analyzers from libFCCAnalyses...')
@@ -739,7 +745,6 @@ def run(parser):
         LOGGER.debug('Succesfuly loaded main FCCanalyses analyzers.')
 
     # Load the analysis script as a module
-    anapath = os.path.abspath(anapath)
     LOGGER.info('Loading analysis script:\n%s', anapath)
     try:
         rdf_spec = importlib.util.spec_from_file_location('rdfanalysis',
@@ -751,13 +756,7 @@ def run(parser):
                      err)
         sys.exit(3)
 
-    # Merge configuration from analysis script file with command line arguments
-    if get_element(rdf_module, 'graph', False):
-        args.graph = True
-
-    if get_element(rdf_module, 'graphPath') != '':
-        args.graph_path = get_element(rdf_module, 'graphPath')
-
+    # Decide which style of analysis to run
     n_ana_styles = 0
     for analysis_style in ["build_graph", "RDFanalysis", "Analysis"]:
         if hasattr(rdf_module, analysis_style):
@@ -783,8 +782,14 @@ def run(parser):
     # Adjustments for the old approaches
     if args.progress_bar is None:
         args.progress_bar = True
+
     if args.files_list is None:
         args.files_list = []
+
+    if get_element(rdf_module, 'graph', False):
+        args.graph = True
+    if get_element(rdf_module, 'graphPath') != '':
+        args.graph_path = get_element(rdf_module, 'graphPath')
 
     if hasattr(rdf_module, "RDFanalysis"):
         run_stages(args, rdf_module, anapath)

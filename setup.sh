@@ -168,3 +168,6 @@ export MANPATH=${FCCANA_LOCAL_DIR}/install/share/man:${MANPATH}
 export MYPYPATH=${FCCANA_LOCAL_DIR}/python:${MYPYPATH}
 
 export FCCDICTSDIR=/cvmfs/fcc.cern.ch/FCCDicts:${FCCDICTSDIR}
+
+# Suppress .Snapshot info message
+export ROOT_RDF_SNAPSHOT_INFO=0

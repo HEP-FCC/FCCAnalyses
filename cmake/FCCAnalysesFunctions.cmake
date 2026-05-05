@@ -34,7 +34,7 @@ function(add_integration_test _testname)
   string(RANDOM _random)
   add_test(NAME fccanalysisrun_${_testname}
           # todo: figure out how to make ctest pick fccanalysis up from PATH
-          COMMAND ${CMAKE_SOURCE_DIR}/bin/fccanalysis run ${_testname} --test --nevents 100 --bench -o output-${_random}.root
+          COMMAND ${CMAKE_SOURCE_DIR}/bin/fccanalysis run ${_testname} --test --nevents 100 --bench -o ${CMAKE_BINARY_DIR}/output-${_random}.root
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
           )
   set_property(TEST fccanalysisrun_${_testname} APPEND PROPERTY ENVIRONMENT
@@ -62,7 +62,7 @@ endfunction()
 function(add_standalone_test _testname)
   string(RANDOM _random)
   add_test(NAME fccanalysis_standalone_${_testname}
-           COMMAND python ${_testname} --test -o output-${_random}.root
+           COMMAND python ${_testname} --test -o ${CMAKE_BINARY_DIR}/output-${_random}.root
            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   )
   set_property(TEST fccanalysis_standalone_${_testname} APPEND PROPERTY ENVIRONMENT

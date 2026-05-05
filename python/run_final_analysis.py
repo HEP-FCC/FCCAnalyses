@@ -17,7 +17,7 @@ from typing import Any, Union
 import ROOT  # type: ignore
 import cppyy  # type: ignore
 from anascript import get_element, get_attribute
-from process import get_process_dict, get_entries_sow
+from sample import get_process_dict, get_entries_sow
 from utils import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run_final')
@@ -634,7 +634,11 @@ def run(rdf_module, config, args) -> None:
         LOGGER.info(info_msg)
 
         if args.graph:
-            generate_graph(dframe, args)
+            graph_path = args.graph_path
+            if graph_path is None:
+                graph_path = os.path.join(os.getcwd(),
+                                          'fccanalysis_graph.dot')
+            generate_graph(dframe, graph_path)
             args.graph = False
 
         # And save everything
@@ -773,26 +777,28 @@ def run_final(parser):
 
     # Set verbosity level
     if args.verbose:
-        # ROOT.Experimental.ELogLevel.kInfo verbosity level is more
+        # ROOT.ROOT.ELogLevel.kInfo verbosity level is more
         # equivalent to DEBUG in other log systems
-        LOGGER.debug('Setting verbosity level "kInfo" for RDataFrame...')
-        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+        verbosity = ROOT.RLogScopedVerbosity(
             ROOT.Detail.RDF.RDFLogChannel(),
-            ROOT.Experimental.ELogLevel.kInfo)
-        LOGGER.debug(verbosity)
+            ROOT.ROOT.ELogLevel.kInfo)
+        if verbosity:
+            LOGGER.debug('Setting verbosity level "kInfo" for RDataFrame...')
     if args.more_verbose:
-        LOGGER.debug('Setting verbosity level "kDebug" for RDataFrame...')
-        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+        verbosity = ROOT.RLogScopedVerbosity(
             ROOT.Detail.RDF.RDFLogChannel(),
-            ROOT.Experimental.ELogLevel.kDebug)
-        LOGGER.debug(verbosity)
+            ROOT.ROOT.ELogLevel.kDebug)
+        if verbosity:
+            LOGGER.debug('Setting verbosity level "kDebug" for RDataFrame...')
     if args.most_verbose:
         LOGGER.debug('Setting verbosity level "kDebug+10" for '
                      'RDataFrame...')
-        verbosity = ROOT.Experimental.RLogScopedVerbosity(
+        verbosity = ROOT.RLogScopedVerbosity(
             ROOT.Detail.RDF.RDFLogChannel(),
-            ROOT.Experimental.ELogLevel.kDebug+10)
-        LOGGER.debug(verbosity)
+            ROOT.ROOT.ELogLevel.kDebug+10)
+        if verbosity:
+            LOGGER.debug('Setting verbosity level "kDebug+10" for '
+                         'RDataFrame...')
 
     # Load the analysis
     LOGGER.info('Loading analysis script:\n%s', anapath)

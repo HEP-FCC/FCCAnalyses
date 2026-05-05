@@ -7,12 +7,14 @@ import sys
 import json
 import glob
 import logging
-from typing import Optional
+from typing import Optional, Union
 import urllib.request
 import yaml  # type: ignore
 import ROOT  # type: ignore
 import cppyy
 import numpy as np
+from threading import Thread
+from queue import Queue
 
 
 ROOT.gROOT.SetBatch(True)
@@ -21,7 +23,7 @@ LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.process_info')
 
 
 # _____________________________________________________________________________
-def get_entries(inpath: str) -> int | None:
+def get_entries(inpath: str) -> Optional[int]:
     '''
     Retrieves number of entries in the "events" TTree from the provided ROOT
     file.
@@ -38,9 +40,14 @@ def get_entries(inpath: str) -> int | None:
     return nevents
 
 
-def get_entries_sow(infilepath: str, nevents_max: Optional[int] = None, get_local: bool = True, weight_name: str = "EventHeader.weight") -> tuple[int, int, float, float]:
+# _____________________________________________________________________________
+def get_entries_sow(infilepath: str,
+                    nevents_max: Optional[int] = None,
+                    get_local: bool = True,
+                    weight_name: str = "EventHeader.weight") -> tuple[int, int, float, float]:
     '''
-    Get number of original entries and number of actual entries in the file, as well as the sum of weights
+    Get number of original entries and number of actual entries in the file, as
+    well as the sum of weights.
     '''
 
     infile = ROOT.TFile.Open(infilepath)
@@ -102,6 +109,7 @@ def get_entries_sow(infilepath: str, nevents_max: Optional[int] = None, get_loca
     return processEvents, eventsTTree, processSumOfWeights, sumOfWeightsTTree
 
 
+# _____________________________________________________________________________
 def get_process_info(
         process_name: str,
         prod_tag: str,
@@ -130,6 +138,7 @@ def get_process_info(
     return get_process_info_files(process_name, input_dir)
 
 
+# _____________________________________________________________________________
 def get_process_info_files(process: str, input_dir: str) -> tuple[list[str],
                                                                   list[int]]:
     '''
@@ -268,6 +277,215 @@ def get_process_dict_dirs() -> list[str]:
 
 
 # _____________________________________________________________________________
+def get_file_list(file_list_path: str) -> list[str]:
+    '''
+    Loads file list from the provided file.
+    '''
+    if not os.path.isfile(file_list_path):
+        LOGGER.error('Provided file containing list of ROOT files could not '
+                     'be found!\nAborting...')
+        sys.exit(3)
+
+    with open(file_list_path, 'r', encoding='utf-8') as lstfile:
+        file_list = [line.strip() for line in lstfile]
+
+    # remove empty lines
+    file_list = [line for line in file_list if line]
+
+    # remove commented out lines
+    file_list = [line for line in file_list if line[0] != '#']
+
+    if not file_list:
+        LOGGER.error('Provided file containing list of ROOT files is empty or '
+                     'does not contain valid lines!\nAborting...')
+        sys.exit(3)
+
+    return file_list
+
+
+# _____________________________________________________________________________
+def get_files_in_dir(dir_path: str) -> Optional[list[str]]:
+    '''
+    Finds ROOT files in the provided directory.
+    '''
+
+    if not os.path.isdir(dir_path):
+        LOGGER.error('Can\'t access the sample directory!\n - %s\nAborting...',
+                     dir_path)
+        sys.exit(3)
+
+    files = [os.path.join(dir_path, f) for f in os.listdir(dir_path) if
+             os.path.isfile(os.path.join(dir_path, f)) and
+             f.endswith('.root')]
+
+    if not files:
+        return None
+
+    return files
+
+
+# _____________________________________________________________________________
+def get_files_in_yaml(sample_name: str,
+                      campaign: str) -> Optional[list[str]]:
+    '''
+    Get list of files of a sample from the YAML file.
+    '''
+
+    file_counts = get_file_counts_yaml(sample_name, campaign)
+
+    filelist = [fc['path'] for fc in file_counts]
+
+    return filelist, file_counts
+
+
+# _____________________________________________________________________________
+def get_file_counts_yaml(
+        sample_name: str,
+        campaign: str) -> \
+            Optional[list[dict[str, Union[str, int, Optional[float]]]]]:
+    '''
+    Get list of files of a sample from the YAML file
+    campaign_name: "<accelerator>/<season-and-year>/<detector>"
+    sample_name: "<generator>_<process>_<energy>"
+    '''
+    doc = None
+    proc_dict_dirs = get_process_dict_dirs()
+
+    # Select first valid YAML file found
+    yamlfilepath = None
+    for path in proc_dict_dirs:
+        yamlfilepath = os.path.join(path, 'yaml', campaign, sample_name,
+                                    'merge.yaml')
+        if not os.path.isfile(yamlfilepath):
+            continue
+    if not os.path.isfile(yamlfilepath):
+        LOGGER.error('Can\'t find the YAML file with information for sample '
+                     '"%s"!\nSample will be ignored...', sample_name)
+        return None
+
+    with open(yamlfilepath, 'r', encoding='utf-8') as ftmp:
+        try:
+            doc = yaml.load(ftmp, Loader=yaml.FullLoader)
+        except yaml.YAMLError as exc:
+            LOGGER.error(exc)
+            return None
+        except IOError as exc:
+            LOGGER.error('I/O error(%i): %s\nYAML file: %s',
+                         exc.errno, exc.strerror, yamlfilepath)
+            return None
+        finally:
+            LOGGER.debug('YAML file with process information successfully '
+                         'loaded:\n%s', yamlfilepath)
+
+    file_counts: list[dict[str, Union[str, int, Optional[float]]]] = []
+    for file_info in doc['merge']['outfiles']:
+        file_count = {}
+        file_count['path'] = doc['merge']['outdir'] + file_info[0]
+        file_count['events-processed'] = None
+        file_count['sow-processed'] = None
+        file_count['events-in-ttree'] = file_info[1]
+        file_count['sow-in-ttree'] = None
+
+        file_counts.append(file_count)
+
+    if not file_counts:
+        return None
+
+    return file_counts
+
+
+# _____________________________________________________________________________
+def get_one_file_quantities(infilepath: str,
+                            results: Queue) -> None:
+    '''
+    Get number of original entries and sum of weights together with number of
+    current entries in the "events" TTree.
+    '''
+
+    #print('infilepath:')
+    #print(infilepath)
+    result: dict[str, Union[None, str, int, float]] = {}
+    result['path'] = infilepath
+    result['events-processed'] = None
+    result['sow-processed'] = None
+    result['events-in-ttree'] = None
+    result['sow-in-ttree'] = None
+
+    error_ignore_level = ROOT.gErrorIgnoreLevel
+    try:
+        # Suppress Info and Warning messages, only show Error and Fatal
+        ROOT.gErrorIgnoreLevel = ROOT.kError
+
+        # ROOT 6.38 does not support "in" for dictionary style of access
+        with ROOT.TFile.Open(infilepath) as infile:
+            try:
+                result['events-processed'] = infile['eventsProcessed'].GetVal()
+            except KeyError:
+                pass
+
+            try:
+                result['sow-processed'] = infile['SumOfWeights'].GetVal()
+            except KeyError:
+                pass
+
+            try:
+                fccana_dir = infile['fccana']
+                if 'n-events-original' in fccana_dir:
+                    result['events-processed'] = \
+                        fccana_dir['n-events-original']
+                if 'sow-original' in fccana_dir:
+                    result['sow-processed'] = fccana_dir['sow-original']
+            except KeyError:
+                pass
+
+            try:
+                result['events-in-ttree'] = infile['events'].GetEntries()
+            except KeyError:
+                pass
+
+            # TODO: Pick up also sum of weights somehow (avoid running over all
+            #       events)
+
+        ROOT.gErrorIgnoreLevel = error_ignore_level
+
+        #print(result)
+
+        results.put(result)
+    except OSError:
+        ROOT.gErrorIgnoreLevel = error_ignore_level
+
+        results.put(result)
+
+
+# _____________________________________________________________________________
+def get_file_quantities(file_list: list[str]) -> \
+        list[dict[str, Union[None, str, int, float]]]:
+    '''
+    Get event counts and sum of weights for each file in the file list.
+    '''
+
+    if len(file_list) > 20:
+        LOGGER.warning('Retrieving event counts and other quantities directly '
+                       'from the files.\nThis might take some time...')
+
+    threads = []
+    results: Queue = Queue()
+    for filepath in file_list:
+        thread = Thread(target=get_one_file_quantities,
+                        args=(filepath, results))
+        threads.append(thread)
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+    return [result for result in results.queue
+            if result['events-in-ttree'] is not None]
+
+
+# _____________________________________________________________________________
 def get_subfile_list(in_file_list: list[str],
                      event_list: list[int],
                      fraction: float) -> list[str]:
@@ -291,12 +509,12 @@ def get_subfile_list(in_file_list: list[str],
         out_file_list.append(in_file_list[i])
 
     info_msg = f'Reducing the input file list by fraction "{fraction}" of '
-    info_msg += 'total events:\n\t'
-    info_msg += f'- total number of events: {nevts_total:,}\n\t'
-    info_msg += f'- targeted number of events: {nevts_target:,}\n\t'
-    info_msg += '- number of events in the resulting file list: '
-    info_msg += f'{nevts_real:,}\n\t'
-    info_msg += '- number of files after reduction: '
+    info_msg += 'total events:\n'
+    info_msg += f' - total number of events: {nevts_total:,}\n'
+    info_msg += f' - targeted number of events: {nevts_target:,}\n'
+    info_msg += ' - number of events in the resulting file list: ' \
+                f'{nevts_real:,}\n'
+    info_msg += ' - number of files after reduction: '
     info_msg += str((len(out_file_list)))
     LOGGER.info(info_msg)
 
@@ -310,3 +528,31 @@ def get_chunk_list(file_list: str, chunks: int):
     '''
     chunk_list = list(np.array_split(file_list, chunks))
     return [chunk for chunk in chunk_list if chunk.size > 0]
+
+
+# _____________________________________________________________________________
+def apply_filepath_rewrites(filepath: str) -> str:
+    '''
+    Apply path rewrites if applicable.
+    '''
+    # Stripping leading and trailing white spaces
+    filepath_stripped = filepath.strip()
+    # Stripping leading and trailing slashes
+    filepath_stripped = filepath_stripped.strip('/')
+
+    # Splitting the path along slashes
+    filepath_splitted = filepath_stripped.split('/')
+
+    if len(filepath_splitted) > 1 and filepath_splitted[0] == 'eos':
+        if filepath_splitted[1] == 'experiment':
+            filepath = 'root://eospublic.cern.ch//' + filepath_stripped
+        elif filepath_splitted[1] == 'user':
+            filepath = 'root://eosuser.cern.ch//' + filepath_stripped
+        elif 'home-' in filepath_splitted[1]:
+            filepath = 'root://eosuser.cern.ch//eos/user/' + \
+                       filepath_stripped.replace('eos/home-', '')
+        else:
+            LOGGER.warning('Unknown EOS path type!\nPlease check with the '
+                           'developers as this might impact performance of '
+                           'the analysis.')
+    return filepath

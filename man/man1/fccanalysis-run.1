@@ -19,6 +19,13 @@
 [\fB\-g\fR]
 [\fB\-\-graph\-path\fR \fIGRAPH_PATH\fR]
 [\fB\-\-use-data-source\fR]
+[\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR]
+[\fB\-a\fR \fIANALYSIS_NAME\fR | \fB\-\-analysis\-name\fR \fIANALYSIS_NAME\fR]
+[\fB\-\-apply\-filepath\-rewrites\fR | \fB\-\-no\-filepath\-rewrites\fR]
+[\fB\-s\fR \fISAMPLE_NAME\fR | \fB\-\-sample\-name\fR \fISAMPLE_NAME\fR]
+[\fB\-\-n\-chunks\fR \fIN_CHUNKS\fR]
+[\fB\-\-stride\fR \fISTRIDE\fR]
+[\fB\-\-test\-file\fR \fITEST_FILE\fR]
 .B analysis-script
 \-\-
 [\fIANALYSIS ARGUMENTS\fR]
@@ -59,7 +66,7 @@ starting with "#" are ignored\&.
 \fB\-\-output\fR \fIOUTPUT\fR
 Specify output file name, otherwise dataset name used.
 .TP
-\fB\-\-nevents\fR \fINEVENTS\fR
+\fB\-\-nevents\fR \fINEVENTS\fR, \fB\-\-n\-events\fR \fINEVENTS\fR
 Specify max number of events to process\&.
 .TP
 .B \-\-test
@@ -67,6 +74,30 @@ Run over the test file\&.
 .TP
 .B \-\-use-data-source
 Load events through podio::DataSource\&.
+.TP
+\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR
+Set global output directory for the analysis.
+.TP
+\fB\-a\fR \fIANALYSIS_NAME\fR, \fB\-\-analysis\-name\fR \fIANALYSIS_NAME\fR
+Set analysis name, mostly used for the output path.
+.TP
+.BR \-\-apply\-filepath\-rewrites ", " \-\-no\-filepath\-rewrites
+Apply or disable path rewrites for files stored on shared file systems.
+.TP
+\fB\-s\fR \fISAMPLE_NAME\fR, \fB\-\-sample\-name\fR \fISAMPLE_NAME\fR
+Set sample name, mostly used for the output path. Used when running over an
+independent sample (i.e. without a sample list).
+.TP
+\fB\-\-n\-chunks\fR \fIN_CHUNKS\fR
+Split the output into \fIN_CHUNKS\fR files. Used only when running over a
+test file or an independent sample.
+.TP
+\fB\-\-stride\fR \fISTRIDE\fR
+Specify how to stride through the events. Used only when running over a
+test file or an independent sample.
+.TP
+\fB\-\-test\-file\fR \fITEST_FILE\fR
+Specify the test file to use when running with \fB\-\-test\fR.
 .TP
 .B \-\-bench
 Output benchmark results to a JSON file\&.
