@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777974377086,
+  "lastUpdate": 1777974379563,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -56533,6 +56533,76 @@ window.BENCHMARK_DATA = {
             "value": 6.040888547897339,
             "range": "10",
             "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9661cef575a813c25c8f4769a7af14391e68590f",
+          "message": "Introduces Job class serving as a unit of work (which outputs one file) (#514)\n\n* Implementing job class for local processing\n\n* Fixed few issues and removed run_local()\n\n* Fix the test file check\n\n* Resolving the test_file template\n\n* Resolving the clash between output() and output-file\n\n* Added type anotations\n\n* fixed tests and added support for per sample stride and n-events-max\n\n* Using validation function for the sample list\n\n* Updated the man pages\n\n* Test output to the build directory now",
+          "timestamp": "2026-05-05T11:32:12+02:00",
+          "tree_id": "82f9cfa4d0c32070e412a23af174d13158950f93",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/9661cef575a813c25c8f4769a7af14391e68590f"
+        },
+        "date": 1777974378642,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 24.992614186934304,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 11.18964727980689,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 8.711000924682365,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 12.157570990184414,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 4.465461371906218,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/weaver/stage1.py",
+            "value": 4.169318524875976,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: /Package/examples/data_source/stages_source.py",
+            "value": 15.915146015244801,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "nightly | Events processed per second: /Package/examples/data_source/analysis_stage1.py",
+            "value": 16.553856143366055,
+            "range": "1000",
+            "unit": "Evt/s",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
