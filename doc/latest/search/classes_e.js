@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['valenciabriefjet_0',['ValenciaBriefJet',['../classcontrib_1_1ValenciaBriefJet.html',1,'contrib']]],
-  ['valenciainfo_1',['ValenciaInfo',['../classcontrib_1_1ValenciaInfo.html',1,'contrib']]],
-  ['valenciaplugin_2',['ValenciaPlugin',['../classcontrib_1_1ValenciaPlugin.html',1,'contrib']]],
-  ['varinfo_3',['VarInfo',['../structWeaverInterface_1_1PreprocessParams_1_1VarInfo.html',1,'WeaverInterface::PreprocessParams']]]
+  ['thrustfit_0',['thrustFit',['../structFCCAnalyses_1_1Algorithms_1_1thrustFit.html',1,'FCCAnalyses::Algorithms']]],
+  ['tmva_5fhelper_5fxgb_1',['tmva_helper_xgb',['../classtmva__helper__xgb.html',1,'']]],
+  ['tmvahelperxgb_2',['TMVAHelperXGB',['../classTMVAHelper_1_1TMVAHelperXGB.html',1,'TMVAHelper']]],
+  ['trackdqdxhandler_3',['TrackDqdxHandler',['../classFCCAnalyses_1_1TrackUtils_1_1TrackDqdxHandler.html',1,'FCCAnalyses::TrackUtils']]]
 ];
