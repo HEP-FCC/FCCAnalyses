@@ -35,8 +35,13 @@
     [<b>--nevents</b> <i>NEVENTS</i>] [<b>--test</b>] [<b>--bench</b>]
     [<b>-j</b> NCPUS | <b>--ncpus</b> <i>NCPUS</i> | <b>--n-threads</b>
     <i>NTHREADS</i>] [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]
-    [<b>--use-data-source</b>] <b>analysis-script</b> -- [<i>ANALYSIS
-    ARGUMENTS</i>]</p>
+    [<b>--use-data-source</b>] [<b>--output-dir</b> <i>OUTPUT_DIR</i>]
+    [<b>-a</b> <i>ANALYSIS_NAME</i> | <b>--analysis-name</b>
+    <i>ANALYSIS_NAME</i>] [<b>--apply-filepath-rewrites</b> |
+    <b>--no-filepath-rewrites</b>] [<b>-s</b> <i>SAMPLE_NAME</i> |
+    <b>--sample-name</b> <i>SAMPLE_NAME</i>] [<b>--n-chunks</b> <i>N_CHUNKS</i>]
+    [<b>--stride</b> <i>STRIDE</i>] [<b>--test-file</b> <i>TEST_FILE</i>]
+    <b>analysis-script</b> -- [<i>ANALYSIS ARGUMENTS</i>]</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -77,12 +82,36 @@
     <i>OUTPUT</i></a></dt>
   <dd>Specify output file name, otherwise dataset name used.</dd>
   <dt id="nevents"><a class="permalink" href="#nevents"><b>--nevents</b>
-    <i>NEVENTS</i></a></dt>
+    <i>NEVENTS</i>, <b>--n-events</b> <i>NEVENTS</i></a></dt>
   <dd>Specify max number of events to process.</dd>
   <dt id="test"><a class="permalink" href="#test"><b>--test</b></a></dt>
   <dd>Run over the test file.</dd>
   <dt id="use-data-source"><a class="permalink" href="#use-data-source"><b>--use-data-source</b></a></dt>
   <dd>Load events through podio::DataSource.</dd>
+  <dt id="output~2"><a class="permalink" href="#output~2"><b>--output-dir</b>
+    <i>OUTPUT_DIR</i></a></dt>
+  <dd>Set global output directory for the analysis.</dd>
+  <dt id="a"><a class="permalink" href="#a"><b>-a</b> <i>ANALYSIS_NAME</i>,
+    <b>--analysis-name</b> <i>ANALYSIS_NAME</i></a></dt>
+  <dd>Set analysis name, mostly used for the output path.</dd>
+  <dt id="apply"><a class="permalink" href="#apply"><b>--apply-filepath-rewrites</b>,
+    <b>--no-filepath-rewrites</b></a></dt>
+  <dd>Apply or disable path rewrites for files stored on shared file
+    systems.</dd>
+  <dt id="s"><a class="permalink" href="#s"><b>-s</b> <i>SAMPLE_NAME</i>,
+    <b>--sample-name</b> <i>SAMPLE_NAME</i></a></dt>
+  <dd>Set sample name, mostly used for the output path. Used when running over
+      an independent sample (i.e. without a sample list).</dd>
+  <dt id="n"><a class="permalink" href="#n"><b>--n-chunks</b>
+    <i>N_CHUNKS</i></a></dt>
+  <dd>Split the output into <i>N_CHUNKS</i> files. Used only when running over a
+      test file or an independent sample.</dd>
+  <dt id="stride"><a class="permalink" href="#stride"><b>--stride</b>
+    <i>STRIDE</i></a></dt>
+  <dd>Specify how to stride through the events. Used only when running over a
+      test file or an independent sample.</dd>
+  <dt><b>--test-file</b> <i>TEST_FILE</i></dt>
+  <dd>Specify the test file to use when running with <b>--test</b>.</dd>
   <dt id="bench"><a class="permalink" href="#bench"><b>--bench</b></a></dt>
   <dd>Output benchmark results to a JSON file.</dd>
   <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>NCPUS</i>,
