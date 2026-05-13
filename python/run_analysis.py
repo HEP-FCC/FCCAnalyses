@@ -534,10 +534,15 @@ def run_histmaker(args, rdf_module, anapath):
             # Skip check for processed events in case of first stage
             if get_element(rdf_module, "prodTag") is None:
                 infile = ROOT.TFile.Open(str(file_name), 'READ')
-                for key in infile.GetListOfKeys():
-                    if 'eventsProcessed' == key.GetName():
-                        nevents_meta += infile.eventsProcessed.GetVal()
-                        break
+                
+                # Fetch parameter directly to bypass PyROOT dynamic lookup
+                events_param = infile.Get("eventsProcessed")
+                
+                if events_param:
+                    nevents_meta += events_param.GetVal()
+                else:
+                    LOGGER.warning('Missing "eventsProcessed" in %s! Cross-section scaling may fall back to filtered event count.', file_name)
+                
                 infile.Close()
             if args.test:
                 break
