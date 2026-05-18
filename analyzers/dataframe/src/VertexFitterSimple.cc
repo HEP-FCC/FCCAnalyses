@@ -86,11 +86,12 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
 VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
-                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
+                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
+                double solenoidBz) {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> dummy;
   return VertexFitter_Tk(Primary, tracks, dummy, BeamSpotConstraint, bsc_sigmax,
-                         bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z);
+                         bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z, solenoidBz);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -99,7 +100,8 @@ VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 const ROOT::VecOps::RVec<edm4hep::TrackState> &alltracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
-                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
+                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
+                double solenoidBz) {
   // Suppressing printf() output from TMatrixBase:
   // https://github.com/root-project/root/blob/722eb4652bfc79149df00c8b0e92d0837caf054c/math/matrix/src/TMatrixTBase.cxx#L662
   // The solution found here:
@@ -230,8 +232,8 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
         VertexingUtils::Delphes2Edm4hep_TrackParam(updated_par, Units_mm);
     updated_track_parameters.push_back(updated_par_edm4hep);
 
-    // Momenta of the tracks at the vertex:
-    TVector3 ptrack_at_vertex = theVertexMore.GetMomentum(i);
+    // Momenta of the tracks at the vertex, correcting for a hardcoded Bz of 2 T in Delphes util used here:
+    TVector3 ptrack_at_vertex = theVertexMore.GetMomentum(i) * (solenoidBz / 2.0);
     updated_track_momentum_at_vertex.push_back(ptrack_at_vertex);
   }
 

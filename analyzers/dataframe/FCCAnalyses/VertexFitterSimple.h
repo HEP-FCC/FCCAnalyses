@@ -44,17 +44,21 @@ namespace VertexFitterSimple{
                                                    double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
 
 
-  /// Vertex (code from Franco Bedeschi): passing the tracks. Units for the beamspot constraint: mum
+  /// Vertex (code from Franco Bedeschi): passing the tracks. Units for the beamspot constraint: mum.
+  /// solenoidBz: solenoid field in Tesla (default 2.0 T). Used to correct track momenta at vertex,
+  /// which otherwise assume 2 T due to a hardcoded value in VertexMore.
   VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 						      bool BeamSpotConstraint = false,
 						      double sigmax=0., double sigmay=0., double sigmaz=0.,
-                                                      double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
+                                                      double bsc_x=0., double bsc_y=0., double bsc_z=0.,
+                                                      double solenoidBz=2.0 )  ;
 
   VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                                                       const ROOT::VecOps::RVec<edm4hep::TrackState>& alltracks,
                                                       bool BeamSpotConstraint = false,
                                                       double sigmax=0., double sigmay=0., double sigmaz=0.,
-                                                      double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
+                                                      double bsc_x=0., double bsc_y=0., double bsc_z=0.,
+                                                      double solenoidBz=2.0 )  ;
 
 /// Return the tracks that are flagged as coming from the primary vertex
    ROOT::VecOps::RVec<edm4hep::TrackState> get_PrimaryTracks(           ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
