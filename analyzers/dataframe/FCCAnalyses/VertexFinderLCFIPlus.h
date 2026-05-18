@@ -36,8 +36,9 @@ namespace VertexFinderLCFIPlus{
 											 ROOT::VecOps::RVec<fastjet::PseudoJet> jets,
 											 std::vector<std::vector<int>> jet_consti,
 											 bool V0_rej=true,
-											 double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5. ) ;
-  
+											 double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.,
+											 double solenoidBz=2.0 ) ;
+
   /** returns SVs reconstructed from non-primary tracks of the event
    *  SV finding done before jet clustering
    *  non-primary separated from all tracks using isInPrimary (bool) vector
@@ -47,7 +48,8 @@ namespace VertexFinderLCFIPlus{
 								      VertexingUtils::FCCAnalysesVertex PV,
 								      ROOT::VecOps::RVec<bool> isInPrimary,
 								      bool V0_rej=true,
-								      double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5. ) ;
+								      double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.,
+								 double solenoidBz=2.0 ) ;
 
   /** returns SVs reconstructed from non-primary tracks of the event
    *  SV finding done before jet clustering
@@ -56,14 +58,15 @@ namespace VertexFinderLCFIPlus{
                                                                       ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
 								      VertexingUtils::FCCAnalysesVertex PV,
 								      bool V0_rej=true,
-								      double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5. ) ;
-  
+								      double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.,
+								 double solenoidBz=2.0 ) ;
+
   /** returns indices of the best pair of tracks from a vector of (non-primary) tracks 
    *  default chi2 threshold is 9 and default invariant mass threshold is 10GeV
    */
   ROOT::VecOps::RVec<int> VertexSeed_best( ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 					   VertexingUtils::FCCAnalysesVertex PV,
-					   double chi2_cut=9., double invM_cut=10.) ;
+					   double chi2_cut=9., double invM_cut=10., double solenoidBz=2.0) ;
 
   /** adds index of the best track (from the remaining tracks) to the (seed) vtx 
    *  default chi2 threshold is 9 and default invariant mass threshold is 10GeV
@@ -72,7 +75,7 @@ namespace VertexFinderLCFIPlus{
   ROOT::VecOps::RVec<int> addTrack_best( ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   					 ROOT::VecOps::RVec<int> vtx_tr,
   					 VertexingUtils::FCCAnalysesVertex PV,
-  					 double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.) ;
+  					 double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5., double solenoidBz=2.0) ;
 
   /** V0 rejection (tight)
    *  takes all (non-primary tracks) & removes tracks coming from V0s if user chooses
@@ -80,7 +83,7 @@ namespace VertexFinderLCFIPlus{
    */
   ROOT::VecOps::RVec<edm4hep::TrackState> V0rejection_tight( ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 							     VertexingUtils::FCCAnalysesVertex PV,
-							     bool V0_rej=true ) ;
+							     bool V0_rej=true, double solenoidBz=2.0 ) ;
 
   /** find SVs from a set of tracks
    *  default values of thresholds for the constraints are set
@@ -88,7 +91,7 @@ namespace VertexFinderLCFIPlus{
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks_fin,
                                                                           const ROOT::VecOps::RVec<edm4hep::TrackState>& alltracks,
 									  VertexingUtils::FCCAnalysesVertex PV,
-									  double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.) ;
+									  double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5., double solenoidBz=2.0) ;
 
   /** check constraints of vertex candidates
    *  default values of thresholds for the constraints are set
@@ -109,7 +112,7 @@ namespace VertexFinderLCFIPlus{
    */
   ROOT::VecOps::RVec<bool> isV0( ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
 				 VertexingUtils::FCCAnalysesVertex PV,
-				 bool tight = false ) ;
+				 bool tight = false, double solenoidBz=2.0 ) ;
 
   ///
   
@@ -119,7 +122,7 @@ namespace VertexFinderLCFIPlus{
   VertexingUtils::FCCAnalysesV0 get_V0s( ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
 					 VertexingUtils::FCCAnalysesVertex PV,
 					 bool tight,
-					 double chi2_cut=9. ) ;
+					 double chi2_cut=9., double solenoidBz=2.0 ) ;
 
   /** returns V0s reconstructed from a set of tracks (as an FCCAnalysesV0 object)
    *  constraint thresholds can be set manually
@@ -129,7 +132,7 @@ namespace VertexFinderLCFIPlus{
 					 double Ks_invM_low=0.493, double Ks_invM_high=0.503, double Ks_dis=0.5, double Ks_cosAng=0.999,
 					 double Lambda_invM_low=1.111, double Lambda_invM_high=1.121, double Lambda_dis=0.5, double Lambda_cosAng=0.99995,
 					 double Gamma_invM_low=0., double Gamma_invM_high=0.005, double Gamma_dis=9, double Gamma_cosAng=0.99995,
-					 double chi2_cut=9. ) ;
+					 double chi2_cut=9., double solenoidBz=2.0 ) ;
 
   /** returns V0s reconstructed in each jet of the event (as an FCCAnalysesV0 object)
    *  need to perform jet clustering before calling this function
@@ -141,7 +144,7 @@ namespace VertexFinderLCFIPlus{
 					     std::vector<std::vector<int>> jet_consti,
 					     VertexingUtils::FCCAnalysesVertex PV,
 					     bool tight = true,
-					     double chi2_cut=9. );
+					     double chi2_cut=9., double solenoidBz=2.0 );
 
   /** returns invariant mass, distance from PV, and colliniarity variables for all V0 candidates
    *  [0] -> invM_Ks [GeV]
@@ -157,7 +160,7 @@ namespace VertexFinderLCFIPlus{
 					      ROOT::VecOps::RVec<edm4hep::TrackState> tr_pair,
 					      VertexingUtils::FCCAnalysesVertex PV,
 					      bool chi2,
-					      double chi2_cut=9. );
+					      double chi2_cut=9., double solenoidBz=2.0 );
 
   /** functions to fill constraint thresholds
    *  tight  -> tight constraints
