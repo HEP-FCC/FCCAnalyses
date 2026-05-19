@@ -159,8 +159,8 @@ ROOT::VecOps::RVec<int> VertexSeed_best(ROOT::VecOps::RVec<edm4hep::TrackState> 
   // gives indices of the best pair of tracks
 
   ROOT::VecOps::RVec<int> result;
-  int isel = 0;
-  int jsel = 1;
+  int isel = -1;
+  int jsel = -1;
   
   int nTr = tracks.size();
   // push empty tracks to make a size=2 vector
@@ -190,13 +190,13 @@ ROOT::VecOps::RVec<int> VertexSeed_best(ROOT::VecOps::RVec<edm4hep::TrackState> 
       // if a pair passes all constraints compare chi2, store lowest chi2
       double chi2_seed = vtx_seed.vertex.chi2; // normalised but nDOF=1 for nTr=2      
       if(chi2_seed < chi2_min) {
-	isel = i; jsel =j;
-	chi2_min = chi2_seed;
+	        isel = i; jsel =j;
+	        chi2_min = chi2_seed;
+        }
       }
-    }
-  }
-
-  if(chi2_min != 99){
+   }
+  // check that indices of best track pair were found 
+  if(isel > 0 && jsel > 0){
     result.push_back(isel); 
     result.push_back(jsel);
   }
