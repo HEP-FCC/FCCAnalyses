@@ -23,7 +23,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>> get_SV
 										      std::vector<std::vector<int>> jet_consti,
 										      bool V0_rej,
 										      double chi2_cut, double invM_cut, double chi2Tr_cut,
-										      double solenoidBz) {
+										      double solenoidBz, double dR_prefilter_cut) {
 
   // find SVs using LCFI+ (clustering first)
   
@@ -63,7 +63,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>> get_SV
     }
 
     // start finding SVs
-    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> i_result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz);
+    ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> i_result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz, dR_prefilter_cut);
     //
     result.push_back(i_result);
     
@@ -84,7 +84,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
 								   ROOT::VecOps::RVec<bool> isInPrimary,
 								   bool V0_rej,
 								   double chi2_cut, double invM_cut, double chi2Tr_cut,
-								   double solenoidBz) {
+								   double solenoidBz, double dR_prefilter_cut) {
     
   // find SVs using LCFI+ (w/o clustering)
   
@@ -116,7 +116,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
   }
 
   // start finding SVs (only if there are 2 or more tracks)
-  result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz);
+  result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz, dR_prefilter_cut);
 
   //if(debug_me) std::cout<<"no more SVs can be reconstructed"<<std::endl;
   
@@ -128,7 +128,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
 								   VertexingUtils::FCCAnalysesVertex PV,
 								   bool V0_rej,
 								   double chi2_cut, double invM_cut, double chi2Tr_cut,
-								   double solenoidBz) {
+								   double solenoidBz, double dR_prefilter_cut) {
 
   // find SVs from non-primary tracks using LCFI+ (w/o clustering)
   // primary - non-primary separation done externally
@@ -144,7 +144,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
   }
 
   // start finding SVs (only if there are 2 or more tracks)
-  result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz);
+  result = findSVfromTracks(tracks_fin, thetracks, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz, dR_prefilter_cut);
   
   return result;
 }
@@ -154,7 +154,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_SV_event(ROOT::VecOps:
 
 ROOT::VecOps::RVec<int> VertexSeed_best(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 					VertexingUtils::FCCAnalysesVertex PV,
-					double chi2_cut, double invM_cut, double solenoidBz) {
+					double chi2_cut, double invM_cut, double solenoidBz, double dR_prefilter_cut) {
 
   // gives indices of the best pair of tracks
 
@@ -173,10 +173,18 @@ ROOT::VecOps::RVec<int> VertexSeed_best(ROOT::VecOps::RVec<edm4hep::TrackState> 
   
   for(unsigned int i=0; i<nTr-1; i++) {
     tr_pair[0] = tracks[i];
+
+    TVector3 p_i(TMath::Cos(tracks[i].phi), TMath::Sin(tracks[i].phi), tracks[i].tanLambda);
     
     for(unsigned int j=i+1; j<nTr; j++) {
       tr_pair[1] = tracks[j];
-      
+
+      // pre-filtering with dR requirement on the two tracks if requested: 
+      TVector3 p_j(TMath::Cos(tracks[j].phi), TMath::Sin(tracks[j].phi), tracks[j].tanLambda);
+      if (dR_prefilter_cut > 0 && p_i.DeltaR(p_j) > dR_prefilter_cut) {
+        continue;
+        }
+    
       // V0 rejection (loose)
       ROOT::VecOps::RVec<bool> isInV0 = isV0(tr_pair, PV, false, solenoidBz);
       if(isInV0[0] && isInV0[1]) continue;
@@ -206,12 +214,12 @@ ROOT::VecOps::RVec<int> VertexSeed_best(ROOT::VecOps::RVec<edm4hep::TrackState> 
 ROOT::VecOps::RVec<int> addTrack_best(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 				      ROOT::VecOps::RVec<int> vtx_tr,
 				      VertexingUtils::FCCAnalysesVertex PV,
-				      double chi2_cut, double invM_cut, double chi2Tr_cut, double solenoidBz) {
+				      double chi2_cut, double invM_cut, double chi2Tr_cut, double solenoidBz, double dR_prefilter_cut) {
   // adds index of the best track to the (seed) vtx
-  
+
   ROOT::VecOps::RVec<int> result = vtx_tr;
   if(tracks.size() == vtx_tr.size()) return result;
-  
+
   int isel = -1;
 
   int nTr = tracks.size();
@@ -219,11 +227,13 @@ ROOT::VecOps::RVec<int> addTrack_best(ROOT::VecOps::RVec<edm4hep::TrackState> tr
   VertexingUtils::FCCAnalysesVertex vtx;
   double chi2_min = 99;
 
-  // add tracks of the previously formed vtx to a vector
+  // add tracks of the previously formed vtx to a vector; accumulate sum momentum for dR prefilter
+  TVector3 p_tracks_sum;
   for(int tr : vtx_tr) {
     if(debug_me) std::cout << "Track integer: " << tr << std::endl;
     if(debug_me) std::cout <<  "Track value: " << tracks[tr] << std::endl;
     tr_vtx.push_back(tracks[tr]);
+    p_tracks_sum += TVector3(TMath::Cos(tracks[tr].phi), TMath::Sin(tracks[tr].phi), tracks[tr].tanLambda);
   }
   int iTr = tr_vtx.size();
   // add an empty track to increase vector size by 1
@@ -233,6 +243,10 @@ ROOT::VecOps::RVec<int> addTrack_best(ROOT::VecOps::RVec<edm4hep::TrackState> tr
   // find best track to add to the vtx
   for(unsigned int i=0; i<nTr; i++) {
     if(std::find(vtx_tr.begin(), vtx_tr.end(), i) != vtx_tr.end()) continue;
+
+    // use dR prefilter if requested to make sure track points roughly in same direction as the ones selected already
+    TVector3 p_i(TMath::Cos(tracks[i].phi), TMath::Sin(tracks[i].phi), tracks[i].tanLambda);
+    if (dR_prefilter_cut > 0 && p_i.DeltaR(p_tracks_sum) > dR_prefilter_cut) continue;
     tr_vtx[iTr] = tracks[i];
     
     vtx = VertexFitterSimple::VertexFitter_Tk(2, tr_vtx, false, 0., 0., 0., 0., 0., 0., solenoidBz);
@@ -275,14 +289,23 @@ ROOT::VecOps::RVec<edm4hep::TrackState> V0rejection_tight(ROOT::VecOps::RVec<edm
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks_fin,
                                                                        const ROOT::VecOps::RVec<edm4hep::TrackState>&  alltracks,
 								       VertexingUtils::FCCAnalysesVertex PV,
-								       double chi2_cut, double invM_cut, double chi2Tr_cut, double solenoidBz) {
+								       double chi2_cut, double invM_cut, double chi2Tr_cut, double solenoidBz, double dR_prefilter_cut) {
 
   // find SVs (only if there are 2 or more tracks)
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> result;
 
+  if (dR_prefilter_cut > 0) {
+    static bool printed = false;
+    if (!printed) {
+      std::cout << "INFO [VertexFinderLCFIPlus]: dR prefilter cut enabled in SV finder (dR_prefilter_cut = "
+                << dR_prefilter_cut << ") -- this can bias SV reconstruction!" << std::flush << std::endl;
+      printed = true;
+    }
+  }
+
   while(tracks_fin.size() > 1) {
     // find vertex seed
-    ROOT::VecOps::RVec<int> vtx_seed = VertexSeed_best(tracks_fin, PV, chi2_cut, invM_cut, solenoidBz);
+    ROOT::VecOps::RVec<int> vtx_seed = VertexSeed_best(tracks_fin, PV, chi2_cut, invM_cut, solenoidBz, dR_prefilter_cut);
     
     if(debug_me){
       std::cout << "tracks_fin.size(): " << tracks_fin.size() << std::endl;
@@ -296,7 +319,7 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks(ROOT::Vec
     int vtx_fin_size = 0; // to start the loop
     while(vtx_fin_size != vtx_fin.size()) {
       vtx_fin_size = vtx_fin.size();
-      vtx_fin = addTrack_best(tracks_fin, vtx_fin, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz);
+      vtx_fin = addTrack_best(tracks_fin, vtx_fin, PV, chi2_cut, invM_cut, chi2Tr_cut, solenoidBz, dR_prefilter_cut);
     }
     
     // fit tracks to SV and remove from tracks_fin
