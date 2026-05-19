@@ -196,7 +196,7 @@ ROOT::VecOps::RVec<int> VertexSeed_best(ROOT::VecOps::RVec<edm4hep::TrackState> 
       }
    }
   // check that indices of best track pair were found 
-  if(isel > 0 && jsel > 0){
+  if(isel >= 0 && jsel >= 0){
     result.push_back(isel); 
     result.push_back(jsel);
   }
