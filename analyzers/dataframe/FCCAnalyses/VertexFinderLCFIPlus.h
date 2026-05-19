@@ -37,7 +37,7 @@ namespace VertexFinderLCFIPlus{
 											 std::vector<std::vector<int>> jet_consti,
 											 bool V0_rej=true,
 											 double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.,
-											 double solenoidBz=2.0, double dR_prefilter_cut=-1. ) ;
+											 double solenoidBz=2.0, double dR_prefilter_cut=-1., bool require_opp_charge=false ) ;
 
   /** returns SVs reconstructed from non-primary tracks of the event
    *  SV finding done before jet clustering
@@ -49,7 +49,7 @@ namespace VertexFinderLCFIPlus{
 								      ROOT::VecOps::RVec<bool> isInPrimary,
 								      bool V0_rej=true,
 								      double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.,
-								      double solenoidBz=2.0, double dR_prefilter_cut=-1. ) ;
+								      double solenoidBz=2.0, double dR_prefilter_cut=-1., bool require_opp_charge=false ) ;
 
   /** returns SVs reconstructed from non-primary tracks of the event
    *  SV finding done before jet clustering
@@ -59,14 +59,14 @@ namespace VertexFinderLCFIPlus{
 								      VertexingUtils::FCCAnalysesVertex PV,
 								      bool V0_rej=true,
 								      double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5.,
-								      double solenoidBz=2.0, double dR_prefilter_cut=-1. ) ;
+								      double solenoidBz=2.0, double dR_prefilter_cut=-1., bool require_opp_charge=false ) ;
 
   /** returns indices of the best pair of tracks from a vector of (non-primary) tracks 
    *  default chi2 threshold is 9 and default invariant mass threshold is 10GeV
    */
   ROOT::VecOps::RVec<int> VertexSeed_best( ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 					   VertexingUtils::FCCAnalysesVertex PV,
-					   double chi2_cut=9., double invM_cut=10., double solenoidBz=2.0, double dR_prefilter_cut=-1.) ;
+					   double chi2_cut=9., double invM_cut=10., double solenoidBz=2.0, double dR_prefilter_cut=-1., bool require_opp_charge=false) ;
 
   /** adds index of the best track (from the remaining tracks) to the (seed) vtx 
    *  default chi2 threshold is 9 and default invariant mass threshold is 10GeV
@@ -91,7 +91,7 @@ namespace VertexFinderLCFIPlus{
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks( ROOT::VecOps::RVec<edm4hep::TrackState> tracks_fin,
                                                                           const ROOT::VecOps::RVec<edm4hep::TrackState>& alltracks,
 									  VertexingUtils::FCCAnalysesVertex PV,
-									  double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5., double solenoidBz=2.0, double dR_prefilter_cut=-1.) ;
+									  double chi2_cut=9., double invM_cut=10., double chi2Tr_cut=5., double solenoidBz=2.0, double dR_prefilter_cut=-1., bool require_opp_charge=false) ;
 
   /** check constraints of vertex candidates
    *  default values of thresholds for the constraints are set
