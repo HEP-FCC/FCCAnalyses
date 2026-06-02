@@ -922,15 +922,11 @@ def draw_plot(config: dict[str, Any],
             latex.SetTextSize(0.035)
             latex.DrawLatex(0.18, 0.4-dy*0.05, text)
 
-            stry = str(yields[y][1])
-            stry = stry.split('.', maxsplit=1)[0]
-            text = '#bf{#it{' + stry + '}}'
+            text = '#bf{#it{' + f'{yields[y][1]:,.0f}' + '}}'
             latex.SetTextSize(0.035)
             latex.DrawLatex(0.5, 0.4-dy*0.05, text)
 
-            stry = str(yields[y][2])
-            stry = stry.split('.', maxsplit=1)[0]
-            text = '#bf{#it{' + stry + '}}'
+            text = '#bf{#it{' + f'{yields[y][2]:,.0f}' + '}}'
             latex.SetTextSize(0.035)
             latex.DrawLatex(0.75, 0.4-dy*0.05, text)
 
