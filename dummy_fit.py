@@ -1,16 +1,42 @@
 class Datacard:
     def __init__(self):
-        # 1. Define channels
-        self.channels = ["electron_channel", "muon_channel"]
+        # Global configuration toggles
+        self.autoMCStats = True
         
-        # 2. Define processes (rates are -1 until Phase 2 is done)
-        self.processes = {
-            "ZH_signal": {"type": "signal", "rate": -1},
-            "Z_background": {"type": "background", "rate": -1}
+        # Shape file templates
+        self.shapes = {
+            "*": {
+                "electron_channel": "fcc_analysis_shapes.root $CHANNEL/$PROCESS",
+                "muon_channel": "fcc_analysis_shapes.root $CHANNEL/$PROCESS"
+            }
         }
         
-        # 3. Define systematics
+        # Channel-by-channel definitions
+        self.channels = {
+            "electron_channel": {
+                "observation": -1,
+                "processes": {
+                    "ZH_signal": {"type": "signal", "rate": -1},
+                    "Z_background": {"type": "background", "rate": -1}
+                }
+            },
+            "muon_channel": {
+                "observation": -1,
+                "processes": {
+                    "ZH_signal": {"type": "signal", "rate": -1},
+                    "Z_background": {"type": "background", "rate": -1}
+                }
+            }
+        }
+        
+        # Systematics dictionary
         self.systematics = {
-            "lumi": {"type": "lnN", "value": 1.05},
-            "jet_energy_scale": {"type": "shape", "value": 1.0}
+            "lumi": {
+                "type": "lnN",
+                "apply_to": {"ZH_signal": 1.05, "Z_background": 1.05}
+            },
+            "efficiency": {
+                "type": "lnN",
+                "apply_to": {"ZH_signal": 1.02}
+            }
         }

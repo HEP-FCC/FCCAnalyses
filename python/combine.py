@@ -3,49 +3,202 @@ import sys
 import logging
 import argparse
 import importlib.util
+from typing import Dict, Any
 
-# Use the standard FCCAnalyses logger
+# Use the standard FCCAnalyses logging hierarchy
 LOGGER = logging.getLogger('FCCAnalyses.combine')
 
+class DatacardWriter:
+    """Writes the structured OOP configuration out to Combine's standard text format."""
+    
+    def __init__(self, datacard_obj):
+        self.datacard = datacard_obj
+        self.channels = getattr(datacard_obj, 'channels', {})
+        self.systematics = getattr(datacard_obj, 'systematics', {})
+        self.shapes = getattr(datacard_obj, 'shapes', {})
+        self.autoMCStats = getattr(datacard_obj, 'autoMCStats', False)
+        
+        self.metadata = self._get_metadata()
+        self.col_w = self._calculate_col_width()
+
+    def _get_metadata(self) -> Dict[str, int]:
+        imax = len(self.channels)
+        jmax = 0
+        if self.channels:
+            first_channel = list(self.channels.values())[0]
+            processes = first_channel.get('processes', {})
+            jmax = sum(1 for p in processes.values() if p.get('type') == 'background')
+            
+        kmax = len(self.systematics)
+        return {'imax': imax, 'jmax': jmax, 'kmax': kmax}
+
+    def _calculate_col_width(self) -> int:
+        max_len = 10 
+        for ch_name, ch_data in self.channels.items():
+            max_len = max(max_len, len(ch_name))
+            for proc_name in ch_data.get('processes', {}).keys():
+                max_len = max(max_len, len(proc_name))
+        for syst_name in self.systematics.keys():
+            max_len = max(max_len, len(syst_name))
+        return max_len + 4 
+
+    def generate(self, output_path: str):
+        with open(output_path, 'w') as f:
+            self._write_header(f)
+            self._write_shapes(f)
+            self._write_observation(f)
+            self._write_rates(f)
+            self._write_systematics(f)
+            self._write_automcstats(f)
+        LOGGER.info('Successfully generated production datacard: %s', output_path)
+
+    def _write_header(self, f):
+        f.write(f"imax {self.metadata['imax']}  number of channels\n")
+        f.write(f"jmax {self.metadata['jmax']}  number of backgrounds\n")
+        f.write(f"kmax {self.metadata['kmax']}  number of nuisance parameters\n")
+        f.write("-" * 50 + "\n")
+
+    def _write_shapes(self, f):
+        if self.shapes:
+            for process, channels in self.shapes.items():
+                for channel, mapping in channels.items():
+                    f.write(f"shapes {process} {channel} {mapping}\n")
+            f.write("-" * 50 + "\n")
+
+    def _write_observation(self, f):
+        bin_names = "".join([f"{name:<{self.col_w}}" for name in self.channels.keys()])
+        obs_values = "".join([f"{str(ch.get('observation', 0)):<{self.col_w}}" for ch in self.channels.values()])
+        
+        f.write(f"{'bin':<{self.col_w}}{bin_names}\n")
+        f.write(f"{'observation':<{self.col_w}}{obs_values}\n")
+        f.write("-" * 50 + "\n")
+
+    def _write_rates(self, f):
+        bin_line = [f"{'bin':<{self.col_w}}"]
+        process_name_line = [f"{'process':<{self.col_w}}"]
+        process_id_line = [f"{'process':<{self.col_w}}"]
+        rate_line = [f"{'rate':<{self.col_w}}"]
+
+        for bin_name, channel_data in self.channels.items():
+            processes = channel_data.get('processes', {})
+            sorted_procs = sorted(
+                processes.items(), 
+                key=lambda item: 0 if item[1].get('type') == 'signal' else 1
+            )
+            bkg_counter = 1
+            for proc_name, proc_data in sorted_procs:
+                bin_line.append(f"{bin_name:<{self.col_w}}")
+                process_name_line.append(f"{proc_name:<{self.col_w}}")
+                if proc_data.get('type') == 'signal':
+                    process_id_line.append(f"{'0':<{self.col_w}}")
+                else:
+                    process_id_line.append(f"{str(bkg_counter):<{self.col_w}}")
+                    bkg_counter += 1
+                rate_line.append(f"{str(proc_data.get('rate', 0.0)):<{self.col_w}}")
+
+        f.write("".join(bin_line) + "\n")
+        f.write("".join(process_name_line) + "\n")
+        f.write("".join(process_id_line) + "\n")
+        f.write("".join(rate_line) + "\n")
+        f.write("-" * 50 + "\n")
+
+    def _write_systematics(self, f):
+        all_processes = []
+        for channel_data in self.channels.values():
+            sorted_procs = sorted(
+                channel_data.get('processes', {}).items(), 
+                key=lambda item: 0 if item[1].get('type') == 'signal' else 1
+            )
+            all_processes.extend([proc_name for proc_name, _ in sorted_procs])
+
+        for syst_name, syst_data in self.systematics.items():
+            syst_type = syst_data.get('type', 'lnN')
+            apply_to = syst_data.get('apply_to', {})
+            
+            line_str = f"{syst_name:<{self.col_w}}{syst_type:<10}"
+            for proc_name in all_processes:
+                val = str(apply_to.get(proc_name, "-"))
+                line_str += f"{val:<{self.col_w}}"
+            
+            f.write(line_str + "\n")
+
+    def _write_automcstats(self, f):
+        if self.autoMCStats:
+            f.write("-" * 50 + "\n")
+            f.write("* autoMCStats 0 1 1\n")
+
+
+def validate_datacard(user_datacard) -> None:
+    """Validates the properties within the loaded user Datacard object."""
+    channels = getattr(user_datacard, 'channels', {})
+    if not channels:
+        LOGGER.warning("No channels defined in the datacard object.")
+
+    for ch_name, ch_data in channels.items():
+        obs = ch_data.get('observation', 0)
+        if not (isinstance(obs, (int, float)) and (obs >= 0 or obs == -1)):
+            raise ValueError(f"Validation Error: Invalid observation '{obs}' in channel '{ch_name}'. Must be >= 0 or -1.")
+        
+        processes = ch_data.get('processes', {})
+        for proc_name, proc_data in processes.items():
+            p_type = proc_data.get('type')
+            if p_type not in ['signal', 'background']:
+                raise ValueError(f"Validation Error: Invalid type '{p_type}' for process '{proc_name}' in channel '{ch_name}'. Must be 'signal' or 'background'.")
+            
+            rate = proc_data.get('rate', 0.0)
+            if not (isinstance(rate, (int, float)) and (rate >= 0 or rate == -1)):
+                raise ValueError(f"Validation Error: Invalid rate '{rate}' for process '{proc_name}'. Must be >= 0 or -1.")
+
+    valid_syst_types = ['lnN', 'shape', 'gmM', 'gmN']
+    systematics = getattr(user_datacard, 'systematics', {})
+    for syst_name, syst_data in systematics.items():
+        s_type = syst_data.get('type')
+        if s_type not in valid_syst_types:
+            raise ValueError(f"Validation Error: Invalid systematic type '{s_type}' for '{syst_name}'. Allowed: {valid_syst_types}")
+
+
 def generate_datacard(parser: argparse.ArgumentParser) -> None:
-    """
-    Sub-command entry point for Combine datacard generation.
-    """
+    """Sub-command engine entry point."""
     args = parser.parse_args()
     anapath = os.path.abspath(args.fit_script)
+    output_path = args.output
     
-    LOGGER.info('Loading Combine fit script from:\\n  %s', anapath)
+    LOGGER.info('Loading Combine fit script from: %s', anapath)
     
     if not os.path.isfile(anapath):
-        LOGGER.error('Fit script not found!\\nAborting...')
+        LOGGER.error('Fit script file not found! Aborting...')
         sys.exit(3)
         
-    # Dynamically load the user's python file
     try:
         spec = importlib.util.spec_from_file_location('user_fit', anapath)
         user_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(user_module)
     except SyntaxError as err:
-        LOGGER.error('Syntax error encountered in the fit script:\\n%s', err)
+        LOGGER.error('Syntax error encountered in the fit script:\n%s', err)
         sys.exit(3)
         
-    # Instantiate the user's class and validate
     if not hasattr(user_module, "Datacard"):
-        LOGGER.error('Fit script must define a class named "Datacard"!\\nAborting...')
+        LOGGER.error('Fit script must define a class named "Datacard"! Aborting...')
         sys.exit(3)
         
     user_datacard = user_module.Datacard()
     
-    # Check for minimal required members
-    if not hasattr(user_datacard, 'processes') or not hasattr(user_datacard, 'channels'):
-        LOGGER.error('Datacard class must have "processes" and "channels" defined!\\nAborting...')
+    try:
+        validate_datacard(user_datacard)
+    except ValueError as err:
+        LOGGER.error('%s\nAborting...', err)
         sys.exit(3)
         
-    LOGGER.info('Successfully validated user Datacard.')
-    LOGGER.info('Channels found: %s', user_datacard.channels)
-    LOGGER.info('Processes found: %s', list(user_datacard.processes.keys()))
+    LOGGER.info('Successfully validated user Datacard configuration data.')
     
-    # TODO: In the next commit, insert Phase 1 text alignment and parsing engine here
-    # to loop over the user_datacard members and output the .txt file.
-    
-    LOGGER.info('Datacard generation skeleton complete.')
+    # Run the generator matrix logic
+    writer = DatacardWriter(user_datacard)
+    writer.generate(output_path)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    test_parser = argparse.ArgumentParser()
+    test_parser.add_argument("fit_script", help="Path to the user fit script")
+    test_parser.add_argument("-o", "--output", default="generated_datacard.txt", help="Path to save output text datacard")
+    generate_datacard(test_parser)
