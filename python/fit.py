@@ -1,26 +1,29 @@
 import os
 import sys
 import logging
-from combine import generate_datacard
+import argparse
 
 LOGGER = logging.getLogger('FCCAnalyses.fit')
 
-def run_fit(parser):
-    """
-    Entry point for the 'fccanalysis fit' sub-command.
-    """
-    args, _ = parser.parse_known_args()
-
-    if args.command != 'fit':
-        LOGGER.error('Wrong sub-command!\nAborting...')
-        sys.exit(3)
-
-    if not os.path.isfile(args.script_path):
-        LOGGER.error('Fit script "%s" not found!\nAborting...', args.script_path)
-        sys.exit(3)
-
-    # Convert to absolute path and pass to Combine engine
+def run_fit(parser: argparse.ArgumentParser) -> None:
+    """Sub-command entry point for object-oriented fitting configurations."""
+    args = parser.parse_args()
+    
     anapath = os.path.abspath(args.script_path)
     output_path = args.output
-    
-    generate_datacard(anapath, output_path)
+    backend = args.backend.lower()
+
+    LOGGER.info('Steering fit configuration towards the "%s" backend...', backend)
+
+    if backend == 'combine':
+        # Lazy import to keep dependencies clean
+        from combine import generate_datacard
+        generate_datacard(anapath, output_path)
+        
+    elif backend == 'pyhf':
+        LOGGER.error('Backend "pyhf" is planned but not yet implemented! Aborting...')
+        sys.exit(5)
+        
+    else:
+        LOGGER.error('Unsupported fitting backend: %s. Aborting...', backend)
+        sys.exit(4)
