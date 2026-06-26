@@ -50,6 +50,8 @@ saveTabular = True
 # Save cut yields and efficiencies in JSON file
 saveJSON = True
 
+do_weighted = True 
+
 # Dictionary with the list of cuts. The key is the name of the selection that
 # will be added to the output file
 cutList = {"sel0": "Zcand_q == 0",

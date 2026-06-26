@@ -13,7 +13,11 @@ procDict = "/eos/experiment/fcc/hh/tutorials/edm4hep_tutorial_data/FCChh_procDic
 #Note the numbeOfEvents and sumOfWeights are placeholders that get overwritten with the correct values in the samples
 
 #How to add a process that is not in the official dictionary:
-# procDictAdd={"pwp8_pp_hh_5f_hhbbyy": {"numberOfEvents": 4980000, "sumOfWeights": 4980000.0, "crossSection": 0.0029844128399999998, "kfactor": 1.075363, "matchingEfficiency": 1.0}}
+procDictAdd={"pwp8_pp_hh_5f_hhbbyy": {"numberOfEvents": 4980000, 
+                                    "sumOfWeights": 4980000.0, 
+                                    "crossSection": 0.0029844128399999998, 
+                                    "kfactor": 1.075363, 
+                                    "matchingEfficiency": 1.0}}
 
 # Expected integrated luminosity
 intLumi = 30e+06  # pb-1

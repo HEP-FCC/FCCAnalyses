@@ -49,7 +49,7 @@ class RDFanalysis():
 				.Define("MET_y", "ReconstructedParticle::get_py(MissingET)") #y-component of MET
 				.Define("MET_phi", "ReconstructedParticle::get_phi(MissingET)") #angle of MET
              )
-       return df2
+        return df2
 
     #__________________________________________________________
     # Mandatory: output function, please make sure you return the branchlist as a python list
