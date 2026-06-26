@@ -103,24 +103,34 @@ class DatacardWriter:
         f.write("-" * 50 + "\n")
 
     def _write_systematics(self, f):
-        all_processes = []
-        for channel_data in self.channels.values():
-            sorted_procs = sorted(
-                channel_data.get('processes', {}).items(), 
-                key=lambda item: 0 if item[1].get('type') == 'signal' else 1
-            )
-            all_processes.extend([proc_name for proc_name, _ in sorted_procs])
+        for syst_name, syst_info in self.datacard.systematics.items():
+            syst_type = syst_info.get("type", "lnN")
+            apply_to = syst_info.get("apply_to", {})
 
-        for syst_name, syst_data in self.systematics.items():
-            syst_type = syst_data.get('type', 'lnN')
-            apply_to = syst_data.get('apply_to', {})
-            
-            line_str = f"{syst_name:<{self.col_w}}{syst_type:<10}"
-            for proc_name in all_processes:
-                val = str(apply_to.get(proc_name, "-"))
-                line_str += f"{val:<{self.col_w}}"
-            
-            f.write(line_str + "\n")
+            # Start each row with the systematic name and its type
+            row_cells = [syst_name, syst_type]
+
+            # Loop over channels
+            for ch_name, ch_info in self.datacard.channels.items():
+                sorted_procs = sorted(
+                    ch_info.get('processes', {}).items(),
+                    key=lambda item: 0 if item[1].get('type') == 'signal' else 1
+                )
+
+                for proc_name, _ in sorted_procs:
+                    # Check if this systematic applies to the current process
+                    if proc_name in apply_to:
+                        val = apply_to[proc_name]
+
+                        # If it's a channel-dependent dictionary, extract the specific channel value
+                        if isinstance(val, dict):
+                            val = val.get(ch_name, "-")
+
+                        row_cells.append(str(val))
+                    else:
+                        row_cells.append("-")
+
+            f.write("\t".join(row_cells) + "\n")
 
     def _write_automcstats(self, f):
         if self.autoMCStats:
