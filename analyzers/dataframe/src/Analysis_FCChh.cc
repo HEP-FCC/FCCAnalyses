@@ -405,11 +405,15 @@ int AnalysisFCChh::checkZDecay(
 
   if (isLep(child_1) && isLep(child_2)) {
     return 1;
-  } else if (isNeutrino(child_1) && isNeutrino(child_2)) {
+  } 
+  else if (isNeutrino(child_1) && isNeutrino(child_2)) {
     return 2;
-  } else {
-    std::cout << "Found different decay of Z boson than 2 leptons (e or mu), "
-                 "neutrinos or taus! Please check."
+    } 
+  else if (isQuark(child_1) && isQuark(child_2)) {
+    return 3;
+  }
+    else {
+    std::cout << "Found different decay of Z boson than 2 leptons, neutrinos or quarks. Please check."
               << std::endl;
     return 0;
   }
@@ -745,6 +749,77 @@ int AnalysisFCChh::findHiggsDecayChannel(
   // std::cout << "Number of higgs in event :" << higgs_list.size()<< std::endl;
   // std::cout << "Code for higgs decay is = " << higgs_decay_type << std::endl;
   return higgs_decay_type;
+}
+
+//Check if VH event is WH or ZH and how the V decayed
+// ONLY WORKS ASSUMING THE SAMPLE DOES NOT INCLUDE H->VV DECAYS (designed for VH(yy) analysis)
+int AnalysisFCChh::checkVHChannel(
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
+    ROOT::VecOps::RVec<podio::ObjectID> daughter_ids) {
+
+  // std::cout << "Checking truth VH channel" << std::endl;
+
+  int VH_channel = 0;
+  // VH decay types: 
+  // First digit 1 for W, first digit 2 for Z
+  //  11: W(lv), 12: W(had)
+  //  21: Z(ll), 22: Z(vv), 23: Z(had)
+
+  for (auto &truth_part : truth_particles) {
+    if (isW(truth_part)) {
+      // std::cout << "Found W" << std::endl;
+
+      // skip intermediate Ws that just have another W as children
+      if (truth_part.daughters_end - truth_part.daughters_begin != 2) {
+        continue;
+      }
+
+      int W_decay_type = checkWDecay(truth_part, daughter_ids, truth_particles);
+
+      if (W_decay_type == 1){
+        return 11;
+      }
+
+      else if (W_decay_type == 2) {
+        return 12;
+      }
+
+      else{
+        std::cout << "Warning! Found unkown decay of W!" << std::endl;
+        continue;
+      }
+    }
+    
+    if (isZ(truth_part)) {
+      // std::cout << "Found Z" << std::endl;
+
+      // skip intermediate Zs that just have another Z as children
+      if (truth_part.daughters_end - truth_part.daughters_begin != 2) {
+        continue;
+      }
+
+      int Z_decay_type = checkZDecay(truth_part, daughter_ids, truth_particles);
+
+      if (Z_decay_type == 1){
+        return 21;
+      }
+
+      else if (Z_decay_type == 2) {
+        return 22;
+      }
+
+      else if (Z_decay_type == 3) {
+        return 23;
+      }
+
+      else{
+        std::cout << "Warning! Found unkown decay of Z!" << std::endl;
+        continue;
+      }
+    }
+  }
+
+  return VH_channel;
 }
 
 // truth filter used to get ZZ(llvv) events from the ZZ(llvv+4l+4v) inclusive
@@ -1460,11 +1535,63 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> AnalysisFCChh::get_neg_pa
     return particles_neg;
 }
 
+// helper function for the H->ZZ->4l lepton pairs building
+bool AnalysisFCChh::make_lepton_pair(
+    const edm4hep::ReconstructedParticleData& lep1,
+    const edm4hep::ReconstructedParticleData& lep2,
+    float lead_pt_cut,
+    float sublead_pt_cut,
+    int flavour_flag,
+    RecoParticlePair& pair_out)
+{
+  std::vector<edm4hep::ReconstructedParticleData> leptons = {lep1, lep2};
+
+  std::sort(leptons.begin(), leptons.end(),
+    [&](const auto& a, const auto& b) {
+      return getTLV_reco(a).Pt() > getTLV_reco(b).Pt();
+    });
+
+  float pt_lead = getTLV_reco(leptons[0]).Pt();
+  float pt_sub  = getTLV_reco(leptons[1]).Pt();
+
+  if (pt_lead > lead_pt_cut && pt_sub > sublead_pt_cut) {
+
+    pair_out.particle_1 = leptons[0];
+    pair_out.particle_2 = leptons[1];
+    pair_out.flavour_flag = flavour_flag;
+
+    return true;
+  }
+
+  return false;
+}
+
+// Helper to sort a vector of RecoParticlePair by |mZ - m_ll|
+ROOT::VecOps::RVec<RecoParticlePair> AnalysisFCChh::sort_pairs_by_mZ(
+    const ROOT::VecOps::RVec<RecoParticlePair>& pairs,
+    float mZ)
+{
+    // Make a copy to sort
+    ROOT::VecOps::RVec<RecoParticlePair> sorted_pairs = pairs;
+
+    std::sort(sorted_pairs.begin(), sorted_pairs.end(),
+        [mZ](const RecoParticlePair& a, const RecoParticlePair& b) {
+            auto Za = getTLV_reco(a.particle_1) + getTLV_reco(a.particle_2);
+            auto Zb = getTLV_reco(b.particle_1) + getTLV_reco(b.particle_2);
+
+            return std::abs(Za.M() - mZ) < std::abs(Zb.M() - mZ);
+        });
+
+    return sorted_pairs;
+}
+
 // for the H->ZZ->4l analysis: build to OS, SF pairs - muons take precedence
 ROOT::VecOps::RVec<RecoParticlePair> AnalysisFCChh::build_Zll_pairs(
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selected_muons,
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selected_electrons) {
 
+  ROOT::VecOps::RVec<RecoParticlePair> all_lead_pairs;
+  ROOT::VecOps::RVec<RecoParticlePair> all_sub_pairs;
   ROOT::VecOps::RVec<RecoParticlePair> best_pairs;
   bool found_leading_pair = false;
   bool found_subleading_pair = false;
@@ -1495,105 +1622,110 @@ ROOT::VecOps::RVec<RecoParticlePair> AnalysisFCChh::build_Zll_pairs(
   }
 
   //first try to find the leading pair:
-  // try if one of the muon pairs passes the selection
+  // build all possible OS muon pairs that pass pT selection
   for (auto muons_pos_it = sel_muons_pos.begin(); muons_pos_it != sel_muons_pos.end(); muons_pos_it++) {
     // auto it = truth_parts_neg.begin(); it != truth_parts_neg.end();
     for (auto muons_neg_it = sel_muons_neg.begin(); muons_neg_it != sel_muons_neg.end(); muons_neg_it++){
-      float muon_pos_pT = getTLV_reco(*muons_pos_it).Pt();
-      float muon_neg_pT = getTLV_reco(*muons_neg_it).Pt();
-    
-      if ( muon_pos_pT > 20. && muon_neg_pT > 10.){
-        // std::cout << "Found first pair among muons" << std::endl;
-        RecoParticlePair muon_pair; 
-        muon_pair.particle_1 = *muons_pos_it;
-        muon_pair.particle_2 = *muons_neg_it;
-        muon_pair.flavour_flag = 1;
-        found_leading_pair = true;
-        best_pairs.push_back(muon_pair);
-        sel_muons_pos.erase(muons_pos_it);
-        sel_muons_neg.erase(muons_neg_it);
-        break;
+
+      RecoParticlePair muon_pair;
+
+      if (make_lepton_pair(*muons_pos_it, *muons_neg_it, 20., 10., 1, muon_pair)) {
+
+        // Store indices in the original vectors
+        muon_pair.idx_pos = std::distance(sel_muons_pos.begin(), muons_pos_it);
+        muon_pair.idx_neg = std::distance(sel_muons_neg.begin(), muons_neg_it);
+
+        all_lead_pairs.push_back(muon_pair);
       }
     }
-    if (found_leading_pair) {break;}
   }
 
-  //if not, try if one of the electron pairs passes the selection
-  if (!found_leading_pair){
-    for (auto electrons_pos_it = sel_electrons_pos.begin(); electrons_pos_it != sel_electrons_pos.end(); electrons_pos_it++) {
-      // auto it = truth_parts_neg.begin(); it != truth_parts_neg.end();
-      for (auto electrons_neg_it = sel_electrons_neg.begin(); electrons_neg_it != sel_electrons_neg.end(); electrons_neg_it++){
-        float electron_pos_pT = getTLV_reco(*electrons_pos_it).Pt();
-        float electron_neg_pT = getTLV_reco(*electrons_neg_it).Pt();
-      
-        if ( electron_pos_pT > 20. && electron_neg_pT > 10.){
-          // std::cout << "Found first pair among electrons" << std::endl;
-          RecoParticlePair electron_pair; 
-          electron_pair.particle_1 = *electrons_pos_it;
-          electron_pair.particle_2 = *electrons_neg_it;
-          electron_pair.flavour_flag = 2;
-          found_leading_pair = true;
-          best_pairs.push_back(electron_pair);
-          sel_electrons_pos.erase(electrons_pos_it);
-          sel_electrons_neg.erase(electrons_neg_it);
-          break;
-        }
+  //same for electrons
+  for (auto electrons_pos_it = sel_electrons_pos.begin(); electrons_pos_it != sel_electrons_pos.end(); electrons_pos_it++) {
+    for (auto electrons_neg_it = sel_electrons_neg.begin(); electrons_neg_it != sel_electrons_neg.end(); electrons_neg_it++){
+
+      RecoParticlePair electron_pair;
+
+      if (make_lepton_pair(*electrons_pos_it, *electrons_neg_it, 20., 10., 2, electron_pair)) {
+
+        // Store indices in the original vectors
+        electron_pair.idx_pos = std::distance(sel_electrons_pos.begin(), electrons_pos_it);
+        electron_pair.idx_neg = std::distance(sel_electrons_neg.begin(), electrons_neg_it);
+
+        all_lead_pairs.push_back(electron_pair);
       }
-      if (found_leading_pair) {break;}
     }
   }
 
-  //if we haven't found a leading pair that passes the selection, we don't need to try for subleading
-  if (!found_leading_pair){
-    return best_pairs;
+  // now sort the leading pairs by how close they are to mZ:
+  auto sorted_lead_pairs = sort_pairs_by_mZ(all_lead_pairs);
+
+  // select the leading pair closest to mZ:
+  if (!sorted_lead_pairs.empty()) {
+      best_pairs.push_back(sorted_lead_pairs[0]);
+      found_leading_pair = true;
   }
 
+  //if we haven't found a leading pair that passes the selection, we don't need to try for subleading and return empty vector instead
+  if (!found_leading_pair){
+    return {};
+  }
+
+  // if we have selected a leading pair, we need a list of all remaining leptons to use for the subleading pair
+  const RecoParticlePair& best_pair = best_pairs[0];
+  
+  // can remove the used leptons from the respective vectors using their indices we store in the pair struct
+  if (best_pair.flavour_flag == 1) {
+      // muons
+      if (best_pair.idx_pos < sel_muons_pos.size())
+          sel_muons_pos.erase(sel_muons_pos.begin() + best_pair.idx_pos);
+      if (best_pair.idx_neg < sel_muons_neg.size())
+          sel_muons_neg.erase(sel_muons_neg.begin() + best_pair.idx_neg);
+  } else {
+      // electrons
+      if (best_pair.idx_pos < sel_electrons_pos.size())
+          sel_electrons_pos.erase(sel_electrons_pos.begin() + best_pair.idx_pos);
+      if (best_pair.idx_neg < sel_electrons_neg.size())
+          sel_electrons_neg.erase(sel_electrons_neg.begin() + best_pair.idx_neg);
+  }
   //now same for subleading pair, try from muons first
   for (auto muons_pos_it = sel_muons_pos.begin(); muons_pos_it != sel_muons_pos.end(); muons_pos_it++) {
-    // auto it = truth_parts_neg.begin(); it != truth_parts_neg.end();
     for (auto muons_neg_it = sel_muons_neg.begin(); muons_neg_it != sel_muons_neg.end(); muons_neg_it++){
-      float muon_pos_pT = getTLV_reco(*muons_pos_it).Pt();
-      float muon_neg_pT = getTLV_reco(*muons_neg_it).Pt();
-    
-      if ( muon_pos_pT > 7. && muon_neg_pT > 5.){
-        // std::cout << "Found second pair among muons" << std::endl;
-        RecoParticlePair muon_pair; 
-        muon_pair.particle_1 = *muons_pos_it;
-        muon_pair.particle_2 = *muons_neg_it;
-        muon_pair.flavour_flag = 1;
-        found_subleading_pair = true;
-        best_pairs.push_back(muon_pair);
-        sel_muons_pos.erase(muons_pos_it);
-        sel_muons_neg.erase(muons_neg_it);
-        break;
+
+      RecoParticlePair muon_pair;
+
+      if (make_lepton_pair(*muons_pos_it, *muons_neg_it, 7., 5., 1, muon_pair)) {
+
+        all_sub_pairs.push_back(muon_pair);
       }
     }
-    if (found_subleading_pair) {break;}
+  } 
+
+  //same for electrons
+  for (auto electrons_pos_it = sel_electrons_pos.begin(); electrons_pos_it != sel_electrons_pos.end(); electrons_pos_it++) {
+    for (auto electrons_neg_it = sel_electrons_neg.begin(); electrons_neg_it != sel_electrons_neg.end(); electrons_neg_it++){
+
+      RecoParticlePair electron_pair;
+
+      if (make_lepton_pair(*electrons_pos_it, *electrons_neg_it, 7., 5., 2, electron_pair)) {
+
+        all_sub_pairs.push_back(electron_pair);
+      }
+    }
   }
 
-  //if not a subleading muon pair, try with electrons
+  // now sort the subleading pairs by how close they are to mZ:
+  auto sorted_sub_pairs = sort_pairs_by_mZ(all_sub_pairs);
+
+  // select the subleading pair closest to mZ:
+  if (!sorted_sub_pairs.empty()) {
+      best_pairs.push_back(sorted_sub_pairs[0]);
+      found_subleading_pair = true;
+  }
+
+  //make sure to return empty vector if a leading but no subleading pair is found
   if (!found_subleading_pair){
-    for (auto electrons_pos_it = sel_electrons_pos.begin(); electrons_pos_it != sel_electrons_pos.end(); electrons_pos_it++) {
-      // auto it = truth_parts_neg.begin(); it != truth_parts_neg.end();
-      for (auto electrons_neg_it = sel_electrons_neg.begin(); electrons_neg_it != sel_electrons_neg.end(); electrons_neg_it++){
-        float electron_pos_pT = getTLV_reco(*electrons_pos_it).Pt();
-        float electron_neg_pT = getTLV_reco(*electrons_neg_it).Pt();
-      
-        if ( electron_pos_pT > 7. && electron_neg_pT > 5.){
-          // std::cout << "Found second pair among electrons" << std::endl;
-          RecoParticlePair electron_pair; 
-          electron_pair.particle_1 = *electrons_pos_it;
-          electron_pair.particle_2 = *electrons_neg_it;
-          electron_pair.flavour_flag = 2;
-          found_subleading_pair = true;
-          best_pairs.push_back(electron_pair);
-          sel_electrons_pos.erase(electrons_pos_it);
-          sel_electrons_neg.erase(electrons_neg_it);
-          break;
-        }
-      }
-      if (found_subleading_pair) {break;}
-    }
+    return {};
   }
 
   return best_pairs;
@@ -1630,6 +1762,115 @@ ROOT::VecOps::RVec<int> AnalysisFCChh::get_4l_flavour_flag(
 
       // std::cout << "Reco ZZ4l flavour flag = " << results_vector.at(0) << std::endl;
       
+
+      return results_vector;
+
+    }
+
+// HZZ4l specific variables:
+ROOT::VecOps::RVec<double> AnalysisFCChh::get_cos_theta_star(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4) {
+
+      ROOT::VecOps::RVec<double> results_vector; 
+
+      // Build Z candidates and Higgs
+      TLorentzVector Z1 = lep1 + lep2; // assume leading Z
+      TLorentzVector Z2 = lep3 + lep4;
+      TLorentzVector H = Z1 + Z2;
+
+      // Boost Z1 into Higgs rest frame
+      TVector3 boostVec = -H.BoostVector(); // boost to rest frame of H
+      TLorentzVector Z1_boosted = Z1;
+      Z1_boosted.Boost(boostVec);
+
+      // cos(theta*) = angle between Z1 and beam (z-axis) in H rest frame
+      double cosThetaStar = Z1_boosted.Vect().CosTheta();  // z-axis by default
+      results_vector.push_back(cosThetaStar);
+
+      return results_vector;
+    }
+
+ROOT::VecOps::RVec<double> AnalysisFCChh::get_cos_theta_lep_to_Z(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4,
+    bool useLeadingZ) {
+
+      ROOT::VecOps::RVec<double> results_vector; 
+      // Assign Z1 and Z2 based on flag
+      TLorentzVector Z1, Z2, negLep;
+
+      if (useLeadingZ) {
+        Z1 = lep1 + lep2;      // Z1 from lep1, lep2
+        Z2 = lep3 + lep4;
+        negLep = lep1;         // negative lepton from Z1
+      } else {
+        Z1 = lep3 + lep4;      // Z1 <- now lep3, lep4
+        Z2 = lep1 + lep2;
+        negLep = lep3;         // negative lepton from Z2
+      }
+
+      TLorentzVector H = Z1 + Z2;
+
+      // Step 1: direction of Z1 in H rest frame
+      TLorentzVector Z1_H = Z1;
+      Z1_H.Boost(-H.BoostVector());
+      TVector3 Z1_dir_in_H = Z1_H.Vect().Unit();
+
+      // Step 2: boost negative lepton to Z1 rest frame
+      TLorentzVector negLep_Z1 = negLep;
+      negLep_Z1.Boost(-Z1.BoostVector());
+
+      // Step 3: compute cos(theta)
+      double cosThetaN = negLep_Z1.Vect().Unit().Dot(Z1_dir_in_H);
+      results_vector.push_back(cosThetaN);
+
+      return results_vector;
+
+    }
+
+ROOT::VecOps::RVec<double> AnalysisFCChh::get_phi_decay_planes(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4) {
+      ROOT::VecOps::RVec<double> results_vector; 
+
+      // Build Z candidates and H
+      TLorentzVector Z1 = lep1 + lep2;
+      TLorentzVector Z2 = lep3 + lep4;
+      TLorentzVector H  = Z1 + Z2;
+
+      // Boost all leptons to Higgs rest frame
+      TVector3 boostToH = -H.BoostVector();
+
+      TLorentzVector lep1_H = lep1; lep1_H.Boost(boostToH);
+      TLorentzVector lep2_H = lep2; lep2_H.Boost(boostToH);
+      TLorentzVector lep3_H = lep3; lep3_H.Boost(boostToH);
+      TLorentzVector lep4_H = lep4; lep4_H.Boost(boostToH);
+
+      // Construct normal vectors to decay planes
+      TVector3 n1 = lep1_H.Vect().Cross(lep2_H.Vect()).Unit();  // Z1 decay plane
+      TVector3 n2 = lep3_H.Vect().Cross(lep4_H.Vect()).Unit();  // Z2 decay plane
+
+      // Angle between planes (absolute value)
+      double cosPhi = n1.Dot(n2);
+      if (cosPhi > 1.0) cosPhi = 1.0;
+      if (cosPhi < -1.0) cosPhi = -1.0;
+
+      double phi = std::acos(cosPhi);  // in [0, pi]
+
+      // To get signed Phi in [-pi, pi], use triple product
+      TVector3 z1_dir = (lep1 + lep2).BoostVector(); // Direction of Z1 in lab
+      TVector3 z = z1_dir.Unit();  // Direction of Z1 in Higgs frame
+
+      double sign = z.Dot(n1.Cross(n2));
+      if (sign < 0) phi *= -1.0;
+      results_vector.push_back(phi);
 
       return results_vector;
 
@@ -1871,10 +2112,14 @@ ROOT::VecOps::RVec<float> AnalysisFCChh::get_mT(
   vec_pT_met.SetXYZ(MET.momentum.x, MET.momentum.y, 0.);
 
   float mT = sqrt(2. * pT_ll * pT_met *
-                  (1 - cos(abs(vec_pT_ll.DeltaPhi(vec_pT_met)))));
+                  (1 - cos(vec_pT_ll.DeltaPhi(vec_pT_met))));
 
   mT_vector.push_back(mT);
-
+  
+  // std::cout << " Debug: pT_vis = " << pT_ll << std::endl;
+  // std::cout << " Debug: pT_met = " << pT_met << std::endl;
+  // std::cout << " Debug: deltaPhi = " << vec_pT_ll.DeltaPhi(vec_pT_met) << std::endl;
+  // std::cout << " Debug: cos(deltaPhi)  = " << cos(vec_pT_ll.DeltaPhi(vec_pT_met)) << std::endl;
   // std::cout << "Debug mT: mT with old func = " << mT << std::endl;
 
   return mT_vector;

@@ -54,6 +54,11 @@ struct RecoParticlePair {
       return;
     }
   }
+
+  // helper for selection pairs in H4l combinatorics:
+  // NEW: indices in original pos/neg vectors for safe removal
+    size_t idx_pos{0}; // default 0
+    size_t idx_neg{0}; // default 0
 };
 
 // same for MC particle
@@ -158,6 +163,11 @@ int findHiggsDecayChannel(
     ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
     ROOT::VecOps::RVec<podio::ObjectID> daughter_ids);
 
+// for checking inclusive VH(yy) sample: what W or Z decay?
+int checkVHChannel(
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
+    ROOT::VecOps::RVec<podio::ObjectID> daughter_ids);
+
 // truth level fct to get a Z->ll truth decay
 ROOT::VecOps::RVec<edm4hep::MCParticleData>
 getTruthZll(ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
@@ -184,13 +194,27 @@ getLeadingPair(ROOT::VecOps::RVec<RecoParticlePair> electron_pairs,
                ROOT::VecOps::RVec<RecoParticlePair>
                    muon_pairs); // pair with leading pT(pair)
 
+
+// helpers for H->ZZ->4l lepton pairs selection
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get_pos_particles(
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> particles_in);
 
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get_neg_particles(
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> particles_in);
 
-// for the H->ZZ->4l analysis: build to OS, SF pairs
+bool make_lepton_pair(
+    const edm4hep::ReconstructedParticleData& lep1,
+    const edm4hep::ReconstructedParticleData& lep2,
+    float lead_pt_cut,
+    float sublead_pt_cut,
+    int flavour_flag,
+    RecoParticlePair& pair_out);
+
+ROOT::VecOps::RVec<RecoParticlePair> sort_pairs_by_mZ(
+    const ROOT::VecOps::RVec<RecoParticlePair>& pairs,
+    float mZ = 91.1876);
+
+// for the H->ZZ->4l analysis: build to OS, SF pairs 
 ROOT::VecOps::RVec<RecoParticlePair> build_Zll_pairs(
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selected_muons,
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selected_electrons);
@@ -198,6 +222,26 @@ ROOT::VecOps::RVec<RecoParticlePair> build_Zll_pairs(
 ROOT::VecOps::RVec<int> get_4l_flavour_flag(
     RecoParticlePair leading_pair,
     RecoParticlePair subleading_pair);
+
+//variables from ATLAS H4l analysis:
+ROOT::VecOps::RVec<double> get_cos_theta_star(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4);
+
+ROOT::VecOps::RVec<double> get_cos_theta_lep_to_Z(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4,
+    bool useLeadingZ);
+
+ROOT::VecOps::RVec<double> get_phi_decay_planes(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4);
 
 // make a general pair, not caring about charges, e.g. the two b-jets
 ROOT::VecOps::RVec<RecoParticlePair>
