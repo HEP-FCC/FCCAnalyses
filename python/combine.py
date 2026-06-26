@@ -157,18 +157,15 @@ def validate_datacard(user_datacard) -> None:
             raise ValueError(f"Validation Error: Invalid systematic type '{s_type}' for '{syst_name}'. Allowed: {valid_syst_types}")
 
 
-def generate_datacard(parser: argparse.ArgumentParser) -> None:
-    """Sub-command engine entry point."""
-    args = parser.parse_args()
-    anapath = os.path.abspath(args.fit_script)
-    output_path = args.output
+def generate_datacard(anapath: str, output_path: str) -> None:
+    """Sub-command engine execution block."""
     
     LOGGER.info('Loading Combine fit script from: %s', anapath)
-    
+
     if not os.path.isfile(anapath):
         LOGGER.error('Fit script file not found! Aborting...')
         sys.exit(3)
-        
+
     try:
         spec = importlib.util.spec_from_file_location('user_fit', anapath)
         user_module = importlib.util.module_from_spec(spec)
@@ -194,11 +191,3 @@ def generate_datacard(parser: argparse.ArgumentParser) -> None:
     # Run the generator matrix logic
     writer = DatacardWriter(user_datacard)
     writer.generate(output_path)
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    test_parser = argparse.ArgumentParser()
-    test_parser.add_argument("fit_script", help="Path to the user fit script")
-    test_parser.add_argument("-o", "--output", default="generated_datacard.txt", help="Path to save output text datacard")
-    generate_datacard(test_parser)
