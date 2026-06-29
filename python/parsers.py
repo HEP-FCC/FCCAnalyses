@@ -309,8 +309,10 @@ def setup_run_parser_fit(parser):
     parser.add_argument('script_path', help="path to the object-oriented fit script")
     parser.add_argument('-o', '--output', type=str, default="generated_datacard.txt",
                         help="path to save the output text datacard")
-    parser.add_argument('--backend', type=str, choices=['combine', 'pyhf'], default='combine',
+    parser.add_argument('-b', '--backend', type=str, choices=['combine', 'pyhf'], default='combine',
                         help="fitting backend infrastructure to target")
+    parser.add_argument('-e', '--execute', action='store_true',
+                        help="automatically execute the fit calculation backend after generating the model")
 
 # _____________________________________________________________________________
 def setup_subparsers(topparser):
