@@ -11,14 +11,11 @@ import argparse
 from typing import Any, Optional, Union
 
 import ROOT  # type: ignore
-from anascript import validate_analysis_class, validate_sample_list
-from sample import get_file_list, get_subfile_list, get_chunk_list
-from sample import get_files_in_dir, get_files_in_yaml
-from sample import get_file_quantities
-from sample import apply_filepath_rewrites
-from utils import save_benchmark
-from job import Job
+from anascript import get_element, get_element_dict, get_attribute
+from process import get_process_info, get_entries_sow
+from frame import generate_graph
 
+LOGGER = logging.getLogger('FCCAnalyses.run')
 
 ROOT.gROOT.SetBatch(True)
 
@@ -490,43 +487,13 @@ def merge_config(args: argparse.Namespace,
     if hasattr(analysis_class, 'use_data_source'):
         config['use-data-source'] = True
     if args.use_data_source:
-        config['use-data-source'] = True
-
-    # Check if the progress-bar is enabled
-    config['enable-progress-bar'] = True
-    if args.progress_bar is not None:
-        config['enable-progress-bar'] = args.progress_bar
-
-    # Check whether to create the computational graph
-    config['generate-graph'] = False
-    config['graph-path'] = None
-    if args.graph is not None:
-        config['generate-graph'] = args.graph
-
-        if config['generate-graph']:
-            config['graph-path'] = args.graph_path
-            if config['graph-path'] is None:
-                config['graph_path'] = os.path.join(os.getcwd(),
-                                                    'fccanalysis_graph.dot')
-
-    # Load geometry, needed for the CaloNtupleizer analyzers
-    config['geometry-path'] = None
-    if hasattr(analysis_class, 'geometry_path'):
-        config['geometry-path'] = analysis_class.geometry_path
-
-    config['readout-name'] = None
-    if hasattr(analysis_class, 'readout_name'):
-        config['readout-name'] = analysis_class.readout_name
-
-    # Check whether to apply file-path rewrites
-    config['apply-filepath-rewrites'] = True
-    if args.apply_filepath_rewrites is not None:
-        config['apply-filepath-rewrites'] = args.apply_filepath_rewrites
-
-    # Check whether to save benchmark results
-    config['bench'] = False
-    if args.bench is not None:
-        config['bench'] = args.bench
+        config['use_data_source'] = True
+    if get_attribute(analysis, 'use_data_source', False):
+        config['use_data_source'] = True
+    # Check whether to use event weights (only supported as analysis config file option, not command line!)
+    config['do_weighted'] = False
+    if get_attribute(analysis, 'do_weighted', False):
+        config['do_weighted'] = True
 
     return config
 
@@ -574,12 +541,144 @@ def global_setup(config):
         ROOT.gInterpreter.ProcessLine(".O2")
         for path in config['include-paths']:
             LOGGER.info('Loading %s...', path)
-            success = ROOT.gInterpreter.Declare(
-                f'#include "{os.path.join(config["analysis-dir"], path)}"'
-            )
-            if not success:
-                LOGGER.error('Error occurred when JIT compiling "%s" include '
-                             'header file!\nAborting...', path)
+            ROOT.gInterpreter.Declare(f'#include "{basepath}/{path}"')
+
+
+# _____________________________________________________________________________
+def run_rdf(config: dict[str, any],
+            args,
+            analysis,
+            input_list: list[str],
+            out_file: str) -> int:
+    '''
+    Run the analysis ROOTDataFrame and snapshot it.
+    '''
+    # Create initial dataframe
+    if config['use_data_source']:
+        if ROOT.podio.DataSource:
+            LOGGER.debug('Found podio::DataSource.')
+        else:
+            LOGGER.error('podio::DataSource library not found!\nAborting...')
+            sys.exit(3)
+        LOGGER.info('Loading events through podio::DataSource...')
+
+        try:
+            dframe = ROOT.podio.CreateDataFrame(input_list)
+        except TypeError as excp:
+            LOGGER.error('Unable to build dataframe using '
+                         'podio::DataSource!\n%s', excp)
+            sys.exit(3)
+    else:
+        dframe = ROOT.RDataFrame("events", input_list)
+
+    # Limit number of events processed
+    if args.nevents > 0:
+        dframe2 = dframe.Range(0, args.nevents)
+    else:
+        dframe2 = dframe
+
+    try:
+        evtcount_init = dframe2.Count()
+        sow_init = evtcount_init
+        if config['do_weighted']:
+            sow_init = dframe2.Sum("EventHeader.weight")
+
+        dframe3 = analysis.analyzers(dframe2)
+
+        branch_list = ROOT.vector('string')()
+        blist = analysis.output()
+        for bname in blist:
+            branch_list.push_back(bname)
+
+        evtcount_final = dframe3.Count()
+        sow_final = evtcount_final
+        if config['do_weighted']:
+            sow_final = dframe3.Sum("EventHeader.weight")
+
+        # Generate computational graph of the analysis
+        if args.graph:
+            generate_graph(dframe, args)
+
+        dframe3.Snapshot("events", out_file, branch_list)
+    except Exception as excp:
+        LOGGER.error('During the execution of the analysis file exception '
+                     'occurred:\n%s', excp)
+        sys.exit(3)
+
+    return evtcount_init.GetValue(), evtcount_final.GetValue(), sow_init.GetValue(), sow_final.GetValue()
+
+
+# _____________________________________________________________________________
+def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
+    '''
+    Send jobs to HTCondor batch system.
+    '''
+    local_dir = os.environ['LOCAL_DIR']
+    current_date = datetime.datetime.fromtimestamp(
+        datetime.datetime.now().timestamp()).strftime('%Y-%m-%d_%H-%M-%S')
+    log_dir = os.path.join(local_dir, 'BatchOutputs', current_date,
+                           sample_name)
+    if not os.path.exists(log_dir):
+        os.system(f'mkdir -p {log_dir}')
+
+    # Making sure the FCCAnalyses libraries are compiled and installed
+    try:
+        subprocess.check_output(['make', 'install'],
+                                cwd=local_dir+'/build',
+                                stderr=subprocess.DEVNULL
+                                )
+    except subprocess.CalledProcessError:
+        LOGGER.error('The FCCanalyses libraries are not properly build and '
+                     'installed!\nAborting job submission...')
+        sys.exit(3)
+
+    subjob_scripts = []
+    for ch_num in range(len(chunk_list)):
+        subjob_script_path = os.path.join(
+            log_dir,
+            f'job_{sample_name}_chunk_{ch_num}.sh')
+        subjob_scripts.append(subjob_script_path)
+
+        for i in range(3):
+            try:
+                with open(subjob_script_path, 'w', encoding='utf-8') as ofile:
+                    subjob_script = create_subjob_script(local_dir,
+                                                         analysis,
+                                                         sample_name,
+                                                         ch_num,
+                                                         chunk_list,
+                                                         anapath,
+                                                         args)
+                    ofile.write(subjob_script)
+            except IOError as err:
+                if i < 2:
+                    LOGGER.warning('I/O error(%i): %s',
+                                   err.errno, err.strerror)
+                else:
+                    LOGGER.error('I/O error(%i): %s', err.errno, err.strerror)
+                    sys.exit(3)
+            else:
+                break
+            time.sleep(10)
+        subprocess.getstatusoutput(f'chmod 777 {subjob_script_path}')
+
+    LOGGER.debug('Sub-job scripts to be run:\n - %s',
+                 '\n - '.join(subjob_scripts))
+
+    condor_config_path = f'{log_dir}/job_desc_{sample_name}.cfg'
+
+    for i in range(3):
+        try:
+            with open(condor_config_path, 'w', encoding='utf-8') as cfgfile:
+                condor_config = create_condor_config(log_dir,
+                                                     sample_name,
+                                                     determine_os(local_dir),
+                                                     analysis,
+                                                     subjob_scripts)
+                cfgfile.write(condor_config)
+        except IOError as err:
+            LOGGER.warning('I/O error(%i): %s', err.errno, err.strerror)
+            if i == 2:
                 sys.exit(3)
 
     # Resolve test-file template if needed
@@ -597,66 +696,169 @@ def run_fccanalysis(args, anascript_module) -> None:
     '''
     Run analysis of style "Analysis".
     '''
-    config: dict[str, Any] = {}
+    # Stripping leading and trailing white spaces
+    filepath_stripped = filepath.strip()
+    # Stripping leading and trailing slashes
+    filepath_stripped = filepath_stripped.strip('/')
 
-    # Get analysis class out of the module
-    # Also, execute the "constructor" of the analysis class
-    LOGGER.info('Initializing analysis class...')
-    config |= validate_analysis_class(anascript_module.Analysis(vars(args)))
+    # Splitting the path along slashes
+    filepath_splitted = filepath_stripped.split('/')
 
-    LOGGER.info('Setting run parameters...')
-    # Merge configuration from command line arguments and analysis class
-    config |= merge_config(args, config['analysis-class'])
+    if len(filepath_splitted) > 1 and filepath_splitted[0] == 'eos':
+        if filepath_splitted[1] == 'experiment':
+            filepath = 'root://eospublic.cern.ch//' + filepath_stripped
+        elif filepath_splitted[1] == 'user':
+            filepath = 'root://eosuser.cern.ch//' + filepath_stripped
+        elif 'home-' in filepath_splitted[1]:
+            filepath = 'root://eosuser.cern.ch//eos/user/' + \
+                       filepath_stripped.replace('eos/home-', '')
+        else:
+            LOGGER.warning('Unknown EOS path type!\nPlease check with the '
+                           'developers as this might impact performance of '
+                           'the analysis.')
+    return filepath
 
-    # Set number of threads, load header files, ...
-    global_setup(config)
 
-    # Generate jobs to be run
-    jobs = generate_jobs(config)
+# _____________________________________________________________________________
+def run_local(config: dict[str, any],
+              args: object,
+              analysis: object,
+              infile_list):
+    '''
+    Run analysis locally.
+    '''
+    # Create list of files to be processed
+    info_msg = 'Creating dataframe object from files:\n'
+    file_list = ROOT.vector('string')()
+    # Amount of events processed in previous stage (= 0 if it is the first
+    # stage)
+    nevents_orig = 0
+    # The amount of events in the input file(s)
+    nevents_local = 0
 
-    if len(jobs) <= 0:
-        LOGGER.error('No jobs to be executed!\nAborting...')
-        sys.exit(3)
-    elif len(jobs) == 1:
-        LOGGER.info('Will execute 1 job...')
+    # Same for the sum of weights
+    if config['do_weighted']:
+        sow_orig = 0.
+        sow_local = 0.
+
+    for filepath in infile_list:
+
+        if not config['use_data_source']:
+            filepath = apply_filepath_rewrites(filepath)
+
+        file_list.push_back(filepath)
+        info_msg += f'- {filepath}\t\n'
+
+        if config['do_weighted']:
+             # Adjust number of events in case --nevents was specified
+            if args.nevents > 0:
+                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath, args.nevents)
+            else:
+                nevts_param, nevts_tree, sow_param, sow_tree = get_entries_sow(filepath)
+
+            nevents_orig += nevts_param
+            nevents_local += nevts_tree
+            sow_orig += sow_param
+            sow_local += sow_tree
+
+        else:
+            infile = ROOT.TFile.Open(filepath, 'READ')
+            try:
+                nevents_orig += infile.Get('eventsProcessed').GetVal()
+            except AttributeError:
+                pass
+
+            try:
+                nevents_local += infile.Get("events").GetEntries()
+            except AttributeError:
+                LOGGER.error('Input file:\n%s\nis missing events TTree!\n'
+                             'Aborting...', filepath)
+                infile.Close()
+                sys.exit(3)
+            infile.Close()
+
+             # Adjust number of events in case --nevents was specified
+            if args.nevents > 0 and args.nevents < nevents_local:
+                nevents_local = args.nevents
+
+
+    LOGGER.info(info_msg)
+
+   
+    if nevents_orig > 0:
+        LOGGER.info('Number of events:\n\t- original: %s\n\t- local:    %s',
+                    f'{nevents_orig:,}', f'{nevents_local:,}')
+        if config['do_weighted']:
+            LOGGER.info('Sum of weights:\n\t- original: %s\n\t- local:    %s',
+                        f'{sow_orig:,}', f'{sow_local:,}')
     else:
-        LOGGER.info('Will execute %i jobs...', len(jobs))
+        LOGGER.info('Number of local events: %s', f'{nevents_local:,}')
+        if config['do_weighted']:
+            LOGGER.info('Local sum of weights: %s', f'{sow_local:0,.2f}')
 
-    total_events = 0
-    total_elapsed_time = 0.
 
-    for job in jobs:
-        LOGGER.info('Starting job: %s ...', job['name'])
-        directory, _ = os.path.split(job['output-file'])
-        if directory:
-            os.system(f'mkdir -p {directory}')
+    output_dir = get_attribute(analysis, 'output_dir', '')
+    if not args.batch:
+        if os.path.isabs(args.output):
+            LOGGER.warning('Provided output path is absolute, "outputDir" '
+                           'from analysis script will be ignored!')
+        outfile_path = os.path.join(output_dir, args.output)
+    else:
+        outfile_path = args.output
+    LOGGER.info('Output file path:\n%s', outfile_path)
 
-        dframe_job = Job(job['input-file-list'],
-                         config['analysis-chain'],
-                         config['use-data-source'])
+    # Run RDF
+    start_time = time.time()
+    inn, outn, in_sow, out_sow = run_rdf(config, args, analysis, file_list, outfile_path)
+    elapsed_time = time.time() - start_time
 
-        dframe_job.setup_output(job['output-file'],
-                                config['output-variables'])
+    # replace nevents_local by inn = the amount of processed events
 
-        if config['enable-progress-bar']:
-            dframe_job.enable_progress_bar()
+    info_msg = f"{' SUMMARY ':=^80}\n"
+    info_msg += 'Elapsed time (H:M:S):    '
+    info_msg += time.strftime('%H:%M:%S', time.gmtime(elapsed_time))
+    info_msg += '\nEvents processed/second: '
+    info_msg += f'{int(inn/elapsed_time):,}'
+    info_msg += f'\nTotal events processed:  {int(inn):,}'
+    info_msg += f'\nNo. result events:       {int(outn):,}'
+    if inn > 0:
+        info_msg += f'\nReduction factor local:  {outn/inn}'
+    if nevents_orig > 0:
+        info_msg += f'\nReduction factor total:  {outn/nevents_orig}'
+    if config['do_weighted']:
+        info_msg += f'\nTotal sum of weights processed:  {float(in_sow):0,.2f}'
+        info_msg += f'\nNo. result weighted events :       {float(out_sow):0,.2f}'
+        if in_sow > 0:
+            info_msg += f'\nReduction factor local, weighted:  {float(out_sow/in_sow):0,.4f}'
+        if sow_orig > 0:
+            info_msg += f'\nReduction factor total, weighted:  {float(out_sow/sow_orig):0,.4f}'
+    info_msg += '\n'
+    info_msg += 80 * '='
+    info_msg += '\n'
+    LOGGER.info(info_msg)
 
-        dframe_job.restrict_events(job['n-events-max'],
-                                   job['stride'])
+    # Update resulting root file with number of processed events
+    # and number of selected events
+    with ROOT.TFile(outfile_path, 'update') as outfile:
+        param = ROOT.TParameter(int)(
+                'eventsProcessed',
+                nevents_orig if nevents_orig != 0 else inn)
+        param.Write()
+        param = ROOT.TParameter(int)('eventsSelected', outn) 
+        param.Write()
 
-        dframe_job.run()
+        if config['do_weighted']:
+            param_sow = ROOT.TParameter(float)( 
+                        'SumOfWeights', 
+                        sow_orig if sow_orig != 0 else in_sow )
+            param_sow.Write()
+            param_sow = ROOT.TParameter(float)('SumOfWeightsSelected', out_sow) # No of weighted, selected events
+            param_sow.Write()
+        outfile.Write()
 
-        dframe_job.finalize()
-
-        if config['generate-graph']:
-            dframe_job.generate_analysis_graph(config['graph-path'])
-
-        n_events, elapsed_time = dframe_job.get_benchmark_info()
-        total_events += n_events
-        total_elapsed_time += elapsed_time
-
-    if config['bench']:
-        analysis_name = config['analysis-name'] or config['anascript-path']
+    if args.bench:
+        analysis_name = get_attribute(analysis,
+                                      'analysis_name', args.anascript_path)
 
         bench_time = {}
         bench_time['name'] = 'Time spent running the analysis: ' + \
@@ -676,3 +878,148 @@ def run_fccanalysis(args, anascript_module) -> None:
         bench_evt_per_sec['extra'] = 'Analysis path: ' + \
                                      config['anascript-path']
         save_benchmark('benchmarks_bigger_better.json', bench_evt_per_sec)
+
+
+# _____________________________________________________________________________
+def run_fccanalysis(args, analysis_module):
+    '''
+    Run analysis of style "Analysis".
+    '''
+
+    # Get analysis class out of the module
+    analysis_args = vars(args)
+    analysis = analysis_module.Analysis(analysis_args)
+
+    # Merge configuration from command line arguments and analysis class
+    config: dict[str, any] = merge_config(args, analysis)
+
+    # Set number of threads, load header files, custom dicts, ...
+    initialize(config, args, analysis_module)
+
+    # Check if output directory exist and if not create it
+    output_dir = get_attribute(analysis, 'output_dir', None)
+    if output_dir is not None and not os.path.exists(output_dir):
+        os.system(f'mkdir -p {output_dir}')
+
+    # Check if eos output directory exist and if not create it
+    output_dir_eos = get_attribute(analysis, 'output_dir_eos', None)
+    if output_dir_eos is not None and not os.path.exists(output_dir_eos):
+        os.system(f'mkdir -p {output_dir_eos}')
+
+    if config['do_weighted']:
+        LOGGER.info('Using generator weights')
+
+    # Check if test mode is specified, and if so run the analysis on it (this
+    # will exit after)
+    if args.test:
+        LOGGER.info('Running over test file...')
+        testfile_path = getattr(analysis, "test_file")
+        directory, _ = os.path.split(args.output)
+        if directory:
+            os.system(f'mkdir -p {directory}')
+        run_local(config, args, analysis, [testfile_path])
+        sys.exit(0)
+
+    # Check if files are specified, and if so run the analysis on it/them (this
+    # will exit after)
+    if len(args.files_list) > 0:
+        LOGGER.info('Running over files provided in command line argument...')
+        directory, _ = os.path.split(args.output)
+        if directory:
+            os.system(f'mkdir -p {directory}')
+        run_local(config, args, analysis, args.files_list)
+        sys.exit(0)
+
+    # Check if batch mode is available
+    run_batch = get_attribute(analysis, 'run_batch', False)
+    if run_batch and shutil.which('condor_q') is None:
+        LOGGER.error('HTCondor tools can\'t be found!\nAborting...')
+        sys.exit(3)
+
+    # Check if the process list is specified
+    process_list = get_attribute(analysis, 'process_list', [])
+
+    prod_tag = get_attribute(analysis, 'prod_tag', None)
+
+    input_dir = get_attribute(analysis, 'input_dir', None)
+
+    if prod_tag is None and input_dir is None:
+        LOGGER.error('No input directory or production tag specified in the '
+                     'analysis script!\nAborting...')
+        sys.exit(3)
+
+
+
+    for process_name in process_list:
+        LOGGER.info('Started processing sample "%s" ...', process_name)
+        file_list, event_list = get_process_info(process_name,
+                                                 prod_tag,
+                                                 input_dir)
+
+        if len(file_list) <= 0:
+            LOGGER.error('No files to process!\nAborting...')
+            sys.exit(3)
+
+        # Determine the fraction of the input to be processed
+        fraction = 1
+        if get_element_dict(process_list[process_name], 'fraction'):
+            fraction = get_element_dict(process_list[process_name], 'fraction')
+        # Put together output path
+        output_stem = process_name
+        if get_element_dict(process_list[process_name], 'output'):
+            output_stem = get_element_dict(process_list[process_name],
+                                           'output')
+        # Determine the number of chunks the output will be split into
+        chunks = 1
+        if get_element_dict(process_list[process_name], 'chunks'):
+            chunks = get_element_dict(process_list[process_name], 'chunks')
+
+        info_msg = f'Adding process "{process_name}" with:'
+        if fraction < 1:
+            info_msg += f'\n\t- fraction:         {fraction}'
+        info_msg += f'\n\t- number of files:  {len(file_list):,}'
+        info_msg += f'\n\t- output stem:      {output_stem}'
+        if chunks > 1:
+            info_msg += f'\n\t- number of chunks: {chunks}'
+
+        if fraction < 1:
+            file_list = get_subfile_list(file_list, event_list, fraction)
+
+        chunk_list = [file_list]
+        if chunks > 1:
+            chunk_list = get_chunk_list(file_list, chunks)
+        LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
+
+        # Create directory if more than 1 chunk
+        if len(chunk_list) > 1:
+            output_directory = os.path.join(output_dir if output_dir else '',
+                                            output_stem)
+
+            if not os.path.exists(output_directory):
+                os.system(f'mkdir -p {output_directory}')
+
+        if run_batch:
+            # Sending to the batch system
+            LOGGER.info('Running on the batch...')
+            if len(chunk_list) == 1:
+                LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
+                               'only one chunk might not be optimal\033[0m')
+
+            anapath = os.path.abspath(args.anascript_path)
+
+            send_to_batch(args, analysis, chunk_list, process_name, anapath)
+
+        else:
+            # Running locally
+            LOGGER.info('Running locally...')
+            if len(chunk_list) == 1:
+                args.output = f'{output_stem}.root'
+                run_local(config, args, analysis, chunk_list[0])
+            else:
+                for index, chunk in enumerate(chunk_list):
+                    args.output = f'{output_stem}/chunk{index}.root'
+                    run_local(config, args, analysis, chunk)
+
+    if len(process_list) == 0:
+        LOGGER.warning('No files processed (process_list not found)!\n'
+                       'Exiting...')

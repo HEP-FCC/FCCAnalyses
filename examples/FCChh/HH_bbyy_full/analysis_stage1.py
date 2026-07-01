@@ -28,7 +28,18 @@ class Analysis():
             # # - <name of process> needs to correspond either the name of the input .root file, or the name of a directory containing root files 
             # # If you want to process only part of the events, split the output into chunks or give a different name to the output use the optional arguments
             # # or leave blank to use defaults = run the full statistics in one output file named the same as the process:
-            'pwp8_pp_hh_5f_hhbbyy': {},
+            'pwp8_pp_hh_lambda100_5f_hhbbaa': {'chunks':200},
+            'pwp8_pp_hh_lambda240_5f_hhbbaa': {'chunks':200},
+            'pwp8_pp_hh_lambda300_5f_hhbbaa': {'chunks':200},
+            'pwp8_pp_hh_lambda000_5f_hhbbaa': {'chunks':200},
+            #single Higgs bkgs
+            'mgp8_pp_h012j_5f_haa': {'chunks':100},
+            'mgp8_pp_vbf_h01j_5f_haa': {'chunks':100},
+            'mgp8_pp_tth01j_5f_haa': {'chunks':200},
+            'mgp8_pp_vh012j_5f_haa': {'chunks':100},
+            #yy+jets continuum bkg
+            'mgp8_pp_jjaa_5f': {'chunks':250},
+
         }
 
         # Mandatory: Input directory where to find the samples, or a production tag when running over the centrally produced

@@ -30,6 +30,8 @@ TLorentzVector getTLV_MC(edm4hep::MCParticleData MC_part);
 struct RecoParticlePair {
   edm4hep::ReconstructedParticleData particle_1;
   edm4hep::ReconstructedParticleData particle_2;
+  int flavour_flag = 0;
+  int pair_used = false;
   TLorentzVector merged_TLV() {
     TLorentzVector tlv_1 = getTLV_reco(particle_1);
     TLorentzVector tlv_2 = getTLV_reco(particle_2);
@@ -52,6 +54,11 @@ struct RecoParticlePair {
       return;
     }
   }
+
+  // helper for selection pairs in H4l combinatorics:
+  // NEW: indices in original pos/neg vectors for safe removal
+    size_t idx_pos{0}; // default 0
+    size_t idx_neg{0}; // default 0
 };
 
 // same for MC particle
@@ -86,6 +93,8 @@ struct MCParticlePair {
 // other functions (in a vector)
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 merge_pairs(ROOT::VecOps::RVec<RecoParticlePair> pairs);
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
+merge_pair(RecoParticlePair pair);
 int get_n_pairs(ROOT::VecOps::RVec<RecoParticlePair> pairs);
 ROOT::VecOps::RVec<RecoParticlePair>
 get_first_pair(ROOT::VecOps::RVec<RecoParticlePair>
@@ -98,6 +107,14 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 get_first_from_pair(ROOT::VecOps::RVec<RecoParticlePair> pairs);
 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
 get_second_from_pair(ROOT::VecOps::RVec<RecoParticlePair> pairs);
+
+//same for MCParticlePair
+ROOT::VecOps::RVec<edm4hep::MCParticleData>
+merge_pairs(ROOT::VecOps::RVec<MCParticlePair> pairs);
+ROOT::VecOps::RVec<MCParticlePair>
+get_first_pair(ROOT::VecOps::RVec<MCParticlePair>
+                   pairs); // can use to get leading pair if the inputs to pair
+                           // finding fct were pT sorted
 
 // truth filter used to get ZZ(llvv) events from the ZZ(llvv+4l+4v) inclusive
 // signal samples
@@ -125,6 +142,14 @@ bool isGluon(edm4hep::MCParticleData truth_part);
 bool isc(edm4hep::MCParticleData truth_part);
 bool iss(edm4hep::MCParticleData truth_part);
 bool isMuon(edm4hep::MCParticleData truth_part);
+bool isElectron(edm4hep::MCParticleData truth_part);
+int checkZllDecay(edm4hep::MCParticleData truth_Z,
+                ROOT::VecOps::RVec<podio::ObjectID> daughter_ids,
+                ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles);
+ROOT::VecOps::RVec<int> getTruthZ4lFlavourFlag(
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
+    ROOT::VecOps::RVec<podio::ObjectID> parent_ids,
+    ROOT::VecOps::RVec<podio::ObjectID> daughter_ids);
 int checkZDecay(edm4hep::MCParticleData truth_Z,
                 ROOT::VecOps::RVec<podio::ObjectID> daughter_ids,
                 ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles);
@@ -138,6 +163,11 @@ int findHiggsDecayChannel(
     ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
     ROOT::VecOps::RVec<podio::ObjectID> daughter_ids);
 
+// for checking inclusive VH(yy) sample: what W or Z decay?
+int checkVHChannel(
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
+    ROOT::VecOps::RVec<podio::ObjectID> daughter_ids);
+
 // truth level fct to get a Z->ll truth decay
 ROOT::VecOps::RVec<edm4hep::MCParticleData>
 getTruthZll(ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
@@ -146,6 +176,11 @@ getTruthZll(ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
 // find the SFOS pair of reconstructed leptons (electrons or muons)
 ROOT::VecOps::RVec<RecoParticlePair>
 getOSPairs(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> leptons_in);
+
+// find OS pairs in truth particles
+ROOT::VecOps::RVec<MCParticlePair>
+getOSPairs(ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_parts);
+
 ROOT::VecOps::RVec<RecoParticlePair> getDFOSPairs(
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> electrons_in,
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> muons_in);
@@ -158,6 +193,55 @@ ROOT::VecOps::RVec<RecoParticlePair>
 getLeadingPair(ROOT::VecOps::RVec<RecoParticlePair> electron_pairs,
                ROOT::VecOps::RVec<RecoParticlePair>
                    muon_pairs); // pair with leading pT(pair)
+
+
+// helpers for H->ZZ->4l lepton pairs selection
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get_pos_particles(
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> particles_in);
+
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get_neg_particles(
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> particles_in);
+
+bool make_lepton_pair(
+    const edm4hep::ReconstructedParticleData& lep1,
+    const edm4hep::ReconstructedParticleData& lep2,
+    float lead_pt_cut,
+    float sublead_pt_cut,
+    int flavour_flag,
+    RecoParticlePair& pair_out);
+
+ROOT::VecOps::RVec<RecoParticlePair> sort_pairs_by_mZ(
+    const ROOT::VecOps::RVec<RecoParticlePair>& pairs,
+    float mZ = 91.1876);
+
+// for the H->ZZ->4l analysis: build to OS, SF pairs 
+ROOT::VecOps::RVec<RecoParticlePair> build_Zll_pairs(
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selected_muons,
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selected_electrons);
+
+ROOT::VecOps::RVec<int> get_4l_flavour_flag(
+    RecoParticlePair leading_pair,
+    RecoParticlePair subleading_pair);
+
+//variables from ATLAS H4l analysis:
+ROOT::VecOps::RVec<double> get_cos_theta_star(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4);
+
+ROOT::VecOps::RVec<double> get_cos_theta_lep_to_Z(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4,
+    bool useLeadingZ);
+
+ROOT::VecOps::RVec<double> get_phi_decay_planes(
+    const TLorentzVector& lep1,
+    const TLorentzVector& lep2,
+    const TLorentzVector& lep3,
+    const TLorentzVector& lep4);
 
 // make a general pair, not caring about charges, e.g. the two b-jets
 ROOT::VecOps::RVec<RecoParticlePair>
@@ -370,6 +454,9 @@ getLepsFromZ(ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
              ROOT::VecOps::RVec<podio::ObjectID> parent_ids);
 ROOT::VecOps::RVec<edm4hep::MCParticleData>
 getPhotonsFromH(ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
+                ROOT::VecOps::RVec<podio::ObjectID> parent_ids);
+ROOT::VecOps::RVec<edm4hep::MCParticleData>
+getWFromH(ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
                 ROOT::VecOps::RVec<podio::ObjectID> parent_ids);
 ROOT::VecOps::RVec<int> getTruthLepLepFlavour(
     ROOT::VecOps::RVec<edm4hep::MCParticleData> leps_from_tau);

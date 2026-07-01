@@ -239,6 +239,9 @@ namespace MCParticle{
                                              const ROOT::VecOps::RVec<edm4hep::MCParticleData> &in,
                                              const ROOT::VecOps::RVec<int> &ind);
 
+  //scalar HT: scalar pT sum of all stable gen particles
+  float scalarHT(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
 
 }//end NS MCParticle
 

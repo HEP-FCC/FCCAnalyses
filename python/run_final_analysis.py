@@ -17,8 +17,8 @@ from typing import Any, Union
 import ROOT  # type: ignore
 import cppyy  # type: ignore
 from anascript import get_element, get_attribute
-from sample import get_process_dict, get_entries_sow
-from utils import generate_graph
+from process import get_process_dict, get_entries_sow
+from frame import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run_final')
 
@@ -297,6 +297,22 @@ def run(rdf_module, config, args) -> None:
         sow_process = process_events.copy()
         sow_ttree = events_ttree.copy()
 
+    # Check if using weighted events is requested
+    do_weighted = get_attribute(rdf_module, 'do_weighted', False)
+
+    if do_weighted:
+        LOGGER.info('Using generator weights')
+        sow_process = process_events.copy()
+        sow_ttree = events_ttree.copy()
+
+    # Check if using weighted events is requested
+    do_weighted = get_attribute(rdf_module, 'do_weighted', False)
+
+    if do_weighted:
+        LOGGER.info('Using generator weights')
+        sow_process = process_events.copy()
+        sow_ttree = events_ttree.copy()
+
     # Checking input directory
     input_dir = get_attribute(rdf_module, 'inputDir', '')
     if not input_dir:
@@ -332,40 +348,53 @@ def run(rdf_module, config, args) -> None:
     for process_name in process_list:
         process_events[process_name] = 0
         events_ttree[process_name] = 0
-        if config['do-weighted']:
+        if do_weighted:
             sow_process[process_name] = 0.
             sow_ttree[process_name] = 0.
 
         file_list[process_name] = ROOT.vector('string')()
 
-        flist = find_sample_files(input_dir, process_name)
-        for filepath in flist:
-            # TODO: check in `get_entries()` if file is valid and remove it
-            #       from the input list if it is not
-            if config['do-weighted']:
-                chunk_process_events, chunk_events_ttree, \
+        infilepath = input_dir + process_name + '.root'  # input file
+        
+        if not os.path.isfile(infilepath):
+            LOGGER.debug('File %s does not exist!\nTrying if it is a '
+                         'directory as it might have been processed in batch.',
+                         infilepath)
+        else:
+            LOGGER.info('Open file:\n  %s', infilepath)
+            if do_weighted:
+                process_events[process_name], events_ttree[process_name], \
+                sow_process[process_name], sow_ttree[process_name] = \
+                    get_entries_sow(infilepath, weight_name="weight")
+            else:
+                process_events[process_name], events_ttree[process_name] = \
+                    get_entries(infilepath)
+            file_list[process_name].push_back(infilepath)
+
+        indirpath = input_dir + process_name
+        if os.path.isdir(indirpath):
+            #reset the nevts/sow counters to avoid wrong counting in case a single file of same name (e.g. local test output) also exists in the same directory
+            process_events[process_name] = 0
+            events_ttree[process_name] = 0
+            sow_process[process_name] = 0.
+            sow_ttree[process_name] = 0.
+
+            info_msg = f'Open directory {indirpath}'
+            flist = glob.glob(indirpath + '/chunk*.root')
+            for filepath in flist:
+                info_msg += '\n\t' + filepath
+                if do_weighted:
+                    chunk_process_events, chunk_events_ttree, \
                     chunk_sow_process, chunk_sow_ttree = \
                     get_entries_sow(filepath, weight_name="weight")
-                sow_process[process_name] += chunk_sow_process
-                sow_ttree[process_name] += chunk_sow_ttree
-            else:
-                chunk_process_events, chunk_events_ttree = \
-                    get_entries(filepath)
-            process_events[process_name] += chunk_process_events
-            events_ttree[process_name] += chunk_events_ttree
-            file_list[process_name].push_back(filepath)
-        if len(file_list[process_name]) < 1:
-            LOGGER.error('No valid input files for sample "%s" '
-                         'found!\nAborting..', process_name)
-            sys.exit(3)
-        if len(file_list[process_name]) == 1:
-            LOGGER.info('Loading events for sample "%s" from file:\n  - %s',
-                        process_name, file_list[process_name][0])
-        else:
-            info_msg = f'Loading events for sample "{process_name}"'
-            info_msg += ' from files:'
-            for filepath in file_list[process_name]:
-                info_msg += f'\n  - {filepath}'
+                    sow_process[process_name] += chunk_sow_process
+                    sow_ttree[process_name] += chunk_sow_ttree
+                else:
+                    chunk_process_events, chunk_events_ttree = \
+                        get_entries(filepath)
+                process_events[process_name] += chunk_process_events
+                events_ttree[process_name] += chunk_events_ttree
+                file_list[process_name].push_back(filepath)
             LOGGER.info(info_msg)
 
     info_msg = 'Processed events:'
@@ -374,18 +403,19 @@ def run(rdf_module, config, args) -> None:
     LOGGER.info(info_msg)
     info_msg = 'Events in the TTree:'
     for process_name, n_events in events_ttree.items():
-        info_msg += f'\n  - {process_name}: {n_events:,}'
+        info_msg += f'\n\t- {process_name}: {n_events:,}'
     LOGGER.info(info_msg)
 
-    if config['do-weighted']:
+    if do_weighted:
         info_msg = 'Processed sum of weights:'
         for process_name, sow in sow_process.items():
-            info_msg += f'\n  - {process_name}: {sow:,}'
+            info_msg += f'\n\t- {process_name}: {sow:,}'
         LOGGER.info(info_msg)
         info_msg = 'Sum of weights in the TTree:'
         for process_name, sow in sow_ttree.items():
-            info_msg += f'\n  - {process_name}: {sow:,}'
+            info_msg += f'\n\t- {process_name}: {sow:,}'
         LOGGER.info(info_msg)
+
 
     # Check if there are any histograms defined
     histo_list: dict[str, dict[str, Any]] = get_attribute(rdf_module,
@@ -548,19 +578,14 @@ def run(rdf_module, config, args) -> None:
         all_events_raw = dframe.Count().GetValue()
         all_events_weighted = all_events_raw
 
-        if config['do-weighted']:
-            # check that the weight column exists, it should always be called
-            # "weight" for now
+        if do_weighted:
+            # check that the weight column exists, it should always be called "weight" for now
             try:
                 all_events_weighted = dframe.Sum("weight").GetValue()
-                info_msg = 'Successfully applied event weights, got ' + \
-                           f'weighted events = {all_events_weighted:0,.2f}'
-                LOGGER.info(info_msg)
+                LOGGER.info(f'Successfully applied event weights, got weighted events = {all_events_weighted:0,.2f}')
             except cppyy.gbl.std.runtime_error:
-                LOGGER.error(
-                    'Event weights requested but the input file does not '
-                    'contain the "weight" column.\nAborting...'
-                )
+                LOGGER.error('Error: Event weights requested with do_weighted, '
+                                'but input file does not contain weight column. Aborting.')
                 sys.exit(3)
 
         LOGGER.info('Done')
@@ -570,16 +595,16 @@ def run(rdf_module, config, args) -> None:
 
         if do_scale:
             LOGGER.info('Scaling cut yields...')
-            if config['do-weighted']:
-                all_events = (all_events_weighted * 1. * gen_sf *
-                              int_lumi) / sow_process[process_name]
-                uncertainty = (math.sqrt(all_events_weighted) * gen_sf *
-                               int_lumi) / sow_process[process_name]
+            if do_weighted:
+                    all_events = all_events_weighted * 1. * gen_sf * \
+                        int_lumi / sow_process[process_name]
+                    uncertainty = ROOT.Math.sqrt(all_events_weighted) * gen_sf * \
+                        int_lumi / sow_process[process_name]
             else:
-                all_events = (all_events_raw * 1. * gen_sf *
-                              int_lumi / process_events[process_name])
-                uncertainty = (math.sqrt(all_events_raw) * gen_sf *
-                               int_lumi / process_events[process_name])
+                all_events = all_events_raw * 1. * gen_sf * \
+                    int_lumi / process_events[process_name]
+                uncertainty = ROOT.Math.sqrt(all_events_raw) * gen_sf * \
+                    int_lumi / process_events[process_name]
         else:
             all_events = all_events_raw
             uncertainty = math.sqrt(all_events_raw)
@@ -654,30 +679,28 @@ def run(rdf_module, config, args) -> None:
                     hist_name = hist.GetName() + '_raw'
                     outfile.WriteObject(hist.GetValue(), hist_name)
                     if do_scale:
-                        if config['do-weighted']:
+                        if do_weighted:
                             hist.Scale(gen_sf * int_lumi /
-                                       sow_process[process_name])
+                                       sow_process[process_name])         
                         else:
                             hist.Scale(gen_sf * int_lumi /
                                        process_events[process_name])
-                    outfile.WriteObject(hist.GetValue())
+                        outfile.WriteObject(hist.GetValue())
 
                 # write all metadata info to the output file
                 param = ROOT.TParameter(int)("eventsProcessed",
                                              process_events[process_name])
                 outfile.WriteObject(param)
 
-                if config['do-weighted']:
+                if do_weighted:
                     param = ROOT.TParameter(float)("sumOfWeights",
                                                    sow_process[process_name])
                     outfile.WriteObject(param)
 
                 else:
-                    param = ROOT.TParameter(float)(
-                        "sumOfWeights",
-                        process_events[process_name]
-                    )
-                    outfile.WriteObject(param)
+                    param = ROOT.TParameter(float)("sumOfWeights",
+                                                   process_events[process_name])
+                    outfile.WriteObject(param) 
 
                 param = ROOT.TParameter(bool)("scaled",
                                               do_scale)
@@ -715,25 +738,23 @@ def run(rdf_module, config, args) -> None:
                                  'events!', cut, process_name)
                     sys.exit(3)
 
-                # Store also the TParameters for total number of events and
-                # sum of weights to the trees
-                LOGGER.info('Updating file "%s"', fout_list[i])
+                #store also the TParameters for total number of events and sum of weights to the trees
+                print("Updating file", fout_list[i])
                 outfile = ROOT.TFile(fout_list[i], 'update')
-                param = ROOT.TParameter(int)('eventsProcessed',
-                                             process_events[process_name])
-                LOGGER.info("Number of events processed: %g",
-                            process_events[process_name])
+                param = ROOT.TParameter(int)('eventsProcessed', process_events[process_name])
+                print("Number of events processed:", process_events[process_name])
                 param.Write()
-                if config['do-weighted']:
-                    param2 = ROOT.TParameter(float)('sumOfWeights',
-                                                    sow_process[process_name])
-                    LOGGER.info("Sum of weights: %g",
-                                sow_process[process_name])
+                if do_weighted:
+                    param2 = ROOT.TParameter(float)('SumOfWeights', sow_process[process_name])
+                    print("Sum of weights:", sow_process[process_name])
                     param2.Write()
                 outfile.Write()
                 outfile.Close()
 
-    # Save the results either to JSON or LaTeX tables
+
+
+
+    # Save results either to JSON or LaTeX tables
     save_results(results, rdf_module)
 
     elapsed_time = time.time() - start_time

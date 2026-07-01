@@ -10,7 +10,7 @@
 #include "TMath.h"
 #include "TMatrixDSym.h"
 #include "TRandom.h"
-// EDM4hep
+#include "TRandom3.h"
 #include "edm4hep/MCParticleData.h"
 #include "edm4hep/RecDqdxData.h"
 // FCCAnalyses
@@ -102,15 +102,17 @@ struct SmearedReconstructedParticle {
   float m_scale;
   int m_type;
   int m_mode;
-  SmearedReconstructedParticle(float scale, int type, int mode, bool debug);
+  int m_event_number;
+  SmearedReconstructedParticle(float scale, int type, int mode, int event_number, bool debug);
 
   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
   operator()(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>
                  &allRecoParticles,
              const ROOT::VecOps::RVec<int> &RP2MC_indices,
-             const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles);
+             const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mcParticles,
+             const ROOT::VecOps::RVec<int> recoIndices);
 };
 
 } // namespace FCCAnalyses::SmearObjects
 
-#endif /* SMEAR_OBJECTS_ANALYZERS_H */
+#endif

@@ -775,6 +775,28 @@ ROOT::VecOps::RVec<int> get_leptons_origin(const ROOT::VecOps::RVec<edm4hep::MCP
   return result;
 }
 
+float scalarHT(ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
+  float result = 0;
+  float result_nomu = 0;
+  float result_mu = 0;
+  TLorentzVector tlv_tot;
+  for (size_t i = 0; i < in.size(); ++i) {
+    auto & p = in[i];
+
+    // print particle characteristics, momenta and mothers and dauters, and status
+
+    if (p.generatorStatus != 1 )
+      continue;
+
+    // std::cout << "i= " << i << "  PDGID "<< p.PDG  <<  "  status  " << p.generatorStatus << " momentum " << p.momentum.x << " " << p.momentum.y << " " << p.momentum.z << " " << p.mass << std::endl;
+    TLorentzVector tlv;
+    tlv.SetXYZM(p.momentum.x, p.momentum.y, p.momentum.z, p.mass);
+    result += tlv.Pt();
+  }
+
+  return result;
+}
+
 }//end NS MCParticle
 
 }//end NS FCCAnalyses
