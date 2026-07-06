@@ -139,11 +139,14 @@ class DatacardWriter:
 
 
 def validate_datacard(user_datacard) -> None:
-    """Validates the properties within the loaded user Datacard object."""
+    """Validates properties and verifies shape histogram existence in ROOT files."""
+    import ROOT
+
     channels = getattr(user_datacard, 'channels', {})
     if not channels:
         LOGGER.warning("No channels defined in the datacard object.")
 
+    # 1. Standard structural and rate checks
     for ch_name, ch_data in channels.items():
         obs = ch_data.get('observation', 0)
         if not (isinstance(obs, (int, float)) and (obs >= 0 or obs == -1)):
@@ -161,11 +164,58 @@ def validate_datacard(user_datacard) -> None:
 
     valid_syst_types = ['lnN', 'shape', 'gmM', 'gmN']
     systematics = getattr(user_datacard, 'systematics', {})
+    shapes_config = getattr(user_datacard, 'shapes', {})
+
+    # 2. Advanced Shape Systematics Check
     for syst_name, syst_data in systematics.items():
         s_type = syst_data.get('type')
         if s_type not in valid_syst_types:
             raise ValueError(f"Validation Error: Invalid systematic type '{s_type}' for '{syst_name}'. Allowed: {valid_syst_types}")
 
+        # If it's a shape systematic, verify the physical histograms exist
+        if s_type == 'shape':
+            apply_to = syst_data.get('apply_to', {})
+            
+            for ch_name, ch_info in channels.items():
+                # Determine what the shape mapping rule is for this channel
+                # Handles wildcard '*' or specific process rules
+                mapping_rule = shapes_config.get('*', {}).get(ch_name) or shapes_config.get(proc_name, {}).get(ch_name)
+                
+                if not mapping_rule:
+                    continue
+                
+                # Extract the ROOT file path (assumes space-separated path and inner structure mapping)
+                root_file_path = mapping_rule.split()[0]
+                
+                if not os.path.isfile(root_file_path):
+                    LOGGER.warning("Shape file '%s' not created yet or using relative build path. Skipping deep object check.", root_file_path)
+                    continue
+
+                # Open the file via PyROOT to peek inside
+                r_file = ROOT.TFile.Open(root_file_path, "READ")
+                if not r_file or r_file.IsZombie():
+                    raise ValueError(f"Validation Error: Failed to open shape ROOT file: {root_file_path}")
+
+                for proc_name in ch_info.get('processes', {}).keys():
+                    if proc_name in apply_to and str(apply_to[proc_name]) != '-':
+                        
+                        # Resolve the inner path template (e.g., $CHANNEL/$PROCESS -> mumu_bjets_channel/ZH_signal)
+                        base_path = mapping_rule.split()[1].replace('$CHANNEL', ch_name).replace('$PROCESS', proc_name)
+                        
+                        # Combine expects clones with "Up" and "Down" appended to the nominal path/name
+                        for variation in ['Up', 'Down']:
+                            target_hist_path = f"{base_path}_{syst_name}{variation}"
+                            hist = r_file.Get(target_hist_path)
+                            
+                            if not hist or not hist.InheritsFrom("TH1"):
+                                r_file.Close()
+                                raise ValueError(
+                                    f"Validation Error: Missing required shape histogram!\n"
+                                    f"  File: {root_file_path}\n"
+                                    f"  Expected Path: {target_hist_path}\n"
+                                    f"  Reason: Systematic '{syst_name}' is declared as 'shape' for '{proc_name}' in '{ch_name}'."
+                                )
+                r_file.Close()
 
 def generate_datacard(anapath: str, output_path: str) -> None:
     """Sub-command engine execution block."""

@@ -1,14 +1,13 @@
 class Datacard:
     def __init__(self):
         # 1. Global framework configurations
-        self.autoMCStats = True
+        self.autoMCStats = False
 
         # 2. Path templates for the input shape histograms
-        # Maps the processes to the ROOT file containing the physical templates
         self.shapes = {
             "*": {
-                "mumu_bjets_channel": "fcc_ee_zh_shapes.root $CHANNEL/$PROCESS",
-                "mumu_inter_channel": "fcc_ee_zh_shapes.root $CHANNEL/$PROCESS"
+                "mumu_bjets_channel": "fcc_ee_zh_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC",
+                "mumu_inter_channel": "fcc_ee_zh_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC"
             }
         }
 
@@ -75,6 +74,14 @@ class Datacard:
                 "type": "lnN",
                 "apply_to": {
                     "ZZ_bkg": 1.04
+                }
+            },
+            # Recoil mass resolution shape systematic
+            "recoil_res": {
+                "type": "shape",
+                "apply_to": {
+                    "ZH_signal": 1.0,
+                    "ZZ_bkg":    1.0
                 }
             }
         }
