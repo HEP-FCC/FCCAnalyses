@@ -34,6 +34,8 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
                 base_command = ['combine', '-M', 'AsymptoticLimits', output_path]
                 
                 # 2. Append whatever the user passed after the '--'
+                if tool_args and tool_args[0] == '--':
+                    tool_args = tool_args[1:]
                 full_command = base_command + tool_args
 
                 subprocess.run(full_command, check=True)
