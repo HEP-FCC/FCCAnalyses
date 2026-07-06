@@ -30,14 +30,20 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
 
             LOGGER.info('Launching Combine statistical engine execution on: %s', output_path)
             try:
-                # 1. Start with the clean, default framework command
-                base_command = ['combine', '-M', 'AsymptoticLimits', output_path]
-                
-                # 2. Append whatever the user passed after the '--'
+                # 1. Strip the '--' separator if present
                 if tool_args and tool_args[0] == '--':
                     tool_args = tool_args[1:]
-                full_command = base_command + tool_args
 
+                # 2. Check if the user explicitly provided a custom method
+                if '-M' in tool_args or '--method' in tool_args:
+                    # Drop the default AsymptoticLimits so they don't clash
+                    base_command = ['combine', output_path]
+                else:
+                    # Fallback to the default minimizer
+                    base_command = ['combine', '-M', 'AsymptoticLimits', output_path]
+
+                # 3. Combine and execute
+                full_command = base_command + tool_args
                 subprocess.run(full_command, check=True)
                 
             except subprocess.CalledProcessError as e:
