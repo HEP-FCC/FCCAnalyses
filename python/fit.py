@@ -9,8 +9,10 @@ LOGGER = logging.getLogger('FCCAnalyses.fit')
 
 def run_fit(parser: argparse.ArgumentParser) -> None:
     """Sub-command entry point for object-oriented fitting configurations."""
-    args = parser.parse_args()
     
+    # parse_known_args splits recognized flags from extra forwarding flags
+    args, tool_args = parser.parse_known_args()
+
     anapath = os.path.abspath(args.script_path)
     output_path = args.output
     backend = args.backend.lower()
@@ -20,22 +22,22 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
     if backend == 'combine':
         from combine import generate_datacard
         generate_datacard(anapath, output_path)
-        
-        # If the user requested live execution
+
         if args.execute:
             if shutil.which('combine') is None:
-                LOGGER.error('The "combine" command-line tool cannot be found in your current environment path!\n'
-                             'Please ensure you have sourced your Combine workspace before running execution.')
+                LOGGER.error('The "combine" command-line tool cannot be found...')
                 sys.exit(6)
-                
+
             LOGGER.info('Launching Combine statistical engine execution on: %s', output_path)
             try:
-                # Executes the single-line combine limit calculation command
-                subprocess.run(['combine', '-M', 'AsymptoticLimits', output_path], check=True)
-            except subprocess.CalledProcessError as e:
-                LOGGER.error('Combine statistical fitting execution failed! Error code: %s', e.returncode)
-                sys.exit(7)
+                # 1. Start with the clean, default framework command
+                base_command = ['combine', '-M', 'AsymptoticLimits', output_path]
                 
-    elif backend == 'pyhf':
-        LOGGER.error('Backend "pyhf" is planned but not yet implemented! Aborting...')
-        sys.exit(5)
+                # 2. Append whatever the user passed after the '--'
+                full_command = base_command + tool_args
+
+                subprocess.run(full_command, check=True)
+                
+            except subprocess.CalledProcessError as e:
+                LOGGER.error('Combine statistical fitting execution failed!')
+                sys.exit(7)
