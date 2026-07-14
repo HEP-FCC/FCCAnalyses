@@ -2199,6 +2199,326 @@ int has_anglethrust_emin(ROOT::VecOps::RVec<float> angle){
   return -1;
 }
 
+// Identify hadronic tau decays from a jet collection and, optionally, extract specific
+// sub-components of the decay (e.g. the charged/neutral pions of a 1- or 3-prong decay).
+// Efficiency of the code and validation can be found in https://arxiv.org/abs/2601.11383.
+//
+// Usage: first cluster the event into jets (e.g. clustering_ee_kt(2, 4, 1, 0)), then call this
+// function on the jet constituents. For each jet, the algorithm:
+//   1) picks the highest-pT charged constituent as the seed ("leading pion"),
+//   2) rejects the jet if that seed is below `kLeadPtMin` GeV, or if the jet contains a
+//      constituent identified as an electron or muon,
+//   3) adds further charged/neutral constituents within `kConeHalfAngle` rad of the running
+//      tau direction and above `kCompanionPtMin` GeV,
+//   4) classifies the candidate by prong multiplicity (1 or 3 charged tracks, net charge +-1)
+//      and photon/neutral-hadron count into a `tauID` (see table below), and discards the
+//      candidate (tauID = -2) if its visible mass exceeds `kTauMassMax` GeV.
+//
+// `request` selects which four-vector is written out for a candidate:
+//    0 : full visible tau
+//    1 : charged pion with the same charge as the tau
+//        (for a 3-prong decay, the one paired with the opposite-charge pion closest to
+//        the rho(770) mass; for a 1-prong decay, simply the leading pion)
+//    2 : the tau's other component - the opposite-charge pion of the rho pair (3-prong)
+//        or the summed neutral system (1-prong)
+//    3 : sum of all charged pions
+//    4 (or any other value) : summed neutral system only
+//   Requests 1-4 only differ from each other in the 3-prong case; for 1-prong decays,
+//   1 == the single charged pion and 2/4 == the neutral system.
+//
+// Output: one edm4hep::ReconstructedParticleData entry per input jet (never skipped), so the
+// output vector can be zipped index-by-index with the input jets and filtered by `type`:
+//   type == tauID (0-6 for 1-prong, 10-16 for 3-prong, higher tauID = more photons/pi0s found)
+//   type == -1  : no charged constituent above kLeadPtMin found in the jet
+//   type == -11 : jet contains an electron
+//   type == -13 : jet contains a muon
+//   type == -2  : visible mass >= kTauMassMax
+//   type == -3  : constituents don't form a valid 1- or 3-prong
+//   type == -4  : leading charged constituent has |charge| != 1 (not expected in practice)
+ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> findTauInJet (const ROOT::VecOps::RVec< FCCAnalyses::JetConstituentsUtils::FCCAnalysesJetConstituents   >& jets, int request){
+
+  // Constituent mass windows used to veto electrons/muons
+  constexpr double kMuonMass = 0.105658;        // GeV
+  constexpr double kElectronMass = 0.000510999; // GeV
+  constexpr double kMuonMassTol = 1.e-03;
+  constexpr double kElectronMassTol = 1.e-05;
+  // pT thresholds (GeV)
+  constexpr double kLeadPtMin = 2.0;
+  constexpr double kCompanionPtMin = 1.0;
+  // Half-opening angle (rad) of the cone
+  constexpr double kConeHalfAngle = 0.20;
+  // Nominal rho(770) mass (GeV)
+  constexpr double kRhoMass = 0.775;
+  // Reject candidates with a visible mass at or above this (GeV)
+  constexpr double kTauMassMax = 3.0;
+
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> out;
+
+  for (size_t i = 0; i < jets.size(); ++i) {
+
+    // Full visible tau (0 in request)
+    TLorentzVector sum_tau;
+    edm4hep::ReconstructedParticleData Tau;
+    // Neutral constituents (2 or 4 in request)
+    TLorentzVector neutral;
+    // Charged constituents (1 or 3 in request)
+    TLorentzVector charged;
+    // Individual ones
+    ROOT::VecOps::RVec<TLorentzVector> charged_vec;
+    // Their charge
+    ROOT::VecOps::RVec<int> charges_vec;
+    // Their track index to access later for track related variables
+    ROOT::VecOps::RVec<int> track_vec;
+
+    int tauID = -1;
+    int count_piP = 0, count_piM = 0, count_pho = 0;
+
+    // Leading particle
+    TLorentzVector lead;
+    lead.SetPxPyPzE(0, 0, 0, 0);
+    int chargeLead = 0;
+    int track = 0;
+
+    FCCAnalyses::JetConstituentsUtils::FCCAnalysesJetConstituents jcs = jets.at(i);
+
+    // First loop through the constituents to find the leading pion.
+    for (const auto& jc : jcs) {
+
+      // No electrons or muons in hadronic tau decays
+      if (fabs(jc.mass - kMuonMass) < kMuonMassTol) {
+        tauID = -13;
+        continue;
+      }
+      if (fabs(jc.mass - kElectronMass) < kElectronMassTol) {
+        tauID = -11;
+        continue;
+      }
+
+      // Now find the leading charged particle
+      if (sqrt(jc.momentum.x*jc.momentum.x + jc.momentum.y*jc.momentum.y) > lead.Pt() && jc.charge != 0) {
+        lead.SetPxPyPzE(jc.momentum.x, jc.momentum.y, jc.momentum.z, jc.energy);
+        chargeLead = jc.charge;
+        track = jc.tracks_begin; // This saves the index in the track collection related to the leading pion
+      }
+    }
+
+    charges_vec.push_back(chargeLead);
+    charged_vec.push_back(lead);
+    track_vec.push_back(track);
+
+    if (lead.Pt() < kLeadPtMin) {
+      tauID = -1;
+      Tau.type = tauID;
+      out.push_back(Tau);
+      continue;
+    } // Too low pt, the particle will be empty but still will show up as an entry
+
+    if (tauID==-13 || tauID==-11) {
+      Tau.type = tauID;
+      out.push_back(Tau);
+      continue;
+    } // Leptons in jet, the particle will be empty but still will show up as an entry
+
+    if (chargeLead==1) {
+      count_piP++;
+    } else if (chargeLead==-1) {
+      count_piM++;
+    } else {
+      // Not expected: the seed passed the charge!=0 check above, so |charge| should be 1.
+      Tau.type = -4;
+      out.push_back(Tau);
+      continue;
+    }
+
+    sum_tau += lead;
+    charged += lead;
+
+    // Now loop to build the tau adding candidates to the lead only if they satisfy some conditions: distance, charge, etc
+    for (const auto& jc : jcs) {
+
+      TLorentzVector tlv;
+      tlv.SetPxPyPzE(jc.momentum.x, jc.momentum.y, jc.momentum.z, jc.energy);
+
+      if (tlv==lead) continue;
+
+      // Distance (in terms of Theta) to the running tau direction
+      double dTheta = fabs(sum_tau.Theta() - tlv.Theta());
+
+      if (tlv.Pt()<kCompanionPtMin || dTheta>kConeHalfAngle) continue;
+
+      if (jc.charge>0) {
+        count_piP++;
+        charged += tlv;
+        charges_vec.push_back(jc.charge);
+        charged_vec.push_back(tlv);
+        track_vec.push_back(jc.tracks_begin);
+      } else if (jc.charge<0) {
+        count_piM++;
+        charged += tlv;
+        charges_vec.push_back(jc.charge);
+        charged_vec.push_back(tlv);
+        track_vec.push_back(jc.tracks_begin);
+      } else {
+        count_pho++;
+        neutral += tlv;
+      }
+
+      sum_tau += tlv;
+    }
+
+    // Lets build the ID : count the charged pions and the neutrals.
+    // Considering the decays of the tau, we want candidates with one or three charged candidates (one or three prongs).
+    // The ID is then increased depending on the number of photons/neutral hadrons found.
+
+    if (tauID!=-13 && tauID!=-11 && abs(count_piP-count_piM)==1 && ((count_piP+count_piM)==1 || (count_piP+count_piM)==3)) {
+
+      if ((count_piP+count_piM)==1 && count_pho==0) tauID=0;
+      if ((count_piP+count_piM)==1 && count_pho==1) tauID=1;
+      if ((count_piP+count_piM)==1 && count_pho==2) tauID=2;
+      if ((count_piP+count_piM)==1 && count_pho==3) tauID=3;
+      if ((count_piP+count_piM)==1 && count_pho==4) tauID=4;
+      if ((count_piP+count_piM)==1 && count_pho==5) tauID=5;
+      if ((count_piP+count_piM)==1 && count_pho>=6) tauID=6;
+
+      if ((count_piP+count_piM)==3 && count_pho==0) tauID=10;
+      if ((count_piP+count_piM)==3 && count_pho==1) tauID=11;
+      if ((count_piP+count_piM)==3 && count_pho==2) tauID=12;
+      if ((count_piP+count_piM)==3 && count_pho==3) tauID=13;
+      if ((count_piP+count_piM)==3 && count_pho==4) tauID=14;
+      if ((count_piP+count_piM)==3 && count_pho==5) tauID=15;
+      if ((count_piP+count_piM)==3 && count_pho>=6) tauID=16;
+
+      if (request==0) {
+        Tau.momentum.x = sum_tau.Px();
+        Tau.momentum.y = sum_tau.Py();
+        Tau.momentum.z = sum_tau.Pz();
+        Tau.mass = sum_tau.M();
+        Tau.energy = sum_tau.E();
+        Tau.charge = (count_piP-count_piM);
+        Tau.type = tauID;
+        Tau.tracks_begin = track;
+      } else if (request==1 || request==2) {
+        // Get the pion from the rho resonance for the request==2
+        if ((count_piP+count_piM)==3) {
+          // Charge the tau candidate is required to have (+-1); the pion sharing this
+          // charge in the opposite-charge pair closest to the rho mass is "second".
+          int tauCharge = count_piP - count_piM;
+          TLorentzVector second;
+          int second_track = -1;
+          TLorentzVector third;
+          double minMassDifference = -1e6;
+          for (size_t iCh = 0; iCh < charges_vec.size(); ++iCh) {
+            for (size_t jCh = iCh + 1; jCh < charges_vec.size(); ++jCh) {
+              if (charges_vec[iCh] + charges_vec[jCh] == 0) { // opposite charges
+                double invMass = (charged_vec[iCh] + charged_vec[jCh]).M();
+                double massDifference = std::abs(invMass - kRhoMass);
+
+                if (minMassDifference == -1e6 || massDifference < minMassDifference) {
+                  // First candidate pair found, or a smaller mass difference than before
+                  minMassDifference = massDifference;
+                  // Save the pion with same charge as the tau as the charged one and the other as the neutral
+                  if (charges_vec[iCh]==tauCharge) {
+                    second = charged_vec[iCh];
+                    third = charged_vec[jCh];
+                    second_track = track_vec[iCh];
+                  } else {
+                    second = charged_vec[jCh];
+                    third = charged_vec[iCh];
+                    second_track = track_vec[jCh];
+                  }
+                }
+              }
+            }
+          }
+
+          if (request==1) {
+            Tau.momentum.x = second.Px();
+            Tau.momentum.y = second.Py();
+            Tau.momentum.z = second.Pz();
+            Tau.mass = second.M();
+            Tau.energy = second.E();
+            Tau.charge = (count_piP-count_piM);
+            Tau.type = tauID;
+            Tau.tracks_begin = second_track;
+          } else {
+            Tau.momentum.x = third.Px();
+            Tau.momentum.y = third.Py();
+            Tau.momentum.z = third.Pz();
+            Tau.mass = third.M();
+            Tau.energy = third.E();
+            Tau.charge = (count_piP-count_piM); // neutral particle has the same charge as the tau to allow for easy matching
+            Tau.type = tauID;
+            Tau.tracks_begin = second_track; // and same track index as the charged
+          }
+        } else {
+          // 1-prong: only one charged pion exists, so it is trivially "the pion with the
+          // same charge as the tau" (request==1); the neutral system is everything else.
+          if (request==1) {
+            Tau.momentum.x = lead.Px();
+            Tau.momentum.y = lead.Py();
+            Tau.momentum.z = lead.Pz();
+            Tau.mass = lead.M();
+            Tau.energy = lead.E();
+            Tau.charge = (count_piP-count_piM);
+            Tau.type = tauID;
+            Tau.tracks_begin = track;
+          } else {
+            // The only charged constituent is the lead, so the neutral system is exactly
+            // `neutral` (using it directly avoids the floating point cancellation of
+            // computing sum_tau - lead).
+            Tau.momentum.x = neutral.Px();
+            Tau.momentum.y = neutral.Py();
+            Tau.momentum.z = neutral.Pz();
+            Tau.mass = neutral.M();
+            Tau.energy = neutral.E();
+            Tau.charge = (count_piP-count_piM); // neutral particle has the same charge as the tau to allow for easy matching
+            Tau.type = tauID;
+            Tau.tracks_begin = track; // and same track index as the charged
+          }
+        }
+      } else if (request==3) {
+        Tau.momentum.x = charged.Px();
+        Tau.momentum.y = charged.Py();
+        Tau.momentum.z = charged.Pz();
+        Tau.mass = charged.M();
+        Tau.energy = charged.E();
+        Tau.charge = (count_piP-count_piM);
+        Tau.type = tauID;
+        Tau.tracks_begin = track;
+      } else {
+        Tau.momentum.x = neutral.Px();
+        Tau.momentum.y = neutral.Py();
+        Tau.momentum.z = neutral.Pz();
+        Tau.mass = neutral.M();
+        Tau.energy = neutral.E();
+        Tau.charge = (count_piP-count_piM); // neutral particle has the same charge as the tau to allow for easy matching
+        Tau.type = tauID;
+        Tau.tracks_begin = track; // and same track index as the charged
+      }
+
+      // Save taus (or its components) with mass below kTauMassMax
+      if (sum_tau.M() < kTauMassMax) {
+        out.push_back(Tau);
+      } else {
+        // Reset the particle if it's not a tau but keep a different ID to identify the cause
+        Tau.momentum.x = 0;
+        Tau.momentum.y = 0;
+        Tau.momentum.z = 0;
+        Tau.mass = 0;
+        Tau.energy = 0;
+        Tau.charge = 0;
+        Tau.type = -2;
+        out.push_back(Tau);
+      }
+    } else {
+      // Prong number not matched
+      Tau.type = -3;
+      out.push_back(Tau);
+    }
+  }
+  return out;
+}
+
 }//end NS myUtils
 
 }//end NS FCCAnalyses
