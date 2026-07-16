@@ -347,7 +347,8 @@ def setup_subparsers(topparser):
         help="prepare combine cards to run basic template fits")
     parser_run_fit = topparser.add_parser(
         'fit',
-        help="generate combine datacards using object-oriented Python config")
+        help="generate combine datacards using object-oriented Python config."
+             "Use '-- [args]' to forward custom flags directly to the backend engine.")
 
     # Register sub-parsers
     setup_build_parser(parser_build)

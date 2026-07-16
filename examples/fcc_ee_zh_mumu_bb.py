@@ -1,3 +1,16 @@
+"""Example configuration script for FCC-ee ZH angular/mass fitting.
+
+Usage Examples:
+    1. Generate the text datacard only:
+       fccanalysis fit examples/fcc_ee_zh_mumu_bb.py -o outputs/datacard.txt
+
+    2. Generate datacard and run the default AsymptoticLimits engine:
+       fccanalysis fit examples/fcc_ee_zh_mumu_bb.py -o outputs/datacard.txt -e
+
+    3. Override the default engine with custom options (e.g. FitDiagnostics):
+       fccanalysis fit examples/fcc_ee_zh_mumu_bb.py -o outputs/datacard.txt -e -- -M FitDiagnostics
+"""
+
 class Datacard:
     def __init__(self):
         # 1. Global framework configurations
