@@ -49,3 +49,8 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
             except subprocess.CalledProcessError as e:
                 LOGGER.error('Combine statistical fitting execution failed!')
                 sys.exit(7)
+
+            except KeyboardInterrupt:
+                # Catch Ctrl+C, log a clean exit status message, and exit with code 0
+                LOGGER.info('Fit execution interrupted by user (Ctrl+C). Terminating...')
+                sys.exit(0)
