@@ -138,8 +138,8 @@ class DatacardWriter:
             f.write("* autoMCStats 0 1 1\n")
 
 
-def validate_datacard(user_datacard) -> None:
-    """Validates properties and verifies shape histogram existence in ROOT files."""
+def sanitize_and_validate_config(user_datacard) -> None:
+    """Validates properties and verifies shape histogram existence in ROOT files before backend execution."""
     import ROOT
 
     channels = getattr(user_datacard, 'channels', {})
@@ -150,7 +150,7 @@ def validate_datacard(user_datacard) -> None:
     for ch_name, ch_data in channels.items():
         obs = ch_data.get('observation', 0)
         if not (isinstance(obs, (int, float)) and (obs >= 0 or obs == -1)):
-            raise ValueError(f"Validation Error: Invalid observation '{obs}' in channel '{ch_name}'. Must be >= 0 or -1.")
+            raise ValueError(f"Sanitization Error: Invalid observation '{obs}' in channel '{ch_name}'. Must be >= 0 or -1.")
         
         processes = ch_data.get('processes', {})
         for proc_name, proc_data in processes.items():
@@ -241,12 +241,12 @@ def generate_datacard(anapath: str, output_path: str) -> None:
     user_datacard = user_module.Datacard()
     
     try:
-        validate_datacard(user_datacard)
+        sanitize_and_validate_config(user_datacard)
     except ValueError as err:
         LOGGER.error('%s\nAborting...', err)
         sys.exit(3)
         
-    LOGGER.info('Successfully validated user Datacard configuration data.')
+    LOGGER.info('Successfully sanitized and verified user input configuration.')
     
     # Run the generator matrix logic
     writer = DatacardWriter(user_datacard)
