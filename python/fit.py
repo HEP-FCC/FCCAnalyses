@@ -4,13 +4,13 @@ import logging
 import argparse
 import subprocess
 import shutil
+import glob  # <--- Added for tracking output ROOT files
 
 LOGGER = logging.getLogger('FCCAnalyses.fit')
 
 def run_fit(parser: argparse.ArgumentParser) -> None:
     """Sub-command entry point for object-oriented fitting configurations."""
     
-    # parse_known_args splits recognized flags from extra forwarding flags
     args, tool_args = parser.parse_known_args()
 
     anapath = os.path.abspath(args.script_path)
@@ -36,21 +36,38 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
 
                 # 2. Check if the user explicitly provided a custom method
                 if '-M' in tool_args or '--method' in tool_args:
-                    # Drop the default AsymptoticLimits so they don't clash
                     base_command = ['combine', output_path]
                 else:
-                    # Fallback to the default minimizer
                     base_command = ['combine', '-M', 'AsymptoticLimits', output_path]
-
-                # 3. Combine and execute
+                
+                # 3. Execute Combine from the current directory (resolves relative shape files)
                 full_command = base_command + tool_args
                 subprocess.run(full_command, check=True)
                 
+                # 4. Resolve the output directory and move generated output files there
+                output_dir = os.path.dirname(os.path.abspath(output_path))
+                os.makedirs(output_dir, exist_ok=True)
+                
+                output_patterns = ['higgsCombine*.root', 'fitDiagnostics*.root', 'combine_logger.out']
+                moved_count = 0
+                
+                for pattern in output_patterns:
+                    for filepath in glob.glob(pattern):
+                        dest_path = os.path.join(output_dir, os.path.basename(filepath))
+                        if os.path.exists(dest_path):
+                            os.remove(dest_path)
+                        shutil.move(filepath, output_dir)
+                        moved_count += 1
+                
+                if moved_count > 0:
+                    # Convert absolute path to a clean relative path for the CLI output
+                    rel_output_dir = os.path.relpath(output_dir)
+                    LOGGER.info("Successfully organized %d fit artifact(s) in: %s/", moved_count, rel_output_dir)
+
             except subprocess.CalledProcessError as e:
                 LOGGER.error('Combine statistical fitting execution failed!')
                 sys.exit(7)
-
+                
             except KeyboardInterrupt:
-                # Catch Ctrl+C, log a clean exit status message, and exit with code 0
-                LOGGER.info('Fit execution interrupted by user (Ctrl+C). Terminating...')
+                LOGGER.info('Fit execution interrupted by user (Ctrl+C). Terminating cleanly...')
                 sys.exit(0)
