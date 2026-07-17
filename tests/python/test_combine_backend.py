@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import os
 import subprocess
 import shutil
@@ -12,7 +11,7 @@ def test_combine_backend_execution():
     """Integration test to verify datacard generation and fit execution."""
     
     # Anchor all relative tracks directly to the dynamic REPO_ROOT
-    test_config = os.path.join(REPO_ROOT, "examples", "fcc_ee_zh_mumu_bb.py") 
+    test_config = os.path.join(REPO_ROOT, "examples", "fcc_ee_zh_mumu_bb.py")
     test_output_dir = os.path.join(REPO_ROOT, "outputs", "test_integration", "mumu")
     test_datacard = os.path.join(test_output_dir, "datacard.txt")
     
@@ -23,17 +22,31 @@ def test_combine_backend_execution():
     if os.path.exists(test_output_dir):
         shutil.rmtree(test_output_dir)
 
-    # Invoke via the explicit 'fccanalysis' executable environment entry point
+    # Target the local script asset directly to avoid pulling the global CVMFS version
+    local_fccanalysis = os.path.join(REPO_ROOT, "bin", "fccanalysis")
+
+    # RESTORED: Use sys.executable to perfectly match the active environment's interpreter
     command = [
-        "fccanalysis", "fit", test_config,
+        sys.executable, local_fccanalysis, "fit", test_config,
         "-o", test_datacard,
         "-e",
         "--", "-M", "FitDiagnostics"
     ]
     
+    # Explicitly preserve and inject local paths into PYTHONPATH for isolated runners
+    test_env = os.environ.copy()
+    local_python_dir = os.path.join(REPO_ROOT, "python")
+    local_bin_dir = os.path.join(REPO_ROOT, "bin")
+    current_python_path = test_env.get("PYTHONPATH", "")
+    
+    if current_python_path:
+        test_env["PYTHONPATH"] = f"{local_python_dir}:{local_bin_dir}:{current_python_path}"
+    else:
+        test_env["PYTHONPATH"] = f"{local_python_dir}:{local_bin_dir}"
+    
     print(f"----> Running verification command: {' '.join(command)}")
-    result = subprocess.run(command, capture_output=True, text=True, cwd=REPO_ROOT)
-
+    result = subprocess.run(command, capture_output=True, text=True, cwd=REPO_ROOT, env=test_env)
+    
     if result.returncode != 0:
         print(f"----> ERROR: Framework execution failed!\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
         sys.exit(1)
