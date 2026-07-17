@@ -48,20 +48,33 @@ fccanalysis run examples/FCCee/weaver/analysis_inference.py \
     --files-list <edm4hep>/wzp6_ee_nunuH_Hbb_ecm240/events_*.root --ncpus 8
 
 # ROC curves from those score trees (edit the model dirs at the top of the script)
-python examples/FCCee/weaver/plot_rocs.py            # full statistics, multi-threaded
-ROC_MAXEVT=100000 python examples/FCCee/weaver/plot_rocs.py   # quick test, capped per sample
+python examples/FCCee/weaver/plot_rocs.py         # full statistics, multi-threaded
+ROC_NFILES=1 python examples/FCCee/weaver/plot_rocs.py   # quick test, 1 file/flavour
 ```
 
 `plot_rocs.py` compares two model variants over a set of signal-vs-background flavour
 pairs; the background score is the sum over the listed flavours, so composite backgrounds
 (e.g. `uds`, `ud`) use `D(sig,bkg) = score_sig / (score_sig + Σ score_bkg)`.
 
+Example ROC curves (pre_summer2026 70M vs winter2023 7-class):
+
+| c vs uds | b vs uds | s vs ud |
+|----------|----------|---------|
+| ![c vs uds](plots/roc_c_vs_uds.png) | ![b vs uds](plots/roc_b_vs_uds.png) | ![s vs ud](plots/roc_s_vs_ud.png) |
+
 ## Input-feature validation
 
 ```sh
-python examples/FCCee/weaver/stage_plots.py --indir <stage2_dir> --outdir <plot_dir>
+python examples/FCCee/weaver/stage_plots.py \
+    --indir_a <stage2_dir_A> --label_a winter2023 \
+    --indir_b <stage2_dir_B> --label_b pre_summer2026 --outdir <plot_dir>
 ```
 
-Overlays each pfcand/jet observable for two samples with a ratio panel — used to check
-feature agreement across generators or productions.
+Overlays each pfcand/jet observable for two productions, area-normalised with a ratio
+panel — used to check feature agreement across generators or productions. Example: the
+leading-constituent transverse and longitudinal impact parameters for light (d) jets.
+
+| light-jet d0 | light-jet z0 |
+|--------------|--------------|
+| ![light dxy](plots/d_pfcand_dxy.png) | ![light dz](plots/d_pfcand_dz.png) |
 
