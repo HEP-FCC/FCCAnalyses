@@ -33,6 +33,7 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
 
             LOGGER.info('Launching Combine statistical engine execution on: %s', output_path)
             try:
+                full_command = []
                 # 1. Strip the '--' separator if present
                 if tool_args and tool_args[0] == '--':
                     tool_args = tool_args[1:]
@@ -41,18 +42,14 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
 
                 # 2. Check if the user explicitly provided a custom method
                 if '-M' in tool_args or '--method' in tool_args:
-                    base_command = ['combine', output_path] + cleaned_args + [output_path]
+                    full_command = ['combine'] + cleaned_args + [output_path]
                 else:
-                    base_command = ['combine', '-M', 'AsymptoticLimits', output_path] + cleaned_args + [output_path]
+                    full_command = ['combine', '-M', 'AsymptoticLimits'] + cleaned_args + [output_path]
                 
                 LOGGER.info("Executing command: %s", " ".join(full_command))
                 subprocess.run(full_command, check=True)
-
-                # 3. Execute Combine from the current directory (resolves relative shape files)
-                full_command = base_command + tool_args
-                subprocess.run(full_command, check=True)
                 
-                # 4. Resolve the output directory and move generated output files there
+                # 3. Resolve the output directory and move generated output files there
                 output_dir = os.path.dirname(os.path.abspath(output_path))
                 os.makedirs(output_dir, exist_ok=True)
                 
