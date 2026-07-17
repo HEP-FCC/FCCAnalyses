@@ -32,8 +32,8 @@ def test_combine_backend_execution():
     ]
     
     print(f"----> Running verification command: {' '.join(command)}")
-    result = subprocess.run(command, capture_output=True, text=True)
-    
+    result = subprocess.run(command, capture_output=True, text=True, cwd=REPO_ROOT)
+
     if result.returncode != 0:
         print(f"----> ERROR: Framework execution failed!\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
         sys.exit(1)
