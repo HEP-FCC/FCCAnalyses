@@ -49,7 +49,7 @@ def test_combine_backend_execution():
     
     if result.returncode == 6:
         print("----> WARNING: 'combine' tool not found in this environment. Skipping execution test.")
-    if result.returncode != 0:
+    elif result.returncode != 0:
         print(f"----> ERROR: Framework execution failed!\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
         sys.exit(1)
         
