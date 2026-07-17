@@ -18,6 +18,9 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
     backend = args.backend.lower()
 
     LOGGER.info('Steering fit configuration towards the "%s" backend...', backend)
+    
+    output_dir = os.path.dirname(os.path.abspath(output_path))
+    os.makedirs(output_dir, exist_ok=True)
 
     if backend == 'combine':
         from combine import generate_datacard
