@@ -1,38 +1,15 @@
-import os
-import urllib.request
-
-# ____________________________________________________________
-def get_file_path(url, filename):
-    if os.path.exists(filename):
-        return os.path.abspath(filename)
-    else:
-        urllib.request.urlretrieve(url, os.path.basename(url))
-        return os.path.basename(url)
-
-# ____________________________________________________________
-
 ## input file needed for unit test in CI
 testFile = "https://fccsw.web.cern.ch/fccsw/testsamples/wzp6_ee_nunuH_Hss_ecm240.root"
 
 ## output directory
 outputDir   = "outputs/inference"
 
-## latest particle transformer model, trainied on 9M jets in winter2023 samples
-model_name = "fccee_flavtagging_edm4hep_wc_v1"
+## pre_summer2026 7-class (G/U/D/S/C/B/TAU) particle transformer, 70M jets
+model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_summer2026/models/IDEA_240_andrea_30_06_2026/TRAINING_70M_7labels_4GPUs_newKey4Hep_LongJob2"
+model_name = "TRAINING_70M_7labels_4GPUs_newKey4Hep_LongJob2"
 
-## model files needed for unit testing in CI
-url_model_dir = "https://fccsw.web.cern.ch/fccsw/testsamples/jet_flavour_tagging/winter2023/wc_pt_13_01_2022/"
-url_preproc = "{}/{}.json".format(url_model_dir, model_name)
-url_model = "{}/{}.onnx".format(url_model_dir, model_name)
-
-## model files locally stored on /eos
-model_dir = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_13_01_2022/"
-local_preproc = "{}/{}.json".format(model_dir, model_name)
-local_model = "{}/{}.onnx".format(model_dir, model_name)
-
-## get local file, else download from url
-weaver_preproc = get_file_path(url_preproc, local_preproc)
-weaver_model = get_file_path(url_model, local_model)
+weaver_preproc = "{}/{}_preprocess.json".format(model_dir, model_name)
+weaver_model = "{}/{}_best_epoch_state.onnx".format(model_dir, model_name)
 
 from addons.ONNXRuntime.jetFlavourHelper import JetFlavourHelper
 from addons.FastJet.jetClusteringHelper import ExclusiveJetClusteringHelper
