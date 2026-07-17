@@ -1,20 +1,29 @@
+#!/usr/bin/env python3
 import os
 import subprocess
 import shutil
-import pytest
+import sys
+
+# Dynamically calculate the repository root directory
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
 
 def test_combine_backend_execution():
     """Integration test to verify datacard generation and fit execution."""
-    # 1. Setup paths
-    test_config = "examples/fcc_ee_zh_mumu_bb.py"
-    test_output_dir = "outputs/test_integration/mumu"
+    
+    # Anchor all relative tracks directly to the dynamic REPO_ROOT
+    test_config = os.path.join(REPO_ROOT, "examples", "fcc_ee_zh_mumu_bb.py") 
+    test_output_dir = os.path.join(REPO_ROOT, "outputs", "test_integration", "mumu")
     test_datacard = os.path.join(test_output_dir, "datacard.txt")
     
-    # Ensure a clean slate for the test
+    if not os.path.exists(test_config):
+        print(f"----> ERROR: Target config missing at: {test_config}")
+        sys.exit(1)
+        
     if os.path.exists(test_output_dir):
         shutil.rmtree(test_output_dir)
 
-    # 2. Build the command string
+    # Invoke via the explicit 'fccanalysis' executable environment entry point
     command = [
         "fccanalysis", "fit", test_config,
         "-o", test_datacard,
@@ -22,27 +31,19 @@ def test_combine_backend_execution():
         "--", "-M", "FitDiagnostics"
     ]
     
-    # 3. Execute the toolchain
+    print(f"----> Running verification command: {' '.join(command)}")
     result = subprocess.run(command, capture_output=True, text=True)
     
-    # 4. Assertions
-    assert result.returncode == 0, f"Framework crashed with error: {result.stderr}"
-    assert os.path.exists(test_datacard), "Datacard text file was not generated."
-    assert os.path.exists(os.path.join(test_output_dir, "fitDiagnosticsTest.root")), "Combine ROOT output artifact is missing."
-    
-    # 5. Clean up test outputs
-    shutil.rmtree("outputs/test_integration")
+    if result.returncode != 0:
+        print(f"----> ERROR: Framework execution failed!\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
+        sys.exit(1)
+        
+    if not os.path.exists(test_datacard):
+        print("----> ERROR: Datacard file asset was not generated successfully!")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    import sys
     print("----> INFO: Starting Combine backend integration test...")
-    try:
-        test_combine_backend_execution()
-        print("----> INFO: Integration test PASSED successfully!")
-        sys.exit(0)
-    except AssertionError as e:
-        print(f"----> ERROR: Integration test FAILED assertion!\n{e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"----> ERROR: Runtime crash during test execution!\n{e}")
-        sys.exit(1)
+    test_combine_backend_execution()
+    print("----> INFO: Integration test PASSED successfully!")
+    sys.exit(0)

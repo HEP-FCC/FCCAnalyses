@@ -37,12 +37,17 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
                 if tool_args and tool_args[0] == '--':
                     tool_args = tool_args[1:]
 
+                cleaned_args = [arg for arg in tool_args if arg != output_path]
+
                 # 2. Check if the user explicitly provided a custom method
                 if '-M' in tool_args or '--method' in tool_args:
-                    base_command = ['combine', output_path]
+                    base_command = ['combine', output_path] + cleaned_args + [output_path]
                 else:
-                    base_command = ['combine', '-M', 'AsymptoticLimits', output_path]
+                    base_command = ['combine', '-M', 'AsymptoticLimits', output_path] + cleaned_args + [output_path]
                 
+                LOGGER.info("Executing command: %s", " ".join(full_command))
+                subprocess.run(full_command, check=True)
+
                 # 3. Execute Combine from the current directory (resolves relative shape files)
                 full_command = base_command + tool_args
                 subprocess.run(full_command, check=True)
