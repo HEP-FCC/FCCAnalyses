@@ -141,6 +141,7 @@ class DatacardWriter:
 def sanitize_and_validate_config(user_datacard) -> None:
     """Validates properties and verifies shape histogram existence in ROOT files before backend execution."""
     import ROOT
+    import os
 
     channels = getattr(user_datacard, 'channels', {})
     if not channels:
@@ -151,13 +152,13 @@ def sanitize_and_validate_config(user_datacard) -> None:
         obs = ch_data.get('observation', 0)
         if not (isinstance(obs, (int, float)) and (obs >= 0 or obs == -1)):
             raise ValueError(f"Sanitization Error: Invalid observation '{obs}' in channel '{ch_name}'. Must be >= 0 or -1.")
-        
+
         processes = ch_data.get('processes', {})
         for proc_name, proc_data in processes.items():
             p_type = proc_data.get('type')
             if p_type not in ['signal', 'background']:
                 raise ValueError(f"Validation Error: Invalid type '{p_type}' for process '{proc_name}' in channel '{ch_name}'. Must be 'signal' or 'background'.")
-            
+
             rate = proc_data.get('rate', 0.0)
             if not (isinstance(rate, (int, float)) and (rate >= 0 or rate == -1)):
                 raise ValueError(f"Validation Error: Invalid rate '{rate}' for process '{proc_name}'. Must be >= 0 or -1.")
@@ -166,6 +167,49 @@ def sanitize_and_validate_config(user_datacard) -> None:
     systematics = getattr(user_datacard, 'systematics', {})
     shapes_config = getattr(user_datacard, 'shapes', {})
 
+    # --- PHASE A: Bulk Upfront In-Memory Pre-loading ---
+    targets_to_load = {}
+    failed_to_open_files = set()
+    hist_cache = {}
+
+    # Discover all target histogram paths required across all shape systematics
+    for s_name, s_data in systematics.items():
+        if s_data.get('type') == 'shape':
+            a_to = s_data.get('apply_to', {})
+            for c_name, c_info in channels.items():
+                m_rule = shapes_config.get('*', {}).get(c_name) or shapes_config.get(proc_name, {}).get(c_name)
+                if not m_rule:
+                    continue
+                rf_path = m_rule.split()[0]
+                if not os.path.isfile(rf_path):
+                    continue
+                for p_name in c_info.get('processes', {}).keys():
+                    if p_name in a_to and str(a_to[p_name]) != '-':
+                        b_path = m_rule.split()[1].replace('$CHANNEL', c_name).replace('$PROCESS', p_name)
+                        for var in ['Up', 'Down']:
+                            t_path = f"{b_path}_{s_name}{var}"
+                            if rf_path not in targets_to_load:
+                                targets_to_load[rf_path] = set()
+                            targets_to_load[rf_path].add(t_path)
+
+    # Open files once, read matching objects, decouple from disk, and close immediately
+    for rf_path, paths in targets_to_load.items():
+        hist_cache[rf_path] = {}
+        r_file = ROOT.TFile.Open(rf_path, "READ")
+        if not r_file or r_file.IsZombie():
+            failed_to_open_files.add(rf_path)
+            continue
+        for t_path in paths:
+            h = r_file.Get(t_path)
+            if h:
+                # Disassociate from TFile lifecycle to persist in high-speed RAM
+                h.SetDirectory(0)
+                hist_cache[rf_path][t_path] = h
+            else:
+                hist_cache[rf_path][t_path] = None
+        r_file.Close()
+
+    # --- PHASE B: In-Memory Validation Engine ---
     # 2. Advanced Shape Systematics Check
     for syst_name, syst_data in systematics.items():
         s_type = syst_data.get('type')
@@ -175,47 +219,46 @@ def sanitize_and_validate_config(user_datacard) -> None:
         # If it's a shape systematic, verify the physical histograms exist
         if s_type == 'shape':
             apply_to = syst_data.get('apply_to', {})
-            
+
             for ch_name, ch_info in channels.items():
                 # Determine what the shape mapping rule is for this channel
                 # Handles wildcard '*' or specific process rules
                 mapping_rule = shapes_config.get('*', {}).get(ch_name) or shapes_config.get(proc_name, {}).get(ch_name)
-                
+
                 if not mapping_rule:
                     continue
-                
+
                 # Extract the ROOT file path (assumes space-separated path and inner structure mapping)
                 root_file_path = mapping_rule.split()[0]
-                
+
                 if not os.path.isfile(root_file_path):
                     LOGGER.warning("Shape file '%s' not created yet or using relative build path. Skipping deep object check.", root_file_path)
                     continue
 
                 # Open the file via PyROOT to peek inside
-                r_file = ROOT.TFile.Open(root_file_path, "READ")
-                if not r_file or r_file.IsZombie():
+                if root_file_path in failed_to_open_files:
                     raise ValueError(f"Validation Error: Failed to open shape ROOT file: {root_file_path}")
 
                 for proc_name in ch_info.get('processes', {}).keys():
                     if proc_name in apply_to and str(apply_to[proc_name]) != '-':
-                        
+
                         # Resolve the inner path template (e.g., $CHANNEL/$PROCESS -> mumu_bjets_channel/ZH_signal)
                         base_path = mapping_rule.split()[1].replace('$CHANNEL', ch_name).replace('$PROCESS', proc_name)
-                        
+
                         # Combine expects clones with "Up" and "Down" appended to the nominal path/name
                         for variation in ['Up', 'Down']:
                             target_hist_path = f"{base_path}_{syst_name}{variation}"
-                            hist = r_file.Get(target_hist_path)
                             
+                            # Retrieve the pre-loaded detached histogram object directly from cache
+                            hist = hist_cache.get(root_file_path, {}).get(target_hist_path)
+
                             if not hist or not hist.InheritsFrom("TH1"):
-                                r_file.Close()
                                 raise ValueError(
                                     f"Validation Error: Missing required shape histogram!\n"
                                     f"  File: {root_file_path}\n"
                                     f"  Expected Path: {target_hist_path}\n"
                                     f"  Reason: Systematic '{syst_name}' is declared as 'shape' for '{proc_name}' in '{ch_name}'."
                                 )
-                r_file.Close()
 
 def generate_datacard(anapath: str, output_path: str) -> None:
     """Sub-command engine execution block."""
