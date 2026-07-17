@@ -65,8 +65,3 @@ python examples/FCCee/weaver/stage_plots.py --indir <stage2_dir> --outdir <plot_
 Overlays each pfcand/jet observable for two samples with a ratio panel — used to check
 feature agreement across generators or productions.
 
-## Model
-
-`analysis_inference.py` points at the ONNX model + preprocessing JSON. The number of
-output classes and the input feature list are read from the JSON, so switching models
-(5- vs 7-class, different training) needs no code change beyond the paths at the top.
