@@ -277,11 +277,11 @@ def generate_datacard(anapath: str, output_path: str) -> None:
         LOGGER.error('Syntax error encountered in the fit script:\n%s', err)
         sys.exit(3)
         
-    if not hasattr(user_module, "Datacard"):
-        LOGGER.error('Fit script must define a class named "Datacard"! Aborting...')
+    if not hasattr(user_module, "Fit"):
+        LOGGER.error('Fit script must define a class named "Fit"! Aborting...')
         sys.exit(3)
         
-    user_datacard = user_module.Datacard()
+    user_datacard = user_module.Fit()
     
     try:
         sanitize_and_validate_config(user_datacard)

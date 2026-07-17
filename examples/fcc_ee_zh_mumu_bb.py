@@ -11,7 +11,7 @@ Usage Examples:
        fccanalysis fit examples/fcc_ee_zh_mumu_bb.py -o outputs/datacard.txt -e -- -M FitDiagnostics
 """
 
-class Datacard:
+class Fit:
     def __init__(self):
         # 1. Global framework configurations
         self.autoMCStats = False
