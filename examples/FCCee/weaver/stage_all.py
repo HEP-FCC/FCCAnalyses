@@ -22,8 +22,9 @@ def main():
         default="/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/samples_gen_v1",
     )
 
-    parser.add_argument("--sample", help="sample name", default="wzp6_ee_nunuH_HXX_ecm240")
+    parser.add_argument("--sample", help="sample name (XX replaced by each flavour token)", default="wzp6_ee_nunuH_HXX_ecm240")
     parser.add_argument("--ncpus", help="number of cpus", type=int, default=64)
+    parser.add_argument("--nev", help="events per flavour to process in stage1 (0 = all)", type=int, default=0)
     parser.add_argument("--opt", help="option 1: run stage 1, 2: run stage 2, 3: all 4: clean", default="3")
 
     args = parser.parse_args()
@@ -31,10 +32,11 @@ def main():
     outdir = args.outdir
     ncpus = args.ncpus
     sample = args.sample
+    nev = args.nev
     opt = args.opt
 
-    ## qq is merge of uu/dd
-    flavors = ["bb", "cc", "ss", "gg", "qq", "tautau"]
+    ## 7 classes: H{f}{f} tokens
+    flavors = ["gg", "uu", "dd", "ss", "cc", "bb", "tautau"]
 
     outtmpdir = "/tmp/selvaggi/data/stage_all"
     os.system("rm -rf {}".format(outtmpdir))
@@ -54,9 +56,10 @@ def main():
 
             sample_f = sample.replace("XX", f)
             edm_files = "{}/{}/*.root".format(indir, sample_f)
+            nev_opt = " --nevents {}".format(nev) if nev > 0 else ""
             cmd_stage1 = (
-                "fccanalysis run examples/FCCee/weaver/stage1_gen.py --output {} --files-list {} --ncpus {}".format(
-                    stage1_files[f], edm_files, ncpus
+                "fccanalysis run examples/FCCee/weaver/stage1.py --output {} --files-list {} --ncpus {}{}".format(
+                    stage1_files[f], edm_files, ncpus, nev_opt
                 )
             )
             print("running stage 1: ")
@@ -121,22 +124,6 @@ def run_command(command):
     # Replace this with code to run the command
     print("running command: {}".format(command))
     os.system(command)
-
-
-# ________________________________________________________________________________
-def count_events(file, tree_name="events"):
-    import ROOT
-
-    # Open the ROOT file
-    root_file = ROOT.TFile.Open(file)
-
-    # Get the tree from the file
-    tree = root_file.Get(tree_name)
-
-    # Get the number of events in the tree
-    num_events = tree.GetEntries()
-
-    return num_events
 
 
 # ________________________________________________________________________________

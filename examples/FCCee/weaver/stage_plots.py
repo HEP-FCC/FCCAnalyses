@@ -2,20 +2,21 @@ import ROOT
 import os
 import argparse
 
+ROOT.gROOT.SetBatch(True)  # headless: render canvases offscreen, no GUI
+
 # ________________________________________________________________________________
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "--indir",
-        help="path input directory",
-        default="/tmp/selvaggi/data/pre_winter2023_tests_v2/selvaggi_2022Nov24",
-    )
-    parser.add_argument(
-        "--outdir",
-        help="path output directory",
-        default="/eos/user/s/selvaggi/www/test_tag",
-    )
+    ## compare the stage2 ntuples of two productions (e.g. winter2023 vs pre_summer2026)
+    parser.add_argument("--indir_a", help="dir of sample A stage2_H{f}{f}.root",
+                        default="/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/samples_v2")
+    parser.add_argument("--label_a", help="legend label for sample A", default="winter2023")
+    parser.add_argument("--indir_b", help="dir of sample B stage2_H{f}{f}.root",
+                        default="/eos/experiment/fcc/ee/jet_flavour_tagging/pre_summer2026/stage2_100k")
+    parser.add_argument("--label_b", help="legend label for sample B", default="pre_summer2026")
+    parser.add_argument("--outdir", help="path output directory",
+                        default="/eos/user/s/selvaggi/www/stage_plots")
 
     args = parser.parse_args()
 
@@ -24,22 +25,20 @@ def main():
 
     from examples.FCCee.weaver.config import variables_pfcand, variables_jet, variables_event, flavors
 
-    input_dir = args.indir
     output_dir = args.outdir
-
     os.system("mkdir -p {}".format(output_dir))
 
     for f in flavors:
 
         sample_a = {
-            "file": "{}/ntuple_test_wzp6_ee_nunuH_H{}{}.root".format(input_dir, f, f),
+            "file": "{}/stage2_H{}{}.root".format(args.indir_a, f, f),
             "flavor": f,
-            "label": "WZ + Pythia6",
+            "label": args.label_a,
         }
         sample_b = {
-            "file": "{}/ntuple_test_p8_ee_ZH_Znunu_H{}{}.root".format(input_dir, f, f),
+            "file": "{}/stage2_H{}{}.root".format(args.indir_b, f, f),
             "flavor": f,
-            "label": "Pythia8",
+            "label": args.label_b,
         }
         # We read the tree from the file and create a RDataFrame.
         df_a = ROOT.RDataFrame("tree", sample_a["file"])
@@ -48,11 +47,16 @@ def main():
         print(sample_a["file"])
         print(sample_b["file"])
 
-        sample_a["histos_pfcand"] = dfhs_pfcand(df_a, variables_pfcand)
-        sample_b["histos_pfcand"] = dfhs_pfcand(df_b, variables_pfcand)
+        ## only plot variables present in BOTH productions
+        cols = set(df_a.GetColumnNames()) & set(df_b.GetColumnNames())
+        vars_pf = {k: v for k, v in variables_pfcand.items() if k in cols}
+        vars_jet = {k: v for k, v in variables_jet.items() if k in cols}
 
-        sample_a["histos_jet"] = dfhs_jet(df_a, variables_jet)
-        sample_b["histos_jet"] = dfhs_jet(df_b, variables_jet)
+        sample_a["histos_pfcand"] = dfhs_pfcand(df_a, vars_pf)
+        sample_b["histos_pfcand"] = dfhs_pfcand(df_b, vars_pf)
+
+        sample_a["histos_jet"] = dfhs_jet(df_a, vars_jet)
+        sample_b["histos_jet"] = dfhs_jet(df_b, vars_jet)
 
         #sample_a["histos_event"] = dfhs_event(df_a, variables_event)
         #sample_b["histos_event"] = dfhs_event(df_b, variables_event)
@@ -70,9 +74,9 @@ def main():
         )
 
 
-        for var, params in variables_pfcand.items():
+        for var, params in vars_pf.items():
             plot(sample_a, sample_b, "histos_pfcand", var, params, output_dir)
-        for var, params in variables_jet.items():
+        for var, params in vars_jet.items():
             plot(sample_a, sample_b, "histos_jet", var, params, output_dir)
 
         """
@@ -99,7 +103,7 @@ def dfhs_pfcand(df, vars):
         df_dict[pfcand_var] = df_var.Histo1D(
             (
                 "h_{}".format(var),
-                ";{};N_{{Events}}".format(params["title"]),
+                ";{};a.u.".format(params["title"]),
                 params["bin"],
                 params["xmin"],
                 params["xmax"],
@@ -119,7 +123,7 @@ def dfhs_jet(df, vars):
         df_dict[jet_var] = df.Histo1D(
             (
                 "h_{}".format(jet_var),
-                ";{};N_{{Events}}".format(params["title"]),
+                ";{};a.u.".format(params["title"]),
                 params["bin"],
                 params["xmin"],
                 params["xmax"],
@@ -140,7 +144,7 @@ def dfhs_event(df, vars):
         df_dict[event_var] = df.Histo1D(
             (
                 "h_{}".format(event_var),
-                ";{};N_{{Events}}".format(params["title"]),
+                ";{};a.u.".format(params["title"]),
                 params["bin"],
                 params["xmin"],
                 params["xmax"],
@@ -155,6 +159,11 @@ def plot(sample_a, sample_b, histo_coll, var, params, outdir):
 
     dfh_a = sample_a[histo_coll][var].GetValue()
     dfh_b = sample_b[histo_coll][var].GetValue()
+
+    ## normalise to unit area so shapes are compared regardless of sample size
+    for h in (dfh_a, dfh_b):
+        if h.Integral() > 0:
+            h.Scale(1.0 / h.Integral())
 
     # Create canvas with pads for main plot and data/MC ratio
     c = ROOT.TCanvas("c", "", 700, 750)
@@ -185,6 +194,12 @@ def plot(sample_a, sample_b, histo_coll, var, params, outdir):
     dfh_a.GetYaxis().SetTitleSize(0.05)
     dfh_a.SetStats(0)
     dfh_a.SetTitle("")
+    hmax = max(dfh_a.GetMaximum(), dfh_b.GetMaximum())
+    if params["scale"] == "log":
+        dfh_a.SetMinimum(1e-6)
+        dfh_a.SetMaximum(10.0 * hmax)
+    else:
+        dfh_a.SetMaximum(1.4 * hmax)
     dfh_a.Draw("hist")
 
     # Draw dfh_b

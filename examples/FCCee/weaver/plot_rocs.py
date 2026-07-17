@@ -9,11 +9,15 @@ from copy import deepcopy
 from examples.FCCee.weaver.config import variables_pfcand, variables_jet, flavors
 import matplotlib.pyplot as plt
 
-plt.rcParams["mathtext.fontset"] = "stix"
-plt.rcParams["font.family"] = "STIXGeneral"
-plt.rcParams["axes.labelweight"] = "bold"
+## LaTeX rendering (needs latex on PATH, e.g. the LCG texlive)
+plt.rc("text", usetex=True)
+plt.rc("font", family="serif")
+plt.rcParams.update({"font.size": 18})
 
-plt.gcf().subplots_adjust(bottom=0.15)
+
+def texesc(s):
+    ## escape LaTeX special characters in a plain string used as a label
+    return s.replace("\\", r"\textbackslash{}").replace("_", r"\_").replace("&", r"\&").replace("%", r"\%")
 
 
 # compute binary discriminant
@@ -37,98 +41,52 @@ ROOT::VecOps::RVec<float> binary_discriminant(ROOT::VecOps::RVec<float> score_s,
 ROOT.ROOT.EnableImplicitMT()
 
 # ________________________________________________________________________________
+## inference-output dirs, laid out as <dir>/wzp6_ee_nunuH_H{f}{f}_ecm240/*.root
+DIR_70M = "/eos/experiment/fcc/ee/jet_flavour_tagging/pre_summer2026/roc_inference_70M/"
+DIR_W23 = "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_7classes_12_04_2023/"
+
 def main():
-    parser = argparse.ArgumentParser()
+    args = argparse.ArgumentParser().parse_args()
 
-    """
-    parser.add_argument(
-        "--indir",
-        help="path input directory where inference_files were produced",
-        default="/eos/experiment/fcc/ee/jet_flavour_tagging/pre_winter2023_tests_v2/selvaggi_2022Nov26/",
-    )
-    """
-    args = parser.parse_args()
+    ## two 7-class models to compare, same sample layout
+    proc_70M = Process("wzp6_70M", "wzp6_ee_nunuH", "pre_summer2026 (70M)", DIR_70M)
+    proc_w23 = Process("wzp6_w23", "wzp6_ee_nunuH", "winter2023 (7-class)", DIR_W23)
+    variants = [proc_70M, proc_w23]
 
-    """
-    proc_pnet = Process(
-        "wzp6_pnet",
-        "wzp6_ee_nunuH",
-        "WZ-Pythia (PNet)",
-        "/eos/experiment/fcc/ee/analyses/case-studies/higgs/flat_trees/pnet_test/",
-    )
-    """
-    proc_pt = Process(
-        "wzp6_ptold",
-        "wzp6_ee_nunuH",
-        "WZ-Pythia6 (PT -old)",
-        "/eos/experiment/fcc/ee/analyses/case-studies/higgs/flat_trees/pt_test/",
-    )
-    proc_pt2 = Process(
-        "wzp6_ptnew",
-        "wzp6_ee_nunuH",
-        "WZ-Pythia6 (PT - new)",
-        "/eos/experiment/fcc/ee/jet_flavour_tagging/winter2023/wc_pt_13_01_2022/",
-    )
-
+    ## load the per-flavour score trees for both variants
     samples = dict()
-
-    nfiles_max = 5
-    ### retrieve samples
-
-    # processes = [proc_pnet, proc_pt]
-    processes = [proc_pt, proc_pt2]
-
-    for proc in processes:
+    ## ROC_NFILES caps files/flavour (each ~100k events) for quick tests; 0 = all. MT-safe.
+    nfiles_max = int(os.environ.get("ROC_NFILES", "0")) or 10**9
+    for proc in variants:
         samples[proc] = dict()
         for f in flavors:
-            fs = f
-
-            files = []
-            dirpath = "{}/{}_H{}{}_ecm240/".format(proc.dir, proc.name, fs, fs)
-
-            for i, fname in enumerate(glob.glob("{}/*.root".format(dirpath))):
-                if i >= nfiles_max:
-                    continue
-                files.append(fname)
-
-            # print(files)
+            dirpath = "{}/{}_H{}{}_ecm240/".format(proc.dir, proc.name, f, f)
+            files = sorted(glob.glob("{}/*.root".format(dirpath)))[:nfiles_max]
             samples[proc][f] = Sample(files, "events", f, proc)
 
-    roc_param = RocParam(2, 100)  # ndecades, nbins
-    plot_param = PlotParams(
-        [Text("FCC-ee simulation (IDEA)", (0.75, 1.03), "bold", 13)],
-        ((0.3, 1.0), (0.001, 1.0)),
-        ("jet tagging efficiency", "jet misid. probability"),
-        ("linear", "log"),
-    )
+    roc_param = RocParam(2, 40000)  # nbins = discriminant-histogram bins (ROC threshold resolution)
 
-    ctag_cfg = {
-        "sig": "c",
-        "bkg": ["g", "q", "b"],
-        "samples": samples,
-        "variants": processes,
-        "param_roc": roc_param,
-        "param_plot": plot_param,
-    }
+    def plot_param():
+        return PlotParams(
+            [Text("FCC-ee simulation (IDEA)", (0.75, 1.03), "bold", 13)],
+            ((0.0, 1.0), (0.0001, 1.0)),
+            ("jet tagging efficiency", "jet misid. probability"),
+            ("linear", "log"),
+        )
 
-    btag_cfg = deepcopy(ctag_cfg)
-    btag_cfg["sig"] = "b"
-    btag_cfg["bkg"] = ["g", "q", "c"]
+    ## (signal flavour, [background flavours], short tag); background scores are summed
+    pairs = [
+        ("b", ["c"],          "b_vs_c"),
+        ("b", ["u", "d", "s"], "b_vs_uds"),
+        ("c", ["b"],          "c_vs_b"),
+        ("c", ["u", "d", "s"], "c_vs_uds"),
+        ("s", ["b"],          "s_vs_b"),
+        ("s", ["c"],          "s_vs_c"),
+        ("s", ["u", "d"],     "s_vs_ud"),
+    ]
 
-    stag_cfg = deepcopy(ctag_cfg)
-    stag_cfg["sig"] = "s"
-    stag_cfg["bkg"] = ["g", "q", "c", "b"]
-    stag_cfg["param_plot"].ranges = ((0.0, 1.0), (0.001, 1.0))
-
-    gtag_cfg = deepcopy(ctag_cfg)
-    gtag_cfg["sig"] = "g"
-    gtag_cfg["bkg"] = ["q", "s", "c", "b"]
-    gtag_cfg["param_plot"].ranges = ((0.0, 1.0), (0.001, 1.0))
-
-    roc_plot(ctag_cfg)
-    roc_plot(btag_cfg)
-    roc_plot(stag_cfg)
-    roc_plot(gtag_cfg)
+    for sig, bkg, tag in pairs:
+        roc_plot(sig, bkg, tag, variants, samples, roc_param, plot_param())
 
 
 # _______________________________________________________________________________
@@ -158,8 +116,10 @@ class RocParam:
 
 # _______________________________________________________________________________
 class ROC:
-    def __init__(self, name, sample_s, sample_b, param, color, style):
+    def __init__(self, name, sig_flavor, bkg_flavors, sample_s, sample_b, param, color, style, variant_label):
         self.name = name
+        self.sig_flavor = sig_flavor
+        self.bkg_flavors = bkg_flavors
         self.sample_s = sample_s
         self.sample_b = sample_b
         self.range = param.ndec
@@ -169,60 +129,35 @@ class ROC:
         self.x = []
         self.y = []
 
-        # self.name = "{}_{}".format(self.sample_s.flavor, self.sample_b.flavor)
-        self.label = "{} vs {} ({})".format(self.sample_s.flavor, self.sample_b.flavor, self.sample_s.label.label)
-        ## initialize histo rdataframe objects
-        self.histos = []
+        self.label = "{} vs {} ({})".format(sig_flavor, "".join(bkg_flavors), variant_label)
         df_s = ROOT.RDataFrame(self.sample_s.treename, self.sample_s.files)
         df_b = ROOT.RDataFrame(self.sample_b.treename, self.sample_b.files)
 
-        ## dict of rdf histos vs cut values
-        self.dh_s = dfhs(
-            df_s,
-            self.sample_s.flavor,
-            self.sample_b.flavor,
-            self.range,
-            self.nbins,
-            "sig_{}".format(self.name),
-        )
-        self.dh_b = dfhs(
-            df_b,
-            self.sample_s.flavor,
-            self.sample_b.flavor,
-            self.range,
-            self.nbins,
-            "bkg_{}".format(self.name),
-        )
-
-        self.dhs = list(self.dh_s.values()) + list(self.dh_b.values())
+        ## one fine histogram of the tagging discriminant per sample (filled in a single
+        ## event loop); the ROC is then the reverse-cumulative of these histograms
+        self.h_s = dfh(df_s, sig_flavor, bkg_flavors, self.nbins, "sig_{}".format(self.name))
+        self.h_b = dfh(df_b, sig_flavor, bkg_flavors, self.nbins, "bkg_{}".format(self.name))
+        self.dhs = [self.h_s, self.h_b]
 
     def get_roc(self):
+        def eff(h):
+            nb = h.GetNbinsX()
+            c = np.array([h.GetBinContent(i) for i in range(nb + 2)])  # 0=under .. nb+1=over
+            tot = c.sum()
+            if tot == 0:
+                sys.exit("ERROR: histogram is empty...")
+            # efficiency to pass D >= threshold, one point per bin lower edge
+            revcum = np.cumsum(c[1:nb + 1][::-1])[::-1] + c[nb + 1]
+            return revcum / tot
+
+        self.x = eff(self.h_s)  # signal efficiency
+        self.y = eff(self.h_b)  # background mis-id
+
         out_root = ROOT.TFile("{}.root".format(self.name), "RECREATE")
-        for cut, hist in self.dh_s.items():
-            hist.Write()
-        for cut, hist in self.dh_b.items():
-            hist.Write()
-
-        x, y = [], []
-        cuts = list(self.dh_s.keys())
-
-        def integral(h):
-            return float(h.Integral(0, h.GetNbinsX() + 1))
-
-        sum_s = integral(self.dh_s[cuts[0]])
-        sum_b = integral(self.dh_b[cuts[0]])
-
-        if sum_s == 0 or sum_b == 0:
-            sys.exit("ERROR: histograms are empty...")
-
-        for cut in cuts:
-            x.append(integral(self.dh_s[cut]) / sum_s)
-            y.append(integral(self.dh_b[cut]) / sum_b)
-
-        self.x = x
-        self.y = y
-
-        return x, y
+        self.h_s.Write()
+        self.h_b.Write()
+        out_root.Close()
+        return self.x, self.y
 
 
 # _______________________________________________________________________________
@@ -256,23 +191,14 @@ class Graph:
         fig, ax = plt.subplots()
 
         ## plot curves
-
         print(fig_file)
         for roc in rocs:
-            print(
-                roc.name,
-                roc.sample_s.label.label,
-                roc.sample_b.label.label,
-            )
-            for x, y in zip(roc.x, roc.y):
-                print(x, y)
-
             ax.plot(
                 roc.x,
                 roc.y,
                 linestyle=roc.style,
                 color=roc.color,
-                label="{}".format(roc.label),
+                label=texesc(roc.label),
                 linewidth=3,
             )
 
@@ -312,29 +238,30 @@ class Graph:
 
 
 # _______________________________________________________________________________
-def roc_plot(cfg):
-
+def roc_plot(sig, bkg, tag, variants, samples, roc_param, plot_param):
+    ## one curve per model variant; background = the flavours in `bkg` combined
     colors = ["black", "red", "blue", "purple", "green"]
-    styles = ["-", "--", "-.", "."]
 
     rocs = []
-
-    procstr = ""
-    for ip, proc in enumerate(cfg["variants"]):
-        sig_f = cfg["sig"]
-        procstr += "_{}".format(proc.name)
-        for ib, bkg_f in enumerate(cfg["bkg"]):
-            name = "{}{}_{}".format(sig_f, bkg_f, proc.name)
-            rocs.append(
-                ROC(
-                    name,
-                    cfg["samples"][proc][sig_f],
-                    cfg["samples"][proc][bkg_f],
-                    cfg["param_roc"],
-                    colors[ib],
-                    styles[ip],
-                )
+    for iv, proc in enumerate(variants):
+        bkg_files = []
+        for fb in bkg:
+            bkg_files += samples[proc][fb].files
+        sample_b = Sample(bkg_files, "events", "".join(bkg), proc)
+        name = "{}_{}".format(tag, proc.procname)
+        rocs.append(
+            ROC(
+                name,
+                sig,
+                bkg,
+                samples[proc][sig],
+                sample_b,
+                roc_param,
+                colors[iv % len(colors)],
+                "-",
+                proc.label,
             )
+        )
 
     dh_list = []
     for roc in rocs:
@@ -345,62 +272,21 @@ def roc_plot(cfg):
     for roc in rocs:
         roc.get_roc()
 
-    plot_name = "{}tagging{}".format(cfg["sig"], procstr)
-    plot = Graph(rocs, cfg["param_plot"], "plots/{}.png".format(plot_name))
+    Graph(rocs, plot_param, "plots/roc_{}.png".format(tag))
 
 
 # ______________________________________________________________________________
-def dfhs(df, fs, fb, m, nbins, label):
-
-    lin_array = np.arange(0.0, m + float(m) / nbins, float(m) / nbins)
-    exp_array = np.power(10.0, lin_array)
-
-    a = -1.0 / (np.power(10.0, m) - 1)
-    b = np.power(10.0, m) / (np.power(10.0, m) - 1)
-    cutvals = a * exp_array + b
-    cutvals.sort()
-
+def dfh(df, fs, bkg_flavors, nbins, label):
+    ## single fine histogram of the binary discriminant D = score_s / (score_s + Σ score_bkg);
+    ## the ROC is recovered from its reverse-cumulative sum (see ROC.get_roc)
+    fb = "".join(bkg_flavors)
     score_s = "recojet_is{}".format(fs.upper())
-    score_b = "recojet_is{}".format(fb.upper())
-
-    binary_discr_var = "d_{}{}".format(fs, fb)
-    binary_discr_label = "D({},{})".format(fs, fb)
-    binary_discr_func = "binary_discriminant({}, {})".format(score_s, score_b)
-
-    # print(cutvals)
-    df_dict = OrderedDict()
-    dh_dict = OrderedDict()
+    score_b = "(" + "+".join("recojet_is{}".format(f.upper()) for f in bkg_flavors) + ")"
+    dvar = "d_{}{}".format(fs, fb)
 
     print("producing roc curve: {} vs {} -- {}".format(fs, fb, label))
-    df = df.Define(binary_discr_var, binary_discr_func)
-
-    for i, cut in enumerate(cutvals):
-
-        cut_str = "{:.0f}".format(1e5 * cut)
-        if i == 0:
-            cut_str = "00000"
-
-        filter_expr = "{} > {}".format(binary_discr_var, cut)
-        fcoll_title = "{} > {:.4f}".format(binary_discr_label, cut)
-        fcoll_str = "{}_{}".format(binary_discr_var, cut_str)
-
-        # define filter from previous iteration in the loop
-        if i == 0:
-            df_dict[cut] = df.Define(fcoll_str, "{}[{}]".format(binary_discr_var, filter_expr))
-        else:
-            df_dict[cut] = df_dict[cutvals[i - 1]].Define(fcoll_str, "{}[{}]".format(binary_discr_var, filter_expr))
-
-        dh_dict[cut] = df_dict[cut].Histo1D(
-            (
-                "h_{}_{}".format(fcoll_str, label),
-                ";{};N_{{Events}}".format(binary_discr_label),
-                nbins,
-                0.0,
-                1.0,
-            ),
-            fcoll_str,
-        )
-    return dh_dict
+    df = df.Define(dvar, "binary_discriminant({}, {})".format(score_s, score_b))
+    return df.Histo1D(("h_{}".format(label), ";D({},{});jets".format(fs, fb), nbins, 0.0, 1.0), dvar)
 
 
 # _______________________________________________________________________________________

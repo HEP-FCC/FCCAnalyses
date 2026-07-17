@@ -1,133 +1,96 @@
+"""Flatten the per-event stage1 tree to a per-jet ntuple for training.
+
+Reads the stage1 `events` tree with uproot (vectorised) and writes the per-jet
+`tree` with PyROOT. The one-hot `recojet_is{FLAVOUR}` label is inferred from the
+input file name (`H{f}{f}` for Higgs samples, `_ee_{f}{f}_` for Z samples).
+
+Usage: python stage2.py input_file output_file n_start n_final
+
+Note: a previous per-entry PyROOT implementation read RVec<RVec<float>> branches
+with nested cppyy indexing, which corrupts the heap (segfault on tau samples).
+Reading the branches vectorised with uproot avoids that and is much faster.
+"""
 import sys
+import numpy as np
+import uproot
+import awkward as ak
 from array import array
 from ROOT import TFile, TTree
 from examples.FCCee.weaver.config import variables_pfcand, variables_jet, flavors
 
-debug = False
-
-if len(sys.argv) < 2:
-    print(" Usage: stage2.py input_file output_file n_start n_events")
+if len(sys.argv) < 5:
+    print(" Usage: python stage2.py input_file output_file n_start n_final")
     sys.exit(1)
 
-input_file = sys.argv[1]
-output_file = sys.argv[2]
-n_start = int(sys.argv[3])
-n_final = int(sys.argv[4])
-n_events = n_final - n_start
-
-# Opening the input file containing the tree (output of stage1.py)
-infile = TFile.Open(input_file, "READ")
-
-ev = infile.Get("events")
-numberOfEntries = ev.GetEntries()
-
-## basic checks
-if n_final > n_start + numberOfEntries:
-    print("ERROR: requesting too many events. This file only has {}".format(numberOfEntries))
-    sys.exit()
+input_file, output_file = sys.argv[1], sys.argv[2]
+n_start, n_final = int(sys.argv[3]), int(sys.argv[4])
 
 branches_pfcand = list(variables_pfcand.keys())
 branches_jet = list(variables_jet.keys())
+if not branches_jet or not branches_pfcand:
+    print("ERROR: empty branch list from config")
+    sys.exit(1)
 
-if len(branches_jet) == 0:
-    print("ERROR: branches_jet is empty ...")
-    sys.exit()
-
-if len(branches_pfcand) == 0:
-    print("ERROR: branches_pfcand is empty ...")
-    sys.exit()
-
-# print("")
-# print("-> number of events: {}".format(numberOfEntries))
-# print("-> requested to run over [{},{}] event range".format(n_start, n_final))
-
-# branches_pfcand = [branches_pfcand[0]]
-# branches_jet = [branches_jet[-1]]
-
-## define variables for output tree
-maxn = 500
-
-match_flavor = dict()
+## jet flavour from the file name: "H{f}{f}" (Higgs) or "_ee_{f}{f}_" (Z)
+match_flavor = {}
 for f in flavors:
-    match_flavor[f] = False
-    if "H{}{}".format(f, f) in input_file:
-        match_flavor[f] = True
+    ff = f + f
+    match_flavor[f] = ("H{}".format(ff) in input_file) or ("_ee_{}_".format(ff) in input_file)
+if True not in match_flavor.values():
+    print("ERROR: could not infer jet flavor from file name: {}".format(input_file))
+    sys.exit(1)
 
-if True in match_flavor.values():
-    f0 = list(match_flavor.keys())[list(match_flavor.values()).index(True)]
-    # print("producing  '{}-flavor' jets ...".format(f0, f0))
-else:
-    print("ERROR: could not infer jet flavor from file name")
-    str_err = "ERROR: please provide input file containing: "
-    for f in flavors:
-        str_err += "H{}{} ".format(f, f)
+t = uproot.open(input_file)["events"]
+n_final = min(n_final, t.num_entries)
 
-## output jet-wise tree
+## read once (jagged: event -> jet -> constituent), restricted to the event range
+arr_jet = {b: t[b].array(library="ak", entry_start=n_start, entry_stop=n_final) for b in branches_jet}
+arr_pf = {b: t[b].array(library="ak", entry_start=n_start, entry_stop=n_final) for b in branches_pfcand}
+
+## flatten the event axis -> one entry per jet
+jet_flat = {b: ak.to_numpy(ak.flatten(arr_jet[b])).astype(np.float64) for b in branches_jet}
+pf_perjet = {b: ak.flatten(arr_pf[b], axis=1) for b in branches_pfcand}
+npf = ak.to_numpy(ak.num(pf_perjet[branches_pfcand[0]], axis=1))
+njets_tot = int(npf.size)
+
+maxn = 500
 out_root = TFile(output_file, "RECREATE")
-t = TTree("tree", "tree with jets")
+tr = TTree("tree", "tree with jets")
 
-jet_array = dict()
+jet_array = {}
 for f in flavors:
     b = "recojet_is{}".format(f.upper())
-    jet_array[b] = array("i", [0])
-    t.Branch(b, jet_array[b], "{}/I".format(b))
+    jet_array[b] = array("i", [int(match_flavor[f])])
+    tr.Branch(b, jet_array[b], "{}/I".format(b))
 for b in branches_jet:
     jet_array[b] = array("f", [0])
-    t.Branch(b, jet_array[b], "{}/F".format(b))
+    tr.Branch(b, jet_array[b], "{}/F".format(b))
 
-## need this branch to define pfcand branches
 jet_npfcand = array("i", [0])
-t.Branch("jet_npfcand", jet_npfcand, "jet_npfcand/I")
+tr.Branch("jet_npfcand", jet_npfcand, "jet_npfcand/I")
 
-pfcand_array = dict()
+pf_buf, pf_np = {}, {}
 for b in branches_pfcand:
-    pfcand_array[b] = array("f", maxn * [0])
-    t.Branch(b, pfcand_array[b], "{}[jet_npfcand]/F".format(b))
+    pf_buf[b] = array("f", maxn * [0.0])
+    tr.Branch(b, pf_buf[b], "{}[jet_npfcand]/F".format(b))
+    pf_np[b] = np.frombuffer(pf_buf[b], dtype=np.float32)
 
-if debug:
-    for key, item in jet_array.items():
-        print(key)
-    for key, item in pfcand_array.items():
-        print(key)
+## contiguous per-constituent data + per-jet offsets, to fill the fixed-size buffers
+pf_offsets = np.zeros(njets_tot + 1, dtype=np.int64)
+np.cumsum(npf, out=pf_offsets[1:])
+pf_flat = {b: ak.to_numpy(ak.flatten(pf_perjet[b], axis=1)).astype(np.float32) for b in branches_pfcand}
 
-# Loop over all events
-for entry in range(n_start, n_final):
-    # Load selected branches with data from specified event
+for j in range(njets_tot):
+    for b in branches_jet:
+        jet_array[b][0] = jet_flat[b][j]
+    n = int(min(npf[j], maxn))
+    jet_npfcand[0] = n
+    o = pf_offsets[j]
+    for b in branches_pfcand:
+        pf_np[b][:n] = pf_flat[b][o:o + n]
+    tr.Fill()
 
-    # if (entry+1)%100 == 0:
-    # if (entry + 1) % 1000 == 0:
-    #    print(" ... processed {} events ...".format(entry + 1))
-
-    ev.GetEntry(entry)
-
-    njets = len(getattr(ev, branches_jet[0]))
-
-    ## loop over jets
-    for j in range(njets):
-
-        ## fill jet-based quantities
-        for f in flavors:
-            name = "recojet_is{}".format(f.upper())
-            jet_array[name][0] = int(match_flavor[f])
-            if debug:
-                print("   jet:", j, name, jet_array[name][0])
-
-        for name in branches_jet:
-            jet_array[name][0] = getattr(ev, name)[j]
-            if debug:
-                print("   jet:", j, name, getattr(ev, name)[j])
-
-        ## loop over constituents
-        jet_npfcand[0] = len(getattr(ev, branches_pfcand[0])[j])
-        for k in range(jet_npfcand[0]):
-            for name in branches_pfcand:
-                pfcand_array[name][k] = getattr(ev, name)[j][k]
-                if debug:
-                    print("       const:", k, name, getattr(ev, name)[j][k])
-
-        ## fill tree at every jet
-        t.Fill()
-
-# write tree
-t.SetDirectory(out_root)
-t.Write()
+tr.SetDirectory(out_root)
+tr.Write()
+out_root.Close()
+print("wrote {} jets -> {}".format(njets_tot, output_file))
