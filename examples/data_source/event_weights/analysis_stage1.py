@@ -3,7 +3,7 @@ Analysis example, measure Higgs mass in the Z(mumu)H recoil measurement.
 '''
 from argparse import ArgumentParser
 
-
+import ROOT
 # Mandatory: Analysis class where the user defines the operations on the
 # dataframe.
 class Analysis():
@@ -91,7 +91,20 @@ class Analysis():
             "GetAllWeights{}(EventHeader)"
         )
 
-        return dframe2
+        # Create one Functor 2 object and find the index of rwgt_4 once.
+        selected_weight_functor = ROOT.GetWeightByName(
+            "rwgt_4",
+            self.test_file
+        )
+
+        # Functor 2: create a second column containing only rwgt_4.
+        dframe3 = dframe2.Define(
+            "selected_weight",
+            selected_weight_functor,
+            ["EventHeader"]
+        )
+
+        return dframe3
         # Pass EventHeader into the GetAllWeights functor and store its returned weights in a new column called event_weights.
 
 
@@ -99,4 +112,4 @@ class Analysis():
     # Mandatory: output function, please make sure you return the branch list
     # as a python list
     def output(self):
-        return ["event_weights"]
+        return ["event_weights", "selected_weight"]
