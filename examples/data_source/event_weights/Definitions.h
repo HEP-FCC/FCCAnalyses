@@ -160,18 +160,29 @@ struct GetWeightByName {
         //get the list of labels from metadataFrame
         auto weightNames =
              metadataFrame.getParameter<std::vector<std::string>>("EventWeightNames");
-        // Extract the EventWeightNames parameter from metadataFrame as a vector of strings and store it in weightNames.
+        // Extract the EventWeightNames parameter from metadataFrame as an optional vector of strings and store it in weightNames.     
+        //PODIO’s getParameter() function returns an optional because the metadata parameter "EventWeightNames" might not exist,
+        // so auto determines weightnames to have the type std::optional<std::vector<std::string>>.  
 
 
-        // Loop through all weight names, compare each one with the requested name, and store its index when a match is found.
-        //std::size_t is an unsigned integer type
-        for (std::size_t i = 0; i < weightNames.size(); ++i) {
-            if (weightNames[i] == requestedWeightName) {
-                //static_cast<int>(i) -> converts i from std::size_t to int since weightIndex is int
-                weightIndex = static_cast<int>(i);
-                break;
-            }
+            // Loop through all weight names, compare each one with the requested name, and store its index when a match is found.
+            //std::size_t is an unsigned integer type
+                               
+
+     //we cannot do .size or [i] on an optional so 
+     //first check weight Names has a vector inside
+     if (!weightNames.has_value()) {
+        return;
+    }
+    //then access the vector inside the optional
+    for (std::size_t i = 0; i < weightNames->size(); ++i) {
+        if ((*weightNames)[i] == requestedWeightName) {
+            weightIndex = static_cast<int>(i);
+            break;
         }
+    }
+
+
     } //constructor ends here
 
     //Functor operator() that will be called for each event
@@ -207,7 +218,7 @@ struct GetWeightByName {
              return -1.0;
         }
     // Return the numerical weight that corresponds to the requested label.
-    return eventWeights[index];
+        return eventWeights[index];
     }
     
           
