@@ -57,12 +57,12 @@ drop_track_with_bad_covariance(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
     }
     std::cerr
         << "VertexFitterSimple: dropping track with non positive-definite "
-           "covariance matrix -- track parameters: D0=" << t.D0
-        << " phi=" << t.phi << " omega=" << t.omega << " Z0=" << t.Z0
+           "covariance matrix -- track parameters: D0="
+        << t.D0 << " phi=" << t.phi << " omega=" << t.omega << " Z0=" << t.Z0
         << " tanLambda=" << t.tanLambda
-        << " -- covariance diagonal (D0,phi,omega,Z0,tanLambda)=("
-        << Cov(0, 0) << ", " << Cov(1, 1) << ", " << Cov(2, 2) << ", "
-        << Cov(3, 3) << ", " << Cov(4, 4) << ")" << std::endl;
+        << " -- covariance diagonal (D0,phi,omega,Z0,tanLambda)=(" << Cov(0, 0)
+        << ", " << Cov(1, 1) << ", " << Cov(2, 2) << ", " << Cov(3, 3) << ", "
+        << Cov(4, 4) << ")" << std::endl;
   }
   return good_tracks;
 }
