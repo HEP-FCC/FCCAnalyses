@@ -1,9 +1,47 @@
 {
     "creators": [
 	{
+	    "affiliation": "CERN",
+	    "name": "Carceller, Juan Miguel"
+	},
+	{
+	    "affiliation": "University of Adelaide",
+	    "name": "Desai, Aman"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Eysermans, Jan"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Forthomme, Laurent",
+	    "orcid": "0000-0002-3302-336X"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Francois, Brieuc"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Ganis, Gerardo",
+	    "orcid": "0000-0002-8432-2183"
+	},
+	{
 	    "affiliation": "Ecole Polytechnique Fédérale de Lausanne",
 	    "name": "Helsens, Clement",
 	    "orcid": "0000-0002-9243-7554"
+	},
+	{
+	    "affiliation": "CERN",
+	    "name": "Jamin, David Olivier"
+	},
+	{
+	    "affiliation": "DESY",
+	    "name": "Madlener, Thomas"
+	},
+	{
+	    "affiliation": "University of Copenhagen",
+	    "name": "Munch Torndal, Julie"
 	},
 	{
 	    "affiliation": "CERN",
@@ -17,18 +55,20 @@
 	},
 	{
 	    "affiliation": "CERN",
-	    "name": "Volkl, Valentin",
-	    "orcid": "0000-0002-9172-6629"
+	    "name": "Smieško, Juraj",
+	    "orcid": "0000-0003-3725-2984"
 	},
 	{
 	    "affiliation": "CERN",
-	    "name": "Forthomme, Laurent",
-	    "orcid": "0000-0002-3302-336X"
-	},
-	{
-	    "affiliation": "University of Copenhagen",
-	    "name": "Munch Torndal, Julie"
+	    "name": "Volkl, Valentin",
+	    "orcid": "0000-0002-9172-6629"
 	}
+    ],
+    "description": "FCCAnalyses is a common framework for Future Circular Collider (FCC) related analyses. It allows users to write full analyses by taking EDM4hep input ROOT files, processing them using ROOT RDataFrame, and producing histograms and plots. The framework is designed to be efficient and modular, supporting various FCC-ee and FCC-hh physics studies.",
+    "communities": [
+        {
+            "identifier": "fcc-phex"
+        }
     ],
     "keywords": [
 	"data analyses",
@@ -40,4 +80,3 @@
     "license": "Apache-2.0",
     "upload_type": "software"
 }
-

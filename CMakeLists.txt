@@ -51,15 +51,6 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
 set(INSTALL_SHARE_DIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH
     "Installation directory for shared resources")
 
-
-#--- Declare C++ Standard -----------------------------------------------------
-
-set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
-if(NOT CMAKE_CXX_STANDARD MATCHES "17|20")
-  message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}")
-endif()
-message (STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
-
 #--- Dependencies -------------------------------------------------------------
 
 find_package(ROOT REQUIRED COMPONENTS ROOTVecOps ROOTDataFrame TMVA TMVAUtils)
@@ -72,6 +63,7 @@ find_package(FastJet REQUIRED)
 
 find_package( Delphes REQUIRED )
 
+include(cmake/Key4hepConfig.cmake)
 
 if(WITH_ACTS)
   find_package( Acts COMPONENTS Core )
