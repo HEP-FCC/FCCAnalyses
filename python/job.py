@@ -30,7 +30,8 @@ class Job:
     def __init__(self,
                  input_file_list: list[str],
                  analysis_chain: Callable,
-                 use_data_source: bool = False):
+                 use_data_source: bool = False,
+                 output_format: str = 'ttree'):
         '''
         Initialize all required parameters.
         '''
@@ -55,6 +56,9 @@ class Job:
 
         # Setup analysis chain
         self._analysis_chain: Callable = analysis_chain
+
+        # Output format
+        self._output_format: str = output_format
 
         # Output of the job
         self._output_file_path: Optional[str] = None
@@ -247,9 +251,16 @@ class Job:
         start_time = time.time()
         try:
             LOGGER.info('Snapshoting...')
-            final_dframe.Snapshot("events",
-                                  self._output_file_path,
-                                  self._output_variables)
+            options = ROOT.RDF.RSnapshotOptions()
+            if self._output_format == 'rntuple':
+                options.fOutputFormat = ROOT.RDF.ESnapshotOutputFormat.kRNTuple
+
+            final_dframe.Snapshot(
+                "events",
+                self._output_file_path,
+                self._output_variables,
+                options
+            )
             LOGGER.info('Finished snapshoting...')
         except TypeError as err:
             LOGGER.error('A problem encountered during the execution of the '

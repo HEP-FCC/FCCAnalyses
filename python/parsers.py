@@ -192,6 +192,12 @@ def setup_run_parser(parser):
         default=None,
         help='specify how to stride through the events'
     )
+    parser.add_argument(
+        '--output-format',
+        choices=('ttree', 'rntuple'),
+        default='ttree',
+        help='choose the output file format'
+    )
 
     # Testing
     test_group = parser.add_argument_group('Tests and benchmarking')
