@@ -29,5 +29,5 @@ jobs:
       run: |
         docker exec container /bin/bash -c 'cd ./Package; \
           source /cvmfs/sw.hsf.org/key4hep/setup.sh;\
-          git clang-format --diff --style=file $(git merge-base upstream/master HEAD)
-          git clang-format --diffstat --style=file $(git merge-base upstream/master HEAD)'
+          git clang-format --diff --style=file --extensions c,h,cc,cpp,cxx,hh,hpp,hxx $(git merge-base upstream/master HEAD)
+          git clang-format --diffstat --style=file --extensions c,h,cc,cpp,cxx,hh,hpp,hxx $(git merge-base upstream/master HEAD)'
