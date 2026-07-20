@@ -8,11 +8,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # 2025-01-28 is excluded: it ships podio 1.1, and the
+        # WITH_PODIO_DATASOURCE feature needs podio >= 1.3.
         STACK: ['/cvmfs/sw.hsf.org/key4hep/setup.sh',
                 '/cvmfs/sw.hsf.org/key4hep/setup.sh -r 2026-04-08',
                 '/cvmfs/sw.hsf.org/key4hep/setup.sh -r 2026-02-01',
                 '/cvmfs/sw.hsf.org/key4hep/setup.sh -r 2025-05-29',
-                '/cvmfs/sw.hsf.org/key4hep/setup.sh -r 2025-01-28',
                 '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
         OS: ['alma9',
             ]
