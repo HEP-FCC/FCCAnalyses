@@ -8,7 +8,7 @@
 
 #include <fcntl.h>
 
-//#include "TrkUtil.h"    // from delphes
+#include "TrackCovariance/TrkUtil.h" // from Delphes
 
 namespace FCCAnalyses {
 
@@ -34,6 +34,38 @@ void resume_stdout(int fd) {
 }
 
 // -----------------------------------------------------------------------------
+
+// Drop tracks whose covariance matrix is not positive-definite: VertexFit
+// (Delphes) silently produces a NaN vertex when such a track is included,
+// instead of failing loudly, on top of flooding stdout while it tries (and
+// fails) to invert the matrix. See
+// https://github.com/HEP-FCC/FCCAnalyses/issues/378
+//
+// Printed via std::cerr rather than std::cout since callers wrap the fit
+// itself in supress_stdout()/resume_stdout() to silence Delphes' own
+// printf() spam; stderr (fd 2) is untouched by that redirection, so this
+// stays visible without reintroducing the spam.
+static ROOT::VecOps::RVec<edm4hep::TrackState>
+drop_track_with_bad_covariance(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                               bool Units_mm) {
+  ROOT::VecOps::RVec<edm4hep::TrackState> good_tracks;
+  for (auto &t : tracks) {
+    TMatrixDSym Cov = VertexingUtils::get_trackCov(t, Units_mm);
+    if (TrkUtil::CheckPosDef(Cov)) {
+      good_tracks.push_back(t);
+      continue;
+    }
+    std::cerr
+        << "VertexFitterSimple: dropping track with non positive-definite "
+           "covariance matrix -- track parameters: D0=" << t.D0
+        << " phi=" << t.phi << " omega=" << t.omega << " Z0=" << t.Z0
+        << " tanLambda=" << t.tanLambda
+        << " -- covariance diagonal (D0,phi,omega,Z0,tanLambda)=("
+        << Cov(0, 0) << ", " << Cov(1, 1) << ", " << Cov(2, 2) << ", "
+        << Cov(3, 3) << ", " << Cov(4, 4) << ")" << std::endl;
+  }
+  return good_tracks;
+}
 
 VertexingUtils::FCCAnalysesVertex VertexFitter(
     int Primary,
@@ -104,6 +136,10 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   // https://stackoverflow.com/questions/46728680/how-to-temporarily-suppress-output-from-printf
   int fd = supress_stdout();
 
+  bool Units_mm = true;
+
+  tracks = drop_track_with_bad_covariance(tracks, Units_mm);
+
   // Units for the beam-spot : mum
   // See
   // https://github.com/HEP-FCC/FCCeePhysicsPerformance/tree/master/General#generating-events-under-realistic-fcc-ee-environment-conditions
@@ -150,8 +186,6 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   TVectorD **trkPar = new TVectorD *[Ntr];
   TMatrixDSym **trkCov = new TMatrixDSym *[Ntr];
-
-  bool Units_mm = true;
 
   for (Int_t i = 0; i < Ntr; i++) {
     edm4hep::TrackState t = tracks[i];
@@ -274,10 +308,18 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
               << tracks.size() << std::endl;
   }
 
+  // Suppressing printf() output from TMatrixBase / Delphes' VertexFit, see
+  // VertexFitter_Tk() above for details.
+  int fd = supress_stdout();
+
+  tracks = drop_track_with_bad_covariance(tracks, false);
+
   ROOT::VecOps::RVec<edm4hep::TrackState> seltracks = tracks;
 
-  if (seltracks.size() <= 1)
+  if (seltracks.size() <= 1) {
+    resume_stdout(fd);
     return seltracks;
+  }
 
   int Ntr = tracks.size();
 
@@ -343,6 +385,8 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   }
   delete[] trkPar;
   delete[] trkCov;
+
+  resume_stdout(fd);
 
   return seltracks;
 }
