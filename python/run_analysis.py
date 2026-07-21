@@ -541,7 +541,7 @@ def run_histmaker(args, rdf_module, anapath):
                 if events_param:
                     nevents_meta += events_param.GetVal()
                 else:
-                    LOGGER.warning('Missing "eventsProcessed" in %s! Cross-section scaling may fall back to filtered event count.', file_name)
+                    LOGGER.debug('Missing "eventsProcessed" in %s! Cross-section scaling may fall back to filtered event count.', file_name)
                 
                 infile.Close()
             if args.test:
