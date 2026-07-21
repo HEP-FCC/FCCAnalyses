@@ -8,7 +8,6 @@
 
 #include "TLorentzVector.h"
 #include "VertexingUtils.h"
-#include "JetConstituentsUtils.h"
 #include <vector>
 
 namespace FCCAnalyses{
@@ -407,12 +406,6 @@ namespace myUtils{
 								ROOT::VecOps::RVec<float> thrust);
 
   int has_anglethrust_emin(ROOT::VecOps::RVec<float> angle);
-
-  // Identify hadronic tau candidates in jets; see myUtils.cc for the full documentation
-  // of the algorithm, the `request` parameter, and the output `type` codes.
-  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> findTauInJet(
-      const ROOT::VecOps::RVec<FCCAnalyses::JetConstituentsUtils::FCCAnalysesJetConstituents>& jets,
-      int request);
 
 }//end NS myUtils
 
