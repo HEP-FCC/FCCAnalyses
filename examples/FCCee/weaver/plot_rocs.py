@@ -7,16 +7,23 @@ import sys
 from collections import OrderedDict
 from copy import deepcopy
 from examples.FCCee.weaver.config import variables_pfcand, variables_jet, flavors
+import shutil
 import matplotlib.pyplot as plt
 
-## LaTeX rendering (needs latex on PATH, e.g. the LCG texlive)
-plt.rc("text", usetex=True)
+# use LaTeX rendering only if latex is on PATH else fall back
+USETEX = shutil.which("latex") is not None
+if not USETEX:
+    print("[plot_rocs] latex not found on PATH: using default styling "
+          "(add texlive to PATH for nicer LaTeX-rendered labels)")
+plt.rc("text", usetex=USETEX)
 plt.rc("font", family="serif")
 plt.rcParams.update({"font.size": 18})
 
 
 def texesc(s):
-    ## escape LaTeX special characters in a plain string used as a label
+    # escape LaTeX special characters in a label (no-op when usetex is off)
+    if not USETEX:
+        return s
     return s.replace("\\", r"\textbackslash{}").replace("_", r"\_").replace("&", r"\&").replace("%", r"\%")
 
 
