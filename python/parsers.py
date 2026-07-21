@@ -108,6 +108,12 @@ def setup_run_parser(parser):
         help='global output directory'
     )
     parser.add_argument(
+        '--output-format',
+        choices=('ttree', 'rntuple'),
+        default=None,
+        help='choose the output file format'
+    )
+    parser.add_argument(
         '-j', '--ncpus', '--n-threads',
         type=int,
         default=None,
@@ -191,12 +197,6 @@ def setup_run_parser(parser):
         type=int,
         default=None,
         help='specify how to stride through the events'
-    )
-    parser.add_argument(
-        '--output-format',
-        choices=('ttree', 'rntuple'),
-        default=None,
-        help='choose the output file format'
     )
 
     # Testing
