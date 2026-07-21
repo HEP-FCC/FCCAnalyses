@@ -32,13 +32,15 @@ namespace FCCAnalyses{
 
 namespace VertexFitterSimple{
 
-  /// Vertex (code from Franco Bedeschi): passing the recoparticles. Units for the beamspot constraint: mum
+  /// Vertex (code from Franco Bedeschi): passing the recoparticles. Units for the beamspot constraint: mum.
+  /// See VertexFitter_Tk() below for what ComputeMomentaAtVertex controls.
   VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
 						   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
 						   ROOT::VecOps::RVec<edm4hep::TrackState> alltracks,
 						   bool BeamSpotConstraint = false,
 						   double sigmax=0., double sigmay=0., double sigmaz=0.,
-                                                   double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
+                                                   double bsc_x=0., double bsc_y=0., double bsc_z=0.,
+                                                   bool ComputeMomentaAtVertex = true )  ;
 
 
   /// Vertex (code from Franco Bedeschi): passing the tracks. Units for the beamspot constraint: mum.
