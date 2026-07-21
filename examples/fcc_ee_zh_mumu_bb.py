@@ -91,10 +91,10 @@ class Fit:
             },
             # Recoil mass resolution shape systematic
             "recoil_res": {
-                "type": "shape",
+                "type": "lnN",
                 "apply_to": {
-                    "ZH_signal": 1.0,
-                    "ZZ_bkg":    1.0
+                    "ZH_signal": 1.05,
+                    "ZZ_bkg":    1.05
                 }
             }
         }
