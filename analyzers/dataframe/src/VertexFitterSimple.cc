@@ -116,11 +116,13 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
 VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
-                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
+                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
+                bool ComputeMomentaAtVertex) {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> dummy;
   return VertexFitter_Tk(Primary, tracks, dummy, BeamSpotConstraint, bsc_sigmax,
-                         bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z);
+                         bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z,
+                         ComputeMomentaAtVertex);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -129,7 +131,8 @@ VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 const ROOT::VecOps::RVec<edm4hep::TrackState> &alltracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
-                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
+                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
+                bool ComputeMomentaAtVertex) {
   // Suppressing printf() output from TMatrixBase:
   // https://github.com/root-project/root/blob/722eb4652bfc79149df00c8b0e92d0837caf054c/math/matrix/src/TMatrixTBase.cxx#L662
   // The solution found here:
@@ -247,20 +250,25 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   TheVertex.vertex = result;
 
-  // Use VertexMore to retrieve more information :
-  VertexMore theVertexMore(&theVertexFit, Units_mm);
-
   for (Int_t i = 0; i < Ntr; i++) {
-
     TVectorD updated_par =
         theVertexFit.GetNewPar(i); // updated track parameters
     TVectorD updated_par_edm4hep =
         VertexingUtils::Delphes2Edm4hep_TrackParam(updated_par, Units_mm);
     updated_track_parameters.push_back(updated_par_edm4hep);
+  }
 
-    // Momenta of the tracks at the vertex:
-    TVector3 ptrack_at_vertex = theVertexMore.GetMomentum(i);
-    updated_track_momentum_at_vertex.push_back(ptrack_at_vertex);
+  // VertexMore computes the joint covariance of the vertex position and
+  // every track's momentum at the vertex, which costs O(Ntr^3) -- this
+  // dominates the total runtime for events with many tracks (see
+  // https://github.com/HEP-FCC/FCCAnalyses/issues/378). Skip it whenever
+  // the caller doesn't need updated_track_momentum_at_vertex.
+  if (ComputeMomentaAtVertex) {
+    VertexMore theVertexMore(&theVertexFit, Units_mm);
+    for (Int_t i = 0; i < Ntr; i++) {
+      TVector3 ptrack_at_vertex = theVertexMore.GetMomentum(i);
+      updated_track_momentum_at_vertex.push_back(ptrack_at_vertex);
+    }
   }
 
   TheVertex.updated_track_parameters = updated_track_parameters;
