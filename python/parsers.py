@@ -195,7 +195,7 @@ def setup_run_parser(parser):
     parser.add_argument(
         '--output-format',
         choices=('ttree', 'rntuple'),
-        default='ttree',
+        default=None,
         help='choose the output file format'
     )
 

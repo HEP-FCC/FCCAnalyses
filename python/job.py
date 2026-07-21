@@ -30,8 +30,7 @@ class Job:
     def __init__(self,
                  input_file_list: list[str],
                  analysis_chain: Callable,
-                 use_data_source: bool = False,
-                 output_format: str = 'ttree'):
+                 use_data_source: bool = False):
         '''
         Initialize all required parameters.
         '''
@@ -56,9 +55,6 @@ class Job:
 
         # Setup analysis chain
         self._analysis_chain: Callable = analysis_chain
-
-        # Output format
-        self._output_format: str = output_format
 
         # Output of the job
         self._output_file_path: Optional[str] = None
@@ -151,11 +147,14 @@ class Job:
 
     def setup_output(self,
                      output_filepath: str,
-                     output_variables: Callable[[], list[str]]) -> None:
+                     output_variables: Callable[[], list[str]],
+                     output_format: str = 'ttree') -> None:
         '''
         Setup output of this work unit, output variables and output file path.
         '''
         self._output_file_path = output_filepath
+
+        self._output_format: str = output_format
 
         self._output_variables = output_variables()
 

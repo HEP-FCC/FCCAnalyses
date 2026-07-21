@@ -464,7 +464,11 @@ def merge_config(args: argparse.Namespace,
         config['output-dir'] = args.output_dir
 
     # Check output file format
-    config['output-format'] = args.output_format
+    config['output-format'] = 'ttree'
+    if hasattr(analysis_class, 'output_format'):
+        config['output-format'] = analysis_class.output_format
+    if args.output_format is not None:
+        config['output-format'] = args.output_format
 
     # Check for number of output chunks
     config['n-chunks'] = None
@@ -636,12 +640,12 @@ def run_fccanalysis(args, anascript_module) -> None:
 
         dframe_job = Job(job['input-file-list'],
                          config['analysis-chain'],
-                         config['use-data-source'],
-                         config['output-format']
+                         config['use-data-source']
         )
 
         dframe_job.setup_output(job['output-file'],
-                                config['output-variables'])
+                                config['output-variables'],
+                                config['output-format'])
 
         if config['enable-progress-bar']:
             dframe_job.enable_progress_bar()
