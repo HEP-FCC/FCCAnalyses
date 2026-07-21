@@ -23,11 +23,13 @@ class DatacardWriter:
 
     def _get_metadata(self) -> Dict[str, int]:
         imax = len(self.channels)
-        jmax = 0
-        if self.channels:
-            first_channel = list(self.channels.values())[0]
-            processes = first_channel.get('processes', {})
-            jmax = sum(1 for p in processes.values() if p.get('type') == 'background')
+        jmax = max(
+            (
+                sum(1 for p in ch.get('processes', {}).values() if p.get('type') == 'background')
+                for ch in self.channels.values()
+            ),
+            default=0,
+        )
             
         kmax = len(self.systematics)
         return {'imax': imax, 'jmax': jmax, 'kmax': kmax}
@@ -103,7 +105,7 @@ class DatacardWriter:
         f.write("-" * 50 + "\n")
 
     def _write_systematics(self, f):
-        for syst_name, syst_info in self.datacard.systematics.items():
+        for syst_name, syst_info in self.systematics.items():
             syst_type = syst_info.get("type", "lnN")
             apply_to = syst_info.get("apply_to", {})
 
@@ -111,7 +113,7 @@ class DatacardWriter:
             row_cells = [syst_name, syst_type]
 
             # Loop over channels
-            for ch_name, ch_info in self.datacard.channels.items():
+            for ch_name, ch_info in self.channels.items():
                 sorted_procs = sorted(
                     ch_info.get('processes', {}).items(),
                     key=lambda item: 0 if item[1].get('type') == 'signal' else 1
@@ -219,25 +221,41 @@ def sanitize_and_validate_config(user_datacard) -> None:
         # If it's a shape systematic, verify the physical histograms exist
         if s_type == 'shape':
             apply_to = syst_data.get('apply_to', {})
-
+            
             for ch_name, ch_info in channels.items():
-                # Determine what the shape mapping rule is for this channel
-                # Handles wildcard '*' or specific process rules
-                mapping_rule = shapes_config.get('*', {}).get(ch_name) or shapes_config.get(proc_name, {}).get(ch_name)
-
-                if not mapping_rule:
-                    continue
-
-                # Extract the ROOT file path (assumes space-separated path and inner structure mapping)
-                root_file_path = mapping_rule.split()[0]
-
-                if not os.path.isfile(root_file_path):
-                    LOGGER.warning("Shape file '%s' not created yet or using relative build path. Skipping deep object check.", root_file_path)
-                    continue
-
-                # Open the file via PyROOT to peek inside
-                if root_file_path in failed_to_open_files:
-                    raise ValueError(f"Validation Error: Failed to open shape ROOT file: {root_file_path}")
+                for proc_name in ch_info.get('processes', {}).keys():
+                    
+                    # 1. Resolve mapping rule per process
+                    mapping_rule = shapes_config.get(proc_name, {}).get(ch_name) or shapes_config.get('*', {}).get(ch_name)
+                    
+                    if not mapping_rule:
+                        continue
+                    
+                    root_file_path = mapping_rule.split()[0]
+                    
+                    if not os.path.isfile(root_file_path):
+                        LOGGER.warning("Shape file '%s' not created yet or using relative build path. Skipping deep object check.", root_file_path)
+                        continue
+                    
+                    # 2. Check if PyROOT failed to open it
+                    if root_file_path in failed_to_open_files:
+                        raise ValueError(f"Validation Error: Failed to open shape ROOT file: {root_file_path}")
+                    
+                    # 3. Check variations
+                    if proc_name in apply_to and str(apply_to[proc_name]) != '-':
+                        
+                        # Resolve the inner path template
+                        base_path = mapping_rule.split()[1].replace('$CHANNEL', ch_name).replace('$PROCESS', proc_name)
+                        
+                        # Combine expects clones with "Up" and "Down"
+                        for variation in ['Up', 'Down']:
+                            target_hist_path = f"{base_path}_{syst_name}{variation}"
+                            
+                            # Retrieve the pre-loaded detached histogram object
+                            hist = hist_cache.get(root_file_path, {}).get(target_hist_path)
+                            
+                            if not hist or not hist.InheritsFrom("TH1"):
+                                raise ValueError(f"Validation Error: Target histogram '{target_hist_path}' missing in '{root_file_path}'")
 
                 for proc_name in ch_info.get('processes', {}).keys():
                     if proc_name in apply_to and str(apply_to[proc_name]) != '-':

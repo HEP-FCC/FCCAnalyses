@@ -76,3 +76,6 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
             except KeyboardInterrupt:
                 LOGGER.info('Fit execution interrupted by user (Ctrl+C). Terminating cleanly...')
                 sys.exit(0)
+        else:
+            LOGGER.error('Backend "%s" is not implemented yet. Supported backends: combine.', backend)
+            sys.exit(4)

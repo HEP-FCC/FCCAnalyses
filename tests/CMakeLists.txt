@@ -32,5 +32,5 @@ if(PYTHON_EXECUTABLE)
     )
 
     # Ensure test data assets are fully downloaded via CI before running this test
-    set_tests_properties(test_combine_fit_backend PROPERTIES DEPENDS get_test_inputs)
+    set_tests_properties(test_combine_fit_backend PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()

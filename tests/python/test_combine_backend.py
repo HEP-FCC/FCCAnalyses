@@ -12,9 +12,10 @@ def test_combine_backend_execution():
     
     # Anchor all relative tracks directly to the dynamic REPO_ROOT
     test_config = os.path.join(REPO_ROOT, "examples", "fcc_ee_zh_mumu_bb.py")
-    test_output_dir = os.path.join(REPO_ROOT, "outputs", "test_integration", "mumu")
+    tmp_root = os.environ.get("TMPDIR") or os.environ.get("TEMP") or "/tmp"
+    test_output_dir = os.path.join(tmp_root, f"fccanalyses_test_integration_mumu_{os.getpid()}")
     test_datacard = os.path.join(test_output_dir, "datacard.txt")
-    
+
     if not os.path.exists(test_config):
         print(f"----> ERROR: Target config missing at: {test_config}")
         sys.exit(1)
