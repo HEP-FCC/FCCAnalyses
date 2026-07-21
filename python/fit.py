@@ -4,7 +4,7 @@ import logging
 import argparse
 import subprocess
 import shutil
-import glob  # <--- Added for tracking output ROOT files
+import glob
 
 LOGGER = logging.getLogger('FCCAnalyses.fit')
 
@@ -24,7 +24,10 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
 
     if backend == 'combine':
         from combine import generate_datacard
-        generate_datacard(anapath, output_path)
+        import shlex
+        
+        # 1. Capture the combine_args returned from the Fit class
+        class_combine_args = generate_datacard(anapath, output_path)
 
         if args.execute:
             if shutil.which('combine') is None:
@@ -40,34 +43,31 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
 
                 cleaned_args = [arg for arg in tool_args if arg != output_path]
 
-                # 2. Check if the user explicitly provided a custom method
-                if '-M' in tool_args or '--method' in tool_args:
-                    full_command = ['combine'] + cleaned_args + [output_path]
-                else:
-                    full_command = ['combine', '-M', 'AsymptoticLimits'] + cleaned_args + [output_path]
+                # 2. Merge Class arguments and CLI arguments
+                class_args = shlex.split(class_combine_args) if class_combine_args else []
                 
+                # Deduplicate the Method argument: CLI takes precedence over the Python class
+                has_cli_method = '-M' in cleaned_args or '--method' in cleaned_args
+                if has_cli_method:
+                    for flag in ['-M', '--method']:
+                        if flag in class_args:
+                            idx = class_args.index(flag)
+                            del class_args[idx:idx+2] # Remove the flag and its value from class_args
+
+                combined_args = class_args + cleaned_args
+
+                # Check if the user explicitly provided a custom method
+                if '-M' in combined_args or '--method' in combined_args:
+                    full_command = ['combine'] + combined_args + [output_path]
+                else:
+                    full_command = ['combine', '-M', 'AsymptoticLimits'] + combined_args + [output_path]
+                
+                # 3. Add the --out flag
+                output_dir = os.path.dirname(os.path.abspath(output_path))
+                full_command.extend(['--out', output_dir])
+
                 LOGGER.info("Executing command: %s", " ".join(full_command))
                 subprocess.run(full_command, check=True)
-                
-                # 3. Resolve the output directory and move generated output files there
-                output_dir = os.path.dirname(os.path.abspath(output_path))
-                os.makedirs(output_dir, exist_ok=True)
-                
-                output_patterns = ['higgsCombine*.root', 'fitDiagnostics*.root', 'combine_logger.out']
-                moved_count = 0
-                
-                for pattern in output_patterns:
-                    for filepath in glob.glob(pattern):
-                        dest_path = os.path.join(output_dir, os.path.basename(filepath))
-                        if os.path.exists(dest_path):
-                            os.remove(dest_path)
-                        shutil.move(filepath, output_dir)
-                        moved_count += 1
-                
-                if moved_count > 0:
-                    # Convert absolute path to a clean relative path for the CLI output
-                    rel_output_dir = os.path.relpath(output_dir)
-                    LOGGER.info("Successfully organized %d fit artifact(s) in: %s/", moved_count, rel_output_dir)
 
             except subprocess.CalledProcessError as e:
                 LOGGER.error('Combine statistical fitting execution failed!')

@@ -98,3 +98,7 @@ class Fit:
                 }
             }
         }
+
+        # Optional: Define default command-line arguments to pass to the Combine tool
+        # The framework will automatically append `--out <output_dir>` to this.
+        self.combine_args = "-M FitDiagnostics"

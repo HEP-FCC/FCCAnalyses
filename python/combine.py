@@ -312,3 +312,4 @@ def generate_datacard(anapath: str, output_path: str) -> None:
     # Run the generator matrix logic
     writer = DatacardWriter(user_datacard)
     writer.generate(output_path)
+    return getattr(user_datacard, 'combine_args', '')
