@@ -32,35 +32,39 @@ namespace FCCAnalyses{
 
 namespace VertexFitterSimple{
 
-  /// Vertex (code from Franco Bedeschi): passing the recoparticles. Units for the beamspot constraint: mum.
-  /// See VertexFitter_Tk() below for what ComputeMomentaAtVertex controls.
-  VertexingUtils::FCCAnalysesVertex  VertexFitter( int Primary,
-						   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-						   ROOT::VecOps::RVec<edm4hep::TrackState> alltracks,
-						   bool BeamSpotConstraint = false,
-						   double sigmax=0., double sigmay=0., double sigmaz=0.,
-                                                   double bsc_x=0., double bsc_y=0., double bsc_z=0.,
-                                                   bool ComputeMomentaAtVertex = true )  ;
+/// Vertex (code from Franco Bedeschi): passing the recoparticles. Units for the
+/// beamspot constraint: mum. See VertexFitter_Tk() below for what
+/// ComputeMomentaAtVertex controls.
+VertexingUtils::FCCAnalysesVertex VertexFitter(
+    int Primary,
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+    ROOT::VecOps::RVec<edm4hep::TrackState> alltracks,
+    bool BeamSpotConstraint = false, double sigmax = 0., double sigmay = 0.,
+    double sigmaz = 0., double bsc_x = 0., double bsc_y = 0., double bsc_z = 0.,
+    bool ComputeMomentaAtVertex = true);
 
+/// Vertex (code from Franco Bedeschi): passing the tracks. Units for the
+/// beamspot constraint: mum. ComputeMomentaAtVertex controls whether
+/// updated_track_momentum_at_vertex is filled: it requires building a Delphes
+/// VertexMore object, whose cost scales as O(ntracks^3) and dominates the total
+/// runtime for events with many tracks. Set to false when only the vertex
+/// position/chi2 is needed (e.g. FCCAnalysesVertex::vertex via
+/// VertexingUtils::get_VertexData) -- see
+/// https://github.com/HEP-FCC/FCCAnalyses/issues/378.
+VertexingUtils::FCCAnalysesVertex
+VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                bool BeamSpotConstraint = false, double sigmax = 0.,
+                double sigmay = 0., double sigmaz = 0., double bsc_x = 0.,
+                double bsc_y = 0., double bsc_z = 0.,
+                bool ComputeMomentaAtVertex = true);
 
-  /// Vertex (code from Franco Bedeschi): passing the tracks. Units for the beamspot constraint: mum.
-  /// ComputeMomentaAtVertex controls whether updated_track_momentum_at_vertex is filled: it requires
-  /// building a Delphes VertexMore object, whose cost scales as O(ntracks^3) and dominates the total
-  /// runtime for events with many tracks. Set to false when only the vertex position/chi2 is needed
-  /// (e.g. FCCAnalysesVertex::vertex via VertexingUtils::get_VertexData) -- see
-  /// https://github.com/HEP-FCC/FCCAnalyses/issues/378.
-  VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-						      bool BeamSpotConstraint = false,
-						      double sigmax=0., double sigmay=0., double sigmaz=0.,
-                                                      double bsc_x=0., double bsc_y=0., double bsc_z=0.,
-                                                      bool ComputeMomentaAtVertex = true )  ;
-
-  VertexingUtils::FCCAnalysesVertex  VertexFitter_Tk( int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-                                                      const ROOT::VecOps::RVec<edm4hep::TrackState>& alltracks,
-                                                      bool BeamSpotConstraint = false,
-                                                      double sigmax=0., double sigmay=0., double sigmaz=0.,
-                                                      double bsc_x=0., double bsc_y=0., double bsc_z=0.,
-                                                      bool ComputeMomentaAtVertex = true )  ;
+VertexingUtils::FCCAnalysesVertex
+VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                const ROOT::VecOps::RVec<edm4hep::TrackState> &alltracks,
+                bool BeamSpotConstraint = false, double sigmax = 0.,
+                double sigmay = 0., double sigmaz = 0., double bsc_x = 0.,
+                double bsc_y = 0., double bsc_z = 0.,
+                bool ComputeMomentaAtVertex = true);
 
 /// Return the tracks that are flagged as coming from the primary vertex
    ROOT::VecOps::RVec<edm4hep::TrackState> get_PrimaryTracks(           ROOT::VecOps::RVec<edm4hep::TrackState> tracks,

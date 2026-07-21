@@ -239,14 +239,12 @@ ROOT::VecOps::RVec<int> get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCA
 
 }
 
-
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
 get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
-			  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
-			  ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-			  ROOT::VecOps::RVec<int> recin,
-			  ROOT::VecOps::RVec<int> mcin,
-			  bool ComputeMomentaAtVertex){
+                 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+                 ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                 ROOT::VecOps::RVec<int> recin, ROOT::VecOps::RVec<int> mcin,
+                 bool ComputeMomentaAtVertex) {
 
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> result;
 
@@ -273,9 +271,15 @@ get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
     if (recoparticles.size()<2)continue;
 
     VertexingUtils::FCCAnalysesVertex TheVertex;
-    if (v==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks, true, 4.5, 20e-3, 300, 0., 0., 0., ComputeMomentaAtVertex );
+    if (v == 0)
+      TheVertex = VertexFitterSimple::VertexFitter(
+          1, recoparticles, tracks, true, 4.5, 20e-3, 300, 0., 0., 0.,
+          ComputeMomentaAtVertex);
     //if (v==0) TheVertex = VertexFitterSimple::VertexFitter(1,recoparticles, tracks);
-    else TheVertex = VertexFitterSimple::VertexFitter(0,recoparticles, tracks, false, 0., 0., 0., 0., 0., 0., ComputeMomentaAtVertex);
+    else
+      TheVertex = VertexFitterSimple::VertexFitter(0, recoparticles, tracks,
+                                                   false, 0., 0., 0., 0., 0.,
+                                                   0., ComputeMomentaAtVertex);
     if (std::isnan(TheVertex.vertex.chi2))continue;
     TheVertex.mc_ind=v;
     result.push_back(TheVertex);

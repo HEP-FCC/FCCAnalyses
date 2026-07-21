@@ -88,10 +88,9 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
 
   // FCCAnalysesVertex thevertex = VertexFitter_Tk( Primary, tracks, thetracks)
   // ;
-  thevertex =
-      VertexFitter_Tk(Primary, tracks, thetracks, BeamSpotConstraint,
-                      bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z,
-                      ComputeMomentaAtVertex);
+  thevertex = VertexFitter_Tk(Primary, tracks, thetracks, BeamSpotConstraint,
+                              bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y,
+                              bsc_z, ComputeMomentaAtVertex);
 
   // fill the indices of the tracks
   ROOT::VecOps::RVec<int> reco_ind;
