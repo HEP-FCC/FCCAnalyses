@@ -177,13 +177,13 @@ def sanitize_and_validate_config(user_datacard) -> None:
         if s_data.get('type') == 'shape':
             a_to = s_data.get('apply_to', {})
             for c_name, c_info in channels.items():
-                m_rule = shapes_config.get('*', {}).get(c_name) or shapes_config.get(proc_name, {}).get(c_name)
-                if not m_rule:
-                    continue
-                rf_path = m_rule.split()[0]
-                if not os.path.isfile(rf_path):
-                    continue
                 for p_name in c_info.get('processes', {}).keys():
+                    m_rule = shapes_config.get(p_name, {}).get(c_name) or shapes_config.get('*', {}).get(c_name)
+                    if not m_rule:
+                        continue
+                    rf_path = m_rule.split()[0]
+                    if not os.path.isfile(rf_path):
+                        continue
                     if p_name in a_to and str(a_to[p_name]) != '-':
                         b_path = m_rule.split()[1].replace('$CHANNEL', c_name).replace('$PROCESS', p_name)
                         for var in ['Up', 'Down']:
