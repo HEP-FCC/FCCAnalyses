@@ -10,6 +10,7 @@
 // EDM4hep
 #include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/ParticleIDData.h"
+#include "JetConstituentsUtils.h"
 
 namespace FCCAnalyses ::ReconstructedParticle {
 /**
@@ -198,6 +199,12 @@ struct recoilBuilder {
    * @brief Get number of b-jets.
    */
   int getJet_ntags(ROOT::VecOps::RVec<bool> inBJetMask);
+
+  // Identify hadronic tau candidates in jets.
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> findTauInJet(
+      const ROOT::VecOps::RVec<FCCAnalyses::JetConstituentsUtils::FCCAnalysesJetConstituents>& jets,
+      int request);
+
   } // namespace FCCAnalyses::ReconstructedParticle
 
 #endif /* RECONSTRUCTEDPARTICLE_ANALYZERS_H */
