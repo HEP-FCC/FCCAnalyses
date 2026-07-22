@@ -463,7 +463,7 @@ def merge_config(args: argparse.Namespace,
     if args.output_dir is not None:
         config['output-dir'] = args.output_dir
 
-    # Check output file format
+    # Check output ROOT file format
     config['output-format'] = 'ttree'
     if hasattr(analysis_class, 'output_format'):
         config['output-format'] = analysis_class.output_format

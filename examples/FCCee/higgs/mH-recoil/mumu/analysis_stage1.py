@@ -48,7 +48,7 @@ class Analysis():
         self.output_dir = 'outputs/FCCee/higgs/mH-recoil/mumu/' \
                           f'stage1_{self.ana_args.muon_pt}'
 
-        # Optional: output file format, default is 'ttree'
+        # Optional: output ROOT file format, default is 'ttree'
         # self.output_format = 'rntuple'
 
         # Optional: analysis name, default is ''

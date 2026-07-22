@@ -111,7 +111,7 @@ def setup_run_parser(parser):
         '--output-format',
         choices=('ttree', 'rntuple'),
         default=None,
-        help='choose the output file format'
+        help='choose the output ROOT file format'
     )
     parser.add_argument(
         '-j', '--ncpus', '--n-threads',
