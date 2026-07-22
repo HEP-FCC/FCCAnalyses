@@ -36,12 +36,13 @@
     [<b>-j</b> NCPUS | <b>--ncpus</b> <i>NCPUS</i> | <b>--n-threads</b>
     <i>NTHREADS</i>] [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]
     [<b>--use-data-source</b>] [<b>--output-dir</b> <i>OUTPUT_DIR</i>]
-    [<b>-a</b> <i>ANALYSIS_NAME</i> | <b>--analysis-name</b>
-    <i>ANALYSIS_NAME</i>] [<b>--apply-filepath-rewrites</b> |
-    <b>--no-filepath-rewrites</b>] [<b>-s</b> <i>SAMPLE_NAME</i> |
-    <b>--sample-name</b> <i>SAMPLE_NAME</i>] [<b>--n-chunks</b> <i>N_CHUNKS</i>]
-    [<b>--stride</b> <i>STRIDE</i>] [<b>--test-file</b> <i>TEST_FILE</i>]
-    <b>analysis-script</b> -- [<i>ANALYSIS ARGUMENTS</i>]</p>
+    [<b>--output-format</b> {<b>ttree</b>,<b>rntuple</b>}] [<b>-a</b>
+    <i>ANALYSIS_NAME</i> | <b>--analysis-name</b> <i>ANALYSIS_NAME</i>]
+    [<b>--apply-filepath-rewrites</b> | <b>--no-filepath-rewrites</b>]
+    [<b>-s</b> <i>SAMPLE_NAME</i> | <b>--sample-name</b> <i>SAMPLE_NAME</i>]
+    [<b>--n-chunks</b> <i>N_CHUNKS</i>] [<b>--stride</b> <i>STRIDE</i>]
+    [<b>--test-file</b> <i>TEST_FILE</i>] <b>analysis-script</b> -- [<i>ANALYSIS
+    ARGUMENTS</i>]</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -91,6 +92,11 @@
   <dt id="output~2"><a class="permalink" href="#output~2"><b>--output-dir</b>
     <i>OUTPUT_DIR</i></a></dt>
   <dd>Set global output directory for the analysis.</dd>
+  <dt id="output~3"><a class="permalink" href="#output~3"><b>--output-format</b>
+    {<b>ttree</b>, <b>rntuple</b>}</a></dt>
+  <dd>Specify the output ROOT file format.
+    <br/>
+    Default value: <b>ttree</b>.</dd>
   <dt id="a"><a class="permalink" href="#a"><b>-a</b> <i>ANALYSIS_NAME</i>,
     <b>--analysis-name</b> <i>ANALYSIS_NAME</i></a></dt>
   <dd>Set analysis name, mostly used for the output path.</dd>
