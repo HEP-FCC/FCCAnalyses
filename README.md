@@ -58,7 +58,7 @@ website.
 ## Documentation
 
 Detailed documentation can be found at the
-[FCCAnalyses](https://hep-fcc.github.io/FCCAnalyses/) webpage.
+[FCCAnalyses](https://fccanalyses.web.cern.ch/) webpage.
 
 
 ## Contributing
@@ -70,7 +70,7 @@ your feature/analysis and submit a pull requests.
 ### Code Formating
 
 The preferred style of the C++ code in the
-[FCCAnalyses](https://hep-fcc.github.io/FCCAnalyses/) is LLVM, which is checked
+[FCCAnalyses](https://fccanalyses.web.cern.ch/) is LLVM, which is checked
 by a CI job.
 
 To apply formatting to a file:

@@ -4,7 +4,7 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
-    <tab type="user" visible="yes" title="FCCAnalyses website" url="https://hep-fcc.github.io/FCCAnalyses/"/>
+    <tab type="user" visible="yes" title="FCCAnalyses website" url="https://fccanalyses.web.cern.ch/"/>
     <tab type="user" visible="yes" title="EDM4hep" url="https://cern.ch/edm4hep"/>
     <tab type="user" visible="yes" title="ROOT RDataFrame" url="https://root.cern/doc/master/classROOT_1_1RDataFrame.html"/>
     <tab type="pages" visible="yes" title="" intro=""/>
