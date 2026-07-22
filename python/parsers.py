@@ -108,6 +108,12 @@ def setup_run_parser(parser):
         help='global output directory'
     )
     parser.add_argument(
+        '--output-format',
+        choices=('ttree', 'rntuple'),
+        default=None,
+        help='choose the output ROOT file format'
+    )
+    parser.add_argument(
         '-j', '--ncpus', '--n-threads',
         type=int,
         default=None,

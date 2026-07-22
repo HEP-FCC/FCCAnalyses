@@ -147,11 +147,14 @@ class Job:
 
     def setup_output(self,
                      output_filepath: str,
-                     output_variables: Callable[[], list[str]]) -> None:
+                     output_variables: Callable[[], list[str]],
+                     output_format: str = 'ttree') -> None:
         '''
         Setup output of this work unit, output variables and output file path.
         '''
         self._output_file_path = output_filepath
+
+        self._output_format: str = output_format
 
         self._output_variables = output_variables()
 
@@ -247,9 +250,16 @@ class Job:
         start_time = time.time()
         try:
             LOGGER.info('Snapshoting...')
-            final_dframe.Snapshot("events",
-                                  self._output_file_path,
-                                  self._output_variables)
+            options = ROOT.RDF.RSnapshotOptions()
+            if self._output_format == 'rntuple':
+                options.fOutputFormat = ROOT.RDF.ESnapshotOutputFormat.kRNTuple
+
+            final_dframe.Snapshot(
+                "events",
+                self._output_file_path,
+                self._output_variables,
+                options
+            )
             LOGGER.info('Finished snapshoting...')
         except TypeError as err:
             LOGGER.error('A problem encountered during the execution of the '
