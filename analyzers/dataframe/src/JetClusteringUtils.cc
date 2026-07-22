@@ -258,7 +258,7 @@ std::vector<float> exclusive_dmerge(fastjet::ClusterSequence &cs,
 }
 
 bool check(unsigned int n, int exclusive, float cut) {
-  if (exclusive > 0 && n <= int(cut))
+  if (exclusive > 0 && n < int(cut))
     return false;
   return true;
 }

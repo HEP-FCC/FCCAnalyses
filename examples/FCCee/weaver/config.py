@@ -23,8 +23,9 @@ collections = {
     "Bz": "magFieldBz",
 }
 
-#### list of flavors f = g, q, c, s, ...(will look for input file name ccontaining "[Hff]")
-flavors = ["g", "q", "s", "c", "b", "tau"]
+#### list of flavors (7 classes, matching the G/U/D/S/C/B/TAU tagger outputs);
+#### the jet label is inferred from the input file name ("Hff" or "_ee_ff_")
+flavors = ["g", "u", "d", "s", "c", "b", "tau"]
 
 ## define here the branches to be stored in the output root files in addition to the predefined one
 ## only the name of the var is used here, the metadata is used in stage_plots

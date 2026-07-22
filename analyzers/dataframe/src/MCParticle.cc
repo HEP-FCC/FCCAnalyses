@@ -103,6 +103,7 @@ get_EventPrimaryVertexP4::get_EventPrimaryVertexP4() {};
 TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
   TLorentzVector result(-1e12,-1e12,-1e12,-1e12);
   Bool_t found_py8 = false;
+  Bool_t found_beam = false;
   //std::cout<<"-------------------------------------------"<<std::endl;
   // first try pythia8 gen status == 21 code;
   for (auto & p: in) {
@@ -117,8 +118,19 @@ TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep
 
    if (!found_py8) {
      for (auto & p: in) {
-        // std::cout<< p.generatorStatus<<", "<<p.PDG<<", "<<p.momentum.x<<", "<<p.momentum.y<<",     "<< p.vertex.y<<", "<< p.vertex.z<<", "<< p.time * 1.0e3 * 2.99792458e+8<<std::endl;
-        if ( p.generatorStatus == 2 and abs(p.vertex.z) > 1.e-12 ) {   // generator status code for the incoming particles of the hardest subprocess
+        if ( p.generatorStatus == 4 ) {   // HepMC beam particles (Herwig, Sherpa, ...)
+          // vertex.time is in s, convert in mm here.
+          TLorentzVector res( p.vertex.x, p.vertex.y, p.vertex.z, p.time * 1.0e3 * 2.99792458e+8);
+          result = res;
+          found_beam = true;
+          break;
+        }
+      }
+   }
+
+   if (!found_py8 && !found_beam) {
+     for (auto & p: in) {
+        if ( p.parents_begin == p.parents_end ) {   // generators with neither convention (Whizard/STDHEP has only status 1 and 2): the beam particles are the only parentless particles
           // vertex.time is in s, convert in mm here.
           TLorentzVector res( p.vertex.x, p.vertex.y, p.vertex.z, p.time * 1.0e3 * 2.99792458e+8);
           result = res;
