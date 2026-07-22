@@ -24,7 +24,7 @@
 */
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
-{text:"FCCAnalyses website",url:"^https://hep-fcc.github.io/FCCAnalyses/"},
+{text:"FCCAnalyses website",url:"^https://fccanalyses.web.cern.ch/"},
 {text:"EDM4hep",url:"^https://cern.ch/edm4hep"},
 {text:"ROOT RDataFrame",url:"^https://root.cern/doc/master/classROOT_1_1RDataFrame.html"},
 {text:"Namespaces",url:"namespaces.html",children:[
