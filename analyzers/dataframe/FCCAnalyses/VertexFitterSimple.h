@@ -71,7 +71,6 @@ namespace VertexFitterSimple{
    ROOT::VecOps::RVec<bool> IsPrimary_forTracks( ROOT::VecOps::RVec<edm4hep::TrackState> allTracks,
                                                                  ROOT::VecOps::RVec<edm4hep::TrackState> primaryTracks ) ;
 
-
 /*
   Double_t FastRv(TVectorD p1, TVectorD p2) ;
   TMatrixDSym RegInv3(TMatrixDSym &Smat0) ;
