@@ -107,11 +107,18 @@ namespace myUtils{
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
   merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in);
 
-  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
-									 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
-									 ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
-									 ROOT::VecOps::RVec<int> recin,
-									 ROOT::VecOps::RVec<int> mcin);
+  /// ComputeMomentaAtVertex controls whether updated_track_momentum_at_vertex
+  /// is filled for each returned vertex: it requires building a Delphes
+  /// VertexMore object, whose cost scales as O(ntracks^3) and dominates the
+  /// total runtime for events with many tracks. Set to false when only the
+  /// vertex position/chi2/primary flag is needed (e.g. hasPV()) -- see
+  /// https://github.com/HEP-FCC/FCCAnalyses/issues/378.
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_VertexObject(
+      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
+      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
+      ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+      ROOT::VecOps::RVec<int> recin, ROOT::VecOps::RVec<int> mcin,
+      bool ComputeMomentaAtVertex = true);
 
   ROOT::VecOps::RVec<float> get_Vertex_mass(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 					    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco);

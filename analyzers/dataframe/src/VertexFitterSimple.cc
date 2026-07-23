@@ -8,7 +8,7 @@
 
 #include <fcntl.h>
 
-//#include "TrkUtil.h"    // from delphes
+#include "TrackCovariance/TrkUtil.h" // from Delphes
 
 namespace FCCAnalyses {
 
@@ -35,12 +35,44 @@ void resume_stdout(int fd) {
 
 // -----------------------------------------------------------------------------
 
+// Drop tracks whose covariance matrix is not positive-definite: VertexFit
+// (Delphes) silently produces a NaN vertex when such a track is included,
+// instead of failing loudly, on top of flooding stdout while it tries (and
+// fails) to invert the matrix. See
+// https://github.com/HEP-FCC/FCCAnalyses/issues/378
+//
+// Printed via std::cerr rather than std::cout since callers wrap the fit
+// itself in supress_stdout()/resume_stdout() to silence Delphes' own
+// printf() spam; stderr (fd 2) is untouched by that redirection, so this
+// stays visible without reintroducing the spam.
+static ROOT::VecOps::RVec<edm4hep::TrackState>
+drop_track_with_bad_covariance(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                               bool Units_mm) {
+  ROOT::VecOps::RVec<edm4hep::TrackState> good_tracks;
+  for (auto &t : tracks) {
+    TMatrixDSym Cov = VertexingUtils::get_trackCov(t, Units_mm);
+    if (TrkUtil::CheckPosDef(Cov)) {
+      good_tracks.push_back(t);
+      continue;
+    }
+    std::cerr
+        << "VertexFitterSimple: dropping track with non positive-definite "
+           "covariance matrix -- track parameters: D0="
+        << t.D0 << " phi=" << t.phi << " omega=" << t.omega << " Z0=" << t.Z0
+        << " tanLambda=" << t.tanLambda
+        << " -- covariance diagonal (D0,phi,omega,Z0,tanLambda)=(" << Cov(0, 0)
+        << ", " << Cov(1, 1) << ", " << Cov(2, 2) << ", " << Cov(3, 3) << ", "
+        << Cov(4, 4) << ")" << std::endl;
+  }
+  return good_tracks;
+}
+
 VertexingUtils::FCCAnalysesVertex VertexFitter(
     int Primary,
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks, bool BeamSpotConstraint,
     double bsc_sigmax, double bsc_sigmay, double bsc_sigmaz, double bsc_x,
-    double bsc_y, double bsc_z) {
+    double bsc_y, double bsc_z, bool ComputeMomentaAtVertex) {
 
   // input = a collection of recoparticles (in case one want to make
   // associations to RecoParticles ?) and thetracks = the collection of all
@@ -56,9 +88,9 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
 
   // FCCAnalysesVertex thevertex = VertexFitter_Tk( Primary, tracks, thetracks)
   // ;
-  thevertex =
-      VertexFitter_Tk(Primary, tracks, thetracks, BeamSpotConstraint,
-                      bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z);
+  thevertex = VertexFitter_Tk(Primary, tracks, thetracks, BeamSpotConstraint,
+                              bsc_sigmax, bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y,
+                              bsc_z, ComputeMomentaAtVertex);
 
   // fill the indices of the tracks
   ROOT::VecOps::RVec<int> reco_ind;
@@ -84,11 +116,13 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
 VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
-                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
+                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
+                bool ComputeMomentaAtVertex) {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> dummy;
   return VertexFitter_Tk(Primary, tracks, dummy, BeamSpotConstraint, bsc_sigmax,
-                         bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z);
+                         bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z,
+                         ComputeMomentaAtVertex);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -97,12 +131,17 @@ VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 const ROOT::VecOps::RVec<edm4hep::TrackState> &alltracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
-                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z) {
+                double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
+                bool ComputeMomentaAtVertex) {
   // Suppressing printf() output from TMatrixBase:
   // https://github.com/root-project/root/blob/722eb4652bfc79149df00c8b0e92d0837caf054c/math/matrix/src/TMatrixTBase.cxx#L662
   // The solution found here:
   // https://stackoverflow.com/questions/46728680/how-to-temporarily-suppress-output-from-printf
   int fd = supress_stdout();
+
+  bool Units_mm = true;
+
+  tracks = drop_track_with_bad_covariance(tracks, Units_mm);
 
   // Units for the beam-spot : mum
   // See
@@ -150,8 +189,6 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   TVectorD **trkPar = new TVectorD *[Ntr];
   TMatrixDSym **trkCov = new TMatrixDSym *[Ntr];
-
-  bool Units_mm = true;
 
   for (Int_t i = 0; i < Ntr; i++) {
     edm4hep::TrackState t = tracks[i];
@@ -213,20 +250,25 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   TheVertex.vertex = result;
 
-  // Use VertexMore to retrieve more information :
-  VertexMore theVertexMore(&theVertexFit, Units_mm);
-
   for (Int_t i = 0; i < Ntr; i++) {
-
     TVectorD updated_par =
         theVertexFit.GetNewPar(i); // updated track parameters
     TVectorD updated_par_edm4hep =
         VertexingUtils::Delphes2Edm4hep_TrackParam(updated_par, Units_mm);
     updated_track_parameters.push_back(updated_par_edm4hep);
+  }
 
-    // Momenta of the tracks at the vertex:
-    TVector3 ptrack_at_vertex = theVertexMore.GetMomentum(i);
-    updated_track_momentum_at_vertex.push_back(ptrack_at_vertex);
+  // VertexMore computes the joint covariance of the vertex position and
+  // every track's momentum at the vertex, which costs O(Ntr^3) -- this
+  // dominates the total runtime for events with many tracks (see
+  // https://github.com/HEP-FCC/FCCAnalyses/issues/378). Skip it whenever
+  // the caller doesn't need updated_track_momentum_at_vertex.
+  if (ComputeMomentaAtVertex) {
+    VertexMore theVertexMore(&theVertexFit, Units_mm);
+    for (Int_t i = 0; i < Ntr; i++) {
+      TVector3 ptrack_at_vertex = theVertexMore.GetMomentum(i);
+      updated_track_momentum_at_vertex.push_back(ptrack_at_vertex);
+    }
   }
 
   TheVertex.updated_track_parameters = updated_track_parameters;
@@ -274,10 +316,18 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
               << tracks.size() << std::endl;
   }
 
+  // Suppressing printf() output from TMatrixBase / Delphes' VertexFit, see
+  // VertexFitter_Tk() above for details.
+  int fd = supress_stdout();
+
+  tracks = drop_track_with_bad_covariance(tracks, false);
+
   ROOT::VecOps::RVec<edm4hep::TrackState> seltracks = tracks;
 
-  if (seltracks.size() <= 1)
+  if (seltracks.size() <= 1) {
+    resume_stdout(fd);
     return seltracks;
+  }
 
   int Ntr = tracks.size();
 
@@ -343,6 +393,8 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   }
   delete[] trkPar;
   delete[] trkCov;
+
+  resume_stdout(fd);
 
   return seltracks;
 }
