@@ -6,7 +6,7 @@
 
 #include "edm4hep/ReconstructedParticleData.h"
 
-#include "FastJet/JetClustering.h"
+#include "FCCAnalyses/JetClustering.h"
 
 //#include "TFitter.h"
 #include "Math/Minimizer.h"

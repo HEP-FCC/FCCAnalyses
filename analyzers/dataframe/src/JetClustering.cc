@@ -1,4 +1,4 @@
-#include "FastJet/JetClustering.h"
+#include "FCCAnalyses/JetClustering.h"
 #include "FastJet/ExternalRecombiner.h"
 
 #include "FCCAnalyses/JetClusteringUtils.h"
