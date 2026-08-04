@@ -4,8 +4,8 @@
 
 #Get the detector geometry
 from os import getenv
-FCCDETECTORS=getenv('FCCDETECTORS')
-geometryFile = FCCDETECTORS+"/Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml"
+K4GEO=getenv('K4GEO')
+geometryFile = K4GEO+"/FCCee/ALLEGRO/compact/ALLEGRO_o1_v03/ALLEGRO_o1_v03.xml"
 readoutName  = "ECalBarrelPhiEta"
 
 #Mandatory: RDFanalysis class where the use defines the operations on the TTree
