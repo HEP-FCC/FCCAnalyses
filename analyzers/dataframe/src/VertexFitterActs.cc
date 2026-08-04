@@ -3,7 +3,13 @@
 #include "FCCAnalyses/ReconstructedParticle2MC.h"
 
 // ACTS
+// BoundTrackParameters.hpp replaced the umbrella TrackParameters.hpp header
+// starting with ACTS 45.
+#if ACTS_VERSION_MAJOR >= 45
+#include "Acts/EventData/BoundTrackParameters.hpp"
+#else
 #include "Acts/EventData/TrackParameters.hpp"
+#endif
 #include "Acts/MagneticField/ConstantBField.hpp"
 #include "Acts/Propagator/EigenStepper.hpp"
 #include "Acts/Propagator/Propagator.hpp"
@@ -39,7 +45,13 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
   // Create a test context
   //Acts::GeometryContext geoContext = Acts::GeometryContext();
   //Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
+  // GeometryContext's default constructor became private (in favor of
+  // dangerouslyDefaultConstruct()) starting with ACTS 45.
+#if ACTS_VERSION_MAJOR >= 45
+  const auto& geoContext = Acts::GeometryContext::dangerouslyDefaultConstruct();
+#else
   const auto& geoContext = Acts::GeometryContext();
+#endif
   const auto& magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
@@ -111,7 +123,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
     }
 
     // Get track covariance vector
-    using Covariance = Acts::BoundSquareMatrix;
+    using Covariance = Acts::BoundMatrix;
     Covariance covMat;
     covMat <<
       covACTS(0,0), covACTS(1,0), covACTS(2,0), covACTS(3,0), covACTS(4,0), covACTS(5,0),

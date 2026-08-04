@@ -48,7 +48,13 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   // Create a test context
   //Acts::GeometryContext geoContext = Acts::GeometryContext();
   //Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
+  // GeometryContext's default constructor became private (in favor of
+  // dangerouslyDefaultConstruct()) starting with ACTS 45.
+#if ACTS_VERSION_MAJOR >= 45
+  const auto& geoContext = Acts::GeometryContext::dangerouslyDefaultConstruct();
+#else
   const auto& geoContext = Acts::GeometryContext();
+#endif
   const auto& magFieldContext = Acts::MagneticFieldContext();
 
   // Set up EigenStepper
@@ -164,7 +170,7 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
     }
 
     // Get track covariance vector
-    using Covariance = Acts::BoundSquareMatrix;
+    using Covariance = Acts::BoundMatrix;
 
     Covariance covMat;
     covMat <<
