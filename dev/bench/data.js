@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785829553200,
+  "lastUpdate": 1785829614463,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -58553,6 +58553,86 @@ window.BENCHMARK_DATA = {
             "value": 19.607732590855317,
             "range": "1000",
             "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "David.Lange@cern.ch",
+            "name": "David Lange",
+            "username": "davidlange6"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "277dab3167c0b50bf17c11a33af54ce7a28509f1",
+          "message": "move to k4geo (#534)",
+          "timestamp": "2026-08-04T09:36:33+02:00",
+          "tree_id": "8784aca3025d7379d1e37a138074e569e8320b91",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/277dab3167c0b50bf17c11a33af54ce7a28509f1"
+        },
+        "date": 1785829607022,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Time spent running the analysis: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 3.6914591789245605,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 8.0724356174469,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 9.41341519355774,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 7.323285341262817,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 26.05610966682434,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/weaver/stage1.py",
+            "value": 18.914393663406372,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/weaver/stage1.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: /Package/examples/data_source/stages_source.py",
+            "value": 5.414052724838257,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: /Package/examples/data_source/analysis_stage1.py",
+            "value": 5.406424045562744,
+            "range": "10",
+            "unit": "Seconds",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
