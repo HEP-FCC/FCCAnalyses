@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785836980046,
+  "lastUpdate": 1785857440341,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -59303,6 +59303,86 @@ window.BENCHMARK_DATA = {
             "value": 17.217422801834356,
             "range": "1000",
             "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "34742917+kjvbrt@users.noreply.github.com",
+            "name": "Juraj Smiesko",
+            "username": "kjvbrt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5360cd219485daa59a505564f31d7c38a78d7542",
+          "message": "Fix ACTS build against nightlies (ACTS >= 45) (#536)\n\n* Fix ACTS build against nightlies (ACTS >= 45)\n\nTrackParameters.hpp, GeometryContext's public default ctor, and\nBoundSquareMatrix were removed/renamed in newer ACTS. Gate on\nACTS_VERSION_MAJOR so both the pinned release and nightlies build\nwith --acts-on.\n\n* Apply clang-format",
+          "timestamp": "2026-08-04T17:20:41+02:00",
+          "tree_id": "bc8c9813a3eaf56ed0a287ee4aea66e0138f67de",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/5360cd219485daa59a505564f31d7c38a78d7542"
+        },
+        "date": 1785857432812,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Time spent running the analysis: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 3.7406299114227295,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 8.095899820327759,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 10.207880973815918,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 7.30184006690979,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 25.730157136917114,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: examples/FCCee/weaver/stage1.py",
+            "value": 18.823375463485718,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/weaver/stage1.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: /Package/examples/data_source/stages_source.py",
+            "value": 5.652551174163818,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "nightly | Time spent running the analysis: /Package/examples/data_source/analysis_stage1.py",
+            "value": 5.465616941452026,
+            "range": "10",
+            "unit": "Seconds",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
