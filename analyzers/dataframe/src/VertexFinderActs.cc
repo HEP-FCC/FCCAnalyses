@@ -46,12 +46,12 @@ VertexFinderAMVF(ROOT::VecOps::RVec<edm4hep::TrackState> tracks ){
   using Propagator = Acts::Propagator<Acts::EigenStepper<>>;
 
   // Create a test context
-  //Acts::GeometryContext geoContext = Acts::GeometryContext();
-  //Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
+  // Acts::GeometryContext geoContext = Acts::GeometryContext();
+  // Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
   // GeometryContext's default constructor became private (in favor of
   // dangerouslyDefaultConstruct()) starting with ACTS 45.
 #if ACTS_VERSION_MAJOR >= 45
-  const auto& geoContext = Acts::GeometryContext::dangerouslyDefaultConstruct();
+  const auto &geoContext = Acts::GeometryContext::dangerouslyDefaultConstruct();
 #else
   const auto& geoContext = Acts::GeometryContext();
 #endif

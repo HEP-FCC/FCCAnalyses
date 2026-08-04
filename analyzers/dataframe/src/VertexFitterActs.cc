@@ -41,14 +41,13 @@ VertexingUtils::FCCAnalysesVertex VertexFitterFullBilloir(ROOT::VecOps::RVec<edm
   // retrieve the tracks associated to the recoparticles
   ROOT::VecOps::RVec<edm4hep::TrackState> tracks = ReconstructedParticle2Track::getRP2TRK( recoparticles, thetracks );
 
-
   // Create a test context
-  //Acts::GeometryContext geoContext = Acts::GeometryContext();
-  //Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
+  // Acts::GeometryContext geoContext = Acts::GeometryContext();
+  // Acts::MagneticFieldContext magFieldContext = Acts::MagneticFieldContext();
   // GeometryContext's default constructor became private (in favor of
   // dangerouslyDefaultConstruct()) starting with ACTS 45.
 #if ACTS_VERSION_MAJOR >= 45
-  const auto& geoContext = Acts::GeometryContext::dangerouslyDefaultConstruct();
+  const auto &geoContext = Acts::GeometryContext::dangerouslyDefaultConstruct();
 #else
   const auto& geoContext = Acts::GeometryContext();
 #endif
