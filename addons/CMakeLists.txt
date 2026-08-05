@@ -1,4 +1,5 @@
 add_subdirectory(FastJet)
+add_subdirectory(MultiPlotter)
 add_subdirectory(ONNXRuntime)
 add_subdirectory(TMVAHelper)
 
