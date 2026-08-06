@@ -62,6 +62,36 @@ def formatStatUncHist(hists, name, hstyle=3254):
     return hist_tot
 
 
+def get_xrange_strict(histos: list[Any],
+                      xmin: float,
+                      xmax: float):
+    '''
+    Find min and max values for the x-axis among the provided histograms
+    while not considering bins with 0 content
+    '''
+    if len(histos) == 0:
+        LOGGER.warning('Histograms not provided!')
+        return 1e-5, 1
+
+    hist_name = 'hist_tot_' + random_string(12)
+    hist_tot = histos[0].Clone(hist_name)
+    for hist in histos[1:]:
+        hist_tot.Add(hist)
+
+    start_bin = hist_tot.FindBin(xmin)
+    end_bin   = hist_tot.FindBin(xmax)
+
+    vals_min, vals_max = [], []
+    for i in range(start_bin, end_bin + 1):
+        if hist_tot.GetBinContent(i) != 0:
+            vals_min.append(hist_tot.GetBinLowEdge(i))
+            vals_max.append(hist_tot.GetBinLowEdge(i+1))
+    if len(vals_min) == 0 or len(vals_max) == 0:
+        return 1e-5, 1
+
+    return min(vals_min), max(vals_max)
+
+
 # _____________________________________________________________________________
 def get_minmax_range(histos: list[Any],
                      xmin: float,
@@ -79,12 +109,13 @@ def get_minmax_range(histos: list[Any],
     for hist in histos[1:]:
         hist_tot.Add(hist)
 
+    start_bin = hist_tot.FindBin(xmin)
+    end_bin   = hist_tot.FindBin(xmax)
+
     vals = []
-    for i in range(0, hist_tot.GetNbinsX()+1):
-        if hist_tot.GetBinLowEdge(i) > xmin or \
-                hist_tot.GetBinLowEdge(i+1) < xmax:
-            if hist_tot.GetBinContent(i) != 0:
-                vals.append(hist_tot.GetBinContent(i))
+    for i in range(start_bin, end_bin + 1):
+        if hist_tot.GetBinContent(i) != 0:
+            vals.append(hist_tot.GetBinContent(i))
     if len(vals) == 0:
         return 1e-5, 1
 
@@ -400,7 +431,7 @@ def runPlots(config: dict[str, Any],
                        'stack-sig': 'stack'}
         draw_plot(config, plot_params,
                   var,
-                  'events', leg, lt, rt,
+                  'Events', leg, lt, rt,
                   script_module.formats,
                   script_module.outdir + "/" + sel, histos,
                   colors, script_module.ana_tex, extralab,
@@ -423,7 +454,7 @@ def runPlots(config: dict[str, Any],
                     plot_name += '_' + yaxis_scaling + 'y'
                 draw_plot(config, plot_params_x_y,
                           plot_name,
-                          'events', leg, lt, rt,
+                          'Events', leg, lt, rt,
                           script_module.formats,
                           script_module.outdir + "/" + sel,
                           histos, colors, script_module.ana_tex,
@@ -573,13 +604,13 @@ def runPlotsHistmaker(config: dict[str, Any],
               xtitle=xtitle)
 
     if 'dumpTable' in hist_cfg and hist_cfg['dumpTable']:
-        if type(xtitle) != list:
+        if not isinstance(xtitle, list):
             LOGGER.error('Can only dump a table of yields for cutflow plots.')
             quit()
         procs = list(hsignal.keys()) + list(hbackgrounds.keys())
         hists = hsignal | hbackgrounds
         scaleSig = hist_cfg['scaleSig'] if 'scaleSig' in hist_cfg else 1.
-        hists[procs[0]][0].Scale(1./scaleSig) # undo signal scaling
+        hists[procs[0]][0].Scale(1./scaleSig)  # undo signal scaling
         cuts = xtitle
 
         out_orig = sys.stdout
@@ -593,7 +624,7 @@ def runPlotsHistmaker(config: dict[str, Any],
                 s = hists[procs[0]][0].GetBinContent(i+1)
                 s_plus_b = sum([hists[p][0].GetBinContent(i+1) for p in procs])
                 significance = s/(s_plus_b**0.5) if s_plus_b > 0 else 0
-                row = ["Cut %d"%i, "%.3f"%significance]
+                row = [f"Cut {i}", f"{significance:.3f}"]
                 for j,proc in enumerate(procs):
                     yield_ = hists[proc][0].GetBinContent(i+1)
                     row.append("%.4e" % (yield_))
@@ -630,6 +661,9 @@ def draw_plot(config: dict[str, Any],
     else:
         canvas.SetLogy(1)
     canvas.SetTicks(1, 1)
+    if config['set_grid']:
+        canvas.SetGridx(1)
+        canvas.SetGridy(1)
     canvas.SetLeftMargin(0.14)
     canvas.SetRightMargin(0.08)
 
@@ -723,6 +757,10 @@ def draw_plot(config: dict[str, Any],
         xmax = hStack.GetStack().Last().GetBinLowEdge(
             hStack.GetStack().Last().GetNbinsX() + 1
         )
+
+    if config['strict-x-range']:
+        xmin, xmax = get_xrange_strict(hStack.GetHists(), xmin, xmax)
+
     if plot_params['xaxis'] == 'log':
         if xmin <= 0.:
             LOGGER.error('Log scale for x-axis can\'t start at: %g\n'
@@ -752,7 +790,7 @@ def draw_plot(config: dict[str, Any],
     if ymin == -1:
         ymin = ymin_*0.1 if plot_params['yaxis'] == 'log' else 0
     if ymax == -1:
-        ymax = ymax_*1000. if plot_params['yaxis'] == 'log' else 1.4*ymax_
+        ymax = ymax_*10000. if plot_params['yaxis'] == 'log' else 1.7*ymax_
     if plot_params['yaxis'] == 'log':
         if ymin <= 0.:
             LOGGER.error('Log scale for y-axis can\'t start at: %g\n'
@@ -884,15 +922,11 @@ def draw_plot(config: dict[str, Any],
             latex.SetTextSize(0.035)
             latex.DrawLatex(0.18, 0.4-dy*0.05, text)
 
-            stry = str(yields[y][1])
-            stry = stry.split('.', maxsplit=1)[0]
-            text = '#bf{#it{' + stry + '}}'
+            text = '#bf{#it{' + f'{yields[y][1]:,.0f}' + '}}'
             latex.SetTextSize(0.035)
             latex.DrawLatex(0.5, 0.4-dy*0.05, text)
 
-            stry = str(yields[y][2])
-            stry = stry.split('.', maxsplit=1)[0]
-            text = '#bf{#it{' + stry + '}}'
+            text = '#bf{#it{' + f'{yields[y][2]:,.0f}' + '}}'
             latex.SetTextSize(0.035)
             latex.DrawLatex(0.75, 0.4-dy*0.05, text)
 
@@ -1090,6 +1124,14 @@ def run(args):
     if args.legend_text_size is not None:
         config['legend_text_size'] = args.legend_text_size
 
+    config['strict-x-range'] = False
+    if hasattr(script_module, "strictRange"):
+        config['strict-x-range'] = script_module.strictRange
+
+    config['set_grid'] = False
+    if hasattr(script_module, "setGrid"):
+        config['set_grid'] = script_module.setGrid
+
     # Label for the integrated luminosity
     config['int_lumi_label'] = None
     if hasattr(script_module, "intLumiLabel"):
@@ -1114,6 +1156,8 @@ def run(args):
 
     counter = 0
     LOGGER.info('Plotting staged analysis plots...')
+    l = max(len(v) for v in script_module.variables)
+    ll = max(len(sel) for sel in script_module.selections)
     for var_index, var in enumerate(script_module.variables):
         for label, sels in script_module.selections.items():
             for sel in sels:
@@ -1122,9 +1166,7 @@ def run(args):
                     if len(script_module.rebin) == \
                             len(script_module.variables):
                         rebin_tmp = script_module.rebin[var_index]
-
-                LOGGER.info('  var: %s     label: %s     selection: %s',
-                            var, label, sel)
+                LOGGER.info(f'  var: {var:<{l}}  label: {label:<{ll}}  selections: {sel}')
 
                 hsignal, hbackgrounds = load_hists(var,
                                                    label,
