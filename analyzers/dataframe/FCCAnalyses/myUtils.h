@@ -1,8 +1,8 @@
 #ifndef MYUTILS_ANALYZERS_H
 #define MYUTILS_ANALYZERS_H
 #include "ROOT/RVec.hxx"
-#include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/MCParticleData.h"
+#include "edm4hep/ReconstructedParticleData.h"
 #include "edm4hep/TrackState.h"
 #include "edm4hep/VertexData.h"
 
@@ -76,7 +76,6 @@ namespace myUtils{
     int m_PDG=211;
     ROOT::VecOps::RVec<int> operator() (ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
   };
-
 
   ROOT::VecOps::RVec<edm4hep::TrackState> get_pseudotrack(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
