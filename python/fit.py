@@ -60,7 +60,7 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
                 if '-M' in combined_args or '--method' in combined_args:
                     full_command = ['combine'] + combined_args + [output_path]
                 else:
-                    full_command = ['combine', '-M', 'AsymptoticLimits'] + combined_args + [output_path]
+                    full_command = ['combine', '-M', 'MultiDimFit'] + combined_args + [output_path]
                 
                 # 3. Add the --out flag
                 output_dir = os.path.dirname(os.path.abspath(output_path))
