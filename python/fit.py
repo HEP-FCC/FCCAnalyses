@@ -56,15 +56,20 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
 
                 combined_args = class_args + cleaned_args
 
+                # Add auto-differentiation by default if not already specified in class or CLI args
+                if not any('MINIMIZER_analytic' in arg for arg in combined_args):
+                    combined_args = ['--X-rtd', 'MINIMIZER_analytic'] + combined_args
+
                 # Check if the user explicitly provided a custom method
                 if '-M' in combined_args or '--method' in combined_args:
                     full_command = ['combine'] + combined_args + [output_path]
                 else:
                     full_command = ['combine', '-M', 'MultiDimFit'] + combined_args + [output_path]
                 
-                # 3. Add the --out flag
-                output_dir = os.path.dirname(os.path.abspath(output_path))
-                full_command.extend(['--out', output_dir])
+                # 3. Add default --out flag only if not explicitly provided by the user
+                if '--out' not in combined_args:
+                    output_dir = os.path.dirname(os.path.abspath(output_path))
+                    full_command.extend(['--out', output_dir])
 
                 LOGGER.info("Executing command: %s", " ".join(full_command))
                 subprocess.run(full_command, check=True)
