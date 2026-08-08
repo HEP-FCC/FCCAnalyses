@@ -16,6 +16,7 @@ from run_analysis import run
 from run_final_analysis import run_final
 from do_plots import do_plots
 from do_combine import do_combine
+from fit import run_fit
 
 
 # _____________________________________________________________________________
@@ -125,6 +126,8 @@ def main():
         do_plots(parser)
     elif args.command == 'combine':
         do_combine(parser)
+    elif args.command == 'fit':
+        run_fit(parser)    
     else:
         run(parser)
 

@@ -307,6 +307,18 @@ def setup_run_parser_combine(parser):
     '''
     parser.add_argument('script_path', help="path to the combine script")
 
+# _____________________________________________________________________________
+def setup_run_parser_fit(parser):
+    '''
+    Define command line arguments for the fit sub-command.
+    '''
+    parser.add_argument('script_path', help="path to the object-oriented fit script")
+    parser.add_argument('-o', '--output', type=str, default="generated_datacard.txt",
+                        help="path to save the output text datacard")
+    parser.add_argument('-b', '--backend', type=str, choices=['combine', 'pyhf'], default='combine',
+                        help="fitting backend infrastructure to target")
+    parser.add_argument('-e', '--execute', action='store_true',
+                        help="automatically execute the fit calculation backend after generating the model")
 
 # _____________________________________________________________________________
 def setup_subparsers(topparser):
@@ -339,6 +351,10 @@ def setup_subparsers(topparser):
     parser_run_combine = topparser.add_parser(
         'combine',
         help="prepare combine cards to run basic template fits")
+    parser_run_fit = topparser.add_parser(
+        'fit',
+        help="generate combine datacards using object-oriented Python config."
+             "Use '-- [args]' to forward custom flags directly to the backend engine.")
 
     # Register sub-parsers
     setup_build_parser(parser_build)
@@ -349,3 +365,4 @@ def setup_subparsers(topparser):
     setup_run_parser_final(parser_run_final)
     setup_run_parser_plots(parser_run_plots)
     setup_run_parser_combine(parser_run_combine)
+    setup_run_parser_fit(parser_run_fit)
