@@ -16,16 +16,39 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MultiPlotter_MultiPlotter_h
-#define MultiPlotter_MultiPlotter_h
+#ifndef MultiPlotter_Systematics_h
+#define MultiPlotter_Systematics_h
+
+#include <memory>
+#include <string>
+
+// forward declarations
+namespace mplt {
+class SystematicsSet;
+} // namespace mplt
+namespace pybind11 {
+class dict;
+} // namespace pybind11
 
 namespace mplt {
-class MultiPlotter {
-public:
-  explicit MultiPlotter();
-  virtual ~MultiPlotter() = default;
+enum SystematicsType { constant, log_normal, shape };
 
-private:
+/// Systematics computation object
+/// \author Laurent Forthomme <laurent.forthomme@cern.ch>
+/// \date July 2026
+class Systematics {
+public:
+  static std::unique_ptr<Systematics>
+  build(SystematicsType, std::string_view name, pybind11::dict &);
+
+  virtual void apply(SystematicsSet &set) const = 0;
+
+  const SystematicsType type;
+  const std::string name;
+
+protected:
+  explicit Systematics(SystematicsType _type, std::string_view _name)
+      : type{_type}, name{_name} {}
 };
 } // namespace mplt
 

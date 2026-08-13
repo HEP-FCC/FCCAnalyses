@@ -1,0 +1,7 @@
+<lcgdict>
+  <class name="mplt::MultiPlotter"/>
+  <class name="mplt::Sample"/>
+  <class name="std::vector<mplt::Sample>"/>
+  <class name="mplt::Sample::Type"/>
+  <class name="mplt::plotItPlotter"/>
+</lcgdict>

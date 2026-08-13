@@ -18,6 +18,22 @@
 
 #include "MultiPlotter/MultiPlotter.h"
 
+#include <TH1.h>
+
 using namespace mplt;
 
-MultiPlotter::MultiPlotter() {}
+MultiPlotter::MultiPlotter(std::string_view experiment_name,
+                           const std::vector<std::string> &extra_labels)
+    : experiment_name_{experiment_name}, extra_labels_{extra_labels} {}
+
+Sample &MultiPlotter::addSample(Sample &sample) {
+  return samples_[sample.type].add(sample);
+}
+
+std::string MultiPlotter::yieldsTable() const {
+  std::ostringstream table;
+  // TODO: implement the table creation
+  //  potentially, create a base table creation object that can be specialised
+  //  for (LaTeX, Markdown, ...) output type
+  return table.str();
+}
