@@ -280,6 +280,38 @@ def mapHistosFromHistmaker(config: dict[str, Any],
 
 
 # _____________________________________________________________________________
+def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsignal, hbackgrounds):
+    from ROOT.mplt import Sample as smp, plotItPlotter as plotit
+    from os.path import join
+
+    if 'ee' in script_module.collider:
+        lt = 'FCCAnalyses: FCC-ee Simulation (Delphes)'
+        rt = [f'#sqrt{{s}} = {script_module.energy:.1f} GeV', f'{config["int-lumi-label"]}']
+    else:
+        lt = 'FCCAnalyses: FCC-hh Simulation (Delphes)'
+        rt = [f'#sqrt{{s}} = {script_module.energy:.1f} TeV', f'{config["int-lumi-label"]}']
+    plotter = plotit.plotItPlotter(lt, rt)
+    for hsig in hsignal:
+        sample = smp.Sample()
+        sample.type = smp.Type.signal
+        sample.name = hsig  #TODO
+        sample.histogram = hsignal[hsig][0]
+        sample.weight = 1.  #TODO
+        sample.colour = script_module.colors[hsig]
+        plotter.addSample(sample)
+    for hbkg in hbackgrounds:
+        sample = smp.Sample()
+        sample.type = smp.Type.background
+        sample.name = hbkg  #TODO
+        sample.histogram = hbackgrounds[hbkg][0]
+        sample.weight = 1.  #TODO
+        sample.colour = script_module.colors[hbkg]
+        plotter.addSample(sample)
+    print(config, script_module)
+    plotter.plot(var, join(script_module.outdir, sel), config)
+
+
+# _____________________________________________________________________________
 def runPlots(config: dict[str, Any],
              args,
              var,
@@ -1122,14 +1154,7 @@ def run(args):
                                                    sel,
                                                    config,
                                                    rebin=rebin_tmp)
-                runPlots(config,
-                         args,
-                         var + "_" + label,
-                         sel,
-                         script_module,
-                         hsignal,
-                         hbackgrounds,
-                         script_module.extralabel[sel])
+                runPlotsNew(config, var + "_" + label, sel, script_module, hsignal, hbackgrounds)
                 if counter == 0:
                     runPlots(config,
                              args,
