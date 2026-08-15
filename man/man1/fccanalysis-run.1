@@ -20,6 +20,7 @@
 [\fB\-\-graph\-path\fR \fIGRAPH_PATH\fR]
 [\fB\-\-use-data-source\fR]
 [\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR]
+[\fB\-\-output\-format\fR {\fBttree\fR,\fBrntuple\fR}]
 [\fB\-a\fR \fIANALYSIS_NAME\fR | \fB\-\-analysis\-name\fR \fIANALYSIS_NAME\fR]
 [\fB\-\-apply\-filepath\-rewrites\fR | \fB\-\-no\-filepath\-rewrites\fR]
 [\fB\-s\fR \fISAMPLE_NAME\fR | \fB\-\-sample\-name\fR \fISAMPLE_NAME\fR]
@@ -78,6 +79,11 @@ Load events through podio::DataSource\&.
 \fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR
 Set global output directory for the analysis.
 .TP
+\fB\-\-output\-format\fR {\fBttree\fR, \fBrntuple\fR}
+Specify the output ROOT file format.
+.br
+Default value: \fBttree\fR.
+.TP
 \fB\-a\fR \fIANALYSIS_NAME\fR, \fB\-\-analysis\-name\fR \fIANALYSIS_NAME\fR
 Set analysis name, mostly used for the output path.
 .TP
@@ -124,7 +130,7 @@ Controls search path for the process dictionaries. The default value is
 \fI/cvmfs/fcc.cern.ch/FCCDicts/\fR\&.
 
 .SH SEE ALSO
-fccanalysis(1), fccanalysis-script(7)
+fccanalysis(1), fccanalysis-script(7), fccanalysis-fit(1), fccanalysis-extract(1)
 
 .SH BUGS
 Many
