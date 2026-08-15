@@ -349,6 +349,15 @@ def setup_subparsers(topparser):
         'fit',
         help="generate combine datacards using object-oriented Python config."
              "Use '-- [args]' to forward custom flags directly to the backend engine.")
+    parser_extract = topparser.add_parser(
+        'extract',
+        help='Extract fit parameters and uncertainties directly from Combine ROOT files'
+    )
+    parser_extract.add_argument(
+        'input_path',
+        type=str,
+        help='Path to a higgsCombine ROOT file, or a directory containing one.'
+    )
 
     # Register sub-parsers
     setup_build_parser(parser_build)

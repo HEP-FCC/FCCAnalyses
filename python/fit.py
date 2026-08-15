@@ -5,6 +5,7 @@ import argparse
 import subprocess
 import shutil
 import glob
+from extract import extract_fit_results
 
 LOGGER = logging.getLogger('FCCAnalyses.fit')
 
@@ -26,7 +27,6 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
         from combine import generate_datacard
         import shlex
         
-        # 1. Capture the combine_args returned from the Fit class
         class_combine_args = generate_datacard(anapath, output_path)
 
         if args.execute:
@@ -37,42 +37,45 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
             LOGGER.info('Launching Combine statistical engine execution on: %s', output_path)
             try:
                 full_command = []
-                # 1. Strip the '--' separator if present
                 if tool_args and tool_args[0] == '--':
                     tool_args = tool_args[1:]
 
                 cleaned_args = [arg for arg in tool_args if arg != output_path]
-
-                # 2. Merge Class arguments and CLI arguments
                 class_args = shlex.split(class_combine_args) if class_combine_args else []
                 
-                # Deduplicate the Method argument: CLI takes precedence over the Python class
                 has_cli_method = '-M' in cleaned_args or '--method' in cleaned_args
                 if has_cli_method:
                     for flag in ['-M', '--method']:
                         if flag in class_args:
                             idx = class_args.index(flag)
-                            del class_args[idx:idx+2] # Remove the flag and its value from class_args
+                            del class_args[idx:idx+2] 
 
                 combined_args = class_args + cleaned_args
 
-                # Add auto-differentiation by default if not already specified in class or CLI args
                 if not any('MINIMIZER_analytic' in arg for arg in combined_args):
                     combined_args = ['--X-rtd', 'MINIMIZER_analytic'] + combined_args
 
-                # Check if the user explicitly provided a custom method
+                # Build the command WITHOUT forcing --out
                 if '-M' in combined_args or '--method' in combined_args:
                     full_command = ['combine'] + combined_args + [output_path]
                 else:
                     full_command = ['combine', '-M', 'MultiDimFit'] + combined_args + [output_path]
-                
-                # 3. Add default --out flag only if not explicitly provided by the user
-                if '--out' not in combined_args:
-                    output_dir = os.path.dirname(os.path.abspath(output_path))
-                    full_command.extend(['--out', output_dir])
 
                 LOGGER.info("Executing command: %s", " ".join(full_command))
                 subprocess.run(full_command, check=True)
+                
+                # --- ROBUST ARTIFACT SHIFTING ---
+                # Scoop up any ROOT files Combine dropped in the main directory
+                artifacts = glob.glob("higgsCombine*.root") + glob.glob("fitDiagnostics*.root")
+                for artifact in artifacts:
+                    dest_file = os.path.join(output_dir, os.path.basename(artifact))
+                    # Remove old versions if they exist in the target directory
+                    if os.path.exists(dest_file):
+                        os.remove(dest_file)
+                    shutil.move(artifact, output_dir)
+                
+                # Automatically extract and display results from the correct directory
+                extract_fit_results(output_dir)
 
             except subprocess.CalledProcessError as e:
                 LOGGER.error('Combine statistical fitting execution failed!')
@@ -81,6 +84,6 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
             except KeyboardInterrupt:
                 LOGGER.info('Fit execution interrupted by user (Ctrl+C). Terminating cleanly...')
                 sys.exit(0)
-        else:
-            LOGGER.error('Backend "%s" is not implemented yet. Supported backends: combine.', backend)
-            sys.exit(4)
+    else:
+        LOGGER.error('Backend "%s" is not implemented yet. Supported backends: combine.', backend)
+        sys.exit(4)
