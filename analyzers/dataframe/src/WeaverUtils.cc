@@ -2,6 +2,7 @@
 #include "ONNXRuntime/WeaverInterface.h"
 
 #include <memory>
+#include <cstddef>
 
 namespace FCCAnalyses {
   std::unique_ptr<WeaverInterface> gWeaver2;
@@ -46,9 +47,9 @@ namespace FCCAnalyses {
         throw std::runtime_error("Invalid index requested for object weight " + std::to_string(weight) + ".");
       ROOT::VecOps::RVec<float> out;
       for (const auto& object_weights : objects_weights) {
-        if (weight >= object_weights.size())
+        if (static_cast<std::size_t>(weight) >= object_weights.size())
           throw std::runtime_error("Flavour weight index exceeds the number of weights registered.");
-        out.emplace_back(object_weights.at(weight));
+        out.emplace_back(object_weights.at(static_cast<std::size_t>(weight)));
       }
       return out;
     }

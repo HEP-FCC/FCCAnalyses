@@ -2,6 +2,7 @@
 #include "ONNXRuntime/WeaverInterface.h"
 
 #include <memory>
+#include <cstddef>
 
 namespace FCCAnalyses {
   std::vector<WeaverInterface *> gWeavers;
@@ -49,9 +50,9 @@ namespace FCCAnalyses {
         throw std::runtime_error("Invalid index requested for jet flavour weight.");
       rv::RVec<float> out;
       for (const auto& jet_weights : jets_weights) {
-        if (weight >= jet_weights.size())
+        if (static_cast<std::size_t>(weight) >= jet_weights.size())
           throw std::runtime_error("Flavour weight index exceeds the number of weights registered.");
-        out.emplace_back(jet_weights.at(weight));
+        out.emplace_back(jet_weights.at(static_cast<std::size_t>(weight)));
       }
       return out;
     }
