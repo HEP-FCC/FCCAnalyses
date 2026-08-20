@@ -1,4 +1,5 @@
 #include "FCCAnalyses/VertexFitterSimple.h"
+#include <cstddef>
 #include "FCCAnalyses/MCParticle.h"
 
 #include "edm4hep/EDM4hepVersion.h"
@@ -64,7 +65,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
 
   // fill the indices of the tracks
   ROOT::VecOps::RVec<int> reco_ind;
-  int Ntr = tracks.size();
+  const std::size_t Ntr = tracks.size();
   for (auto &p : recoparticles) {
     // std::cout << " in VertexFitter:  a recoparticle with charge = " <<
     // p.charge << std::endl;
@@ -123,9 +124,9 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   // if the collection of all tracks has been passed, keep trace of the indices
   // of the tracks that are used to fit this vertex
   if (alltracks.size() > 0) {
-    for (int i = 0; i < tracks.size(); i++) { // the fitted tracks
+    for (std::size_t i = 0; i < tracks.size(); i++) { // the fitted tracks
       edm4hep::TrackState tr1 = tracks[i];
-      for (int j = 0; j < alltracks.size();
+      for (std::size_t j = 0; j < alltracks.size();
            j++) { // the collection of all tracks
         edm4hep::TrackState tr2 = alltracks[j];
         if (VertexingUtils::compare_Tracks(tr1, tr2)) {

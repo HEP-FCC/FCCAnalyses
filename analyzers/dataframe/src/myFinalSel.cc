@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cstddef>
 #include <vector>
 
 namespace FCCAnalyses{
@@ -90,7 +91,7 @@ float get_min(ROOT::VecOps::RVec<float> in,
 
   for (size_t i = 0; i < in.size(); ++i){
     if (ispv.at(i)>0)continue;
-    if (index==i)continue;
+    if (index >= 0 && static_cast<std::size_t>(index) == i)continue;
     if (in.at(i)<min)min=in.at(i);
   }
   return min;
@@ -102,7 +103,7 @@ float get_max(ROOT::VecOps::RVec<float> in,
 
   for (size_t i = 0; i < in.size(); ++i){
     if (ispv.at(i)>0)continue;
-    if (index==i)continue;
+    if (index >= 0 && static_cast<std::size_t>(index) == i)continue;
     if (in.at(i)>max)max=in.at(i);
   }
   return max;
@@ -117,7 +118,7 @@ float get_ave(ROOT::VecOps::RVec<float> in,
   float aven=0.;
   for (size_t i = 0; i < in.size(); ++i){
     if (ispv.at(i)>0)continue;
-    if (index==i)continue;
+    if (index >= 0 && static_cast<std::size_t>(index) == i)continue;
 
     ave+=in.at(i);
     aven+=1.;
