@@ -2501,8 +2501,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTau(
         std::cout << " found tau neither from Higgs or from Had" << std::endl;
         auto first_parent_index = truth_part.parents_begin;
         auto last_parent_index = truth_part.parents_end;
-        for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
-             parent_i++) {
+        for (unsigned int parent_i = first_parent_index;
+             parent_i < last_parent_index; parent_i++) {
           auto parent_MC_index = parent_ids.at(parent_i).index;
           auto parent = truth_particles.at(parent_MC_index);
           std::cout << "Parent PDG:" << std::endl;
@@ -2546,8 +2546,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauLeps(
         std::cout << " found tau neither from Higgs or from Had" << std::endl;
         auto first_parent_index = truth_part.parents_begin;
         auto last_parent_index = truth_part.parents_end;
-        for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
-             parent_i++) {
+        for (unsigned int parent_i = first_parent_index;
+             parent_i < last_parent_index; parent_i++) {
           auto parent_MC_index = parent_ids.at(parent_i).index;
           auto parent = truth_particles.at(parent_MC_index);
           std::cout << "Parent PDG:" << std::endl;
@@ -2561,8 +2561,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauLeps(
         auto last_child_index = truth_part.daughters_end;
         // auto child_1_MC_index = daughter_ids.at(first_child_index).index;
         // auto hild_2_MC_index = daughter_ids.at(last_child_index-1).index;
-        for (unsigned int child_i = first_child_index; child_i < last_child_index;
-             child_i++) {
+        for (unsigned int child_i = first_child_index;
+             child_i < last_child_index; child_i++) {
           auto child = truth_particles.at(daughter_ids.at(child_i).index);
           if (abs(child.PDG) == 15) {
             isItself = true;
@@ -2577,7 +2577,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauLeps(
       // std::cout << " found tau with children" << std::endl;
       auto first_child_index = truth_part.daughters_begin;
       auto last_child_index = truth_part.daughters_end;
-      for (unsigned int ch_i = first_child_index; ch_i < last_child_index; ch_i++) {
+      for (unsigned int ch_i = first_child_index; ch_i < last_child_index;
+           ch_i++) {
         auto ch = truth_particles.at(daughter_ids.at(ch_i).index);
         std::cout << "Child ID: " << ch.PDG << std::endl;
         if (isLep(ch)) {
@@ -2623,8 +2624,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauHads(
         std::cout << " found tau neither from Higgs or from Had" << std::endl;
         auto first_parent_index = truth_part.parents_begin;
         auto last_parent_index = truth_part.parents_end;
-        for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
-             parent_i++) {
+        for (unsigned int parent_i = first_parent_index;
+             parent_i < last_parent_index; parent_i++) {
           auto parent_MC_index = parent_ids.at(parent_i).index;
           auto parent = truth_particles.at(parent_MC_index);
           std::cout << "Parent PDG:" << std::endl;
@@ -2638,8 +2639,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauHads(
         auto last_child_index = truth_part.daughters_end;
         // auto child_1_MC_index = daughter_ids.at(first_child_index).index;
         // auto hild_2_MC_index = daughter_ids.at(last_child_index-1).index;
-        for (unsigned int child_i = first_child_index; child_i < last_child_index;
-             child_i++) {
+        for (unsigned int child_i = first_child_index;
+             child_i < last_child_index; child_i++) {
           auto child = truth_particles.at(daughter_ids.at(child_i).index);
           if (abs(child.PDG) == 15) {
             isItself = true;
@@ -2654,7 +2655,8 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauHads(
       // std::cout << " found tau with children" << std::endl;
       auto first_child_index = truth_part.daughters_begin;
       auto last_child_index = truth_part.daughters_end;
-      for (unsigned int ch_i = first_child_index; ch_i < last_child_index; ch_i++) {
+      for (unsigned int ch_i = first_child_index; ch_i < last_child_index;
+           ch_i++) {
         auto ch = truth_particles.at(daughter_ids.at(ch_i).index);
         std::cout << "Child ID: " << ch.PDG << std::endl;
         if (isHadron(ch)) {
@@ -2901,7 +2903,7 @@ AnalysisFCChh::find_reco_matched(
 ROOT::VecOps::RVec<float> AnalysisFCChh::get_IP_delphes(
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> test_parts,
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco_parts_all,
-  float dR_min, float pT_min, bool) {
+    float dR_min, float pT_min, bool) {
 
   ROOT::VecOps::RVec<float> out_vector;
 

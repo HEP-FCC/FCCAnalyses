@@ -1,6 +1,6 @@
 #include "FCCAnalyses/VertexingUtils.h"
-#include <cstddef>
 #include "FCCAnalyses/VertexFitterSimple.h"
+#include <cstddef>
 
 #include "TrkUtil.h" // from delphes
 

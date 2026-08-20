@@ -25,15 +25,15 @@ struct selPDG {
   selPDG(int pdg, bool chargeConjugateAllowed);
   const int m_pdg;
   const bool m_chargeConjugateAllowed;
-  std::vector<edm4hep::MCParticleData>
-  operator()(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) const;
+  std::vector<edm4hep::MCParticleData> operator()(
+      const ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) const;
 };
 
 selPDG::selPDG(int pdg, bool chargeConjugateAllowed)
     : m_pdg(pdg), m_chargeConjugateAllowed(chargeConjugateAllowed){};
 
-std::vector<edm4hep::MCParticleData>
-selPDG::operator()(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) const {
+std::vector<edm4hep::MCParticleData> selPDG::operator()(
+    const ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) const {
   std::vector<edm4hep::MCParticleData> result;
   for (size_t i = 0; i < inParticles.size(); ++i) {
     auto &particle = inParticles[i];

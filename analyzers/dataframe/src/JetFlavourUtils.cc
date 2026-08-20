@@ -1,8 +1,8 @@
 #include "FCCAnalyses/JetFlavourUtils.h"
 #include "ONNXRuntime/WeaverInterface.h"
 
-#include <memory>
 #include <cstddef>
+#include <memory>
 
 namespace FCCAnalyses {
   std::vector<WeaverInterface *> gWeavers;

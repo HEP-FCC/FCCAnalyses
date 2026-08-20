@@ -1,8 +1,8 @@
 #include "FCCAnalyses/WeaverUtils.h"
 #include "ONNXRuntime/WeaverInterface.h"
 
-#include <memory>
 #include <cstddef>
+#include <memory>
 
 namespace FCCAnalyses {
   std::unique_ptr<WeaverInterface> gWeaver2;

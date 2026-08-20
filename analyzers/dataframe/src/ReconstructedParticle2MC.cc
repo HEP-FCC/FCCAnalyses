@@ -273,16 +273,17 @@ selRP_PDG::operator() (ROOT::VecOps::RVec<int> recind,
 
   std::vector<edm4hep::ReconstructedParticleData> result;
 
-  for (std::size_t i=0; i<recind.size();i++) {
-      int reco_idx = recind.at(i);
-      int mc_idx = mcind.at(i);
-      int pdg = mc.at(mc_idx).PDG ;
-      if ( m_chargedOnly ) {
-        if ( reco.at( reco_idx ).charge ==0 ) continue;
-      }
-      if ( std::abs( pdg ) == std::abs( m_PDG)  ) {
-         result.push_back( reco.at( reco_idx ) ) ;
-      }
+  for (std::size_t i = 0; i < recind.size(); i++) {
+    int reco_idx = recind.at(i);
+    int mc_idx = mcind.at(i);
+    int pdg = mc.at(mc_idx).PDG;
+    if (m_chargedOnly) {
+      if (reco.at(reco_idx).charge == 0)
+        continue;
+    }
+    if (std::abs(pdg) == std::abs(m_PDG)) {
+      result.push_back(reco.at(reco_idx));
+    }
   }
   return result;
 }
@@ -297,16 +298,17 @@ selRP_PDG_index::operator() (ROOT::VecOps::RVec<int> recind,
 
   ROOT::VecOps::RVec<int> result;
 
-  for (std::size_t i=0; i<recind.size();i++) {
-      int reco_idx = recind.at(i);
-      int mc_idx = mcind.at(i);
-      int pdg = mc.at(mc_idx).PDG ;
-      if ( m_chargedOnly ) {
-        if ( reco.at( reco_idx ).charge ==0 ) continue;
-      }
-      if ( std::abs( pdg ) == std::abs( m_PDG)  ) {
-         result.push_back( reco_idx ) ;
-      }
+  for (std::size_t i = 0; i < recind.size(); i++) {
+    int reco_idx = recind.at(i);
+    int mc_idx = mcind.at(i);
+    int pdg = mc.at(mc_idx).PDG;
+    if (m_chargedOnly) {
+      if (reco.at(reco_idx).charge == 0)
+        continue;
+    }
+    if (std::abs(pdg) == std::abs(m_PDG)) {
+      result.push_back(reco_idx);
+    }
   }
   return result;
 }
@@ -324,13 +326,15 @@ selRP_ChargedHadrons (ROOT::VecOps::RVec<int> recind,
 
   std::vector<edm4hep::ReconstructedParticleData> result;
 
-  for (std::size_t i=0; i<recind.size();i++) {
-      int reco_idx = recind.at(i);
-      int mc_idx = mcind.at(i);
-      int pdg = mc.at(mc_idx).PDG ;
-      if ( reco.at( reco_idx ).charge == 0 ) continue;
-      if ( std::abs( pdg ) == 11 || std::abs( pdg ) == 13 || std::abs( pdg ) == 15 ) continue ;
-      result.push_back( reco.at( reco_idx ) ) ;
+  for (std::size_t i = 0; i < recind.size(); i++) {
+    int reco_idx = recind.at(i);
+    int mc_idx = mcind.at(i);
+    int pdg = mc.at(mc_idx).PDG;
+    if (reco.at(reco_idx).charge == 0)
+      continue;
+    if (std::abs(pdg) == 11 || std::abs(pdg) == 13 || std::abs(pdg) == 15)
+      continue;
+    result.push_back(reco.at(reco_idx));
   }
 
   return result;
@@ -361,7 +365,7 @@ selRP_matched_to_list( ROOT::VecOps::RVec<int>  mcParticles_indices,
 
     // is this MC particle associated with a Reco particle :
     bool found = false;
-    for (std::size_t i=0; i<recind.size();i++) {
+    for (std::size_t i = 0; i < recind.size(); i++) {
       int reco_idx = recind.at(i);
       int mc_idx = mcind.at(i);
       if ( mc_idx == idx ) {
@@ -392,15 +396,16 @@ int getTrack2MC_index (int track_index,
 						 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
   int mc_index = -1;
 
-      for (std::size_t i=0; i<recind.size();i++) {
-          int reco_idx = recind.at(i);
-          // keep only charged particles
-          if ( reco.at( reco_idx ).charge == 0 ) continue;
-          mc_index = mcind.at(i);
-          if (track_index >= 0 &&
-              reco.at(reco_idx).tracks_begin == static_cast<unsigned int>(track_index))
-            return mc_index;
-      }
+  for (std::size_t i = 0; i < recind.size(); i++) {
+    int reco_idx = recind.at(i);
+    // keep only charged particles
+    if (reco.at(reco_idx).charge == 0)
+      continue;
+    mc_index = mcind.at(i);
+    if (track_index >= 0 && reco.at(reco_idx).tracks_begin ==
+                                static_cast<unsigned int>(track_index))
+      return mc_index;
+  }
  return mc_index;
 }
 

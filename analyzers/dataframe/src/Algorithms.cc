@@ -2,15 +2,15 @@
 #include "FCCAnalyses/Utils.h"
 #include <cstddef>
 
-#include "Math/Minimizer.h"
-#include "Math/IFunction.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
-#include <array>
+#include "Math/IFunction.h"
+#include "Math/Minimizer.h"
 #include <algorithm>
+#include <array>
 #include <iostream>
-#include <vector>
 #include <numeric>
+#include <vector>
 
 #include "Math/IFunction.h"
 #include "Math/Factory.h"
@@ -491,23 +491,21 @@ JetClustering::FCCAnalysesJet jets_TwoHemispheres::operator() (
  float pz_minus=0;
  float e_minus=0;
 
- for ( std::size_t i=0; i < RP_costheta.size(); i++) {
-     if ( RP_costheta[i] > 0 ) {
-        constituents_JetPlus.push_back( i );
-	px_plus += RP_px[i];
-	py_plus += RP_py[i];
-	pz_plus += RP_pz[i];
-	e_plus += RP_e[i];
-     }
-     else {
-	constituents_JetMimus.push_back( i );
-        px_minus += RP_px[i];
-        py_minus += RP_py[i];
-        pz_minus += RP_pz[i];
-        e_minus += RP_e[i];
-     }
+ for (std::size_t i = 0; i < RP_costheta.size(); i++) {
+   if (RP_costheta[i] > 0) {
+     constituents_JetPlus.push_back(i);
+     px_plus += RP_px[i];
+     py_plus += RP_py[i];
+     pz_plus += RP_pz[i];
+     e_plus += RP_e[i];
+   } else {
+     constituents_JetMimus.push_back(i);
+     px_minus += RP_px[i];
+     py_minus += RP_py[i];
+     pz_minus += RP_pz[i];
+     e_minus += RP_e[i];
+   }
  }
-
 
  float pt_plus = sqrt( pow( px_plus,2) + pow( py_plus,2) + pow( pz_plus, 2) ) ;
  float pt_minus = sqrt( pow( px_minus, 2) + pow( py_minus, 2) + pow( pz_minus, 2) ) ;
