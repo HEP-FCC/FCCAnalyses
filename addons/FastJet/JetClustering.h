@@ -8,8 +8,11 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/JetDefinition.hh"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #include "fastjet/EECambridgePlugin.hh"
 #include "fastjet/JadePlugin.hh"
+#pragma GCC diagnostic pop
 
 #include "FastJet/ValenciaPlugin.h"
 
