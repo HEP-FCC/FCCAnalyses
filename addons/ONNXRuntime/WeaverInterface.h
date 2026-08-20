@@ -47,7 +47,7 @@ private:
     size_t min_length{0}, max_length{0};
     std::vector<std::string> var_names;
     std::unordered_map<std::string, VarInfo> var_info_map;
-    VarInfo info(const std::string& name) const { return var_info_map.at(name); }
+    VarInfo info(const std::string& variableName) const { return var_info_map.at(variableName); }
     void dumpVars() const;
   };
   std::vector<float> center_norm_pad(const rv::RVec<float>& input,

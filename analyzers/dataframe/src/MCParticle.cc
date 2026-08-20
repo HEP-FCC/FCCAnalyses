@@ -86,9 +86,7 @@ bool  filter_pdgID::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in) 
 get_EventPrimaryVertex::get_EventPrimaryVertex( int arg_genstatus) { m_genstatus = arg_genstatus; };
 TVector3 get_EventPrimaryVertex::operator() ( ROOT::VecOps::RVec<edm4hep::MCParticleData> in )  {
   TVector3 result(-1e12,-1e12,-1e12);
-  int i=0;
   for (auto & p: in) {
-     i++;
      if ( p.generatorStatus == m_genstatus ) {   // generator status code for the incoming particles of the hardest subprocess
        TVector3 res( p.vertex.x, p.vertex.y, p.vertex.z );
        result = res;
@@ -145,8 +143,6 @@ TLorentzVector get_EventPrimaryVertexP4::operator() ( ROOT::VecOps::RVec<edm4hep
 get_tree::get_tree(int arg_index) : m_index(arg_index) {};
 ROOT::VecOps::RVec<int> get_tree::operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in, ROOT::VecOps::RVec<int> ind){
   ROOT::VecOps::RVec<int> result;
-  auto & particle = in[m_index];
-
   //for (unsigned j = in.at(i).parents_begin; j != in.at(i).parents_end; ++j){
   //  if
   //  result.push_back(ind.at(j));

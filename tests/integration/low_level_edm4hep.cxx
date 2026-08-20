@@ -7,6 +7,8 @@
 #include <edm4hep/MCParticleData.h>
 #include <edm4hep/SimCalorimeterHitData.h>
 
+#include <vector>
+
 ROOT::VecOps::RVec<edm4hep::MCParticleData>
 selElectrons(ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> electrons;
@@ -23,16 +25,16 @@ struct selPDG {
   selPDG(int pdg, bool chargeConjugateAllowed);
   const int m_pdg;
   const bool m_chargeConjugateAllowed;
-  ROOT::VecOps::RVec<edm4hep::MCParticleData>
-  operator()(ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles);
+  std::vector<edm4hep::MCParticleData>
+  operator()(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) const;
 };
 
 selPDG::selPDG(int pdg, bool chargeConjugateAllowed)
     : m_pdg(pdg), m_chargeConjugateAllowed(chargeConjugateAllowed){};
 
-ROOT::VecOps::RVec<edm4hep::MCParticleData>
-selPDG::operator()(ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) {
-  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+std::vector<edm4hep::MCParticleData>
+selPDG::operator()(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &inParticles) const {
+  std::vector<edm4hep::MCParticleData> result;
   for (size_t i = 0; i < inParticles.size(); ++i) {
     auto &particle = inParticles[i];
     if (m_chargeConjugateAllowed) {
@@ -53,6 +55,16 @@ ROOT::VecOps::RVec<float>
 getPx(ROOT::VecOps::RVec<edm4hep::MCParticleData> inParticles) {
   ROOT::VecOps::RVec<float> result;
   for (auto &p : inParticles) {
+    result.push_back(p.momentum.x);
+  }
+
+  return result;
+}
+
+ROOT::VecOps::RVec<float>
+getPxStd(const std::vector<edm4hep::MCParticleData> &inParticles) {
+  ROOT::VecOps::RVec<float> result;
+  for (const auto &p : inParticles) {
     result.push_back(p.momentum.x);
   }
 
@@ -93,7 +105,7 @@ int main(int argc, const char *argv[]) {
   auto rdf2 = rdf.Define("particles_px", getPx, {"Particle"});
   // auto rdf3 = rdf2.Define("electrons", selElectrons, {"MCParticles"});
   auto rdf3 = rdf2.Define("electrons", selPDG(11, false), {"Particle"});
-  auto rdf4 = rdf3.Define("electrons_px", getPx, {"electrons"});
+  auto rdf4 = rdf3.Define("electrons_px", getPxStd, {"electrons"});
   auto h_particles_px = rdf4.Histo1D("particles_px");
   auto h_electrons_px = rdf4.Histo1D("electrons_px");
 

@@ -9,7 +9,6 @@ get_flavour(ROOT::VecOps::RVec<fastjet::PseudoJet> in,
             ROOT::VecOps::RVec<edm4hep::MCParticleData> MCin) {
   ROOT::VecOps::RVec<int> result(in.size(), 0);
 
-  int loopcount = 0;
   for (size_t i = 0; i < MCin.size(); ++i) {
     auto &parton = MCin[i];
     // Select partons only (for pythia8 71-79, for pythia6 2):

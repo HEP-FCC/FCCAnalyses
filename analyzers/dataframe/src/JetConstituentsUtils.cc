@@ -31,12 +31,10 @@ namespace FCCAnalyses
       for (const auto &jet : jets)
       {
         auto &jc = jcs.emplace_back();
-        float energy_jet = jet.energy;
-        float energy_const = 0;
         for (auto it = jet.particles_begin; it < jet.particles_end; ++it)
         {
           jc.emplace_back(rps.at(it));
-          energy_const += rps.at(it).energy;
+
         }
       }
       return jcs;
@@ -455,7 +453,7 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_Sip2dVal_clusterV(const rv::RVec<fastjet::PseudoJet> &jets,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData> &D0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData> &phi0,
-                                                                   const float Bz)
+                                                                   const float)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
 
@@ -569,7 +567,7 @@ namespace FCCAnalyses
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData> &D0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData> &Z0,
                                                                    const rv::RVec<FCCAnalysesJetConstituentsData> &phi0,
-                                                                   const float Bz)
+                                                                   const float)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
 
@@ -689,7 +687,7 @@ namespace FCCAnalyses
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData> &D0,
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData> &Z0,
                                                                      const rv::RVec<FCCAnalysesJetConstituentsData> &phi0,
-                                                                     const float Bz)
+                                                                     const float)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
 

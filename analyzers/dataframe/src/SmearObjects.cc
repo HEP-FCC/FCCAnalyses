@@ -193,8 +193,6 @@ ROOT::VecOps::RVec<edm4hep::TrackState> mcTrackParameters(
   edm4hep::TrackState dummy;
 
   for (int itrack = 0; itrack < ntracks; itrack++) {
-    edm4hep::TrackState track = alltracks[itrack];
-
     // find the corresponding MC particle
     int MCindex = -1;
     for (int ireco = 0; ireco < allRecoParticles.size(); ireco++) {
@@ -300,7 +298,7 @@ TVectorD CovSmear(TVectorD x, TMatrixDSym C, TRandom *ran, bool debug = false) {
 // ----------------------------------------------------------------------------
 
 SmearedTracksdNdx::SmearedTracksdNdx(float scale, bool debug = false)
-    : m_scale(scale), m_debug(debug) {}
+    : m_debug(debug), m_scale(scale) {}
 
 ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
     const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>

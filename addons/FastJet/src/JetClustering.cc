@@ -24,7 +24,6 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _recombScheme);
     if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
       _def.set_recombiner(new ExternalRecombiner(_recombination));
@@ -65,7 +64,6 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _recombScheme);
     if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
       _def.set_recombiner(new ExternalRecombiner(_recombination));
@@ -105,7 +103,6 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _recombScheme);
     if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
       _def.set_recombiner(new ExternalRecombiner(_recombination));
@@ -141,7 +138,6 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm, _recombScheme);
     if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
       _def.set_recombiner(new ExternalRecombiner(_recombination));
@@ -180,7 +176,6 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _exponent, _recombScheme);
     if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
       _def.set_recombiner(new ExternalRecombiner(_recombination));
@@ -219,7 +214,6 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm, _radius, _exponent, _recombScheme);
     if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
       _def.set_recombiner(new ExternalRecombiner(_recombination));
@@ -264,7 +258,6 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     //define the clustering sequence and jet definition
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm);
     _def.set_recombination_scheme(_recombScheme);
     if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
@@ -300,12 +293,11 @@ namespace JetClustering {
     _jetAlgorithm = new fastjet::JadePlugin();
 
     // initialize recombination scheme
-    fastjet::RecombinationScheme _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
+    fastjet::RecombinationScheme recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
-    fastjet::ClusterSequence _cs;
     _def = fastjet::JetDefinition(_jetAlgorithm);
-    _def.set_recombination_scheme(_recombScheme);
-    if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
+    _def.set_recombination_scheme(recombScheme);
+    if (recombScheme == fastjet::RecombinationScheme::external_scheme)
       _def.set_recombiner(new ExternalRecombiner(_recombination));
   }
 

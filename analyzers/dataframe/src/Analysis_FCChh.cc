@@ -487,8 +487,6 @@ int AnalysisFCChh::findTopDecayChannel(
       auto first_child_index = truth_part.daughters_begin;
       auto last_child_index = truth_part.daughters_end;
 
-      auto children_size = last_child_index - first_child_index;
-
       // skip intermediate tops that just have another top as children
       if (last_child_index - first_child_index != 2) {
         continue;
@@ -560,8 +558,6 @@ int AnalysisFCChh::findHiggsDecayChannel(
       // check what children the top has:
       auto first_child_index = truth_part.daughters_begin;
       auto last_child_index = truth_part.daughters_end;
-
-      auto children_size = last_child_index - first_child_index;
 
       // skip intermediate tops that just have another Higgs as children
       if (last_child_index - first_child_index != 2) {
@@ -860,7 +856,7 @@ AnalysisFCChh::getJet_tag(ROOT::VecOps::RVec<int> index,
 // return the list of c hadrons
 ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getChadron(
     ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
-    ROOT::VecOps::RVec<podio::ObjectID> parent_ids) {
+    ROOT::VecOps::RVec<podio::ObjectID>) {
 
   ROOT::VecOps::RVec<edm4hep::MCParticleData> c_had_list;
   for (auto &truth_part : truth_particles) {
@@ -875,7 +871,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getChadron(
 // return the list of b hadrons
 ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getBhadron(
     ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
-    ROOT::VecOps::RVec<podio::ObjectID> parent_ids) {
+    ROOT::VecOps::RVec<podio::ObjectID>) {
 
   ROOT::VecOps::RVec<edm4hep::MCParticleData> b_had_list;
   for (auto &truth_part : truth_particles) {
@@ -2481,12 +2477,11 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getLepsFromTau(
 
 ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTau(
     ROOT::VecOps::RVec<edm4hep::MCParticleData> truth_particles,
-    ROOT::VecOps::RVec<podio::ObjectID> daughter_ids,
+    ROOT::VecOps::RVec<podio::ObjectID>,
     ROOT::VecOps::RVec<podio::ObjectID> parent_ids, TString type) {
 
   ROOT::VecOps::RVec<edm4hep::MCParticleData> tau_list;
   for (auto &truth_part : truth_particles) {
-    bool flagchildren = false;
     if (isTau(truth_part)) {
 
       // check also if from Higgs to count only from Higgs ones
@@ -2905,7 +2900,7 @@ AnalysisFCChh::find_reco_matched(
 ROOT::VecOps::RVec<float> AnalysisFCChh::get_IP_delphes(
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> test_parts,
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco_parts_all,
-    float dR_min, float pT_min, bool exclude_light_leps) {
+  float dR_min, float pT_min, bool) {
 
   ROOT::VecOps::RVec<float> out_vector;
 
@@ -3322,7 +3317,6 @@ AnalysisFCChh::find_reco_matches_exclusive(
   }
 
   for (auto &truth_part : truth_parts) {
-    bool excludedMatch = false;
     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco_match_vector =
         find_reco_matched_particle(truth_part, reco_particles, dR_thres);
     ROOT::VecOps::RVec<edm4hep::MCParticleData> mc_excluded_vector =

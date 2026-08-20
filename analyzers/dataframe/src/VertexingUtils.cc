@@ -1422,7 +1422,6 @@ get_d3d_SV(ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices,
 ROOT::VecOps::RVec<ROOT::VecOps::RVec<TVector3>> get_position_SV(
     ROOT::VecOps::RVec<ROOT::VecOps::RVec<FCCAnalysesVertex>> vertices) {
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<TVector3>> result;
-  ROOT::VecOps::RVec<TVector3> i_result;
 
   for (unsigned int i = 0; i < vertices.size(); i++) {
     ROOT::VecOps::RVec<TVector3> i_result;

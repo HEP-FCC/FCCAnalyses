@@ -82,15 +82,6 @@ bool isPrimaryVtx(const edm4hep::VertexData& vertex) {
 #endif
 }
 
-bool isPrimaryOrSecondaryVtx(const edm4hep::VertexData &vertex) {
-#if EDM4HEP_BUILD_VERSION <= EDM4HEP_VERSION(0, 10, 5)
-  return vertex.primary > 0;
-#else
-  return edm4hep::utils::checkAnyBits(vertex.type,
-                                      edm4hep::Vertex::BITPrimaryVertex,
-                                      edm4hep::Vertex::BITSecondaryVertex);
-#endif
-}
 } // namespace
 
 int get_PV_ntracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
@@ -507,10 +498,10 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT:
 
     if (result.size()==0){
       VertexingUtils::FCCAnalysesVertexMC vertex;
-      ROOT::VecOps::RVec<int> ind;
-      ind.push_back(tmpvecint.at(i));
+      ROOT::VecOps::RVec<int> vertexIndices;
+      vertexIndices.push_back(tmpvecint.at(i));
       vertex.vertex=vertexPos;
-      vertex.mc_ind=ind;
+      vertex.mc_ind=vertexIndices;
       result.push_back(vertex);
     }
     else{
@@ -832,7 +823,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> add_truthmatched(ROOT::VecOps::RVec<FCC
 								   ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 								   //ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> rp2mc){
 								   ROOT::VecOps::RVec<int> rp2mc,
-								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>,
 								   ROOT::VecOps::RVec<int> ind){
 
 
@@ -851,8 +842,6 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> add_truthmatched(ROOT::VecOps::RVec<FCC
       //if (mcassoc.size()==1){
       //mother.push_back(mcassoc.at(0));
       int mother1=getMC_parent(0, mc.at(mcassoc), ind);
-      int mother2=getMC_parent(1, mc.at(mcassoc), ind);
-
       mother.push_back(mother1);
       motherPDG.push_back(mc.at(mother1).PDG);
       //std::cout << "mother 1 "<<mother1<<"  mother2  " << mother2<< std::endl;
@@ -928,7 +917,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> add_truthmatched2(ROOT::VecOps::RVec<F
 								     ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 								     ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 								     ROOT::VecOps::RVec<int> rp2mc,
-								     ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>,
 								     ROOT::VecOps::RVec<int> ind){
 
 
@@ -941,8 +930,6 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> add_truthmatched2(ROOT::VecOps::RVec<F
 
       int mcassoc = rp2mc.at(index.at(j));
       int mother1=getMC_parent(0, mc.at(mcassoc), ind);
-      int mother2=getMC_parent(1, mc.at(mcassoc), ind);
-
       mother.push_back(mother1);
       motherPDG.push_back(mc.at(mother1).PDG);
     }
@@ -1653,7 +1640,6 @@ ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get_RP_atVertex(ROOT::Vec
 
 
 float build_invmass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, ROOT::VecOps::RVec<int> index){
-  float result=0;
   TLorentzVector tlv;
   for (size_t i=0;i<index.size();i++){
     TLorentzVector tmp_tlv = ReconstructedParticle::get_tlv(recop[index.at(i)]);
@@ -1663,7 +1649,6 @@ float build_invmass(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop
 }
 
 TLorentzVector build_tlv(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, ROOT::VecOps::RVec<int> index){
-  float result=0;
   TLorentzVector tlv;
   for (size_t i=0;i<index.size();i++){
     TLorentzVector tmp_tlv = ReconstructedParticle::get_tlv(recop[index.at(i)]);
@@ -1990,9 +1975,9 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2MuMu(ROOT::VecOps::RVec<Verte
   return result;
 }
 
-build_tau23pi::build_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho):m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_rho(arg_rho){};
+sel_tau23pi::sel_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho):m_masslow(arg_masslow),m_masshigh(arg_masshigh),m_p(arg_p),m_angle(arg_angle),m_rho(arg_rho){};
 ROOT::VecOps::RVec<FCCAnalysesComposite2>
-build_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+sel_tau23pi::operator() (ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 				    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> result;

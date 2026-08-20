@@ -218,9 +218,8 @@ namespace ReconstructedParticle2Track{
 
   ROOT::VecOps::RVec<float> XPtoPar_ct(const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& in,
 				       const ROOT::VecOps::RVec<edm4hep::TrackState>& tracks,
-				       const float& Bz) {
+				       const float&) {
 
-    const double cSpeed = 2.99792458e8 * 1.0e-9;
     ROOT::VecOps::RVec<float> out;
 
     for (const auto & rp: in) {

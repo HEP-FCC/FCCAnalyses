@@ -51,8 +51,8 @@ namespace myUtils{
 
 
 
-  struct build_tau23pi {
-    build_tau23pi( float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho);
+  struct sel_tau23pi {
+    sel_tau23pi(float arg_masslow, float arg_masshigh, float arg_p, float arg_angle, bool arg_rho);
     float m_masslow=0.05;
     float m_masshigh=3.0;
     float m_p=1.;
