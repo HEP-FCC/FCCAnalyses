@@ -69,7 +69,7 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
   for (auto &p : recoparticles) {
     // std::cout << " in VertexFitter:  a recoparticle with charge = " <<
     // p.charge << std::endl;
-    if (p.tracks_begin >= 0 && p.tracks_begin < thetracks.size()) {
+  if (p.tracks_begin < thetracks.size()) {
       reco_ind.push_back(p.tracks_begin);
     }
   }

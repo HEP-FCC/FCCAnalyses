@@ -515,7 +515,7 @@ getRP2TRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
   result.reserve( in.size() );
 
   for (auto & p: in) {
-    if (p.tracks_begin >= 0 && p.tracks_begin<tracks.size()) {
+  if (p.tracks_begin < tracks.size()) {
 	result.push_back(tracks.at(p.tracks_begin) ) ;
     }
   }
@@ -532,7 +532,7 @@ get_recoindTRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
   
   for (unsigned int ctr=0; ctr<in.size(); ctr++) {
     edm4hep::ReconstructedParticleData p = in.at(ctr);
-    if (p.tracks_begin >= 0 && p.tracks_begin<tracks.size()) result.push_back(ctr) ;
+  if (p.tracks_begin < tracks.size()) result.push_back(ctr) ;
   }
  return result ;
 }
@@ -550,7 +550,7 @@ hasTRK( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in ) {
   result.reserve( in.size() );
   
   for (auto & p: in) {
-    if (p.tracks_begin >= 0 && p.tracks_begin != p.tracks_end) result.push_back(true) ;
+  if (p.tracks_begin != p.tracks_end) result.push_back(true) ;
     else result.push_back(false);
   }
  return result ;
