@@ -1,5 +1,6 @@
 #include "FCCAnalyses/Algorithms.h"
 #include "FCCAnalyses/Utils.h"
+#include <cstddef>
 
 #include "Math/Minimizer.h"
 #include "Math/IFunction.h"
@@ -490,7 +491,7 @@ JetClustering::FCCAnalysesJet jets_TwoHemispheres::operator() (
  float pz_minus=0;
  float e_minus=0;
 
- for ( int i=0; i < RP_costheta.size(); i++) {
+ for ( std::size_t i=0; i < RP_costheta.size(); i++) {
      if ( RP_costheta[i] > 0 ) {
         constituents_JetPlus.push_back( i );
 	px_plus += RP_px[i];

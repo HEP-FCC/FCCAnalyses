@@ -1,4 +1,5 @@
 #include "FCCAnalyses/Analysis_FCChh.h"
+#include <cstddef>
 // #include "FCCAnalyses/lester_mt2_bisect.h"
 
 #include <iostream>
@@ -191,7 +192,7 @@ bool AnalysisFCChh::isFromHadron(
 
   // loop over all parents (usually onle 1, but sometimes more for reasons not
   // understood?):
-  for (int parent_i = first_parent_index; parent_i < last_parent_index;
+  for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
        parent_i++) {
     // first get the index from the parent
     auto parent_MC_index = parent_ids.at(parent_i).index;
@@ -219,7 +220,7 @@ bool AnalysisFCChh::hasHiggsParent(
 
   // loop over all parents (usually onle 1, but sometimes more for reasons not
   // understood?):
-  for (int parent_i = first_parent_index; parent_i < last_parent_index;
+  for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
        parent_i++) {
     // first get the index from the parent
     auto parent_MC_index = parent_ids.at(parent_i).index;
@@ -249,7 +250,7 @@ bool AnalysisFCChh::isFromHiggsDirect(
 
   // loop over all parents (usually only 1, but sometimes more for reasons not
   // understood?):
-  for (int parent_i = first_parent_index; parent_i < last_parent_index;
+  for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
        parent_i++) {
     // first get the index from the parent
     auto parent_MC_index = parent_ids.at(parent_i).index;
@@ -278,7 +279,7 @@ bool AnalysisFCChh::isChildOfTauFromHiggs(
 
   // loop over all parents (usually onle 1, but sometimes more for reasons not
   // understood?):
-  for (int parent_i = first_parent_index; parent_i < last_parent_index;
+  for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
        parent_i++) {
     // first get the index from the parent
     auto parent_MC_index = parent_ids.at(parent_i).index;
@@ -311,7 +312,7 @@ bool AnalysisFCChh::isChildOfZFromHiggs(
 
   // loop over all parents (usually onle 1, but sometimes more for reasons not
   // understood?):
-  for (int parent_i = first_parent_index; parent_i < last_parent_index;
+  for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
        parent_i++) {
     // first get the index from the parent
     auto parent_MC_index = parent_ids.at(parent_i).index;
@@ -344,7 +345,7 @@ bool AnalysisFCChh::isChildOfWFromHiggs(
 
   // loop over all parents (usually only 1, but sometimes more for reasons not
   // understood?):
-  for (int parent_i = first_parent_index; parent_i < last_parent_index;
+  for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
        parent_i++) {
     // first get the index from the parent
     auto parent_MC_index = parent_ids.at(parent_i).index;
@@ -2251,7 +2252,7 @@ AnalysisFCChh::get_immediate_children(
 
   // std::cout << "children size: " << children_size << std::endl;
 
-  for (int child_i = 0; child_i < children_size; child_i++) {
+  for (unsigned int child_i = 0; child_i < children_size; child_i++) {
     auto child_i_index = daughter_ids.at(first_child_index + child_i).index;
     auto child = truth_particles.at(child_i_index);
     // std::cout << "PDG ID of child number " << child_i << " : " << child.PDG
@@ -2500,7 +2501,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTau(
         std::cout << " found tau neither from Higgs or from Had" << std::endl;
         auto first_parent_index = truth_part.parents_begin;
         auto last_parent_index = truth_part.parents_end;
-        for (int parent_i = first_parent_index; parent_i < last_parent_index;
+        for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
              parent_i++) {
           auto parent_MC_index = parent_ids.at(parent_i).index;
           auto parent = truth_particles.at(parent_MC_index);
@@ -2545,7 +2546,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauLeps(
         std::cout << " found tau neither from Higgs or from Had" << std::endl;
         auto first_parent_index = truth_part.parents_begin;
         auto last_parent_index = truth_part.parents_end;
-        for (int parent_i = first_parent_index; parent_i < last_parent_index;
+        for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
              parent_i++) {
           auto parent_MC_index = parent_ids.at(parent_i).index;
           auto parent = truth_particles.at(parent_MC_index);
@@ -2560,7 +2561,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauLeps(
         auto last_child_index = truth_part.daughters_end;
         // auto child_1_MC_index = daughter_ids.at(first_child_index).index;
         // auto hild_2_MC_index = daughter_ids.at(last_child_index-1).index;
-        for (int child_i = first_child_index; child_i < last_child_index;
+        for (unsigned int child_i = first_child_index; child_i < last_child_index;
              child_i++) {
           auto child = truth_particles.at(daughter_ids.at(child_i).index);
           if (abs(child.PDG) == 15) {
@@ -2576,7 +2577,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauLeps(
       // std::cout << " found tau with children" << std::endl;
       auto first_child_index = truth_part.daughters_begin;
       auto last_child_index = truth_part.daughters_end;
-      for (int ch_i = first_child_index; ch_i < last_child_index; ch_i++) {
+      for (unsigned int ch_i = first_child_index; ch_i < last_child_index; ch_i++) {
         auto ch = truth_particles.at(daughter_ids.at(ch_i).index);
         std::cout << "Child ID: " << ch.PDG << std::endl;
         if (isLep(ch)) {
@@ -2622,7 +2623,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauHads(
         std::cout << " found tau neither from Higgs or from Had" << std::endl;
         auto first_parent_index = truth_part.parents_begin;
         auto last_parent_index = truth_part.parents_end;
-        for (int parent_i = first_parent_index; parent_i < last_parent_index;
+        for (unsigned int parent_i = first_parent_index; parent_i < last_parent_index;
              parent_i++) {
           auto parent_MC_index = parent_ids.at(parent_i).index;
           auto parent = truth_particles.at(parent_MC_index);
@@ -2637,7 +2638,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauHads(
         auto last_child_index = truth_part.daughters_end;
         // auto child_1_MC_index = daughter_ids.at(first_child_index).index;
         // auto hild_2_MC_index = daughter_ids.at(last_child_index-1).index;
-        for (int child_i = first_child_index; child_i < last_child_index;
+        for (unsigned int child_i = first_child_index; child_i < last_child_index;
              child_i++) {
           auto child = truth_particles.at(daughter_ids.at(child_i).index);
           if (abs(child.PDG) == 15) {
@@ -2653,7 +2654,7 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> AnalysisFCChh::getTruthTauHads(
       // std::cout << " found tau with children" << std::endl;
       auto first_child_index = truth_part.daughters_begin;
       auto last_child_index = truth_part.daughters_end;
-      for (int ch_i = first_child_index; ch_i < last_child_index; ch_i++) {
+      for (unsigned int ch_i = first_child_index; ch_i < last_child_index; ch_i++) {
         auto ch = truth_particles.at(daughter_ids.at(ch_i).index);
         std::cout << "Child ID: " << ch.PDG << std::endl;
         if (isHadron(ch)) {
@@ -3173,7 +3174,7 @@ ROOT::VecOps::RVec<int> AnalysisFCChh::find_reco_matched_index(
 
   TLorentzVector truth_part_tlv = getTLV_MC(truth_part_to_match);
 
-  for (int i = 0; i < check_reco_parts.size(); ++i) {
+  for (std::size_t i = 0; i < check_reco_parts.size(); ++i) {
 
     edm4hep::ReconstructedParticleData check_reco_part = check_reco_parts[i];
 

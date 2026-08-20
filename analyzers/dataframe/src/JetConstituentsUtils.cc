@@ -1,5 +1,6 @@
 #include "FCCAnalyses/JetConstituentsUtils.h"
 
+#include <cstddef>
 // EDM4hep
 #include "edm4hep/EDM4hepVersion.h"
 // FastJet
@@ -166,7 +167,7 @@ namespace FCCAnalyses
         nconst.push_back(jet.particles_end - jet.particles_begin);
       }
       auto indices = ROOT::VecOps::Argsort(nconst);
-      for (int index = 0; index < jets.size(); ++index)
+      for (std::size_t index = 0; index < jets.size(); ++index)
       {
         out.push_back(jets.at(indices.at(indices.size() - 1 - index)));
       }
@@ -182,7 +183,7 @@ namespace FCCAnalyses
         energy.push_back(jet.energy);
       }
       auto indices = ROOT::VecOps::Argsort(energy);
-      for (int index = 0; index < jets.size(); ++index)
+      for (std::size_t index = 0; index < jets.size(); ++index)
       {
         out.push_back(jets.at(indices.at(indices.size() - 1 - index)));
       }
@@ -400,11 +401,11 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> D0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
 
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         TVector2 p(jets[i].momentum.x, jets[i].momentum.y);
         FCCAnalysesJetConstituentsData cprojs;
-        for (int j = 0; j < jcs[i].size(); ++j)
+        for (std::size_t j = 0; j < jcs[i].size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -429,11 +430,11 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> D0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
 
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         TVector2 p(jets[i].px(), jets[i].py());
         FCCAnalysesJetConstituentsData cprojs;
-        for (int j = 0; j < jcs[i].size(); ++j)
+        for (std::size_t j = 0; j < jcs[i].size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -457,11 +458,11 @@ namespace FCCAnalyses
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
 
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         TVector2 p(jets[i].px(), jets[i].py());
         FCCAnalysesJetConstituentsData cprojs;
-        for (int j = 0; j < D0[i].size(); ++j)
+        for (std::size_t j = 0; j < D0[i].size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -484,10 +485,10 @@ namespace FCCAnalyses
                                                           const rv::RVec<FCCAnalysesJetConstituentsData> &err2_D0)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < Sip2dVals.size(); ++i)
+      for (std::size_t i = 0; i < Sip2dVals.size(); ++i)
       {
         FCCAnalysesJetConstituentsData s;
-        for (int j = 0; j < Sip2dVals.at(i).size(); ++j)
+        for (std::size_t j = 0; j < Sip2dVals.at(i).size(); ++j)
         {
           if (err2_D0.at(i).at(j) > 0)
           {
@@ -512,11 +513,11 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> Z0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
 
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         TVector3 p(jets[i].momentum.x, jets[i].momentum.y, jets[i].momentum.z);
         FCCAnalysesJetConstituentsData cprojs;
-        for (int j = 0; j < jcs[i].size(); ++j)
+        for (std::size_t j = 0; j < jcs[i].size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -542,11 +543,11 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> Z0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
 
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         TVector3 p(jets[i].px(), jets[i].py(), jets[i].pz());
         FCCAnalysesJetConstituentsData cprojs;
-        for (int j = 0; j < jcs[i].size(); ++j)
+        for (std::size_t j = 0; j < jcs[i].size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -571,11 +572,11 @@ namespace FCCAnalyses
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
 
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         TVector3 p(jets[i].px(), jets[i].py(), jets[i].pz());
         FCCAnalysesJetConstituentsData cprojs;
-        for (int j = 0; j < D0[i].size(); ++j)
+        for (std::size_t j = 0; j < D0[i].size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -597,10 +598,10 @@ namespace FCCAnalyses
                                                           const rv::RVec<FCCAnalysesJetConstituentsData> &err2_Z0)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < Sip3dVals.size(); ++i)
+      for (std::size_t i = 0; i < Sip3dVals.size(); ++i)
       {
         FCCAnalysesJetConstituentsData s;
-        for (int j = 0; j < Sip3dVals.at(i).size(); ++j)
+        for (std::size_t j = 0; j < Sip3dVals.at(i).size(); ++j)
         {
           if (err2_D0.at(i).at(j) > 0.)
           {
@@ -624,12 +625,12 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> D0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0);
       rv::RVec<FCCAnalysesJetConstituentsData> Z0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         FCCAnalysesJetConstituentsData tmp;
         TVector3 p_jet(jets[i].momentum.x, jets[i].momentum.y, jets[i].momentum.z);
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -657,12 +658,12 @@ namespace FCCAnalyses
       rv::RVec<FCCAnalysesJetConstituentsData> D0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_D0);
       rv::RVec<FCCAnalysesJetConstituentsData> Z0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_Z0);
       rv::RVec<FCCAnalysesJetConstituentsData> phi0 = cast_constituent_2(jcs, tracks, ReconstructedParticle2Track::getRP2TRK_phi);
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         FCCAnalysesJetConstituentsData tmp;
         TVector3 p_jet(jets[i].px(), jets[i].py(), jets[i].pz());
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -691,12 +692,12 @@ namespace FCCAnalyses
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
 
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         FCCAnalysesJetConstituentsData tmp;
         TVector3 p_jet(jets[i].px(), jets[i].py(), jets[i].pz());
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
           if (D0.at(i).at(j) != -9)
           {
@@ -721,10 +722,10 @@ namespace FCCAnalyses
                                                             const rv::RVec<FCCAnalysesJetConstituentsData> &err2_Z0)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < JetDistVal.size(); ++i)
+      for (std::size_t i = 0; i < JetDistVal.size(); ++i)
       {
         FCCAnalysesJetConstituentsData tmp;
-        for (int j = 0; j < JetDistVal.at(i).size(); ++j)
+        for (std::size_t j = 0; j < JetDistVal.at(i).size(); ++j)
         {
           if (err2_D0.at(i).at(j) > 0)
           {
@@ -765,11 +766,11 @@ namespace FCCAnalyses
     )
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < jcs.size(); ++i)
+      for (std::size_t i = 0; i < jcs.size(); ++i)
       {
         FCCAnalysesJetConstituents ct = jcs.at(i);
         FCCAnalysesJetConstituentsData tmp;
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
           if (ct.at(j).clusters_begin < nhdata.size() + gammadata.size())
           {
@@ -1086,11 +1087,11 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_isEl(const rv::RVec<FCCAnalysesJetConstituents> &jcs)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < jcs.size(); ++i)
+      for (std::size_t i = 0; i < jcs.size(); ++i)
       {
         FCCAnalysesJetConstituentsData is_El;
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
           if (std::abs(ct.at(j).charge) > 0 and std::abs(ct.at(j).mass - 0.000510999) < 1.e-05)
           {
@@ -1110,11 +1111,11 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_isMu(const rv::RVec<FCCAnalysesJetConstituents> &jcs)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < jcs.size(); ++i)
+      for (std::size_t i = 0; i < jcs.size(); ++i)
       {
         FCCAnalysesJetConstituentsData is_Mu;
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
           if (std::abs(ct.at(j).charge) > 0 and std::abs(ct.at(j).mass - 0.105658) < 1.e-03)
           {
@@ -1134,11 +1135,11 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_isChargedHad(const rv::RVec<FCCAnalysesJetConstituents> &jcs)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < jcs.size(); ++i)
+      for (std::size_t i = 0; i < jcs.size(); ++i)
       {
         FCCAnalysesJetConstituentsData is_ChargedHad;
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
           if (std::abs(ct.at(j).charge) > 0 and std::abs(ct.at(j).mass - 0.13957) < 1.e-03)
           {
@@ -1158,11 +1159,11 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_isNeutralHad(const rv::RVec<FCCAnalysesJetConstituents> &jcs)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < jcs.size(); ++i)
+      for (std::size_t i = 0; i < jcs.size(); ++i)
       {
         FCCAnalysesJetConstituentsData is_NeutralHad;
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
 #if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
           if (ct.at(j).PDG == 130)
@@ -1183,11 +1184,11 @@ namespace FCCAnalyses
     rv::RVec<FCCAnalysesJetConstituentsData> get_isGamma(const rv::RVec<FCCAnalysesJetConstituents> &jcs)
     {
       rv::RVec<FCCAnalysesJetConstituentsData> out;
-      for (int i = 0; i < jcs.size(); ++i)
+      for (std::size_t i = 0; i < jcs.size(); ++i)
       {
         FCCAnalysesJetConstituentsData is_NeutralHad;
         FCCAnalysesJetConstituents ct = jcs.at(i);
-        for (int j = 0; j < ct.size(); ++j)
+        for (std::size_t j = 0; j < ct.size(); ++j)
         {
 #if edm4hep_VERSION > EDM4HEP_VERSION(0, 10, 5)
           if (ct.at(j).PDG == 22)
@@ -1214,7 +1215,7 @@ namespace FCCAnalyses
     rv::RVec<int> count_consts(rv::RVec<FCCAnalysesJetConstituents> jets)
     {
       rv::RVec<int> out;
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         out.push_back(jets.at(i).size());
       }
@@ -1224,11 +1225,11 @@ namespace FCCAnalyses
     rv::RVec<int> count_type(const rv::RVec<FCCAnalysesJetConstituentsData> &isType)
     {
       rv::RVec<int> out;
-      for (int i = 0; i < isType.size(); ++i)
+      for (std::size_t i = 0; i < isType.size(); ++i)
       {
         int count = 0;
         rv::RVec<float> istype = isType.at(i);
-        for (int j = 0; j < istype.size(); ++j)
+        for (std::size_t j = 0; j < istype.size(); ++j)
         {
           if ((int)(istype.at(j)) == 1)
             count++;
@@ -1254,7 +1255,7 @@ namespace FCCAnalyses
     rv::RVec<TLorentzVector> sum_tlv_constituents(const rv::RVec<FCCAnalysesJetConstituents> &jets)
     {
       rv::RVec<TLorentzVector> out;
-      for (int i = 0; i < jets.size(); ++i)
+      for (std::size_t i = 0; i < jets.size(); ++i)
       {
         TLorentzVector sum_tlv; // initialized by (0., 0., 0., 0.)
         FCCAnalysesJetConstituents jcs = jets.at(i);
@@ -1291,11 +1292,11 @@ namespace FCCAnalyses
       if(AllJets.size() < 2) return InvariantMasses;
 
       // For each jet, take its invariant mass with the remaining jets. Stop at last jet.
-      for(int i = 0; i < AllJets.size()-1; ++i) {
+      for(std::size_t i = 0; i + 1 < AllJets.size(); ++i) {
 
         tlv1 = AllJets.at(i); 
 
-        for(int j=i+1; j < AllJets.size(); ++j){ // go until end
+        for(std::size_t j=i+1; j < AllJets.size(); ++j){ // go until end
           tlv2 = AllJets.at(j);
           E = tlv1.E() + tlv2.E();
           px = tlv1.Px() + tlv2.Px();
@@ -1314,7 +1315,7 @@ namespace FCCAnalyses
     rv::RVec<double> compute_residue_energy(const rv::RVec<TLorentzVector>& tlv_jet, const rv::RVec<TLorentzVector>& sum_tlv_jcs) {
     
       rv::RVec<double> out;
-      for (int i = 0; i < tlv_jet.size(); ++i)
+      for (std::size_t i = 0; i < tlv_jet.size(); ++i)
       {
         float de = (sum_tlv_jcs.at(i).E() - tlv_jet.at(i).E()) / tlv_jet.at(i).E();
         out.push_back(de);
@@ -1325,7 +1326,7 @@ namespace FCCAnalyses
     rv::RVec<double> compute_residue_px(const rv::RVec<TLorentzVector> &tlv_jet, const rv::RVec<TLorentzVector> &sum_tlv_jcs)
     {
       rv::RVec<double> out;
-      for (int i = 0; i < tlv_jet.size(); ++i)
+      for (std::size_t i = 0; i < tlv_jet.size(); ++i)
       {
         float dpx = (sum_tlv_jcs.at(i).Px() - tlv_jet.at(i).Px()) / tlv_jet.at(i).Px();
         out.push_back(dpx);
@@ -1336,7 +1337,7 @@ namespace FCCAnalyses
     rv::RVec<double> compute_residue_py(const rv::RVec<TLorentzVector> &tlv_jet, const rv::RVec<TLorentzVector> &sum_tlv_jcs)
     {
       rv::RVec<double> out;
-      for (int i = 0; i < tlv_jet.size(); ++i)
+      for (std::size_t i = 0; i < tlv_jet.size(); ++i)
       {
         float dpy = (sum_tlv_jcs.at(i).Py() - tlv_jet.at(i).Py()) / tlv_jet.at(i).Py();
         out.push_back(dpy);
@@ -1347,7 +1348,7 @@ namespace FCCAnalyses
     rv::RVec<double> compute_residue_pz(const rv::RVec<TLorentzVector> &tlv_jet, const rv::RVec<TLorentzVector> &sum_tlv_jcs)
     {
       rv::RVec<double> out;
-      for (int i = 0; i < tlv_jet.size(); ++i)
+      for (std::size_t i = 0; i < tlv_jet.size(); ++i)
       {
         float dpz = (sum_tlv_jcs.at(i).Pz() - tlv_jet.at(i).Pz()) / tlv_jet.at(i).Pz();
         out.push_back(dpz);
@@ -1358,7 +1359,7 @@ namespace FCCAnalyses
     rv::RVec<double> compute_residue_pt(const rv::RVec<TLorentzVector> &tlv_jet, const rv::RVec<TLorentzVector> &sum_tlv_jcs)
     {
       rv::RVec<double> out;
-      for (int i = 0; i < tlv_jet.size(); ++i)
+      for (std::size_t i = 0; i < tlv_jet.size(); ++i)
       {
         double pt_jet = std::sqrt(tlv_jet.at(i).Px() * tlv_jet.at(i).Px() + tlv_jet.at(i).Py() * tlv_jet.at(i).Py());
         double pt_jcs = std::sqrt(sum_tlv_jcs.at(i).Px() * sum_tlv_jcs.at(i).Px() + sum_tlv_jcs.at(i).Py() * sum_tlv_jcs.at(i).Py());
@@ -1371,7 +1372,7 @@ namespace FCCAnalyses
     rv::RVec<double> compute_residue_phi(const rv::RVec<TLorentzVector> &tlv_jet, const rv::RVec<TLorentzVector> &sum_tlv_jcs)
     {
       rv::RVec<double> out;
-      for (int i = 0; i < tlv_jet.size(); ++i)
+      for (std::size_t i = 0; i < tlv_jet.size(); ++i)
       {
         double phi_jet = tlv_jet.at(i).Phi();
         double phi_jcs = sum_tlv_jcs.at(i).Phi();
@@ -1384,7 +1385,7 @@ namespace FCCAnalyses
     rv::RVec<double> compute_residue_theta(const rv::RVec<TLorentzVector> &tlv_jet, const rv::RVec<TLorentzVector> &sum_tlv_jcs)
     {
       rv::RVec<double> out;
-      for (int i = 0; i < tlv_jet.size(); ++i)
+      for (std::size_t i = 0; i < tlv_jet.size(); ++i)
       {
         double theta_jet = tlv_jet.at(i).Theta();
         double theta_jcs = sum_tlv_jcs.at(i).Theta();
