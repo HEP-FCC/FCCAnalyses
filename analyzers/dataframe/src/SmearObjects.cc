@@ -1,4 +1,5 @@
 #include "FCCAnalyses/SmearObjects.h"
+#include <cstddef>
 
 // std
 #include <iostream>
@@ -77,7 +78,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState> SmearedTracks::operator()(
 
     // find the corresponding MC particle
     int MCindex = -1;
-    for (int ireco = 0; ireco < allRecoParticles.size(); ireco++) {
+    for (std::size_t ireco = 0; ireco < allRecoParticles.size(); ireco++) {
       edm4hep::ReconstructedParticleData rp = allRecoParticles[ireco];
       int track_index = rp.tracks_begin;
       if (track_index == itrack) {
@@ -195,7 +196,7 @@ ROOT::VecOps::RVec<edm4hep::TrackState> mcTrackParameters(
   for (int itrack = 0; itrack < ntracks; itrack++) {
     // find the corresponding MC particle
     int MCindex = -1;
-    for (int ireco = 0; ireco < allRecoParticles.size(); ireco++) {
+    for (std::size_t ireco = 0; ireco < allRecoParticles.size(); ireco++) {
       edm4hep::ReconstructedParticleData rp = allRecoParticles[ireco];
       int track_index = rp.tracks_begin;
       if (track_index == itrack) {
@@ -426,7 +427,7 @@ ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> SmearedTracksTOF::operator()(
 
     // find the corresponding MC particle
     int MCindex = -1;
-    for (int ireco = 0; ireco < allRecoParticles.size(); ireco++) {
+    for (std::size_t ireco = 0; ireco < allRecoParticles.size(); ireco++) {
       edm4hep::ReconstructedParticleData rp = allRecoParticles[ireco];
       int track_index = rp.tracks_begin;
       if (track_index == itrack) {

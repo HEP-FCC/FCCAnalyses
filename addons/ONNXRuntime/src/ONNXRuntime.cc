@@ -71,7 +71,7 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
     } else {
       input_dims = input_shapes[input_pos];
       // rely on the given input_shapes to set the batch size
-      if (input_dims[0] != batch_size)
+      if (static_cast<unsigned long long>(input_dims[0]) != batch_size)
         throw std::runtime_error("The first element of `input_shapes` (" + std::to_string(input_dims[0]) +
                                  ") does not match the given `batch_size` (" + std::to_string(batch_size) + ")");
     }

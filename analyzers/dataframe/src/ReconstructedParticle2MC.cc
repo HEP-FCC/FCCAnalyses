@@ -1,4 +1,5 @@
 #include "FCCAnalyses/ReconstructedParticle2MC.h"
+#include <cstddef>
 #include <iostream>
 
 namespace FCCAnalyses{
@@ -272,7 +273,7 @@ selRP_PDG::operator() (ROOT::VecOps::RVec<int> recind,
 
   std::vector<edm4hep::ReconstructedParticleData> result;
 
-  for (int i=0; i<recind.size();i++) {
+  for (std::size_t i=0; i<recind.size();i++) {
       int reco_idx = recind.at(i);
       int mc_idx = mcind.at(i);
       int pdg = mc.at(mc_idx).PDG ;
@@ -296,7 +297,7 @@ selRP_PDG_index::operator() (ROOT::VecOps::RVec<int> recind,
 
   ROOT::VecOps::RVec<int> result;
 
-  for (int i=0; i<recind.size();i++) {
+  for (std::size_t i=0; i<recind.size();i++) {
       int reco_idx = recind.at(i);
       int mc_idx = mcind.at(i);
       int pdg = mc.at(mc_idx).PDG ;
@@ -323,7 +324,7 @@ selRP_ChargedHadrons (ROOT::VecOps::RVec<int> recind,
 
   std::vector<edm4hep::ReconstructedParticleData> result;
 
-  for (int i=0; i<recind.size();i++) {
+  for (std::size_t i=0; i<recind.size();i++) {
       int reco_idx = recind.at(i);
       int mc_idx = mcind.at(i);
       int pdg = mc.at(mc_idx).PDG ;
@@ -360,7 +361,7 @@ selRP_matched_to_list( ROOT::VecOps::RVec<int>  mcParticles_indices,
 
     // is this MC particle associated with a Reco particle :
     bool found = false;
-    for (int i=0; i<recind.size();i++) {
+    for (std::size_t i=0; i<recind.size();i++) {
       int reco_idx = recind.at(i);
       int mc_idx = mcind.at(i);
       if ( mc_idx == idx ) {
@@ -391,7 +392,7 @@ int getTrack2MC_index (int track_index,
 						 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco) {
   int mc_index = -1;
 
-      for (int i=0; i<recind.size();i++) {
+      for (std::size_t i=0; i<recind.size();i++) {
           int reco_idx = recind.at(i);
           // keep only charged particles
           if ( reco.at( reco_idx ).charge == 0 ) continue;

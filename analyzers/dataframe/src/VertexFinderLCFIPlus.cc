@@ -2,6 +2,7 @@
 // contact: kunal.gautam@cern.ch
 
 #include "FCCAnalyses/VertexFinderLCFIPlus.h"
+#include <cstddef>
 #include <iostream>
 
 namespace FCCAnalyses{
@@ -44,7 +45,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>> get_SV
 
     // remove primary tracks & separate non-primary tracks by jet
     std::vector<int> i_jetconsti = jet_consti[j];
-    for (int ctr=0; ctr<tracks.size(); ctr++) {
+    for (std::size_t ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
       if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
 	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
@@ -170,10 +171,10 @@ ROOT::VecOps::RVec<int> VertexSeed_best(ROOT::VecOps::RVec<edm4hep::TrackState> 
   VertexingUtils::FCCAnalysesVertex vtx_seed;
   double chi2_min = 99;
   
-  for(unsigned int i=0; i<nTr-1; i++) {
+  for(int i=0; i<nTr-1; i++) {
     tr_pair[0] = tracks[i];
     
-    for(unsigned int j=i+1; j<nTr; j++) {
+    for(int j=i+1; j<nTr; j++) {
       tr_pair[1] = tracks[j];
       
       // V0 rejection (loose)
@@ -230,7 +231,7 @@ ROOT::VecOps::RVec<int> addTrack_best(ROOT::VecOps::RVec<edm4hep::TrackState> tr
   tr_vtx.push_back(tr_i);
 
   // find best track to add to the vtx
-  for(unsigned int i=0; i<nTr; i++) {
+  for(int i=0; i<nTr; i++) {
     if(std::find(vtx_tr.begin(), vtx_tr.end(), i) != vtx_tr.end()) continue;
     tr_vtx[iTr] = tracks[i];
     
@@ -285,14 +286,14 @@ ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> findSVfromTracks(ROOT::Vec
     
     if(debug_me){
       std::cout << "tracks_fin.size(): " << tracks_fin.size() << std::endl;
-      for(int i=0; i<vtx_seed.size();i++)
+      for(std::size_t i=0; i<vtx_seed.size();i++)
 	std::cout << "vtx_seed: " << vtx_seed[i] << std::endl;
     }
     if(vtx_seed.size() == 0) break;
     
     // add tracks to the seed, check if a track is added; if not break loop
     ROOT::VecOps::RVec<int> vtx_fin = vtx_seed;
-    int vtx_fin_size = 0; // to start the loop
+    std::size_t vtx_fin_size = 0; // to start the loop
     while(vtx_fin_size != vtx_fin.size()) {
       vtx_fin_size = vtx_fin.size();
       vtx_fin = addTrack_best(tracks_fin, vtx_fin, PV, chi2_cut, invM_cut, chi2Tr_cut);
@@ -392,11 +393,11 @@ ROOT::VecOps::RVec<bool> isV0(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
   t_pair.push_back(tr_j);
   VertexingUtils::FCCAnalysesVertex V0;
   //
-  for(unsigned int i=0; i<nTr-1; i++) {
+  for(int i=0; i<nTr-1; i++) {
     if(result[i] == true) continue;
     t_pair[0] = np_tracks[i];
 
-    for(unsigned int j=i+1; j<nTr; j++) {
+    for(int j=i+1; j<nTr; j++) {
       if(result[j] == true) continue;
       if(t_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
       t_pair[1] = np_tracks[j];
@@ -473,11 +474,11 @@ VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np
   tr_pair.push_back(tr_i);
   tr_pair.push_back(tr_j);
   //
-  for(unsigned int i=0; i<nTr-1; i++) {
+  for(int i=0; i<nTr-1; i++) {
     if(isInV0[i] == true) continue; // don't pair a track if it already forms a V0
     tr_pair[0] = np_tracks[i];
 
-    for(unsigned int j=i+1; j<nTr; j++) {
+    for(int j=i+1; j<nTr; j++) {
       if(isInV0[j] == true) continue; // don't pair a track if it already forms a V0
       if(tr_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
       tr_pair[1] = np_tracks[j];
@@ -571,11 +572,11 @@ VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np
   tr_pair.push_back(tr_i);
   tr_pair.push_back(tr_j);
   //
-  for(unsigned int i=0; i<nTr-1; i++) {
+  for(int i=0; i<nTr-1; i++) {
     if(isInV0[i] == true) continue; // don't pair a track if it already forms a V0
     tr_pair[0] = np_tracks[i];
 
-    for(unsigned int j=i+1; j<nTr; j++) {
+    for(int j=i+1; j<nTr; j++) {
       if(isInV0[j] == true) continue; // don't pair a track if it already forms a V0
       if(tr_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
       tr_pair[1] = np_tracks[j];
@@ -691,7 +692,7 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
     
     // remove primary tracks & separate non-primary tracks by jet
     std::vector<int> i_jetconsti = jet_consti[j];
-    for (int ctr=0; ctr<tracks.size(); ctr++) {
+    for (std::size_t ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
       if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
 	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
@@ -704,11 +705,11 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
     if(nTr<2) continue;    
     ROOT::VecOps::RVec<bool> isInV0(nTr, false);
     //
-    for(unsigned int i=0; i<nTr-1; i++) {
+    for(int i=0; i<nTr-1; i++) {
       if(isInV0[i] == true) continue; // don't pair a track if it already forms a V0
       tr_pair[0] = np_tracks[i];
       
-      for(unsigned int trackIndex=i+1; trackIndex<nTr; trackIndex++) {
+      for(int trackIndex=i+1; trackIndex<nTr; trackIndex++) {
 	if(isInV0[trackIndex] == true) continue; // don't pair a track if it already forms a V0
 	if(tr_pair[0].omega * np_tracks[trackIndex].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
 	tr_pair[1] = np_tracks[trackIndex];
