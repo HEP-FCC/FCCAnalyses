@@ -88,9 +88,8 @@ ROOT::VecOps::RVec<edm4hep::TrackState> SmearedTracks::operator()(
     } // end loop on RPs
 
     if (MCindex < 0 ||
-        MCindex >=
-            mcParticles
-                .size()) { // in principle, this should not happen in delphes,
+        static_cast<std::size_t>(MCindex) >= mcParticles.size()) {
+      // In principle, this should not happen in Delphes,
       // each track should be matched to a MC particle.
       result[itrack] = dummy;
       continue;
@@ -205,7 +204,8 @@ ROOT::VecOps::RVec<edm4hep::TrackState> mcTrackParameters(
       }
     } // end loop on RPs
 
-    if (MCindex < 0 || MCindex >= mcParticles.size()) {
+    if (MCindex < 0 ||
+        static_cast<std::size_t>(MCindex) >= mcParticles.size()) {
       result.push_back(dummy);
       continue;
     }
@@ -324,7 +324,7 @@ ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
 
     // find the corresponding MC particle
     int MCindex = -1;
-    for (int ireco = 0; ireco < allRecoParticles.size(); ireco++) {
+    for (std::size_t ireco = 0; ireco < allRecoParticles.size(); ireco++) {
       edm4hep::ReconstructedParticleData rp = allRecoParticles[ireco];
       int track_index = rp.tracks_begin;
       if (track_index == itrack) {
@@ -334,9 +334,8 @@ ROOT::VecOps::RVec<edm4hep::RecDqdxData> SmearedTracksdNdx::operator()(
     } // end loop on RPs
 
     if (MCindex < 0 ||
-        MCindex >=
-            mcParticles
-                .size()) { // in principle, this should not happen in delphes,
+        static_cast<std::size_t>(MCindex) >= mcParticles.size()) {
+      // In principle, this should not happen in Delphes,
       // each track should be matched to a MC particle.
       result.push_back(dNdxSmeared);
       continue;
@@ -437,9 +436,8 @@ ROOT::VecOps::RVec<edm4hep::TrackerHit3DData> SmearedTracksTOF::operator()(
     } // end loop on RPs
 
     if (MCindex < 0 ||
-        MCindex >=
-            mcParticles
-                .size()) { // in principle, this should not happen in delphes,
+        static_cast<std::size_t>(MCindex) >= mcParticles.size()) {
+      // In principle, this should not happen in Delphes,
       // each track should be matched to a MC particle.
       result[idx_tin] = smeared_thits_0;
       result[idx_tpix] = smeared_thits_1;
@@ -548,7 +546,8 @@ SmearedReconstructedParticle::operator()(
 
     // smear particle only if MC particle found, else return original particle
     // and if type == requested
-    if (MCindex >= 0 and MCindex < mcParticles.size() and
+    if (MCindex >= 0 and
+        static_cast<std::size_t>(MCindex) < mcParticles.size() and
         reco_part_type == m_type) {
       edm4hep::MCParticleData mc_part = mcParticles[MCindex];
 

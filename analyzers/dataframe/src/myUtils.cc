@@ -3,6 +3,7 @@
 // std
 #include <iostream>
 #include <cstdlib>
+#include <cstddef>
 #include <vector>
 
 // EDM4hep
@@ -782,7 +783,9 @@ ROOT::VecOps::RVec<int> getMC_daughter(int daughterindex,
 						ROOT::VecOps::RVec<int> ind){
   ROOT::VecOps::RVec<int> result;
   for (size_t i = 0; i < in.size(); ++i) {
-    if (daughterindex+1>in.at(i).daughters_end-in.at(i).daughters_begin) {
+  if (daughterindex < 0 ||
+      static_cast<unsigned int>(daughterindex) >=
+          in.at(i).daughters_end - in.at(i).daughters_begin) {
       result.push_back(-999);
     }
     else {
@@ -797,7 +800,9 @@ ROOT::VecOps::RVec<int> getMC_parent(int parentindex,
 					      ROOT::VecOps::RVec<int> ind){
   ROOT::VecOps::RVec<int> result;
   for (size_t i = 0; i < in.size(); ++i) {
-    if (parentindex+1>in.at(i).parents_end-in.at(i).parents_begin) {
+  if (parentindex < 0 ||
+      static_cast<unsigned int>(parentindex) >=
+          in.at(i).parents_end - in.at(i).parents_begin) {
       result.push_back(-999);
     }
     else {
@@ -811,7 +816,8 @@ int getMC_parent(int parentindex,
 			  edm4hep::MCParticleData in,
 			  ROOT::VecOps::RVec<int> ind){
   int result;
-  if (parentindex+1>in.parents_end-in.parents_begin)
+  if (parentindex < 0 ||
+      static_cast<unsigned int>(parentindex) >= in.parents_end - in.parents_begin)
     result = -999;
   else
     result = ind.at(in.parents_begin+parentindex);
@@ -1043,7 +1049,9 @@ filter_PV::operator()(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> in,
   for (auto & p: in) {
     bool found=false;
     for (size_t i = 0; i < index.size(); ++i) {
-      if (p.tracks_begin==index.at(i)){found=true; break;}
+      const int track_index = index.at(i);
+      if (track_index >= 0 &&
+          p.tracks_begin == static_cast<unsigned int>(track_index)) {found=true; break;}
     }
     if (found==false && m_pv==false)result.push_back(p);
     else if (found==true && m_pv==true)result.push_back(p);
@@ -1457,7 +1465,9 @@ ROOT::VecOps::RVec<edm4hep::VertexData> getFCCAnalysesComposite_vertex(ROOT::Vec
 bool isPV(edm4hep::ReconstructedParticleData recop, ROOT::VecOps::RVec<int> pvindex){
 
   for (size_t i = 0; i < pvindex.size(); ++i) {
-    if (recop.tracks_begin==pvindex.at(i))return true;
+    const int track_index = pvindex.at(i);
+    if (track_index >= 0 &&
+        recop.tracks_begin == static_cast<unsigned int>(track_index)) return true;
   }
   return false;
 }
@@ -2244,9 +2254,11 @@ ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep
 					    int index){
 
   ROOT::VecOps::RVec<float> result;
+  if (index < 0) return result;
+  const auto particle_index = static_cast<std::size_t>(index);
   for (auto &p:in){
-    if (index>=p.size())continue;
-    result.push_back(p.at(index).mass);
+      if (particle_index >= p.size())continue;
+    result.push_back(p.at(particle_index).mass);
   }
   return result;
 }

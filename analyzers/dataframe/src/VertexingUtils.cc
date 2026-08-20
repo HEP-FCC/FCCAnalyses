@@ -1,4 +1,5 @@
 #include "FCCAnalyses/VertexingUtils.h"
+#include <cstddef>
 #include "FCCAnalyses/VertexFitterSimple.h"
 
 #include "TrkUtil.h" // from delphes
@@ -303,7 +304,7 @@ FCCAnalysesVertex
 get_FCCAnalysesVertex(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl,
                       int index) {
   FCCAnalysesVertex result;
-  if (index < TheVertexColl.size())
+  if (index >= 0 && static_cast<std::size_t>(index) < TheVertexColl.size())
     result = TheVertexColl.at(index);
   return result;
 }
@@ -328,7 +329,7 @@ get_VertexData(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl) {
 edm4hep::VertexData
 get_VertexData(ROOT::VecOps::RVec<FCCAnalysesVertex> TheVertexColl, int index) {
   edm4hep::VertexData result;
-  if (index < TheVertexColl.size())
+  if (index >= 0 && static_cast<std::size_t>(index) < TheVertexColl.size())
     result = TheVertexColl.at(index).vertex;
   return result;
 }
@@ -354,13 +355,14 @@ ROOT::VecOps::RVec<int> get_VertexRecoParticlesInd(
 
   ROOT::VecOps::RVec<int> result;
   ROOT::VecOps::RVec<int> indices_tracks = TheVertex.reco_ind;
-  for (int i = 0; i < indices_tracks.size(); i++) {
-    int tk_index = indices_tracks[i];
-    for (int j = 0; j < reco.size(); j++) {
+  for (std::size_t i = 0; i < indices_tracks.size(); i++) {
+    const int tk_index = indices_tracks[i];
+    for (std::size_t j = 0; j < reco.size(); j++) {
       auto &p = reco[j];
       if (p.tracks_begin == p.tracks_end)
         continue;
-      if (p.tracks_begin == tk_index) {
+      if (tk_index >= 0 &&
+          p.tracks_begin == static_cast<unsigned int>(tk_index)) {
         result.push_back(j);
         break;
       }
@@ -473,7 +475,7 @@ double get_invM_pairs(FCCAnalysesVertex vertex, double m1, double m2) {
   double m[2] = {m1, m2};
   int nTr = p_tracks.size();
 
-  for (unsigned int i = 0; i < nTr; i++) {
+  for (int i = 0; i < nTr; i++) {
     TLorentzVector p4_tr;
     p4_tr.SetXYZM(p_tracks[i].X(), p_tracks[i].Y(), p_tracks[i].Z(), m[i]);
     p4_vtx += p4_tr;
@@ -499,7 +501,7 @@ get_invM_pairs(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices, double m1,
     double m[2] = {m1, m2};
     int nTr = p_tracks.size();
 
-    for (unsigned int i = 0; i < nTr; i++) {
+    for (int i = 0; i < nTr; i++) {
       TLorentzVector p4_tr;
       p4_tr.SetXYZM(p_tracks[i].X(), p_tracks[i].Y(), p_tracks[i].Z(), m[i]);
       p4_vtx += p4_tr;
@@ -938,16 +940,16 @@ get_relTheta_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
                 ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
-  unsigned int j = 0;
-  int nSV = nSV_jet[0];
-  for (unsigned int i = 0; i < vertices.size(); i++) {
+  std::size_t j = 0;
+  std::size_t nSV = static_cast<std::size_t>(nSV_jet[0]);
+  for (std::size_t i = 0; i < vertices.size(); i++) {
     auto &ivtx = vertices[i];
     TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1],
                  ivtx.vertex.position[2]);
 
     if (i >= nSV) {
       j++;
-      nSV += nSV_jet[j];
+      nSV += static_cast<std::size_t>(nSV_jet[j]);
     }
     auto &ijet = jets[j];
     double jetTheta = ijet.theta();
@@ -965,16 +967,16 @@ get_relPhi_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
               ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
-  unsigned int j = 0;
-  int nSV = nSV_jet[0];
-  for (unsigned int i = 0; i < vertices.size(); i++) {
+  std::size_t j = 0;
+  std::size_t nSV = static_cast<std::size_t>(nSV_jet[0]);
+  for (std::size_t i = 0; i < vertices.size(); i++) {
     auto &ivtx = vertices[i];
     TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1],
                  ivtx.vertex.position[2]);
 
     if (i >= nSV) {
       j++;
-      nSV += nSV_jet[j];
+      nSV += static_cast<std::size_t>(nSV_jet[j]);
     }
     auto &ijet = jets[j];
     TVector3 jetP(ijet.px(), ijet.py(), ijet.pz());
@@ -1040,13 +1042,13 @@ std::vector<std::vector<edm4hep::TrackState>> get_tracksInJets(
 
   int nJet = jets.size();
   //
-  for (unsigned int j = 0; j < nJet; j++) {
+  for (int j = 0; j < nJet; j++) {
 
     std::vector<int> i_jetconsti = jet_consti[j];
 
     for (unsigned int ip : i_jetconsti) {
       auto &p = recoparticles[ip];
-      if (p.tracks_begin >= 0 && p.tracks_begin < thetracks.size())
+      if (p.tracks_begin < thetracks.size())
         iJet_tracks.push_back(thetracks.at(p.tracks_begin));
     }
 

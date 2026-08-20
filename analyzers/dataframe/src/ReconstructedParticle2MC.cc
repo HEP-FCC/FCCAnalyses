@@ -397,7 +397,9 @@ int getTrack2MC_index (int track_index,
           // keep only charged particles
           if ( reco.at( reco_idx ).charge == 0 ) continue;
           mc_index = mcind.at(i);
-          if ( reco.at( reco_idx ).tracks_begin == track_index ) return mc_index;
+          if (track_index >= 0 &&
+              reco.at(reco_idx).tracks_begin == static_cast<unsigned int>(track_index))
+            return mc_index;
       }
  return mc_index;
 }
