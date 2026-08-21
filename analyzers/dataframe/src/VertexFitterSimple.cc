@@ -9,6 +9,7 @@
 #include "TString.h"
 
 #include <fcntl.h>
+#include <unistd.h>
 
 //#include "TrkUtil.h"    // from delphes
 
