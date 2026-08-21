@@ -44,6 +44,11 @@ function(add_integration_test _testname)
     ROOT_INCLUDE_PATH=${CMAKE_SOURCE_DIR}/analyzers/dataframe:$ENV{ROOT_INCLUDE_PATH}
     TEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}
     )
+  if(UNIX AND NOT APPLE)
+    # Keep ROOT from resolving FastJet calls to Delphes' bundled copy.
+    set_property(TEST fccanalysisrun_${_testname} APPEND PROPERTY ENVIRONMENT
+      LD_PRELOAD=${CMAKE_BINARY_DIR}/analyzers/dataframe/libFCCAnalyses.so:${CMAKE_BINARY_DIR}/addons/FastJet/libFastJet.so:${FASTJET_LIBRARY})
+  endif()
 endfunction()
 
 function(add_generic_test _testname _testcmd)

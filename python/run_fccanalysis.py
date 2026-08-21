@@ -362,7 +362,8 @@ def merge_config(args: argparse.Namespace,
         LOGGER.error('Key4hep stack not setup!\nAborting...')
         sys.exit(3)
     k4h_stack_env = os.environ['KEY4HEP_STACK']
-    if 'sw-nightlies.hsf.org' in k4h_stack_env:
+    if ('sw-nightlies.hsf.org' in k4h_stack_env
+            or 'sft-nightlies.cern.ch' in k4h_stack_env):
         config['key4hep-stack'] = 'nightlies'
     elif 'sw.hsf.org' in k4h_stack_env:
         config['key4hep-stack'] = 'release'
@@ -370,7 +371,7 @@ def merge_config(args: argparse.Namespace,
         LOGGER.error('Key4hep stack not recognized!\nAborting...')
         sys.exit(3)
 
-    if 'almalinux9' in k4h_stack_env:
+    if 'almalinux9' in k4h_stack_env or '-el9-' in k4h_stack_env:
         config['key4hep-os'] = 'alma9'
     elif 'almalinux10' in k4h_stack_env:
         config['key4hep-os'] = 'alma10'
