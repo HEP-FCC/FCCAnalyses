@@ -67,7 +67,20 @@ void plotItPlotter::plot(std::string_view output_file,
       sorting_method == "yields") { // TODO
   }
 
-  prepareStacksPlotting(canvas);
+  root::utils::StackSystematics systematics;
+  if (utils::get_with_default(options, "plot-syst-unc", true) &&
+      samples_.contains(Sample::Type::background))
+    systematics = root::utils::combine_systematics(
+        samples_.at(Sample::Type::background));
+  const auto with_breakdown =
+      !systematics.empty() &&
+      utils::get_with_default(options, "syst-breakdown", true);
+
+  // two extra legend entries for the stat and stat+syst uncertainty bands
+  prepareStacksPlotting(canvas, systematics.empty() ? 0 : 2);
+  if (with_breakdown) // lower pad for the per-source relative uncertainties
+    canvas.split(0.3);
+  canvas.mainPad()->cd();
 
   if (samples_.contains(Sample::Type::background))
     for (const auto &sample : samples_.at(Sample::Type::background).samples()) {
@@ -141,7 +154,7 @@ void plotItPlotter::plot(std::string_view output_file,
   // particularise for lin/log axes, and final draw
   for (const auto &x_scaling : utils::get_with_default(
            options, "x-axis-scale-types", std::vector{"lin"s})) {
-    canvas.SetLogx(x_scaling == "log");
+    canvas.setLogx(x_scaling == "log");
     const auto y_scalings = utils::get_with_default(
         options, "y-axis-scale-types", std::vector{"lin"s});
     for (const auto &y_scaling : y_scalings) {
@@ -150,11 +163,11 @@ void plotItPlotter::plot(std::string_view output_file,
           histogram_ref->SetMinimum(min_value * 0.1);
         if (max_value > std::numeric_limits<double>::min())
           histogram_ref->SetMaximum(max_value * 1.e3);
-        canvas.SetLogy(true);
+        canvas.setLogy(true);
       } else { // linear y-axis
         histogram_ref->SetMinimum(min_value);
         histogram_ref->SetMaximum(max_value * 1.4);
-        canvas.SetLogy(false);
+        canvas.setLogy(false);
       }
       // histogram_ref->GetYaxis()->SetRangeUser(min_value, max_value * 1.2);
 
@@ -171,9 +184,10 @@ void plotItPlotter::plot(std::string_view output_file,
   }
 }
 
-void plotItPlotter::prepareStacksPlotting(ROOTCanvas &canvas) const {
+void plotItPlotter::prepareStacksPlotting(
+    ROOTCanvas &canvas, size_t num_extra_legend_entries) const {
   canvas.cd();
-  size_t num_drawable_histograms = 0;
+  size_t num_drawable_histograms = num_extra_legend_entries;
   for (const auto &[sample_type, stack] : samples_)
     if (sample_type == Sample::Type::background ||
         sample_type == Sample::Type::signal)

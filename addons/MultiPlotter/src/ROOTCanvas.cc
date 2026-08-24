@@ -47,7 +47,7 @@ ROOTCanvas::ROOTCanvas(const py::dict &options)
   if (options.contains("margin_top"))
     SetTopMargin(py::cast<double>(options["margin_top"]));
   if (options.contains("margin_bottom"))
-    SetTopMargin(py::cast<double>(options["margin_bottom"]));
+    SetBottomMargin(py::cast<double>(options["margin_bottom"]));
   cd();
 }
 
@@ -91,13 +91,60 @@ TLegend &ROOTCanvas::addLegend(float x1, float y1, float x2, float y2) {
   return *legend_;
 }
 
+void ROOTCanvas::split(float lower_fraction) {
+  if (upper_pad_) // already split
+    return;
+  lower_fraction_ = lower_fraction;
+  cd();
+  upper_pad_ =
+      new TPad((GetName() + "_upper"s).data(), "", 0., lower_fraction, 1., 1.);
+  lower_pad_ =
+      new TPad((GetName() + "_lower"s).data(), "", 0., 0., 1., lower_fraction);
+  for (auto *pad : {upper_pad_, lower_pad_}) { // inherit the canvas attributes
+    pad->SetFillStyle(GetFillStyle());
+    pad->SetFrameFillStyle(GetFrameFillStyle());
+    pad->SetTicks(1, 1);
+    pad->SetLeftMargin(GetLeftMargin());
+    pad->SetRightMargin(GetRightMargin());
+  }
+  upper_pad_->SetTopMargin(GetTopMargin());
+  upper_pad_->SetBottomMargin(0.02);
+  lower_pad_->SetTopMargin(0.04);
+  // keep the same absolute room for the x-axis labels and title
+  lower_pad_->SetBottomMargin(
+      std::min(0.45f, GetBottomMargin() / lower_fraction));
+  for (auto *pad : {upper_pad_, lower_pad_}) {
+    cd(); // sub-pads are attached to the canvas
+    pad->Draw();
+  }
+  upper_pad_->cd();
+}
+
+void ROOTCanvas::setLogx(bool log) {
+  SetLogx(log);
+  for (auto *pad : {upper_pad_, lower_pad_})
+    if (pad)
+      pad->SetLogx(log);
+}
+
+void ROOTCanvas::setLogy(bool log) { mainPad()->SetLogy(log); }
+
 void ROOTCanvas::save(const std::vector<std::string> &formats,
                       std::string_view alternative_name) {
-  RedrawAxis();
-  GetFrame()->SetBorderSize(12);
+  auto *main_pad = mainPad();
+  if (lower_pad_) {
+    lower_pad_->cd();
+    lower_pad_->RedrawAxis();
+    lower_pad_->Modified();
+  }
+  main_pad->cd();
+  main_pad->RedrawAxis();
+  main_pad->GetFrame()->SetBorderSize(12);
+  main_pad->Modified();
   Modified();
   Update();
 
+  main_pad->cd();  // legend and text boxes belong to the main pad
   if (legend_)
     legend_->Draw();
   for (const auto &text_box : text_boxes_) // add registered text boxes

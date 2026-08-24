@@ -47,8 +47,23 @@ public:
   }
   TLatex &addTextBox(float x1, float y1, const std::vector<std::string> &);
   TLegend &addLegend(float x1, float y1, float x2, float y2);
+  TLegend *legend() { return legend_.get(); }
+
+  /// Split the canvas into main/secondary pads
+  void split(float lower_fraction = 0.3);
+  /// Pad hosting the distributions (the canvas itself if not split)
+  TPad *mainPad() { return upper_pad_ ? upper_pad_ : this; }
+  /// Secondary pad (null if the canvas was not split)
+  TPad *lowerPad() { return lower_pad_; }
+  /// Fraction of the canvas height covered by the secondary pad
+  float lowerFraction() const { return lower_fraction_; }
+  void setLogx(bool); ///< x-axis scaling for all pads
+  void setLogy(bool); ///< y-axis scaling for the main pad only
 
 private:
+  TPad *upper_pad_{nullptr};
+  TPad *lower_pad_{nullptr};
+  float lower_fraction_{0.f};
   std::unique_ptr<TLegend> legend_;
   std::vector<std::unique_ptr<TObject>> objects_;
   std::vector<std::unique_ptr<TLatex>> text_boxes_;
