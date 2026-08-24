@@ -22,15 +22,26 @@
 
 using namespace mplt;
 
+namespace {
+/// Clone a histogram, and detach it from any ROOT directory
+TH1 *detached_clone(const TH1 *histogram) {
+  auto *clone = static_cast<TH1 *>(histogram->Clone());
+  clone->SetDirectory(nullptr);
+  return clone;
+}
+} // namespace
+
 SystematicsSet::SystematicsSet(const TH1 *nominal)
-    : true_nominal_shape_{static_cast<TH1 *>(nominal->Clone())},
-      true_up_shape_{static_cast<TH1 *>(nominal->Clone())},
-      true_down_shape_{static_cast<TH1 *>(nominal->Clone())} {}
+    : true_nominal_shape_{detached_clone(nominal)},
+      true_up_shape_{detached_clone(nominal)},
+      true_down_shape_{detached_clone(nominal)} {
+  reset(); // start from the nominal shape for all variations
+}
 
 void SystematicsSet::reset() {
-  nominal_shape.reset(static_cast<TH1 *>(true_nominal_shape_->Clone()));
-  up_shape.reset(static_cast<TH1 *>(true_up_shape_->Clone()));
-  down_shape.reset(static_cast<TH1 *>(true_down_shape_->Clone()));
+  nominal_shape.reset(detached_clone(true_nominal_shape_.get()));
+  up_shape.reset(detached_clone(true_up_shape_.get()));
+  down_shape.reset(detached_clone(true_down_shape_.get()));
 }
 
 void SystematicsSet::scale(float factor) {
