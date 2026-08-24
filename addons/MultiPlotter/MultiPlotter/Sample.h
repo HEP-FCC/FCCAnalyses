@@ -49,7 +49,7 @@ struct Sample {
 
 class Stack {
 public:
-  Stack();
+  Stack() = default;
 
   Sample &add(Sample &);
 
@@ -58,13 +58,8 @@ public:
   /// Order a given samples category according to a sorting strategy
   void sort(SortingType, bool reverse = false);
 
-  const std::shared_ptr<THStack> &stack() const;
-  const std::shared_ptr<TH1> &merged() const;
-
 private:
   std::vector<Sample> samples_;
-  std::shared_ptr<TH1> hist_merged_{nullptr};
-  std::shared_ptr<THStack> stack_{nullptr};
 };
 } // namespace mplt
 

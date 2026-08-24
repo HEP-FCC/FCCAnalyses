@@ -24,6 +24,7 @@
 #include <iostream> //TODO: replace with multithreading-compatible equivalent
 
 using namespace mplt;
+using namespace std::string_literals;
 namespace py = pybind11;
 
 void Sample::addSystematics(std::string_view syst_name,
@@ -47,20 +48,9 @@ void Sample::addSystematics(std::string_view syst_name,
   const auto up_shape = set.shapeUp(), down_shape = set.shapeDown();
 }
 
-Stack::Stack() : stack_{std::make_shared<THStack>()} {}
+//-----------------------------------------------------------------------------
 
-Sample &Stack::add(Sample &sample) {
-  auto &added_sample = samples_.emplace_back(sample);
-  if (added_sample.histogram) { // only stack if a histogram is present
-    if (!hist_merged_) {
-      hist_merged_.reset(static_cast<TH1 *>(added_sample.histogram->Clone()));
-      hist_merged_->SetDirectory(nullptr); // keep it for ourselves
-    } else
-      hist_merged_->Add(added_sample.histogram);
-    stack_->Add(added_sample.histogram, added_sample.name.data());
-  }
-  return added_sample;
-}
+Sample &Stack::add(Sample &sample) { return samples_.emplace_back(sample); }
 
 void Stack::sort(SortingType sorting_type, bool reverse) {
   if (sorting_type == SortingType::none)
@@ -80,7 +70,3 @@ void Stack::sort(SortingType sorting_type, bool reverse) {
     }
   });
 }
-
-const std::shared_ptr<THStack> &Stack::stack() const { return stack_; }
-
-const std::shared_ptr<TH1> &Stack::merged() const { return hist_merged_; }

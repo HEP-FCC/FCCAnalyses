@@ -16,7 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "MultiPlotter/ROOTCanvas.h"
+#include "MultiPlotter/ROOTUtils.h"
+#include "MultiPlotter/Sample.h"
 #include <TH1.h>
+#include <THStack.h>
 #include <cmath>
 
 using namespace std::string_literals;
@@ -87,5 +91,37 @@ void add_underflow_overflow_bins(TH1 *histogram,
     histogram->SetBinError(last_bin,
                            std::sqrt(overflow_sumw2 + last_bin_sumw2));
   }
+}
+
+void draw_samples_stack(ROOTCanvas &canvas, const Stack &stack, bool stacked,
+                        Style_t fill_style) {
+  auto *root_stack = canvas.make<THStack>();
+  for (const auto &sample : stack.samples()) {
+    if (sample.histogram) // only stack if a histogram is present
+      root_stack->Add(sample.histogram, sample.name.data());
+  }
+  if (auto *hist_merged = canvas.make<TH1D>(
+          *dynamic_cast<TH1D *>(merge_samples(stack).release()));
+      hist_merged) {
+    hist_merged->SetLineWidth(0);
+    hist_merged->SetFillStyle(fill_style);
+    hist_merged->SetFillColor(kGray + 1);
+    hist_merged->Draw("e2,same");
+  }
+  root_stack->Draw(("hist,same,"s + (stacked ? ""s : "nostack"s)).data());
+}
+
+std::unique_ptr<TH1> merge_samples(const Stack &stack) {
+  std::unique_ptr<TH1> hist_merged;
+  for (const auto &sample : stack.samples()) {
+    if (sample.histogram) { // only stack if a histogram is present
+      if (!hist_merged) {
+        hist_merged.reset(dynamic_cast<TH1D *>(sample.histogram->Clone()));
+        hist_merged->SetDirectory(nullptr); // keep it for ourselves
+      } else
+        hist_merged->Add(sample.histogram);
+    }
+  }
+  return hist_merged;
 }
 } // namespace mplt::root::utils

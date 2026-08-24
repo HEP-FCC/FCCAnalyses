@@ -22,6 +22,7 @@
 #include <TGaxis.h>
 #include <TLatex.h>
 #include <TLegend.h>
+#include <iostream>
 
 using namespace mplt;
 using namespace std::string_literals;

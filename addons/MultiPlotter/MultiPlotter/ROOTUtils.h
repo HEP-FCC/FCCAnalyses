@@ -19,6 +19,10 @@
 #include <string_view>
 
 class TH1;
+namespace mplt {
+class ROOTCanvas;
+class Stack;
+} // namespace mplt
 
 namespace mplt::root::utils {
 /// Adjust x- and y-axis labels if a physical unit is specified
@@ -27,4 +31,10 @@ void adjust_labels(TH1 *histogram, std::string_view xaxis_unit);
 void add_underflow_overflow_bins(
     TH1 *histogram, const std::pair<double, double> &range = std::pair(0., 0.),
     bool propagate_unc = true);
+/// Draw a stack of multiple samples
+void draw_samples_stack(ROOTCanvas &, const Stack &, bool stacked,
+                        Style_t fill_style);
+/// Merge all histograms in a sample into one single histogram
+/// (with error propagation)
+std::unique_ptr<TH1> merge_samples(const Stack &);
 } // namespace mplt::root::utils
