@@ -82,9 +82,9 @@ std::vector<float> SystematicsSet::binnedMaximumUncertainty() const {
   return syst_unc;
 }
 
-std::vector<std::pair<float, float>>
+std::vector<SystematicsSet::Values>
 SystematicsSet::binnedAsymmetricUncertainties() const {
-  std::vector<std::pair<float, float>> syst_unc;
+  std::vector<Values> syst_unc;
   syst_unc.reserve(nominal_shape->GetNbinsX());
   for (int i = 1; i <= nominal_shape->GetNbinsX(); ++i)
     syst_unc.emplace_back(std::make_pair(
@@ -92,6 +92,16 @@ SystematicsSet::binnedAsymmetricUncertainties() const {
         std::fabs(nominal_shape->GetBinContent(i) -
                   down_shape->GetBinContent(i))));
   return syst_unc;
+}
+
+std::vector<SystematicsSet::Values> SystematicsSet::binnedShifts() const {
+  std::vector<Values> shifts;
+  shifts.reserve(nominal_shape->GetNbinsX());
+  for (int i = 1; i <= nominal_shape->GetNbinsX(); ++i)
+    shifts.emplace_back(
+        up_shape->GetBinContent(i) - nominal_shape->GetBinContent(i),
+        down_shape->GetBinContent(i) - nominal_shape->GetBinContent(i));
+  return shifts;
 }
 
 float SystematicsSet::totalUncertainty() const {

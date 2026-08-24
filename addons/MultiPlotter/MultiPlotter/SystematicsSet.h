@@ -38,13 +38,14 @@ public:
   void scale(float);  ///< rescale all shapes by a given factor
   void rebin(size_t); ///< rebin all shapes histograms by a given factor
 
-  /// Compute the maximum (between upper and lower) uncertainty for each bin
+  using Values = std::pair<float, float>;
+
+  /// Maximum (between upper and lower) uncertainty for each bin
   std::vector<float> binnedMaximumUncertainty() const;
-  /// Compute the independent upper and lower uncertainty for each bin
-  std::vector<std::pair<float, float>> binnedAsymmetricUncertainties() const;
-  /// Compute the total uncertainty from a binned shape, assuming all shape
-  /// objects are TH1-derivatives
-  float totalUncertainty() const;
+  /// Independent upper/lower uncertainty for each bin
+  std::vector<Values> binnedAsymmetricUncertainties() const;
+  std::vector<Values> binnedShifts() const; ///< Signed, binned shifts
+  float totalUncertainty() const; ///< Total uncertainty from binned shape
 
   std::unique_ptr<TH1> shapeUp() const;
   std::unique_ptr<TH1> shapeDown() const;

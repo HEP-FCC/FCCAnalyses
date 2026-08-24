@@ -17,7 +17,6 @@
  */
 
 #include "MultiPlotter/Sample.h"
-#include "MultiPlotter/SystematicsSet.h"
 
 #include <TH1.h>
 #include <THStack.h>
@@ -35,17 +34,16 @@ void Sample::addSystematics(std::string_view syst_name,
   if (systematics.contains(std::string{syst_name}))
     std::cout << "Warning: systematics with name '" << syst_name
               << "' was already booked/computed. Clearing any recorded value "
-                 "by default.";
-  auto &systematics_values = systematics[std::string{syst_name}];
-  systematics_values.clear(); // clear any previous computation
-  systematics_values.resize(histogram->GetNbinsX());
+                 "by default."
+              << std::endl;
 
   const auto systematics_builder =
       Systematics::build(syst_type, syst_name, params);
 
   SystematicsSet set(histogram);
   systematics_builder->apply(set);
-  const auto up_shape = set.shapeUp(), down_shape = set.shapeDown();
+  // any previous computation is overwritten
+  systematics[std::string{syst_name}] = set.binnedShifts();
 }
 
 //-----------------------------------------------------------------------------
