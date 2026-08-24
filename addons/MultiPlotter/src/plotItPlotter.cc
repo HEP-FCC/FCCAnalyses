@@ -22,6 +22,7 @@
 #include "MultiPlotter/plotItPlotter.h"
 #include <TH1.h>
 #include <THStack.h>
+#include <TLatex.h>
 #include <TLegend.h>
 #include <filesystem>
 #include <iostream> //FIXME
@@ -55,6 +56,8 @@ void plotItPlotter::plot(std::string_view output_file,
                   plot_name += '_' + yaxis_scaling + 'y'*/
   options["name"] = std::string{output_file};
   ROOTCanvas canvas(options);
+  for (const auto &[coordinates, text] : text_boxes_)
+    canvas.addTextBox(coordinates.first, coordinates.second, text);
 
   const auto xaxis_unit = utils::get_with_default(options, "unit", ""s);
 
@@ -78,22 +81,23 @@ void plotItPlotter::plot(std::string_view output_file,
       if (rebinning_factor != 1.) // FIXME float comparisons
         histogram->Rebin(rebinning_factor);
     }
-  std::unique_ptr<TH1> histogram_data{nullptr};
-  auto stack_backgrounds = std::make_unique<THStack>("hstackbkg", ""),
-       stack_signals = std::make_unique<THStack>("hstacksig", "");
-
-  std::unique_ptr<TH1> dummy{nullptr};
+  std::unique_ptr<TH1> histogram_data{nullptr}, histogram_ref{nullptr};
   for (const auto &samples_list : samples_ | std::ranges::views::values) {
-    if (dummy)
+    if (histogram_ref)
       break;
-    if (samples_list.merged())
-      dummy.reset(dynamic_cast<TH1 *>(samples_list.merged()->Clone()));
+    if (auto merged = root::utils::merge_samples(samples_list); merged)
+      histogram_ref = std::move(merged);
   }
-  if (!dummy)
-    return;                     // TODO: log
-  dummy->SetDirectory(nullptr); // kill garbage collector
-  dummy->Clear();               // reset bins content
-  root::utils::adjust_labels(dummy.get(), xaxis_unit);
+  if (!histogram_ref)
+    throw std::runtime_error(
+        "Failed to initialise a reference histogram for plot with name '"s +
+        canvas.GetName() + "'."s);
+  histogram_ref->SetDirectory(nullptr); // kill garbage collector
+  histogram_ref->Clear();               // reset bins content
+  histogram_ref->SetLineWidth(0);
+  histogram_ref->SetFillStyle(0);
+  histogram_ref->Draw("hist");
+  root::utils::adjust_labels(histogram_ref.get(), xaxis_unit);
 
   if (samples_.contains(Sample::Type::data)) {
     for (const auto &sample : samples_.at(Sample::Type::data).samples()) {
@@ -109,51 +113,50 @@ void plotItPlotter::plot(std::string_view output_file,
         histogram_data->Add(dynamic_cast<TH1 *>(sample.histogram));
     }
   }
-  dummy->Draw("hist");
   auto min_value = std::numeric_limits<double>::max(),
        max_value = std::numeric_limits<double>::min();
   if (samples_.contains(Sample::Type::background)) {
     auto &stack = samples_.at(Sample::Type::background);
-    stack.stack()->Draw("hist same");
-    min_value = std::min(min_value, stack.merged()->GetMinimum());
-    max_value = std::max(max_value, stack.merged()->GetMaximum());
+    root::utils::draw_samples_stack(canvas, stack, true, 3004);
+    const auto merged = root::utils::merge_samples(stack);
+    min_value = std::min(min_value, merged->GetMinimum());
+    max_value = std::max(max_value, merged->GetMaximum());
   }
   if (samples_.contains(Sample::Type::signal)) {
     auto &stack = samples_.at(Sample::Type::signal);
-    stack.stack()->Draw("hist same nostack");
-    min_value = std::min(min_value, stack.merged()->GetMinimum());
-    max_value = std::max(max_value, stack.merged()->GetMaximum());
+    root::utils::draw_samples_stack(canvas, stack, false, 3005);
+    const auto merged = root::utils::merge_samples(stack);
+    min_value = std::min(min_value, merged->GetMinimum());
+    max_value = std::max(max_value, merged->GetMaximum());
   }
-  std::cout << min_value << ":" << max_value << std::endl;
 
   const auto formats = utils::get_with_default(options, "output-file-types",
                                                std::vector{"pdf"s});
+  auto &experiment_label = canvas.addTextBox(
+      0.9, 0.94, {"#it{"s + std::string{experiment_name_} + "}"s});
+  experiment_label.SetTextAlign(31);
+  experiment_label.SetTextSize(0.04);
+  canvas.addTextBox(0.18, 0.82, extra_labels_);
+
   // particularise for lin/log axes, and final draw
-  for (const auto &x_scaling :
-       utils::get_with_default(options, "x-axis-scale-types",
-                               std::vector{"lin"s})) { // lin-log x-scale
+  for (const auto &x_scaling : utils::get_with_default(
+           options, "x-axis-scale-types", std::vector{"lin"s})) {
     canvas.SetLogx(x_scaling == "log");
     const auto y_scalings = utils::get_with_default(
         options, "y-axis-scale-types", std::vector{"lin"s});
     for (const auto &y_scaling : y_scalings) {
       if (y_scaling == "log") { // logarithmic y-axis
         if (min_value > 0.)
-          dummy->SetMinimum(min_value * 0.1);
+          histogram_ref->SetMinimum(min_value * 0.1);
         if (max_value > std::numeric_limits<double>::min())
-          dummy->SetMaximum(max_value * 1.e3);
+          histogram_ref->SetMaximum(max_value * 1.e3);
         canvas.SetLogy(true);
       } else { // linear y-axis
-        dummy->SetMinimum(min_value);
-        dummy->SetMaximum(max_value * 1.4);
+        histogram_ref->SetMinimum(min_value);
+        histogram_ref->SetMaximum(max_value * 1.4);
         canvas.SetLogy(false);
       }
-      // dummy->GetYaxis()->SetRangeUser(min_value, max_value * 1.2);
-
-      auto &experiment_label = canvas.addTextBox(
-          0.9, 0.94, {"#it{"s + std::string{experiment_name_} + "}"s});
-      experiment_label.SetTextAlign(31);
-      experiment_label.SetTextSize(0.04);
-      canvas.addTextBox(0.18, 0.82, extra_labels_);
+      // histogram_ref->GetYaxis()->SetRangeUser(min_value, max_value * 1.2);
 
       std::ostringstream final_output_file;
       final_output_file << output_file;
@@ -168,31 +171,28 @@ void plotItPlotter::plot(std::string_view output_file,
   }
 }
 
-void plotItPlotter::prepareStacksPlotting(TCanvas &canvas) const {
+void plotItPlotter::prepareStacksPlotting(ROOTCanvas &canvas) const {
   canvas.cd();
   size_t num_drawable_histograms = 0;
   for (const auto &[sample_type, stack] : samples_)
     if (sample_type == Sample::Type::background ||
         sample_type == Sample::Type::signal)
       num_drawable_histograms += stack.samples().size();
-  /*auto *legend = canvas.BuildLegend(0.68, 0.86 - 0.04 *
-  num_drawable_histograms, 0.96, 0.88);
-  // legend->Clear();*/
-  auto *legend =
-      new TLegend(0.68, 0.86 - 0.04 * num_drawable_histograms, 0.96, 0.88);
+  auto &legend =
+      canvas.addLegend(0.68, 0.86 - 0.04 * num_drawable_histograms, 0.96, 0.88);
   for (const auto &[sample_type, stack] : samples_) { // set colours
     int i = 0;
     for (const auto &sample : stack.samples()) {
       if (auto *histogram = dynamic_cast<TH1 *>(sample.histogram); histogram) {
         histogram->SetLineColor(sample.colour);
-        histogram->SetLineWidth(2);
+        histogram->SetLineWidth(3);
         if (sample_type == Sample::Type::signal) {
           histogram->SetLineStyle(i + 2); // TODO: list of fallback line styles
-          legend->AddEntry(histogram, sample.name.data(), "l");
+          legend.AddEntry(histogram, sample.name.data(), "l");
           ++i;
         } else if (sample_type == Sample::Type::background) {
           histogram->SetFillColorAlpha(sample.colour, 0.5);
-          legend->AddEntry(histogram, sample.name.data(), "lf");
+          legend.AddEntry(histogram, sample.name.data(), "lf");
         }
       }
     }

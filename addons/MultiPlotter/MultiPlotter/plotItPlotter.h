@@ -19,12 +19,13 @@
 #ifndef MultiPlotter_plotItPlotter_h
 #define MultiPlotter_plotItPlotter_h
 
-#include "MultiPlotter.h"
-#include <TLatex.h>
+#include "MultiPlotter/MultiPlotter.h"
 #include <pybind11/pybind11.h>
 
 // forward definitions
-class TCanvas;
+namespace mplt {
+class ROOTCanvas;
+} // namespace mplt
 
 namespace mplt {
 /// plotIt-like plotting utility object
@@ -40,7 +41,7 @@ public:
 
 private:
   /// prepare per-stack histograms before plotting
-  void prepareStacksPlotting(TCanvas &) const;
+  void prepareStacksPlotting(ROOTCanvas &) const;
 };
 } // namespace mplt
 

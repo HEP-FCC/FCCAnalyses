@@ -21,6 +21,7 @@
 #include <TFrame.h>
 #include <TGaxis.h>
 #include <TLatex.h>
+#include <TLegend.h>
 
 using namespace mplt;
 using namespace std::string_literals;
@@ -77,14 +78,28 @@ TLatex &ROOTCanvas::addTextBox(float x1, float y1,
   return *box;
 }
 
+TLegend &ROOTCanvas::addLegend(float x1, float y1, float x2, float y2) {
+  if (legend_) {
+    std::cout << "Replacing pre-existing legend for canvas with name '"
+              << GetName() << "'.";
+    legend_.reset();
+  }
+  legend_ = std::make_unique<TLegend>(x1, y1, x2, y2);
+  legend_->SetLineWidth(0);
+  legend_->SetFillStyle(0);
+  return *legend_;
+}
+
 void ROOTCanvas::save(const std::vector<std::string> &formats,
                       std::string_view alternative_name) {
   RedrawAxis();
   GetFrame()->SetBorderSize(12);
   Modified();
   Update();
-  // add registered text boxes
-  for (const auto &text_box : text_boxes_)
+
+  if (legend_)
+    legend_->Draw();
+  for (const auto &text_box : text_boxes_) // add registered text boxes
     text_box->Draw("same");
   for (const auto &format : formats) {
     const auto filename =

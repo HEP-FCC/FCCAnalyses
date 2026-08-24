@@ -22,6 +22,7 @@
 #include <TCanvas.h>
 
 class TLatex;
+class TLegend;
 namespace pybind11 {
 class dict;
 } // namespace pybind11
@@ -40,12 +41,15 @@ public:
 
   // TODO: use concepts to ensure T derives from a TObject
   template <typename T, typename... Args> T *make(Args &&...args) {
-    auto *&object = objects_.emplace_back(new T(std::forward<Args>(args)...));
+    const std::unique_ptr<TObject> &object =
+        objects_.emplace_back(new T(std::forward<Args>(args)...));
     return dynamic_cast<T *>(object.get());
   }
   TLatex &addTextBox(float x1, float y1, const std::vector<std::string> &);
+  TLegend &addLegend(float x1, float y1, float x2, float y2);
 
 private:
+  std::unique_ptr<TLegend> legend_;
   std::vector<std::unique_ptr<TObject>> objects_;
   std::vector<std::unique_ptr<TLatex>> text_boxes_;
 };

@@ -36,8 +36,7 @@ public:
 
   /// Add a visual text box of a given size at a given position into the canvas
   /// (units: normalised to 1 ; 0=leftmost/bottommost, 1=rightmost/topmost)
-  virtual void addTextBox(float x1, float y1,
-                          const std::vector<std::string> &) = 0;
+  virtual void addTextBox(float x1, float y1, const std::vector<std::string> &);
   /// Core method: perform the plotting operation using all samples, with a
   /// given set of user-defined options
   virtual void plot(std::string_view output_file, std::string_view output_dir,
@@ -49,6 +48,9 @@ protected:
   const std::string experiment_name_;
   const std::vector<std::string> extra_labels_;
   std::unordered_map<Sample::Type, Stack> samples_;
+
+  using BoxCoordinates = std::pair<float, float>;
+  std::vector<std::pair<BoxCoordinates, std::vector<std::string>>> text_boxes_;
 };
 } // namespace mplt
 

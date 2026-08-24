@@ -37,3 +37,8 @@ std::string MultiPlotter::yieldsTable() const {
   //  for (LaTeX, Markdown, ...) output type
   return table.str();
 }
+
+void MultiPlotter::addTextBox(float x1, float y1,
+                              const std::vector<std::string> &text) {
+  text_boxes_.emplace_back(std::make_pair(std::make_pair(x1, y1), text));
+}
