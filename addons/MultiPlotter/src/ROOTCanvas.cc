@@ -144,11 +144,14 @@ void ROOTCanvas::save(const std::vector<std::string> &formats,
   Modified();
   Update();
 
-  main_pad->cd();  // legend and text boxes belong to the main pad
-  if (legend_)
-    legend_->Draw();
-  for (const auto &text_box : text_boxes_) // add registered text boxes
-    text_box->Draw("same");
+  if (!decorated_) { // only once, the canvas may be saved several times
+    main_pad->cd();  // legend and text boxes belong to the main pad
+    if (legend_)
+      legend_->Draw();
+    for (const auto &text_box : text_boxes_) // add registered text boxes
+      text_box->Draw("same");
+    decorated_ = true;
+  }
   for (const auto &format : formats) {
     const auto filename =
         (alternative_name.empty() ? std::string{GetName()}

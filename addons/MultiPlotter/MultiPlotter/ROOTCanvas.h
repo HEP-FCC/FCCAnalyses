@@ -64,6 +64,7 @@ private:
   TPad *upper_pad_{nullptr};
   TPad *lower_pad_{nullptr};
   float lower_fraction_{0.f};
+  bool decorated_{false}; ///< legend and text boxes already drawn?
   std::unique_ptr<TLegend> legend_;
   std::vector<std::unique_ptr<TObject>> objects_;
   std::vector<std::unique_ptr<TLatex>> text_boxes_;
