@@ -18,6 +18,7 @@
 
 #include "MultiPlotter/Systematics.h"
 #include "MultiPlotter/SystematicsSet.h"
+#include "MultiPlotter/Utils.h"
 #include <TFile.h>
 #include <TH1.h>
 #include <pybind11/pybind11.h>
@@ -73,18 +74,35 @@ private:
 class ShapeSystematics : public Systematics {
 public:
   explicit ShapeSystematics(std::string_view _name, const TH1 *up_shape,
-                            const TH1 *down_shape)
+                            const TH1 *down_shape, float scale, int rebin)
       : Systematics(SystematicsType::shape, _name),
-        up_shape_{static_cast<TH1 *>(up_shape->Clone())},
-        down_shape_{static_cast<TH1 *>(down_shape->Clone())} {}
+        up_shape_{prepare(up_shape, scale, rebin)},
+        down_shape_{prepare(down_shape, scale, rebin)} {}
 
   void apply(SystematicsSet &set) const override {
-    set.up_shape.reset(static_cast<TH1 *>(up_shape_->Clone()));
-    set.down_shape.reset(static_cast<TH1 *>(down_shape_->Clone()));
-    // TODO: verify the validity/scaling/...
+    for (const auto *shape : {up_shape_, down_shape_})
+      if (shape->GetNbinsX() != set.nominal_shape->GetNbinsX())
+        throw std::runtime_error(
+            "Shape systematics with name '" + name + "' has " +
+            std::to_string(shape->GetNbinsX()) +
+            " bins, while the nominal distribution has " +
+            std::to_string(set.nominal_shape->GetNbinsX()) +
+            ": check the 'scale' and 'rebin' parameters.");
+    set.up_shape.reset(prepare(up_shape_));
+    set.down_shape.reset(prepare(down_shape_));
   }
 
 private:
+  static TH1 *prepare(const TH1 *shape, float scale = 1.f, int rebin = 1) {
+    auto *clone = static_cast<TH1 *>(shape->Clone());
+    clone->SetDirectory(nullptr);
+    if (scale != 1.f)
+      clone->Scale(scale);
+    if (rebin > 1)
+      clone->Rebin(rebin);
+    return clone;
+  }
+
   const TH1 *up_shape_;
   const TH1 *down_shape_;
 };
@@ -99,9 +117,9 @@ std::unique_ptr<Systematics> Systematics::build(SystematicsType syst_type,
   case SystematicsType::log_normal:
     return std::make_unique<LogNormalSystematics>(
         name, py::cast<float>(options["prior"]),
-        py::cast<float>(options["postFit"]),
-        py::cast<float>(options["postFitErrorUp"]),
-        py::cast<float>(options["postFitErrorDown"]));
+        utils::get_with_default(options, "postFit", 0.f),
+        utils::get_with_default(options, "postFitErrorUp", 1.f),
+        utils::get_with_default(options, "postFitErrorDown", 1.f));
   case SystematicsType::shape: {
     std::unique_ptr<TFile> input_file;
     const auto input_filename = py::cast<std::string>(options["inputFilename"]);
@@ -112,11 +130,19 @@ std::unique_ptr<Systematics> Systematics::build(SystematicsType syst_type,
           "Failed to open the shapes file for systematics with name '" +
           std::string{name} + "': check your input with filename='" +
           input_filename + "'.");
+    const auto up_name = py::cast<std::string>(options["shapeUp"]),
+               down_name = py::cast<std::string>(options["shapeDown"]);
+    const auto *up_shape = input_file->Get<TH1>(up_name.data()),
+               *down_shape = input_file->Get<TH1>(down_name.data());
+    if (!up_shape || !down_shape)
+      throw std::runtime_error(
+          "Failed to retrieve the shapes '" + up_name + "' and/or '" +
+          down_name + "' for systematics with name '" + std::string{name} +
+          "' from file '" + input_filename + "'.");
     return std::make_unique<ShapeSystematics>(
-        name,
-        input_file->Get<TH1>(py::cast<std::string>(options["shapeUp"]).data()),
-        input_file->Get<TH1>(
-            py::cast<std::string>(options["shapeDown"]).data()));
+        name, up_shape, down_shape,
+        utils::get_with_default(options, "scale", 1.f),
+        utils::get_with_default(options, "rebin", 1));
   }
   }
   throw std::runtime_error(

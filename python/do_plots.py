@@ -280,6 +280,57 @@ def mapHistosFromHistmaker(config: dict[str, Any],
 
 
 # _____________________________________________________________________________
+def book_systematics(config: dict[str, Any], sample, sample_name: str,
+                     var: str, sel: str) -> None:
+    '''Book one source of systematics for a sample.'''
+    from ROOT import mplt
+
+    syst_types = {'constant': mplt.SystematicsType.constant,
+                  'lognormal': mplt.SystematicsType.log_normal,
+                  'shape': mplt.SystematicsType.shape}
+    def normalise_systematics(syst_name: str, syst_def) -> dict[str, Any]:
+        if isinstance(syst_def, dict):
+            return syst_def
+        if isinstance(syst_def, (tuple, list)) and len(syst_def) in (2, 3) and \
+                isinstance(syst_def[0], str):
+            normalised: dict[str, Any] = {'type': syst_def[0]}
+            if isinstance(syst_def[1], dict):
+                normalised.update(syst_def[1])
+            elif isinstance(syst_def[1], (int, float)):
+                key = 'prior' if syst_def[0] == 'lognormal' else 'value'
+                normalised[key] = float(syst_def[1])
+            else:
+                normalised = {}
+            if normalised:
+                if len(syst_def) == 3:
+                    normalised['samples'] = list(syst_def[2])
+                return normalised
+        LOGGER.error('Systematics "%s" has an unsupported definition: %r\n'
+                     'Expected a dictionary such as '
+                     '{"type": "constant", "value": 1.01}\nAborting...',
+                     syst_name, syst_def)
+        sys.exit(3)
+    for syst_name, syst_def in config.get('systematics', {}).items():
+        syst_def = normalise_systematics(syst_name, syst_def)
+        if 'samples' in syst_def and sample_name not in syst_def['samples']:
+            continue
+        if syst_def.get('type') not in syst_types:
+            LOGGER.error('Systematics "%s" has an invalid type "%s"! Supported '
+                         'types: %s\nAborting...', syst_name,
+                         syst_def.get('type'), ', '.join(syst_types))
+            sys.exit(3)
+        params = {key: value for key, value in syst_def.items()
+                  if key not in ('type', 'samples')}
+        # shapes may be specific to a sample/variable/selection
+        for key in ('inputFilename', 'shapeUp', 'shapeDown'):
+            if key in params:
+                params[key] = params[key].format(sample=sample_name,
+                                                 variable=var,
+                                                 selection=sel)
+        sample.addSystematics(syst_name, syst_types[syst_def['type']], params)
+
+
+# _____________________________________________________________________________
 def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsignal, hbackgrounds):
     from ROOT.mplt import Sample as smp, plotItPlotter as plotit
     from os.path import join
@@ -298,6 +349,7 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
         sample.histogram = hsignal[hsig][0]
         sample.weight = 1.  #TODO
         sample.colour = script_module.colors[hsig]
+        book_systematics(config, sample, hsig, var, sel)
         plotter.addSample(sample)
     for hbkg in hbackgrounds:
         sample = smp.Sample()
@@ -306,6 +358,7 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
         sample.histogram = hbackgrounds[hbkg][0]
         sample.weight = 1.  #TODO
         sample.colour = script_module.colors[hbkg]
+        book_systematics(config, sample, hbkg, var, sel)
         plotter.addSample(sample)
     print(config, script_module)
     plotter.plot(var, join(script_module.outdir, sel), config)
@@ -1106,6 +1159,12 @@ def run(args):
     config['plot-stat-unc'] = False
     if hasattr(script_module, 'plotStatUnc'):
         config['plot-stat-unc'] = script_module.plotStatUnc
+
+    # Sources of systematic uncertainty, and their display
+    config['systematics'] = getattr(script_module, 'systematics', {})
+    config['plot-syst-unc'] = getattr(script_module, 'plotSystUnc', True)
+    config['syst-breakdown'] = getattr(script_module, 'systBreakdown', True)
+    config['syst-max-sources'] = getattr(script_module, 'systMaxSources', 6)
 
     config['legend-text-size'] = 0.035
     if hasattr(script_module, 'legendTextSize'):
