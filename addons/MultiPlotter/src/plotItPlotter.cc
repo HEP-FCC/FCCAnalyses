@@ -20,10 +20,11 @@
 #include "MultiPlotter/ROOTUtils.h"
 #include "MultiPlotter/Utils.h"
 #include "MultiPlotter/plotItPlotter.h"
-#include <TH1.h>
+#include <TGraphAsymmErrors.h>
 #include <THStack.h>
 #include <TLatex.h>
 #include <TLegend.h>
+#include <TLine.h>
 #include <filesystem>
 #include <iostream> //FIXME
 #include <pybind11/stl.h>
@@ -70,8 +71,8 @@ void plotItPlotter::plot(std::string_view output_file,
   root::utils::StackSystematics systematics;
   if (utils::get_with_default(options, "plot-syst-unc", true) &&
       samples_.contains(Sample::Type::background))
-    systematics = root::utils::combine_systematics(
-        samples_.at(Sample::Type::background));
+    systematics =
+        root::utils::combine_systematics(samples_.at(Sample::Type::background));
   const auto with_breakdown =
       !systematics.empty() &&
       utils::get_with_default(options, "syst-breakdown", true);
@@ -128,12 +129,36 @@ void plotItPlotter::plot(std::string_view output_file,
   }
   auto min_value = std::numeric_limits<double>::max(),
        max_value = std::numeric_limits<double>::min();
+  // smallest strictly positive content: lower bound of a logarithmic y-axis
+  auto min_positive_value = std::numeric_limits<double>::max();
+  const auto update_min_positive = [&min_positive_value](const TH1 &hist) {
+    for (int bin = hist.GetXaxis()->GetFirst();
+         bin <= hist.GetXaxis()->GetLast(); ++bin)
+      if (const auto content = hist.GetBinContent(bin); content > 0.)
+        min_positive_value = std::min(min_positive_value, content);
+  };
+  std::unique_ptr<TH1> merged_background{nullptr};
   if (samples_.contains(Sample::Type::background)) {
     auto &stack = samples_.at(Sample::Type::background);
-    root::utils::draw_samples_stack(canvas, stack, true, 3004);
-    const auto merged = root::utils::merge_samples(stack);
-    min_value = std::min(min_value, merged->GetMinimum());
-    max_value = std::max(max_value, merged->GetMaximum());
+    auto *stat_band =
+        root::utils::draw_samples_stack(canvas, stack, true, 3004);
+    merged_background = root::utils::merge_samples(stack);
+    min_value = std::min(min_value, merged_background->GetMinimum());
+    max_value = std::max(max_value, merged_background->GetMaximum());
+    update_min_positive(*merged_background);
+    if (!systematics.empty() && merged_background) {
+      // total uncertainty band, on top of the stack
+      const auto *total_band = root::utils::draw_uncertainty_band(
+          canvas, *merged_background, systematics, false);
+      for (int i = 0; i < total_band->GetN(); ++i) // leave room for the band
+        max_value = std::max(max_value, total_band->GetY()[i] +
+                                            total_band->GetErrorYhigh(i));
+      if (auto *legend = canvas.legend(); legend) {
+        if (stat_band)
+          legend->AddEntry(stat_band, "Stat. unc.", "f");
+        legend->AddEntry(total_band, "Total unc.", "f");
+      }
+    }
   }
   if (samples_.contains(Sample::Type::signal)) {
     auto &stack = samples_.at(Sample::Type::signal);
@@ -141,6 +166,69 @@ void plotItPlotter::plot(std::string_view output_file,
     const auto merged = root::utils::merge_samples(stack);
     min_value = std::min(min_value, merged->GetMinimum());
     max_value = std::max(max_value, merged->GetMaximum());
+    update_min_positive(*merged);
+  }
+
+  if (with_breakdown && merged_background) {
+    // lower pad: uncertainties relative to the total background yield
+    canvas.lowerPad()->cd();
+    auto *frame = root::utils::book_like(canvas, *histogram_ref,
+                                         canvas.GetName() + "_syst_frame"s);
+    { // the lower pad takes over the x-axis labelling
+      const auto scaling =
+          (1. - canvas.lowerFraction()) / canvas.lowerFraction();
+      auto *ref_xaxis = histogram_ref->GetXaxis(),
+           *ref_yaxis = histogram_ref->GetYaxis();
+      frame->GetXaxis()->SetTitle(ref_xaxis->GetTitle());
+      frame->GetXaxis()->SetTitleSize(ref_xaxis->GetTitleSize() * scaling);
+      frame->GetXaxis()->SetLabelSize(ref_xaxis->GetLabelSize() * scaling);
+      frame->GetXaxis()->SetTickLength(ref_xaxis->GetTickLength() * scaling);
+      frame->GetYaxis()->SetTitle("Rel. unc.");
+      frame->GetYaxis()->CenterTitle();
+      frame->GetYaxis()->SetTitleSize(ref_yaxis->GetTitleSize() * scaling);
+      // a null offset means "automatic", which scales with the title size
+      frame->GetYaxis()->SetTitleOffset((ref_yaxis->GetTitleOffset() > 0.f
+                                             ? ref_yaxis->GetTitleOffset()
+                                             : 1.25f) /
+                                        scaling);
+      frame->GetYaxis()->SetLabelSize(ref_yaxis->GetLabelSize() * scaling);
+      frame->GetYaxis()->SetNdivisions(505);
+      ref_xaxis->SetTitleSize(0.);
+      ref_xaxis->SetLabelSize(0.);
+    }
+    // vertical range driven by the systematics, with room for the legend
+    auto max_relative =
+        root::utils::max_relative_systematics(*merged_background, systematics);
+    if (max_relative <= 0.)
+      max_relative = 1.;
+    frame->SetMinimum(-1.5 * max_relative);
+    frame->SetMaximum(2.4 * max_relative);
+    frame->Draw("axis");
+
+    root::utils::draw_uncertainty_band( // stat+syst
+        canvas, *merged_background, systematics, true);
+    auto *stat_band = root::utils::draw_uncertainty_band( // stat only
+        canvas, *merged_background, {}, true);
+    stat_band->SetFillStyle(3004);
+    stat_band->SetFillColor(kGray + 1);
+
+    const auto num_sources = std::min(
+        systematics.sources.size(),
+        utils::get_with_default(options, "syst-max-sources", size_t{6}));
+    auto *legend = canvas.make<TLegend>(0.16, 0.76, 0.9, 0.94);
+    legend->SetLineWidth(0);
+    legend->SetFillStyle(0);
+    legend->SetTextSize(0.09);
+    legend->SetNColumns(std::clamp<int>(num_sources, 1, 3));
+    root::utils::draw_systematics_breakdown(canvas, *merged_background,
+                                            systematics, num_sources, *legend);
+    auto *zero_line = canvas.make<TLine>(
+        frame->GetXaxis()->GetBinLowEdge(frame->GetXaxis()->GetFirst()), 0.,
+        frame->GetXaxis()->GetBinUpEdge(frame->GetXaxis()->GetLast()), 0.);
+    zero_line->SetLineColor(kGray + 2);
+    zero_line->Draw();
+    legend->Draw();
+    canvas.mainPad()->cd();
   }
 
   const auto formats = utils::get_with_default(options, "output-file-types",

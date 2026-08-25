@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "MultiPlotter/Systematics.h"
+#include "MultiPlotter/SystematicsSet.h"
 
 // forward definitions
 class TH1;
@@ -42,7 +43,9 @@ struct Sample {
   TH1 *histogram{nullptr}; ///< base ROOT distribution object
   float weight{1.};        ///< cross-section * L, with additional weightings
   int colour{0};           ///< for now, ROOT colours are handled
-  std::unordered_map<std::string, std::vector<float>> systematics{};
+  /// Signed shifts of the yield in each bin for each systematic uncertainty
+  std::unordered_map<std::string, std::vector<SystematicsSet::Values>>
+      systematics{};
 
   void addSystematics(std::string_view, SystematicsType, PyObject * = nullptr);
 };

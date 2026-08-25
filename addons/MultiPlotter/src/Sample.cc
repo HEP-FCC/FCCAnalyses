@@ -30,7 +30,13 @@ void Sample::addSystematics(std::string_view syst_name,
                             SystematicsType syst_type, PyObject *params_obj) {
   // first cast the Python object into a parseable dictionary to extract
   // parameters conveniently
-  auto params = py::reinterpret_borrow<py::dict>(params_obj);
+  py::dict params;
+  if (params_obj)
+    params = py::reinterpret_borrow<py::dict>(params_obj);
+  if (!histogram)
+    throw std::runtime_error("Sample '" + name +
+                             "' has no histogram to evaluate systematics '" +
+                             std::string{syst_name} + "' on.");
   if (systematics.contains(std::string{syst_name}))
     std::cout << "Warning: systematics with name '" << syst_name
               << "' was already booked/computed. Clearing any recorded value "
