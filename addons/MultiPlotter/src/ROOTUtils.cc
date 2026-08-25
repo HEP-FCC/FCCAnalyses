@@ -19,9 +19,14 @@
 #include "MultiPlotter/ROOTCanvas.h"
 #include "MultiPlotter/ROOTUtils.h"
 #include "MultiPlotter/Sample.h"
+#include <TGraphAsymmErrors.h>
 #include <TH1.h>
 #include <THStack.h>
+#include <TLegend.h>
+#include <algorithm>
 #include <cmath>
+#include <functional>
+#include <ranges>
 
 using namespace std::string_literals;
 
@@ -93,22 +98,23 @@ void add_underflow_overflow_bins(TH1 *histogram,
   }
 }
 
-void draw_samples_stack(ROOTCanvas &canvas, const Stack &stack, bool stacked,
+TH1 *draw_samples_stack(ROOTCanvas &canvas, const Stack &stack, bool stacked,
                         Style_t fill_style) {
   auto *root_stack = canvas.make<THStack>();
   for (const auto &sample : stack.samples()) {
     if (sample.histogram) // only stack if a histogram is present
       root_stack->Add(sample.histogram, sample.name.data());
   }
-  if (auto *hist_merged = canvas.make<TH1D>(
-          *dynamic_cast<TH1D *>(merge_samples(stack).release()));
-      hist_merged) {
+  auto *hist_merged =
+      canvas.make<TH1D>(*dynamic_cast<TH1D *>(merge_samples(stack).release()));
+  if (hist_merged) {
     hist_merged->SetLineWidth(0);
     hist_merged->SetFillStyle(fill_style);
     hist_merged->SetFillColor(kGray + 1);
     hist_merged->Draw("e2,same");
   }
   root_stack->Draw(("hist,same,"s + (stacked ? ""s : "nostack"s)).data());
+  return hist_merged;
 }
 
 std::unique_ptr<TH1> merge_samples(const Stack &stack) {
@@ -123,5 +129,143 @@ std::unique_ptr<TH1> merge_samples(const Stack &stack) {
     }
   }
   return hist_merged;
+}
+
+StackSystematics combine_systematics(const Stack &stack) {
+  StackSystematics combined;
+  // a given source is fully correlated between samples: linear sum of shifts
+  for (const auto &sample : stack.samples()) {
+    if (!sample.histogram) // not drawn, hence not accounted for
+      continue;
+    for (const auto &[name, shifts] : sample.systematics) {
+      auto &source = combined.sources[name];
+      if (source.size() < shifts.size())
+        source.resize(shifts.size(), {0., 0.});
+      for (size_t i = 0; i < shifts.size(); ++i) {
+        source[i].first += shifts[i].first;
+        source[i].second += shifts[i].second;
+      }
+    }
+  }
+  size_t num_bins = 0;
+  for (const auto &source : combined.sources | std::views::values)
+    num_bins = std::max(num_bins, source.size());
+  // sources are uncorrelated with each other: quadratic sum, separately for
+  // the upwards and downwards fluctuations of the yield
+  combined.total.assign(num_bins, {0., 0.});
+  for (auto &source : combined.sources | std::views::values) {
+    source.resize(num_bins, {0., 0.});
+    for (size_t i = 0; i < num_bins; ++i) {
+      const auto upwards = std::max({source[i].first, source[i].second, 0.}),
+                 downwards =
+                     std::max({-source[i].first, -source[i].second, 0.});
+      combined.total[i].first += upwards * upwards;
+      combined.total[i].second += downwards * downwards;
+    }
+  }
+  for (auto &[upwards, downwards] : combined.total) {
+    upwards = std::sqrt(upwards);
+    downwards = std::sqrt(downwards);
+  }
+  return combined;
+}
+
+double max_relative_systematics(const TH1 &nominal,
+                                const StackSystematics &systematics) {
+  double max_relative = 0.;
+  for (int bin = nominal.GetXaxis()->GetFirst();
+       bin <= nominal.GetXaxis()->GetLast(); ++bin) {
+    const auto content = nominal.GetBinContent(bin);
+    if (const size_t i = bin - 1; content > 0. && i < systematics.total.size())
+      max_relative =
+          std::max({max_relative, systematics.total[i].first / content,
+                    systematics.total[i].second / content});
+  }
+  return max_relative;
+}
+
+TH1D *book_like(ROOTCanvas &canvas, const TH1 &model, const std::string &name) {
+  const auto *axis = model.GetXaxis();
+  auto *histogram = axis->GetXbins()->GetSize() > 0 // variable-width bins
+                        ? canvas.make<TH1D>(name.data(), "", axis->GetNbins(),
+                                            axis->GetXbins()->GetArray())
+                        : canvas.make<TH1D>(name.data(), "", axis->GetNbins(),
+                                            axis->GetXmin(), axis->GetXmax());
+  histogram->SetDirectory(nullptr); // kill garbage collector
+  histogram->SetStats(false);
+  histogram->GetXaxis()->SetRange(axis->GetFirst(), axis->GetLast());
+  return histogram;
+}
+
+TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
+                                         const StackSystematics &systematics,
+                                         bool relative) {
+  const int num_bins = nominal.GetNbinsX();
+  auto *band = canvas.make<TGraphAsymmErrors>(num_bins);
+  for (int i = 0; i < num_bins; ++i) {
+    const int bin = i + 1;
+    const auto content = nominal.GetBinContent(bin),
+               stat = nominal.GetBinError(bin),
+               half_width = 0.5 * nominal.GetBinWidth(bin);
+    const auto [syst_up, syst_down] =
+        static_cast<size_t>(i) < systematics.total.size() ? systematics.total[i]
+                                                          : std::pair{0., 0.};
+    auto central = content, up = std::hypot(stat, syst_up),
+         down = std::hypot(stat, syst_down);
+    if (relative) { // no band for empty bins
+      central = 0.;
+      up = content > 0. ? up / content : 0.;
+      down = content > 0. ? down / content : 0.;
+    }
+    band->SetPoint(i, nominal.GetBinCenter(bin), central);
+    band->SetPointError(i, half_width, half_width, down, up);
+  }
+  band->SetLineWidth(0);
+  band->SetMarkerSize(0);
+  band->SetFillStyle(1001);
+  band->SetFillColorAlpha(kBlack, 0.25);
+  band->Draw("2");
+  return band;
+}
+
+void draw_systematics_breakdown(ROOTCanvas &canvas, const TH1 &nominal,
+                                const StackSystematics &systematics,
+                                size_t max_sources, TLegend &legend) {
+  // rank the sources according to their overall effect on the yields
+  std::vector<std::pair<double, std::string>> ranking;
+  for (const auto &[name, shifts] : systematics.sources) {
+    double effect = 0.;
+    for (const auto &[up, down] : shifts)
+      effect += std::max(std::fabs(up), std::fabs(down));
+    ranking.emplace_back(effect, name);
+  }
+  std::ranges::sort(ranking, std::greater{});
+  if (ranking.size() > max_sources)
+    ranking.resize(max_sources);
+
+  size_t i_source = 0;
+  for (const auto &name : ranking | std::views::values) {
+    const auto &shifts = systematics.sources.at(name);
+    const auto base_name = canvas.GetName() + "_syst_"s + name;
+    auto *up = book_like(canvas, nominal, base_name + "_up"),
+         *down = book_like(canvas, nominal, base_name + "_down");
+    for (int bin = 1; bin <= nominal.GetNbinsX(); ++bin) {
+      const auto content = nominal.GetBinContent(bin);
+      if (const size_t i = bin - 1; content > 0. && i < shifts.size()) {
+        up->SetBinContent(bin, shifts[i].first / content);
+        down->SetBinContent(bin, shifts[i].second / content);
+      }
+    }
+    const auto colour =
+        colours.at((i_source++ % colours.size()) + 1 /*skip black*/);
+    for (auto *variation : {up, down}) {
+      variation->SetLineColor(colour);
+      variation->SetLineWidth(2);
+      variation->SetFillStyle(0);
+      variation->Draw("hist,same");
+    }
+    down->SetLineStyle(2); // solid: +1 sigma ; dashed: -1 sigma
+    legend.AddEntry(up, name.data(), "l");
+  }
 }
 } // namespace mplt::root::utils
