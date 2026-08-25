@@ -247,8 +247,10 @@ void plotItPlotter::plot(std::string_view output_file,
         options, "y-axis-scale-types", std::vector{"lin"s});
     for (const auto &y_scaling : y_scalings) {
       if (y_scaling == "log") { // logarithmic y-axis
-        if (min_value > 0.)
-          histogram_ref->SetMinimum(min_value * 0.1);
+        // empty bins cannot drive the lower bound of a logarithmic axis
+        histogram_ref->SetMinimum(0.1 * (min_positive_value < max_value
+                                             ? min_positive_value
+                                             : 1.e-3 * max_value));
         if (max_value > std::numeric_limits<double>::min())
           histogram_ref->SetMaximum(max_value * 1.e3);
         canvas.setLogy(true);

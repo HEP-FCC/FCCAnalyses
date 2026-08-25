@@ -11,7 +11,6 @@ formats        = ['png', 'pdf']
 yaxis          = ['lin', 'log']
 stacksig       = ['stack', 'nostack']
 outdir         = 'outputs/FCCee/higgs/mH-recoil/mumu/plots/'
-plotStatUnc    = True
 
 variables = ['mz',
              'mz_zoom',
@@ -19,6 +18,21 @@ variables = ['mz',
              'leptonic_recoil_m_zoom',
              'leptonic_recoil_m_zoom2']
 rebin = [1, 1, 1, 1, 2]  # uniform rebin per variable (optional)
+
+systematics = {}
+systematics['lumi'] = {'type': 'constant', 'value': 1.01}
+systematics['xsec_WW'] = {'type': 'lognormal', 'prior': 1.05, 'samples': ['WW']}
+#systematics['jes'] = {'type': 'shape',
+#                      'inputFilename': 'syst/{sample}.root',
+#                      'shapeUp': '{variable}_jesUp',
+#                      'shapeDown': '{variable}_jesDown',
+#                      'scale': 1.0,
+#                      'rebin': 1},
+
+plotStatUnc    = True
+plotSystUnc = True      # total band
+systBreakdown = True    # lower pad
+systMaxSources = 6
 
 # Dictionary with the list of selections to be plotted for this analysis. The
 # name of the selections should be the same than in the final selection
