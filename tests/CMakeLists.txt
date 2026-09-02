@@ -22,15 +22,15 @@ if(WITH_PODIO_DATASOURCE)
   add_integration_test("examples/data_source/analysis_stage1.py")
 endif()
 
-# Python Integration Tests for Combine Backend
+# Python Integration Tests for Combine Backend (Fit & Extract)
 find_program(PYTHON_EXECUTABLE NAMES python3 python)
 
 if(PYTHON_EXECUTABLE)
     add_test(
-        NAME test_combine_fit_backend
+        NAME test_combine_backend
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/python/test_combine_backend.py
     )
 
     # Ensure test data assets are fully downloaded via CI before running this test
-    set_tests_properties(test_combine_fit_backend PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    set_tests_properties(test_combine_backend PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
