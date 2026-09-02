@@ -34,7 +34,9 @@ def extract_fit_results(target_path):
         return
 
     if os.path.isdir(target_path):
-        root_files = glob.glob(os.path.join(target_path, "higgsCombine*.root"))
+        root_files = glob.glob(os.path.join(target_path, "higgsCombine*.root")) + \
+                 glob.glob(os.path.join(target_path, "fitDiagnostics*.root"))
+
         if not root_files:
             LOGGER.warning("No higgsCombine output ROOT file found in directory: %s", target_path)
             return
