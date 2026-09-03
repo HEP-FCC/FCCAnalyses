@@ -4,7 +4,7 @@
 
 namespace FCCAnalyses ::EventFilter {
 // ----------------------------------------------------------------------------
-stride::stride(const ULong64_t stride) : m_stride(stride) {}
+stride::stride(const ULong64_t value) : m_stride(value) {}
 
 bool
 stride::operator()(const ULong64_t rdfEntry) {

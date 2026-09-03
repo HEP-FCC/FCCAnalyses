@@ -1,4 +1,5 @@
 #include "FCCAnalyses/ReconstructedParticle.h"
+#include <cstddef>
 
 // Standard library
 #include <cstdlib>
@@ -229,18 +230,22 @@ float angular_separationBuilder::operator() ( ROOT::VecOps::RVec<edm4hep::Recons
  float dmin = 999;
  float sum = 0;
  float npairs = 0;
- for (int i=0; i < in.size(); i++) {
-  if ( in.at(i).energy < 0) continue;    // "dummy" particle - cf selRP_matched_to_list
-  TVector3 p1( in.at(i).momentum.x, in.at(i).momentum.y, in.at(i).momentum.z );
-  for (int j=i+1; j < in.size(); j++) {
-    if ( in.at(j).energy < 0) continue;   // "dummy" particle
-    TVector3 p2( in.at(j).momentum.x, in.at(j).momentum.y, in.at(j).momentum.z );
-    float delta_ij = fabs( p1.Angle( p2 ) );
-    if ( delta_ij > dmax) dmax = delta_ij;
-    if ( delta_ij < dmin) dmin = delta_ij;
-    sum = sum + delta_ij;
-    npairs ++;
-  }
+ for (std::size_t i = 0; i < in.size(); i++) {
+   if (in.at(i).energy < 0)
+     continue; // "dummy" particle - cf selRP_matched_to_list
+   TVector3 p1(in.at(i).momentum.x, in.at(i).momentum.y, in.at(i).momentum.z);
+   for (std::size_t j = i + 1; j < in.size(); j++) {
+     if (in.at(j).energy < 0)
+       continue; // "dummy" particle
+     TVector3 p2(in.at(j).momentum.x, in.at(j).momentum.y, in.at(j).momentum.z);
+     float delta_ij = fabs(p1.Angle(p2));
+     if (delta_ij > dmax)
+       dmax = delta_ij;
+     if (delta_ij < dmin)
+       dmin = delta_ij;
+     sum = sum + delta_ij;
+     npairs++;
+   }
  }
  float delta_max = dmax;
  float delta_min = dmin;

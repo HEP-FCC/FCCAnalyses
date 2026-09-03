@@ -1,13 +1,16 @@
 #include "FCCAnalyses/Algorithms.h"
 #include "FCCAnalyses/Utils.h"
+#include <cstddef>
 
-#include "Math/Minimizer.h"
-#include "Math/IFunction.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
+#include "Math/IFunction.h"
+#include "Math/Minimizer.h"
 #include <algorithm>
+#include <array>
 #include <iostream>
 #include <numeric>
+#include <vector>
 
 #include "Math/IFunction.h"
 #include "Math/Factory.h"
@@ -197,13 +200,14 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
 
   // Array to store x, y, z and magnitude squared of the particles.
   // 0 -- magnitude squared, 1 -- x, 2 -- y, 3 -- z
-  float pArr[nParticles][4];
+  std::vector<std::array<float, 4>> pArr(nParticles);
   float pSum = 0.;
   for (size_t i = 0; i < nParticles; ++i) {
     pArr[i][1] = px[i];
     pArr[i][2] = py[i];
     pArr[i][3] = pz[i];
-    mag2(pArr[i]);
+    pArr[i][0] = pArr[i][1] * pArr[i][1] + pArr[i][2] * pArr[i][2] +
+                 pArr[i][3] * pArr[i][3];
     pSum += std::sqrt(pArr[i][0]);
   }
 
@@ -214,7 +218,7 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
   for (size_t i = 0; i < nParticles - 1; ++i) {
     for (size_t j = i + 1; j < nParticles; ++j) {
       float nRef[4];
-      cross(nRef, pArr[i], pArr[j]);
+      cross(nRef, pArr[i].data(), pArr[j].data());
       mag2(nRef);
       unit(nRef);
 
@@ -224,29 +228,29 @@ ROOT::VecOps::RVec<float> Algorithms::calculate_thrust::operator()(
           continue;
         }
 
-        if (dot(nRef, pArr[k]) > 0.) {
-          plus(pPart, pPart, pArr[k]);
+        if (dot(nRef, pArr[k].data()) > 0.) {
+          plus(pPart, pPart, pArr[k].data());
         } else {
-          minus(pPart, pPart, pArr[k]);
+          minus(pPart, pPart, pArr[k].data());
         }
       }
 
       float pFullArr[4][4];
       // pPart + pArr[i] + pArr[j]
-      plus(pFullArr[0], pPart, pArr[i]);
-      plus(pFullArr[0], pFullArr[0], pArr[j]);
+      plus(pFullArr[0], pPart, pArr[i].data());
+      plus(pFullArr[0], pFullArr[0], pArr[j].data());
 
       // pPart + pArr[i] - pArr[j]
-      plus(pFullArr[1], pPart, pArr[i]);
-      minus(pFullArr[1], pFullArr[1], pArr[j]);
+      plus(pFullArr[1], pPart, pArr[i].data());
+      minus(pFullArr[1], pFullArr[1], pArr[j].data());
 
       // pPart - pArr[i] + pArr[j]
-      minus(pFullArr[2], pPart, pArr[i]);
-      plus(pFullArr[2], pFullArr[2], pArr[j]);
+      minus(pFullArr[2], pPart, pArr[i].data());
+      plus(pFullArr[2], pFullArr[2], pArr[j].data());
 
       // pPart - pArr[i] - pArr[j]
-      minus(pFullArr[3], pPart, pArr[i]);
-      minus(pFullArr[3], pFullArr[3], pArr[j]);
+      minus(pFullArr[3], pPart, pArr[i].data());
+      minus(pFullArr[3], pFullArr[3], pArr[j].data());
 
       for (size_t k = 0; k < 4; ++k) {
         mag2(pFullArr[k]);
@@ -487,23 +491,21 @@ JetClustering::FCCAnalysesJet jets_TwoHemispheres::operator() (
  float pz_minus=0;
  float e_minus=0;
 
- for ( int i=0; i < RP_costheta.size(); i++) {
-     if ( RP_costheta[i] > 0 ) {
-        constituents_JetPlus.push_back( i );
-	px_plus += RP_px[i];
-	py_plus += RP_py[i];
-	pz_plus += RP_pz[i];
-	e_plus += RP_e[i];
-     }
-     else {
-	constituents_JetMimus.push_back( i );
-        px_minus += RP_px[i];
-        py_minus += RP_py[i];
-        pz_minus += RP_pz[i];
-        e_minus += RP_e[i];
-     }
+ for (std::size_t i = 0; i < RP_costheta.size(); i++) {
+   if (RP_costheta[i] > 0) {
+     constituents_JetPlus.push_back(i);
+     px_plus += RP_px[i];
+     py_plus += RP_py[i];
+     pz_plus += RP_pz[i];
+     e_plus += RP_e[i];
+   } else {
+     constituents_JetMimus.push_back(i);
+     px_minus += RP_px[i];
+     py_minus += RP_py[i];
+     pz_minus += RP_pz[i];
+     e_minus += RP_e[i];
+   }
  }
-
 
  float pt_plus = sqrt( pow( px_plus,2) + pow( py_plus,2) + pow( pz_plus, 2) ) ;
  float pt_minus = sqrt( pow( px_minus, 2) + pow( py_minus, 2) + pow( pz_minus, 2) ) ;

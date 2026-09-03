@@ -1,5 +1,7 @@
 #include "TMVAHelper/TMVAHelper.h"
 
+#include <cstddef>
+
 #include "RVersion.h"
 
 tmva_helper_xgb::tmva_helper_xgb(const std::string &filename,
@@ -20,8 +22,8 @@ tmva_helper_xgb::tmva_helper_xgb(const std::string &filename,
 
 ROOT::VecOps::RVec<float>
 tmva_helper_xgb::operator()(const ROOT::VecOps::RVec<float> vars) {
-  auto const tbb_slot =
-      std::max(tbb::this_task_arena::current_thread_index(), 0);
+  const auto tbb_slot = static_cast<std::size_t>(
+      std::max(tbb::this_task_arena::current_thread_index(), 0));
   if (tbb_slot >= m_interpreters.size()) {
     throw std::runtime_error(
         "Not enough interpreters allocated for number of tbb threads");
