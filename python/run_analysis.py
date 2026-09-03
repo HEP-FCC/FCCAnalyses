@@ -447,6 +447,8 @@ def run_histmaker(args, rdf_module, anapath):
         key4hep_os = 'ubuntu22'
     elif 'ubuntu24' in k4h_stack_env:
         key4hep_os = 'ubuntu24'
+    elif 'ubuntu26' in k4h_stack_env:
+        key4hep_os = 'ubuntu26'
     else:
         LOGGER.error('Key4hep OS not recognized!\nAborting...')
         sys.exit(3)
