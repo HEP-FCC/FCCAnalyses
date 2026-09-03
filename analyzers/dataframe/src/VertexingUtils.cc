@@ -1,7 +1,7 @@
 #include "FCCAnalyses/VertexingUtils.h"
 #include "FCCAnalyses/VertexFitterSimple.h"
-
 #include "TrkUtil.h" // from delphes
+#include <set>
 
 namespace FCCAnalyses {
 
@@ -367,6 +367,51 @@ ROOT::VecOps::RVec<int> get_VertexRecoParticlesInd(
     }
   }
   return result;
+}
+
+ROOT::VecOps::RVec<int> get_VerticesRecoParticlesInd(
+    ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
+    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &reco) {
+
+  ROOT::VecOps::RVec<int> result;
+  for (int i = 0; i < vertices.size(); ++i) {
+    ROOT::VecOps::RVec<int> indices_tracks = vertices[i].reco_ind;
+    for (int j = 0; j < indices_tracks.size(); j++) {
+      int tk_index = indices_tracks[j];
+      for (int k = 0; k < reco.size(); k++) {
+        auto &p = reco[k];
+        if (p.tracks_begin == p.tracks_end)
+          continue;
+        if (p.tracks_begin == tk_index) {
+          result.push_back(k);
+          break;
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
+int getVertex_matching_recoParticles(
+    const ROOT::VecOps::RVec<FCCAnalysesVertex> &vertices,
+    const ROOT::VecOps::RVec<int> &recoParticleIndices,
+    const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &reco,
+    bool require_all) {
+  std::set<int> indicesWeWant;
+  indicesWeWant.insert(recoParticleIndices.begin(), recoParticleIndices.end());
+  // correct for "-1" representing missed tracks in the recoParticleIndices
+  int correctMissing = indicesWeWant.count(-1);
+  for (int iVX = 0; iVX < vertices.size(); ++iVX) {
+    auto vxParticleIndices = get_VertexRecoParticlesInd(vertices[iVX], reco);
+    int nFound = std::count_if(
+        vxParticleIndices.begin(), vxParticleIndices.end(),
+        [&](int recoIndex) { return indicesWeWant.count(recoIndex); });
+    if (require_all ? (nFound == indicesWeWant.size() - correctMissing)
+                     : (nFound == vxParticleIndices.size()))
+      return iVX;
+  }
+  return -1;
 }
 
 TVectorD ParToACTS(TVectorD Par) {
