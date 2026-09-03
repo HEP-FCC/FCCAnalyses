@@ -374,16 +374,16 @@ ROOT::VecOps::RVec<int> get_VerticesRecoParticlesInd(
     const ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> &reco) {
 
   ROOT::VecOps::RVec<int> result;
-  for (int j = 0; j < vertices.size(); ++j) {
-    ROOT::VecOps::RVec<int> indices_tracks = vertices[j].reco_ind;
-    for (int i = 0; i < indices_tracks.size(); i++) {
-      int tk_index = indices_tracks[i];
-      for (int j = 0; j < reco.size(); j++) {
-        auto &p = reco[j];
+  for (int i = 0; i < vertices.size(); ++i) {
+    ROOT::VecOps::RVec<int> indices_tracks = vertices[i].reco_ind;
+    for (int j = 0; j < indices_tracks.size(); j++) {
+      int tk_index = indices_tracks[j];
+      for (int k = 0; k < reco.size(); k++) {
+        auto &p = reco[k];
         if (p.tracks_begin == p.tracks_end)
           continue;
         if (p.tracks_begin == tk_index) {
-          result.push_back(j);
+          result.push_back(k);
           break;
         }
       }
@@ -407,8 +407,8 @@ int getVertex_matching_recoParticles(
     int nFound = std::count_if(
         vxParticleIndices.begin(), vxParticleIndices.end(),
         [&](int recoIndex) { return indicesWeWant.count(recoIndex); });
-    if (require_all && nFound == indicesWeWant.size() - correctMissing ||
-        nFound == vxParticleIndices.size())
+    if (require_all ? (nFound == indicesWeWant.size() - correctMissing)
+                     : (nFound == vxParticleIndices.size()))
       return iVX;
   }
   return -1;

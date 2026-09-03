@@ -92,7 +92,7 @@ namespace FCCAnalyses {
     operator()(const ROOT::VecOps::RVec<int> &indices,
                const ROOT::VecOps::RVec<thingToSelect> &in) {
       ROOT::VecOps::RVec<int> result;
-      result.reserve(in.size());
+      result.reserve(indices.size());
       for (int index : indices) {
         if (index < 0 || index >= in.size())
           continue;
