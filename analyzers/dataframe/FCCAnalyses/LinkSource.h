@@ -59,7 +59,7 @@ struct selAbsPDG {
     }
 
     return result;
-  }
+  };
 };
 
 /**
