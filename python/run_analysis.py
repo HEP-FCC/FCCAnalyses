@@ -754,7 +754,6 @@ def run(parser):
 
     # Load the analysis script as a module
     LOGGER.info('Loading analysis script:\n%s', anapath)
-    sys.path.insert(0, os.getcwd())
     try:
         rdf_spec = importlib.util.spec_from_file_location('rdfanalysis',
                                                           anapath)
