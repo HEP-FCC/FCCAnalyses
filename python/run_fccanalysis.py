@@ -379,6 +379,8 @@ def merge_config(args: argparse.Namespace,
         config['key4hep-os'] = 'ubuntu22'
     elif 'ubuntu24' in k4h_stack_env:
         config['key4hep-os'] = 'ubuntu24'
+    elif 'ubuntu26' in k4h_stack_env:
+        config['key4hep-os'] = 'ubuntu26'
     else:
         LOGGER.error('Key4hep OS not recognized!\nAborting...')
         sys.exit(3)
