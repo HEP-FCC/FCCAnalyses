@@ -12,6 +12,11 @@ fccanalyses_addon_build(FastJet
                                  ROOT::ROOTVecOps
                         INSTALL_COMPONENT fastjet)
 
+# Prefer FastJet's RPATH over LD_LIBRARY_PATH, so it doesn't pick up a
+# different FastJet build (e.g. Delphes' bundled copy) found earlier on
+# the search path.
+target_link_options(FastJet PRIVATE -Wl,--disable-new-dtags)
+
 add_custom_command(TARGET FastJet POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy
                    ${CMAKE_CURRENT_SOURCE_DIR}/python/*

@@ -432,7 +432,8 @@ def run_histmaker(args, rdf_module, anapath):
         LOGGER.error('Key4hep stack not setup!\nAborting...')
         sys.exit(3)
     k4h_stack_env = os.environ['KEY4HEP_STACK']
-    if 'sw-nightlies.hsf.org' in k4h_stack_env:
+    if ('sw-nightlies.hsf.org' in k4h_stack_env
+            or 'sft-nightlies.cern.ch' in k4h_stack_env):
         key4hep_stack = 'nightlies'
     elif 'sw.hsf.org' in k4h_stack_env:
         key4hep_stack = 'release'
@@ -440,12 +441,14 @@ def run_histmaker(args, rdf_module, anapath):
         LOGGER.error('Key4hep stack not recognized!\nAborting...')
         sys.exit(3)
 
-    if 'almalinux9' in k4h_stack_env:
+    if 'almalinux9' in k4h_stack_env or '-el9-' in k4h_stack_env:
         key4hep_os = 'alma9'
     elif 'ubuntu22' in k4h_stack_env:
         key4hep_os = 'ubuntu22'
     elif 'ubuntu24' in k4h_stack_env:
         key4hep_os = 'ubuntu24'
+    elif 'ubuntu26' in k4h_stack_env:
+        key4hep_os = 'ubuntu26'
     else:
         LOGGER.error('Key4hep OS not recognized!\nAborting...')
         sys.exit(3)
@@ -740,6 +743,10 @@ def run(parser):
         if verbosity:
             LOGGER.debug('Setting verbosity level "kDebug+10" for '
                          'RDataFrame...')
+
+    # Load real FastJet before Delphes gets pulled in via libFCCAnalyses,
+    # so ClusterSequence calls don't resolve into Delphes' bundled copy.
+    ROOT.gSystem.Load("libFastJet")
 
     # Load the pre-compiled analyzers
     LOGGER.info('Loading analyzers from libFCCAnalyses...')
