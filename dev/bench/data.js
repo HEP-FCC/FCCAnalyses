@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788515485778,
+  "lastUpdate": 1788516760315,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -60803,6 +60803,86 @@ window.BENCHMARK_DATA = {
             "value": 18.220114217153338,
             "range": "1000",
             "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "22276694+jmcarcell@users.noreply.github.com",
+            "name": "Juan Miguel Carceller",
+            "username": "jmcarcell"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "071ef708696c4635070cd9be11dbeeac8e3d0e61",
+          "message": "ci: cancel superseded build and test runs (#545)\n\nCo-authored-by: Juan Miguel Carceller <jmcarcell@users.noreply.github.com>",
+          "timestamp": "2026-09-04T12:02:53+02:00",
+          "tree_id": "4a6f84a19dd5d0c08bc0c9682d0bca58c3af4f28",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/071ef708696c4635070cd9be11dbeeac8e3d0e61"
+        },
+        "date": 1788516752308,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 3.5266857147216797,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 7.5312340259552,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 8.860923051834106,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 7.093924522399902,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 24.59212827682495,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/weaver/stage1.py",
+            "value": 18.33255910873413,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/weaver/stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: /Package/examples/data_source/stages_source.py",
+            "value": 5.397092819213867,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: /Package/examples/data_source/analysis_stage1.py",
+            "value": 5.276211977005005,
+            "range": "10",
+            "unit": "Seconds",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
