@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788513878351,
+  "lastUpdate": 1788515483373,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -60653,6 +60653,86 @@ window.BENCHMARK_DATA = {
             "value": 21.081032803258005,
             "range": "1000",
             "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "22276694+jmcarcell@users.noreply.github.com",
+            "name": "Juan Miguel Carceller",
+            "username": "jmcarcell"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "091c2de983f0b05feb3e9defd3c8b0fb401a17aa",
+          "message": "ci: align Key4hep build options with tests (#541)\n\nCo-authored-by: Juan Miguel Carceller <jmcarcell@users.noreply.github.com>",
+          "timestamp": "2026-09-04T11:41:04+02:00",
+          "tree_id": "22a7a856cd8797d99b44c9d294a74d227870db2d",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/091c2de983f0b05feb3e9defd3c8b0fb401a17aa"
+        },
+        "date": 1788515474777,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Time spent running the analysis: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 3.831840753555298,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 8.06692886352539,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 10.495377540588379,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/test/jet_constituents.py",
+            "value": 7.682175636291504,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/test/jet_constituents.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 25.628899335861206,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/vertex_lcfiplus/analysis_V0.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: examples/FCCee/weaver/stage1.py",
+            "value": 20.898181676864624,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: examples/FCCee/weaver/stage1.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: /Package/examples/data_source/stages_source.py",
+            "value": 5.7369065284729,
+            "range": "10",
+            "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Time spent running the analysis: /Package/examples/data_source/analysis_stage1.py",
+            "value": 5.4884397983551025,
+            "range": "10",
+            "unit": "Seconds",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
