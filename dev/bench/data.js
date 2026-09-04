@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788513875909,
+  "lastUpdate": 1788513878351,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -60583,6 +60583,76 @@ window.BENCHMARK_DATA = {
             "value": 4.743600606918335,
             "range": "10",
             "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "22276694+jmcarcell@users.noreply.github.com",
+            "name": "Juan Miguel Carceller",
+            "username": "jmcarcell"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5466348adb8389840e5c73bf99069b57f4087efd",
+          "message": "Fix tests in Key4hep@LCG stacks (#540)\n\n* test: support LCG nightly integration tests\n\n* Recognize ubuntu26 in Key4hep OS detection and fix -Wpedantic error\n\nAdd the missing 'ubuntu26' branch to the OS-detection lists in\nrun_fccanalysis.py/run_analysis.py, and drop a stray ';' after\nselAbsPDG::operator()'s closing brace that -Wpedantic now flags as\nan error on the nightly ubuntu24/ubuntu26 builds.\n\n* Remove unneeded changes\n\n* Remove unneeded change\n\n* Fix -Wpedantic 'extra semicolon' error in LinkSource.h\n\nRe-applies the semicolon fix from 577ba7800, which the \"Remove unneeded\nchanges\" commit reverted.\n\n* Load real FastJet before Delphes to avoid symbol collision\n\nDelphes bundles its own FastJet with exported symbols, which can win\nsymbol resolution first and crash JetClustering.\n\n* Force FastJet RPATH over LD_LIBRARY_PATH to avoid symbol collisions\n\nDT_RPATH takes priority over LD_LIBRARY_PATH, unlike CMake's default\nDT_RUNPATH. Drops the now-redundant Python-side preload.\n\n* Load FastJet addon before Delphes to avoid symbol collision\n\nNow that FastJet's own RPATH takes priority, preload it via the\naddon target so it resolves correctly and wins the load race.\n\n---------\n\nCo-authored-by: Juan Miguel Carceller <jmcarcell@users.noreply.github.com>\nCo-authored-by: Juraj Smiesko <juraj.smiesko@cern.ch>",
+          "timestamp": "2026-09-04T11:13:57+02:00",
+          "tree_id": "599f1dc18a21aa28ad76e2c0244f9e5eddaf9ff7",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/5466348adb8389840e5c73bf99069b57f4087efd"
+        },
+        "date": 1788513877499,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 31.76909525841612,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 14.586112877828667,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 9.951745599240173,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 14.568619162424161,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 5.5194250665562965,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/weaver/stage1.py",
+            "value": 5.046961254035411,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/stages_source.py",
+            "value": 20.514020419410393,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/analysis_stage1.py",
+            "value": 21.081032803258005,
+            "range": "1000",
+            "unit": "Evt/s",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
