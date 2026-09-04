@@ -1,22 +1,39 @@
 .\" Manpage for fccanalysis-submit
 .\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
-.TH FCCANALYSIS\-SUBMIT 1 "14 May 2025" "0.13.1" "fccanalysis-submit man page"
+.TH FCCANALYSIS\-SUBMIT 1 "14 Sep 2026" "0.13.1" "fccanalysis-submit man page"
 
 .SH NAME
 \fBfccanalysis\-submit\fR \- submit FCC analysis to be run on a distributed system
 
 .SH SYNOPSIS
-.B fccanalysis submit
+.B fccanalysis submit ht-condor
 [\fB\-h\fR | \fB\-\-help\fR]
-[\fB\-\-w\fR \fISYSTEM\fR]
-.B analysis-script
-\-\-
+.I analysis-script
+\fB\-\-\fR
 [\fIANALYSIS ARGUMENTS\fR]
+.PP
+.B fccanalysis submit grid
+[\fB\-h\fR | \fB\-\-help\fR]
+[\fB\-\-lfn\-input\fR \fILFN_LIST\fR]
+\fB\-o\fR \fIOUTPUT_FILE\fR
+\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR
+[\fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR]
+[\fB\-\-files\-per\-job\fR \fICOUNT\fR | \fB\-\-n\-chunks\fR \fICOUNT\fR]
+[\fB\-\-sample\-name\fR \fINAME\fR]
+[\fB\-\-site\fR \fISITE\fR]
+[\fB\-\-mode\fR {\fBwms\fR,\fBlocal\fR}]
+[\fB\-\-ship\-local\-build\fR]
+.I analysis-script
+[\fB\-\-\fR \fIRUN ARGUMENTS\fR]
 
 .SH DESCRIPTION
-.B fccanalysis\-submit
-will submit analysis provided in the analysis script to the distributed system
-of choice\&. Currently only CERN's HTCondor is supported.
+.B fccanalysis submit
+submits the analysis defined by
+.I analysis-script
+to the selected backend.
+The supported backends are CERN HTCondor and the DIRAC-managed grid.
+Slurm is recognized but is not yet implemented.
+
 .SS HTCondor
 The mechanism of submission of the jobs to the HTCondor depends on the
 filesystem which hosts the code of the FCCAnalyses. If the code is hosted on the
@@ -25,10 +42,29 @@ mechanism is used.
 
 Here is an overview where the output of the jobs can be saved depending on
 where the FCCAnalyses code is hosted:
+.nf
   | Hosted on \\ Output to | AFS | EOS |
   | --------------------- | --- | --- |
   |                   AFS |  x  |  x  |
   |                   EOS |  0  |  x  |
+.fi
+
+.SS DIRAC grid
+The grid backend first constructs the modern
+.B Analysis
+object from the analysis script, resolves and validates all selected inputs,
+and creates a deterministic plan of independent jobs.
+Each job receives the analysis script, its own generated input-file list, and
+any optional analysis helpers or local FCCAnalyses build through its input
+sandbox.
+
+The submission helper is started in an isolated DIRAC client environment.
+It reuses a valid DIRAC proxy or creates one for the configured DIRAC group.
+In
+.B wms
+mode DIRAC sends the jobs to grid worker nodes; in
+.B local
+mode DIRAC executes them on the submission machine for testing.
 
 .SH OPTIONS
 .TP
@@ -38,15 +74,126 @@ Path to the analysis script\&.
 .BR \-h ", " \-\-help
 Prints short help message and exits\&.
 .TP
-\fB\-w\fR \fISYSTEM\fR, \fB\-\-where\fR \fISYSTEM\fR
-Where to submit the analysis\&. Currently, only "ht-condor" supported\&.
-.TP
 .I ANALYSIS ARGUMENTS
 Command line arguments which will not be parsed by the framework and will be
 passed directly to the analysis script\&.
 
+.SH GRID INPUT MODES
+.SS XRootD input
+This is the default grid input mode.
+The backend reads
+.B Analysis.samples
+and the global or per-sample input directories, lists their immediate ROOT
+files using XRootD, applies any sample fraction, and divides the resulting file
+URLs into jobs. Workers stream these files directly over XRootD.
+
+.SS DIRAC LFN input
+Supplying
+.B --lfn-input
+selects LFN mode.
+The named text file must contain one absolute DIRAC logical file name per
+non-empty line.
+DIRAC stages each planned job's assigned input data into the worker directory,
+and the generated per-job input-file list refers to the staged filenames.
+Unless explicit grouping is requested, one LFN is assigned to each job.
+
+.SH GRID OPTIONS
+.TP
+\fB\-\-lfn\-input\fR \fILFN_LIST\fR
+Read input LFNs from a text file instead of resolving XRootD inputs from the
+analysis samples.
+.TP
+\fB\-o\fR \fIOUTPUT_FILE\fR, \fB\-\-output\fR \fIOUTPUT_FILE\fR
+Set the base output ROOT filename.
+Each planned output is given a deterministic sample and job-number suffix.
+This option is required.
+.TP
+\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR
+Set the output directory relative to the user's DIRAC catalogue root.
+This option is required.
+.TP
+\fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR
+Override the storage element selected by DIRAC for output data.
+.TP
+\fB\-\-files\-per\-job\fR \fICOUNT\fR
+Derive the number of jobs from the number of input files and the requested
+maximum number of files per job.
+For XRootD input this overrides sample-level chunk counts.
+This option is mutually exclusive with
+.BR \-\-n\-chunks .
+.TP
+\fB\-\-n\-chunks\fR \fICOUNT\fR
+Request this number of jobs/output chunks for each XRootD sample or across the
+complete LFN input list.
+For XRootD input this overrides sample-level chunk counts.
+The actual number of jobs cannot exceed the number of input files.
+This option is mutually exclusive with
+.BR \-\-files\-per\-job .
+.TP
+\fB\-\-sample\-name\fR \fINAME\fR
+Set the optional sample name passed to workers in LFN input mode.
+.TP
+\fB\-\-site\fR \fISITE\fR
+Restrict the jobs to the named DIRAC computing site.
+.TP
+\fB\-\-mode\fR {\fBwms\fR,\fBlocal\fR}
+Submit through the DIRAC workload management system or execute through DIRAC
+on the submission machine.
+The default is
+.BR wms .
+.TP
+.B \-\-ship\-local\-build
+Package and ship the active locally built FCCAnalyses installation instead of
+using FCCAnalyses from the selected Key4hep stack on the worker.
+The active stack must match the stack used to build the local installation.
+.TP
+\fB\-\-\fR \fIRUN ARGUMENTS\fR
+Forward all following arguments unchanged to
+.B fccanalysis run
+for every planned job.
+Their effects therefore apply independently to each job.
+Options controlling the per-job input list, output name, sample name, or chunk
+planning cannot be forwarded because they are owned by the grid planner.
+
+.SH GRID OUTPUT
+Each job registers its ROOT output below
+.I OUTPUT_DIR
+in the user's DIRAC catalogue namespace.
+DIRAC chooses the storage element unless
+.B \-\-output\-se
+is supplied.
+Before submitting a job, the backend checks for its planned output LFN and
+removes an existing file to prevent a registration collision.
+
+.SH GRID EXAMPLES
+Submit analysis-defined EOS/XRootD samples to the grid:
+.nf
+fccanalysis submit grid analysis.py \e
+    --output result.root --output-dir analyses/example
+.fi
+.PP
+Create ten jobs per XRootD sample and restrict them to one DIRAC site:
+.nf
+fccanalysis submit grid analysis.py \e
+    --output result.root --output-dir analyses/example \e
+    --n-chunks 10 --site LCG.Example.org
+.fi
+.PP
+Submit a list of DIRAC LFNs in groups of five files:
+.nf
+fccanalysis submit grid analysis.py --lfn-input inputs.txt \e
+    --output result.root --output-dir analyses/example \e
+    --files-per-job 5
+.fi
+.PP
+Pass an event stride to every worker invocation:
+.nf
+fccanalysis submit grid analysis.py \e
+    --output result.root --output-dir analyses/example -- --stride 10
+.fi
+
 .SH SEE ALSO
-fccanalysis(1), fccanalysis-script(7)
+fccanalysis(1), fccanalysis-run(1), fccanalysis-script(7)
 
 .SH BUGS
 Many
