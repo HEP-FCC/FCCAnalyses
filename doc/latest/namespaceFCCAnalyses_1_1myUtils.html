@@ -112,7 +112,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a3174db79c74d73087ffbc528a825e347" id="r_a3174db79c74d73087ffbc528a825e347"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1myUtils_1_1FCCAnalysesComposite2.html">FCCAnalysesComposite2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3174db79c74d73087ffbc528a825e347">build_Bd2MuMu</a> (ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt; vertex, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; recop)</td></tr>
 <tr class="memitem:aa59644437aebc44447e523dd379aa76b" id="r_aa59644437aebc44447e523dd379aa76b"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertexMC.html">VertexingUtils::FCCAnalysesVertexMC</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa59644437aebc44447e523dd379aa76b">get_MCVertexObject</a> (ROOT::VecOps::RVec&lt; edm4hep::MCParticleData &gt; mc, ROOT::VecOps::RVec&lt; int &gt; ind)</td></tr>
 <tr class="memitem:a38f36bd8b5b44dd8e6cad72dff073890" id="r_a38f36bd8b5b44dd8e6cad72dff073890"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38f36bd8b5b44dd8e6cad72dff073890">merge_VertexObjet</a> (ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt; in)</td></tr>
-<tr class="memitem:a30d9ddc3aae337e05297e503e31d1fe8" id="r_a30d9ddc3aae337e05297e503e31d1fe8"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30d9ddc3aae337e05297e503e31d1fe8">get_VertexObject</a> (ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertexMC.html">VertexingUtils::FCCAnalysesVertexMC</a> &gt; mcver, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; reco, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks, ROOT::VecOps::RVec&lt; int &gt; recin, ROOT::VecOps::RVec&lt; int &gt; mcin)</td></tr>
+<tr class="memitem:a0353835c697caae6b59b4ff4789727df" id="r_a0353835c697caae6b59b4ff4789727df"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0353835c697caae6b59b4ff4789727df">get_VertexObject</a> (ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertexMC.html">VertexingUtils::FCCAnalysesVertexMC</a> &gt; mcver, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; reco, ROOT::VecOps::RVec&lt; edm4hep::TrackState &gt; tracks, ROOT::VecOps::RVec&lt; int &gt; recin, ROOT::VecOps::RVec&lt; int &gt; mcin, bool ComputeMomentaAtVertex=true)</td></tr>
+<tr class="memdesc:a0353835c697caae6b59b4ff4789727df"><td class="mdescLeft">&#160;</td><td class="mdescRight">ComputeMomentaAtVertex controls whether updated_track_momentum_at_vertex is filled for each returned vertex: it requires building a Delphes VertexMore object, whose cost scales as O(ntracks^3) and dominates the total runtime for events with many tracks.  <br /></td></tr>
 <tr class="memitem:afc337d031f7464df0f32ce1802e45e58" id="r_afc337d031f7464df0f32ce1802e45e58"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc337d031f7464df0f32ce1802e45e58">get_Vertex_mass</a> (ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt; vertex, ROOT::VecOps::RVec&lt; edm4hep::ReconstructedParticleData &gt; reco)</td></tr>
 <tr class="memitem:afb148f1d6b052c5d0eb7fb700d67c4fd" id="r_afb148f1d6b052c5d0eb7fb700d67c4fd"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb148f1d6b052c5d0eb7fb700d67c4fd">get_Vertex_x</a> (ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt; vertex)</td></tr>
 <tr class="memitem:ad96e1b602ea7ad4c08a3520019b84ec2" id="r_ad96e1b602ea7ad4c08a3520019b84ec2"><td class="memItemLeft" align="right" valign="top">ROOT::VecOps::RVec&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad96e1b602ea7ad4c08a3520019b84ec2">get_Vertex_y</a> (ROOT::VecOps::RVec&lt; <a class="el" href="structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertex.html">VertexingUtils::FCCAnalysesVertex</a> &gt; vertex)</td></tr>
@@ -1733,8 +1734,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a30d9ddc3aae337e05297e503e31d1fe8" name="a30d9ddc3aae337e05297e503e31d1fe8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30d9ddc3aae337e05297e503e31d1fe8">&#9670;&#160;</a></span>get_VertexObject()</h2>
+<a id="a0353835c697caae6b59b4ff4789727df" name="a0353835c697caae6b59b4ff4789727df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0353835c697caae6b59b4ff4789727df">&#9670;&#160;</a></span>get_VertexObject()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1762,10 +1763,18 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;</td>          <td class="paramname"><span class="paramname"><em>mcin</em></span>&#160;)</td>
+          <td class="paramtype">ROOT::VecOps::RVec&lt; int &gt;</td>          <td class="paramname"><span class="paramname"><em>mcin</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>ComputeMomentaAtVertex</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>ComputeMomentaAtVertex controls whether updated_track_momentum_at_vertex is filled for each returned vertex: it requires building a Delphes VertexMore object, whose cost scales as O(ntracks^3) and dominates the total runtime for events with many tracks. </p>
+<p>Set to false when only the vertex position/chi2/primary flag is needed (e.g. <a class="el" href="#a51ffb50ed91797e80986881eda4d5cae">hasPV()</a>) &ndash; see <a href="https://github.com/HEP-FCC/FCCAnalyses/issues/378">https://github.com/HEP-FCC/FCCAnalyses/issues/378</a>. </p>
 
 </div>
 </div>
