@@ -744,10 +744,6 @@ def run(parser):
             LOGGER.debug('Setting verbosity level "kDebug+10" for '
                          'RDataFrame...')
 
-    # Load real FastJet before Delphes gets pulled in via libFCCAnalyses,
-    # so ClusterSequence calls don't resolve into Delphes' bundled copy.
-    ROOT.gSystem.Load("libfastjet")
-
     # Load the pre-compiled analyzers
     LOGGER.info('Loading analyzers from libFCCAnalyses...')
     ROOT.gSystem.Load("libFCCAnalyses")
