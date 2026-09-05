@@ -90,6 +90,22 @@ These stages do not require \fIAnalysis\fR class neither \fIbuild_graph\fR
 function, they have their own set of attributes, please see the
 examples in the \fIexamples\fR of FCCAnalyses repository or
 fccanalysis-final-script(7) and fccanalysis-plots-script(7) manual pages.
+.TP
+\fBFit style analysis\fR
+The analysis script needs to contain a \fIFit\fR class of the following
+structure to generate Higgs Combine datacards:
+.IP
+class Fit():
+    def __init__(self, cmdline_args):
+        self.datacard_dir = "outputs/datacards/"
+        self.combine_args = "\-M MultiDimFit \-\-algo grid"
+        self.processes = {
+            "signal": 0,
+            "background": 1
+        }
+        self.channels = {
+            "channel_name": { ... }
+        }
 
 .SH ATTRIBUTES
 In case of running the FCCAnalysis in the staged style user can/should add the
@@ -237,7 +253,7 @@ sample.
 This section is under construction. You are invited to help :)
 
 .SH SEE ALSO
-fccanalysis(1), fccanalysis-run(1)
+fccanalysis(1), fccanalysis-run(1), fccanalysis-fit(1), fccanalysis-extract(1)
 
 .SH BUGS
 Many
