@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.9)
 
 
-project(FCCAnalyses VERSION 0.12.0
+project(FCCAnalyses VERSION 0.13.1
                     LANGUAGES CXX
 )
 
