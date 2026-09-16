@@ -3,6 +3,7 @@
 
 #include "FastJet/JetClustering.h"
 #include "ROOT/RVec.hxx"
+#include "edm4hep/MCParticleData.h"
 #include "fastjet/PseudoJet.hh"
 
 #include <algorithm>
@@ -18,6 +19,10 @@ namespace FCCAnalyses {
  * down to a negligible value, so they follow the jet they belong to without
  * changing any jet axis. The labelling is therefore a property of the
  * clustering, not of an ad-hoc cone, and works for every jet algorithm.
+ *
+ * Label conventions follow ATLAS:
+ *   - HadronGhostTruthLabelID: 0 light, 4 c, 5 b, 15 tau
+ *   - extended: adds 44 (cc), 54 (bc), 55 (bb), 1515 (tautau)
  */
 namespace JetGhostLabels {
 
@@ -28,6 +33,24 @@ struct GhostParticles {
   std::vector<int> pdg;
   std::vector<int> mc_index;
 };
+
+/// Heavy hadrons (and optionally taus) to ghost-associate.
+///
+/// @param pt_min_gev   minimum transverse momentum of the truth particle
+/// @param weakly_decaying  if true keep the last hadron of a chain (the ATLAS
+///        Hadron* convention); if false keep the first, i.e. the
+///        production-flavour hadron, which also keeps the pre-oscillation
+///        state of a neutral B (the ATLAS HadronGhostInitial* convention)
+/// @param include_taus add final taus, labelled 15
+///
+/// c hadrons descending from a b hadron are always dropped: they are the
+/// c-leg of the b decay, not an independent c.
+GhostParticles
+get_ghost_hadrons(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+                  const ROOT::VecOps::RVec<int> &parents,
+                  const ROOT::VecOps::RVec<int> &daughters,
+                  float pt_min_gev = 1.0f, bool weakly_decaying = true,
+                  bool include_taus = true);
 
 /// Re-run @p clustering with @p ghosts added and report, for every ghost, the
 /// index of the jet it landed in (-1 if it ended up outside every jet, which
@@ -107,6 +130,37 @@ associate_ghosts(Clustering clustering,
   }
   return assignment;
 }
+
+/// HadronGhostTruthLabelID: 0 light, 4 c, 5 b, 15 tau.
+ROOT::VecOps::RVec<int>
+get_hadron_label(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                 const ROOT::VecOps::RVec<int> &assignment,
+                 const GhostParticles &ghosts);
+
+/// HadronGhostExtendedTruthLabelID: adds 44 (cc), 54 (bc), 55 (bb),
+/// 1515 (tautau).
+ROOT::VecOps::RVec<int>
+get_hadron_extended_label(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                          const ROOT::VecOps::RVec<int> &assignment,
+                          const GhostParticles &ghosts);
+
+/// PDG id of the highest-pT ghost of the labelling flavour, 0 for light jets.
+ROOT::VecOps::RVec<int>
+get_hadron_label_pdg(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                     const ROOT::VecOps::RVec<int> &assignment,
+                     const GhostParticles &ghosts);
+
+/// pT of the labelling ghost, NaN for light jets.
+ROOT::VecOps::RVec<float>
+get_hadron_label_pt(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                    const ROOT::VecOps::RVec<int> &assignment,
+                    const GhostParticles &ghosts);
+
+/// Number of ghosts of a given heavy-flavour class per jet.
+ROOT::VecOps::RVec<int>
+count_ghosts(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+             const ROOT::VecOps::RVec<int> &assignment,
+             const GhostParticles &ghosts, int flavour);
 
 } // namespace JetGhostLabels
 } // namespace FCCAnalyses

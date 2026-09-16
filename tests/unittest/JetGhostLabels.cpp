@@ -85,3 +85,68 @@ TEST_CASE("ghosts-land-in-their-own-jet", "[JetGhostLabels]") {
   // the two ghosts follow opposite prongs, so they cannot share a jet
   REQUIRE(assoc[0] != assoc[1]);
 }
+
+TEST_CASE("hadron-ghost-labels", "[JetGhostLabels]") {
+  auto parts = two_prong_event();
+  auto clustered = JetClustering::clustering_ee_kt(2, 2, 1, 0)(parts);
+  ROOT::VecOps::RVec<fastjet::PseudoJet> jets(clustered.jets.begin(),
+                                              clustered.jets.end());
+
+  GhostParticles ghosts = make_ghost(40., 2., 5., 511); // B0 -> b jet
+  ghosts.p.emplace_back(-38., 4., -6., std::sqrt(38. * 38. + 16. + 36.));
+  ghosts.pdg.push_back(421); // D0 -> c jet
+  ghosts.mc_index.push_back(1);
+
+  auto assoc = FCCAnalyses::JetGhostLabels::associate_ghosts(
+      JetClustering::clustering_ee_kt(2, 2, 1, 0), parts,
+      clustered.constituents, ghosts);
+  auto label =
+      FCCAnalyses::JetGhostLabels::get_hadron_label(jets, assoc, ghosts);
+  auto pdg =
+      FCCAnalyses::JetGhostLabels::get_hadron_label_pdg(jets, assoc, ghosts);
+
+  REQUIRE(label.size() == 2);
+  REQUIRE(label[assoc[0]] == 5);
+  REQUIRE(label[assoc[1]] == 4);
+  REQUIRE(pdg[assoc[0]] == 511);
+  REQUIRE(pdg[assoc[1]] == 421);
+}
+
+TEST_CASE("hadron-ghost-extended-labels", "[JetGhostLabels]") {
+  auto parts = two_prong_event();
+  auto clustered = JetClustering::clustering_ee_kt(2, 2, 1, 0)(parts);
+  ROOT::VecOps::RVec<fastjet::PseudoJet> jets(clustered.jets.begin(),
+                                              clustered.jets.end());
+
+  // two b hadrons along the same prong -> 55
+  GhostParticles ghosts = make_ghost(40., 2., 5., 511);
+  ghosts.p.emplace_back(39., 1., 4., std::sqrt(39. * 39. + 1. + 16.));
+  ghosts.pdg.push_back(-521);
+  ghosts.mc_index.push_back(1);
+
+  auto assoc = FCCAnalyses::JetGhostLabels::associate_ghosts(
+      JetClustering::clustering_ee_kt(2, 2, 1, 0), parts,
+      clustered.constituents, ghosts);
+  REQUIRE(assoc[0] == assoc[1]);
+
+  auto ext = FCCAnalyses::JetGhostLabels::get_hadron_extended_label(jets, assoc,
+                                                                    ghosts);
+  auto nb = FCCAnalyses::JetGhostLabels::count_ghosts(jets, assoc, ghosts, 5);
+  REQUIRE(ext[assoc[0]] == 55);
+  REQUIRE(nb[assoc[0]] == 2);
+}
+
+TEST_CASE("unassociated-ghost-leaves-jet-light", "[JetGhostLabels]") {
+  auto parts = two_prong_event();
+  auto clustered = JetClustering::clustering_ee_kt(2, 2, 1, 0)(parts);
+  ROOT::VecOps::RVec<fastjet::PseudoJet> jets(clustered.jets.begin(),
+                                              clustered.jets.end());
+
+  GhostParticles none;
+  ROOT::VecOps::RVec<int> assoc;
+  auto label = FCCAnalyses::JetGhostLabels::get_hadron_label(jets, assoc, none);
+
+  REQUIRE(label.size() == 2);
+  REQUIRE(label[0] == 0);
+  REQUIRE(label[1] == 0);
+}
