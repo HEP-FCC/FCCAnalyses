@@ -41,6 +41,8 @@ doScale = True
 # Number of threads to use
 nCPUS = 2
 
+doTerminalDump = True
+
 # Whether to produce ROOT TTrees, default is False
 doTree = True
 
