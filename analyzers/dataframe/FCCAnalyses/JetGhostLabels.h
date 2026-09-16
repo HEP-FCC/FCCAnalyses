@@ -23,6 +23,7 @@ namespace FCCAnalyses {
  * Label conventions follow ATLAS:
  *   - HadronGhostTruthLabelID: 0 light, 4 c, 5 b, 15 tau
  *   - extended: adds 44 (cc), 54 (bc), 55 (bb), 1515 (tautau)
+ *   - PartonTruthLabelID: -1 none, 1 d, 2 u, 3 s, 4 c, 5 b, 21 gluon
  */
 namespace JetGhostLabels {
 
@@ -51,6 +52,14 @@ get_ghost_hadrons(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
                   const ROOT::VecOps::RVec<int> &daughters,
                   float pt_min_gev = 1.0f, bool weakly_decaying = true,
                   bool include_taus = true);
+
+/// Partons to ghost-associate: the last parton of each branch before
+/// hadronisation, identified from the decay tree rather than from generator
+/// status codes so that the selection is generator independent.
+GhostParticles
+get_ghost_partons(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+                  const ROOT::VecOps::RVec<int> &daughters,
+                  float pt_min_gev = 0.0f);
 
 /// Re-run @p clustering with @p ghosts added and report, for every ghost, the
 /// index of the jet it landed in (-1 if it ended up outside every jet, which
@@ -161,6 +170,26 @@ ROOT::VecOps::RVec<int>
 count_ghosts(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
              const ROOT::VecOps::RVec<int> &assignment,
              const GhostParticles &ghosts, int flavour);
+
+/// PartonTruthLabelID from the highest-energy ghost-associated parton:
+/// -1 none, 1 d, 2 u, 3 s, 4 c, 5 b, 21 gluon.
+ROOT::VecOps::RVec<int>
+get_parton_label(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                 const ROOT::VecOps::RVec<int> &assignment,
+                 const GhostParticles &ghosts);
+
+/// pT of the parton that defines PartonTruthLabelID, NaN if there is none.
+ROOT::VecOps::RVec<float>
+get_parton_label_pt(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                    const ROOT::VecOps::RVec<int> &assignment,
+                    const GhostParticles &ghosts);
+
+/// Angular distance between the jet and the parton that defines
+/// PartonTruthLabelID, NaN if there is none.
+ROOT::VecOps::RVec<float>
+get_parton_label_dr(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                    const ROOT::VecOps::RVec<int> &assignment,
+                    const GhostParticles &ghosts);
 
 } // namespace JetGhostLabels
 } // namespace FCCAnalyses

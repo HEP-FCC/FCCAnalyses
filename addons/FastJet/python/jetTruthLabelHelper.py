@@ -41,7 +41,8 @@ class JetTruthLabelHelper:
         par = self.particle
         self.definition = dict()
 
-        # ghost particle lists: heavy hadrons in both ATLAS conventions
+        # ghost particle lists: heavy hadrons in both ATLAS conventions, and
+        # the last partons before hadronisation
         self.definition["ghost_hadrons{}".format(t)] = (
             "JetGhostLabels::get_ghost_hadrons({}, TLMCParents{}, TLMCDaughters{}, {}, true, true)".format(
                 par, t, t, self.hadron_pt_min
@@ -52,9 +53,12 @@ class JetTruthLabelHelper:
                 par, t, t, self.hadron_pt_min
             )
         )
+        self.definition["ghost_partons{}".format(t)] = (
+            "JetGhostLabels::get_ghost_partons({}, TLMCDaughters{})".format(par, t)
+        )
 
         # ghost association: re-cluster with the ghosts added
-        for name in ("hadrons", "hadrons_initial"):
+        for name in ("hadrons", "hadrons_initial", "partons"):
             self.definition["ghost_assoc_{}{}".format(name, t)] = (
                 "JetGhostLabels::associate_ghosts({}, {}, {}, ghost_{}{})".format(
                     self.clustering_spec, self.pjetc, self.jetc, name, t
@@ -96,6 +100,16 @@ class JetTruthLabelHelper:
         )
         self.definition["jet_GhostCHadronsFinalCount{}".format(t)] = (
             "JetGhostLabels::count_ghosts({}, ghost_assoc_hadrons{}, ghost_hadrons{}, 4)".format(self.jets, t, t)
+        )
+
+        self.definition["jet_PartonTruthLabelID{}".format(t)] = (
+            "JetGhostLabels::get_parton_label({}, ghost_assoc_partons{}, ghost_partons{})".format(self.jets, t, t)
+        )
+        self.definition["jet_PartonTruthLabelPt{}".format(t)] = (
+            "JetGhostLabels::get_parton_label_pt({}, ghost_assoc_partons{}, ghost_partons{})".format(self.jets, t, t)
+        )
+        self.definition["jet_PartonTruthLabelDR{}".format(t)] = (
+            "JetGhostLabels::get_parton_label_dr({}, ghost_assoc_partons{}, ghost_partons{})".format(self.jets, t, t)
         )
 
     def define(self, df):

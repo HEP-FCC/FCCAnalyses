@@ -28,6 +28,11 @@ bool is_strange_llp(int pdg) {
          apid == 3312 || apid == 3322 || apid == 3334;
 }
 
+bool is_parton(int pdg) {
+  int apid = std::abs(pdg);
+  return (apid >= 1 && apid <= 6) || apid == 21;
+}
+
 AncestryFlags
 walk_ancestry(int idx, const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
               const ROOT::VecOps::RVec<int> &parents) {
@@ -95,6 +100,26 @@ bool is_weakly_decaying(int idx, int flavour,
     if (dau < 0 || dau >= static_cast<int>(mc.size()))
       continue;
     if (heavy_flavour_from_pdg(mc[dau].PDG) == flavour)
+      return false;
+  }
+  return true;
+}
+
+bool is_final_parton(int idx,
+                     const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+                     const ROOT::VecOps::RVec<int> &daughters) {
+  if (idx < 0 || idx >= static_cast<int>(mc.size()))
+    return false;
+  if (!is_parton(mc[idx].PDG))
+    return false;
+  const auto &p = mc[idx];
+  for (unsigned int r = p.daughters_begin; r < p.daughters_end; ++r) {
+    if (r >= daughters.size())
+      continue;
+    int dau = daughters[r];
+    if (dau < 0 || dau >= static_cast<int>(mc.size()))
+      continue;
+    if (is_parton(mc[dau].PDG))
       return false;
   }
   return true;

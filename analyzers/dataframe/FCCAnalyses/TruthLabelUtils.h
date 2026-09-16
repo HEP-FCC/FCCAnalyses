@@ -27,6 +27,9 @@ bool is_heavy_hadron(int pdg);
 /// (K_S0, Lambda, Sigma, Xi, Omega), as in the ATLAS truth-origin scheme.
 bool is_strange_llp(int pdg);
 
+/// True for a parton: quark (|PDG| <= 6) or gluon.
+bool is_parton(int pdg);
+
 /// What was found while walking a particle's ancestry.
 struct AncestryFlags {
   bool from_b = false;    ///< a b hadron sits above
@@ -55,6 +58,14 @@ bool has_same_flavour_ancestor(
 bool is_weakly_decaying(int idx, int flavour,
                         const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
                         const ROOT::VecOps::RVec<int> &daughters);
+
+/// True if @p idx has no parton daughter, i.e. it is the last parton of its
+/// branch before hadronisation. Generator independent: it does not rely on
+/// generator status codes, which differ between productions (Pythia8 exposes
+/// 71-79, Whizard+Pythia6 only 1 and 2).
+bool is_final_parton(int idx,
+                     const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+                     const ROOT::VecOps::RVec<int> &daughters);
 
 } // namespace TruthLabelUtils
 } // namespace FCCAnalyses

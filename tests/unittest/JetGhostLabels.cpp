@@ -145,8 +145,12 @@ TEST_CASE("unassociated-ghost-leaves-jet-light", "[JetGhostLabels]") {
   GhostParticles none;
   ROOT::VecOps::RVec<int> assoc;
   auto label = FCCAnalyses::JetGhostLabels::get_hadron_label(jets, assoc, none);
+  auto parton =
+      FCCAnalyses::JetGhostLabels::get_parton_label(jets, assoc, none);
 
   REQUIRE(label.size() == 2);
   REQUIRE(label[0] == 0);
   REQUIRE(label[1] == 0);
+  REQUIRE(parton[0] == -1);
+  REQUIRE(parton[1] == -1);
 }

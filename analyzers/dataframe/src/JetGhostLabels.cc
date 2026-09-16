@@ -78,6 +78,24 @@ int leading_ghost(int jet, int want, const ROOT::VecOps::RVec<int> &assignment,
   return best;
 }
 
+/// Index of the highest-energy ghost assigned to jet @p jet, or -1.
+int leading_energy_ghost(int jet, const ROOT::VecOps::RVec<int> &assignment,
+                         const GhostParticles &ghosts) {
+  int best = -1;
+  double best_e = -1.;
+  size_t n = std::min(assignment.size(), ghosts.p.size());
+  for (size_t i = 0; i < n; ++i) {
+    if (assignment[i] != jet)
+      continue;
+    double e = ghosts.p[i].e();
+    if (e > best_e) {
+      best_e = e;
+      best = static_cast<int>(i);
+    }
+  }
+  return best;
+}
+
 } // namespace
 
 GhostParticles
@@ -131,6 +149,26 @@ get_ghost_hadrons(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
                          p.mass * p.mass);
     out.p.emplace_back(mom.x, mom.y, mom.z, e);
     out.pdg.push_back(pdg);
+    out.mc_index.push_back(static_cast<int>(i));
+  }
+  return out;
+}
+
+GhostParticles
+get_ghost_partons(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+                  const ROOT::VecOps::RVec<int> &daughters, float pt_min_gev) {
+  GhostParticles out;
+  for (size_t i = 0; i < mc.size(); ++i) {
+    if (!TruthLabelUtils::is_final_parton(static_cast<int>(i), mc, daughters))
+      continue;
+    const auto &mom = mc[i].momentum;
+    double pt = std::sqrt(mom.x * mom.x + mom.y * mom.y);
+    if (pt < pt_min_gev)
+      continue;
+    double e = std::sqrt(mom.x * mom.x + mom.y * mom.y + mom.z * mom.z +
+                         mc[i].mass * mc[i].mass);
+    out.p.emplace_back(mom.x, mom.y, mom.z, e);
+    out.pdg.push_back(mc[i].PDG);
     out.mc_index.push_back(static_cast<int>(i));
   }
   return out;
@@ -220,6 +258,45 @@ count_ghosts(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
       out[j] = t[j].n_c;
     else if (flavour == 15)
       out[j] = t[j].n_tau;
+  }
+  return out;
+}
+
+ROOT::VecOps::RVec<int>
+get_parton_label(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                 const ROOT::VecOps::RVec<int> &assignment,
+                 const GhostParticles &ghosts) {
+  ROOT::VecOps::RVec<int> out(jets.size(), -1);
+  for (size_t j = 0; j < jets.size(); ++j) {
+    int i = leading_energy_ghost(static_cast<int>(j), assignment, ghosts);
+    if (i >= 0)
+      out[j] = std::abs(ghosts.pdg[i]);
+  }
+  return out;
+}
+
+ROOT::VecOps::RVec<float>
+get_parton_label_pt(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                    const ROOT::VecOps::RVec<int> &assignment,
+                    const GhostParticles &ghosts) {
+  ROOT::VecOps::RVec<float> out(jets.size(), kNaN);
+  for (size_t j = 0; j < jets.size(); ++j) {
+    int i = leading_energy_ghost(static_cast<int>(j), assignment, ghosts);
+    if (i >= 0)
+      out[j] = static_cast<float>(ghosts.p[i].pt());
+  }
+  return out;
+}
+
+ROOT::VecOps::RVec<float>
+get_parton_label_dr(const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets,
+                    const ROOT::VecOps::RVec<int> &assignment,
+                    const GhostParticles &ghosts) {
+  ROOT::VecOps::RVec<float> out(jets.size(), kNaN);
+  for (size_t j = 0; j < jets.size(); ++j) {
+    int i = leading_energy_ghost(static_cast<int>(j), assignment, ghosts);
+    if (i >= 0)
+      out[j] = static_cast<float>(jets[j].delta_R(ghosts.p[i]));
   }
   return out;
 }
