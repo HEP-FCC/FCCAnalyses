@@ -1,5 +1,6 @@
 #include "FCCAnalyses/TruthLabelUtils.h"
 
+#include <algorithm>
 #include <cmath>
 #include <set>
 
@@ -25,6 +26,17 @@ bool is_heavy_hadron(int pdg) { return heavy_flavour_from_pdg(pdg) != 0; }
 bool is_strange_llp(int pdg) {
   int apid = std::abs(pdg);
   return apid == 310 || apid == 3122 || apid == 3112 || apid == 3222 ||
+         apid == 3312 || apid == 3322 || apid == 3334;
+}
+
+bool is_strange_meson(int pdg) {
+  int apid = std::abs(pdg);
+  return apid == 310 || apid == 130 || apid == 321;
+}
+
+bool is_strange_baryon(int pdg) {
+  int apid = std::abs(pdg);
+  return apid == 3122 || apid == 3112 || apid == 3212 || apid == 3222 ||
          apid == 3312 || apid == 3322 || apid == 3334;
 }
 
@@ -123,6 +135,107 @@ bool is_final_parton(int idx,
       return false;
   }
   return true;
+}
+
+edm4hep::Vector3d
+mc_primary_vertex(const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc) {
+  for (const auto &p : mc)
+    if (p.generatorStatus == 21)
+      return p.vertex;
+  for (const auto &p : mc)
+    if (p.generatorStatus == 4)
+      return p.vertex;
+  for (const auto &p : mc)
+    if (p.parents_begin == p.parents_end)
+      return p.vertex;
+  return edm4hep::Vector3d(0., 0., 0.);
+}
+
+double distance2(const edm4hep::Vector3d &a, const edm4hep::Vector3d &b) {
+  double dx = a.x - b.x;
+  double dy = a.y - b.y;
+  double dz = a.z - b.z;
+  return dx * dx + dy * dy + dz * dz;
+}
+
+std::unordered_map<int, int>
+reco_to_mc_map(const ROOT::VecOps::RVec<int> &recin,
+               const ROOT::VecOps::RVec<int> &mcin) {
+  std::unordered_map<int, int> m;
+  size_t n = std::min(recin.size(), mcin.size());
+  m.reserve(n);
+  for (size_t i = 0; i < n; ++i)
+    m[recin[i]] = mcin[i];
+  return m;
+}
+
+std::unordered_map<int, int>
+truth_vertex_indices(const std::vector<int> &mc_indices,
+                     const ROOT::VecOps::RVec<edm4hep::MCParticleData> &mc,
+                     float merge_radius_mm) {
+  const double radius2 = static_cast<double>(merge_radius_mm) *
+                         static_cast<double>(merge_radius_mm);
+
+  std::set<int> unique_mc;
+  for (int m : mc_indices)
+    if (m >= 0 && m < static_cast<int>(mc.size()))
+      unique_mc.insert(m);
+
+  std::vector<edm4hep::Vector3d> cluster_pos;
+  std::vector<int> cluster_size;
+  std::unordered_map<int, int> mc_to_cluster;
+  for (int m : unique_mc) {
+    const auto &vtx = mc[m].vertex;
+    int assigned = -1;
+    for (size_t ci = 0; ci < cluster_pos.size(); ++ci) {
+      if (distance2(vtx, cluster_pos[ci]) < radius2) {
+        assigned = static_cast<int>(ci);
+        break;
+      }
+    }
+    if (assigned < 0) {
+      assigned = static_cast<int>(cluster_pos.size());
+      cluster_pos.push_back(vtx);
+      cluster_size.push_back(0);
+    }
+    cluster_size[assigned]++;
+    mc_to_cluster[m] = assigned;
+  }
+
+  // index 0 is the cluster holding the MC primary vertex; the rest follow in
+  // decreasing occupancy so the numbering is stable across jets of an event
+  std::unordered_map<int, int> relabel;
+  if (!cluster_pos.empty()) {
+    const edm4hep::Vector3d pv = mc_primary_vertex(mc);
+    int pv_cluster = -1;
+    for (size_t ci = 0; ci < cluster_pos.size(); ++ci) {
+      if (distance2(pv, cluster_pos[ci]) < radius2) {
+        pv_cluster = static_cast<int>(ci);
+        break;
+      }
+    }
+
+    std::vector<int> order(cluster_pos.size());
+    for (size_t ci = 0; ci < order.size(); ++ci)
+      order[ci] = static_cast<int>(ci);
+    std::stable_sort(order.begin(), order.end(), [&](int a, int b) {
+      return cluster_size[a] > cluster_size[b];
+    });
+    if (pv_cluster < 0)
+      pv_cluster = order.front();
+
+    relabel[pv_cluster] = 0;
+    int next_idx = 1;
+    for (int ci : order)
+      if (ci != pv_cluster)
+        relabel[ci] = next_idx++;
+  }
+
+  std::unordered_map<int, int> result;
+  result.reserve(mc_to_cluster.size());
+  for (const auto &kv : mc_to_cluster)
+    result[kv.first] = relabel[kv.second];
+  return result;
 }
 
 } // namespace TruthLabelUtils
