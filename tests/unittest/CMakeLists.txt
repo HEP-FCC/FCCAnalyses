@@ -9,6 +9,7 @@ list(APPEND unittest_src unittest.cpp
                          algorithms.cpp
                          ReconstructedParticle.cpp
                          JetGhostLabels.cpp
+                         TruthJets.cpp
 )
 
 if(WITH_PODIO_DATASOURCE)
