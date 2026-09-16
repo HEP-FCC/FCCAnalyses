@@ -6,6 +6,8 @@ from examples.FCCee.weaver.config import (
 
 from addons.ONNXRuntime.jetFlavourHelper import JetFlavourHelper
 from addons.FastJet.jetClusteringHelper import ExclusiveJetClusteringHelper
+from addons.FastJet.jetTruthLabelHelper import JetTruthLabelHelper
+from addons.FastJet.truthJetHelper import TruthJetHelper
 
 testFile = 'https://fccsw.web.cern.ch/fccsw/analysis/test-samples/' \
            'edm4hep099/wzp6_ee_nunuH_Hss_ecm240.root'
@@ -32,6 +34,14 @@ class RDFanalysis:
 
         ## define observables for tagger
         df = jetFlavourHelper.define(df)
+
+        ## ghost jet labels and per-constituent truth labels
+        jetTruthLabelHelper = JetTruthLabelHelper(collections, jetClusteringHelper)
+        df = jetTruthLabelHelper.define(df)
+
+        ## matched truth-jet kinematics, e.g. as a jet energy regression target
+        truthJetHelper = TruthJetHelper(collections, jetClusteringHelper)
+        df = truthJetHelper.define(df)
 
         ## compute invariant mass of two leading jets
         df = df.Define("jet_p4", "JetConstituentsUtils::compute_tlv_jets({})".format(jetClusteringHelper.jets))
