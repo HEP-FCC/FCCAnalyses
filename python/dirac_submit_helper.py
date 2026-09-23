@@ -176,7 +176,7 @@ def _catalog_file_exists(catalog, lfn: str) -> bool:
         raise RuntimeError(
             f'Unable to check whether output LFN exists: {failed[lfn]}'
         )
-    return lfn in successful
+    return bool(successful.get(lfn, False))
 
 
 def _remove_existing_output(dirac, planned_job) -> None:
