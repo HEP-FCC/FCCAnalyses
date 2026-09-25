@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path, PurePosixPath
 import re
-from typing import Literal, Optional
+from typing import Literal
 
 
 class SubmissionValidationError(ValueError):
@@ -39,7 +39,7 @@ class ResolvedSample:
     output_stem: str
     input_urls: tuple[str, ...]
     chunks: int
-    stride: Optional[int]
+    stride: int | None
 
     def __post_init__(self) -> None:
         _require_simple_name(self.name, "sample.name")
@@ -99,7 +99,7 @@ class PlannedJob:
     index: int
     job_name: str
     input_mode: InputMode
-    sample_name: Optional[str]
+    sample_name: str | None
     source_inputs: tuple[str, ...]
     worker_file_list_entries: tuple[str, ...]
     input_list_filename: str
@@ -145,21 +145,21 @@ class SubmissionRequest:
     input_mode: InputMode
     input_lfns: tuple[str, ...]
     samples: tuple[ResolvedSample, ...]
-    files_per_job: Optional[int]
-    lfn_sample_name: Optional[str]
+    files_per_job: int | None
+    lfn_sample_name: str | None
     run_arguments: tuple[str, ...]
     output_file: str
     output_path: str
-    output_se: Optional[str]
+    output_se: str | None
     key4hep_setup: str
     job_name: str
     job_group: str
     submit_mode: str
-    destination_site: Optional[str]
+    destination_site: str | None
     submission_id: str
-    user_build_payload: Optional[UserBuildPayload]
-    analysis_include_archive: Optional[str] = None
-    n_chunks: Optional[int] = None
+    user_build_payload: UserBuildPayload | None
+    analysis_include_archive: str | None = None
+    n_chunks: int | None = None
 
     VERSION = 12
 
@@ -435,8 +435,8 @@ def _plan_input_groups(request: SubmissionRequest) -> list[dict[str, object]]:
 
 def group_input_lfns(
     input_lfns: Sequence[str],
-    files_per_job: Optional[int] = None,
-    n_chunks: Optional[int] = None,
+    files_per_job: int | None = None,
+    n_chunks: int | None = None,
 ) -> tuple[InputGroup, ...]:
     """Validate and group concrete LFNs, including staging-name collisions."""
     _require_optional_positive_integer(files_per_job, "files_per_job")
@@ -480,8 +480,8 @@ def group_input_lfns(
 
 def _group_inputs(
     values: Sequence[str],
-    n_chunks: Optional[int],
-    files_per_job: Optional[int],
+    n_chunks: int | None,
+    files_per_job: int | None,
     default_chunks: int,
 ) -> tuple[tuple[str, ...], ...]:
     """Split inputs evenly using an explicit or derived chunk count."""
@@ -612,7 +612,7 @@ def _require_submission_id(value: object) -> None:
 
 def _planned_output_filename(
     filename: str,
-    output_stem: Optional[str],
+    output_stem: str | None,
     index: int,
     width: int,
 ) -> str:

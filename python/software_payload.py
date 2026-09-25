@@ -16,7 +16,6 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
-from typing import Optional
 
 
 class SoftwarePayloadError(ValueError):
@@ -47,7 +46,7 @@ PAYLOAD_ROOT = "fccanalyses-payload"
 
 
 def validate_user_build(
-    environment: Optional[Mapping[str, str]] = None,
+    environment: Mapping[str, str] | None = None,
 ) -> ValidatedUserBuild:
     """Validate the active local build required for a future grid payload."""
     environment = os.environ if environment is None else environment

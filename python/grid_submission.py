@@ -15,7 +15,7 @@ import subprocess
 import tarfile
 import tempfile
 from types import ModuleType
-from typing import Any, Optional
+from typing import Any
 
 from anascript import validate_sample_list
 
@@ -56,9 +56,9 @@ class GridSubmissionError(ValueError):
 def create_grid_submission_request(
     args: argparse.Namespace,
     analysis_module: ModuleType,
-    key4hep_setup: Optional[str] = None,
-    user_build_payload: Optional[UserBuildPayload] = None,
-    analysis_include_archive_path: Optional[Path] = None,
+    key4hep_setup: str | None = None,
+    user_build_payload: UserBuildPayload | None = None,
+    analysis_include_archive_path: Path | None = None,
 ) -> SubmissionRequest:
     '''Create a backend-neutral grid request from validated CLI arguments.'''
     analysis_script = _require_file(args.anascript_path, 'Analysis script')
@@ -214,8 +214,8 @@ def _resolve_analysis_samples(
 def _create_analysis_include_archive(
     analysis_script: Path,
     analysis_class: Any,
-    archive_path: Optional[Path],
-) -> Optional[Path]:
+    archive_path: Path | None,
+) -> Path | None:
     '''Archive Analysis.include_paths while preserving analysis-relative paths.'''
     include_paths = getattr(analysis_class, 'include_paths', None)
     if include_paths is None:
@@ -392,7 +392,7 @@ def _xrootd_location(directory: str) -> tuple[str, str]:
     )
 
 
-def _parse_xrdfs_listing(line: str) -> Optional[tuple[str, str]]:
+def _parse_xrdfs_listing(line: str) -> tuple[str, str] | None:
     '''Extract the entry type and path from one ``xrdfs ls -l`` line.'''
     parts = line.split()
     if not parts:
@@ -564,7 +564,7 @@ def _require_file(path_value: str, description: str) -> Path:
     return path
 
 
-def _require_key4hep_setup(override: Optional[str]) -> Path:
+def _require_key4hep_setup(override: str | None) -> Path:
     path_value = override or os.environ.get('KEY4HEP_STACK')
     if not path_value:
         raise GridSubmissionError(
