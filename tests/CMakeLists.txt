@@ -8,10 +8,13 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 add_test(
   NAME grid_submission_python
-  COMMAND ${Python3_EXECUTABLE} -m unittest discover
-          -s ${CMAKE_CURRENT_LIST_DIR}/python
-          -p test_*.py
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  COMMAND ${Python3_EXECUTABLE} -m unittest
+          test_dirac_submit_helper
+          test_grid_submission
+          test_software_payload
+          test_submission
+          test_submit_grid
+  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/python
 )
 add_test(
   NAME grid_submission_worker_wrapper
