@@ -6,7 +6,6 @@ submission process.
 '''
 
 import argparse
-import importlib.util
 import logging
 import math
 import os
@@ -15,6 +14,7 @@ import re
 import subprocess
 import tarfile
 import tempfile
+from types import ModuleType
 from typing import Any, Optional
 
 from anascript import validate_sample_list
@@ -55,6 +55,7 @@ class GridSubmissionError(ValueError):
 
 def create_grid_submission_request(
     args: argparse.Namespace,
+    analysis_module: ModuleType,
     key4hep_setup: Optional[str] = None,
     user_build_payload: Optional[UserBuildPayload] = None,
     analysis_include_archive_path: Optional[Path] = None,
@@ -71,7 +72,9 @@ def create_grid_submission_request(
     try:
         run_arguments = _validated_run_arguments(getattr(args, 'remaining', []))
         n_chunks = getattr(args, 'n_chunks', None)
-        analysis_class = _load_analysis_class(analysis_script, args)
+        analysis_class = _create_analysis_instance(
+            analysis_module, analysis_script, args
+        )
         _warn_ignored_sample_event_limits(analysis_class)
         if args.lfn_input is not None:
             input_mode = 'dirac-lfn'
@@ -269,29 +272,22 @@ def _create_analysis_include_archive(
     return archive_path.resolve()
 
 
-def _load_analysis_class(analysis_script: Path, args: argparse.Namespace) -> Any:
-    '''Import one Analysis-style script and construct its Analysis instance.'''
-    try:
-        specification = importlib.util.spec_from_file_location(
-            'fccanalysis_grid', analysis_script
-        )
-        if specification is None or specification.loader is None:
-            raise GridSubmissionError(f'Cannot load analysis script: {analysis_script}')
-        module = importlib.util.module_from_spec(specification)
-        specification.loader.exec_module(module)
-    except (OSError, SyntaxError) as error:
+def _create_analysis_instance(
+    analysis_module: ModuleType,
+    analysis_script: Path,
+    args: argparse.Namespace,
+) -> Any:
+    '''Construct an Analysis instance from an already loaded module.'''
+    if not hasattr(analysis_module, 'Analysis'):
         raise GridSubmissionError(
-            f'Cannot load analysis script {analysis_script}: {error}'
-        ) from error
-    if not hasattr(module, 'Analysis'):
-        raise GridSubmissionError(
-            'Grid submission requires a modern Analysis-style analysis script.'
+            'Grid submission requires an Analysis class to be defined '
+            'in the analysis script.'
         )
 
     constructor_arguments = vars(args).copy()
     constructor_arguments['unknown'] = list(getattr(args, 'remaining', []))
     try:
-        return module.Analysis(constructor_arguments)
+        return analysis_module.Analysis(constructor_arguments)
     except Exception as error:
         raise GridSubmissionError(
             f'Could not construct Analysis from {analysis_script}: {error}'
@@ -457,7 +453,10 @@ def _event_count(url: str) -> int:
         input_file.Close()
 
 
-def submit_grid_submission(args: argparse.Namespace) -> None:
+def submit_grid_submission(
+    args: argparse.Namespace,
+    analysis_module: ModuleType,
+) -> None:
     '''Start the isolated DIRAC helper for one parsed grid submission.'''
     source_root = _fccanalyses_root()
     runner = _require_file(
@@ -489,6 +488,7 @@ def submit_grid_submission(args: argparse.Namespace) -> None:
 
         request = create_grid_submission_request(
             args,
+            analysis_module,
             key4hep_setup=key4hep_setup,
             user_build_payload=user_build_payload,
             analysis_include_archive_path=(
@@ -498,7 +498,6 @@ def submit_grid_submission(args: argparse.Namespace) -> None:
         request_path = Path(directory) / 'submission-request.json'
         request.write_json(request_path)
 
-        print('Preparing DIRAC grid submission.', flush=True)
         print(f'Worker Key4hep setup: {request.key4hep_setup}', flush=True)
         if user_build_payload is None:
             print('Worker runtime: FCCAnalyses from the Key4hep stack', flush=True)

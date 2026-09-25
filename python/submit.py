@@ -51,13 +51,6 @@ def submit_analysis(parser: argparse.ArgumentParser) -> None:
         LOGGER.error('Submission to the Slurm is not yet implemented!\n'
                      'Aborting...')
         sys.exit(3)
-    elif args.where == 'grid':
-        try:
-            submit_grid_submission(args)
-        except GridSubmissionError as error:
-            LOGGER.error('%s\nAborting...', error)
-            sys.exit(3)
-        return
 
     # Work with absolute path of the analysis script.
     anapath = os.path.abspath(args.anascript_path)
@@ -81,3 +74,11 @@ def submit_analysis(parser: argparse.ArgumentParser) -> None:
 
     if args.where == 'ht-condor':
         send_to_batch(args, analysis_module)
+
+    elif args.where == 'grid':
+        LOGGER.info('Preparing analysis submission to the grid...')
+        try:
+            submit_grid_submission(args, analysis_module)
+        except GridSubmissionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
