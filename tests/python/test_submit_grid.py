@@ -5,6 +5,8 @@ import sys
 import tempfile
 import types
 import unittest
+from contextlib import redirect_stderr
+from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
@@ -93,8 +95,9 @@ class SubmitGridTest(unittest.TestCase):
         ]
 
         with patch.object(sys, 'argv', command):
-            with self.assertRaises(SystemExit) as error:
-                submit_analysis(parser)
+            with redirect_stderr(StringIO()):
+                with self.assertRaises(SystemExit) as error:
+                    submit_analysis(parser)
 
         self.assertEqual(error.exception.code, 2)
 

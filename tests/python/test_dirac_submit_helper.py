@@ -5,6 +5,8 @@ import sys
 import tempfile
 import types
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 
 
@@ -358,9 +360,15 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 removed.append(lfn)
                 return {'OK': True}
 
-        _remove_existing_output(FakeDirac(), planned_job)
+        output = StringIO()
+        with redirect_stdout(output):
+            _remove_existing_output(FakeDirac(), planned_job)
 
         self.assertEqual(removed, [output_lfn])
+        self.assertIn(
+            f'WARNING: Removing existing output LFN: {output_lfn}',
+            output.getvalue(),
+        )
 
     def test_uses_proxy_group_when_config_does_not_define_a_vo(self) -> None:
         proxy_info_module = sys.modules['DIRAC.Core.Security.ProxyInfo']
