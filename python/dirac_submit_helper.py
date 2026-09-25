@@ -5,8 +5,6 @@ has created the supported DIRAC client environment. Keep ILCDIRAC imports in
 this file so the public FCCAnalyses process remains independent of DIRAC.
 '''
 
-from __future__ import annotations
-
 import os
 from pathlib import Path
 import shlex
