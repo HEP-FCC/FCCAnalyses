@@ -15,6 +15,11 @@ import cppyy
 import numpy as np
 from threading import Thread
 from queue import Queue
+from input_resolver import (
+    InputResolutionError,
+    read_input_file_list,
+    resolve_directory
+)
 
 
 ROOT.gROOT.SetBatch(True)
@@ -281,47 +286,23 @@ def get_file_list(file_list_path: str) -> list[str]:
     '''
     Loads file list from the provided file.
     '''
-    if not os.path.isfile(file_list_path):
-        LOGGER.error('Provided file containing list of ROOT files could not '
-                     'be found!\nAborting...')
+    try:
+        return read_input_file_list(file_list_path)
+    except InputResolutionError as error:
+        LOGGER.error('%s\nAborting...', error)
         sys.exit(3)
-
-    with open(file_list_path, 'r', encoding='utf-8') as lstfile:
-        file_list = [line.strip() for line in lstfile]
-
-    # remove empty lines
-    file_list = [line for line in file_list if line]
-
-    # remove commented out lines
-    file_list = [line for line in file_list if line[0] != '#']
-
-    if not file_list:
-        LOGGER.error('Provided file containing list of ROOT files is empty or '
-                     'does not contain valid lines!\nAborting...')
-        sys.exit(3)
-
-    return file_list
 
 
 # _____________________________________________________________________________
-def get_files_in_dir(dir_path: str) -> Optional[list[str]]:
+def get_files_in_dir(dir_path: str) -> list[str]:
     '''
     Finds ROOT files in the provided directory.
     '''
-
-    if not os.path.isdir(dir_path):
-        LOGGER.error('Can\'t access the sample directory!\n - %s\nAborting...',
-                     dir_path)
+    try:
+        return resolve_directory(dir_path)
+    except InputResolutionError as error:
+        LOGGER.error('%s\nAborting...', error)
         sys.exit(3)
-
-    files = [os.path.join(dir_path, f) for f in os.listdir(dir_path) if
-             os.path.isfile(os.path.join(dir_path, f)) and
-             f.endswith('.root')]
-
-    if not files:
-        return None
-
-    return files
 
 
 # _____________________________________________________________________________
