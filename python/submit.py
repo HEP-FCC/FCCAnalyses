@@ -9,9 +9,26 @@ import importlib
 import argparse
 import shutil
 from batch import send_to_batch
+from grid_submission import GridSubmissionError, submit_grid_submission
 
 
 LOGGER = logging.getLogger('FCCAnalyses.submit')
+
+
+# _____________________________________________________________________________
+def _parse_submit_arguments(parser: argparse.ArgumentParser) -> argparse.Namespace:
+    '''Parse submission arguments and preserve grid worker arguments after --.'''
+    preliminary_args, _ = parser.parse_known_args()
+    if preliminary_args.where != 'grid' or '--' not in sys.argv:
+        args = parser.parse_args()
+        if args.where == 'grid':
+            args.remaining = []
+        return args
+
+    separator_index = sys.argv.index('--')
+    args = parser.parse_args(sys.argv[1:separator_index])
+    args.remaining = sys.argv[separator_index + 1:]
+    return args
 
 
 # _____________________________________________________________________________
@@ -20,7 +37,7 @@ def submit_analysis(parser: argparse.ArgumentParser) -> None:
     Sub-command entry point.
     '''
 
-    args = parser.parse_args()
+    args = _parse_submit_arguments(parser)
 
     # Check to where the analysis will be submitted.
     if args.where == 'ht-condor':
@@ -32,10 +49,6 @@ def submit_analysis(parser: argparse.ArgumentParser) -> None:
 
     elif args.where == 'slurm':
         LOGGER.error('Submission to the Slurm is not yet implemented!\n'
-                     'Aborting...')
-        sys.exit(3)
-    elif args.where == 'grid':
-        LOGGER.error('Submission to the GRID is not yet implemented!\n'
                      'Aborting...')
         sys.exit(3)
 
@@ -61,3 +74,11 @@ def submit_analysis(parser: argparse.ArgumentParser) -> None:
 
     if args.where == 'ht-condor':
         send_to_batch(args, analysis_module)
+
+    elif args.where == 'grid':
+        LOGGER.info('Preparing analysis submission to the grid...')
+        try:
+            submit_grid_submission(args, analysis_module)
+        except GridSubmissionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)

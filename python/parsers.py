@@ -5,6 +5,19 @@ Parsers for the fccanalysis sub-commands
 import argparse
 
 
+def _positive_integer(value):
+    '''Parse a positive integer command-line value.'''
+    try:
+        parsed = int(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError(
+            f'expected an integer, got {value!r}'
+        ) from error
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError('value must be greater than zero')
+    return parsed
+
+
 def setup_build_parser(parser):
     '''
     Arguments for the build sub-command
@@ -81,15 +94,119 @@ def setup_submit_parser(parser):
     '''
     Define command line arguments for the submit sub-command.
     '''
-    parser.add_argument('anascript_path',
-                        type=str,
-                        help='path to the analysis script')
-    parser.add_argument('-w', '--where',
-                        type=str,
-                        choices=['ht-condor', 'slurm', 'grid'],
-                        default='ht-condor',
-                        help='where to submit the analysis')
-    parser.add_argument('remaining', nargs=argparse.REMAINDER)
+    submit_parsers = parser.add_subparsers(
+        title='submission backends',
+        dest='where',
+        required=True
+    )
+
+    htcondor_parser = submit_parsers.add_parser(
+        'ht-condor',
+        help='submit through HTCondor',
+        description='Submit an FCCAnalyses run through HTCondor.'
+    )
+    htcondor_parser.add_argument(
+        'anascript_path',
+        type=str,
+        help='path to the analysis script'
+    )
+    htcondor_parser.add_argument('remaining', nargs=argparse.REMAINDER)
+
+    slurm_parser = submit_parsers.add_parser(
+        'slurm',
+        help='submit through Slurm (not yet implemented)',
+        description='Submission through Slurm is not yet implemented.'
+    )
+    slurm_parser.add_argument(
+        'anascript_path',
+        type=str,
+        help='path to the analysis script'
+    )
+
+    grid_parser = submit_parsers.add_parser(
+        'grid',
+        help='submit through the DIRAC-managed grid',
+        description='Submit an FCCAnalyses run to the DIRAC-managed grid.',
+        epilog=(
+            'Arguments after -- are forwarded unchanged to fccanalysis run '
+            'for every planned worker job. Their effects therefore apply '
+            'independently to each job.'
+        ),
+    )
+    setup_grid_submit_parser(grid_parser)
+
+
+# _____________________________________________________________________________
+def setup_grid_submit_parser(parser):
+    '''Define arguments accepted by the DIRAC grid backend.'''
+    parser.add_argument('anascript_path', help='path to analysis script')
+    parser.add_argument(
+        '--lfn-input',
+        default=None,
+        metavar='LFN_LIST',
+        help='text file containing one DIRAC LFN per line; selects LFN input '
+        'mode instead of XRootD input'
+    )
+    parser.add_argument(
+        '-o', '--output',
+        type=str,
+        required=True,
+        metavar='OUTPUT_FILE',
+        help='base output ROOT filename (will be suffixed with the job number)'
+    )
+    parser.add_argument(
+        '--output-dir',
+        required=True,
+        metavar='OUTPUT_DIR',
+        help='output directory relative to your GRID catalogue root (required)'
+    )
+    parser.add_argument(
+        '--output-se',
+        default=None,
+        metavar='STORAGE_ELEMENT',
+        help='override the DIRAC-selected storage element for output files'
+    )
+    grouping = parser.add_mutually_exclusive_group()
+    grouping.add_argument(
+        '--files-per-job',
+        type=_positive_integer,
+        default=None,
+        metavar='COUNT',
+        help='number of input files processed by each grid job; overrides '
+        'sample chunks when supplied'
+    )
+    grouping.add_argument(
+        '--n-chunks',
+        type=_positive_integer,
+        default=None,
+        metavar='COUNT',
+        help='requested number of jobs/output chunks per XRootD sample or '
+        'across the complete LFN input list; overrides sample chunks when '
+        'supplied'
+    )
+    parser.add_argument(
+        '--sample-name',
+        default=None,
+        metavar='NAME',
+        help='optional sample name forwarded to workers in LFN input mode'
+    )
+    parser.add_argument(
+        '--site',
+        default=None,
+        metavar='SITE',
+        help='restrict jobs to this DIRAC computing site'
+    )
+    parser.add_argument(
+        '--mode',
+        choices=('wms', 'local'),
+        default='wms',
+        help='submit to the WMS or execute through local DIRAC mode (default: wms)'
+    )
+    parser.add_argument(
+        '--ship-local-build',
+        action='store_true',
+        help='ship the active locally built FCCAnalyses installation'
+    )
 
 
 # _____________________________________________________________________________
