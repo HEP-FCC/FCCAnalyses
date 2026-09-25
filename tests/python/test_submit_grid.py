@@ -37,7 +37,7 @@ class SubmitGridTest(unittest.TestCase):
     def test_routes_lfn_grid_arguments_to_grid_frontend(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             analysis_script = Path(directory) / 'analysis.py'
-            analysis_script.write_text('this is not valid Python\n', encoding='utf-8')
+            analysis_script.write_text('class Analysis: pass\n', encoding='utf-8')
             parser = self.make_submit_parser()
             command = [
                 'fccanalysis',
@@ -55,12 +55,30 @@ class SubmitGridTest(unittest.TestCase):
                     submit_analysis(parser)
 
         submit_grid.assert_called_once()
-        args = submit_grid.call_args.args[0]
+        args, analysis_module = submit_grid.call_args.args
+        self.assertTrue(hasattr(analysis_module, 'Analysis'))
+        self.assertEqual(analysis_module.__file__, str(analysis_script))
         self.assertEqual(args.anascript_path, str(analysis_script))
         self.assertEqual(args.lfn_input, '/tmp/input-lfns.txt')
         self.assertEqual(args.output, 'analysis.root')
         self.assertIsNone(args.output_se)
         self.assertEqual(args.remaining, ['--stride', '5', '--nevents', '100'])
+
+    def test_rejects_invalid_analysis_before_grid_dispatch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            analysis_script = Path(directory) / 'analysis.py'
+            analysis_script.write_text('this is not valid Python\n', encoding='utf-8')
+            command = [
+                'fccanalysis', 'submit', 'grid', str(analysis_script),
+                '--output', 'analysis.root', '--output-dir', 'analysis/results',
+            ]
+            with patch.object(sys, 'argv', command):
+                with patch('submit.submit_grid_submission') as submit_grid:
+                    with self.assertLogs('FCCAnalyses.submit', level='ERROR'):
+                        with self.assertRaises(SystemExit) as error:
+                            submit_analysis(self.make_submit_parser())
+                    submit_grid.assert_not_called()
+            self.assertEqual(error.exception.code, 3)
 
     def test_rejects_unknown_grid_argument_without_separator(self) -> None:
         parser = self.make_submit_parser()

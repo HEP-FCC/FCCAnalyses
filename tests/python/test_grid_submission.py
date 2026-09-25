@@ -1,6 +1,7 @@
 '''Tests for the Key4hep-side grid submission frontend.'''
 
 import argparse
+import importlib.util
 import sys
 import tarfile
 import tempfile
@@ -18,6 +19,7 @@ sys.path.insert(0, str(REPOSITORY_ROOT / 'python'))
 from grid_submission import (
     GridSubmissionError,
     _create_analysis_include_archive,
+    _create_analysis_instance,
     create_grid_submission_request,
     submit_grid_submission,
 )
@@ -42,6 +44,13 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         return self.make_submit_parser().parse_args(
             ['grid', analysis_script, *arguments]
         )
+
+    @staticmethod
+    def load_analysis_module(path):
+        specification = importlib.util.spec_from_file_location('test_analysis', path)
+        module = importlib.util.module_from_spec(specification)
+        specification.loader.exec_module(module)
+        return module
 
     @staticmethod
     def write_lfn_input(directory: Path) -> Path:
@@ -79,6 +88,18 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             'LCG.CERN.ch',
         ]
 
+    def test_constructs_analysis_from_supplied_module(self) -> None:
+        class Analysis:
+            def __init__(self, arguments):
+                self.arguments = arguments
+
+        module = SimpleNamespace(Analysis=Analysis)
+        args = argparse.Namespace(remaining=['--custom', 'value'])
+        analysis = _create_analysis_instance(module, Path('not-imported.py'), args)
+        self.assertIsInstance(analysis, Analysis)
+        self.assertEqual(analysis.arguments['unknown'], ['--custom', 'value'])
+        self.assertFalse(hasattr(args, 'unknown'))
+
     def test_parses_lfn_contract_and_creates_request(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -93,6 +114,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
             request = create_grid_submission_request(
                 args,
+                self.load_analysis_module(analysis_script),
                 key4hep_setup=str(key4hep_setup),
             )
 
@@ -135,6 +157,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
             request = create_grid_submission_request(
                 args,
+                self.load_analysis_module(analysis_script),
                 key4hep_setup=str(key4hep_setup),
             )
 
@@ -185,6 +208,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 with self.assertLogs('FCCAnalyses.grid_submission', 'WARNING') as logs:
                     request = create_grid_submission_request(
                         args,
+                        self.load_analysis_module(analysis_script),
                         key4hep_setup=str(key4hep_setup),
                         analysis_include_archive_path=root / 'includes.tar.gz',
                     )
@@ -230,6 +254,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             with self.assertLogs('FCCAnalyses.grid_submission', 'WARNING') as logs:
                 request = create_grid_submission_request(
                     args,
+                    self.load_analysis_module(analysis_script),
                     key4hep_setup=str(key4hep_setup),
                     analysis_include_archive_path=root / 'includes.tar.gz',
                 )
@@ -250,9 +275,10 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 self.grid_arguments(self.write_lfn_input(root)),
             )
 
-            with self.assertRaisesRegex(GridSubmissionError, 'modern Analysis-style'):
+            with self.assertRaisesRegex(GridSubmissionError, 'requires an Analysis class'):
                 create_grid_submission_request(
                     args,
+                    self.load_analysis_module(analysis_script),
                     key4hep_setup=str(key4hep_setup),
                 )
 
@@ -271,6 +297,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
             request = create_grid_submission_request(
                 args,
+                self.load_analysis_module(analysis_script),
                 key4hep_setup=str(key4hep_setup),
             )
 
@@ -296,6 +323,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     ):
                         create_grid_submission_request(
                             args,
+                            self.load_analysis_module(analysis_script),
                             key4hep_setup=str(key4hep_setup),
                         )
 
@@ -379,6 +407,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             ):
                 create_grid_submission_request(
                     args,
+                    self.load_analysis_module(analysis_script),
                     key4hep_setup=str(key4hep_setup),
                     user_build_payload=UserBuildPayload(
                         archive_path='/tmp/fccanalyses-payload.tar.gz',
@@ -449,7 +478,9 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                             side_effect=check_child,
                         ):
                             with redirect_stdout(StringIO()):
-                                submit_grid_submission(args)
+                                submit_grid_submission(
+                                    args, self.load_analysis_module(analysis_script)
+                                )
 
         self.assertTrue(temporary_paths)
         self.assertTrue(all(not path.exists() for path in temporary_paths))
