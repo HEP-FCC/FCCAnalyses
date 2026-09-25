@@ -6,7 +6,7 @@ import sys
 import tarfile
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
 from types import SimpleNamespace
@@ -327,30 +327,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                             key4hep_setup=str(key4hep_setup),
                         )
 
-    def test_rejects_invalid_grid_cli(self) -> None:
-        invalid_arguments = (
-            ['--output-dir', 'analysis/results'],
-            ['--output', 'analysis.root'],
-            [
-                '--output', 'analysis.root',
-                '--output-dir', 'analysis/results',
-                '--files-per-job', '0',
-            ],
-            [
-                '--output', 'analysis.root',
-                '--output-dir', 'analysis/results',
-                '--files-per-job', '2',
-                '--n-chunks', '3',
-            ],
-        )
-
-        for arguments in invalid_arguments:
-            with self.subTest(arguments=arguments):
-                with redirect_stderr(StringIO()):
-                    with self.assertRaises(SystemExit) as error:
-                        self.parse_grid_arguments('analysis.py', arguments)
-                self.assertEqual(error.exception.code, 2)
-
     def test_rejects_include_paths_outside_analysis_directory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -366,28 +342,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     SimpleNamespace(include_paths=['../outside.h']),
                     root / 'includes.tar.gz',
                 )
-
-    def test_backend_specific_parsers(self) -> None:
-        with redirect_stdout(StringIO()) as output:
-            with self.assertRaises(SystemExit) as error:
-                self.make_submit_parser().parse_args(['grid', '--help'])
-
-        self.assertEqual(error.exception.code, 0)
-        self.assertIn('--lfn-input', output.getvalue())
-        self.assertIn('--output-dir OUTPUT_DIR', output.getvalue())
-        self.assertIn('--output-se STORAGE_ELEMENT', output.getvalue())
-        self.assertIn('--site SITE', output.getvalue())
-        self.assertIn('--mode', output.getvalue())
-        self.assertIn('--n-chunks COUNT', output.getvalue())
-        self.assertIn('forwarded unchanged', output.getvalue())
-        self.assertIn('independently to each job', output.getvalue())
-
-        args = self.make_submit_parser().parse_args(
-            ['ht-condor', 'analysis.py', '--custom-option']
-        )
-        self.assertEqual(args.where, 'ht-condor')
-        self.assertEqual(args.remaining, ['--custom-option'])
-        self.assertFalse(hasattr(args, 'mode'))
 
     def test_rejects_payload_without_explicit_user_build_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

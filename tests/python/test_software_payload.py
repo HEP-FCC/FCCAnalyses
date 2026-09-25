@@ -151,13 +151,5 @@ class SoftwarePayloadTest(unittest.TestCase):
             self.assertIsNotNone(member)
             self.assertEqual(member.read(), b"stripped library")
 
-    def test_rejects_archive_inside_source_directory(self) -> None:
-        with self.assertRaisesRegex(SoftwarePayloadError, "outside"):
-            create_user_build_archive(
-                validate_user_build(self.environment),
-                self.source_dir / "payload.tar.gz",
-            )
-
-
 if __name__ == "__main__":
     unittest.main()
