@@ -4,7 +4,6 @@ import logging
 import argparse
 import subprocess
 import shutil
-import glob
 import shlex
 from extract import extract_fit_results
 
@@ -55,6 +54,10 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
                 if not any('MINIMIZER_analytic' in arg for arg in combined_args):
                     combined_args = ['--X-rtd', 'MINIMIZER_analytic'] + combined_args
 
+                # Explicitly append --out so Combine writes artifacts natively to the target directory
+                if '--out' not in combined_args:
+                    combined_args.extend(['--out', output_dir])
+
                 # Build the final command vector
                 if '-M' in combined_args or '--method' in combined_args:
                     full_command = ['combine'] + combined_args + [output_path]
@@ -64,20 +67,7 @@ def run_fit(parser: argparse.ArgumentParser) -> None:
                 LOGGER.info("Executing command: %s", " ".join(full_command))
                 subprocess.run(full_command, check=True)
                 
-                # --- ROBUST ARTIFACT SHIFTING ---
-                # Scoop up any ROOT files Combine dropped in the working directory
-                artifacts = glob.glob("higgsCombine*.root") + glob.glob("fitDiagnostics*.root")
-                for artifact in artifacts:
-                    src_file = os.path.abspath(artifact)
-                    dest_file = os.path.abspath(os.path.join(output_dir, os.path.basename(artifact)))
-                    
-                    # Only move/replace if source and destination paths differ
-                    if src_file != dest_file:
-                        if os.path.exists(dest_file):
-                            os.remove(dest_file)
-                        shutil.move(src_file, output_dir)
-                
-                # Automatically extract and display results from the target output directory
+                # Automatically extract and display results from the natively routed target directory
                 extract_fit_results(output_dir)
 
             except subprocess.CalledProcessError:
