@@ -33,6 +33,8 @@ public:
 
   /// Add a new sample (and its attributes) to a given samples category
   Sample &addSample(Sample &sample);
+  /// List of samples registered for a given category
+  const std::vector<Sample> &samples(Sample::Type) const;
 
   /// Add a visual text box of a given size at a given position into the canvas
   /// (units: normalised to 1 ; 0=leftmost/bottommost, 1=rightmost/topmost)

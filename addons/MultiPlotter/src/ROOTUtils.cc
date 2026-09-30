@@ -199,7 +199,7 @@ TH1D *book_like(ROOTCanvas &canvas, const TH1 &model, const std::string &name) {
 
 TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
                                          const StackSystematics &systematics,
-                                         bool relative) {
+                                         bool relative, double offset) {
   const int num_bins = nominal.GetNbinsX();
   auto *band = canvas.make<TGraphAsymmErrors>(num_bins);
   for (int i = 0; i < num_bins; ++i) {
@@ -213,7 +213,7 @@ TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
     auto central = content, up = std::hypot(stat, syst_up),
          down = std::hypot(stat, syst_down);
     if (relative) { // no band for empty bins
-      central = 0.;
+      central = offset; // 0: relative uncertainty ; 1: ratio to nominal
       up = content > 0. ? up / content : 0.;
       down = content > 0. ? down / content : 0.;
     }
@@ -230,7 +230,8 @@ TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
 
 void draw_systematics_breakdown(ROOTCanvas &canvas, const TH1 &nominal,
                                 const StackSystematics &systematics,
-                                size_t max_sources, TLegend &legend) {
+                                size_t max_sources, TLegend &legend,
+                                double offset) {
   // rank the sources according to their overall effect on the yields
   std::vector<std::pair<double, std::string>> ranking;
   for (const auto &[name, shifts] : systematics.sources) {
@@ -251,9 +252,11 @@ void draw_systematics_breakdown(ROOTCanvas &canvas, const TH1 &nominal,
          *down = book_like(canvas, nominal, base_name + "_down");
     for (int bin = 1; bin <= nominal.GetNbinsX(); ++bin) {
       const auto content = nominal.GetBinContent(bin);
+      up->SetBinContent(bin, offset);
+      down->SetBinContent(bin, offset);
       if (const size_t i = bin - 1; content > 0. && i < shifts.size()) {
-        up->SetBinContent(bin, shifts[i].first / content);
-        down->SetBinContent(bin, shifts[i].second / content);
+        up->SetBinContent(bin, offset + shifts[i].first / content);
+        down->SetBinContent(bin, offset + shifts[i].second / content);
       }
     }
     const auto colour =

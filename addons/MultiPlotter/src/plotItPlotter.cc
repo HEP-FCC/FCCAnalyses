@@ -73,12 +73,15 @@ void plotItPlotter::plot(std::string_view output_file,
       samples_.contains(Sample::Type::background))
     systematics =
         root::utils::combine_systematics(samples_.at(Sample::Type::background));
+  const auto has_data = samples_.contains(Sample::Type::data) &&
+                        !samples_.at(Sample::Type::data).samples().empty();
   const auto with_breakdown =
-      !systematics.empty() &&
+      (!systematics.empty() || has_data) &&
       utils::get_with_default(options, "syst-breakdown", true);
 
-  // two extra legend entries for the stat and stat+syst uncertainty bands
-  prepareStacksPlotting(canvas, systematics.empty() ? 0 : 2);
+  // extra legend entries: stat and stat+syst uncertainty bands, and data
+  prepareStacksPlotting(canvas,
+                        (systematics.empty() ? 0 : 2) + (has_data ? 1 : 0));
   if (with_breakdown) // lower pad for the per-source relative uncertainties
     canvas.split(0.3);
   canvas.mainPad()->cd();
@@ -168,6 +171,23 @@ void plotItPlotter::plot(std::string_view output_file,
     max_value = std::max(max_value, merged->GetMaximum());
     update_min_positive(*merged);
   }
+  if (histogram_data) { // data points, on top of everything else
+    histogram_data->SetMarkerStyle(20);
+    histogram_data->SetMarkerSize(1.);
+    histogram_data->SetMarkerColor(kBlack);
+    histogram_data->SetLineColor(kBlack);
+    histogram_data->SetLineWidth(1);
+    histogram_data->Draw("e,x0,same");
+    for (int bin = histogram_data->GetXaxis()->GetFirst();
+         bin <= histogram_data->GetXaxis()->GetLast(); ++bin)
+      max_value = std::max(max_value, histogram_data->GetBinContent(bin) +
+                                          histogram_data->GetBinError(bin));
+    update_min_positive(*histogram_data);
+    if (auto *legend = canvas.legend(); legend)
+      legend->AddEntry(
+          histogram_data.get(),
+          samples_.at(Sample::Type::data).samples().front().name.data(), "pe");
+  }
 
   if (with_breakdown && merged_background) {
     // lower pad: uncertainties relative to the total background yield
@@ -183,7 +203,8 @@ void plotItPlotter::plot(std::string_view output_file,
       frame->GetXaxis()->SetTitleSize(ref_xaxis->GetTitleSize() * scaling);
       frame->GetXaxis()->SetLabelSize(ref_xaxis->GetLabelSize() * scaling);
       frame->GetXaxis()->SetTickLength(ref_xaxis->GetTickLength() * scaling);
-      frame->GetYaxis()->SetTitle("Rel. unc.");
+      frame->GetYaxis()->SetTitle(histogram_data ? "Data / MC"
+                                                 : "Rel. unc.");
       frame->GetYaxis()->CenterTitle();
       frame->GetYaxis()->SetTitleSize(ref_yaxis->GetTitleSize() * scaling);
       // a null offset means "automatic", which scales with the title size
@@ -199,16 +220,36 @@ void plotItPlotter::plot(std::string_view output_file,
     // vertical range driven by the systematics, with room for the legend
     auto max_relative =
         root::utils::max_relative_systematics(*merged_background, systematics);
+    // with data: ratio to the total background yield, centred on 1 ;
+    // otherwise: relative uncertainties, centred on 0
+    const auto centre = histogram_data ? 1. : 0.;
+    TH1D *data_deviation{nullptr};
+    if (histogram_data) {
+      data_deviation = root::utils::book_like(
+          canvas, *merged_background, canvas.GetName() + "_data_deviation"s);
+      for (int bin = 1; bin <= merged_background->GetNbinsX(); ++bin)
+        if (const auto expected = merged_background->GetBinContent(bin);
+            expected > 0.) {
+          const auto deviation =
+              histogram_data->GetBinContent(bin) / expected - 1.;
+          data_deviation->SetBinContent(bin, centre + deviation);
+          data_deviation->SetBinError(bin, histogram_data->GetBinError(bin) /
+                                               expected);
+          if (bin >= merged_background->GetXaxis()->GetFirst() &&
+              bin <= merged_background->GetXaxis()->GetLast())
+            max_relative = std::max(max_relative, std::fabs(deviation));
+        }
+    }
     if (max_relative <= 0.)
       max_relative = 1.;
-    frame->SetMinimum(-1.5 * max_relative);
-    frame->SetMaximum(2.4 * max_relative);
+    frame->SetMinimum(centre - 1.5 * max_relative);
+    frame->SetMaximum(centre + 2.4 * max_relative);
     frame->Draw("axis");
 
     root::utils::draw_uncertainty_band( // stat+syst
-        canvas, *merged_background, systematics, true);
+        canvas, *merged_background, systematics, true, centre);
     auto *stat_band = root::utils::draw_uncertainty_band( // stat only
-        canvas, *merged_background, {}, true);
+        canvas, *merged_background, {}, true, centre);
     stat_band->SetFillStyle(3004);
     stat_band->SetFillColor(kGray + 1);
 
@@ -221,12 +262,20 @@ void plotItPlotter::plot(std::string_view output_file,
     legend->SetTextSize(0.09);
     legend->SetNColumns(std::clamp<int>(num_sources, 1, 3));
     root::utils::draw_systematics_breakdown(canvas, *merged_background,
-                                            systematics, num_sources, *legend);
+                                            systematics, num_sources, *legend,
+                                            centre);
     auto *zero_line = canvas.make<TLine>(
-        frame->GetXaxis()->GetBinLowEdge(frame->GetXaxis()->GetFirst()), 0.,
-        frame->GetXaxis()->GetBinUpEdge(frame->GetXaxis()->GetLast()), 0.);
+        frame->GetXaxis()->GetBinLowEdge(frame->GetXaxis()->GetFirst()), centre,
+        frame->GetXaxis()->GetBinUpEdge(frame->GetXaxis()->GetLast()), centre);
     zero_line->SetLineColor(kGray + 2);
     zero_line->Draw();
+    if (data_deviation) {
+      data_deviation->SetMarkerStyle(20);
+      data_deviation->SetMarkerSize(1.);
+      data_deviation->SetMarkerColor(kBlack);
+      data_deviation->SetLineColor(kBlack);
+      data_deviation->Draw("e,x0,same");
+    }
     legend->Draw();
     canvas.mainPad()->cd();
   }

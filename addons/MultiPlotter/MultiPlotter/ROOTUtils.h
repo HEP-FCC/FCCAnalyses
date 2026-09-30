@@ -68,12 +68,12 @@ TH1D *book_like(ROOTCanvas &, const TH1 &model, const std::string &name);
 /// Draw the stat+syst uncertainty band
 TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &, const TH1 &nominal,
                                          const StackSystematics &,
-                                         bool relative);
+                                         bool relative, double offset = 0.);
 /// Draw the up/down shifts of systematic uncertainty sources
 /// \param[in] max_sources Maximum number of (leading) sources to be drawn
 void draw_systematics_breakdown(ROOTCanvas &, const TH1 &nominal,
                                 const StackSystematics &, size_t max_sources,
-                                TLegend &);
+                                TLegend &, double offset = 0.);
 } // namespace mplt::root::utils
 
 #endif

@@ -30,6 +30,13 @@ Sample &MultiPlotter::addSample(Sample &sample) {
   return samples_[sample.type].add(sample);
 }
 
+const std::vector<Sample> &MultiPlotter::samples(Sample::Type type) const {
+  static const std::vector<Sample> no_samples;
+  if (const auto it = samples_.find(type); it != samples_.end())
+    return it->second.samples();
+  return no_samples;
+}
+
 std::string MultiPlotter::yieldsTable() const {
   std::ostringstream table;
   // TODO: implement the table creation
