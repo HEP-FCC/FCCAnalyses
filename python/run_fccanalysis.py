@@ -55,7 +55,7 @@ def create_condor_config(log_dir: str,
     cfg = 'executable       = $(filename)\n'
 
     cfg += f'Log              = {log_dir}/condor_job.{process_name}.'
-    cfg += '$(ClusterId).$(ProcId).log\n'
+    cfg += '$(ClusterId).log\n'
 
     cfg += f'Output           = {log_dir}/condor_job.{process_name}.'
     cfg += '$(ClusterId).$(ProcId).out\n'

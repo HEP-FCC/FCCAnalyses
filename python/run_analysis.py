@@ -56,7 +56,7 @@ def create_condor_config(log_dir: str,
     cfg = 'executable       = $(filename)\n'
 
     cfg += f'Log              = {log_dir}/condor_job.{process_name}.'
-    cfg += '$(ClusterId).$(ProcId).log\n'
+    cfg += '$(ClusterId).log\n'
 
     cfg += f'Output           = {log_dir}/condor_job.{process_name}.'
     cfg += '$(ClusterId).$(ProcId).out\n'
@@ -434,7 +434,7 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str):
 
     batch_cmd = f'condor_submit {condor_config_path}'
     LOGGER.info('Batch command:\n  %s', batch_cmd)
-    success = submit_job(batch_cmd, 10)
+    success = submit_job(batch_cmd, 3)
     if not success:
         sys.exit(3)
 
