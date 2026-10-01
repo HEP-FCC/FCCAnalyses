@@ -434,7 +434,7 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str):
 
     batch_cmd = f'condor_submit {condor_config_path}'
     LOGGER.info('Batch command:\n  %s', batch_cmd)
-    success = submit_job(batch_cmd, 3)
+    success = submit_job(batch_cmd, 1)
     if not success:
         sys.exit(3)
 
