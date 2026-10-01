@@ -421,7 +421,7 @@ def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
 
     batch_cmd = f'condor_submit {condor_config_path}'
     LOGGER.info('Batch command:\n  %s', batch_cmd)
-    success = submit_job(batch_cmd, 10)
+    success = submit_job(batch_cmd, 1)
     if not success:
         sys.exit(3)
 
