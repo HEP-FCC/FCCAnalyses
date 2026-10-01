@@ -237,8 +237,10 @@ def submit_job(cmd: str, max_trials: int) -> bool:
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                               universal_newlines=True) as proc:
             (stdout, stderr) = proc.communicate()
-
-            if proc.returncode == 0 and len(stderr) == 0:
+            
+            if proc.returncode == 0:
+                if len(stderr) > 0:
+                    LOGGER.warning('Some errors encountered, see above. Continuing...')                
                 LOGGER.info(stdout)
                 LOGGER.info('GOOD SUBMISSION')
                 return True
