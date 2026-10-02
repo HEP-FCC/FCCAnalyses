@@ -5,6 +5,7 @@ import os
 import os.path
 import ntpath
 import importlib
+import importlib.util
 import copy
 import re
 import logging
@@ -36,7 +37,7 @@ def rebin(h, newbins):
         mybins = array.array('d', newbins)
         return h.Rebin(len(mybins)-1, h.GetName(), mybins)
 
-def run(script_path):
+def run(script_path, args):
 
     ROOT.gROOT.SetBatch(True)
     ROOT.gErrorIgnoreLevel = ROOT.kWarning
@@ -46,7 +47,11 @@ def run(script_path):
     base_name = os.path.splitext(ntpath.basename(script_path))[0]
 
     sys.path.insert(0, module_dir)
-    param = importlib.import_module(base_name)
+    script_spec = importlib.util.spec_from_file_location(base_name,
+                                                         module_path)
+    param = importlib.util.module_from_spec(script_spec)
+    param.cmdline_args = {'unknown': args.unknown}
+    script_spec.loader.exec_module(param)
 
     inputDir = get_param(param, "inputDir")
     outputDir = get_param(param, "outputDir")
@@ -169,7 +174,8 @@ def run(script_path):
 
 
 def do_combine(parser):
-    args, _ = parser.parse_known_args()
+    args, unknown_args = parser.parse_known_args()
+    args.unknown = unknown_args
 
     if args.command != 'combine':
         LOGGER.error('Wrong sub-command!\nAborting...')
@@ -179,4 +185,4 @@ def do_combine(parser):
                      args.script_path)
         sys.exit(3)
 
-    run(args.script_path)
+    run(args.script_path, args)
