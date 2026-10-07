@@ -15,6 +15,7 @@
 #pragma GCC diagnostic pop
 
 #include "FastJet/ValenciaPlugin.h"
+#include "fastjet/contrib/IFNPlugin.hh"
 
 /** Jet clustering interface.
 This represents a set functions and utilities to perfom jet clustering from a list of.
@@ -217,6 +218,23 @@ namespace JetClustering {
     fastjet::JetDefinition _def;                 ///<internal jetdefinition sequence
   };
   ///@}
+
+  ///Jet Clustering interface for ee_kt
+  struct flv_clustering_ee_kt {
+  public:
+    flv_clustering_ee_kt(int arg_exclusive = 0, float arg_cut = 5., int arg_sorted = 0, int arg_recombination = 0);
+    FCCAnalysesJet operator()(const std::vector<fastjet::PseudoJet>& jets);
+
+    int _exclusive;  ///< flag for exclusive jet clustering. Possible choices are 0=inclusive clustering, 1=exclusive clustering that would be obtained when running the algorithm with the given dcut, 2=exclusive clustering when the event is clustered (in the exclusive sense) to exactly njets, 3=exclusive clustering when the event is clustered (in the exclusive sense) up to exactly njets, 4=exclusive jets obtained at the given ycut
+    float _cut;  ///< pT cut for m_exclusive=0, dcut for m_exclusive=1, N jets for m_exlusive=2, N jets for m_exclusive=3, ycut for m_exclusive=4
+    int _sorted;         ///< pT ordering=0, E ordering=1
+    int _recombination;  ///< E_scheme=0, pt_scheme=1, pt2_scheme=2, Et_scheme=3, Et2_scheme=4, BIpt_scheme=5, BIpt2_scheme=6, E0_scheme=10, p_scheme=11
+    fastjet::JetAlgorithm _jetAlgorithm{fastjet::JetAlgorithm::undefined_jet_algorithm};  ///<internal jet algorithm
+    fastjet::RecombinationScheme _recombScheme;  ///<internal recombination scheme
+    fastjet::ClusterSequence _cs;                ///<internal clustering sequence
+    fastjet::JetDefinition _base_jet_def;                 ///<internal jetdefinition sequence
+    fastjet::JetDefinition _def;                 ///<internal jetdefinition sequence
+  };
 
 }  // namespace JetClustering
 

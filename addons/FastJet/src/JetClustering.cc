@@ -7,6 +7,22 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Selector.hh"
 
+// #include "fastjet/contrib/FlavInfo.hh"
+
+namespace {
+  // IFN only neutralises flavour, the kinematic clustering sequence is the one
+  // of the base algorithm, so exclusive jets are as meaningful as for ee_kt.
+  // Declaring this also avoids the ClusterSequence "dcut and exclusive jets"
+  // LimitedWarning. Any LimitedWarning must be avoided: libDelphes bundles its
+  // own FastJet, so the global warnings summary list gets destroyed twice at
+  // exit (once by libfastjet, once by libDelphes) -> double free if non-empty.
+  class ExclusiveIFNPlugin : public fastjet::contrib::IFNPlugin {
+  public:
+    using fastjet::contrib::IFNPlugin::IFNPlugin;
+    bool exclusive_sequence_meaningful() const override { return true; }
+  };
+}  // namespace
+
 namespace JetClustering {
 
   clustering_kt::clustering_kt(
@@ -312,6 +328,59 @@ namespace JetClustering {
     //cluster jets
     std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
 
+    //get dmerged elements
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
+
+    //transform to FCCAnalysesJet
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+  }
+
+  flv_clustering_ee_kt::flv_clustering_ee_kt(int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination) {
+    _exclusive = arg_exclusive;
+    _cut = arg_cut;
+    _sorted = arg_sorted;
+    _recombination = arg_recombination;
+
+    // initialize jet algorithm
+    _jetAlgorithm = fastjet::JetAlgorithm::ee_kt_algorithm;
+
+    // initialize recombination scheme
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
+
+    // define the clustering sequence and jet definition
+    // fastjet::JetDefinition base_jet_def = fastjet::JetDefinition(_jetAlgorithm, _recombScheme);
+    _base_jet_def = fastjet::JetAlgorithm::ee_kt_algorithm;
+    _base_jet_def.set_recombiner(new fastjet::contrib::FlavRecombiner(fastjet::contrib::FlavRecombiner::net));
+    // must be set before the plugin copies _base_jet_def, so the copies share ownership
+    _base_jet_def.delete_recombiner_when_unused();
+
+    // The main free parameter, alpha, in the uij distance, 
+    //   uij = max(pt_i, pt_j)^alpha min(pt_i, pt_j)^(2-alpha) Omega_ij
+    double alpha = 2.0;
+
+    // The parameter that sets the nature of the Omega rapidity term;
+    // only change the default of 3-alpha if you are sure you know what you are doing
+    double omega = 3.0 - alpha;
+
+    auto* plugin = new ExclusiveIFNPlugin(_base_jet_def, alpha, omega, fastjet::contrib::FlavRecombiner::net);
+    _def = fastjet::JetDefinition(plugin);
+    _def.delete_plugin_when_unused();
+
+    // unsupported for now
+    // if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
+      // _def.set_recombiner(new ExternalRecombiner(_recombination));
+  }
+
+  FCCAnalysesJet flv_clustering_ee_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
+    //return empty struct
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
+
+    _cs = fastjet::ClusterSequence(input, _def);
+
+    //cluster jets
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
     //get dmerged elements
     std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
     std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
