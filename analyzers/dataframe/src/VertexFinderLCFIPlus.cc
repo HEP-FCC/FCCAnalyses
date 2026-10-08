@@ -46,7 +46,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>> get_SV
     std::vector<int> i_jetconsti = jet_consti[j];
     for (int ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
-      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
+      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) != i_jetconsti.end()) {
 	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
       }
     }
@@ -693,7 +693,7 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
     std::vector<int> i_jetconsti = jet_consti[j];
     for (int ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
-      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
+      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) != i_jetconsti.end()) {
 	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
       }
     }
