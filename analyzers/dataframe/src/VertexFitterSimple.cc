@@ -358,7 +358,7 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   TVectorD x = theVertexFit.GetVtx(); // this actually runs the fit
 
-  float chi2_max = 1e30;
+  float chi2_max = theVertexFit.GetVtxChi2List().Max();
 
   while (chi2_max >= CHI2MAX) {
 
