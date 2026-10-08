@@ -810,7 +810,7 @@ get_pointingangle_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
     edm4hep::Vector3f r_vtx = ivtx.vertex.position; // in mm
     edm4hep::Vector3f r_PV = PV.vertex.position;    // in mm
 
-    TVector3 r_vtx_PV(r_vtx[0] - r_vtx[0], r_vtx[1] - r_PV[1],
+    TVector3 r_vtx_PV(r_vtx[0] - r_PV[0], r_vtx[1] - r_PV[1],
                       r_vtx[2] - r_PV[2]);
 
     double pDOTr = p_sum.Dot(r_vtx_PV);
@@ -1346,7 +1346,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_pointingangle_SV(
 
       edm4hep::Vector3f r_vtx = ivtx.vertex.position; // in mm
 
-      TVector3 r_vtx_PV(r_vtx[0] - r_vtx[0], r_vtx[1] - r_PV[1],
+      TVector3 r_vtx_PV(r_vtx[0] - r_PV[0], r_vtx[1] - r_PV[1],
                         r_vtx[2] - r_PV[2]);
 
       double pDOTr = p_sum.Dot(r_vtx_PV);
