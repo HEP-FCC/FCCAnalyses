@@ -932,6 +932,11 @@ get_relTheta_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
                 ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
+  // nSV_jet needs one entry per jet, summing to the number of vertices
+  if (nSV_jet.empty() || nSV_jet.size() != jets.size() ||
+      ROOT::VecOps::Sum(nSV_jet) != static_cast<int>(vertices.size()))
+    return result;
+
   unsigned int j = 0;
   int nSV = nSV_jet[0];
   for (unsigned int i = 0; i < vertices.size(); i++) {
@@ -939,7 +944,7 @@ get_relTheta_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
     TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1],
                  ivtx.vertex.position[2]);
 
-    if (i >= nSV) {
+    while (i >= nSV) {
       j++;
       nSV += nSV_jet[j];
     }
@@ -959,6 +964,11 @@ get_relPhi_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
               ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
+  // nSV_jet needs one entry per jet, summing to the number of vertices
+  if (nSV_jet.empty() || nSV_jet.size() != jets.size() ||
+      ROOT::VecOps::Sum(nSV_jet) != static_cast<int>(vertices.size()))
+    return result;
+
   unsigned int j = 0;
   int nSV = nSV_jet[0];
   for (unsigned int i = 0; i < vertices.size(); i++) {
@@ -966,7 +976,7 @@ get_relPhi_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
     TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1],
                  ivtx.vertex.position[2]);
 
-    if (i >= nSV) {
+    while (i >= nSV) {
       j++;
       nSV += nSV_jet[j];
     }
