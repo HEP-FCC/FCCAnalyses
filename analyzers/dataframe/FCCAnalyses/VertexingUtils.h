@@ -36,8 +36,8 @@ namespace VertexingUtils{
   /// Structure to keep useful track information that is related to the vertex
   struct FCCAnalysesVertex{
     edm4hep::VertexData vertex;
-    int ntracks;
-    int mc_ind; ///index in the MC vertex collection if any
+    int ntracks = 0;
+    int mc_ind = -1; /// index in the MC vertex collection if any
     ROOT::VecOps::RVec<int> reco_ind;      // indices of the tracks fitted to that vertex, in the collection of all tracks
     ROOT::VecOps::RVec<float> reco_chi2;
     ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex;
