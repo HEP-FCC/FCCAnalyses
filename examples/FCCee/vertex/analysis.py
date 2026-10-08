@@ -61,13 +61,13 @@ class analysis():
                .Define("nPrimaryTracks", "ReconstructedParticle::get_n(MC_PrimaryTracks_RP)")
 
                # Reconstruct the vertex from these primary tracks :
-               .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1) ")
+               .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1, false, 0., 0., 0., 0., 0., 0., false) ")
                .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
 
                # Idem, but adding the beam-spot constraint to the vertex fitter
                   # At the Z peak, the beam-spot size is ( 4.5 mum, 20 nm, 0.3 mm)
 		  # The beam-spot dimensions are passed in mum :
-               .Define("VertexObject_primaryTracks_BSC",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1, true, 4.5, 20e-3, 300) ")
+               .Define("VertexObject_primaryTracks_BSC",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., false) ")
                .Define("Vertex_primaryTracks_BSC",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks_BSC )")   # primary vertex, in mm
 
 
@@ -90,7 +90,7 @@ class analysis():
 
                .Define("n_RecoedPrimaryTracks",  "ReconstructedParticle2Track::getTK_n( RecoedPrimaryTracks )")
                # the final primary vertex :
-               .Define("FinalVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
+               .Define("FinalVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300, 0., 0., 0., false) ")
                .Define("FinalVertex",   "VertexingUtils::get_VertexData( FinalVertexObject )")
 
                # the secondary tracks
