@@ -466,6 +466,8 @@ double get_invM_pairs(FCCAnalysesVertex vertex, double m1, double m2) {
   TLorentzVector p4_vtx;
   double m[2] = {m1, m2};
   int nTr = p_tracks.size();
+  if (nTr > 2)
+    return -1; // not defined for more than two tracks
 
   for (unsigned int i = 0; i < nTr; i++) {
     TLorentzVector p4_tr;
@@ -492,6 +494,10 @@ get_invM_pairs(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices, double m1,
     TLorentzVector p4_vtx;
     double m[2] = {m1, m2};
     int nTr = p_tracks.size();
+    if (nTr > 2) {
+      result.push_back(-1); // not defined for more than two tracks
+      continue;
+    }
 
     for (unsigned int i = 0; i < nTr; i++) {
       TLorentzVector p4_tr;
