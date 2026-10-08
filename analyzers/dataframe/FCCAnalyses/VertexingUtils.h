@@ -128,13 +128,14 @@ namespace VertexingUtils{
   /** returns the invariant mass of a two-track vertex
    *  CAUTION: m1 -> mass of first track, m2 -> mass of second track
    *  by default both pions
-   *  returns -1 for vertices with more than two tracks
    */
+  /// returns -1 for vertices with more than two tracks
   double get_invM_pairs( FCCAnalysesVertex vertex,
 			 double m1 = 0.13957039,
 			 double m2 = 0.13957039) ;
 
-  /// Vector version of get_invM_pairs; -1 for vertices with more than two tracks
+  /// Vector version of get_invM_pairs;
+  /// -1 for vertices with more than two tracks
   ROOT::VecOps::RVec<double> get_invM_pairs( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
 					     double m1 = 0.13957039,
 					     double m2 = 0.13957039 ) ;  
@@ -214,13 +215,17 @@ namespace VertexingUtils{
   ROOT::VecOps::RVec<double> get_phi_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices );
 
   /// Return polar angle (theta) of all reconstructed vertices wrt jets (or V0.vtx)
-  /// nSV_jet must have one entry per jet, summing to the number of vertices; otherwise an empty vector is returned
+  /** nSV_jet must have one entry per jet, summing to the number of vertices;
+   *  otherwise an empty vector is returned
+   */
   ROOT::VecOps::RVec<double> get_relTheta_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
 					      ROOT::VecOps::RVec<int> nSV_jet,
 					      ROOT::VecOps::RVec<fastjet::PseudoJet> jets );
 
   /// Return azimuthal angle (phi) of all reconstructed vertices wrt jets (or V0.vtx)
-  /// nSV_jet must have one entry per jet, summing to the number of vertices; otherwise an empty vector is returned
+  /** nSV_jet must have one entry per jet, summing to the number of vertices;
+   *  otherwise an empty vector is returned
+   */
   ROOT::VecOps::RVec<double> get_relPhi_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
 					    ROOT::VecOps::RVec<int> nSV_jet,
 					    ROOT::VecOps::RVec<fastjet::PseudoJet> jets );
