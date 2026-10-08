@@ -701,7 +701,7 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
     if(debug_me) std::cout<<"primary tracks removed; there are "<<np_tracks.size()<<" non-primary tracks in jet#"<<j+1<<std::endl;
 
     int nTr = np_tracks.size();
-    if(nTr<2) continue;    
+    if(nTr<2) { np_tracks.clear(); continue; }
     ROOT::VecOps::RVec<bool> isInV0(nTr, false);
     //
     for(unsigned int i=0; i<nTr-1; i++) {
