@@ -335,7 +335,9 @@ bool check_constraints(VertexingUtils::FCCAnalysesVertex vtx,
   bool result = true;
 
   int nTr = tracks.size();  // no of tracks
-  
+  if (vtx.ntracks != nTr)
+    return false; // the fitter dropped a track (bad covariance): no valid fit
+
   // Constraints
   // chi2 < cut (9)
   double chi2 = vtx.vertex.chi2; // normalised
@@ -800,6 +802,8 @@ ROOT::VecOps::RVec<double> get_V0candidate(VertexingUtils::FCCAnalysesVertex &V0
   edm4hep::Vector3f r_PV = PV.vertex.position; // in mm
   
   V0_vtx = VertexFitterSimple::VertexFitter_Tk(2, tr_pair);
+  if (V0_vtx.ntracks != 2)
+    return result; // the fitter dropped a track (bad covariance): no valid fit
 
   if(chi2) {
     // constraint on chi2: chi2 < cut (9)
