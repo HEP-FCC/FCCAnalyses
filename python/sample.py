@@ -7,7 +7,6 @@ import sys
 import json
 import glob
 import logging
-from typing import Optional, Union
 import urllib.request
 import yaml  # type: ignore
 import ROOT  # type: ignore
@@ -23,7 +22,7 @@ LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.process_info')
 
 
 # _____________________________________________________________________________
-def get_entries(inpath: str) -> Optional[int]:
+def get_entries(inpath: str) -> int | None:
     '''
     Retrieves number of entries in the "events" TTree from the provided ROOT
     file.
@@ -42,7 +41,7 @@ def get_entries(inpath: str) -> Optional[int]:
 
 # _____________________________________________________________________________
 def get_entries_sow(infilepath: str,
-                    nevents_max: Optional[int] = None,
+                    nevents_max: int | None = None,
                     get_local: bool = True,
                     weight_name: str = "EventHeader.weight") -> tuple[int, int, float, float]:
     '''
@@ -304,7 +303,7 @@ def get_file_list(file_list_path: str) -> list[str]:
 
 
 # _____________________________________________________________________________
-def get_files_in_dir(dir_path: str) -> Optional[list[str]]:
+def get_files_in_dir(dir_path: str) -> list[str] | None:
     '''
     Finds ROOT files in the provided directory.
     '''
@@ -326,7 +325,7 @@ def get_files_in_dir(dir_path: str) -> Optional[list[str]]:
 
 # _____________________________________________________________________________
 def get_files_in_yaml(sample_name: str,
-                      campaign: str) -> Optional[list[str]]:
+                      campaign: str) -> list[str] | None:
     '''
     Get list of files of a sample from the YAML file.
     '''
@@ -342,7 +341,7 @@ def get_files_in_yaml(sample_name: str,
 def get_file_counts_yaml(
         sample_name: str,
         campaign: str) -> \
-            Optional[list[dict[str, Union[str, int, Optional[float]]]]]:
+            list[dict[str, str | int | float | None]] | None:
     '''
     Get list of files of a sample from the YAML file
     campaign_name: "<accelerator>/<season-and-year>/<detector>"
@@ -377,7 +376,7 @@ def get_file_counts_yaml(
             LOGGER.debug('YAML file with process information successfully '
                          'loaded:\n%s', yamlfilepath)
 
-    file_counts: list[dict[str, Union[str, int, Optional[float]]]] = []
+    file_counts: list[dict[str, str | int | float | None]] = []
     for file_info in doc['merge']['outfiles']:
         file_count = {}
         file_count['path'] = doc['merge']['outdir'] + file_info[0]
@@ -404,7 +403,7 @@ def get_one_file_quantities(infilepath: str,
 
     #print('infilepath:')
     #print(infilepath)
-    result: dict[str, Union[None, str, int, float]] = {}
+    result: dict[str, str | int | float | None] = {}
     result['path'] = infilepath
     result['events-processed'] = None
     result['sow-processed'] = None
@@ -459,7 +458,7 @@ def get_one_file_quantities(infilepath: str,
 
 # _____________________________________________________________________________
 def get_file_quantities(file_list: list[str]) -> \
-        list[dict[str, Union[None, str, int, float]]]:
+        list[dict[str, str | int | float | None]]:
     '''
     Get event counts and sum of weights for each file in the file list.
     '''

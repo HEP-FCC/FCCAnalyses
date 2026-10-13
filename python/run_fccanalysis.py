@@ -8,7 +8,7 @@ import string
 import datetime
 import logging
 import argparse
-from typing import Any, Optional, Union
+from typing import Any
 
 import ROOT  # type: ignore
 from anascript import validate_analysis_class, validate_sample_list
@@ -27,20 +27,19 @@ LOGGER = logging.getLogger('FCCAnalyses.run_analysis')
 
 # _____________________________________________________________________________
 def generate_sample_jobs(config: dict[str, Any]) -> \
-        list[dict[str, Union[int, float, str]]]:
+        list[dict[str, int | float | str]]:
     '''
     Generate the jobs to run from samples defined in the analysis class.
     '''
-    jobs: list[dict[str, Union[int, float, str]]] = []
+    jobs: list[dict[str, int | float | str]] = []
 
     for sample_name, sample_dict in config['samples'].items():
         LOGGER.info('Initializing sample "%s" ...', sample_name)
         info_msg = 'The sample will be processed with the following ' \
                    'parameters:'
 
-        sample_file_list: Optional[list[str]] = None
-        file_quantities: Optional[list[dict[str,
-                                            Union[int, float, str]]]] = None
+        sample_file_list: list[str] | None = None
+        file_quantities: list[dict[str, int | float | str]] | None = None
 
         # Check if input directory is provided
         if 'input-dir' in sample_dict:
