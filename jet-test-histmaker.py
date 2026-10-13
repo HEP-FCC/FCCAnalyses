@@ -97,44 +97,37 @@ def build_graph(df, dataset):
 
     # Implemented algorithms and arguments: https://github.com/HEP-FCC/FCCAnalyses/blob/master/addons/FastJet/JetClustering.h
     # More info: https://indico.cern.ch/event/1173562/contributions/4929025/attachments/2470068/4237859/2022-06-FCC-jets.pdf
-    # df = df.Define("clustered_jets", "JetClustering::clustering_ee_kt(2, 2, 0, 0)(pseudo_jets)") # 2-jet exclusive clustering
-    df = df.Define("clustered_jets", "JetClustering::flv_clustering_ee_kt(2, 2, 0, 0)(pseudo_jets)") # 2-jet exclusive clustering
-
-    df = df.Define("jets", "FCCAnalyses::JetClusteringUtils::get_pseudoJets(clustered_jets)")
-    df = df.Define("jetconstituents", "FCCAnalyses::JetClusteringUtils::get_constituents(clustered_jets)") # one-to-one mapping to the input collection (rps_no_muons)
-    df = df.Define("jets_e", "FCCAnalyses::JetClusteringUtils::get_e(jets)")
-    df = df.Define("jets_px", "FCCAnalyses::JetClusteringUtils::get_px(jets)")
-    df = df.Define("jets_py", "FCCAnalyses::JetClusteringUtils::get_py(jets)")
-    df = df.Define("jets_pz", "FCCAnalyses::JetClusteringUtils::get_pz(jets)")
-    df = df.Define("jets_phi", "FCCAnalyses::JetClusteringUtils::get_phi(jets)")
-    df = df.Define("jets_m", "FCCAnalyses::JetClusteringUtils::get_m(jets)")
-
-    # df = df.Define("jets_flv", "FCCAnalyses::JetClusteringUtils::get_flavours(jets)")
-    df = df.Define("jets_b_content", "FCCAnalyses::JetClusteringUtils::get_b_content(jets)")
-    df = df.Define("jets_c_content", "FCCAnalyses::JetClusteringUtils::get_c_content(jets)")
-    df = df.Define("jets_s_content", "FCCAnalyses::JetClusteringUtils::get_s_content(jets)")
-    df = df.Define("jets_d_content", "FCCAnalyses::JetClusteringUtils::get_d_content(jets)")
-    df = df.Define("jets_u_content", "FCCAnalyses::JetClusteringUtils::get_u_content(jets)")
-
-    # convert jets to LorentzVectors
-    df = df.Define("jets_lv", "Construct<ROOT::Math::PxPyPzEVector>(jets_px, jets_py, jets_pz, jets_e)")
-    # df = df.Define("jets_truth", "FCCAnalyses::jetTruthFinder(jetconstituents, rps_no_muons, Particle, MCRecoAssociations1)") # returns best-matched PDG ID of the jets
-    df = df.Define("dijet_higgs_m", "(jets_lv[0]+jets_lv[1]).M()")
+    # 2-jet exclusive flavour-aware clustering, with IFN and with plain net flavour summation for comparison
+    clusterings = {
+        "ifn": "JetClustering::flv_ifn_clustering_ee_kt(2, 2, 0, 0)(pseudo_jets)",
+        "net": "JetClustering::flv_net_clustering_ee_kt(2, 2, 0, 0)(pseudo_jets)",
+    }
 
     df = df.Define("MC_e_sum", "Sum(MC_e)")
-
-    # define histograms
-    # results.append(df.Histo1D(("zmumu_m", "", *bins_m_ll), "zmumu_m"))
-    results.append(df.Histo1D(("jets_e", "", 250, 0., 250.), "jets_e"))
-    results.append(df.Histo1D(("M_jj", "", 250, 0., 250.), "dijet_higgs_m"))
     results.append(df.Histo1D(("MC_e_sum", "", 250, 0., 250.), "MC_e_sum"))
-    # results.append(df.Histo1D(("jets_flv", "", 50, 0., 50.), "jets_flv"))
-    results.append(df.Histo1D(("jets_b_content", "", 10, -5., 5.), "jets_b_content"))
-    results.append(df.Histo1D(("jets_c_content", "", 10, -5., 5.), "jets_c_content"))
-    results.append(df.Histo1D(("jets_s_content", "", 10, -5., 5.), "jets_s_content"))
-    results.append(df.Histo1D(("jets_d_content", "", 10, -5., 5.), "jets_d_content"))
-    results.append(df.Histo1D(("jets_u_content", "", 10, -5., 5.), "jets_u_content"))
     results.append(df.Histo1D(("n_showers_92", "", 5, 0., 5.), "n_showers_92"))
+
+    for name, clustering in clusterings.items():
+        df = df.Define(f"{name}_clustered_jets", clustering)
+
+        df = df.Define(f"{name}_jets", f"FCCAnalyses::JetClusteringUtils::get_pseudoJets({name}_clustered_jets)")
+        df = df.Define(f"{name}_jetconstituents", f"FCCAnalyses::JetClusteringUtils::get_constituents({name}_clustered_jets)")
+        for var in ["e", "px", "py", "pz", "phi", "m"]:
+            df = df.Define(f"{name}_jets_{var}", f"FCCAnalyses::JetClusteringUtils::get_{var}({name}_jets)")
+
+        # df = df.Define(f"{name}_jets_flv", f"FCCAnalyses::JetClusteringUtils::get_flavours({name}_jets)")
+        for flv in ["b", "c", "s", "d", "u"]:
+            df = df.Define(f"{name}_jets_{flv}_content", f"FCCAnalyses::JetClusteringUtils::get_{flv}_content({name}_jets)")
+
+        # convert jets to LorentzVectors
+        df = df.Define(f"{name}_jets_lv", f"Construct<ROOT::Math::PxPyPzEVector>({name}_jets_px, {name}_jets_py, {name}_jets_pz, {name}_jets_e)")
+        df = df.Define(f"{name}_dijet_higgs_m", f"({name}_jets_lv[0]+{name}_jets_lv[1]).M()")
+
+        # define histograms
+        results.append(df.Histo1D((f"{name}_jets_e", "", 250, 0., 250.), f"{name}_jets_e"))
+        results.append(df.Histo1D((f"{name}_M_jj", "", 250, 0., 250.), f"{name}_dijet_higgs_m"))
+        for flv in ["b", "c", "s", "d", "u"]:
+            results.append(df.Histo1D((f"{name}_jets_{flv}_content", "", 10, -5., 5.), f"{name}_jets_{flv}_content"))
 
     return results, weightsum
 

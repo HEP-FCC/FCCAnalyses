@@ -336,7 +336,7 @@ namespace JetClustering {
     return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
   }
 
-  flv_clustering_ee_kt::flv_clustering_ee_kt(int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination) {
+  flv_ifn_clustering_ee_kt::flv_ifn_clustering_ee_kt(int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination) {
     _exclusive = arg_exclusive;
     _cut = arg_cut;
     _sorted = arg_sorted;
@@ -372,7 +372,47 @@ namespace JetClustering {
       // _def.set_recombiner(new ExternalRecombiner(_recombination));
   }
 
-  FCCAnalysesJet flv_clustering_ee_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
+  FCCAnalysesJet flv_ifn_clustering_ee_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
+    //return empty struct
+    if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
+      return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
+
+    _cs = fastjet::ClusterSequence(input, _def);
+
+    //cluster jets
+    std::vector<fastjet::PseudoJet> pjets = FCCAnalyses::JetClusteringUtils::build_jets(_cs, _exclusive, _cut, _sorted);
+    //get dmerged elements
+    std::vector<float> dmerge = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 0);
+    std::vector<float> dmerge_max = FCCAnalyses::JetClusteringUtils::exclusive_dmerge(_cs, 1);
+
+    //transform to FCCAnalysesJet
+    return FCCAnalyses::JetClusteringUtils::build_FCCAnalysesJet(pjets, dmerge, dmerge_max);
+  }
+
+  flv_net_clustering_ee_kt::flv_net_clustering_ee_kt(int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination) {
+    _exclusive = arg_exclusive;
+    _cut = arg_cut;
+    _sorted = arg_sorted;
+    _recombination = arg_recombination;
+
+    // initialize jet algorithm
+    _jetAlgorithm = fastjet::JetAlgorithm::ee_kt_algorithm;
+
+    // initialize recombination scheme
+    _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
+
+    // define the clustering sequence and jet definition, the flavour recombiner
+    // sums the flavours of the merged particles (E-scheme for the kinematics)
+    _def = fastjet::JetDefinition(_jetAlgorithm);
+    _def.set_recombiner(new fastjet::contrib::FlavRecombiner(fastjet::contrib::FlavRecombiner::net));
+    _def.delete_recombiner_when_unused();
+
+    // unsupported for now
+    // if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
+      // _def.set_recombiner(new ExternalRecombiner(_recombination));
+  }
+
+  FCCAnalysesJet flv_net_clustering_ee_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
     //return empty struct
     if (FCCAnalyses::JetClusteringUtils::check(input.size(), _exclusive, _cut) == false)
       return FCCAnalyses::JetClusteringUtils::initialise_FCCAnalysesJet();
