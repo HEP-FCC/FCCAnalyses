@@ -221,8 +221,7 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   // store the results in an edm4hep::VertexData object
 
   float Chi2 = theVertexFit.GetVtxChi2();
-  float Ndof = 2.0 * Ntr - 3.0;
-  ;
+  float Ndof = BeamSpotConstraint ? 2.0 * Ntr : 2.0 * Ntr - 3.0;
   result.chi2 = Chi2 / Ndof;
 
   // the chi2 of all the tracks :
@@ -358,7 +357,7 @@ get_PrimaryTracks(ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 
   TVectorD x = theVertexFit.GetVtx(); // this actually runs the fit
 
-  float chi2_max = 1e30;
+  float chi2_max = theVertexFit.GetVtxChi2List().Max();
 
   while (chi2_max >= CHI2MAX) {
 
