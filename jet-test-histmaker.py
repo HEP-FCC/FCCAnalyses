@@ -87,12 +87,12 @@ def build_graph(df, dataset):
         results.append(df.Histo1D((f"n_{name}_{pid}", "", 10, 0., 10.), f"n_{name}_{pid}"))
 
     # final partons entering the hadronisation
-    df = df.Define("HadronisationPartons", "FCCAnalyses::MCParticle::get_hadronisation_partons(MCParticles, _Particle_parents.index, _Particle_daughters.index)")
+    df = df.Define("HadronisationPartons", "FCCAnalyses::MCParticle::get_hadronisation_partons(MCParticles, _Particle_parents.index)")
     df = df.Define("n_hadronisation_partons", "HadronisationPartons.size()")
     results.append(df.Histo1D(("n_hadronisation_partons", "", 50, 0., 50.), "n_hadronisation_partons"))
 
     # primary hadrons, i.e. the hadrons directly after hadronisation, before they decay
-    df = df.Define("VisibleMCParticles", "FCCAnalyses::MCParticle::get_primary_hadrons(MCParticles, _Particle_daughters.index)")
+    df = df.Define("VisibleMCParticles", "FCCAnalyses::MCParticle::get_primary_hadrons(MCParticles, _Particle_parents.index)")
     df = df.Define("MC_px", "FCCAnalyses::MCParticle::get_px(VisibleMCParticles)")
     df = df.Define("MC_py", "FCCAnalyses::MCParticle::get_py(VisibleMCParticles)")
     df = df.Define("MC_pz","FCCAnalyses::MCParticle::get_pz(VisibleMCParticles)")

@@ -38,20 +38,27 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_pdgID::operator() (ROOT::VecOps
 }
 
 namespace {
-// select the relatives (daughters or parents, given by the begin/end members
-// and the corresponding index block ind) of all particles with one of the
-// PDG ids, each relative only once and in the order of the Particle block
-template <unsigned int edm4hep::MCParticleData::*Begin, unsigned int edm4hep::MCParticleData::*End>
-ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_relatives_of_pdgID(const std::vector<int>& pdgs,
-                                                                   const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                                   const ROOT::VecOps::RVec<int>& ind) {
-  std::set<int> indices;
-  for (auto & p : in) {
-    if ( std::find(pdgs.begin(), pdgs.end(), p.PDG) == pdgs.end() ) continue;
-    for (unsigned int i = p.*Begin; i < p.*End; ++i) {
-      indices.insert( ind[i] );
+// The daughters relations in the Particle collection are not reliable (they
+// can contain unrelated particles and miss others), while the parents
+// relations are. All daughters are therefore derived from the parents: d is a
+// daughter of i if i is among the parents of d.
+std::vector<std::vector<int>> daughters_from_parents(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                     const ROOT::VecOps::RVec<int>& parents) {
+  std::vector<std::vector<int>> result(in.size());
+  for (std::size_t d = 0; d < in.size(); ++d) {
+    for (unsigned int ip = in[d].parents_begin; ip < in[d].parents_end; ++ip) {
+      result[parents[ip]].push_back(d);
     }
   }
+  return result;
+}
+
+bool has_pdgID(const edm4hep::MCParticleData& p, const std::vector<int>& pdgs) {
+  return std::find(pdgs.begin(), pdgs.end(), p.PDG) != pdgs.end();
+}
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_by_indices(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                           const std::set<int>& indices) {
   ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
   result.reserve(indices.size());
   for (auto i : indices) {
@@ -64,37 +71,70 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_relatives_of_pdgID(const std::ve
 sel_daughters_of_pdgID::sel_daughters_of_pdgID(int arg_pdg) : m_pdgs({arg_pdg}) {};
 sel_daughters_of_pdgID::sel_daughters_of_pdgID(std::vector<int> arg_pdgs) : m_pdgs(std::move(arg_pdgs)) {};
 ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_daughters_of_pdgID::operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                                                const ROOT::VecOps::RVec<int>& ind) {
-  return sel_relatives_of_pdgID<&edm4hep::MCParticleData::daughters_begin,
-                                &edm4hep::MCParticleData::daughters_end>(m_pdgs, in, ind);
+                                                                                const ROOT::VecOps::RVec<int>& parents) {
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  for (auto & d : in) {
+    for (unsigned int ip = d.parents_begin; ip < d.parents_end; ++ip) {
+      if ( has_pdgID(in[parents[ip]], m_pdgs) ) {
+        result.emplace_back(d);
+        break;
+      }
+    }
+  }
+  return result;
 }
 
 sel_parents_of_pdgID::sel_parents_of_pdgID(int arg_pdg) : m_pdgs({arg_pdg}) {};
 sel_parents_of_pdgID::sel_parents_of_pdgID(std::vector<int> arg_pdgs) : m_pdgs(std::move(arg_pdgs)) {};
 ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_parents_of_pdgID::operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                                              const ROOT::VecOps::RVec<int>& ind) {
-  return sel_relatives_of_pdgID<&edm4hep::MCParticleData::parents_begin,
-                                &edm4hep::MCParticleData::parents_end>(m_pdgs, in, ind);
+                                                                              const ROOT::VecOps::RVec<int>& parents) {
+  std::set<int> indices;
+  for (auto & p : in) {
+    if ( !has_pdgID(p, m_pdgs) ) continue;
+    for (unsigned int ip = p.parents_begin; ip < p.parents_end; ++ip) {
+      indices.insert( parents[ip] );
+    }
+  }
+  return sel_by_indices(in, indices);
 }
 
 namespace {
 bool is_hadronisation(const edm4hep::MCParticleData& p) {
-  return std::find(hadronisation_pdgIDs.begin(), hadronisation_pdgIDs.end(), p.PDG) != hadronisation_pdgIDs.end();
+  return has_pdgID(p, hadronisation_pdgIDs);
 }
 
 // whether any (strict) descendant of particle i is a hadronisation entry,
 // memoised in state: 0 = not visited, 1 = being visited, 2 = no, 3 = yes
 bool feeds_hadronisation(std::size_t i,
                          const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                         const ROOT::VecOps::RVec<int>& daughters,
+                         const std::vector<std::vector<int>>& daughters,
                          std::vector<char>& state) {
   if (state[i] >= 2) return state[i] == 3;
   if (state[i] == 1) return false;  // protect against cycles in the record
   state[i] = 1;
   bool result = false;
-  for (unsigned int id = in[i].daughters_begin; id < in[i].daughters_end && !result; ++id) {
-    const std::size_t d = daughters[id];
+  for (auto d : daughters[i]) {
     result = is_hadronisation(in[d]) || feeds_hadronisation(d, in, daughters, state);
+    if (result) break;
+  }
+  state[i] = result ? 3 : 2;
+  return result;
+}
+
+// whether any (strict) ancestor of particle i is a hadronisation entry,
+// memoised in state as for feeds_hadronisation
+bool from_hadronisation(std::size_t i,
+                        const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                        const ROOT::VecOps::RVec<int>& parents,
+                        std::vector<char>& state) {
+  if (state[i] >= 2) return state[i] == 3;
+  if (state[i] == 1) return false;  // protect against cycles in the record
+  state[i] = 1;
+  bool result = false;
+  for (unsigned int ip = in[i].parents_begin; ip < in[i].parents_end; ++ip) {
+    const std::size_t p = parents[ip];
+    result = is_hadronisation(in[p]) || from_hadronisation(p, in, parents, state);
+    if (result) break;
   }
   state[i] = result ? 3 : 2;
   return result;
@@ -102,50 +142,34 @@ bool feeds_hadronisation(std::size_t i,
 }  // namespace
 
 ROOT::VecOps::RVec<edm4hep::MCParticleData> get_primary_hadrons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                                const ROOT::VecOps::RVec<int>& daughters) {
+                                                                const ROOT::VecOps::RVec<int>& parents) {
+  const auto daughters = daughters_from_parents(in, parents);
   std::vector<char> state(in.size(), 0);
   std::set<int> indices;
-  for (auto & p : in) {
-    if ( !is_hadronisation(p) ) continue;
-    for (unsigned int id = p.daughters_begin; id < p.daughters_end; ++id) {
-      const int d = daughters[id];
+  for (std::size_t i = 0; i < in.size(); ++i) {
+    if ( !is_hadronisation(in[i]) ) continue;
+    for (auto d : daughters[i]) {
       if ( is_hadronisation(in[d]) || feeds_hadronisation(d, in, daughters, state) ) continue;
       indices.insert(d);
     }
   }
-  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
-  result.reserve(indices.size());
-  for (auto i : indices) {
-    result.emplace_back( in[i] );
-  }
-  return result;
+  return sel_by_indices(in, indices);
 }
 
 ROOT::VecOps::RVec<edm4hep::MCParticleData> get_hadronisation_partons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                                      const ROOT::VecOps::RVec<int>& parents,
-                                                                      const ROOT::VecOps::RVec<int>& daughters) {
+                                                                      const ROOT::VecOps::RVec<int>& parents) {
   std::vector<char> state(in.size(), 0);
   std::set<int> indices;
   for (std::size_t i = 0; i < in.size(); ++i) {
-    // only the last hadronisation step, i.e. entries not feeding another one
-    if ( !is_hadronisation(in[i]) || feeds_hadronisation(i, in, daughters, state) ) continue;
+    if ( !is_hadronisation(in[i]) ) continue;
     for (unsigned int ip = in[i].parents_begin; ip < in[i].parents_end; ++ip) {
       const int p = parents[ip];
-      if ( is_hadronisation(in[p]) ) continue;
-      // skip partons that also feed an earlier hadronisation step
-      bool earlier = false;
-      for (unsigned int id = in[p].daughters_begin; id < in[p].daughters_end && !earlier; ++id) {
-        earlier = feeds_hadronisation(daughters[id], in, daughters, state);
-      }
-      if ( !earlier ) indices.insert(p);
+      // skip partons coming out of an earlier hadronisation step
+      if ( is_hadronisation(in[p]) || from_hadronisation(p, in, parents, state) ) continue;
+      indices.insert(p);
     }
   }
-  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
-  result.reserve(indices.size());
-  for (auto i : indices) {
-    result.emplace_back( in[i] );
-  }
-  return result;
+  return sel_by_indices(in, indices);
 }
 
 

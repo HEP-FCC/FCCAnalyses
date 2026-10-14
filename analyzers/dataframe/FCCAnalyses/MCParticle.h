@@ -52,28 +52,31 @@ namespace MCParticle{
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
+  // Note: the daughters relations of the Particle collection are not reliable
+  // (they can contain unrelated particles and miss others), so the functions
+  // below derive the daughters from the parents relations only and all take
+  // the parents block (_Particle_parents.index).
+
   /// select the direct daughters of all MCParticles with the given PDG id(s),
-  /// e.g. {91, 92} (Pythia cluster and string) for the primary hadrons after
-  /// hadronisation. Each daughter is selected only once.
-  /// ind is the daughters block (_Particle_daughters.index)
+  /// e.g. {91, 92} (Pythia cluster and string). Each daughter is selected only
+  /// once, in the order of the Particle block.
   struct sel_daughters_of_pdgID {
     sel_daughters_of_pdgID(int arg_pdg);
     sel_daughters_of_pdgID(std::vector<int> arg_pdgs);
     std::vector<int> m_pdgs = {92};
     ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                            const ROOT::VecOps::RVec<int>& ind);
+                                                            const ROOT::VecOps::RVec<int>& parents);
   };
 
   /// select the direct parents of all MCParticles with the given PDG id(s),
-  /// e.g. {91, 92} (Pythia cluster and string) for the partons entering the
-  /// hadronisation. Each parent is selected only once.
-  /// ind is the parents block (_Particle_parents.index)
+  /// e.g. {91, 92} (Pythia cluster and string). Each parent is selected only
+  /// once, in the order of the Particle block.
   struct sel_parents_of_pdgID {
     sel_parents_of_pdgID(int arg_pdg);
     sel_parents_of_pdgID(std::vector<int> arg_pdgs);
     std::vector<int> m_pdgs = {92};
     ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                            const ROOT::VecOps::RVec<int>& ind);
+                                                            const ROOT::VecOps::RVec<int>& parents);
   };
 
   /// PDG ids of the Pythia hadronisation entries: cluster, string and
@@ -85,18 +88,15 @@ namespace MCParticle{
   /// daughters of a hadronisation entry that themselves feed into another
   /// hadronisation entry (e.g. partons or onia emitted by a cluster) are skipped,
   /// as their energy is contained in the hadrons of the later step.
-  /// daughters is the daughters block (_Particle_daughters.index)
   ROOT::VecOps::RVec<edm4hep::MCParticleData> get_primary_hadrons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                                  const ROOT::VecOps::RVec<int>& daughters);
+                                                                  const ROOT::VecOps::RVec<int>& parents);
 
   /// get the final partons entering the hadronisation, i.e. the parents of the
-  /// last hadronisation step: parents that first go through another
-  /// hadronisation entry (e.g. a cluster emitting partons or onia) are skipped.
-  /// parents and daughters are the parents and daughters blocks
-  /// (_Particle_parents.index and _Particle_daughters.index)
+  /// hadronisation entries. Parents that themselves come out of a hadronisation
+  /// entry (e.g. a recoil gluon emitted by a cluster) are skipped, as their
+  /// energy is contained in the partons entering that earlier step.
   ROOT::VecOps::RVec<edm4hep::MCParticleData> get_hadronisation_partons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
-                                                                        const ROOT::VecOps::RVec<int>& parents,
-                                                                        const ROOT::VecOps::RVec<int>& daughters);
+                                                                        const ROOT::VecOps::RVec<int>& parents);
 
   /// get MC history tree for a given MCParticle index
   struct get_tree{
