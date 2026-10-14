@@ -76,17 +76,8 @@ def build_graph(df, dataset):
     # df = df.Define("hadr_idx", "ArgMax(FCCAnalyses::MCParticle::get_pdg(MCParticles) == 92)")
     df = df.Define("hadr_mask", "FCCAnalyses::MCParticle::get_pdg(MCParticles) == 92")
     df = df.Define("n_showers_92", "Sum(hadr_mask)")
-    df = df.Define("hadr_idcs", "std::vector<int> res; for (int i = 0; i < hadr_mask.size(); i++) {if (hadr_mask[i]) {res.push_back(i);} }; return res;")
-    df = df.Define("hadr_daughters", """
-    ROOT::VecOps::RVec<edm4hep::MCParticleData> res;
-    for (auto hadr_idx : hadr_idcs) {
-        std::vector<int> idcs = FCCAnalyses::MCParticle::get_list_of_particles_from_decay(hadr_idx, MCParticles, _Particle_daughters.index);
-        for (auto idx : idcs) {
-            res.push_back(MCParticles[idx]);
-        }
-    } return res;
-    """)
-    df = df.Define("VisibleMCParticles", "hadr_daughters")
+    # primary hadrons, i.e. the direct daughters of the Pythia strings (PDG 92)
+    df = df.Define("VisibleMCParticles", "FCCAnalyses::MCParticle::sel_daughters_of_pdgID(92)(MCParticles, _Particle_daughters.index)")
     df = df.Define("MC_px", "FCCAnalyses::MCParticle::get_px(VisibleMCParticles)")
     df = df.Define("MC_py", "FCCAnalyses::MCParticle::get_py(VisibleMCParticles)")
     df = df.Define("MC_pz","FCCAnalyses::MCParticle::get_pz(VisibleMCParticles)")

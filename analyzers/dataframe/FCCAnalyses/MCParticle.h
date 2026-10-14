@@ -52,6 +52,15 @@ namespace MCParticle{
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
+  /// select the direct daughters of all MCParticles with a given PDG id, e.g.
+  /// 92 (Pythia string) for the primary hadrons after hadronisation
+  struct sel_daughters_of_pdgID {
+    sel_daughters_of_pdgID(int arg_pdg);
+    int m_pdg = 92;
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                            const ROOT::VecOps::RVec<int>& ind);
+  };
+
   /// get MC history tree for a given MCParticle index
   struct get_tree{
     get_tree(int arg_index);

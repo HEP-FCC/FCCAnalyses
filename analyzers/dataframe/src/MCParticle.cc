@@ -37,6 +37,20 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_pdgID::operator() (ROOT::VecOps
   return result;
 }
 
+sel_daughters_of_pdgID::sel_daughters_of_pdgID(int arg_pdg) : m_pdg(arg_pdg) {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_daughters_of_pdgID::operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                                                const ROOT::VecOps::RVec<int>& ind) {
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  for (auto & p : in) {
+    if ( p.PDG != m_pdg ) continue;
+    // daughters_begin/end index into the daughters block ind (Particle#1.index)
+    for (unsigned int id = p.daughters_begin; id < p.daughters_end; ++id) {
+      result.emplace_back( in[ind[id]] );
+    }
+  }
+  return result;
+}
+
 
 
 get_decay::get_decay(int arg_mother, int arg_daughters, bool arg_inf){m_mother=arg_mother; m_daughters=arg_daughters; m_inf=arg_inf;};
