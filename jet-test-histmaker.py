@@ -74,10 +74,25 @@ def build_graph(df, dataset):
     # df = df.Define("VisibleMCParticles", "StableMCParticles")
     # df = df.Define("VisibleMCParticles", "StableMCParticles[abs(FCCAnalyses::MCParticle::get_pdg(StableMCParticles)) != 12 && abs(FCCAnalyses::MCParticle::get_pdg(StableMCParticles)) != 14 && abs(FCCAnalyses::MCParticle::get_pdg(StableMCParticles)) != 16]")
     # df = df.Define("hadr_idx", "ArgMax(FCCAnalyses::MCParticle::get_pdg(MCParticles) == 92)")
-    df = df.Define("hadr_mask", "FCCAnalyses::MCParticle::get_pdg(MCParticles) == 92")
-    df = df.Define("n_showers_92", "Sum(hadr_mask)")
-    # primary hadrons, i.e. the direct daughters of the Pythia strings (PDG 92)
-    df = df.Define("VisibleMCParticles", "FCCAnalyses::MCParticle::sel_daughters_of_pdgID(92)(MCParticles, _Particle_daughters.index)")
+    # count the Pythia special hadronisation entries
+    hadronisation_pids = {
+        88: "junction",
+        91: "cluster",
+        92: "string",
+        93: "indep",  # independent fragmentation
+    }
+    df = df.Define("MC_pdg_all", "FCCAnalyses::MCParticle::get_pdg(MCParticles)")
+    for pid, name in hadronisation_pids.items():
+        df = df.Define(f"n_{name}_{pid}", f"Sum(MC_pdg_all == {pid})")
+        results.append(df.Histo1D((f"n_{name}_{pid}", "", 10, 0., 10.), f"n_{name}_{pid}"))
+
+    # final partons entering the hadronisation
+    df = df.Define("HadronisationPartons", "FCCAnalyses::MCParticle::get_hadronisation_partons(MCParticles, _Particle_parents.index, _Particle_daughters.index)")
+    df = df.Define("n_hadronisation_partons", "HadronisationPartons.size()")
+    results.append(df.Histo1D(("n_hadronisation_partons", "", 50, 0., 50.), "n_hadronisation_partons"))
+
+    # primary hadrons, i.e. the hadrons directly after hadronisation, before they decay
+    df = df.Define("VisibleMCParticles", "FCCAnalyses::MCParticle::get_primary_hadrons(MCParticles, _Particle_daughters.index)")
     df = df.Define("MC_px", "FCCAnalyses::MCParticle::get_px(VisibleMCParticles)")
     df = df.Define("MC_py", "FCCAnalyses::MCParticle::get_py(VisibleMCParticles)")
     df = df.Define("MC_pz","FCCAnalyses::MCParticle::get_pz(VisibleMCParticles)")
@@ -96,7 +111,6 @@ def build_graph(df, dataset):
 
     df = df.Define("MC_e_sum", "Sum(MC_e)")
     results.append(df.Histo1D(("MC_e_sum", "", 250, 0., 250.), "MC_e_sum"))
-    results.append(df.Histo1D(("n_showers_92", "", 5, 0., 5.), "n_showers_92"))
 
     for name, clustering in clusterings.items():
         df = df.Define(f"{name}_clustered_jets", clustering)
