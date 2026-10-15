@@ -360,7 +360,18 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
         sample.colour = script_module.colors[hbkg]
         book_systematics(config, sample, hbkg, var, sel)
         plotter.addSample(sample)
-    print(config, script_module)
+    if config['pseudo-data'] in ('toy', 'asimov') and not hbackgrounds:
+        LOGGER.warning('No background for plot "%s": pseudo-data not '
+                       'generated.', var)
+    elif config['pseudo-data'] in ('toy', 'asimov'):
+        if config['pseudo-data'] == 'toy':
+            plotter.addPseudoData(True, config['pseudo-data-seed'], 'Pseudo-data (toy)')
+        else:
+            plotter.addPseudoData(False, 0, 'Pseudo-data (Asimov)')
+    elif config['pseudo-data']:
+        LOGGER.error('Invalid pseudo-data mode "%s"! Supported modes: toy, '
+                     'asimov\nAborting...', config['pseudo-data'])
+        sys.exit(3)
     plotter.plot(var, join(script_module.outdir, sel), config)
 
 
@@ -1159,6 +1170,10 @@ def run(args):
     config['plot-stat-unc'] = False
     if hasattr(script_module, 'plotStatUnc'):
         config['plot-stat-unc'] = script_module.plotStatUnc
+
+    # Pseudo-data: toy (Poisson) or asimov (expected yields)
+    config['pseudo-data'] = getattr(script_module, 'pseudoData', None)
+    config['pseudo-data-seed'] = getattr(script_module, 'pseudoDataSeed', 1)
 
     # Sources of systematic uncertainty, and their display
     config['systematics'] = getattr(script_module, 'systematics', {})

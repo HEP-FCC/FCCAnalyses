@@ -20,6 +20,7 @@
 #define MultiPlotter_MultiPlotter_h
 
 #include "MultiPlotter/Sample.h"
+#include <memory>
 
 namespace mplt {
 /// Base, virtual plotting utility object
@@ -33,6 +34,10 @@ public:
 
   /// Add a new sample (and its attributes) to a given samples category
   Sample &addSample(Sample &sample);
+  /// Generate a data sample out of the background-only hypothesis
+  /// \param[in] fluctuate Poisson fluctuation, or Asimov dataset
+  Sample &addPseudoData(bool fluctuate = true, unsigned int seed = 42,
+                        const std::string &name = "Pseudo-data");
   /// List of samples registered for a given category
   const std::vector<Sample> &samples(Sample::Type) const;
 
@@ -50,6 +55,8 @@ protected:
   const std::string experiment_name_;
   const std::vector<std::string> extra_labels_;
   std::unordered_map<Sample::Type, Stack> samples_;
+
+  std::vector<std::shared_ptr<TH1>> pseudo_data_; ///< generated pseudo-data
 
   using BoxCoordinates = std::pair<float, float>;
   std::vector<std::pair<BoxCoordinates, std::vector<std::string>>> text_boxes_;

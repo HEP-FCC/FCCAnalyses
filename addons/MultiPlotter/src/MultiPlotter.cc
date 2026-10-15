@@ -19,6 +19,8 @@
 #include "MultiPlotter/MultiPlotter.h"
 
 #include <TH1.h>
+#include <TRandom3.h>
+#include <stdexcept>
 
 using namespace mplt;
 
@@ -28,6 +30,37 @@ MultiPlotter::MultiPlotter(std::string_view experiment_name,
 
 Sample &MultiPlotter::addSample(Sample &sample) {
   return samples_[sample.type].add(sample);
+}
+
+Sample &MultiPlotter::addPseudoData(bool fluctuate, unsigned int seed,
+                                    const std::string &name) {
+  std::shared_ptr<TH1> histogram;
+  for (const auto &sample : samples(Sample::Type::background)) {
+    if (!sample.histogram)
+      continue;
+    if (!histogram) {
+      histogram.reset(static_cast<TH1 *>(sample.histogram->Clone()));
+      histogram->SetDirectory(nullptr);
+    } else
+      histogram->Add(sample.histogram);
+  }
+  if (!histogram)
+    throw std::runtime_error("No background sample to generate pseudo-data.");
+  TRandom3 generator(seed);
+  for (int bin = 0; bin <= histogram->GetNbinsX() + 1; ++bin) {
+    const auto expected = std::max(0., histogram->GetBinContent(bin)),
+               observed = fluctuate ? generator.PoissonD(expected) : expected;
+    histogram->SetBinContent(bin, observed);
+    histogram->SetBinError(bin, std::sqrt(observed));
+  }
+  pseudo_data_.emplace_back(histogram);
+
+  Sample sample;
+  sample.type = Sample::Type::data;
+  sample.name = name;
+  sample.histogram = histogram.get();
+  sample.colour = kBlack;
+  return addSample(sample);
 }
 
 const std::vector<Sample> &MultiPlotter::samples(Sample::Type type) const {

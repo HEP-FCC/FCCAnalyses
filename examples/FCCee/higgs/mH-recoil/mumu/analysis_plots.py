@@ -11,6 +11,8 @@ formats        = ['png', 'pdf']
 yaxis          = ['lin', 'log']
 stacksig       = ['stack', 'nostack']
 outdir         = 'outputs/FCCee/higgs/mH-recoil/mumu/plots/'
+#pseudoData     = 'toy'
+#pseudoData     = 'asimov'
 
 variables = ['mz',
              'mz_zoom',
