@@ -13,25 +13,17 @@ prodTag     = "FCCee/pre_summer2026_training/IDEA/"
 
 # Link to the dictonary that contains all the cross section informations etc... (mandatory)
 # procDict = "FCCee_procDict_pre_summer2026_training_IDEA.json"
+# Unfortunately, there is no procDict for pre_summer2026_training, but we have to have an existing file here even if we don't use the cross-section...
 procDict = "FCCee_procDict_pre_summer2026_IDEA.json"
-# additional/custom C++ functions, defined in header files (optional)
-# includePaths = ["functions.h"]
 
 #Optional: output directory, default is local running directory
 outputDir   = "outputs/jet-test"
 
 # optional: ncpus, default is 4, -1 uses all cores available
 nCPUS       = 6
-# nCPUS       = 1
 
 # scale the histograms with the cross-section and integrated luminosity
 doScale = False
-intLumi = 7200000.0 # 7.2 /ab
-
-
-# define some binning for various histograms
-bins_p_mu = (250, 0, 250)
-
 
 # build_graph function that contains the analysis logic, cuts and histograms (mandatory)
 def build_graph(df, dataset):
@@ -44,7 +36,7 @@ def build_graph(df, dataset):
 
     # count the Pythia special hadronisation entries
     hadronisation_pids = {
-        88: "junction",
+        # 88: "junction",
         91: "cluster",
         92: "string",
         93: "indep",  # independent fragmentation
