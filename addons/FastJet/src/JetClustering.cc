@@ -7,6 +7,10 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Selector.hh"
 
+#include <iostream>
+#include <stdexcept>
+#include <string>
+
 // #include "fastjet/contrib/FlavInfo.hh"
 
 namespace {
@@ -21,6 +25,17 @@ namespace {
     using fastjet::contrib::IFNPlugin::IFNPlugin;
     bool exclusive_sequence_meaningful() const override { return true; }
   };
+
+  // The FastJet contrib FlavRecombiner only does E-scheme kinematics, so any
+  // other recombination scheme would be silently ignored. Refuse it instead.
+  void check_flav_recombination(int recombination, const std::string& name) {
+    if (recombination == 0)
+      return;
+    const std::string msg = "JetClustering::" + name + ": recombination scheme " + std::to_string(recombination) +
+                            " is not supported for flavour-aware clustering, only the E scheme (0) is.";
+    std::cerr << "ERROR: " << msg << std::endl;
+    throw std::invalid_argument(msg);
+  }
 }  // namespace
 
 namespace JetClustering {
@@ -337,6 +352,8 @@ namespace JetClustering {
   }
 
   flv_ifn_clustering_ee_kt::flv_ifn_clustering_ee_kt(int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination) {
+    check_flav_recombination(arg_recombination, "flv_ifn_clustering_ee_kt");
+
     _exclusive = arg_exclusive;
     _cut = arg_cut;
     _sorted = arg_sorted;
@@ -349,8 +366,7 @@ namespace JetClustering {
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
     // define the clustering sequence and jet definition
-    // fastjet::JetDefinition base_jet_def = fastjet::JetDefinition(_jetAlgorithm, _recombScheme);
-    _base_jet_def = fastjet::JetAlgorithm::ee_kt_algorithm;
+    _base_jet_def = fastjet::JetDefinition(_jetAlgorithm);
     _base_jet_def.set_recombiner(new fastjet::contrib::FlavRecombiner(fastjet::contrib::FlavRecombiner::net));
     // must be set before the plugin copies _base_jet_def, so the copies share ownership
     _base_jet_def.delete_recombiner_when_unused();
@@ -366,10 +382,6 @@ namespace JetClustering {
     auto* plugin = new ExclusiveIFNPlugin(_base_jet_def, alpha, omega, fastjet::contrib::FlavRecombiner::net);
     _def = fastjet::JetDefinition(plugin);
     _def.delete_plugin_when_unused();
-
-    // unsupported for now
-    // if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
-      // _def.set_recombiner(new ExternalRecombiner(_recombination));
   }
 
   FCCAnalysesJet flv_ifn_clustering_ee_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
@@ -390,6 +402,8 @@ namespace JetClustering {
   }
 
   flv_net_clustering_ee_kt::flv_net_clustering_ee_kt(int arg_exclusive, float arg_cut, int arg_sorted, int arg_recombination) {
+    check_flav_recombination(arg_recombination, "flv_net_clustering_ee_kt");
+
     _exclusive = arg_exclusive;
     _cut = arg_cut;
     _sorted = arg_sorted;
@@ -401,15 +415,9 @@ namespace JetClustering {
     // initialize recombination scheme
     _recombScheme = FCCAnalyses::JetClusteringUtils::recomb_scheme(_recombination);
 
-    // define the clustering sequence and jet definition, the flavour recombiner
-    // sums the flavours of the merged particles (E-scheme for the kinematics)
     _def = fastjet::JetDefinition(_jetAlgorithm);
     _def.set_recombiner(new fastjet::contrib::FlavRecombiner(fastjet::contrib::FlavRecombiner::net));
     _def.delete_recombiner_when_unused();
-
-    // unsupported for now
-    // if (_recombScheme == fastjet::RecombinationScheme::external_scheme)
-      // _def.set_recombiner(new ExternalRecombiner(_recombination));
   }
 
   FCCAnalysesJet flv_net_clustering_ee_kt::operator()(const std::vector<fastjet::PseudoJet>& input) {
