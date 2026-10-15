@@ -63,6 +63,78 @@ std::vector<fastjet::PseudoJet> set_pseudoJets_xyzm(
   return result;
 }
 
+namespace {
+void add_flavours(std::vector<fastjet::PseudoJet> &jets,
+                  const ROOT::VecOps::RVec<int> &pdg) {
+  for (size_t i = 0; i < jets.size(); ++i) {
+    jets[i].set_user_info(new fastjet::contrib::FlavHistory(pdg[i]));
+  }
+}
+} // namespace
+
+std::vector<fastjet::PseudoJet> set_pseudoJets_flav(
+    const ROOT::VecOps::RVec<float> &px, const ROOT::VecOps::RVec<float> &py,
+    const ROOT::VecOps::RVec<float> &pz, const ROOT::VecOps::RVec<float> &e,
+    const ROOT::VecOps::RVec<int> &pdg) {
+  std::vector<fastjet::PseudoJet> result = set_pseudoJets(px, py, pz, e);
+  add_flavours(result, pdg);
+  return result;
+}
+
+std::vector<fastjet::PseudoJet> set_pseudoJets_xyzm_flav(
+    const ROOT::VecOps::RVec<float> &px, const ROOT::VecOps::RVec<float> &py,
+    const ROOT::VecOps::RVec<float> &pz, const ROOT::VecOps::RVec<float> &m,
+    const ROOT::VecOps::RVec<int> &pdg) {
+  std::vector<fastjet::PseudoJet> result = set_pseudoJets_xyzm(px, py, pz, m);
+  add_flavours(result, pdg);
+  return result;
+}
+
+ROOT::VecOps::RVec<std::string>
+get_flavours(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in) {
+  ROOT::VecOps::RVec<std::string> result;
+  for (auto &p : in) {
+    result.push_back(
+        fastjet::contrib::FlavHistory::current_flavour_of(p).description());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int>
+get_flavour_content(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in,
+                    int iflv) {
+  ROOT::VecOps::RVec<int> result;
+  for (auto &p : in) {
+    result.push_back(fastjet::contrib::FlavHistory::current_flavour_of(p)[iflv]);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<int>
+get_d_content(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in) {
+  return get_flavour_content(in, 1);
+}
+
+ROOT::VecOps::RVec<int>
+get_u_content(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in) {
+  return get_flavour_content(in, 2);
+}
+
+ROOT::VecOps::RVec<int>
+get_s_content(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in) {
+  return get_flavour_content(in, 3);
+}
+
+ROOT::VecOps::RVec<int>
+get_c_content(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in) {
+  return get_flavour_content(in, 4);
+}
+
+ROOT::VecOps::RVec<int>
+get_b_content(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in) {
+  return get_flavour_content(in, 5);
+}
+
 ROOT::VecOps::RVec<float>
 get_px(const ROOT::VecOps::RVec<fastjet::PseudoJet> &in) {
   ROOT::VecOps::RVec<float> result;
