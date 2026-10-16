@@ -27,13 +27,18 @@ class RDFanalysis():
                # 	std::array<float, 6> covMatrix{}; ///< covariance matrix of the position (stored as lower triangle matrix, i.e. cov(xx),cov(y,x),cov(z,x),cov(y,y),... )
                # - ROOT::VecOps::RVec<float> reco_chi2 : the contribution to the chi2 of all tracks used in the fit
                # - ROOT::VecOps::RVec< TVector3 >  updated_track_momentum_at_vertex : the post-fit (px, py, pz ) of the tracks, at the vertex (and not at their d.c.a.)
-               .Define("VertexObject_allTracks",  "VertexFitterSimple::VertexFitter_Tk ( 1, EFlowTrack_1, true, 4.5, 20e-3, 300)")
+               #   (left empty below via ComputeMomentaAtVertex=false, since only the vertex position/chi2 is used
+               #   in this tutorial -- computing it requires a Delphes VertexMore object whose cost scales as
+               #   O(ntracks^3) and dominates the runtime for events with many tracks, see
+               #   https://github.com/HEP-FCC/FCCAnalyses/issues/378)
+               .Define("VertexObject_allTracks",  "VertexFitterSimple::VertexFitter_Tk ( 1, EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0., false)")
 
                # EFlowTrack_1 is the collection of all tracks (the fitting method can of course be applied to a subset of tracks (see later)).
                # "true" means that a beam-spot constraint is applied. Default is no BSC. Following args are the BS size and position, in mum :
                #                                   bool BeamSpotConstraint = false,
                #                                   double sigmax=0., double sigmay=0., double sigmaz=0.,
-               #                                   double bsc_x=0., double bsc_y=0., double bsc_z=0. )  ;
+               #                                   double bsc_x=0., double bsc_y=0., double bsc_z=0.,
+               #                                   bool ComputeMomentaAtVertex = true )  ;
 
                # This returns the  edm4hep::VertexData :
                .Define("Vertex_allTracks",  "VertexingUtils::get_VertexData( VertexObject_allTracks )")   # primary vertex, in mm
@@ -42,8 +47,9 @@ class RDFanalysis():
                # Below, we determine the "primary tracks" using an iterative algorithm - cf LCFI+.
                .Define("RecoedPrimaryTracks",  "VertexFitterSimple::get_PrimaryTracks( EFlowTrack_1, true, 4.5, 20e-3, 300, 0., 0., 0.)")
 
-               # Now we run again the vertex fit, but only on the primary tracks :
-               .Define("PrimaryVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300) ")
+               # Now we run again the vertex fit, but only on the primary tracks
+               # (again skipping the momenta-at-vertex computation, unused here):
+               .Define("PrimaryVertexObject",   "VertexFitterSimple::VertexFitter_Tk ( 1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300, 0., 0., 0., false) ")
                .Define("PrimaryVertex",   "VertexingUtils::get_VertexData( PrimaryVertexObject )")
 
                # It is often useful to retrieve the secondary (i.e. non-primary) tracks, for example to search for secondary vertices.
