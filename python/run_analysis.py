@@ -463,6 +463,7 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str, args,
                                                           if event_limits
                                                           is not None else
                                                           None))
+                    ofile.write(subjob_script)
             except IOError as e:
                 if i < 2:
                     LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
