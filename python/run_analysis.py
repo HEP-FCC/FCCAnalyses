@@ -103,7 +103,8 @@ def create_subjob_script(local_dir: str,
                          chunk_num: int,
                          chunk_list: list[list[str]],
                          anapath: str,
-                         cmd_args) -> str:
+                         cmd_args,
+                         n_events: int | None = None) -> str:
     '''
     Creates sub-job script to be run.
     '''
@@ -138,6 +139,8 @@ def create_subjob_script(local_dir: str,
 
     scr += local_dir
     scr += f'/bin/fccanalysis run {anapath} --batch'
+    if n_events is not None:
+        scr += f' --nevents {n_events}'
     if len(cmd_args.unknown) > 0:
         scr += ' ' + ' '.join(cmd_args.unknown)
     scr += ' '
@@ -199,12 +202,58 @@ def get_subfile_list(in_file_list: list[str],
 
 
 # _____________________________________________________________________________
+def get_subfile_list_by_events(in_file_list: list[str],
+                               event_list: list[int],
+                               n_max: int) -> list[str]:
+    '''Obtain list of files containing at most roughly ``n_max`` events.'''
+    if n_max <= 0:
+        raise ValueError('n_max must be a positive integer')
+
+    nevts_total = sum(event_list)
+    if n_max >= nevts_total:
+        return in_file_list
+
+    nevts_real = 0
+    out_file_list = []
+    for filepath, nevts in zip(in_file_list, event_list):
+        if nevts_real >= n_max: break
+        out_file_list.append(filepath)
+        nevts_real += nevts
+
+    LOGGER.info('Limiting input file list to at most %s events: %s files '
+                '(contains %s events)', f'{n_max:,}', len(out_file_list),
+                f'{nevts_real:,}')
+    return out_file_list
+
+
+# _____________________________________________________________________________
 def get_chunk_list(file_list: str, chunks: int):
     '''
     Get list of input file paths arranged into chunks.
     '''
     chunk_list = list(np.array_split(file_list, chunks))
     return [chunk for chunk in chunk_list if chunk.size > 0]
+
+
+# _____________________________________________________________________________
+def get_chunk_list_with_limits(file_list: list[str],
+                               event_list: list[int],
+                               chunks: int,
+                               n_max: int) -> tuple[list, list[int]]:
+    '''Split files and distribute n_max across the non-empty chunks.'''
+    file_chunks = np.array_split(file_list, chunks)
+    event_chunks = np.array_split(event_list, chunks)
+    chunk_list = []
+    event_limits = []
+    remaining = n_max
+    for files, events in zip(file_chunks, event_chunks):
+        if files.size == 0 or remaining <= 0:
+            continue
+        chunk_list.append(files)
+        event_limit = min(remaining, sum(events))
+        event_limits.append(event_limit)
+        remaining -= event_limit
+    return chunk_list, event_limits
 
 
 # _____________________________________________________________________________
@@ -264,9 +313,13 @@ def initialize(args, rdf_module, anapath: str):
     if geometry_file != "" and readout_name != "":
         ROOT.CaloNtupleizer.loadGeometry(geometry_file, readout_name)
 
-    # set multithreading (no MT if number of events is specified)
+    process_list = get_element(rdf_module, "processList")
+    has_n_max = any(get_element_dict(process, 'n_max') is not None
+                    for process in process_list.values())
+
+    # Range, used for n_max, is not supported with implicit multithreading.
     ncpus = 1
-    if args.nevents < 0:
+    if args.nevents < 0 and not has_n_max:
         if isinstance(args.ncpus, int) and args.ncpus >= 1:
             ncpus = args.ncpus
         else:
@@ -275,6 +328,9 @@ def initialize(args, rdf_module, anapath: str):
             ROOT.EnableImplicitMT()
             ncpus = ROOT.GetThreadPoolSize()
         ROOT.ROOT.EnableImplicitMT(ncpus)
+    elif has_n_max:
+        LOGGER.info('Multithreading disabled because n_max requires '
+                    'RDataFrame Range.')
     ROOT.EnableThreadSafety()
 
     if ROOT.IsImplicitMTEnabled():
@@ -364,7 +420,8 @@ def run_rdf(rdf_module,
 
 
 # _____________________________________________________________________________
-def send_to_batch(rdf_module, chunk_list, process, anapath: str, args):
+def send_to_batch(rdf_module, chunk_list, process, anapath: str, args,
+                  event_limits: list[int] | None = None):
     '''
     Send jobs to HTCondor batch system.
     '''
@@ -401,8 +458,11 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str, args):
                                                          ch,
                                                          chunk_list,
                                                          anapath,
-                                                         args)
-                    ofile.write(subjob_script)
+                                                         args,
+                                                         (event_limits[ch]
+                                                          if event_limits
+                                                          is not None else
+                                                          None))
             except IOError as e:
                 if i < 2:
                     LOGGER.warning('I/O error(%i): %s', e.errno, e.strerror)
@@ -663,6 +723,15 @@ def run_stages(args, rdf_module, anapath):
         chunks = 1
         if get_element_dict(process_list[process_name], 'chunks'):
             chunks = get_element_dict(process_list[process_name], 'chunks')
+        n_max = get_element_dict(process_list[process_name], 'n_max')
+        selected_event_list = event_list
+        if n_max is not None:
+            if fraction != 1:
+                raise ValueError(f'Process {process_name!r} cannot use both '
+                                 'fraction and n_max.')
+            file_list = get_subfile_list_by_events(file_list, event_list,
+                                                   n_max)
+            selected_event_list = event_list[:len(file_list)]
 
         info_msg = f'Adding process "{process_name}" with:'
         if fraction < 1:
@@ -675,8 +744,13 @@ def run_stages(args, rdf_module, anapath):
         if fraction < 1:
             file_list = get_subfile_list(file_list, event_list, fraction)
 
-        chunk_list = [file_list]
-        if chunks > 1:
+        chunk_event_limits = None
+        if n_max is not None:
+            chunk_list, chunk_event_limits = get_chunk_list_with_limits(
+                file_list, selected_event_list, chunks, n_max)
+        else:
+            chunk_list = [file_list]
+        if n_max is None and chunks > 1:
             chunk_list = get_chunk_list(file_list, chunks)
         LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
@@ -694,18 +768,31 @@ def run_stages(args, rdf_module, anapath):
                 LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
                                'only one chunk might not be optimal\033[0m')
 
-            send_to_batch(rdf_module, chunk_list, process_name, anapath, args)
+            send_to_batch(rdf_module, chunk_list, process_name, anapath, args,
+                          chunk_event_limits)
 
         else:
             # Running locally
             LOGGER.info('Running locally...')
             if len(chunk_list) == 1:
                 args.output = f'{output_stem}.root'
-                run_local(rdf_module, chunk_list[0], args)
+                original_nevents = args.nevents
+                if chunk_event_limits is not None:
+                    args.nevents = chunk_event_limits[0]
+                try:
+                    run_local(rdf_module, chunk_list[0], args)
+                finally:
+                    args.nevents = original_nevents
             else:
                 for index, chunk in enumerate(chunk_list):
                     args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(rdf_module, chunk, args)
+                    original_nevents = args.nevents
+                    if chunk_event_limits is not None:
+                        args.nevents = chunk_event_limits[index]
+                    try:
+                        run_local(rdf_module, chunk, args)
+                    finally:
+                        args.nevents = original_nevents
 
 
 def run_histmaker(args, rdf_module, anapath):

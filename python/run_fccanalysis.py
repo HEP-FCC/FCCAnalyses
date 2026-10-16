@@ -16,6 +16,8 @@ import ROOT  # type: ignore
 from anascript import get_element, get_element_dict, get_attribute
 from process import get_process_info
 from frame import generate_graph
+from run_analysis import (get_subfile_list_by_events,
+                          get_chunk_list_with_limits)
 
 LOGGER = logging.getLogger('FCCAnalyses.run')
 
@@ -102,7 +104,8 @@ def create_subjob_script(local_dir: str,
                          chunk_num: int,
                          chunk_list: list[list[str]],
                          anapath: str,
-                         cmd_args) -> str:
+                         cmd_args,
+                         n_events: int | None = None) -> str:
     '''
     Creates sub-job script to be run.
     '''
@@ -136,6 +139,8 @@ def create_subjob_script(local_dir: str,
     scr += local_dir
     scr += f'/bin/fccanalysis run {anapath} --batch'
     scr += f' --output {output_path}'
+    if n_events is not None:
+        scr += f' --nevents {n_events}'
     if cmd_args.ncpus > 0:
         scr += f' --ncpus {cmd_args.ncpus}'
     if len(cmd_args.unknown) > 0:
@@ -269,9 +274,13 @@ def initialize(args, analysis):
     if geometry_file is not None and readout_name is not None:
         ROOT.CaloNtupleizer.loadGeometry(geometry_file, readout_name)
 
-    # set multithreading (no MT if number of events is specified)
+    process_list = get_attribute(analysis, 'process_list', [])
+    has_n_max = any(process.get('n_max') is not None
+                    for process in process_list.values())
+
+    # Range, used for n_max, is not supported with implicit multithreading.
     n_threads = 1
-    if args.nevents < 0:
+    if args.nevents < 0 and not has_n_max:
         if isinstance(args.ncpus, int) and args.ncpus >= 1:
             n_threads = args.ncpus
         else:
@@ -282,6 +291,9 @@ def initialize(args, analysis):
 
         if n_threads > 1:
             ROOT.ROOT.EnableImplicitMT(n_threads)
+    elif has_n_max:
+        LOGGER.info('Multithreading disabled because n_max requires '
+                    'RDataFrame Range.')
 
     if ROOT.IsImplicitMTEnabled():
         ROOT.EnableThreadSafety()
@@ -343,7 +355,8 @@ def run_rdf(args,
 
 
 # _____________________________________________________________________________
-def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
+def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str,
+                  event_limits: list[int] | None = None):
     '''
     Send jobs to HTCondor batch system.
     '''
@@ -382,7 +395,11 @@ def send_to_batch(args, analysis, chunk_list, sample_name, anapath: str):
                                                          ch_num,
                                                          chunk_list,
                                                          anapath,
-                                                         args)
+                                                         args,
+                                                         (event_limits[ch_num]
+                                                          if event_limits
+                                                          is not None else
+                                                          None))
                     ofile.write(subjob_script)
             except IOError as err:
                 if i < 2:
@@ -539,8 +556,8 @@ def run_local(args, analysis, infile_list):
     # and number of selected events
     with ROOT.TFile(outfile_path, 'update') as outfile:
         param = ROOT.TParameter(int)(
-                'eventsProcessed',
-                nevents_orig if nevents_orig != 0 else inn)
+            'eventsProcessed',
+            nevents_orig if nevents_orig != 0 else inn)
         param.Write()
         param = ROOT.TParameter(int)('eventsSelected', outn)
         param.Write()
@@ -659,6 +676,15 @@ def run_fccanalysis(args, analysis_module):
         chunks = 1
         if get_element_dict(process_list[process_name], 'chunks'):
             chunks = get_element_dict(process_list[process_name], 'chunks')
+        n_max = get_element_dict(process_list[process_name], 'n_max')
+        selected_event_list = event_list
+        if n_max is not None:
+            if fraction != 1:
+                raise ValueError(f'Process {process_name!r} cannot use both '
+                                 'fraction and n_max.')
+            file_list = get_subfile_list_by_events(
+                file_list, event_list, n_max)
+            selected_event_list = event_list[:len(file_list)]
 
         info_msg = f'Adding process "{process_name}" with:'
         if fraction < 1:
@@ -671,8 +697,13 @@ def run_fccanalysis(args, analysis_module):
         if fraction < 1:
             file_list = get_subfile_list(file_list, event_list, fraction)
 
-        chunk_list = [file_list]
-        if chunks > 1:
+        chunk_event_limits = None
+        if n_max is not None:
+            chunk_list, chunk_event_limits = get_chunk_list_with_limits(
+                file_list, selected_event_list, chunks, n_max)
+        else:
+            chunk_list = [file_list]
+        if n_max is None and chunks > 1:
             chunk_list = get_chunk_list(file_list, chunks)
         LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
@@ -693,18 +724,31 @@ def run_fccanalysis(args, analysis_module):
 
             anapath = os.path.abspath(args.anascript_path)
 
-            send_to_batch(args, analysis, chunk_list, process_name, anapath)
+            send_to_batch(args, analysis, chunk_list, process_name, anapath,
+                          chunk_event_limits)
 
         else:
             # Running locally
             LOGGER.info('Running locally...')
             if len(chunk_list) == 1:
                 args.output = f'{output_stem}.root'
-                run_local(args, analysis, chunk_list[0])
+                original_nevents = args.nevents
+                if chunk_event_limits is not None:
+                    args.nevents = chunk_event_limits[0]
+                try:
+                    run_local(args, analysis, chunk_list[0])
+                finally:
+                    args.nevents = original_nevents
             else:
                 for index, chunk in enumerate(chunk_list):
                     args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(args, analysis, chunk)
+                    original_nevents = args.nevents
+                    if chunk_event_limits is not None:
+                        args.nevents = chunk_event_limits[index]
+                    try:
+                        run_local(args, analysis, chunk)
+                    finally:
+                        args.nevents = original_nevents
 
     if len(process_list) == 0:
         LOGGER.warning('No files processed (process_list not found)!\n'

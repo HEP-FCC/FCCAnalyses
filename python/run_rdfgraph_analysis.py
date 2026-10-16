@@ -16,6 +16,8 @@ import ROOT  # type: ignore
 from anascript import get_element, get_element_dict, get_attribute
 from process import get_process_info
 from frame import generate_graph
+from run_analysis import (get_subfile_list_by_events,
+                          get_chunk_list_with_limits)
 
 LOGGER = logging.getLogger('FCCAnalyses.run')
 
@@ -102,7 +104,8 @@ def create_subjob_script(local_dir: str,
                          chunk_num: int,
                          chunk_list: list[list[str]],
                          anapath: str,
-                         cmd_args) -> str:
+                         cmd_args,
+                         n_events: int | None = None) -> str:
     '''
     Creates sub-job script to be run.
     '''
@@ -137,6 +140,8 @@ def create_subjob_script(local_dir: str,
 
     scr += local_dir
     scr += f'/bin/fccanalysis run {anapath} --batch'
+    if n_events is not None:
+        scr += f' --nevents {n_events}'
     if len(cmd_args.unknown) > 0:
         scr += ' ' + ' '.join(cmd_args.unknown)
     scr += ' '
@@ -263,9 +268,13 @@ def initialize(args, rdf_module, anapath: str):
     if geometry_file != "" and readout_name != "":
         ROOT.CaloNtupleizer.loadGeometry(geometry_file, readout_name)
 
-    # set multithreading (no MT if number of events is specified)
+    process_list = get_element(rdf_module, "processList")
+    has_n_max = any(get_element_dict(process, 'n_max') is not None
+                    for process in process_list.values())
+
+    # Range, used for n_max, is not supported with implicit multithreading.
     ncpus = 1
-    if args.nevents < 0:
+    if args.nevents < 0 and not has_n_max:
         if isinstance(args.ncpus, int) and args.ncpus >= 1:
             ncpus = args.ncpus
         else:
@@ -274,6 +283,9 @@ def initialize(args, rdf_module, anapath: str):
             ROOT.EnableImplicitMT()
             ncpus = ROOT.GetThreadPoolSize()
         ROOT.ROOT.EnableImplicitMT(ncpus)
+    elif has_n_max:
+        LOGGER.info('Multithreading disabled because n_max requires '
+                    'RDataFrame Range.')
     ROOT.EnableThreadSafety()
 
     if ROOT.IsImplicitMTEnabled():
@@ -362,7 +374,8 @@ def run_rdf_graph(rdf_module,
         dframe2 = dframe
 
     try:
-        dframe3, params = get_element(rdf_module.RDFgraph, "analysers")(dframe2, process_name)
+        dframe3, params = get_element(
+            rdf_module.RDFgraph, "analysers")(dframe2, process_name)
 
         blist = get_element(rdf_module.RDFgraph, "output")()
         branch_list = ROOT.vector('string')(blist)
@@ -388,7 +401,7 @@ def run_rdf_graph(rdf_module,
                 params_to_write.append(param)
 
         # Get event counts
-        evtcount_init  = dframe2.Count()
+        evtcount_init = dframe2.Count()
         evtcount_final = dframe3.Count()
 
         # Batch write all objects to file in single UPDATE operation
@@ -411,7 +424,8 @@ def run_rdf_graph(rdf_module,
 
 
 # _____________________________________________________________________________
-def send_to_batch(rdf_module, chunk_list, process, anapath: str, args):
+def send_to_batch(rdf_module, chunk_list, process, anapath: str, args,
+                  event_limits: list[int] | None = None):
     '''
     Send jobs to HTCondor batch system.
     '''
@@ -448,7 +462,11 @@ def send_to_batch(rdf_module, chunk_list, process, anapath: str, args):
                                                          ch,
                                                          chunk_list,
                                                          anapath,
-                                                         args)
+                                                         args,
+                                                         (event_limits[ch]
+                                                          if event_limits
+                                                          is not None else
+                                                          None))
                     ofile.write(subjob_script)
             except IOError as e:
                 if i < 2:
@@ -577,7 +595,8 @@ def run_local(rdf_module, infile_list, process_name, args):
 
     # Run RDF
     start_time = time.time()
-    inn, outn = run_rdf_graph(rdf_module, file_list, outfile_path, process_name, args)
+    inn, outn = run_rdf_graph(rdf_module, file_list,
+                              outfile_path, process_name, args)
     elapsed_time = time.time() - start_time
 
     # replace nevents_local by inn = the amount of processed events
@@ -602,8 +621,8 @@ def run_local(rdf_module, infile_list, process_name, args):
     # and number of selected events
     with ROOT.TFile(outfile_path, 'update') as outfile:
         param = ROOT.TParameter(int)(
-                'eventsProcessed',
-                nevents_orig if nevents_orig != 0 else inn)
+            'eventsProcessed',
+            nevents_orig if nevents_orig != 0 else inn)
         param.Write()
         param = ROOT.TParameter(int)('eventsSelected', outn)
         param.Write()
@@ -712,6 +731,15 @@ def run_rdfgraph(args, rdf_module, anapath):
         chunks = 1
         if get_element_dict(process_list[process_name], 'chunks'):
             chunks = get_element_dict(process_list[process_name], 'chunks')
+        n_max = get_element_dict(process_list[process_name], 'n_max')
+        selected_event_list = event_list
+        if n_max is not None:
+            if fraction != 1:
+                raise ValueError(
+                    f'Process {process_name!r} cannot use both fraction and n_max.')
+            file_list = get_subfile_list_by_events(
+                file_list, event_list, n_max)
+            selected_event_list = event_list[:len(file_list)]
 
         info_msg = f'Adding process "{process_name}" with:'
         if fraction < 1:
@@ -724,8 +752,13 @@ def run_rdfgraph(args, rdf_module, anapath):
         if fraction < 1:
             file_list = get_subfile_list(file_list, event_list, fraction)
 
-        chunk_list = [file_list]
-        if chunks > 1:
+        chunk_event_limits = None
+        if n_max is not None:
+            chunk_list, chunk_event_limits = get_chunk_list_with_limits(
+                file_list, selected_event_list, chunks, n_max)
+        else:
+            chunk_list = [file_list]
+        if n_max is None and chunks > 1:
             chunk_list = get_chunk_list(file_list, chunks)
         LOGGER.info('Number of the output files: %s', f'{len(chunk_list):,}')
 
@@ -743,15 +776,28 @@ def run_rdfgraph(args, rdf_module, anapath):
                 LOGGER.warning('\033[4m\033[1m\033[91mRunning on batch with '
                                'only one chunk might not be optimal\033[0m')
 
-            send_to_batch(rdf_module, chunk_list, process_name, anapath, args)
+            send_to_batch(rdf_module, chunk_list, process_name, anapath, args,
+                          chunk_event_limits)
 
         else:
             # Running locally
             LOGGER.info('Running locally...')
             if len(chunk_list) == 1:
                 args.output = f'{output_stem}.root'
-                run_local(rdf_module, chunk_list[0], process_name, args)
+                original_nevents = args.nevents
+                if chunk_event_limits is not None:
+                    args.nevents = chunk_event_limits[0]
+                try:
+                    run_local(rdf_module, chunk_list[0], process_name, args)
+                finally:
+                    args.nevents = original_nevents
             else:
                 for index, chunk in enumerate(chunk_list):
                     args.output = f'{output_stem}/chunk{index}.root'
-                    run_local(rdf_module, chunk, process_name, args)
+                    original_nevents = args.nevents
+                    if chunk_event_limits is not None:
+                        args.nevents = chunk_event_limits[index]
+                    try:
+                        run_local(rdf_module, chunk, process_name, args)
+                    finally:
+                        args.nevents = original_nevents
