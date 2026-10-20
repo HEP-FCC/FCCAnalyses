@@ -51,12 +51,25 @@ VertexingUtils::FCCAnalysesVertex VertexFitter(
 /// position/chi2 is needed (e.g. FCCAnalysesVertex::vertex via
 /// VertexingUtils::get_VertexData) -- see
 /// https://github.com/HEP-FCC/FCCAnalyses/issues/378.
+/// startR: optional transverse radius [mm] at which the fit starts, i.e.
+/// linearises the helices (Delphes VertexFit::SetStartR), measured from the
+/// origin of the frame of the vertex position; <= 0 or NaN (default -1): keep
+/// the previous start, at the points of closest approach to that origin. The
+/// default start can converge to a wrong solution for vertices far from the
+/// origin (the other crossing point of two transverse track circles). A
+/// radius beyond the farthest transverse point of a track is reduced to it;
+/// if the start is undefined for a track, the default start is used instead.
+/// startR is the last argument, so all the preceding ones must be given, e.g.
+/// VertexFitter_Tk(2, tracks, false, 0., 0., 0., 0., 0., 0., true, 350.);
+/// a shorter call such as VertexFitter_Tk(2, tracks, 350.) compiles but sets
+/// BeamSpotConstraint instead. For a track pair, VertexFitter_2Tk_seeded()
+/// chooses the start radius itself.
 VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 bool BeamSpotConstraint = false, double sigmax = 0.,
                 double sigmay = 0., double sigmaz = 0., double bsc_x = 0.,
                 double bsc_y = 0., double bsc_z = 0.,
-                bool ComputeMomentaAtVertex = true);
+                bool ComputeMomentaAtVertex = true, double startR = -1.);
 
 VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
@@ -64,7 +77,21 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 bool BeamSpotConstraint = false, double sigmax = 0.,
                 double sigmay = 0., double sigmaz = 0., double bsc_x = 0.,
                 double bsc_y = 0., double bsc_z = 0.,
-                bool ComputeMomentaAtVertex = true);
+                bool ComputeMomentaAtVertex = true, double startR = -1.);
+
+/// Vertex fit of a track pair started at the crossing points of the two
+/// transverse track circles (VertexingUtils::get_circleCrossingRadii): one fit
+/// from each of the two crossing radii, or, if the circles do not cross, one
+/// fit from the radius of their closest approach and one with the default
+/// start; the fit with the lowest chi2 is returned (NaN counts as the highest).
+/// Same output as VertexFitter_Tk (no beam-spot constraint), at about twice its
+/// CPU cost (two fits). Not 2 tracks, or no crossing radius defined:
+/// VertexFitter_Tk with the default start. Used by the V0 finders of
+/// VertexFinderLCFIPlus (get_V0s, get_V0s_jet) unless seedFit = false.
+VertexingUtils::FCCAnalysesVertex
+VertexFitter_2Tk_seeded(int Primary,
+                        ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                        bool ComputeMomentaAtVertex = true);
 
 /// Return the tracks that are flagged as coming from the primary vertex
    ROOT::VecOps::RVec<edm4hep::TrackState> get_PrimaryTracks(           ROOT::VecOps::RVec<edm4hep::TrackState> tracks,

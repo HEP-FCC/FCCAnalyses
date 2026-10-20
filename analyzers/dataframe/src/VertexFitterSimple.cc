@@ -1,7 +1,9 @@
 #include "FCCAnalyses/VertexFitterSimple.h"
 #include "FCCAnalyses/MCParticle.h"
 
+#include <algorithm>
 #include <iostream>
+#include <limits>
 
 #include "TFile.h"
 #include "TString.h"
@@ -117,12 +119,12 @@ VertexingUtils::FCCAnalysesVertex
 VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
                 double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
-                bool ComputeMomentaAtVertex) {
+                bool ComputeMomentaAtVertex, double startR) {
 
   ROOT::VecOps::RVec<edm4hep::TrackState> dummy;
   return VertexFitter_Tk(Primary, tracks, dummy, BeamSpotConstraint, bsc_sigmax,
                          bsc_sigmay, bsc_sigmaz, bsc_x, bsc_y, bsc_z,
-                         ComputeMomentaAtVertex);
+                         ComputeMomentaAtVertex, startR);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -132,7 +134,7 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
                 const ROOT::VecOps::RVec<edm4hep::TrackState> &alltracks,
                 bool BeamSpotConstraint, double bsc_sigmax, double bsc_sigmay,
                 double bsc_sigmaz, double bsc_x, double bsc_y, double bsc_z,
-                bool ComputeMomentaAtVertex) {
+                bool ComputeMomentaAtVertex, double startR) {
   // Suppressing printf() output from TMatrixBase:
   // https://github.com/root-project/root/blob/722eb4652bfc79149df00c8b0e92d0837caf054c/math/matrix/src/TMatrixTBase.cxx#L662
   // The solution found here:
@@ -213,6 +215,26 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
     theVertexFit.AddVtxConstraint(xv_BS, cov_BS);
   }
 
+  // optional start radius, in the units of the track parameters (Units_mm)
+  if (startR > 0) {
+    // the start phase of a track is defined up to its farthest transverse
+    // point, at radius |D + 1/C| (if 1 + 2 C D > 0); the margin keeps the
+    // argument of the arcsin of VertexFit below 1 there
+    const double reachMargin = 1e-12;
+    bool startDefined = true;
+    double R = startR;
+    for (Int_t i = 0; i < Ntr; i++) {
+      double D = (*trkPar[i])(0), C = (*trkPar[i])(2);
+      if (!(1. + 2. * C * D > 0.)) {
+        startDefined = false;
+        break;
+      }
+      R = std::min(R, std::abs(D + 1. / C) * (1. - reachMargin));
+    }
+    if (startDefined)
+      theVertexFit.SetStartR(R);
+  }
+
   TVectorD x = theVertexFit.GetVtx(); // this actually runs the fit
 
   result.position =
@@ -287,6 +309,37 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
   resume_stdout(fd);
 
   return TheVertex;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+VertexingUtils::FCCAnalysesVertex
+VertexFitter_2Tk_seeded(int Primary,
+                        ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
+                        bool ComputeMomentaAtVertex) {
+
+  ROOT::VecOps::RVec<double> startRs;
+  if (tracks.size() == 2)
+    startRs = VertexingUtils::get_circleCrossingRadii(tracks[0], tracks[1]);
+  // circles that do not cross: the default start is tried as well
+  if (startRs.size() < 2)
+    startRs.push_back(-1.);
+
+  VertexingUtils::FCCAnalysesVertex best;
+  double bestChi2 = 0.;
+  for (size_t k = 0; k < startRs.size(); k++) {
+    VertexingUtils::FCCAnalysesVertex vtx =
+        VertexFitter_Tk(Primary, tracks, false, 0., 0., 0., 0., 0., 0.,
+                        ComputeMomentaAtVertex, startRs[k]);
+    double chi2 = vtx.vertex.chi2;
+    if (std::isnan(chi2))
+      chi2 = std::numeric_limits<double>::infinity();
+    if (k == 0 || chi2 < bestChi2) {
+      best = vtx;
+      bestChi2 = chi2;
+    }
+  }
+  return best;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
