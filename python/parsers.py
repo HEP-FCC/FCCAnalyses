@@ -129,15 +129,17 @@ def setup_submit_parser(parser):
     htcondor_parser = submit_parsers.add_parser(
         'ht-condor',
         help='submit through HTCondor',
-        description='Submit an FCCAnalyses run through HTCondor.'
+        description='Submit an FCCAnalyses run through HTCondor.',
+        epilog=(
+            'Arguments after -- are passed as custom arguments to Analysis '
+            'on every planned worker job.'
+        ),
     )
     htcondor_parser.add_argument(
         'anascript_path',
         type=str,
         help='path to the analysis script'
     )
-    htcondor_parser.add_argument('remaining', nargs=argparse.REMAINDER)
-
     slurm_parser = submit_parsers.add_parser(
         'slurm',
         help='submit through Slurm (not yet implemented)',

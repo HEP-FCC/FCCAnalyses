@@ -42,6 +42,9 @@ The mechanism of submission of the jobs to the HTCondor depends on the
 filesystem which hosts the code of the FCCAnalyses. If the code is hosted on the
 AFS the jobs are submitted using shared filesystem mechanism, otherwise spool
 mechanism is used.
+Custom analysis arguments must follow the
+.B --
+separator.
 
 Here is an overview where the output of the jobs can be saved depending on
 where the FCCAnalyses code is hosted:

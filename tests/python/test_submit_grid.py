@@ -105,6 +105,27 @@ class SubmitGridTest(unittest.TestCase):
 
         self.assertEqual(error.exception.code, 2)
 
+    def test_htcondor_custom_arguments_require_separator(self) -> None:
+        parser = self.make_submit_parser()
+
+        valid_command = [
+            'fccanalysis', 'submit', 'ht-condor', 'analysis.py',
+            '--', '--selection', 'tight',
+        ]
+        with patch.object(sys, 'argv', valid_command):
+            args = parse_command_arguments(parser)
+        self.assertEqual(args.remaining, ['--selection', 'tight'])
+
+        invalid_command = [
+            'fccanalysis', 'submit', 'ht-condor', 'analysis.py',
+            '--selection', 'tight',
+        ]
+        with patch.object(sys, 'argv', invalid_command):
+            with redirect_stderr(StringIO()):
+                with self.assertRaises(SystemExit) as error:
+                    parse_command_arguments(parser)
+        self.assertEqual(error.exception.code, 2)
+
 
 if __name__ == '__main__':
     unittest.main()
