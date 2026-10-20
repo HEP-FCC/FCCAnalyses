@@ -1142,12 +1142,10 @@ def run(args):
         counter += 1
 
 
-def do_plots(parser):
+def do_plots(args):
     '''
     Run plots generation
     '''
-
-    args, _ = parser.parse_known_args()
 
     if args.command != 'plots':
         LOGGER.error('Wrong sub-command!\nAborting...')

@@ -168,8 +168,7 @@ def run(script_path):
     print(dc)
 
 
-def do_combine(parser):
-    args, _ = parser.parse_known_args()
+def do_combine(args):
 
     if args.command != 'combine':
         LOGGER.error('Wrong sub-command!\nAborting...')

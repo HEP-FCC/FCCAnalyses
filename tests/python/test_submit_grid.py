@@ -14,7 +14,7 @@ from unittest.mock import patch
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPOSITORY_ROOT / 'python'))
 
-from parsers import setup_submit_parser
+from parsers import parse_command_arguments, setup_submit_parser
 
 # The existing submit module imports the HTCondor backend at module load time.
 # This router test does not exercise that backend or require its PyYAML dependency.
@@ -54,7 +54,7 @@ class SubmitGridTest(unittest.TestCase):
 
             with patch.object(sys, 'argv', command):
                 with patch('submit.submit_grid_submission') as submit_grid:
-                    submit_analysis(parser)
+                    submit_analysis(parse_command_arguments(parser))
 
         submit_grid.assert_called_once()
         args, analysis_module = submit_grid.call_args.args
@@ -78,7 +78,9 @@ class SubmitGridTest(unittest.TestCase):
                 with patch('submit.submit_grid_submission') as submit_grid:
                     with self.assertLogs('FCCAnalyses.submit', level='ERROR'):
                         with self.assertRaises(SystemExit) as error:
-                            submit_analysis(self.make_submit_parser())
+                            submit_analysis(
+                                parse_command_arguments(self.make_submit_parser())
+                            )
                     submit_grid.assert_not_called()
             self.assertEqual(error.exception.code, 3)
 
@@ -97,7 +99,7 @@ class SubmitGridTest(unittest.TestCase):
         with patch.object(sys, 'argv', command):
             with redirect_stderr(StringIO()):
                 with self.assertRaises(SystemExit) as error:
-                    submit_analysis(parser)
+                    submit_analysis(parse_command_arguments(parser))
 
         self.assertEqual(error.exception.code, 2)
 

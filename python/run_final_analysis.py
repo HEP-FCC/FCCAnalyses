@@ -750,12 +750,10 @@ def run(rdf_module, config, args) -> None:
     LOGGER.info(info_msg)
 
 
-def run_final(parser):
+def run_final(args):
     '''
     Run final stage of the analysis.
     '''
-
-    args, _ = parser.parse_known_args()
 
     if args.command != 'final':
         LOGGER.error('Unknown sub-command "%s"!\nAborting...', args.command)
