@@ -616,6 +616,56 @@ double get_trackE(edm4hep::TrackState track) {
   return result;
 }
 
+ROOT::VecOps::RVec<double> get_circleCrossingRadii(edm4hep::TrackState track1,
+                                                   edm4hep::TrackState track2) {
+  ROOT::VecOps::RVec<double> result;
+
+  // transverse circles in the Delphes parametrisation, in mm as in
+  // VertexFitter_Tk: centre -(D + 1/(2C)) * (sin phi0, -cos phi0),
+  // radius 1/(2|C|)
+  double xc[2], yc[2], rc[2];
+  edm4hep::TrackState tracks[2] = {track1, track2};
+  for (int k = 0; k < 2; k++) {
+    TVectorD par = get_trackParam(tracks[k], true);
+    double D = par[0], phi0 = par[1], C = par[2];
+    xc[k] = -(D + 0.5 / C) * std::sin(phi0);
+    yc[k] = (D + 0.5 / C) * std::cos(phi0);
+    rc[k] = 0.5 / std::abs(C);
+  }
+  double dx = xc[1] - xc[0], dy = yc[1] - yc[0];
+  double d = std::hypot(dx, dy);
+  if (!std::isfinite(d) || !std::isfinite(rc[0]) || !std::isfinite(rc[1]) ||
+      !(d > 0.))
+    return result;
+  double ux = dx / d, uy = dy / d; // unit vector from centre 0 to centre 1
+
+  double X, Y;
+  if (d >= rc[0] + rc[1]) { // separate circles: closest points face each other
+    double t = rc[0] + 0.5 * (d - rc[0] - rc[1]);
+    X = xc[0] + t * ux;
+    Y = yc[0] + t * uy;
+  } else if (d <= std::abs(rc[0] - rc[1])) { // one circle inside the other
+    double s = (rc[0] > rc[1]) ? 1. : -1.;
+    X = 0.5 * (xc[0] + xc[1] + s * (rc[0] + rc[1]) * ux);
+    Y = 0.5 * (yc[0] + yc[1] + s * (rc[0] + rc[1]) * uy);
+  } else { // crossing circles
+    double a = (rc[0] * rc[0] - rc[1] * rc[1] + d * d) / (2. * d);
+    double h2 = rc[0] * rc[0] - a * a;
+    X = xc[0] + a * ux;
+    Y = yc[0] + a * uy;
+    if (h2 > 0) {
+      double h = std::sqrt(h2);
+      double r1 = std::hypot(X - h * uy, Y + h * ux);
+      double r2 = std::hypot(X + h * uy, Y - h * ux);
+      result.push_back(std::min(r1, r2));
+      result.push_back(std::max(r1, r2));
+      return result;
+    }
+  }
+  result.push_back(std::hypot(X, Y));
+  return result;
+}
+
 ////////////////////////////////////////////////
 
 // no of reconstructed V0s
