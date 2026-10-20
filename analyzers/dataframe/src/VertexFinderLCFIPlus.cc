@@ -712,56 +712,65 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
 	if(isInV0[j] == true) continue; // don't pair a track if it already forms a V0
 	if(tr_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
 	tr_pair[1] = np_tracks[j];
-	
-	ROOT::VecOps::RVec<double> V0_cand = get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut);
-	if(V0_cand[0] == -1) continue;
-	
-	// Ks
-	if(V0_cand[0]>isKs[0] && V0_cand[0]<isKs[1] && V0_cand[4]>isKs[2] && V0_cand[5]>isKs[3]) {
-	  if(debug_me) std::cout<<"Found a Ks"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(310);
-	  invM.push_back(V0_cand[0]);
-	  i_nSV++;
-	  break;
-	}
-	  
-	// Lambda0
-	else if(V0_cand[1]>isLambda0[0] && V0_cand[1]<isLambda0[1] && V0_cand[4]>isLambda0[2] && V0_cand[5]>isLambda0[3]) {
-	  if(debug_me) std::cout<<"Found a Lambda0"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(3122);
-	  invM.push_back(V0_cand[1]);
-	  i_nSV++;
-	  break;
-	}
-	else if(V0_cand[2]>isLambda0[0] && V0_cand[2]<isLambda0[1] && V0_cand[4]>isLambda0[2] && V0_cand[5]>isLambda0[3]) {
-	  if(debug_me) std::cout<<"Found a Lambda0"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(3122);
-	  invM.push_back(V0_cand[2]);
-	  i_nSV++;
-	  break;
-	}
-	
-	// photon conversion
-	else if(V0_cand[3]<isGamma[1] && V0_cand[4]>isGamma[2] && V0_cand[5]>isGamma[3]) {
-	  if(debug_me) std::cout<<"Found a Photon coversion"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(22);
-	  invM.push_back(V0_cand[3]);
-	  i_nSV++;
-	  break;
-	}
-	//      
+
+        ROOT::VecOps::RVec<double> V0_cand =
+            get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut);
+        if (V0_cand[0] == -1)
+          continue;
+
+        // Ks
+        if (V0_cand[0] > isKs[0] && V0_cand[0] < isKs[1] &&
+            V0_cand[4] > isKs[2] && V0_cand[5] > isKs[3]) {
+          if (debug_me)
+            std::cout << "Found a Ks" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(310);
+          invM.push_back(V0_cand[0]);
+          i_nSV++;
+          break;
+        }
+
+        // Lambda0
+        else if (V0_cand[1] > isLambda0[0] && V0_cand[1] < isLambda0[1] &&
+                 V0_cand[4] > isLambda0[2] && V0_cand[5] > isLambda0[3]) {
+          if (debug_me)
+            std::cout << "Found a Lambda0" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(3122);
+          invM.push_back(V0_cand[1]);
+          i_nSV++;
+          break;
+        } else if (V0_cand[2] > isLambda0[0] && V0_cand[2] < isLambda0[1] &&
+                   V0_cand[4] > isLambda0[2] && V0_cand[5] > isLambda0[3]) {
+          if (debug_me)
+            std::cout << "Found a Lambda0" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(3122);
+          invM.push_back(V0_cand[2]);
+          i_nSV++;
+          break;
+        }
+
+        // photon conversion
+        else if (V0_cand[3] < isGamma[1] && V0_cand[4] > isGamma[2] &&
+                 V0_cand[5] > isGamma[3]) {
+          if (debug_me)
+            std::cout << "Found a Photon coversion" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(22);
+          invM.push_back(V0_cand[3]);
+          i_nSV++;
+          break;
+        }
+        //
       }
     }
 
