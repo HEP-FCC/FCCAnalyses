@@ -109,7 +109,12 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
-                self.grid_arguments(self.write_lfn_input(root)),
+                [
+                    '--lfn-input', str(self.write_lfn_input(root)),
+                    '--files-per-job', '2',
+                    '--output-se', 'CERN-DST-EOS',
+                    '--site', 'LCG.CERN.ch',
+                ],
             )
 
             request = create_grid_submission_request(
@@ -129,8 +134,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         )
         self.assertEqual(request.files_per_job, 2)
         self.assertIsNone(request.n_chunks)
-        self.assertEqual(request.output_file, 'analysis.root')
-        self.assertEqual(request.output_path, 'analysis/results')
+        self.assertEqual(request.output_file, 'output.root')
+        self.assertIsNone(request.output_path)
         self.assertEqual(request.output_se, 'CERN-DST-EOS')
         self.assertEqual(request.destination_site, 'LCG.CERN.ch')
         self.assertEqual(request.submit_mode, 'wms')
@@ -178,9 +183,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 '        self.input_dir = "/eos/experiment/fcc/test"\n'
                 '        self.include_paths = ["include/functions.h"]\n'
                 '        self.samples = {\n'
-                '            "signal": {"chunks": 2, "stride": 3, '
-                '"n-events-max": 20},\n'
-                '            "background": {"n-events-max": 10},\n'
+                '            "signal": {"chunks": 2, "stride": 3},\n'
+                '            "background": {},\n'
                 '        }\n',
                 encoding='utf-8',
             )
@@ -205,13 +209,12 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 ]
 
             with patch('grid_submission._discover_xrootd_root_files', side_effect=discover):
-                with self.assertLogs('FCCAnalyses.grid_submission', 'WARNING') as logs:
-                    request = create_grid_submission_request(
-                        args,
-                        self.load_analysis_module(analysis_script),
-                        key4hep_setup=str(key4hep_setup),
-                        analysis_include_archive_path=root / 'includes.tar.gz',
-                    )
+                request = create_grid_submission_request(
+                    args,
+                    self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(key4hep_setup),
+                    analysis_include_archive_path=root / 'includes.tar.gz',
+                )
             with tarfile.open(request.analysis_include_archive) as archive:
                 self.assertEqual(archive.getnames(), ['include/functions.h'])
                 archived_file = archive.extractfile('include/functions.h')
@@ -228,9 +231,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertEqual(request.samples[0].chunks, 2)
         self.assertEqual(request.samples[0].stride, 3)
         self.assertTrue(request.analysis_include_archive.endswith('includes.tar.gz'))
-        self.assertEqual(len(logs.output), 2)
-        self.assertTrue(all('Ignoring sample-level n-events-max' in line
-                            for line in logs.output))
 
     def test_stages_optional_analysis_includes_in_lfn_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -243,7 +243,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             self.write_modern_analysis(
                 analysis_script,
                 '        self.include_paths = ["helpers/functions.h"]\n'
-                '        self.samples = {"signal": {"n-events-max": 10}}\n',
+                '        self.samples = {"signal": {}}\n',
             )
             key4hep_setup.touch()
             args = self.parse_grid_arguments(
@@ -251,17 +251,16 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 self.grid_arguments(self.write_lfn_input(root)),
             )
 
-            with self.assertLogs('FCCAnalyses.grid_submission', 'WARNING') as logs:
-                request = create_grid_submission_request(
-                    args,
-                    self.load_analysis_module(analysis_script),
-                    key4hep_setup=str(key4hep_setup),
-                    analysis_include_archive_path=root / 'includes.tar.gz',
-                )
+            request = create_grid_submission_request(
+                args,
+                self.load_analysis_module(analysis_script),
+                key4hep_setup=str(key4hep_setup),
+                analysis_include_archive_path=root / 'includes.tar.gz',
+            )
 
             with tarfile.open(request.analysis_include_archive) as archive:
                 self.assertEqual(archive.getnames(), ['helpers/functions.h'])
-            self.assertIn('Ignoring sample-level n-events-max', logs.output[0])
+            self.assertIsNotNone(request.analysis_include_archive)
 
     def test_requires_modern_analysis_style_in_lfn_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -282,7 +281,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     key4hep_setup=str(key4hep_setup),
                 )
 
-    def test_forwards_worker_options_except_grid_owned_work_package_options(self) -> None:
+    def test_keeps_custom_arguments_separate_from_worker_options(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
@@ -291,9 +290,14 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
-                self.grid_arguments(self.write_lfn_input(root)),
+                [
+                    *self.grid_arguments(self.write_lfn_input(root)),
+                    '--stride', '5',
+                    '--ncpus', '2',
+                    '--output-format', 'rntuple',
+                ],
             )
-            args.remaining = ['--stride', '5', '--nevents', '100', '--ncpus', '2']
+            args.remaining = ['--output', 'custom.root', '--nevents', '100']
 
             request = create_grid_submission_request(
                 args,
@@ -302,30 +306,38 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             )
 
             self.assertEqual(request.run_arguments, tuple(args.remaining))
+            self.assertEqual(request.worker_stride, 5)
+            self.assertEqual(request.worker_ncpus, 2)
+            self.assertEqual(request.worker_output_format, 'rntuple')
 
-            for option in (
-                '-i',
-                '--input',
-                '-f',
-                '--input-file-list',
-                '--files-list',
-                '-o',
-                '--output',
-                '-s',
-                '--sample-name',
-                '--n-chunks',
-            ):
-                with self.subTest(option=option):
-                    args.remaining = [option, 'value']
-                    with self.assertRaisesRegex(
-                        GridSubmissionError,
-                        'controlled by grid submission',
-                    ):
-                        create_grid_submission_request(
-                            args,
-                            self.load_analysis_module(analysis_script),
-                            key4hep_setup=str(key4hep_setup),
-                        )
+            args.nevents = 100
+            with self.assertRaisesRegex(GridSubmissionError, '--nevents'):
+                create_grid_submission_request(
+                    args,
+                    self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(key4hep_setup),
+                )
+
+    def test_rejects_sample_event_limits(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis_script = root / 'analysis.py'
+            key4hep_setup = root / 'setup.sh'
+            self.write_modern_analysis(
+                analysis_script,
+                '        self.samples = {"signal": {"n-events-max": 10}}\n',
+            )
+            key4hep_setup.touch()
+            args = self.parse_grid_arguments(
+                str(analysis_script), self.grid_arguments(self.write_lfn_input(root))
+            )
+
+            with self.assertRaisesRegex(GridSubmissionError, 'n-events-max'):
+                create_grid_submission_request(
+                    args,
+                    self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(key4hep_setup),
+                )
 
     def test_rejects_include_paths_outside_analysis_directory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

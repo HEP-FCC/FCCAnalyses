@@ -153,12 +153,8 @@ Default value: None (no striding)
 \fIn-events-max\fR
 .in +4
 Limits the maximum number of events to process for the sample\&.
-Grid submission ignores this value with a warning because event limits do not
-compose reliably with file-based jobs\&. A user may instead forward
-\fB\-\-nevents\fR
-after the
-\fB\-\-\fR
-separator to apply that limit independently to every planned job\&.
+Grid submission rejects this value because event limits do not compose
+reliably with file-based jobs\&.
 .br
 Default value: None (no limit)
 .TP
