@@ -3,6 +3,32 @@ Parsers for the fccanalysis sub-commands
 '''
 
 import argparse
+import sys
+
+
+def parse_command_arguments(parser: argparse.ArgumentParser) -> argparse.Namespace:
+    '''Parse the command once and retain custom analysis arguments after --.'''
+    arguments = sys.argv[1:]
+    try:
+        separator_index = arguments.index('--')
+    except ValueError:
+        args = parser.parse_args(arguments)
+        if not hasattr(args, 'remaining'):
+            args.remaining = []
+        return args
+
+    args = parser.parse_args(arguments[:separator_index])
+    args.remaining = arguments[separator_index + 1:]
+    accepts_custom_arguments = (
+        args.command == 'run'
+        or (
+            args.command == 'submit'
+            and args.where in {'grid', 'ht-condor'}
+        )
+    )
+    if args.remaining and not accepts_custom_arguments:
+        parser.error('arguments after -- are only supported by run and submit')
+    return args
 
 
 def _positive_integer(value):

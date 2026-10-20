@@ -16,28 +16,10 @@ LOGGER = logging.getLogger('FCCAnalyses.submit')
 
 
 # _____________________________________________________________________________
-def _parse_submit_arguments(parser: argparse.ArgumentParser) -> argparse.Namespace:
-    '''Parse submission arguments and preserve grid worker arguments after --.'''
-    preliminary_args, _ = parser.parse_known_args()
-    if preliminary_args.where != 'grid' or '--' not in sys.argv:
-        args = parser.parse_args()
-        if args.where == 'grid':
-            args.remaining = []
-        return args
-
-    separator_index = sys.argv.index('--')
-    args = parser.parse_args(sys.argv[1:separator_index])
-    args.remaining = sys.argv[separator_index + 1:]
-    return args
-
-
-# _____________________________________________________________________________
-def submit_analysis(parser: argparse.ArgumentParser) -> None:
+def submit_analysis(args: argparse.Namespace) -> None:
     '''
     Sub-command entry point.
     '''
-
-    args = _parse_submit_arguments(parser)
 
     # Check to where the analysis will be submitted.
     if args.where == 'ht-condor':
