@@ -49,7 +49,8 @@ class SubmitGridTest(unittest.TestCase):
                 '--lfn-input', '/tmp/input-lfns.txt',
                 '--output', 'analysis.root',
                 '--output-dir', 'analysis/results',
-                '--', '--stride', '5', '--nevents', '100',
+                '--stride', '5',
+                '--', '--analysis-option', 'value',
             ]
 
             with patch.object(sys, 'argv', command):
@@ -64,7 +65,8 @@ class SubmitGridTest(unittest.TestCase):
         self.assertEqual(args.lfn_input, '/tmp/input-lfns.txt')
         self.assertEqual(args.output, 'analysis.root')
         self.assertIsNone(args.output_se)
-        self.assertEqual(args.remaining, ['--stride', '5', '--nevents', '100'])
+        self.assertEqual(args.stride, 5)
+        self.assertEqual(args.remaining, ['--analysis-option', 'value'])
 
     def test_rejects_invalid_analysis_before_grid_dispatch(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

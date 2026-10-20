@@ -73,6 +73,7 @@ class SubmissionTest(unittest.TestCase):
         request = make_xrootd_request(
             n_chunks=2,
             run_arguments=("--analysis-option", "value"),
+            output_path=None,
             output_se=None,
             user_build_payload=UserBuildPayload(
                 archive_path="/tmp/fccanalyses-payload.tar.gz",
@@ -147,7 +148,8 @@ class SubmissionTest(unittest.TestCase):
             ),
             files_per_job=2,
             lfn_sample_name="custom-lfn-sample",
-            run_arguments=("--stride", "7", "--nevents", "100"),
+            run_arguments=("--analysis-option", "value"),
+            worker_stride=7,
         )
 
         jobs = plan_jobs(request)
@@ -181,8 +183,9 @@ class SubmissionTest(unittest.TestCase):
                 "result_0000.root",
                 "--stride",
                 "7",
-                "--nevents",
-                "100",
+                "--",
+                "--analysis-option",
+                "value",
             ),
         )
         self.assertEqual(jobs[2].job_name, "FCCAnalysis-custom-lfn-sample-0002")
@@ -206,7 +209,8 @@ class SubmissionTest(unittest.TestCase):
 
     def test_plans_xrootd_samples_without_mixing_them(self) -> None:
         request = make_xrootd_request(
-            run_arguments=("--stride", "7"),
+            run_arguments=("--analysis-option", "value"),
+            worker_stride=7,
             samples=(
                 ResolvedSample(
                     name="signal",
@@ -244,9 +248,10 @@ class SubmissionTest(unittest.TestCase):
         )
         self.assertEqual(jobs[0].worker_file_list_entries, jobs[0].source_inputs)
         self.assertIn("--stride", jobs[0].run_arguments)
-        self.assertEqual(jobs[0].run_arguments[-2:], ("--stride", "7"))
-        self.assertNotIn("--nevents", jobs[0].run_arguments)
-        self.assertNotIn("--nevents", jobs[2].run_arguments)
+        self.assertEqual(
+            jobs[0].run_arguments[-3:],
+            ("--", "--analysis-option", "value"),
+        )
 
     def test_files_per_job_derives_balanced_chunk_count(self) -> None:
         request = make_xrootd_request(

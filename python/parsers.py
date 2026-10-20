@@ -154,9 +154,8 @@ def setup_submit_parser(parser):
         help='submit through the DIRAC-managed grid',
         description='Submit an FCCAnalyses run to the DIRAC-managed grid.',
         epilog=(
-            'Arguments after -- are forwarded unchanged to fccanalysis run '
-            'for every planned worker job. Their effects therefore apply '
-            'independently to each job.'
+            'Arguments after -- are passed as custom arguments to Analysis '
+            'on every planned worker job.'
         ),
     )
     setup_grid_submit_parser(grid_parser)
@@ -176,15 +175,15 @@ def setup_grid_submit_parser(parser):
     parser.add_argument(
         '-o', '--output',
         type=str,
-        required=True,
         metavar='OUTPUT_FILE',
-        help='base output ROOT filename (will be suffixed with the job number)'
+        default='output.root',
+        help='base output ROOT filename (default: output.root; suffixed per job)'
     )
     parser.add_argument(
         '--output-dir',
-        required=True,
         metavar='OUTPUT_DIR',
-        help='output directory relative to your GRID catalogue root (required)'
+        default=None,
+        help='directory relative to your GRID catalogue root (default: root)'
     )
     parser.add_argument(
         '--output-se',
@@ -232,6 +231,30 @@ def setup_grid_submit_parser(parser):
         '--ship-local-build',
         action='store_true',
         help='ship the active locally built FCCAnalyses installation'
+    )
+    parser.add_argument(
+        '--output-format',
+        choices=('ttree', 'rntuple'),
+        default=None,
+        help='choose the output ROOT file format used by each worker'
+    )
+    parser.add_argument(
+        '-j', '--ncpus', '--n-threads',
+        type=_positive_integer,
+        default=None,
+        help='number of threads requested by each worker'
+    )
+    parser.add_argument(
+        '--stride',
+        type=_positive_integer,
+        default=None,
+        help='stride used by each worker; overrides a sample stride'
+    )
+    parser.add_argument(
+        '--nevents', '--n-events',
+        type=_positive_integer,
+        default=None,
+        help='not supported for grid submissions'
     )
 
 

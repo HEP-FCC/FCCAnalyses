@@ -104,7 +104,7 @@ class PlannedJob:
     worker_file_list_entries: tuple[str, ...]
     input_list_filename: str
     output_file: str
-    output_path: str
+    output_path: str | None
     run_arguments: tuple[str, ...]
 
 
@@ -149,7 +149,7 @@ class SubmissionRequest:
     lfn_sample_name: str | None
     run_arguments: tuple[str, ...]
     output_file: str
-    output_path: str
+    output_path: str | None
     output_se: str | None
     key4hep_setup: str
     job_name: str
@@ -160,8 +160,11 @@ class SubmissionRequest:
     user_build_payload: UserBuildPayload | None
     analysis_include_archive: str | None = None
     n_chunks: int | None = None
+    worker_stride: int | None = None
+    worker_output_format: str | None = None
+    worker_ncpus: int | None = None
 
-    VERSION = 12
+    VERSION = 13
 
     def __post_init__(self) -> None:
         _require_absolute_path(self.analysis_script, "analysis_script")
@@ -177,6 +180,12 @@ class SubmissionRequest:
                 "files_per_job and n_chunks are mutually exclusive"
             )
         _require_run_arguments(self.run_arguments)
+        _require_optional_positive_integer(self.worker_stride, "worker_stride")
+        _require_optional_positive_integer(self.worker_ncpus, "worker_ncpus")
+        if self.worker_output_format not in {None, "ttree", "rntuple"}:
+            raise SubmissionValidationError(
+                'worker_output_format must be "ttree", "rntuple", or null'
+            )
 
         if self.input_mode == "xrootd":
             if self.input_lfns:
@@ -211,7 +220,7 @@ class SubmissionRequest:
                 _require_simple_name(self.lfn_sample_name, "lfn_sample_name")
 
         _require_output_filename(self.output_file)
-        _require_relative_catalogue_path(self.output_path)
+        _require_optional_relative_catalogue_path(self.output_path)
         if self.output_se is not None:
             _require_nonempty_string(self.output_se, "output_se")
         _require_nonempty_string(self.job_name, "job_name")
@@ -245,6 +254,9 @@ class SubmissionRequest:
             "n_chunks": self.n_chunks,
             "lfn_sample_name": self.lfn_sample_name,
             "run_arguments": list(self.run_arguments),
+            "worker_stride": self.worker_stride,
+            "worker_output_format": self.worker_output_format,
+            "worker_ncpus": self.worker_ncpus,
             "output_file": self.output_file,
             "output_path": self.output_path,
             "output_se": self.output_se,
@@ -293,6 +305,9 @@ class SubmissionRequest:
             "n_chunks",
             "lfn_sample_name",
             "run_arguments",
+            "worker_stride",
+            "worker_output_format",
+            "worker_ncpus",
             "output_file",
             "output_path",
             "output_se",
@@ -328,6 +343,9 @@ class SubmissionRequest:
             n_chunks=payload["n_chunks"],
             lfn_sample_name=payload["lfn_sample_name"],
             run_arguments=tuple(payload["run_arguments"]),
+            worker_stride=payload["worker_stride"],
+            worker_output_format=payload["worker_output_format"],
+            worker_ncpus=payload["worker_ncpus"],
             output_file=payload["output_file"],
             output_path=payload["output_path"],
             output_se=payload["output_se"],
@@ -351,7 +369,6 @@ def plan_jobs(request: SubmissionRequest) -> tuple[PlannedJob, ...]:
     """Expand a validated request into deterministic worker jobs."""
     job_specs = _plan_input_groups(request)
     index_width = max(4, len(str(len(job_specs) - 1)))
-    output_path = str(PurePosixPath(request.output_path))
     planned_jobs = []
 
     for index, spec in enumerate(job_specs):
@@ -372,7 +389,14 @@ def plan_jobs(request: SubmissionRequest) -> tuple[PlannedJob, ...]:
         run_arguments.extend(["--output", output_file])
         if spec["stride"] is not None:
             run_arguments.extend(["--stride", str(spec["stride"])])
-        run_arguments.extend(request.run_arguments)
+        if request.worker_stride is not None:
+            run_arguments.extend(["--stride", str(request.worker_stride)])
+        if request.worker_output_format is not None:
+            run_arguments.extend(["--output-format", request.worker_output_format])
+        if request.worker_ncpus is not None:
+            run_arguments.extend(["--ncpus", str(request.worker_ncpus)])
+        if request.run_arguments:
+            run_arguments.extend(["--", *request.run_arguments])
 
         job_label = spec["sample_name"] or "lfn"
         planned_jobs.append(
@@ -387,7 +411,7 @@ def plan_jobs(request: SubmissionRequest) -> tuple[PlannedJob, ...]:
                 worker_file_list_entries=spec["worker_inputs"],
                 input_list_filename=input_list_filename,
                 output_file=output_file,
-                output_path=output_path,
+                output_path=request.output_path,
                 run_arguments=tuple(run_arguments),
             )
         )
@@ -593,7 +617,9 @@ def _require_output_filename(value: object) -> None:
     _require_simple_name(value, "output_file")
 
 
-def _require_relative_catalogue_path(value: object) -> None:
+def _require_optional_relative_catalogue_path(value: object) -> None:
+    if value is None:
+        return
     _require_nonempty_string(value, "output_path")
     path = PurePosixPath(value)
     if path.is_absolute() or ".." in path.parts:
