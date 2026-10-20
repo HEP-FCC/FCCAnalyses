@@ -99,7 +99,9 @@ def _create_job(
 
     if planned_job.input_mode == 'dirac-lfn':
         job.setInputData(list(planned_job.source_inputs))
-    output_options = {'OutputPath': planned_job.output_path}
+    output_options = {}
+    if planned_job.output_path is not None:
+        output_options['OutputPath'] = planned_job.output_path
     if request.output_se is not None:
         output_options['OutputSE'] = request.output_se
     job.setOutputData(planned_job.output_file, **output_options)
@@ -157,7 +159,9 @@ def _output_lfn(planned_job) -> str:
             'protection.'
         )
 
-    relative_output = f'{planned_job.output_path}/{planned_job.output_file}'
+    relative_output = planned_job.output_file
+    if planned_job.output_path is not None:
+        relative_output = f'{planned_job.output_path}/{relative_output}'
     return f'/{virtual_organization}/user/{username[0]}/{username}/{relative_output}'
 
 
@@ -238,8 +242,8 @@ def _print_plan(
         for source_input in planned_job.source_inputs:
             print(f'      {source_input}')
         print(
-            f'    output:        '
-            f'{planned_job.output_path}/{planned_job.output_file}'
+            '    output:        '
+            f'{planned_job.output_path or "(user root)"}/{planned_job.output_file}'
         )
 
 

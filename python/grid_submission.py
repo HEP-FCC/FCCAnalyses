@@ -35,20 +35,6 @@ from submission import (
 
 LOGGER = logging.getLogger('FCCAnalyses.grid_submission')
 
-_GRID_OWNED_RUN_OPTIONS = {
-    '-i',
-    '--input',
-    '-f',
-    '--input-file-list',
-    '--files-list',
-    '-o',
-    '--output',
-    '-s',
-    '--sample-name',
-    '--n-chunks',
-}
-
-
 class GridSubmissionError(ValueError):
     '''Raised when frontend grid-submission validation fails.'''
 
@@ -70,12 +56,17 @@ def create_grid_submission_request(
         )
 
     try:
+        if args.nevents is not None:
+            raise GridSubmissionError(
+                '--nevents is not supported for grid submissions because one '
+                'submission may create multiple jobs.'
+            )
         run_arguments = _validated_run_arguments(getattr(args, 'remaining', []))
         n_chunks = getattr(args, 'n_chunks', None)
         analysis_class = _create_analysis_instance(
             analysis_module, analysis_script, args
         )
-        _warn_ignored_sample_event_limits(analysis_class)
+        _reject_sample_event_limits(analysis_class)
         if args.lfn_input is not None:
             input_mode = 'dirac-lfn'
             input_lfns = _read_lfn_input(args.lfn_input)
@@ -102,6 +93,9 @@ def create_grid_submission_request(
             n_chunks=n_chunks,
             lfn_sample_name=lfn_sample_name,
             run_arguments=run_arguments,
+            worker_stride=args.stride,
+            worker_output_format=args.output_format,
+            worker_ncpus=args.ncpus,
             output_file=args.output,
             output_path=args.output_dir,
             output_se=args.output_se,
@@ -123,13 +117,7 @@ def create_grid_submission_request(
 
 
 def _validated_run_arguments(arguments: list[str]) -> tuple[str, ...]:
-    '''Validate explicit fccanalysis-run arguments passed after ``--``.'''
-    for argument in arguments:
-        option = argument.split('=', 1)[0]
-        if option in _GRID_OWNED_RUN_OPTIONS:
-            raise GridSubmissionError(
-                f'Pass-through argument {option} is controlled by grid submission.'
-            )
+    '''Return custom Analysis arguments passed after the command separator.'''
     return tuple(arguments)
 
 
@@ -315,8 +303,8 @@ def _validated_analysis_samples(analysis_class: Any) -> dict[str, dict[str, Any]
     return samples
 
 
-def _warn_ignored_sample_event_limits(analysis_class: Any) -> None:
-    '''Warn about sample event limits that grid planning never applies.'''
+def _reject_sample_event_limits(analysis_class: Any) -> None:
+    '''Reject sample event limits with ambiguous multi-job semantics.'''
     provided_samples = getattr(
         analysis_class,
         'samples',
@@ -326,11 +314,10 @@ def _warn_ignored_sample_event_limits(analysis_class: Any) -> None:
         return
     for sample_name, sample in provided_samples.items():
         if isinstance(sample, dict) and sample.get('n-events-max') is not None:
-            LOGGER.warning(
-                'Ignoring sample-level n-events-max during grid submission '
-                'for sample %s. To apply an event limit independently to '
-                'every planned job, pass --nevents after --.',
-                sample_name,
+            raise GridSubmissionError(
+                'Sample-level n-events-max is not supported for grid '
+                f'submission (sample {sample_name!r}) because one sample '
+                'may be split across multiple jobs.'
             )
 
 

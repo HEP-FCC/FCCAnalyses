@@ -15,16 +15,19 @@
 .B fccanalysis submit grid
 [\fB\-h\fR | \fB\-\-help\fR]
 [\fB\-\-lfn\-input\fR \fILFN_LIST\fR]
-\fB\-o\fR \fIOUTPUT_FILE\fR
-\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR
+[\fB\-o\fR \fIOUTPUT_FILE\fR]
+[\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR]
 [\fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR]
 [\fB\-\-files\-per\-job\fR \fICOUNT\fR | \fB\-\-n\-chunks\fR \fICOUNT\fR]
 [\fB\-\-sample\-name\fR \fINAME\fR]
 [\fB\-\-site\fR \fISITE\fR]
 [\fB\-\-mode\fR {\fBwms\fR,\fBlocal\fR}]
 [\fB\-\-ship\-local\-build\fR]
+[\fB\-\-output\-format\fR {\fBttree\fR,\fBrntuple\fR}]
+[\fB\-j\fR \fINCPUS\fR | \fB\-\-ncpus\fR \fINCPUS\fR | \fB\-\-n\-threads\fR \fINTHREADS\fR]
+[\fB\-\-stride\fR \fISTRIDE\fR]
 .I analysis-script
-[\fB\-\-\fR \fIRUN ARGUMENTS\fR]
+[\fB\-\-\fR \fIANALYSIS ARGUMENTS\fR]
 
 .SH DESCRIPTION
 .B fccanalysis submit
@@ -86,6 +89,7 @@ The backend reads
 and the global or per-sample input directories, lists their immediate ROOT
 files using XRootD, applies any sample fraction, and divides the resulting file
 URLs into jobs. Workers stream these files directly over XRootD.
+Campaign discovery is not supported for grid submission.
 
 .SS DIRAC LFN input
 Supplying
@@ -106,11 +110,12 @@ analysis samples.
 \fB\-o\fR \fIOUTPUT_FILE\fR, \fB\-\-output\fR \fIOUTPUT_FILE\fR
 Set the base output ROOT filename.
 Each planned output is given a deterministic sample and job-number suffix.
-This option is required.
+The default is
+.BR output.root .
 .TP
 \fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR
 Set the output directory relative to the user's DIRAC catalogue root.
-This option is required.
+If omitted, each output is registered directly in that root.
 .TP
 \fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR
 Override the storage element selected by DIRAC for output data.
@@ -147,18 +152,30 @@ Package and ship the active locally built FCCAnalyses installation instead of
 using FCCAnalyses from the selected Key4hep stack on the worker.
 The active stack must match the stack used to build the local installation.
 .TP
-\fB\-\-\fR \fIRUN ARGUMENTS\fR
-Forward all following arguments unchanged to
-.B fccanalysis run
-for every planned job.
-Their effects therefore apply independently to each job.
-Options controlling the per-job input list, output name, sample name, or chunk
-planning cannot be forwarded because they are owned by the grid planner.
+\fB\-\-output\-format\fR {\fBttree\fR,\fBrntuple\fR}
+Set the ROOT output format used by every worker.
+.TP
+\fB\-j\fR \fINCPUS\fR, \fB\-\-ncpus\fR \fINCPUS\fR, \fB\-\-n\-threads\fR \fINTHREADS\fR
+Set the number of threads used by every worker.
+.TP
+\fB\-\-stride\fR \fISTRIDE\fR
+Set the event stride used by every worker.
+This overrides a sample-level stride.
+.TP
+\fB\-\-nevents\fR \fINEVENTS\fR, \fB\-\-n\-events\fR \fINEVENTS\fR
+Not supported for grid submission because one submission may create multiple
+jobs.
+.TP
+\fB\-\-\fR \fIANALYSIS ARGUMENTS\fR
+Pass all following values as custom arguments to the analysis script on every
+worker. They are placed after the worker's own command separator and cannot
+change planned inputs, outputs, or supported worker options.
 
 .SH GRID OUTPUT
-Each job registers its ROOT output below
+Each job registers its ROOT output below the optional
 .I OUTPUT_DIR
-in the user's DIRAC catalogue namespace.
+in the user's DIRAC catalogue namespace. Without an output directory, DIRAC
+uses the user's catalogue root.
 DIRAC chooses the storage element unless
 .B \-\-output\-se
 is supplied.
@@ -189,7 +206,7 @@ fccanalysis submit grid analysis.py --lfn-input inputs.txt \e
 Pass an event stride to every worker invocation:
 .nf
 fccanalysis submit grid analysis.py \e
-    --output result.root --output-dir analyses/example -- --stride 10
+    --output result.root --output-dir analyses/example --stride 10
 .fi
 
 .SH SEE ALSO

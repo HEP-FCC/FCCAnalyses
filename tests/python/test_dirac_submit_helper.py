@@ -177,7 +177,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
             lfn_sample_name=None,
             run_arguments=(),
             output_file='result.root',
-            output_path='analysis/results',
+            output_path=None,
             output_se='CERN-DST-EOS',
             key4hep_setup='/cvmfs/key4hep/setup.sh',
             job_name='FCCAnalysis',
@@ -223,7 +223,6 @@ class DiracSubmitHelperTest(unittest.TestCase):
             (
                 'result_0000.root',
                 {
-                    'OutputPath': 'analysis/results',
                     'OutputSE': 'CERN-DST-EOS',
                 },
             ),
@@ -325,6 +324,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 'result_signal_0000.root',
                 '--stride',
                 '4',
+                '--',
                 '--analysis-option',
                 'value',
             ],
