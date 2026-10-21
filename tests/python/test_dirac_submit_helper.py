@@ -173,10 +173,16 @@ class DiracSubmitHelperTest(unittest.TestCase):
         request = SubmissionRequest(
             analysis_script='/work/analysis.py',
             input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/input.root',),
-            samples=(),
+            samples=(
+                ResolvedSample(
+                    name=None,
+                    output_stem=None,
+                    inputs=('/fcc/data/input.root',),
+                    chunks=1,
+                    stride=None,
+                ),
+            ),
             files_per_job=1,
-            lfn_sample_name=None,
             run_arguments=(),
             output_file='result.root',
             output_path=None,
@@ -255,18 +261,16 @@ class DiracSubmitHelperTest(unittest.TestCase):
         request = SubmissionRequest(
             analysis_script='/work/analysis.py',
             input_mode='xrootd',
-            input_lfns=(),
             samples=(
                 ResolvedSample(
                     name='signal',
                     output_stem='signal',
-                    input_urls=('root://eospublic.cern.ch//eos/experiment/fcc/a.root',),
+                    inputs=('root://eospublic.cern.ch//eos/experiment/fcc/a.root',),
                     chunks=1,
                     stride=4,
                 ),
             ),
             files_per_job=None,
-            lfn_sample_name=None,
             run_arguments=('--analysis-option', 'value'),
             output_file='result.root',
             output_path='analysis/results',
@@ -336,10 +340,16 @@ class DiracSubmitHelperTest(unittest.TestCase):
         request = SubmissionRequest(
             analysis_script='/work/analysis.py',
             input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/input.root',),
-            samples=(),
+            samples=(
+                ResolvedSample(
+                    name=None,
+                    output_stem=None,
+                    inputs=('/fcc/data/input.root',),
+                    chunks=1,
+                    stride=None,
+                ),
+            ),
             files_per_job=1,
-            lfn_sample_name=None,
             run_arguments=(),
             output_file='result.root',
             output_path='analysis/results',

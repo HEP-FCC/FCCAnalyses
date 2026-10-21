@@ -158,19 +158,32 @@ def setup_submit_parser(parser):
 def setup_grid_submit_parser(parser):
     '''Define arguments accepted by the DIRAC grid backend.'''
     parser.add_argument('anascript_path', help='path to analysis script')
-    parser.add_argument(
-        '--lfn-input',
+    input_mode = parser.add_mutually_exclusive_group()
+    input_mode.add_argument(
+        '--input',
+        default=None,
+        nargs='+',
+        metavar='INPUT_PATH',
+        help='remote file or directory path(s)'
+    )
+    input_mode.add_argument(
+        '--input-file-list',
+        default=None,
+        metavar='LIST_FILE',
+        help='text file containing physical remote input paths'
+    )
+    input_mode.add_argument(
+        '--input-lfn-list',
         default=None,
         metavar='LFN_LIST',
-        help='text file containing one DIRAC LFN per line; selects LFN input '
-        'mode instead of XRootD input'
+        help='text file containing one DIRAC LFNs'
     )
     parser.add_argument(
         '-o', '--output',
         type=str,
         metavar='OUTPUT_FILE',
         default='output.root',
-        help='base output ROOT filename (default: output.root; suffixed per job)'
+        help='base output ROOT filename (suffixed per job)'
     )
     parser.add_argument(
         '--output-dir',
@@ -191,22 +204,21 @@ def setup_grid_submit_parser(parser):
         default=None,
         metavar='COUNT',
         help='number of input files processed by each grid job; overrides '
-        'sample chunks when supplied'
+            'sample chunks when supplied'
     )
     grouping.add_argument(
         '--n-chunks',
         type=_positive_integer,
         default=None,
         metavar='COUNT',
-        help='requested number of jobs/output chunks per XRootD sample or '
-        'across the complete LFN input list; overrides sample chunks when '
-        'supplied'
+        help='requested number of jobs/output chunks; overrides '
+            'sample chunks when supplied'
     )
     parser.add_argument(
         '--sample-name',
         default=None,
         metavar='NAME',
-        help='optional sample name forwarded to workers in LFN input mode'
+        help='optional label for a direct CLI input sample and its output file'
     )
     parser.add_argument(
         '--site',

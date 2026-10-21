@@ -365,12 +365,13 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
             or provided_sample_dict.get('input_dir') is not None,
             provided_sample_dict.get('input-files') is not None,
             provided_sample_dict.get('input-file-list') is not None,
+            provided_sample_dict.get('input-lfn-list') is not None,
         )
         if sum(input_sources) > 1:
             LOGGER.error(
                 'Sample "%s" defines more than one input source. Use only '
-                'one of "input-dir", "input-files" or '
-                '"input-file-list".', sample_name
+                'one of "input-dir", "input-files", "input-file-list" or '
+                '"input-lfn-list".', sample_name
             )
             sys.exit(3)
 
@@ -388,6 +389,12 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
                 provided_sample_dict['input-file-list']
         else:
             sample_dict['input-file-list'] = None
+
+        if has_valid_string(provided_sample_dict, 'input-lfn-list'):
+            sample_dict['input-lfn-list'] = \
+                provided_sample_dict['input-lfn-list']
+        else:
+            sample_dict['input-lfn-list'] = None
 
         # Check directly provided input files
         input_files = provided_sample_dict.get('input-files')
@@ -442,6 +449,8 @@ def get_sample_input_source(sample_dict: dict[str, Any], input_dir: Any,
         return 'input-files', sample_dict['input-files']
     if sample_dict.get('input-file-list') is not None:
         return 'input-file-list', sample_dict['input-file-list']
+    if sample_dict.get('input-lfn-list') is not None:
+        return 'input-lfn-list', sample_dict['input-lfn-list']
     if sample_dict.get('input-dir') is not None:
         return 'sample-input-dir', sample_dict['input-dir']
     if input_dir is not None:

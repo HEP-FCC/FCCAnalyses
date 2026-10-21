@@ -10,14 +10,20 @@ import logging
 import math
 import os
 from pathlib import Path, PurePosixPath
-import re
 import subprocess
 import tarfile
 import tempfile
 from types import ModuleType
 from typing import Any
 
-from anascript import validate_sample_list
+from anascript import get_sample_input_source, validate_sample_list
+from input_resolver import (
+    InputResolutionError,
+    normalize_input_path,
+    read_input_file_list,
+    resolve_directory,
+    resolve_inputs,
+)
 
 from software_payload import (
     SoftwarePayloadError,
@@ -61,20 +67,23 @@ def create_grid_submission_request(
             analysis_module, analysis_script, args
         )
         _reject_sample_event_limits(analysis_class)
-        if args.lfn_input is not None:
+        has_cli_input = (
+            args.input is not None or args.input_file_list is not None
+        )
+        sample_name = (
+            _require_single_name(args.sample_name, '--sample-name')
+            if args.sample_name is not None
+            and (args.input_lfn_list is not None or has_cli_input)
+            else None
+        )
+        if args.input_lfn_list is not None:
             input_mode = 'dirac-lfn'
-            input_lfns = _read_lfn_input(args.lfn_input)
-            samples = ()
-            lfn_sample_name = (
-                _require_single_name(args.sample_name, '--sample-name')
-                if args.sample_name is not None
-                else None
-            )
-        else:
+            samples = (_resolve_grid_cli_lfn_sample(args, sample_name),)
+        elif has_cli_input:
             input_mode = 'xrootd'
-            input_lfns = ()
-            samples = _resolve_analysis_samples(args, analysis_class)
-            lfn_sample_name = None
+            samples = (_resolve_grid_cli_input_sample(args, sample_name),)
+        else:
+            input_mode, samples = _resolve_analysis_samples(args, analysis_class)
 
         analysis_include_archive = _create_analysis_include_archive(
             analysis_script,
@@ -85,11 +94,9 @@ def create_grid_submission_request(
         return SubmissionRequest(
             analysis_script=str(analysis_script),
             input_mode=input_mode,
-            input_lfns=input_lfns,
             samples=samples,
             files_per_job=args.files_per_job,
             n_chunks=n_chunks,
-            lfn_sample_name=lfn_sample_name,
             run_arguments=run_arguments,
             worker_stride=args.stride,
             worker_output_format=args.output_format,
@@ -118,7 +125,7 @@ def _read_lfn_input(path_value: str) -> tuple[str, ...]:
     '''Read one concrete, whitespace-normalised DIRAC LFN per text-file line.'''
     path = _require_file(path_value, 'LFN input file')
     if path.suffix != '.txt':
-        raise GridSubmissionError('--lfn-input must name a .txt file.')
+        raise GridSubmissionError('--input-lfn-list must name a .txt file.')
     try:
         input_lfns = tuple(
             line.strip()
@@ -128,45 +135,121 @@ def _read_lfn_input(path_value: str) -> tuple[str, ...]:
     except OSError as error:
         raise GridSubmissionError(f'Cannot read LFN input file: {path}') from error
     if not input_lfns:
-        raise GridSubmissionError('--lfn-input contains no LFNs.')
+        raise GridSubmissionError('--input-lfn-list contains no LFNs.')
     for lfn in input_lfns:
         _validate_lfn(lfn)
     _require_unique_inputs(input_lfns, 'input LFN')
     return input_lfns
 
 
+def _resolve_grid_cli_lfn_sample(
+    args: argparse.Namespace,
+    sample_name: str | None,
+) -> ResolvedSample:
+    '''Resolve the command-line LFN list as one independent grid sample.'''
+    return ResolvedSample(
+        name=sample_name,
+        output_stem=sample_name,
+        inputs=_read_lfn_input(args.input_lfn_list),
+        chunks=1,
+        stride=None,
+    )
+
+
+def _resolve_grid_cli_input_sample(
+    args: argparse.Namespace,
+    sample_name: str | None,
+) -> ResolvedSample:
+    '''Resolve one independent XRootD sample supplied on the command line.'''
+    try:
+        if args.input is not None:
+            input_urls = resolve_inputs(args.input)
+        else:
+            input_urls = read_input_file_list(args.input_file_list)
+    except InputResolutionError as error:
+        raise GridSubmissionError(str(error)) from error
+    _require_grid_urls(input_urls)
+    return ResolvedSample(
+        name=sample_name or 'output',
+        output_stem=sample_name,
+        inputs=tuple(input_urls),
+        chunks=1,
+        stride=None,
+    )
+
+
 def _resolve_analysis_samples(
     args: argparse.Namespace,
     analysis_class: Any,
-) -> tuple[ResolvedSample, ...]:
-    '''Resolve the modern Analysis input model to concrete XRootD URLs.'''
+) -> tuple[str, tuple[ResolvedSample, ...]]:
+    '''Resolve one uniform Analysis input mode to concrete worker inputs.'''
+    global_lfn_list = getattr(analysis_class, 'input_lfn_list', None)
+    if global_lfn_list is not None:
+        if not isinstance(global_lfn_list, str):
+            raise GridSubmissionError('Analysis.input_lfn_list must be a string.')
+        provided_samples = getattr(
+            analysis_class,
+            'samples',
+            getattr(analysis_class, 'process_list', None),
+        )
+        if (
+            provided_samples
+            or getattr(analysis_class, 'input_dir', None) is not None
+        ):
+            raise GridSubmissionError(
+                'Analysis.input_lfn_list cannot be combined with XRootD inputs.'
+            )
+        return 'dirac-lfn', (
+            ResolvedSample(
+                name=None,
+                output_stem=None,
+                inputs=_read_lfn_input(global_lfn_list),
+                chunks=1,
+                stride=None,
+            ),
+        )
+
     samples = _validated_analysis_samples(analysis_class)
     input_dir = getattr(analysis_class, 'input_dir', None)
     if input_dir is not None and not isinstance(input_dir, str):
         raise GridSubmissionError('Analysis.input_dir must be a string.')
 
+    configured_sources = tuple(
+        (
+            sample_name,
+            sample,
+            *get_sample_input_source(sample, input_dir, None),
+        )
+        for sample_name, sample in samples.items()
+    )
+    input_modes = {
+        'dirac-lfn' if source == 'input-lfn-list' else 'xrootd'
+        for _, _, source, _ in configured_sources
+    }
+    if len(input_modes) != 1:
+        raise GridSubmissionError(
+            'Grid submission cannot mix XRootD and DIRAC LFN sample inputs.'
+        )
+
     resolved_samples = []
-    for sample_name, sample in samples.items():
-        sample_input_dir = sample['input-dir']
-        if sample_input_dir is None:
-            if input_dir is None:
-                raise GridSubmissionError(
-                    f'Sample {sample_name!r} has no input-dir and '
-                    'Analysis.input_dir is unset.'
+    for sample_name, sample, input_source, input_value in configured_sources:
+        if input_source == 'input-lfn-list':
+            input_mode = 'dirac-lfn'
+            inputs = _read_lfn_input(input_value)
+        else:
+            input_mode = 'xrootd'
+            try:
+                inputs = _resolve_grid_sample_inputs(
+                    input_source, input_value, sample_name
                 )
-            sample_input_dir = _join_input_directory(input_dir, sample_name)
-        input_urls = _discover_xrootd_root_files(sample_input_dir)
-        if not input_urls:
-            raise GridSubmissionError(
-                f'No immediate .root files found for sample {sample_name!r} '
-                f'in {sample_input_dir}.'
-            )
-        fraction = sample['fraction']
-        if fraction < 1.0:
-            input_urls = _apply_fraction(input_urls, fraction, sample_name)
+            except InputResolutionError as error:
+                raise GridSubmissionError(str(error)) from error
+            fraction = sample['fraction']
+            if fraction < 1.0:
+                inputs = _apply_fraction(inputs, fraction, sample_name)
         LOGGER.info(
             'Resolved %d input file(s) for sample %s.',
-            len(input_urls),
+            len(inputs),
             sample_name,
         )
 
@@ -189,12 +272,50 @@ def _resolve_analysis_samples(
             ResolvedSample(
                 name=sample_name,
                 output_stem=sample['output-stem'],
-                input_urls=tuple(input_urls),
+                inputs=tuple(inputs),
                 chunks=chunks,
                 stride=sample['stride'],
             )
         )
-    return tuple(resolved_samples)
+    return input_modes.pop(), tuple(resolved_samples)
+
+
+def _resolve_grid_sample_inputs(
+    input_source: str | None,
+    input_value: Any,
+    sample_name: str,
+) -> list[str]:
+    '''Resolve one configured sample input source to grid-readable URLs.'''
+    if input_source == 'input-files':
+        input_urls = [normalize_input_path(path) for path in input_value]
+        _require_grid_urls(input_urls)
+        return resolve_inputs(input_urls)
+    if input_source == 'input-file-list':
+        input_urls = read_input_file_list(input_value)
+        _require_grid_urls(input_urls)
+        return input_urls
+    if input_source in {'sample-input-dir', 'global-input-dir'}:
+        directory = normalize_input_path(input_value)
+        if input_source == 'global-input-dir':
+            directory = directory.rstrip('/') + '/' + sample_name
+        _require_grid_urls([directory])
+        return resolve_directory(directory)
+    raise GridSubmissionError(
+        f'Sample {sample_name!r} has no XRootD input source. Set a per-sample '
+        'source or Analysis.input_dir, or use --input-lfn-list <list.txt> for '
+        'DIRAC-registered input files.'
+    )
+
+
+def _require_grid_urls(input_urls: list[str]) -> None:
+    for input_url in input_urls:
+        if not input_url.startswith('root://'):
+            raise GridSubmissionError(
+                'In XRootD input mode, grid input files and directories must use '
+                'mounted EOS paths or root:// URLs; local input paths cannot be '
+                'staged in this mode. For DIRAC-registered input files, use '
+                '--input-lfn-list <list.txt> containing their LFNs.'
+            )
 
 
 def _create_analysis_include_archive(
@@ -275,7 +396,7 @@ def _create_analysis_instance(
 
 
 def _validated_analysis_samples(analysis_class: Any) -> dict[str, dict[str, Any]]:
-    '''Select and validate samples, retaining the modern process-list alias.'''
+    '''Select and validate samples.'''
     if hasattr(analysis_class, 'samples'):
         provided_samples = analysis_class.samples
     elif hasattr(analysis_class, 'process_list'):
@@ -311,74 +432,6 @@ def _reject_sample_event_limits(analysis_class: Any) -> None:
                 f'submission (sample {sample_name!r}) because one sample '
                 'may be split across multiple jobs.'
             )
-
-
-def _join_input_directory(input_dir: str, sample_name: str) -> str:
-    if input_dir.startswith('root://'):
-        return input_dir.rstrip('/') + '/' + sample_name
-    return os.path.join(input_dir, sample_name)
-
-
-def _discover_xrootd_root_files(directory: str) -> list[str]:
-    '''List immediate ROOT files in an EOS/XRootD directory through xrdfs.'''
-    host, remote_directory = _xrootd_location(directory)
-    try:
-        result = subprocess.run(
-            ['xrdfs', host, 'ls', '-l', remote_directory],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    except FileNotFoundError as error:
-        raise GridSubmissionError(
-            'xrdfs is unavailable; source a Key4hep environment with XRootD.'
-        ) from error
-    except subprocess.CalledProcessError as error:
-        message = error.stderr.strip() or error.stdout.strip() or str(error)
-        raise GridSubmissionError(
-            f'Cannot list XRootD directory {directory} through {host}: {message}'
-        ) from error
-
-    files = []
-    for line in result.stdout.splitlines():
-        entry = _parse_xrdfs_listing(line)
-        if entry is None:
-            continue
-        entry_type, path = entry
-        if entry_type == 'd' or not path.endswith('.root'):
-            continue
-        files.append(f'root://{host}//{path.lstrip("/")}')
-    return sorted(set(files))
-
-
-def _xrootd_location(directory: str) -> tuple[str, str]:
-    '''Turn an EOS path or root URL into an xrdfs host/path pair.'''
-    if directory.startswith('root://'):
-        match = re.fullmatch(r'root://([^/]+)(/.*)', directory)
-        if match is None:
-            raise GridSubmissionError(f'Invalid XRootD directory URL: {directory}')
-        return match.group(1), '/' + match.group(2).lstrip('/')
-    if not directory.startswith('/eos/'):
-        raise GridSubmissionError(
-            f'Input directory must be an /eos/... path or root:// URL: {directory}'
-        )
-    if directory.startswith('/eos/experiment/'):
-        return 'eospublic.cern.ch', directory
-    if directory.startswith('/eos/user/'):
-        return 'eosuser.cern.ch', directory
-    raise GridSubmissionError(
-        f'Cannot infer an EOS redirector for input directory: {directory}'
-    )
-
-
-def _parse_xrdfs_listing(line: str) -> tuple[str, str] | None:
-    '''Extract the entry type and path from one ``xrdfs ls -l`` line.'''
-    parts = line.split()
-    if not parts:
-        return None
-    if len(parts) >= 2 and parts[0][0:1] in {'-', 'd'}:
-        return parts[0][0], parts[-1]
-    return '-', parts[-1]
 
 
 def _apply_fraction(

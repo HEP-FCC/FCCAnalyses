@@ -104,10 +104,15 @@ is deprecated; use
 instead.
 Each sample can have several parameters:
 .br
-Set at most one of \fIinput-dir\fR, \fIinput-files\fR, and
-\fIinput-file-list\fR for a sample. A per-sample input source overrides the
-global \fBinput_dir\fR, which overrides campaign discovery. Command-line input
-options override all analysis-script input configuration.
+Set at most one of \fIinput-dir\fR, \fIinput-files\fR,
+\fIinput-file-list\fR, and \fIinput-lfn-list\fR for a sample. A per-sample
+input source overrides the
+global \fBinput_dir\fR. For the normal runner, the global directory overrides
+campaign discovery, and command-line input options override analysis-script
+input configuration. Grid XRootD mode uses per-sample or global sources;
+campaign discovery is not available in that mode. Grid LFN mode can use
+\fB--input-lfn-list\fR, \fBAnalysis.input_lfn_list\fR, or per-sample
+\fIinput-lfn-list\fR. One submission cannot mix LFN and XRootD input.
 .br
 \fIfraction\fR
 .in +4
@@ -119,7 +124,7 @@ Default value: 1 (full process sample)
 \fIinput-dir\fR
 .in +4
 Specifies a directory for the process instead of the global one\&. For grid
-submission, provide a mounted EOS path or an XRootD directory URL\&.
+XRootD submission, provide a mounted EOS path or an XRootD directory URL\&.
 The deprecated spelling
 \fIinput_dir\fR
 remains accepted as a compatibility alias\&.
@@ -137,6 +142,17 @@ Default value: None
 .in +4
 Path to a text file containing one explicit input file path or URL per line\&.
 Blank lines and lines starting with "#" are ignored\&.
+This list contains physical file paths or URLs, not DIRAC LFNs. For registered
+grid files, use the submission option \fB--input-lfn-list\fR instead\&.
+.br
+Default value: None
+.in -4
+.in +4
+\fIinput-lfn-list\fR
+.in +4
+Path to a text file containing one DIRAC LFN per line. This is available only
+for grid submission. All samples in one grid submission must use either LFN
+input or physical XRootD input; mixing the two is rejected.
 .br
 Default value: None
 .in -4

@@ -20,11 +20,12 @@ from grid_submission import (
     GridSubmissionError,
     _create_analysis_include_archive,
     _create_analysis_instance,
+    _resolve_grid_sample_inputs,
     create_grid_submission_request,
     submit_grid_submission,
 )
 from parsers import setup_submit_parser
-from submission import SubmissionRequest, UserBuildPayload
+from submission import SubmissionRequest, UserBuildPayload, plan_jobs
 
 
 class GridSubmissionFrontendTest(unittest.TestCase):
@@ -74,7 +75,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
     @staticmethod
     def grid_arguments(lfn_input: Path) -> list[str]:
         return [
-            '--lfn-input',
+            '--input-lfn-list',
             str(lfn_input),
             '--output',
             'analysis.root',
@@ -110,8 +111,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 [
-                    '--lfn-input', str(self.write_lfn_input(root)),
-                    '--files-per-job', '2',
+                    '--input-lfn-list', str(self.write_lfn_input(root)),
                     '--output-se', 'CERN-DST-EOS',
                     '--site', 'LCG.CERN.ch',
                 ],
@@ -126,13 +126,11 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertEqual(request.analysis_script, str(analysis_script.resolve()))
         self.assertEqual(request.input_mode, 'dirac-lfn')
         self.assertEqual(
-            request.input_lfns,
-            (
-                '/fcc/user/a/alice/input-1.root',
-                '/fcc/user/a/alice/input-2.root',
-            ),
+            request.samples[0].inputs,
+            ('/fcc/user/a/alice/input-1.root', '/fcc/user/a/alice/input-2.root'),
         )
-        self.assertEqual(request.files_per_job, 2)
+        self.assertIsNone(request.files_per_job)
+        self.assertEqual(len(plan_jobs(request)), 1)
         self.assertIsNone(request.n_chunks)
         self.assertEqual(request.output_file, 'output.root')
         self.assertIsNone(request.output_path)
@@ -153,7 +151,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 [
-                    '--lfn-input', str(self.write_lfn_input(root)),
+                    '--input-lfn-list', str(self.write_lfn_input(root)),
                     '--output', 'analysis.root',
                     '--output-dir', 'analysis/results',
                     '--n-chunks', '2',
@@ -168,6 +166,57 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
         self.assertIsNone(request.files_per_job)
         self.assertEqual(request.n_chunks, 2)
+
+    def test_resolves_analysis_lfn_inputs_and_rejects_mixed_sources(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            key4hep_setup = root / 'setup.sh'
+            lfn_list = self.write_lfn_input(root)
+            global_script = root / 'global-lfns.py'
+            sample_script = root / 'sample-lfns.py'
+            mixed_script = root / 'mixed.py'
+            key4hep_setup.touch()
+            self.write_modern_analysis(
+                global_script,
+                f'        self.input_lfn_list = {str(lfn_list)!r}\n',
+            )
+            self.write_modern_analysis(
+                sample_script,
+                '        self.samples = {\n'
+                f'            "signal": {{"input-lfn-list": {str(lfn_list)!r}}}\n'
+                '        }\n',
+            )
+            self.write_modern_analysis(
+                mixed_script,
+                '        self.samples = {\n'
+                f'            "signal": {{"input-lfn-list": {str(lfn_list)!r}}},\n'
+                '            "background": {"input-files": [\n'
+                '                "root://storage.example.org//data/a.root"\n'
+                '            ]},\n'
+                '        }\n',
+            )
+
+            global_request = create_grid_submission_request(
+                self.parse_grid_arguments(str(global_script), []),
+                self.load_analysis_module(global_script),
+                key4hep_setup=str(key4hep_setup),
+            )
+            sample_request = create_grid_submission_request(
+                self.parse_grid_arguments(str(sample_script), []),
+                self.load_analysis_module(sample_script),
+                key4hep_setup=str(key4hep_setup),
+            )
+            with self.assertRaisesRegex(GridSubmissionError, 'cannot mix'):
+                create_grid_submission_request(
+                    self.parse_grid_arguments(str(mixed_script), []),
+                    self.load_analysis_module(mixed_script),
+                    key4hep_setup=str(key4hep_setup),
+                )
+
+        self.assertEqual(global_request.input_mode, 'dirac-lfn')
+        self.assertIsNone(global_request.samples[0].name)
+        self.assertEqual(sample_request.samples[0].name, 'signal')
+        self.assertEqual(plan_jobs(sample_request)[0].sample_name, 'signal')
 
     def test_resolves_analysis_samples_for_xrootd_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -208,7 +257,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     'root://eospublic.cern.ch//eos/experiment/fcc/test/background/a.root',
                 ]
 
-            with patch('grid_submission._discover_xrootd_root_files', side_effect=discover):
+            with patch('grid_submission.resolve_directory', side_effect=discover):
                 request = create_grid_submission_request(
                     args,
                     self.load_analysis_module(analysis_script),
@@ -225,12 +274,131 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 )
 
         self.assertEqual(request.input_mode, 'xrootd')
-        self.assertEqual(request.input_lfns, ())
         self.assertEqual(request.n_chunks, 2)
         self.assertEqual([sample.name for sample in request.samples], ['signal', 'background'])
         self.assertEqual(request.samples[0].chunks, 2)
         self.assertEqual(request.samples[0].stride, 3)
         self.assertTrue(request.analysis_include_archive.endswith('includes.tar.gz'))
+
+    def test_resolves_sample_input_files_for_grid(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis_script = root / 'analysis.py'
+            key4hep_setup = root / 'setup.sh'
+            self.write_modern_analysis(
+                analysis_script,
+                '        self.samples = {\n'
+                '            "signal": {"input-files": [\n'
+                '                "root://storage.example.org//data/a.root"\n'
+                '            ]}\n'
+                '        }\n',
+            )
+            key4hep_setup.touch()
+            args = self.parse_grid_arguments(str(analysis_script), [])
+
+            with patch(
+                'grid_submission.resolve_inputs',
+                return_value=['root://storage.example.org//data/a.root'],
+            ) as resolve:
+                request = create_grid_submission_request(
+                    args,
+                    self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(key4hep_setup),
+                )
+
+        resolve.assert_called_once_with(['root://storage.example.org//data/a.root'])
+        self.assertEqual(
+            request.samples[0].inputs,
+            ('root://storage.example.org//data/a.root',),
+        )
+
+    def test_resolves_direct_grid_cli_input(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis_script = root / 'analysis.py'
+            key4hep_setup = root / 'setup.sh'
+            self.write_modern_analysis(analysis_script)
+            key4hep_setup.touch()
+            args = self.parse_grid_arguments(
+                str(analysis_script),
+                ['--input', 'root://storage.example.org//data/a.root'],
+            )
+
+            with patch(
+                'grid_submission.resolve_inputs',
+                return_value=['root://storage.example.org//data/a.root'],
+            ) as resolve:
+                request = create_grid_submission_request(
+                    args,
+                    self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(key4hep_setup),
+                )
+            named_args = self.parse_grid_arguments(
+                str(analysis_script),
+                [
+                    '--input', 'root://storage.example.org//data/a.root',
+                    '--sample-name', 'signal',
+                ],
+            )
+            with patch(
+                'grid_submission.resolve_inputs',
+                return_value=['root://storage.example.org//data/a.root'],
+            ):
+                named_request = create_grid_submission_request(
+                    named_args,
+                    self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(key4hep_setup),
+                )
+
+        resolve.assert_called_once_with(['root://storage.example.org//data/a.root'])
+        self.assertEqual(request.samples[0].name, 'output')
+        self.assertIsNone(request.samples[0].output_stem)
+        self.assertEqual(plan_jobs(request)[0].output_file, 'output_0000.root')
+        self.assertEqual(plan_jobs(request)[0].sample_name, 'output')
+        self.assertEqual(named_request.samples[0].name, 'signal')
+        self.assertEqual(named_request.samples[0].output_stem, 'signal')
+        self.assertEqual(
+            plan_jobs(named_request)[0].output_file, 'output_signal_0000.root'
+        )
+
+    def test_resolves_direct_grid_cli_input_file_list(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis_script = root / 'analysis.py'
+            key4hep_setup = root / 'setup.sh'
+            input_list = root / 'inputs.txt'
+            self.write_modern_analysis(analysis_script)
+            key4hep_setup.touch()
+            input_list.write_text(
+                'root://storage.example.org//data/a.root\n', encoding='utf-8'
+            )
+            args = self.parse_grid_arguments(
+                str(analysis_script), ['--input-file-list', str(input_list)]
+            )
+
+            request = create_grid_submission_request(
+                args,
+                self.load_analysis_module(analysis_script),
+                key4hep_setup=str(key4hep_setup),
+            )
+
+        self.assertEqual(
+            request.samples[0].inputs,
+            ('root://storage.example.org//data/a.root',),
+        )
+
+    def test_rejects_local_grid_input_files(self) -> None:
+        with patch('grid_submission.resolve_inputs') as resolve:
+            with self.assertRaisesRegex(
+                GridSubmissionError,
+                'In XRootD input mode, grid input files and directories',
+            ) as error:
+                _resolve_grid_sample_inputs(
+                    'input-files', ['/local/input.root'], 'signal'
+                )
+
+        self.assertIn('--input-lfn-list', str(error.exception))
+        resolve.assert_not_called()
 
     def test_stages_optional_analysis_includes_in_lfn_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
