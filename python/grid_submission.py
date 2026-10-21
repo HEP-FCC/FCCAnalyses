@@ -9,7 +9,7 @@ import argparse
 import logging
 import math
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import tarfile
@@ -49,19 +49,13 @@ def create_grid_submission_request(
     '''Create a backend-neutral grid request from validated CLI arguments.'''
     analysis_script = _require_file(args.anascript_path, 'Analysis script')
     selected_key4hep_setup = _require_key4hep_setup(key4hep_setup)
-
-    if user_build_payload is not None and not args.ship_local_build:
-        raise GridSubmissionError(
-            'A user-build payload requires --ship-local-build.'
-        )
+    output_file = _require_single_name(args.output, '--output')
+    output_path = _require_catalogue_path(args.output_dir)
+    output_se = _require_optional_nonempty_string(args.output_se, '--output-se')
+    destination_site = _require_optional_nonempty_string(args.site, '--site')
 
     try:
-        if args.nevents is not None:
-            raise GridSubmissionError(
-                '--nevents is not supported for grid submissions because one '
-                'submission may create multiple jobs.'
-            )
-        run_arguments = _validated_run_arguments(getattr(args, 'remaining', []))
+        run_arguments = tuple(getattr(args, 'remaining', []))
         n_chunks = getattr(args, 'n_chunks', None)
         analysis_class = _create_analysis_instance(
             analysis_module, analysis_script, args
@@ -71,11 +65,15 @@ def create_grid_submission_request(
             input_mode = 'dirac-lfn'
             input_lfns = _read_lfn_input(args.lfn_input)
             samples = ()
-            lfn_sample_name = args.sample_name
+            lfn_sample_name = (
+                _require_single_name(args.sample_name, '--sample-name')
+                if args.sample_name is not None
+                else None
+            )
         else:
             input_mode = 'xrootd'
             input_lfns = ()
-            samples = _resolve_analysis_samples(args, analysis_script, analysis_class)
+            samples = _resolve_analysis_samples(args, analysis_class)
             lfn_sample_name = None
 
         analysis_include_archive = _create_analysis_include_archive(
@@ -96,14 +94,14 @@ def create_grid_submission_request(
             worker_stride=args.stride,
             worker_output_format=args.output_format,
             worker_ncpus=args.ncpus,
-            output_file=args.output,
-            output_path=args.output_dir,
-            output_se=args.output_se,
+            output_file=output_file,
+            output_path=output_path,
+            output_se=output_se,
             key4hep_setup=str(selected_key4hep_setup),
             job_name='FCCAnalyses',
             job_group='FCCAnalyses_Grid',
             submit_mode=args.mode,
-            destination_site=args.site,
+            destination_site=destination_site,
             submission_id=generate_submission_id(),
             user_build_payload=user_build_payload,
             analysis_include_archive=(
@@ -116,29 +114,29 @@ def create_grid_submission_request(
         raise GridSubmissionError(str(error)) from error
 
 
-def _validated_run_arguments(arguments: list[str]) -> tuple[str, ...]:
-    '''Return custom Analysis arguments passed after the command separator.'''
-    return tuple(arguments)
-
-
 def _read_lfn_input(path_value: str) -> tuple[str, ...]:
     '''Read one concrete, whitespace-normalised DIRAC LFN per text-file line.'''
     path = _require_file(path_value, 'LFN input file')
     if path.suffix != '.txt':
         raise GridSubmissionError('--lfn-input must name a .txt file.')
     try:
-        return tuple(
+        input_lfns = tuple(
             line.strip()
             for line in path.read_text(encoding='utf-8').splitlines()
             if line.strip()
         )
     except OSError as error:
         raise GridSubmissionError(f'Cannot read LFN input file: {path}') from error
+    if not input_lfns:
+        raise GridSubmissionError('--lfn-input contains no LFNs.')
+    for lfn in input_lfns:
+        _validate_lfn(lfn)
+    _require_unique_inputs(input_lfns, 'input LFN')
+    return input_lfns
 
 
 def _resolve_analysis_samples(
     args: argparse.Namespace,
-    analysis_script: Path,
     analysis_class: Any,
 ) -> tuple[ResolvedSample, ...]:
     '''Resolve the modern Analysis input model to concrete XRootD URLs.'''
@@ -166,6 +164,11 @@ def _resolve_analysis_samples(
         fraction = sample['fraction']
         if fraction < 1.0:
             input_urls = _apply_fraction(input_urls, fraction, sample_name)
+        LOGGER.info(
+            'Resolved %d input file(s) for sample %s.',
+            len(input_urls),
+            sample_name,
+        )
 
         chunks = sample['chunks']
         if args.files_per_job is not None and chunks != 1:
@@ -182,11 +185,6 @@ def _resolve_analysis_samples(
                 chunks,
                 sample_name,
             )
-        LOGGER.info(
-            'Resolved %d input file(s) for sample %s.',
-            len(input_urls),
-            sample_name,
-        )
         resolved_samples.append(
             ResolvedSample(
                 name=sample_name,
@@ -206,16 +204,10 @@ def _create_analysis_include_archive(
 ) -> Path | None:
     '''Archive Analysis.include_paths while preserving analysis-relative paths.'''
     include_paths = getattr(analysis_class, 'include_paths', None)
-    if include_paths is None:
+    if not include_paths:
         return None
     if not isinstance(include_paths, (list, tuple)):
         raise GridSubmissionError('Analysis.include_paths must be a list of paths.')
-    if not include_paths:
-        return None
-    if archive_path is None:
-        raise GridSubmissionError(
-            'Analysis.include_paths cannot be staged without an archive destination.'
-        )
 
     analysis_directory = analysis_script.parent.resolve()
     resolved_includes = []
@@ -549,6 +541,58 @@ def _require_file(path_value: str, description: str) -> Path:
     if not path.is_file():
         raise GridSubmissionError(f'{description} not found: {path}')
     return path
+
+
+def _validate_lfn(lfn: str) -> None:
+    path = PurePosixPath(lfn)
+    if not lfn.startswith('/'):
+        raise GridSubmissionError(f'input LFN must be absolute: {lfn}')
+    if path.name in {'', '.', '..'}:
+        raise GridSubmissionError(f'input LFN must name a file: {lfn}')
+    if '..' in path.parts:
+        raise GridSubmissionError(f"input LFN must not contain '..': {lfn}")
+
+
+def _require_unique_inputs(
+    inputs: tuple[str, ...] | list[str], description: str
+) -> None:
+    seen = set()
+    for value in inputs:
+        if value in seen:
+            raise GridSubmissionError(f'duplicate {description}: {value}')
+        seen.add(value)
+
+
+def _require_single_name(value: object, option: str) -> str:
+    if (
+        not isinstance(value, str)
+        or not value
+        or value in {'.', '..'}
+        or PurePosixPath(value).name != value
+    ):
+        raise GridSubmissionError(f'{option} must be a single name, not a path.')
+    return value
+
+
+def _require_catalogue_path(value: object) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise GridSubmissionError('--output-dir must be a non-empty relative path.')
+    path = PurePosixPath(value)
+    if path.is_absolute() or '..' in path.parts:
+        raise GridSubmissionError(
+            '--output-dir must be a relative catalogue path without "..".'
+        )
+    return value
+
+
+def _require_optional_nonempty_string(value: object, option: str) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise GridSubmissionError(f'{option} must be a non-empty string.')
+    return value
 
 
 def _require_key4hep_setup(override: str | None) -> Path:
