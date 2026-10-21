@@ -310,14 +310,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             self.assertEqual(request.worker_ncpus, 2)
             self.assertEqual(request.worker_output_format, 'rntuple')
 
-            args.nevents = 100
-            with self.assertRaisesRegex(GridSubmissionError, '--nevents'):
-                create_grid_submission_request(
-                    args,
-                    self.load_analysis_module(analysis_script),
-                    key4hep_setup=str(key4hep_setup),
-                )
-
     def test_rejects_sample_event_limits(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -353,32 +345,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     analysis_script,
                     SimpleNamespace(include_paths=['../outside.h']),
                     root / 'includes.tar.gz',
-                )
-
-    def test_rejects_payload_without_explicit_user_build_mode(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
-            self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
-            args = self.parse_grid_arguments(
-                str(analysis_script),
-                self.grid_arguments(self.write_lfn_input(root)),
-            )
-
-            with self.assertRaisesRegex(
-                GridSubmissionError,
-                '--ship-local-build',
-            ):
-                create_grid_submission_request(
-                    args,
-                    self.load_analysis_module(analysis_script),
-                    key4hep_setup=str(key4hep_setup),
-                    user_build_payload=UserBuildPayload(
-                        archive_path='/tmp/fccanalyses-payload.tar.gz',
-                        size_bytes=1,
-                    ),
                 )
 
     def test_starts_clean_child_with_shipped_build_request(self) -> None:

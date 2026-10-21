@@ -19,6 +19,9 @@ from DIRAC.Core.Base.Script import Script
 Script.parseCommandLine()
 
 from DIRAC import gConfig
+from DIRAC.ConfigurationSystem.Client.Helpers import Registry
+from DIRAC.Core.Security.ProxyInfo import getProxyInfo
+from DIRAC.Resources.Catalog.FileCatalog import FileCatalog
 from ILCDIRAC.Interfaces.API.DiracILC import DiracILC
 from ILCDIRAC.Interfaces.API.NewInterface.Applications import GenericApplication
 from ILCDIRAC.Interfaces.API.NewInterface.UserJob import UserJob
@@ -137,10 +140,8 @@ def _write_input_file_list(planned_job, directory: Path) -> Path:
     return input_file_list
 
 
-def _output_lfn(planned_job) -> str:
-    '''Return the absolute user LFN corresponding to a planned output.'''
-    from DIRAC.Core.Security.ProxyInfo import getProxyInfo
-
+def _user_lfn_root() -> str:
+    '''Return the absolute DIRAC user LFN root for the active proxy.'''
     result = getProxyInfo()
     if not result or not result.get('OK'):
         message = result.get('Message', result) if result else 'no result returned'
@@ -149,8 +150,6 @@ def _output_lfn(planned_job) -> str:
     username = proxy_info.get('username')
     virtual_organization = gConfig.getValue('/DIRAC/VirtualOrganization')
     if not virtual_organization and proxy_info.get('group'):
-        from DIRAC.ConfigurationSystem.Client.Helpers import Registry
-
         virtual_organization = Registry.getVOForGroup(proxy_info['group'])
     if not username or not virtual_organization:
         raise RuntimeError(
@@ -158,35 +157,41 @@ def _output_lfn(planned_job) -> str:
             'existing output LFN; refusing to submit without overwrite '
             'protection.'
         )
+    return f'/{virtual_organization}/user/{username[0]}/{username}'
 
+
+def _output_lfn(planned_job, user_lfn_root: str) -> str:
+    '''Return the absolute user LFN corresponding to a planned output.'''
     relative_output = planned_job.output_file
     if planned_job.output_path is not None:
         relative_output = f'{planned_job.output_path}/{relative_output}'
-    return f'/{virtual_organization}/user/{username[0]}/{username}/{relative_output}'
+    return f'{user_lfn_root}/{relative_output}'
 
 
 def _catalog_file_exists(catalog, lfn: str) -> bool:
     '''Return whether an LFN is registered, accepting DIRAC bulk-result forms.'''
     result = catalog.exists(lfn)
-    if result.get('OK') is False:
+    if not isinstance(result, dict) or not result.get('OK', True):
         raise RuntimeError(f'Unable to check whether output LFN exists: {result}')
 
     payload = result.get('Value', result)
+    if not isinstance(payload, dict) or not any(
+        key in payload for key in ('Successful', 'successful', 'Failed', 'failed')
+    ):
+        raise RuntimeError(f'Unexpected output LFN check response: {result}')
     successful = payload.get('Successful', payload.get('successful', {}))
     failed = payload.get('Failed', payload.get('failed', {}))
-    if lfn in failed:
-        raise RuntimeError(
-            f'Unable to check whether output LFN exists: {failed[lfn]}'
-        )
+    if not isinstance(successful, dict) or not isinstance(failed, dict):
+        raise RuntimeError(f'Unexpected output LFN check response: {result}')
+    if failed:
+        raise RuntimeError(f'Unable to check whether output LFN exists: {failed}')
     return bool(successful.get(lfn, False))
 
 
-def _remove_existing_output(dirac, planned_job) -> None:
+def _remove_existing_output(dirac, catalog, user_lfn_root, planned_job) -> None:
     '''Remove a planned output LFN before submitting its replacement job.'''
-    from DIRAC.Resources.Catalog.FileCatalog import FileCatalog
-
-    output_lfn = _output_lfn(planned_job)
-    if not _catalog_file_exists(FileCatalog(), output_lfn):
+    output_lfn = _output_lfn(planned_job, user_lfn_root)
+    if not _catalog_file_exists(catalog, output_lfn):
         return
 
     print(f'WARNING: Removing existing output LFN: {output_lfn}')
@@ -268,6 +273,8 @@ def main() -> None:
     _print_plan(request, planned_jobs, analysis_script, local_se)
 
     dirac = DiracILC()
+    user_lfn_root = _user_lfn_root()
+    catalog = FileCatalog()
     submitted_job_ids = []
     failures = []
     with tempfile.TemporaryDirectory(prefix='fccanalyses-input-lists-') as directory:
@@ -281,7 +288,12 @@ def main() -> None:
                 planned_job,
                 input_list_directory,
             )
-            _remove_existing_output(dirac, planned_job)
+            _remove_existing_output(
+                dirac,
+                catalog,
+                user_lfn_root,
+                planned_job,
+            )
             result = _create_job(
                 request,
                 planned_job,
