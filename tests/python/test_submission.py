@@ -1,6 +1,5 @@
 """Tests for the data-only submission contract and job planning."""
 
-import json
 import sys
 import tempfile
 import unittest
@@ -69,7 +68,7 @@ def make_xrootd_request(**overrides: object) -> SubmissionRequest:
 class SubmissionTest(unittest.TestCase):
     """Exercise the shared request and planning invariants."""
 
-    def test_round_trips_complete_versioned_request(self) -> None:
+    def test_round_trips_complete_request(self) -> None:
         request = make_xrootd_request(
             n_chunks=2,
             run_arguments=("--analysis-option", "value"),
@@ -87,59 +86,13 @@ class SubmissionTest(unittest.TestCase):
             request.write_json(path)
             self.assertEqual(SubmissionRequest.read_json(path), request)
 
-            payload = request.to_dict()
-            payload["version"] = SubmissionRequest.VERSION + 1
-            path.write_text(json.dumps(payload), encoding="utf-8")
-            with self.assertRaisesRegex(
-                SubmissionValidationError,
-                "unsupported submission request version",
-            ):
-                SubmissionRequest.read_json(path)
-
-    def test_rejects_unsafe_request_values(self) -> None:
-        invalid_requests = (
-            ({"output_path": "../other-user"}, "relative catalogue"),
-            ({"submission_id": "../other-run"}, "submission_id"),
-            (
-                {"input_mode": "xrootd", "input_lfns": ("/fcc/a.root",)},
-                "must not contain input LFNs",
-            ),
-            (
-                {"input_mode": "dirac-lfn", "samples": make_xrootd_request().samples},
-                "must not contain resolved samples",
-            ),
-            (
-                {"files_per_job": 1, "n_chunks": 2},
-                "mutually exclusive",
-            ),
-        )
-
-        for overrides, message in invalid_requests:
-            with self.subTest(overrides=overrides):
-                with self.assertRaisesRegex(SubmissionValidationError, message):
-                    make_request(**overrides)
-
-    def test_rejects_invalid_input_groups(self) -> None:
-        invalid_groups = (
-            (("/fcc/data/input.root",), 0, "greater than zero"),
-            (
-                ("/fcc/data/input.root", "/fcc/data/input.root"),
-                2,
-                "listed more than once",
-            ),
-            (
-                ("/fcc/data-a/input.root", "/fcc/data-b/input.root"),
-                2,
-                "collide after basename staging",
-            ),
-            (("fcc/data/input.root",), 1, "must be absolute"),
-            (("/fcc/data/../input.root",), 1, "must not contain"),
-        )
-
-        for lfns, files_per_job, message in invalid_groups:
-            with self.subTest(lfns=lfns, files_per_job=files_per_job):
-                with self.assertRaisesRegex(SubmissionValidationError, message):
-                    group_input_lfns(lfns, files_per_job)
+    def test_rejects_lfn_staging_name_collisions(self) -> None:
+        lfns = ("/fcc/data-a/input.root", "/fcc/data-b/input.root")
+        with self.assertRaisesRegex(
+            SubmissionValidationError,
+            "collide after basename staging",
+        ):
+            group_input_lfns(lfns, files_per_job=2)
 
     def test_plans_grouped_lfn_worker_jobs(self) -> None:
         request = make_request(

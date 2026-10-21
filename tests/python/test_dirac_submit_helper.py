@@ -8,6 +8,7 @@ import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -154,6 +155,7 @@ from dirac_submit_helper import (
     _create_job,
     _output_lfn,
     _remove_existing_output,
+    _user_lfn_root,
     _write_input_file_list,
 )
 from submission import (
@@ -351,7 +353,8 @@ class DiracSubmitHelperTest(unittest.TestCase):
             user_build_payload=None,
         )
         planned_job = plan_jobs(request)[0]
-        output_lfn = _output_lfn(planned_job)
+        user_lfn_root = _user_lfn_root()
+        output_lfn = _output_lfn(planned_job, user_lfn_root)
         FakeCatalog.existing_lfns = {output_lfn}
         removed = []
 
@@ -362,7 +365,12 @@ class DiracSubmitHelperTest(unittest.TestCase):
 
         output = StringIO()
         with redirect_stdout(output):
-            _remove_existing_output(FakeDirac(), planned_job)
+            _remove_existing_output(
+                FakeDirac(),
+                FakeCatalog(),
+                user_lfn_root,
+                planned_job,
+            )
 
         self.assertEqual(removed, [output_lfn])
         self.assertIn(
@@ -371,24 +379,24 @@ class DiracSubmitHelperTest(unittest.TestCase):
         )
 
     def test_uses_proxy_group_when_config_does_not_define_a_vo(self) -> None:
-        proxy_info_module = sys.modules['DIRAC.Core.Security.ProxyInfo']
-        original_get_proxy_info = proxy_info_module.getProxyInfo
         original_config_value = FakeConfig.value
         FakeConfig.value = None
-        proxy_info_module.getProxyInfo = lambda: {
-            'OK': True,
-            'Value': {'username': 'alice', 'group': 'fcc_user'},
-        }
         try:
             planned_job = types.SimpleNamespace(
                 output_path='analysis/results', output_file='result.root'
             )
-            self.assertEqual(
-                _output_lfn(planned_job),
-                '/fcc/user/a/alice/analysis/results/result.root',
-            )
+            with patch(
+                'dirac_submit_helper.getProxyInfo',
+                return_value={
+                    'OK': True,
+                    'Value': {'username': 'alice', 'group': 'fcc_user'},
+                },
+            ):
+                self.assertEqual(
+                    _output_lfn(planned_job, _user_lfn_root()),
+                    '/fcc/user/a/alice/analysis/results/result.root',
+                )
         finally:
-            proxy_info_module.getProxyInfo = original_get_proxy_info
             FakeConfig.value = original_config_value
 
 

@@ -19,13 +19,7 @@ def parse_command_arguments(parser: argparse.ArgumentParser) -> argparse.Namespa
 
     args = parser.parse_args(arguments[:separator_index])
     args.remaining = arguments[separator_index + 1:]
-    accepts_custom_arguments = (
-        args.command == 'run'
-        or (
-            args.command == 'submit'
-            and args.where in {'grid', 'ht-condor'}
-        )
-    )
+    accepts_custom_arguments = args.command in {'run', 'submit'}
     if args.remaining and not accepts_custom_arguments:
         parser.error('arguments after -- are only supported by run and submit')
     return args
@@ -126,6 +120,7 @@ def setup_submit_parser(parser):
         required=True
     )
 
+    # Sub-parser for HTCondor
     htcondor_parser = submit_parsers.add_parser(
         'ht-condor',
         help='submit through HTCondor',
@@ -140,17 +135,8 @@ def setup_submit_parser(parser):
         type=str,
         help='path to the analysis script'
     )
-    slurm_parser = submit_parsers.add_parser(
-        'slurm',
-        help='submit through Slurm (not yet implemented)',
-        description='Submission through Slurm is not yet implemented.'
-    )
-    slurm_parser.add_argument(
-        'anascript_path',
-        type=str,
-        help='path to the analysis script'
-    )
 
+    # Sub-parser for DIRAC-managed grid
     grid_parser = submit_parsers.add_parser(
         'grid',
         help='submit through the DIRAC-managed grid',
@@ -162,7 +148,12 @@ def setup_submit_parser(parser):
     )
     setup_grid_submit_parser(grid_parser)
 
-
+    # Sub-parser for Slurm (not yet implemented)
+    slurm_parser = submit_parsers.add_parser(
+        'slurm',
+        help='submit through Slurm (not yet implemented)',
+        description='Submission through Slurm is not yet implemented.'
+    )
 # _____________________________________________________________________________
 def setup_grid_submit_parser(parser):
     '''Define arguments accepted by the DIRAC grid backend.'''
@@ -185,7 +176,7 @@ def setup_grid_submit_parser(parser):
         '--output-dir',
         metavar='OUTPUT_DIR',
         default=None,
-        help='directory relative to your GRID catalogue root (default: root)'
+        help='directory relative to your GRID catalogue root'
     )
     parser.add_argument(
         '--output-se',
@@ -252,14 +243,6 @@ def setup_grid_submit_parser(parser):
         default=None,
         help='stride used by each worker; overrides a sample stride'
     )
-    parser.add_argument(
-        '--nevents', '--n-events',
-        type=_positive_integer,
-        default=None,
-        help='not supported for grid submissions'
-    )
-
-
 # _____________________________________________________________________________
 def setup_run_parser(parser):
     '''
