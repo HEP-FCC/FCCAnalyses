@@ -297,21 +297,15 @@ def setup_run_parser(parser):
 
     # Independent sample
     independent_sample_group = parser.add_argument_group('Independent sample')
-    independent_sample_group.add_argument(
+    input_source_group = independent_sample_group.add_mutually_exclusive_group()
+    input_source_group.add_argument(
         '-i', '--input',
         default=None,
         nargs='+',
         metavar='INPUT_FILE',
         help='location(s) of the input ROOT file(s)'
     )
-    independent_sample_group.add_argument(
-        '--files-list',
-        default=None,
-        nargs='+',
-        metavar='INPUT_FILE',
-        help='[DEPRECATED] location(s) of the input ROOT file(s)'
-    )
-    independent_sample_group.add_argument(
+    input_source_group.add_argument(
         '-f', '--input-file-list',
         type=str,
         default=None,

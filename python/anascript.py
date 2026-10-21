@@ -360,6 +360,20 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
 
         sample_dict: dict[str, Any] = {}
 
+        input_sources = (
+            provided_sample_dict.get('input-dir') is not None
+            or provided_sample_dict.get('input_dir') is not None,
+            provided_sample_dict.get('input-files') is not None,
+            provided_sample_dict.get('input-file-list') is not None,
+        )
+        if sum(input_sources) > 1:
+            LOGGER.error(
+                'Sample "%s" defines more than one input source. Use only '
+                'one of "input-dir", "input-files" or '
+                '"input-file-list".', sample_name
+            )
+            sys.exit(3)
+
         # Check input dir
         if has_valid_string(provided_sample_dict, 'input-dir'):
             sample_dict['input-dir'] = provided_sample_dict['input-dir']
@@ -367,6 +381,21 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
             sample_dict['input-dir'] = provided_sample_dict['input_dir']
         else:
             sample_dict['input-dir'] = None
+
+        # Check input file list
+        if has_valid_string(provided_sample_dict, 'input-file-list'):
+            sample_dict['input-file-list'] = \
+                provided_sample_dict['input-file-list']
+        else:
+            sample_dict['input-file-list'] = None
+
+        # Check directly provided input files
+        input_files = provided_sample_dict.get('input-files')
+        if (isinstance(input_files, list)
+                and all(isinstance(path, str) for path in input_files)):
+            sample_dict['input-files'] = input_files
+        else:
+            sample_dict['input-files'] = None
 
         # Check output stem
         if has_valid_string(provided_sample_dict, 'output-stem'):
@@ -403,6 +432,23 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
         sample_list[sample_name] = sample_dict
 
     return sample_list
+
+
+# _____________________________________________________________________________
+def get_sample_input_source(sample_dict: dict[str, Any], input_dir: Any,
+                            campaign: Any) -> tuple[Any, Any]:
+    '''Return the configured input source in prioritized order.'''
+    if sample_dict.get('input-files') is not None:
+        return 'input-files', sample_dict['input-files']
+    if sample_dict.get('input-file-list') is not None:
+        return 'input-file-list', sample_dict['input-file-list']
+    if sample_dict.get('input-dir') is not None:
+        return 'sample-input-dir', sample_dict['input-dir']
+    if input_dir is not None:
+        return 'global-input-dir', input_dir
+    if campaign is not None:
+        return 'campaign', campaign
+    return None, None
 
 
 def validate_analysis_class(analysis_class: Any) -> dict[str, Any]:

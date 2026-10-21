@@ -104,6 +104,11 @@ is deprecated; use
 instead.
 Each sample can have several parameters:
 .br
+Set at most one of \fIinput-dir\fR, \fIinput-files\fR, and
+\fIinput-file-list\fR for a sample. A per-sample input source overrides the
+global \fBinput_dir\fR, which overrides campaign discovery. Command-line input
+options override all analysis-script input configuration.
+.br
 \fIfraction\fR
 .in +4
 The analysis will run over reduced number of input files roughly corresponding
@@ -113,12 +118,25 @@ Default value: 1 (full process sample)
 .in -4
 \fIinput-dir\fR
 .in +4
-Specifies the location of the process different from the globally set one\&.
-This overrides both prod_tag and input_dir attributes of the analysis script\&.
-For grid XRootD submission, provide an EOS path or XRootD directory URL\&.
+Specifies a directory for the process instead of the global one\&. For grid
+submission, provide a mounted EOS path or an XRootD directory URL\&.
 The deprecated spelling
 \fIinput_dir\fR
 remains accepted as a compatibility alias\&.
+.br
+Default value: None
+.in -4
+\fIinput-files\fR
+.in +4
+List of explicit input file paths or URLs for this process\&. Directory paths
+in this list are expanded to their immediate \fI.root\fR files\&.
+.br
+Default value: None
+.in -4
+\fIinput-file-list\fR
+.in +4
+Path to a text file containing one explicit input file path or URL per line\&.
+Blank lines and lines starting with "#" are ignored\&.
 .br
 Default value: None
 .in -4
@@ -174,9 +192,8 @@ Default value: ttree
 \fBinput_dir\fR
 Global directory containing sample subdirectories\&.
 For grid XRootD submission this must be an EOS path or XRootD directory URL;
-a sample-level
-\fIinput-dir\fR
-overrides this value\&.
+it overrides campaign discovery and is overridden by a per-sample input
+source\&.
 .TP
 \fBanalysis_name\fR (optional)
 Optional name for the analysis

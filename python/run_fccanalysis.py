@@ -11,9 +11,16 @@ import argparse
 from typing import Any, Optional, Union
 
 import ROOT  # type: ignore
+from anascript import get_sample_input_source
 from anascript import validate_analysis_class, validate_sample_list
-from sample import get_file_list, get_subfile_list, get_chunk_list
-from sample import get_files_in_dir, get_files_in_yaml
+from input_resolver import (
+    InputResolutionError,
+    join_input_path,
+    read_input_file_list,
+    resolve_directory,
+    resolve_inputs,
+)
+from sample import get_subfile_list, get_chunk_list, get_files_in_yaml
 from sample import get_file_quantities
 from sample import apply_filepath_rewrites
 from utils import save_benchmark
@@ -42,46 +49,39 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         file_quantities: Optional[list[dict[str,
                                             Union[int, float, str]]]] = None
 
-        # Check if input directory is provided
-        if 'input-dir' in sample_dict:
-            if isinstance(sample_dict['input-dir'], str):
-                LOGGER.info('Will inspect the sample input directory for the '
-                            'sample information.')
-                sample_file_list = get_files_in_dir(sample_dict['input-dir'])
-
-        # Check if file list is provided
-        if 'input-file-list' in sample_dict:
-            if isinstance(sample_dict['input-file-list'], str):
+        input_source, input_value = get_sample_input_source(
+            sample_dict, config['input-dir'], config['campaign']
+        )
+        try:
+            if input_source == 'input-files':
+                LOGGER.info('Will inspect directly provided input files for '
+                            'the sample information.')
+                sample_file_list = resolve_inputs(input_value)
+            elif input_source == 'input-file-list':
                 LOGGER.info('Will inspect the sample input file list for the '
                             'sample information.')
-                sample_file_list = \
-                    get_file_list(sample_dict['input-file-list'])
-
-        # Check if files are provided
-        if 'input-files' in sample_dict:
-            if isinstance(sample_dict['input-files'], list):
-                if all(isinstance(x, str) for x in sample_dict['input-files']):
-                    LOGGER.info('Will inspect directly provided input files '
-                                'for the sample information.')
-                    sample_file_list = sample_dict['input-files']
-
-        # Using globally set input directory or campaign / production tag
-        if sample_file_list is None:
-            if config['input-dir'] is not None:
+                sample_file_list = read_input_file_list(input_value)
+            elif input_source == 'sample-input-dir':
+                LOGGER.info('Will inspect the sample input directory for the '
+                            'sample information.')
+                sample_file_list = resolve_directory(input_value)
+            elif input_source == 'global-input-dir':
                 LOGGER.info('Will inspect the global input directory for the '
                             'sample information.')
-                sample_file_list = get_files_in_dir(
-                    os.path.join(config['input-dir'], sample_name)
-                )
-            elif config['campaign'] is not None:
+                input_dir = join_input_path(input_value, sample_name)
+                sample_file_list = resolve_directory(input_dir)
+            elif input_source == 'campaign':
                 LOGGER.info('Found the sample information in the campaign: %s',
-                            config['campaign'])
+                            input_value)
                 sample_file_list, file_quantities = get_files_in_yaml(
                     sample_name,
-                    config['campaign']
+                    input_value
                 )
             else:
                 sample_file_list = None
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
 
         if sample_file_list is None:
             LOGGER.error('Could not determine the input file list for the '
@@ -143,7 +143,7 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         # Output directory
         output_stem = sample_name
         if 'output' in sample_dict:
-            LOGGER.warning('[DEPRECIATED] please use \'output-stem\' instead '
+            LOGGER.warning('[DEPRECATED] please use \'output-stem\' instead '
                            'of \'output\' to specify different sample output '
                            'directory.')
             output_stem = sample_dict['output']
@@ -345,10 +345,6 @@ def merge_config(args: argparse.Namespace,
     config: dict[str, Any] = {}
 
     # Deprecations
-    if args.files_list is not None:
-        LOGGER.error('--files-list CLI argument is no longer supported, use '
-                     '--i/--input instead!\nAborting...')
-        sys.exit(3)
     if hasattr(analysis_class, 'process_list'):
         LOGGER.warning('[DEPRECATED] Please use "samples" instead of '
                        '"process_list"!')
@@ -395,10 +391,16 @@ def merge_config(args: argparse.Namespace,
 
     # Input file list
     config['input-file-list'] = None
-    if args.input_file_list is not None:
-        config['input-file-list'] = get_file_list(args.input_file_list)
-    if args.input is not None:
-        config['input-file-list'] = args.input
+    try:
+        if args.input_file_list is not None:
+            config['input-file-list'] = read_input_file_list(
+                args.input_file_list
+            )
+        elif args.input is not None:
+            config['input-file-list'] = resolve_inputs(args.input)
+    except InputResolutionError as error:
+        LOGGER.error('%s\nAborting...', error)
+        sys.exit(3)
 
     # Check for sample name
     config['sample-name'] = None
