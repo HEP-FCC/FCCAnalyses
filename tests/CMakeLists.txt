@@ -17,6 +17,18 @@ add_test(
   WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/python
 )
 add_test(
+  NAME input_resolver_python
+  COMMAND ${Python3_EXECUTABLE} -m unittest
+          test_input_resolver
+          test_input_sources
+  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/python
+)
+set_tests_properties(
+  input_resolver_python
+  PROPERTIES LABELS "unit;input-resolver"
+)
+
+add_test(
   NAME grid_submission_worker_wrapper
   COMMAND ${CMAKE_CURRENT_LIST_DIR}/scripts/test_run_fccanalysis.sh
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
