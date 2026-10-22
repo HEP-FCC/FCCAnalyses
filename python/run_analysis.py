@@ -787,7 +787,7 @@ def run(args):
     if args.progress_bar is None:
         args.progress_bar = True
 
-    if args.files_list is None:
+    if not hasattr(args, 'files_list'):
         args.files_list = []
 
     if get_element(rdf_module, 'graph', False):
