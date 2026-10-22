@@ -631,7 +631,11 @@ def run_fccanalysis(args, anascript_module) -> None:
     except ValueError as error:
         LOGGER.error('%s\nAborting...', error)
         sys.exit(3)
-    if not cli_input_override and any(
+
+    LOGGER.info('Setting run parameters...')
+    # Merge configuration from command line arguments and analysis class
+    config |= merge_config(args, config['analysis-class'])
+    if not cli_input_override and config['samples'] is not None and any(
         sample['input-lfn-list'] is not None
         for sample in config['samples'].values()
     ):
@@ -640,10 +644,6 @@ def run_fccanalysis(args, anascript_module) -> None:
             'Aborting...'
         )
         sys.exit(3)
-
-    LOGGER.info('Setting run parameters...')
-    # Merge configuration from command line arguments and analysis class
-    config |= merge_config(args, config['analysis-class'])
 
     # Set number of threads, load header files, ...
     global_setup(config)
