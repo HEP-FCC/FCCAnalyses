@@ -341,7 +341,11 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
     else:
         lt = 'FCCAnalyses: FCC-hh Simulation (Delphes)'
         rt = [f'#sqrt{{s}} = {script_module.energy:.1f} TeV', f'{config["int-lumi-label"]}']
-    plotter = plotit.plotItPlotter(lt, rt)
+    if config['plotter'] == 'matplotlib':
+        from addons.MultiPlotter.matplotlibPlotter import matplotlibPlotter
+        plotter = matplotlibPlotter(lt, rt)
+    else:
+        plotter = plotit.plotItPlotter(lt, rt)
     for hsig in hsignal:
         sample = smp.Sample()
         sample.type = smp.Type.signal
@@ -1170,6 +1174,9 @@ def run(args):
     config['plot-stat-unc'] = False
     if hasattr(script_module, 'plotStatUnc'):
         config['plot-stat-unc'] = script_module.plotStatUnc
+
+    # Plotting: plotIt (ROOT) or matplotlib
+    config['plotter'] = getattr(script_module, 'plotter', 'plotIt')
 
     # Pseudo-data: toy (Poisson) or asimov (expected yields)
     config['pseudo-data'] = getattr(script_module, 'pseudoData', None)
