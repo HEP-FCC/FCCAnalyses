@@ -691,18 +691,10 @@ def run_histmaker(args, rdf_module, anapath):
     LOGGER.info(info_msg)
 
 
-def run(parser):
+def run(args):
     '''
     Set things in motion.
     '''
-
-    try:
-        dash_dash_index = sys.argv.index('--')
-        args = parser.parse_args(sys.argv[1:dash_dash_index])
-        args.remaining = sys.argv[dash_dash_index+1:]
-    except ValueError:
-        args = parser.parse_args()
-        args.remaining = []
 
     if not hasattr(args, 'command'):
         LOGGER.error('Error occurred during sub-command routing!\nAborting...')
@@ -795,7 +787,7 @@ def run(parser):
     if args.progress_bar is None:
         args.progress_bar = True
 
-    if args.files_list is None:
+    if not hasattr(args, 'files_list'):
         args.files_list = []
 
     if get_element(rdf_module, 'graph', False):

@@ -33,7 +33,7 @@ def run_subprocess(command, run_dir):
         sys.exit(0)
 
 
-def test_fccanalyses(mainparser):
+def test_fccanalyses(args):
     '''
     Test FCCAnalyses framework
     '''
@@ -44,8 +44,6 @@ def test_fccanalyses(mainparser):
         sys.exit(3)
 
     local_dir = os.environ.get('FCCANA_LOCAL_DIR')
-
-    args, _ = mainparser.parse_known_args()
 
     ctest_command = ['ctest', '--output-on-failure']
 
