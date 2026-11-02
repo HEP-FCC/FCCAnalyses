@@ -63,6 +63,12 @@ Sample &MultiPlotter::addPseudoData(bool fluctuate, unsigned int seed,
   return addSample(sample);
 }
 
+void MultiPlotter::sortSamples(SortingType sorting_type, bool reverse) {
+  for (auto &[sample_type, stack] : samples_)
+    if (sample_type != Sample::Type::data)
+      stack.sort(sorting_type, reverse);
+}
+
 const std::vector<Sample> &MultiPlotter::samples(Sample::Type type) const {
   static const std::vector<Sample> no_samples;
   if (const auto it = samples_.find(type); it != samples_.end())

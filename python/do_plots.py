@@ -364,6 +364,13 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
         sample.colour = script_module.colors[hbkg]
         book_systematics(config, sample, hbkg, var, sel)
         plotter.addSample(sample)
+    if config['sorting']:
+        if config['sorting'] not in ('yield', 'weight', 'name'):
+            LOGGER.error('Invalid samples sorting "%s"! Supported strategies: '
+                         'yield, weight, name\nAborting...', config['sorting'])
+            sys.exit(3)
+        plotter.sortSamples(getattr(ROOT.mplt.SortingType, config['sorting']),
+                            config['sorting-reverse'])
     if config['pseudo-data'] in ('toy', 'asimov') and not hbackgrounds:
         LOGGER.warning('No background for plot "%s": pseudo-data not '
                        'generated.', var)
@@ -1181,6 +1188,10 @@ def run(args):
     # Pseudo-data: toy (Poisson) or asimov (expected yields)
     config['pseudo-data'] = getattr(script_module, 'pseudoData', None)
     config['pseudo-data-seed'] = getattr(script_module, 'pseudoDataSeed', 1)
+
+    # Samples ordering in each stack: yield, weight or name
+    config['sorting'] = getattr(script_module, 'sortSamples', None)
+    config['sorting-reverse'] = getattr(script_module, 'sortReverse', False)
 
     # Sources of systematic uncertainty, and their display
     config['systematics'] = getattr(script_module, 'systematics', {})
