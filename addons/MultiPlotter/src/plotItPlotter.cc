@@ -153,7 +153,10 @@ void plotItPlotter::plot(std::string_view output_file,
       // total uncertainty band, on top of the stack
       const auto *total_band = root::utils::draw_uncertainty_band(
           canvas, *merged_background, systematics, false);
-      for (int i = 0; i < total_band->GetN(); ++i) // leave room for the band
+      for (int i = merged_background->GetXaxis()->GetFirst() - 1;
+           i < std::min(total_band->GetN(),
+                        merged_background->GetXaxis()->GetLast());
+           ++i)
         max_value = std::max(max_value, total_band->GetY()[i] +
                                             total_band->GetErrorYhigh(i));
       if (auto *legend = canvas.legend(); legend) {

@@ -364,6 +364,9 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
         sample.colour = script_module.colors[hbkg]
         book_systematics(config, sample, hbkg, var, sel)
         plotter.addSample(sample)
+    # histograms treatment, before any pseudo-data is generated out of them
+    if config.get('x-range'):
+        plotter.setXRange(*config['x-range'])
     if config['sorting']:
         if config['sorting'] not in ('yield', 'weight', 'name'):
             LOGGER.error('Invalid samples sorting "%s"! Supported strategies: '
@@ -1246,7 +1249,8 @@ def run(args):
                                                    sel,
                                                    config,
                                                    rebin=rebin_tmp)
-                runPlotsNew(config, var + "_" + label, sel, script_module, hsignal, hbackgrounds)
+                config['x-range'] = getattr(script_module, 'xRanges', {}).get(var)
+                # yields first: the plotter may modify the histograms in place
                 if counter == 0:
                     runPlots(config,
                              args,
@@ -1256,6 +1260,7 @@ def run(args):
                              hsignal,
                              hbackgrounds,
                              script_module.extralabel[sel])
+                runPlotsNew(config, var + "_" + label, sel, script_module, hsignal, hbackgrounds)
         counter += 1
 
 

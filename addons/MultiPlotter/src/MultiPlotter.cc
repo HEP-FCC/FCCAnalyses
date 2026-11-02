@@ -20,6 +20,7 @@
 
 #include <TH1.h>
 #include <TRandom3.h>
+#include <ranges>
 #include <stdexcept>
 
 using namespace mplt;
@@ -67,6 +68,16 @@ void MultiPlotter::sortSamples(SortingType sorting_type, bool reverse) {
   for (auto &[sample_type, stack] : samples_)
     if (sample_type != Sample::Type::data)
       stack.sort(sorting_type, reverse);
+}
+
+void MultiPlotter::setXRange(double min, double max) {
+  if (!(min < max))
+    throw std::runtime_error("Invalid x-axis range: [" + std::to_string(min) +
+                             ", " + std::to_string(max) + "].");
+  for (auto &stack : samples_ | std::views::values)
+    for (auto &sample : stack.samples())
+      if (sample.histogram)
+        sample.histogram->GetXaxis()->SetRangeUser(min, max);
 }
 
 const std::vector<Sample> &MultiPlotter::samples(Sample::Type type) const {

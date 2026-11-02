@@ -39,6 +39,8 @@ public:
   Sample &addPseudoData(bool fluctuate = true, unsigned int seed = 42,
                         const std::string &name = "Pseudo-data");
   void sortSamples(SortingType, bool reverse = false);
+  /// Set x-axis range
+  void setXRange(double min, double max);
   /// List of samples registered for a given category
   const std::vector<Sample> &samples(Sample::Type) const;
 
