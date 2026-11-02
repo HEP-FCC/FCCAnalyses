@@ -235,6 +235,9 @@ class matplotlibPlotter(mplt.MultiPlotter):
                           (1.4 + 0.1 * max(0, len(handles) - 4)) * maximum)
             main.ticklabel_format(axis='y', scilimits=(-3, 4),
                                   useMathText=True)
+        y_range = options.get('log-y-range' if logy else 'y-range')
+        if y_range and (not logy or y_range[0] > 0.):
+            main.set_ylim(*y_range)
         main.set_xlim(edges[0], edges[-1])
         main.set_ylabel(self._ylabel)
         main.legend(handles, labels, loc='upper right', bbox_to_anchor=(0.98, 0.98))

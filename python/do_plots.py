@@ -1249,7 +1249,12 @@ def run(args):
                                                    sel,
                                                    config,
                                                    rebin=rebin_tmp)
-                config['x-range'] = getattr(script_module, 'xRanges', {}).get(var)
+                # per-variable axis ranges: {variable: (min, max)}
+                for key, attribute in (('x-range', 'xRanges'),
+                                       ('y-range', 'yRanges'),
+                                       ('log-y-range', 'logYRanges')):
+                    config[key] = getattr(script_module, attribute,
+                                          {}).get(var)
                 # yields first: the plotter may modify the histograms in place
                 if counter == 0:
                     runPlots(config,

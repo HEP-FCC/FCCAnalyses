@@ -292,6 +292,16 @@ void plotItPlotter::plot(std::string_view output_file,
   canvas.addTextBox(0.18, 0.82, extra_labels_);
 
   // particularise for lin/log axes, and final draw
+  // user-defined vertical ranges, for the linear and logarithmic scales
+  const auto user_range =
+      [&options](std::string_view key) -> std::pair<double, double> {
+    if (!options.contains(key) || options[key.data()].is_none())
+      return {0., 0.};
+    return py::cast<std::pair<double, double>>(options[key.data()]);
+  };
+  const auto y_range = user_range("y-range"),
+             log_y_range = user_range("log-y-range");
+
   for (const auto &x_scaling : utils::get_with_default(
            options, "x-axis-scale-types", std::vector{"lin"s})) {
     canvas.setLogx(x_scaling == "log");
@@ -305,10 +315,18 @@ void plotItPlotter::plot(std::string_view output_file,
                                              : 1.e-3 * max_value));
         if (max_value > std::numeric_limits<double>::min())
           histogram_ref->SetMaximum(max_value * 1.e3);
+        if (log_y_range.first > 0. && log_y_range.first < log_y_range.second) {
+          histogram_ref->SetMinimum(log_y_range.first);
+          histogram_ref->SetMaximum(log_y_range.second);
+        }
         canvas.setLogy(true);
       } else { // linear y-axis
         histogram_ref->SetMinimum(min_value);
         histogram_ref->SetMaximum(max_value * 1.4);
+        if (y_range.first < y_range.second) {
+          histogram_ref->SetMinimum(y_range.first);
+          histogram_ref->SetMaximum(y_range.second);
+        }
         canvas.setLogy(false);
       }
       // histogram_ref->GetYaxis()->SetRangeUser(min_value, max_value * 1.2);
