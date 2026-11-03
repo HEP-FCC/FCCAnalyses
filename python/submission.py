@@ -10,8 +10,12 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
+import logging
 from pathlib import Path, PurePosixPath
 from typing import Any, Literal
+
+
+LOGGER = logging.getLogger('FCCAnalyses.submission')
 
 
 class SubmissionValidationError(ValueError):
@@ -359,6 +363,11 @@ def _split_into_chunks(
     values: Sequence[str], chunks: int
 ) -> tuple[tuple[str, ...], ...]:
     chunk_count = min(chunks, len(values))
+    if chunks > len(values):
+        LOGGER.warning(
+            'Requested %d chunks but only %d input file(s) are available; using %d chunks.',
+            chunks, len(values), chunk_count,
+        )
     return tuple(
         tuple(values[index * len(values) // chunk_count:(index + 1) * len(values) // chunk_count])
         for index in range(chunk_count)
