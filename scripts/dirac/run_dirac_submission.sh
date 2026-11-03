@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Start an ILCDIRAC submission helper from a clean, Key4hep-independent child.
-# The parent launcher provides a versioned request file as explicit data. The
+# The parent launcher provides a JSON request file as explicit data. The
 # request carries the Key4hep setup for the worker.
 
 set -e -o pipefail
