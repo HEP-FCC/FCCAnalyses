@@ -44,8 +44,6 @@ endif()
 include(GNUInstallDirs)
 
 # Offer the user the choice of overriding the installation directories
-set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
-set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
 set(INSTALL_INCLUDE_DIR include CACHE PATH
     "Installation directory for header files")
 set(INSTALL_SHARE_DIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH
@@ -133,7 +131,7 @@ file(COPY bin/fccanalysis
   DESTINATION ${CMAKE_BINARY_DIR}
   FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ
   GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-install(PROGRAMS bin/fccanalysis DESTINATION bin)
+install(PROGRAMS bin/fccanalysis DESTINATION "${CMAKE_INSTALL_BINDIR}")
 
 
 file(GLOB _run_python_files python/*.py)
