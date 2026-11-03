@@ -202,7 +202,10 @@ class SubmissionTest(unittest.TestCase):
             ],
         )
         self.assertEqual(jobs[0].worker_file_list_entries, jobs[0].source_inputs)
-        self.assertIn("--stride", jobs[0].run_arguments)
+        for job in jobs:
+            self.assertEqual(job.run_arguments.count("--stride"), 1)
+            stride_index = job.run_arguments.index("--stride")
+            self.assertEqual(job.run_arguments[stride_index + 1], "7")
         self.assertEqual(
             jobs[0].run_arguments[-3:],
             ("--", "--analysis-option", "value"),

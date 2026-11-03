@@ -238,10 +238,13 @@ def plan_jobs(request: SubmissionRequest) -> tuple[PlannedJob, ...]:
         if spec["sample_name"] is not None:
             run_arguments.extend(["--sample-name", spec["sample_name"]])
         run_arguments.extend(["--output", output_file])
-        if spec["stride"] is not None:
-            run_arguments.extend(["--stride", str(spec["stride"])])
-        if request.worker_stride is not None:
-            run_arguments.extend(["--stride", str(request.worker_stride)])
+        stride = (
+            request.worker_stride
+            if request.worker_stride is not None
+            else spec["stride"]
+        )
+        if stride is not None:
+            run_arguments.extend(["--stride", str(stride)])
         if request.worker_output_format is not None:
             run_arguments.extend(["--output-format", request.worker_output_format])
         if request.worker_ncpus is not None:
