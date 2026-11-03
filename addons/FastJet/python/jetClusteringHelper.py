@@ -39,6 +39,12 @@ class ExclusiveJetClusteringHelper:
         self.jets = jet
         self.constituents = jetc
 
+        # exposed so that truth labelling can re-run the very same clustering
+        # with ghost particles added
+        self.input_pseudojets = pjetc
+        self.constituent_indices = _jetc
+        self.clustering_spec = "JetClustering::clustering_ee_kt(2, {}, 1, 0)".format(njets)
+
         self.definition = dict()
 
         # get single particle properties
@@ -55,7 +61,7 @@ class ExclusiveJetClusteringHelper:
         )
 
         # run jet clustering with all reconstructed particles. ee_kt_algorithm, R=1.5, inclusive clustering, E-scheme
-        self.definition[_jet] = "JetClustering::clustering_ee_kt(2, {}, 1, 0)({})".format(njets, pjetc)
+        self.definition[_jet] = "{}({})".format(self.clustering_spec, pjetc)
 
         # get the jets out of the struct
         self.definition[jet] = "JetClusteringUtils::get_pseudoJets({})".format(_jet)
