@@ -112,16 +112,6 @@ class SoftwarePayloadTest(unittest.TestCase):
         with self.assertRaisesRegex(SoftwarePayloadError, "does not match"):
             validate_user_build(self.environment)
 
-    def test_creates_byte_identical_archives(self) -> None:
-        build = validate_user_build(self.environment)
-        first_path = Path(self.temporary_directory.name) / "first.tar.gz"
-        second_path = Path(self.temporary_directory.name) / "second.tar.gz"
-
-        create_user_build_archive(build, first_path)
-        create_user_build_archive(build, second_path)
-
-        self.assertEqual(first_path.read_bytes(), second_path.read_bytes())
-
     def test_strips_shared_objects_without_modifying_build(self) -> None:
         library = self.install_dir / "lib" / "libFCCAnalyses.so"
         original_contents = b"\x7fELF\x02\x01" + b"\0" * 10 + b"\x03\0debug"

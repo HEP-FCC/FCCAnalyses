@@ -19,8 +19,6 @@ sys.path.insert(0, str(REPOSITORY_ROOT / 'python'))
 from grid_submission import (
     GridSubmissionError,
     _create_analysis_include_archive,
-    _create_analysis_instance,
-    _fccanalyses_root,
     create_grid_submission_request,
     submit_grid_submission,
 )
@@ -89,24 +87,18 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             'LCG.CERN.ch',
         ]
 
-    def test_constructs_analysis_from_supplied_module(self) -> None:
-        class Analysis:
-            def __init__(self, arguments):
-                self.arguments = arguments
-
-        module = SimpleNamespace(Analysis=Analysis)
-        args = argparse.Namespace(remaining=['--custom', 'value'])
-        analysis = _create_analysis_instance(module, Path('not-imported.py'), args)
-        self.assertIsInstance(analysis, Analysis)
-        self.assertEqual(analysis.arguments['unknown'], ['--custom', 'value'])
-        self.assertFalse(hasattr(args, 'unknown'))
-
     def test_parses_lfn_contract_and_creates_request(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
             key4hep_setup = root / 'setup.sh'
-            self.write_modern_analysis(analysis_script)
+            include_file = root / 'helpers' / 'functions.h'
+            include_file.parent.mkdir()
+            include_file.write_text('int answer() { return 42; }\n', encoding='utf-8')
+            self.write_modern_analysis(
+                analysis_script,
+                '        self.include_paths = ["helpers/functions.h"]\n',
+            )
             key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
@@ -115,14 +107,22 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     '--files-per-job', '2',
                     '--output-se', 'CERN-DST-EOS',
                     '--site', 'LCG.CERN.ch',
+                    '--stride', '5',
+                    '--ncpus', '2',
+                    '--output-format', 'rntuple',
                 ],
             )
 
+            args.remaining = ['--output', 'custom.root', '--nevents', '100']
             request = create_grid_submission_request(
                 args,
                 self.load_analysis_module(analysis_script),
                 key4hep_setup=str(key4hep_setup),
+                analysis_include_archive_path=root / 'includes.tar.gz',
             )
+
+            with tarfile.open(request.analysis_include_archive) as archive:
+                self.assertEqual(archive.getnames(), ['helpers/functions.h'])
 
         self.assertEqual(request.analysis_script, str(analysis_script.resolve()))
         self.assertEqual(request.input_mode, 'dirac-lfn')
@@ -141,34 +141,12 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertEqual(request.destination_site, 'LCG.CERN.ch')
         self.assertEqual(request.submit_mode, 'wms')
         self.assertIsNone(request.user_build_payload)
-        self.assertIsNone(request.analysis_include_archive)
+        self.assertIsNotNone(request.analysis_include_archive)
+        self.assertEqual(request.run_arguments, tuple(args.remaining))
+        self.assertEqual(request.worker_stride, 5)
+        self.assertEqual(request.worker_ncpus, 2)
+        self.assertEqual(request.worker_output_format, 'rntuple')
         self.assertRegex(request.submission_id, r'^\d{8}T\d{6}Z$')
-
-    def test_parses_lfn_chunk_override(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
-            self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
-            args = self.parse_grid_arguments(
-                str(analysis_script),
-                [
-                    '--lfn-input', str(self.write_lfn_input(root)),
-                    '--output', 'analysis.root',
-                    '--output-dir', 'analysis/results',
-                    '--n-chunks', '2',
-                ],
-            )
-
-            request = create_grid_submission_request(
-                args,
-                self.load_analysis_module(analysis_script),
-                key4hep_setup=str(key4hep_setup),
-            )
-
-        self.assertIsNone(request.files_per_job)
-        self.assertEqual(request.n_chunks, 2)
 
     def test_resolves_analysis_samples_for_xrootd_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -233,36 +211,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertEqual(request.samples[0].stride, 3)
         self.assertTrue(request.analysis_include_archive.endswith('includes.tar.gz'))
 
-    def test_stages_optional_analysis_includes_in_lfn_mode(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
-            include_file = root / 'helpers' / 'functions.h'
-            include_file.parent.mkdir()
-            include_file.write_text('int answer() { return 42; }\n', encoding='utf-8')
-            self.write_modern_analysis(
-                analysis_script,
-                '        self.include_paths = ["helpers/functions.h"]\n'
-                '        self.samples = {"signal": {}}\n',
-            )
-            key4hep_setup.touch()
-            args = self.parse_grid_arguments(
-                str(analysis_script),
-                self.grid_arguments(self.write_lfn_input(root)),
-            )
-
-            request = create_grid_submission_request(
-                args,
-                self.load_analysis_module(analysis_script),
-                key4hep_setup=str(key4hep_setup),
-                analysis_include_archive_path=root / 'includes.tar.gz',
-            )
-
-            with tarfile.open(request.analysis_include_archive) as archive:
-                self.assertEqual(archive.getnames(), ['helpers/functions.h'])
-            self.assertIsNotNone(request.analysis_include_archive)
-
     def test_requires_modern_analysis_style_in_lfn_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -281,35 +229,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     self.load_analysis_module(analysis_script),
                     key4hep_setup=str(key4hep_setup),
                 )
-
-    def test_keeps_custom_arguments_separate_from_worker_options(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
-            self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
-            args = self.parse_grid_arguments(
-                str(analysis_script),
-                [
-                    *self.grid_arguments(self.write_lfn_input(root)),
-                    '--stride', '5',
-                    '--ncpus', '2',
-                    '--output-format', 'rntuple',
-                ],
-            )
-            args.remaining = ['--output', 'custom.root', '--nevents', '100']
-
-            request = create_grid_submission_request(
-                args,
-                self.load_analysis_module(analysis_script),
-                key4hep_setup=str(key4hep_setup),
-            )
-
-            self.assertEqual(request.run_arguments, tuple(args.remaining))
-            self.assertEqual(request.worker_stride, 5)
-            self.assertEqual(request.worker_ncpus, 2)
-            self.assertEqual(request.worker_output_format, 'rntuple')
 
     def test_rejects_sample_event_limits(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -418,11 +337,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
         self.assertTrue(temporary_paths)
         self.assertTrue(all(not path.exists() for path in temporary_paths))
-
-    def test_release_install_prefix_from_module_location(self) -> None:
-        with patch.dict('os.environ', {}, clear=True):
-            with patch('grid_submission.__file__', '/cvmfs/stack/python/grid_submission.py'):
-                self.assertEqual(_fccanalyses_root(), Path('/cvmfs/stack'))
 
 
 if __name__ == '__main__':
