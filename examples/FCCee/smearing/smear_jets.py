@@ -10,7 +10,7 @@ flavour with variations of the impact parameter resolution and neutral hadrons e
 To run this example:
 
 fccanalysis run examples/FCCee/smearing/smear_jets.py \
---files-list /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/wzp6_ee_nunuH_Hss_ecm240/events_196755633.root \
+--input /eos/experiment/fcc/ee/generation/DelphesEvents/winter2023/IDEA/wzp6_ee_nunuH_Hss_ecm240/events_196755633.root \
 --nevents 100 \
 
 """

@@ -3,6 +3,39 @@ Parsers for the fccanalysis sub-commands
 '''
 
 import argparse
+import sys
+
+
+def parse_command_arguments(parser: argparse.ArgumentParser) -> argparse.Namespace:
+    '''Parse the command once and retain custom analysis arguments after --.'''
+    arguments = sys.argv[1:]
+    try:
+        separator_index = arguments.index('--')
+    except ValueError:
+        args = parser.parse_args(arguments)
+        if not hasattr(args, 'remaining'):
+            args.remaining = []
+        return args
+
+    args = parser.parse_args(arguments[:separator_index])
+    args.remaining = arguments[separator_index + 1:]
+    accepts_custom_arguments = args.command in {'run', 'submit'}
+    if args.remaining and not accepts_custom_arguments:
+        parser.error('arguments after -- are only supported by run and submit')
+    return args
+
+
+def _positive_integer(value):
+    '''Parse a positive integer command-line value.'''
+    try:
+        parsed = int(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError(
+            f'expected an integer, got {value!r}'
+        ) from error
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError('value must be greater than zero')
+    return parsed
 
 
 def setup_build_parser(parser):
@@ -81,17 +114,147 @@ def setup_submit_parser(parser):
     '''
     Define command line arguments for the submit sub-command.
     '''
-    parser.add_argument('anascript_path',
-                        type=str,
-                        help='path to the analysis script')
-    parser.add_argument('-w', '--where',
-                        type=str,
-                        choices=['ht-condor', 'slurm', 'grid'],
-                        default='ht-condor',
-                        help='where to submit the analysis')
-    parser.add_argument('remaining', nargs=argparse.REMAINDER)
+    submit_parsers = parser.add_subparsers(
+        title='submission backends',
+        dest='where',
+        required=True
+    )
 
+    # Sub-parser for HTCondor
+    htcondor_parser = submit_parsers.add_parser(
+        'ht-condor',
+        help='submit through HTCondor',
+        description='Submit an FCCAnalyses run through HTCondor.',
+        epilog=(
+            'Arguments after -- are passed as custom arguments to Analysis '
+            'on every planned worker job.'
+        ),
+    )
+    htcondor_parser.add_argument(
+        'anascript_path',
+        type=str,
+        help='path to the analysis script'
+    )
 
+    # Sub-parser for DIRAC-managed grid
+    grid_parser = submit_parsers.add_parser(
+        'grid',
+        help='submit through the DIRAC-managed grid',
+        description='Submit an FCCAnalyses run to the DIRAC-managed grid.',
+        epilog=(
+            'Arguments after -- are passed as custom arguments to Analysis '
+            'on every planned worker job.'
+        ),
+    )
+    setup_grid_submit_parser(grid_parser)
+
+    # Sub-parser for Slurm (not yet implemented)
+    slurm_parser = submit_parsers.add_parser(
+        'slurm',
+        help='submit through Slurm (not yet implemented)',
+        description='Submission through Slurm is not yet implemented.'
+    )
+# _____________________________________________________________________________
+def setup_grid_submit_parser(parser):
+    '''Define arguments accepted by the DIRAC grid backend.'''
+    parser.add_argument('anascript_path', help='path to analysis script')
+    input_mode = parser.add_mutually_exclusive_group()
+    input_mode.add_argument(
+        '--input',
+        default=None,
+        nargs='+',
+        metavar='INPUT_PATH',
+        help='remote file or directory path(s)'
+    )
+    input_mode.add_argument(
+        '--input-file-list',
+        default=None,
+        metavar='LIST_FILE',
+        help='text file containing physical remote input paths'
+    )
+    input_mode.add_argument(
+        '--input-lfn-list',
+        default=None,
+        metavar='LFN_LIST',
+        help='text file containing one DIRAC LFNs'
+    )
+    parser.add_argument(
+        '-o', '--output',
+        type=str,
+        metavar='OUTPUT_FILE',
+        default='output.root',
+        help='base output ROOT filename (suffixed per job)'
+    )
+    parser.add_argument(
+        '--output-dir',
+        metavar='OUTPUT_DIR',
+        default=None,
+        help='directory relative to your GRID catalogue root'
+    )
+    parser.add_argument(
+        '--output-se',
+        default=None,
+        metavar='STORAGE_ELEMENT',
+        help='override the DIRAC-selected storage element for output files'
+    )
+    grouping = parser.add_mutually_exclusive_group()
+    grouping.add_argument(
+        '--files-per-job',
+        type=_positive_integer,
+        default=None,
+        metavar='COUNT',
+        help='number of input files processed by each grid job; overrides '
+            'sample chunks when supplied'
+    )
+    grouping.add_argument(
+        '--n-chunks',
+        type=_positive_integer,
+        default=None,
+        metavar='COUNT',
+        help='requested number of jobs/output chunks; overrides '
+            'sample chunks when supplied'
+    )
+    parser.add_argument(
+        '--sample-name',
+        default=None,
+        metavar='NAME',
+        help='optional label for a direct CLI input sample and its output file'
+    )
+    parser.add_argument(
+        '--site',
+        default=None,
+        metavar='SITE',
+        help='restrict jobs to this DIRAC computing site'
+    )
+    parser.add_argument(
+        '--mode',
+        choices=('wms', 'local'),
+        default='wms',
+        help='submit to the WMS or execute through local DIRAC mode (default: wms)'
+    )
+    parser.add_argument(
+        '--ship-local-build',
+        action='store_true',
+        help='ship the active locally built FCCAnalyses installation'
+    )
+    parser.add_argument(
+        '--output-format',
+        choices=('ttree', 'rntuple'),
+        default=None,
+        help='choose the output ROOT file format used by each worker'
+    )
+    parser.add_argument(
+        '-j', '--ncpus', '--n-threads',
+        type=_positive_integer,
+        default=None,
+        help='number of threads requested by each worker'
+    )
+    parser.add_argument(
+        '--stride',
+        type=_positive_integer,
+        default=None,
+        help='stride used by each worker; overrides a sample stride'
+    )
 # _____________________________________________________________________________
 def setup_run_parser(parser):
     '''
@@ -146,21 +309,15 @@ def setup_run_parser(parser):
 
     # Independent sample
     independent_sample_group = parser.add_argument_group('Independent sample')
-    independent_sample_group.add_argument(
+    input_source_group = independent_sample_group.add_mutually_exclusive_group()
+    input_source_group.add_argument(
         '-i', '--input',
         default=None,
         nargs='+',
         metavar='INPUT_FILE',
         help='location(s) of the input ROOT file(s)'
     )
-    independent_sample_group.add_argument(
-        '--files-list',
-        default=None,
-        nargs='+',
-        metavar='INPUT_FILE',
-        help='[DEPRECATED] location(s) of the input ROOT file(s)'
-    )
-    independent_sample_group.add_argument(
+    input_source_group.add_argument(
         '-f', '--input-file-list',
         type=str,
         default=None,

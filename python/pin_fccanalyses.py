@@ -15,7 +15,7 @@ class PinFCCAnalyses:
     '''
     Pin/unpin FCCAnalyses to the currently set up version of the Key4hep stack.
     '''
-    def __init__(self, mainparser):
+    def __init__(self, args):
         '''
         Setup analysis pinning
         '''
@@ -36,7 +36,7 @@ class PinFCCAnalyses:
         if pin_path_old.is_file():
             os.replace(pin_path_old, self.pin_path)
 
-        self.args = mainparser.parse_args()
+        self.args = args
 
         if self.args.show:
             self.show_pin()
