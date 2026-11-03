@@ -190,6 +190,8 @@ class DiracSubmitHelperTest(unittest.TestCase):
             user_build_payload=UserBuildPayload(
                 archive_path='/tmp/fccanalyses-payload.tar.gz',
                 size_bytes=12345,
+                build_os='Linux',
+                build_arch='x86_64',
             ),
             analysis_include_archive='/tmp/analysis-includes.tar.gz',
         )
@@ -240,6 +242,10 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 '/cvmfs/key4hep/setup.sh',
                 '--payload-archive',
                 'fccanalyses-payload.tar.gz',
+                '--build-os',
+                'Linux',
+                '--build-arch',
+                'x86_64',
                 '--include-archive',
                 'analysis-includes.tar.gz',
                 '--',

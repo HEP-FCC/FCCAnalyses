@@ -84,15 +84,24 @@ class UserBuildPayload:
 
     archive_path: str
     size_bytes: int
+    build_os: str
+    build_arch: str
 
     def to_dict(self) -> dict[str, object]:
-        return {"archive_path": self.archive_path, "size_bytes": self.size_bytes}
+        return {
+            "archive_path": self.archive_path,
+            "size_bytes": self.size_bytes,
+            "build_os": self.build_os,
+            "build_arch": self.build_arch,
+        }
 
     @classmethod
     def from_dict(cls, payload: Any) -> "UserBuildPayload":
         return cls(
             archive_path=payload["archive_path"],
             size_bytes=payload["size_bytes"],
+            build_os=payload["build_os"],
+            build_arch=payload["build_arch"],
         )
 
 

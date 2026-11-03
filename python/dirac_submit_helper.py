@@ -121,7 +121,11 @@ def _create_job(
         request.key4hep_setup,
     ]
     if user_build_archive is not None:
-        arguments.extend(['--payload-archive', user_build_archive.name])
+        arguments.extend([
+            '--payload-archive', user_build_archive.name,
+            '--build-os', request.user_build_payload.build_os,
+            '--build-arch', request.user_build_payload.build_arch,
+        ])
     if analysis_include_archive is not None:
         arguments.extend(['--include-archive', analysis_include_archive.name])
     arguments.extend(['--', *planned_job.run_arguments])

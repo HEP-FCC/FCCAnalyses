@@ -9,6 +9,7 @@ import argparse
 import logging
 import math
 import os
+import platform
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
@@ -463,6 +464,8 @@ def submit_grid_submission(
             user_build_payload = UserBuildPayload(
                 archive_path=str(archive.path),
                 size_bytes=archive.size_bytes,
+                build_os=platform.system(),
+                build_arch=platform.machine(),
             )
 
         request = create_grid_submission_request(
