@@ -164,6 +164,11 @@ The default is
 Package and ship the active locally built FCCAnalyses installation instead of
 using FCCAnalyses from the selected Key4hep stack on the worker.
 The active stack must match the stack used to build the local installation.
+The build is assumed to have been produced on the submission machine.
+Workers check that their operating system and architecture match those of the
+submission machine before starting the shipped runtime, and fail with a
+diagnostic on mismatch.
+This check does not guarantee compatible CPU instruction sets or system libraries.
 .TP
 \fB\-\-output\-format\fR {\fBttree\fR,\fBrntuple\fR}
 Set the ROOT output format used by every worker.

@@ -2,6 +2,7 @@
 
 import argparse
 import importlib.util
+import platform
 import sys
 import tarfile
 import tempfile
@@ -306,6 +307,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 request = SubmissionRequest.read_json(request_path)
                 self.assertEqual(request.key4hep_setup, str(key4hep_setup.resolve()))
                 self.assertIsNotNone(request.user_build_payload)
+                self.assertEqual(request.user_build_payload.build_os, platform.system())
+                self.assertEqual(request.user_build_payload.build_arch, platform.machine())
                 payload_path = Path(request.user_build_payload.archive_path)
                 self.assertTrue(payload_path.is_file())
                 temporary_paths.extend([request_path, payload_path])

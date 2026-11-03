@@ -13,6 +13,8 @@
 #                            local DIRAC test payload in a minimal one.
 #   --key4hep-setup PATH     Exact Key4hep setup script selected at submission.
 #   --payload-archive FILE   Staged user-build archive, when one is supplied.
+#   --build-os OS           Submission/build OS, required for a user build.
+#   --build-arch ARCH       Submission/build architecture, required for a user build.
 #   --include-archive FILE   Staged Analysis.include_paths archive, when used.
 #
 # Arguments after `--` are opaque FCCAnalyses arguments. The first is the
@@ -21,12 +23,14 @@
 set -e -o pipefail
 
 usage() {
-  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--payload-archive FILE] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
+  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--payload-archive FILE --build-os OS --build-arch ARCH] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
 }
 
 environment_mode=""
 key4hep_setup=""
 payload_archive=""
+build_os=""
+build_arch=""
 include_archive=""
 
 while [ "$#" -gt 0 ]; do
@@ -61,6 +65,17 @@ while [ "$#" -gt 0 ]; do
         exit 2
       fi
       payload_archive="$2"
+      shift 2
+      ;;
+    --build-os|--build-arch)
+      if [ "$#" -lt 2 ] || [ -z "$2" ]; then
+        echo "$1 requires a value" >&2
+        exit 2
+      fi
+      case "$1" in
+        --build-os) build_os="$2" ;;
+        --build-arch) build_arch="$2" ;;
+      esac
       shift 2
       ;;
     --include-archive)
@@ -109,11 +124,6 @@ if [ -z "${key4hep_setup}" ]; then
   echo "--key4hep-setup must name the selected Key4hep setup script" >&2
   exit 2
 fi
-if [ ! -r "${key4hep_setup}" ]; then
-  echo "Key4hep setup script is not readable: ${key4hep_setup}" >&2
-  exit 2
-fi
-
 if [ -n "${payload_archive}" ]; then
   case "${payload_archive}" in
     */*|.|..)
@@ -121,6 +131,32 @@ if [ -n "${payload_archive}" ]; then
       exit 2
       ;;
   esac
+  if [ -z "${build_os}" ] || [ -z "${build_arch}" ]; then
+    echo "A shipped user build requires --build-os and --build-arch" >&2
+    exit 2
+  fi
+  normalize_arch() {
+    case "$1" in
+      arm64|aarch64) echo aarch64 ;;
+      amd64|x86_64) echo x86_64 ;;
+      *) echo "$1" ;;
+    esac
+  }
+  worker_os="$(uname -s)"
+  worker_arch="$(uname -m)"
+  if [ "${build_os}" != "${worker_os}" ] || \
+     [ "$(normalize_arch "${build_arch}")" != "$(normalize_arch "${worker_arch}")" ]; then
+    echo "Cannot run the shipped FCCAnalyses build on this worker." >&2
+    echo "  Submission/build platform: ${build_os} ${build_arch}" >&2
+    echo "  Worker platform: ${worker_os} ${worker_arch}" >&2
+    echo "Rebuild and submit from a machine matching the worker platform," >&2
+    echo "or submit without --ship-local-build." >&2
+    exit 1
+  fi
+fi
+if [ ! -r "${key4hep_setup}" ]; then
+  echo "Key4hep setup script is not readable: ${key4hep_setup}" >&2
+  exit 2
 fi
 if [ -n "${include_archive}" ]; then
   case "${include_archive}" in
@@ -142,7 +178,8 @@ if [ "${environment_mode}" = "clean" ]; then
     --key4hep-setup "${key4hep_setup}"
   )
   if [ -n "${payload_archive}" ]; then
-    wrapper_arguments+=(--payload-archive "${payload_archive}")
+    wrapper_arguments+=(--payload-archive "${payload_archive}"
+      --build-os "${build_os}" --build-arch "${build_arch}")
   fi
   if [ -n "${include_archive}" ]; then
     wrapper_arguments+=(--include-archive "${include_archive}")

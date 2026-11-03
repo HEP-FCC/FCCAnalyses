@@ -64,6 +64,15 @@ assert_file_equals() {
 make_fake_runtime
 make_fake_payload
 make_fake_include_archive
+build_os="$(uname -s)"
+build_arch="$(uname -m)"
+# Use an equivalent spelling to exercise architecture normalization too.
+case "${build_arch}" in
+  arm64) build_arch=aarch64 ;;
+  aarch64) build_arch=arm64 ;;
+  x86_64) build_arch=amd64 ;;
+  amd64) build_arch=x86_64 ;;
+esac
 (
   cd "${temporary_directory}"
   CONDA_PREFIX="inherited-conda" \
@@ -81,12 +90,36 @@ assert_file_equals "${temporary_directory}/include/functions.h" $'int answer() {
   CONDA_PREFIX="local-dirac-conda" \
     "${wrapper}" --env clean \
       --key4hep-setup "${temporary_directory}/setup.sh" \
+      --build-os "${build_os}" --build-arch "${build_arch}" \
       --payload-archive fccanalyses-payload.tar.gz -- analysis.py \
     --input input.root --output output.root --label "two words"
 )
 assert_file_equals "${temporary_directory}/payload-runtime.txt" $'shipped\n'
 assert_file_equals "${temporary_directory}/payload-arguments.txt" $'run\nanalysis.py\n--input\ninput.root\n--output\noutput.root\n--label\ntwo words\n'
 assert_file_equals "${temporary_directory}/payload-conda-prefix.txt" $'unset\n'
+
+for mismatch in os arch; do
+  expected_os="${build_os}"
+  expected_arch="${build_arch}"
+  case "${mismatch}" in
+    os) expected_os=UnsupportedOS ;;
+    arch) expected_arch=unsupported-arch ;;
+  esac
+  if (
+    cd "${temporary_directory}"
+    "${wrapper}" --env inherit \
+      --key4hep-setup "${temporary_directory}/missing-setup.sh" \
+      --payload-archive fccanalyses-payload.tar.gz \
+      --build-os "${expected_os}" --build-arch "${expected_arch}" \
+      -- analysis.py > /dev/null 2> platform-mismatch.txt
+  ); then
+    echo "Wrapper accepted an incompatible build ${mismatch}" >&2
+    exit 1
+  fi
+  grep -q 'Cannot run the shipped FCCAnalyses build' "${temporary_directory}/platform-mismatch.txt"
+  grep -q "Submission/build platform: ${expected_os} ${expected_arch}" "${temporary_directory}/platform-mismatch.txt"
+  grep -q "Worker platform: $(uname -s) $(uname -m)" "${temporary_directory}/platform-mismatch.txt"
+done
 
 if (
   cd "${temporary_directory}"
