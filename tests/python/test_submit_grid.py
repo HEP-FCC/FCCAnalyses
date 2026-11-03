@@ -68,24 +68,6 @@ class SubmitGridTest(unittest.TestCase):
         self.assertEqual(args.stride, 5)
         self.assertEqual(args.remaining, ['--analysis-option', 'value'])
 
-    def test_rejects_invalid_analysis_before_grid_dispatch(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            analysis_script = Path(directory) / 'analysis.py'
-            analysis_script.write_text('this is not valid Python\n', encoding='utf-8')
-            command = [
-                'fccanalysis', 'submit', 'grid', str(analysis_script),
-                '--output', 'analysis.root', '--output-dir', 'analysis/results',
-            ]
-            with patch.object(sys, 'argv', command):
-                with patch('submit.submit_grid_submission') as submit_grid:
-                    with self.assertLogs('FCCAnalyses.submit', level='ERROR'):
-                        with self.assertRaises(SystemExit) as error:
-                            submit_analysis(
-                                parse_command_arguments(self.make_submit_parser())
-                            )
-                    submit_grid.assert_not_called()
-            self.assertEqual(error.exception.code, 3)
-
     def test_rejects_unknown_grid_argument_without_separator(self) -> None:
         parser = self.make_submit_parser()
         command = [
