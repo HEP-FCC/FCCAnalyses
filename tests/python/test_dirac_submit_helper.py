@@ -42,6 +42,9 @@ class FakeUserJob:
     def setJobGroup(self, value):
         self.job_group = value
 
+    def setNumberOfProcessors(self, **options):
+        self.processors = options
+
     def setLogLevel(self, value):
         self.log_level = value
 
@@ -185,6 +188,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
             job_name='FCCAnalysis',
             job_group='FCCAnalysis_Run',
             submit_mode='local',
+            worker_ncpus=4,
             destination_site='LCG.CERN.ch',
             submission_id='20260729T150000Z',
             user_build_payload=UserBuildPayload(
@@ -210,6 +214,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 input_file_list,
             )
 
+        self.assertEqual(job.processors, {'numberOfProcessors': 4})
         self.assertEqual(job.name, 'FCCAnalysis-lfn-0000')
         self.assertEqual(job.job_group, 'FCCAnalysis_Run')
         self.assertEqual(
@@ -240,6 +245,8 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 'clean',
                 '--key4hep-setup',
                 '/cvmfs/key4hep/setup.sh',
+                '--mode', 'local',
+                '--ncpus', '4',
                 '--payload-archive',
                 'fccanalyses-payload.tar.gz',
                 '--build-os',
@@ -281,6 +288,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
             job_name='FCCAnalysis',
             job_group='FCCAnalysis_Run',
             submit_mode='wms',
+            worker_ncpus=-1,
             destination_site=None,
             submission_id='20260729T150000Z',
             user_build_payload=None,
@@ -304,6 +312,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 input_file_list,
             )
 
+        self.assertEqual(job.processors, {'minNumberOfProcessors': 1})
         self.assertFalse(hasattr(job, 'input_data'))
         self.assertEqual(
             job.input_sandbox,
@@ -320,6 +329,8 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 'inherit',
                 '--key4hep-setup',
                 '/cvmfs/key4hep/setup.sh',
+                '--mode', 'wms',
+                '--ncpus', '-1',
                 '--include-archive',
                 'analysis-includes.tar.gz',
                 '--',

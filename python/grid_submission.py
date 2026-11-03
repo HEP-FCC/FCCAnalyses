@@ -18,7 +18,7 @@ import tempfile
 from types import ModuleType
 from typing import Any
 
-from anascript import validate_sample_list
+from anascript import validate_n_threads, validate_sample_list
 
 from software_payload import (
     SoftwarePayloadError,
@@ -61,6 +61,10 @@ def create_grid_submission_request(
         analysis_class = _create_analysis_instance(
             analysis_module, analysis_script, args
         )
+        try:
+            ncpus = validate_n_threads(analysis_class, args.ncpus)
+        except ValueError as error:
+            raise GridSubmissionError(str(error)) from error
         _reject_sample_event_limits(analysis_class)
         if args.lfn_input is not None:
             input_mode = 'dirac-lfn'
@@ -94,7 +98,7 @@ def create_grid_submission_request(
             run_arguments=run_arguments,
             worker_stride=args.stride,
             worker_output_format=args.output_format,
-            worker_ncpus=args.ncpus,
+            worker_ncpus=ncpus,
             output_file=output_file,
             output_path=output_path,
             output_se=output_se,

@@ -247,8 +247,6 @@ def plan_jobs(request: SubmissionRequest) -> tuple[PlannedJob, ...]:
             run_arguments.extend(["--stride", str(stride)])
         if request.worker_output_format is not None:
             run_arguments.extend(["--output-format", request.worker_output_format])
-        if request.worker_ncpus is not None:
-            run_arguments.extend(["--ncpus", str(request.worker_ncpus)])
         if request.run_arguments:
             run_arguments.extend(["--", *request.run_arguments])
 

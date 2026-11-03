@@ -90,6 +90,11 @@ def _create_job(
     job = UserJob()
     job.setName(planned_job.job_name)
     job.setJobGroup(request.job_group)
+    ncpus = request.worker_ncpus if request.worker_ncpus is not None else 1
+    if ncpus < 0:
+        job.setNumberOfProcessors(minNumberOfProcessors=1)
+    else:
+        job.setNumberOfProcessors(numberOfProcessors=ncpus)
     job.setLogLevel('DEBUG')
     job.setOutputSandbox(['*.log', '*.sh', '*.py', 'localEnv.log', 'std.out', 'std.err'])
 
@@ -119,6 +124,8 @@ def _create_job(
         environment_mode,
         '--key4hep-setup',
         request.key4hep_setup,
+        '--mode', request.submit_mode,
+        '--ncpus', str(ncpus),
     ]
     if user_build_archive is not None:
         arguments.extend([

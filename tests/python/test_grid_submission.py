@@ -125,6 +125,27 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             with tarfile.open(request.analysis_include_archive) as archive:
                 self.assertEqual(archive.getnames(), ['helpers/functions.h'])
 
+            module = self.load_analysis_module(analysis_script)
+            for cli, script, expected in (
+                (None, 3, 3), (-2, 3, -2), (None, 0, None),
+            ):
+                with self.subTest(cli=cli, script=script):
+                    if script is not None:
+                        module.Analysis.n_threads = script
+                    options = ['--lfn-input', str(self.write_lfn_input(root))]
+                    if cli is not None:
+                        options.extend(['-j', str(cli)])
+                    cpu_args = self.parse_grid_arguments(str(analysis_script), options)
+                    if expected is None:
+                        with self.assertRaisesRegex(GridSubmissionError, 'nonzero integer'):
+                            create_grid_submission_request(cpu_args, module, str(key4hep_setup))
+                    else:
+                        cpu_request = create_grid_submission_request(
+                            cpu_args, module, str(key4hep_setup),
+                            analysis_include_archive_path=root / 'cpu-includes.tar.gz',
+                        )
+                        self.assertEqual(cpu_request.worker_ncpus, expected)
+
         self.assertEqual(request.analysis_script, str(analysis_script.resolve()))
         self.assertEqual(request.input_mode, 'dirac-lfn')
         self.assertEqual(

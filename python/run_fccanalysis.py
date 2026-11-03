@@ -11,7 +11,7 @@ import argparse
 from typing import Any, Optional, Union
 
 import ROOT  # type: ignore
-from anascript import validate_analysis_class, validate_sample_list
+from anascript import validate_n_threads, validate_analysis_class, validate_sample_list
 from sample import get_file_list, get_subfile_list, get_chunk_list
 from sample import get_files_in_dir, get_files_in_yaml
 from sample import get_file_quantities
@@ -344,6 +344,12 @@ def merge_config(args: argparse.Namespace,
     '''
     config: dict[str, Any] = {}
 
+    try:
+        config['n-threads'] = validate_n_threads(analysis_class, args.ncpus)
+    except ValueError as error:
+        LOGGER.error('%s\nAborting...', error)
+        sys.exit(3)
+
     # Deprecations
     if args.files_list is not None:
         LOGGER.error('--files-list CLI argument is no longer supported, use '
@@ -487,13 +493,6 @@ def merge_config(args: argparse.Namespace,
     config['stride'] = None
     if args.stride is not None:
         config['stride'] = args.stride
-
-    # Check number of requested threads
-    config['n-threads'] = 1
-    if hasattr(analysis_class, "n_threads"):
-        config['n-threads'] = analysis_class.n_threads
-    if args.ncpus is not None:
-        config['n-threads'] = args.ncpus
 
     # Check whether to use PODIO DataSource to load the events
     config['use-data-source'] = False
