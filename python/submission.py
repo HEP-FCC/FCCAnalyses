@@ -111,7 +111,7 @@ class UserBuildPayload:
 
 @dataclass(frozen=True)
 class SubmissionRequest:
-    """Versioned data contract between FCCAnalyses and a grid helper process."""
+    """Data contract between FCCAnalyses and a grid helper process."""
 
     analysis_script: str
     input_mode: InputMode
