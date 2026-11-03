@@ -8,7 +8,6 @@ import logging
 import traceback
 from threading import Thread
 from queue import Queue
-from typing import Optional, Union
 from collections.abc import Callable
 
 import ROOT  # type: ignore
@@ -35,7 +34,7 @@ class Job:
         Initialize all required parameters.
         '''
         # Event counts
-        self._evtcount: dict[str, Union[int, float, None]] = {}
+        self._evtcount: dict[str, int | float | None] = {}
         self._evtcount['raw-orig'] = None
         self._evtcount['sow-orig'] = None
         self._evtcount['raw-ttree'] = None
@@ -57,11 +56,11 @@ class Job:
         self._analysis_chain: Callable = analysis_chain
 
         # Output of the job
-        self._output_file_path: Optional[str] = None
-        self._output_variables: Optional[list[str]] = None
+        self._output_file_path: str | None = None
+        self._output_variables: list[str] | None = None
 
         # Benchmark
-        self._elapsed_time: Optional[float] = None
+        self._elapsed_time: float | None = None
 
     def _setup_input(self,
                      infile_list: list[str]) -> None:
@@ -176,8 +175,8 @@ class Job:
         ROOT.RDF.Experimental.AddProgressBar(self._init_dframe)
 
     def restrict_events(self,
-                        n_events_max: Optional[int] = None,
-                        stride: Optional[int] = None) -> None:
+                        n_events_max: int | None = None,
+                        stride: int | None = None) -> None:
         '''
         Set number of events to run on or how many events to stride.
         '''

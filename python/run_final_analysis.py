@@ -12,7 +12,7 @@ import pathlib
 import json
 import math
 import argparse
-from typing import Any, Union
+from typing import Any
 
 import ROOT  # type: ignore
 import cppyy  # type: ignore
@@ -287,8 +287,8 @@ def run(rdf_module, config, args) -> None:
     nevents_real = 0
     start_time = time.time()
 
-    process_events: dict[str, Union[int, float]] = {}
-    events_ttree: dict[str, Union[int, float]] = {}
+    process_events: dict[str, int | float] = {}
+    events_ttree: dict[str, int | float] = {}
     file_list: dict[str, ROOT.vector] = {}
     results: dict[str, dict[str, Any]] = {}
 
