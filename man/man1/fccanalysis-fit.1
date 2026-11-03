@@ -1,0 +1,54 @@
+.\" Manpage for fccanalysis-fit
+.\" Contact FCC-PED-SoftwareAndComputing-Analysis@cern.ch to correct errors or typos.
+.TH FCCANALYSIS\-FIT 1 "August 2026" "0.12.0" "fccanalysis-fit man page"
+
+.SH NAME
+\fBfccanalysis\-fit\fR \- generate combine datacards and execute statistical fits
+
+.SH SYNOPSIS
+.B fccanalysis fit
+[\fB\-h\fR | \fB\-\-help\fR]
+[\fB\-o\fR \fIOUTPUT\fR | \fB\-\-output\fR \fIOUTPUT\fR]
+[\fB\-b\fR \fIBACKEND\fR | \fB\-\-backend\fR \fIBACKEND\fR]
+[\fB\-e\fR | \fB\-\-execute\fR]
+.B analysis-script
+\-\-
+[\fICOMBINE ARGUMENTS\fR]
+
+.SH DESCRIPTION
+.B fccanalysis\-fit
+parses an object-oriented Python configuration script containing a \fIFit\fR class
+to dynamically generate a text-based datacard for statistical inference. 
+
+If the \fB\-\-execute\fR flag is provided, the script will automatically invoke the
+underlying statistical engine (e.g., Higgs Combine) on the generated datacard. 
+Output ROOT files are automatically shifted to the datacard directory, and
+1-sigma crossing uncertainties are automatically extracted and displayed.
+
+.SH OPTIONS
+.TP
+.B analysis-script
+Path to the Python analysis script containing the \fIFit\fR class.
+.TP
+.BR \-h ", " \-\-help
+Prints short help message and exits\&.
+.TP
+\fB\-o\fR \fIOUTPUT\fR, \fB\-\-output\fR \fIOUTPUT\fR
+Path where the generated datacard.txt will be saved\&.
+.TP
+\fB\-b\fR \fIBACKEND\fR, \fB\-\-backend\fR \fIBACKEND\fR
+Specify the statistical backend to use\&. Currently supported: \fBcombine\fR.
+.br
+Default value: \fBcombine\fR.
+.TP
+.BR \-e ", " \-\-execute
+Execute the statistical backend after generating the datacard.
+.TP
+.I COMBINE ARGUMENTS
+Command line arguments passed after the \fB\-\-\fR separator will not be parsed 
+by the framework and will be forwarded directly to the backend Combine engine 
+(e.g., \fB\-M FitDiagnostics\fR or \fB\-\-algo grid\fR). These override any default
+arguments defined in the Python class.
+
+.SH SEE ALSO
+fccanalysis(1), fccanalysis-script(7), fccanalysis-extract(1)
