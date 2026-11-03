@@ -66,6 +66,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
     def write_modern_analysis(path: Path, body: str = '        pass\n') -> None:
         path.write_text(
             'class Analysis:\n'
+            '    analyzers = None\n'
+            '    output = []\n'
             '    def __init__(self, arguments):\n'
             f'{body}',
             encoding='utf-8',
@@ -180,6 +182,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             include_file.write_text('int answer() { return 42; }\n', encoding='utf-8')
             analysis_script.write_text(
                 'class Analysis:\n'
+                '    analyzers = None\n'
+                '    output = []\n'
                 '    def __init__(self, arguments):\n'
                 '        self.input_dir = "/eos/experiment/fcc/test"\n'
                 '        self.include_paths = ["include/functions.h"]\n'
@@ -233,24 +237,37 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertEqual(request.samples[0].stride, 3)
         self.assertTrue(request.analysis_include_archive.endswith('includes.tar.gz'))
 
-    def test_requires_modern_analysis_style_in_lfn_mode(self) -> None:
+    def test_rejects_invalid_analysis_before_submission(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
             key4hep_setup = root / 'setup.sh'
-            analysis_script.write_text('value = 1\n', encoding='utf-8')
+            self.write_modern_analysis(analysis_script)
             key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 self.grid_arguments(self.write_lfn_input(root)),
             )
 
-            with self.assertRaisesRegex(GridSubmissionError, 'requires an Analysis class'):
-                create_grid_submission_request(
-                    args,
-                    self.load_analysis_module(analysis_script),
-                    key4hep_setup=str(key4hep_setup),
-                )
+            for attribute, message in (
+                ('Analysis', 'requires an Analysis class'),
+                ('analyzers', 'Analysis chain not provided'),
+                ('output', 'Analysis output variables not provided'),
+                ('run_batch', 'run_batch analysis attribute is no longer supported'),
+            ):
+                with self.subTest(attribute=attribute):
+                    module = self.load_analysis_module(analysis_script)
+                    if attribute == 'Analysis':
+                        del module.Analysis
+                    elif attribute == 'run_batch':
+                        module.Analysis.run_batch = True
+                    else:
+                        delattr(module.Analysis, attribute)
+                    with patch.dict('os.environ', {'KEY4HEP_STACK': str(key4hep_setup)}):
+                        with patch('grid_submission.subprocess.run') as start_child:
+                            with self.assertRaisesRegex(GridSubmissionError, message):
+                                submit_grid_submission(args, module)
+                            start_child.assert_not_called()
 
     def test_rejects_sample_event_limits(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

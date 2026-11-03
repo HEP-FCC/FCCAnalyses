@@ -611,7 +611,12 @@ def run_fccanalysis(args, anascript_module) -> None:
     # Get analysis class out of the module
     # Also, execute the "constructor" of the analysis class
     LOGGER.info('Initializing analysis class...')
-    config |= validate_analysis_class(anascript_module.Analysis(vars(args)))
+    analysis_class = anascript_module.Analysis(vars(args))
+    try:
+        config |= validate_analysis_class(analysis_class)
+    except ValueError as error:
+        LOGGER.error('%s\nAborting...', error)
+        sys.exit(3)
 
     LOGGER.info('Setting run parameters...')
     # Merge configuration from command line arguments and analysis class
