@@ -115,3 +115,5 @@ benchmark*json
 # Graphviz graphs
 *.dot
 *.png
+
+userdata/
