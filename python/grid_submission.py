@@ -18,7 +18,7 @@ import tempfile
 from types import ModuleType
 from typing import Any
 
-from anascript import validate_n_threads, validate_sample_list
+from anascript import validate_analysis_class, validate_n_threads, validate_sample_list
 
 from software_payload import (
     SoftwarePayloadError,
@@ -62,6 +62,7 @@ def create_grid_submission_request(
             analysis_module, analysis_script, args
         )
         try:
+            validate_analysis_class(analysis_class)
             ncpus = validate_n_threads(analysis_class, args.ncpus)
         except ValueError as error:
             raise GridSubmissionError(str(error)) from error

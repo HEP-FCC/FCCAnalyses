@@ -430,23 +430,19 @@ def validate_analysis_class(analysis_class: Any) -> dict[str, Any]:
     # Deprecations
     if hasattr(analysis_class, 'run_batch'):
         if analysis_class.run_batch:
-            LOGGER.error('run_batch analysis attribute is no longer '
-                         'supported, use "fccanalysis submit" instead!\n'
-                         'Aborting...')
-            sys.exit(3)
+            raise ValueError('run_batch analysis attribute is no longer '
+                             'supported, use "fccanalysis submit" instead!')
 
     # Check if the analysis chain is provided
     if hasattr(analysis_class, 'analyzers'):
         config['analysis-chain'] = analysis_class.analyzers
     else:
-        LOGGER.error('Analysis chain not provided!\nAborting...')
-        sys.exit(3)
+        raise ValueError('Analysis chain not provided!')
 
     # Check the output variables
     if hasattr(analysis_class, 'output'):
         config['output-variables'] = analysis_class.output
     else:
-        LOGGER.error('Analysis output variables not provided!\nAborting...')
-        sys.exit(3)
+        raise ValueError('Analysis output variables not provided!')
 
     return config
