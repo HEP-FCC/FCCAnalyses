@@ -437,13 +437,13 @@ def submit_grid_submission(
     analysis_module: ModuleType,
 ) -> None:
     '''Start the isolated DIRAC helper for one parsed grid submission.'''
-    source_root = _fccanalyses_root()
+    install_root = _fccanalyses_root()
     runner = _require_file(
-        str(source_root / 'scripts' / 'dirac' / 'run_dirac_submission.sh'),
+        str(install_root / 'scripts' / 'dirac' / 'run_dirac_submission.sh'),
         'DIRAC submission launcher',
     )
     helper = _require_file(
-        str(source_root / 'python' / 'dirac_submit_helper.py'),
+        str(install_root / 'python' / 'dirac_submit_helper.py'),
         'DIRAC submission helper',
     )
 
@@ -501,10 +501,10 @@ def submit_grid_submission(
 
 
 def _fccanalyses_root() -> Path:
-    '''Return the checkout or release root selected by the FCCAnalyses setup.'''
+    '''Return the install prefix selected by the FCCAnalyses setup.'''
     local_dir = os.environ.get('FCCANA_LOCAL_DIR')
     if local_dir:
-        return Path(local_dir).expanduser().resolve()
+        return Path(local_dir).expanduser().resolve() / 'install'
     return Path(__file__).resolve().parents[1]
 
 
