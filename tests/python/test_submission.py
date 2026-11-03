@@ -3,6 +3,7 @@
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 
@@ -161,6 +162,11 @@ class SubmissionTest(unittest.TestCase):
             [job.output_file for job in jobs],
             ["result_0000.root", "result_0001.root", "result_0002.root"],
         )
+        with self.assertLogs('FCCAnalyses.submission', level='WARNING') as logs:
+            jobs = plan_jobs(replace(request, n_chunks=8))
+        self.assertEqual([len(job.source_inputs) for job in jobs], [1] * 5)
+        self.assertIn('Requested 8 chunks but only 5 input file(s)', logs.output[0])
+        self.assertIn('using 5 chunks', logs.output[0])
 
     def test_plans_xrootd_samples_without_mixing_them(self) -> None:
         request = make_xrootd_request(
