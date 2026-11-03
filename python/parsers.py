@@ -50,6 +50,14 @@ def _positive_integer(value):
     return parsed
 
 
+def _nonzero_integer(value):
+    '''Parse a thread count; negative values select all allocated CPUs.'''
+    parsed = int(value)
+    if parsed == 0:
+        raise argparse.ArgumentTypeError('thread count must not be zero')
+    return parsed
+
+
 def setup_build_parser(parser):
     '''
     Arguments for the build sub-command
@@ -245,9 +253,10 @@ def setup_grid_submit_parser(parser):
     )
     parser.add_argument(
         '-j', '--ncpus', '--n-threads',
-        type=_positive_integer,
+        type=_nonzero_integer,
         default=None,
-        help='number of threads requested by each worker'
+        help='CPUs requested per job; negative values use all allocated CPUs '
+             '(default: Analysis.n_threads, otherwise 1)'
     )
     parser.add_argument(
         '--stride',

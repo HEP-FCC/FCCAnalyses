@@ -16,6 +16,8 @@
 #   --build-os OS           Submission/build OS, required for a user build.
 #   --build-arch ARCH       Submission/build architecture, required for a user build.
 #   --include-archive FILE   Staged Analysis.include_paths archive, when used.
+#   --mode wms|local        Use the DIRAC allocation or locally available CPUs.
+#   --ncpus COUNT           Requested threads; negative means all allocated CPUs.
 #
 # Arguments after `--` are opaque FCCAnalyses arguments. The first is the
 # staged analysis script; every remaining argument is forwarded unchanged to
@@ -23,7 +25,7 @@
 set -e -o pipefail
 
 usage() {
-  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--payload-archive FILE --build-os OS --build-arch ARCH] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
+  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--mode wms|local] [--ncpus COUNT] [--payload-archive FILE --build-os OS --build-arch ARCH] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
 }
 
 environment_mode=""
@@ -32,6 +34,8 @@ payload_archive=""
 build_os=""
 build_arch=""
 include_archive=""
+submit_mode="wms"
+requested_cpus="1"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -67,7 +71,7 @@ while [ "$#" -gt 0 ]; do
       payload_archive="$2"
       shift 2
       ;;
-    --build-os|--build-arch)
+    --build-os|--build-arch|--mode|--ncpus)
       if [ "$#" -lt 2 ] || [ -z "$2" ]; then
         echo "$1 requires a value" >&2
         exit 2
@@ -75,6 +79,8 @@ while [ "$#" -gt 0 ]; do
       case "$1" in
         --build-os) build_os="$2" ;;
         --build-arch) build_arch="$2" ;;
+        --mode) submit_mode="$2" ;;
+        --ncpus) requested_cpus="$2" ;;
       esac
       shift 2
       ;;
@@ -176,6 +182,7 @@ if [ "${environment_mode}" = "clean" ]; then
   wrapper_arguments=(
     --env inherit
     --key4hep-setup "${key4hep_setup}"
+    --mode "${submit_mode}" --ncpus "${requested_cpus}"
   )
   if [ -n "${payload_archive}" ]; then
     wrapper_arguments+=(--payload-archive "${payload_archive}"
@@ -297,4 +304,37 @@ echo "Key4hep setup: ${key4hep_setup}"
 echo "FCCAnalyses runtime: ${runtime_description}"
 echo "fccanalysis executable: ${fccanalysis_command}"
 
-"${fccanalysis_command}" run "${analysis_script}" "$@"
+# Use the selected runtime's Python, and resolve allocation before importing
+# the analysis. Never interpret the opaque analysis arguments after -- here.
+# The submission frontend has already validated the request and mode.
+resolved_cpus="$(python3 - "${requested_cpus}" "${submit_mode}" <<'PY'
+import os
+import sys
+
+try:
+    requested = int(sys.argv[1])
+    try:
+        available = len(os.sched_getaffinity(0))
+    except (AttributeError, OSError, NotImplementedError):
+        available = os.cpu_count()
+    if sys.argv[2] == 'wms':
+        try:
+            allocated = int(os.environ.get('DIRAC_JOB_PROCESSORS', '0'))
+        except ValueError:
+            allocated = 0
+        if allocated < 1:
+            raise ValueError('missing or invalid DIRAC_JOB_PROCESSORS allocation')
+        available = min(available, allocated) if available is not None else allocated
+    if not available:
+        raise ValueError('cannot determine available CPUs')
+    if requested > available:
+        print(f'WARNING: Requested {requested} threads, but only {available} CPUs '
+              f'are available to this job; limiting thread count to {available}.', file=sys.stderr)
+        requested = available
+    print(available if requested < 0 else requested)
+except ValueError as error:
+    sys.exit(f'CPU allocation check failed: {error}')
+PY
+)"
+echo "CPU threads: requested ${requested_cpus}, using ${resolved_cpus} (${submit_mode} mode)"
+"${fccanalysis_command}" run "${analysis_script}" --ncpus "${resolved_cpus}" "$@"
