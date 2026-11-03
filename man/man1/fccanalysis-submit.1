@@ -36,6 +36,16 @@ submits the analysis defined by
 to the selected backend.
 The supported backends are CERN HTCondor and the DIRAC-managed grid.
 Slurm is recognized but is not yet implemented.
+.PP
+The former
+.B fccanalysis submit analysis.py \-\-where BACKEND
+syntax is no longer supported.
+Specify the backend immediately after
+.BR submit ,
+for example
+.B fccanalysis submit ht-condor analysis.py
+or
+.BR "fccanalysis submit grid analysis.py [grid options]" .
 
 .SS HTCondor
 The mechanism of submission of the jobs to the HTCondor depends on the

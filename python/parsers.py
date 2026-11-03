@@ -9,6 +9,18 @@ import sys
 def parse_command_arguments(parser: argparse.ArgumentParser) -> argparse.Namespace:
     '''Parse the command once and retain custom analysis arguments after --.'''
     arguments = sys.argv[1:]
+    framework_arguments = arguments[:arguments.index('--')] if '--' in arguments else arguments
+    if 'submit' in framework_arguments and any(
+        argument == '--where' or argument.startswith('--where=')
+        for argument in framework_arguments
+    ):
+        parser.error(
+            "'fccanalysis submit --where' is no longer supported.\n"
+            'Select the backend as a subcommand:\n'
+            '  fccanalysis submit ht-condor analysis.py\n'
+            '  fccanalysis submit grid analysis.py [grid options]\n'
+            "See 'fccanalysis submit --help' for available backends."
+        )
     try:
         separator_index = arguments.index('--')
     except ValueError:
