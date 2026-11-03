@@ -149,8 +149,6 @@ _fccana_setup() {
   export PYTHONPATH=${FCCANA_LOCAL_DIR}/install/share/examples:${PYTHONPATH}
   export PATH=${FCCANA_LOCAL_DIR}/bin:${PATH}
   export PATH=${FCCANA_LOCAL_DIR}/install/bin:${PATH}
-  export LD_LIBRARY_PATH=${FCCANA_LOCAL_DIR}/install/lib64:${LD_LIBRARY_PATH}
-  export LD_LIBRARY_PATH=${FCCANA_LOCAL_DIR}/install/lib:${LD_LIBRARY_PATH}
   export CMAKE_PREFIX_PATH=${FCCANA_LOCAL_DIR}/install:${CMAKE_PREFIX_PATH}
 
   export ROOT_INCLUDE_PATH=$(fastjet-config --prefix)/include:${ROOT_INCLUDE_PATH}
@@ -162,6 +160,9 @@ _fccana_setup() {
   else
     export LD_LIBRARY_PATH=${ONNXRUNTIME_ROOT_DIR}/lib:${LD_LIBRARY_PATH}
   fi
+
+  # Keep locally installed libraries first in the search path.
+  export LD_LIBRARY_PATH="${FCCANA_LOCAL_DIR}/install/lib64:${FCCANA_LOCAL_DIR}/install/lib:${LD_LIBRARY_PATH}"
 
   export MANPATH=${FCCANA_LOCAL_DIR}/man:${MANPATH}
   export MANPATH=${FCCANA_LOCAL_DIR}/install/share/man:${MANPATH}
