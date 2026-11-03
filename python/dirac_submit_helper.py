@@ -257,9 +257,9 @@ def main() -> None:
     request = _load_request()
     planned_jobs = plan_jobs(request)
 
-    source_root = Path(__file__).resolve().parents[1]
+    install_root = Path(__file__).resolve().parents[1]
     worker_wrapper = _require_file(
-        source_root / 'scripts' / 'dirac' / 'run_fccanalysis.sh',
+        install_root / 'scripts' / 'dirac' / 'run_fccanalysis.sh',
         'FCCAnalyses worker wrapper',
     )
     analysis_script = _require_file(Path(request.analysis_script), 'Analysis script')

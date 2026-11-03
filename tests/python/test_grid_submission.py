@@ -20,6 +20,7 @@ from grid_submission import (
     GridSubmissionError,
     _create_analysis_include_archive,
     _create_analysis_instance,
+    _fccanalyses_root,
     create_grid_submission_request,
     submit_grid_submission,
 )
@@ -354,6 +355,12 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             key4hep_setup = root / 'setup.sh'
             self.write_modern_analysis(analysis_script)
             key4hep_setup.touch()
+            install_root = root.resolve() / 'install'
+            runner = install_root / 'scripts' / 'dirac' / 'run_dirac_submission.sh'
+            helper = install_root / 'python' / 'dirac_submit_helper.py'
+            for path in (runner, helper):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 [*self.grid_arguments(self.write_lfn_input(root)), '--ship-local-build'],
@@ -370,13 +377,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 self.assertEqual(
                     command,
                     [
-                        str(
-                            REPOSITORY_ROOT
-                            / 'scripts'
-                            / 'dirac'
-                            / 'run_dirac_submission.sh'
-                        ),
-                        str(REPOSITORY_ROOT / 'python' / 'dirac_submit_helper.py'),
+                        str(runner),
+                        str(helper),
                     ],
                 )
                 self.assertEqual(env['PATH'], '/usr/bin:/bin')
@@ -393,7 +395,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 'os.environ',
                 {
                     'KEY4HEP_STACK': str(key4hep_setup),
-                    'FCCANA_LOCAL_DIR': str(REPOSITORY_ROOT),
+                    'FCCANA_LOCAL_DIR': str(root),
                 },
                 clear=True,
             ):
@@ -416,6 +418,11 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
         self.assertTrue(temporary_paths)
         self.assertTrue(all(not path.exists() for path in temporary_paths))
+
+    def test_release_install_prefix_from_module_location(self) -> None:
+        with patch.dict('os.environ', {}, clear=True):
+            with patch('grid_submission.__file__', '/cvmfs/stack/python/grid_submission.py'):
+                self.assertEqual(_fccanalyses_root(), Path('/cvmfs/stack'))
 
 
 if __name__ == '__main__':

@@ -136,6 +136,10 @@ install(PROGRAMS bin/fccanalysis DESTINATION "${CMAKE_INSTALL_BINDIR}")
 
 file(GLOB _run_python_files python/*.py)
 install(FILES ${_run_python_files} DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
+install(PROGRAMS
+  scripts/dirac/run_dirac_submission.sh
+  scripts/dirac/run_fccanalysis.sh
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/scripts/dirac)
 
 
 file(GLOB _man_files_1 man/man1/*.1)
