@@ -117,19 +117,23 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             )
 
             args.remaining = ['--output', 'custom.root', '--nevents', '100']
-            request = create_grid_submission_request(
-                args,
-                self.load_analysis_module(analysis_script),
-                key4hep_setup=str(key4hep_setup),
-                analysis_include_archive_path=root / 'includes.tar.gz',
-            )
+            with self.assertLogs('FCCAnalyses.grid_submission', level='WARNING') as logs:
+                request = create_grid_submission_request(
+                    args,
+                    self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(key4hep_setup),
+                    analysis_include_archive_path=root / 'includes.tar.gz',
+                )
+            self.assertEqual(logs.records[0].getMessage(),
+                             'Grid submission currently supports one CPU per job '
+                             '(requested: 2, using: 1).')
 
             with tarfile.open(request.analysis_include_archive) as archive:
                 self.assertEqual(archive.getnames(), ['helpers/functions.h'])
 
             module = self.load_analysis_module(analysis_script)
-            for cli, script, expected in (
-                (None, 3, 3), (-2, 3, -2), (None, 0, None),
+            for cli, script, warning in (
+                (None, 3, 3), (-2, 3, -2), (1, 3, None), (None, 0, 'error'),
             ):
                 with self.subTest(cli=cli, script=script):
                     if script is not None:
@@ -138,15 +142,21 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     if cli is not None:
                         options.extend(['-j', str(cli)])
                     cpu_args = self.parse_grid_arguments(str(analysis_script), options)
-                    if expected is None:
+                    if warning == 'error':
                         with self.assertRaisesRegex(GridSubmissionError, 'nonzero integer'):
                             create_grid_submission_request(cpu_args, module, str(key4hep_setup))
                     else:
-                        cpu_request = create_grid_submission_request(
-                            cpu_args, module, str(key4hep_setup),
-                            analysis_include_archive_path=root / 'cpu-includes.tar.gz',
-                        )
-                        self.assertEqual(cpu_request.worker_ncpus, expected)
+                        log_check = (self.assertLogs if warning is not None else self.assertNoLogs)
+                        with log_check('FCCAnalyses.grid_submission', level='WARNING') as logs:
+                            cpu_request = create_grid_submission_request(
+                                cpu_args, module, str(key4hep_setup),
+                                analysis_include_archive_path=root / 'cpu-includes.tar.gz',
+                            )
+                        self.assertEqual(cpu_request.worker_ncpus, 1)
+                        if warning is not None:
+                            self.assertEqual(logs.records[0].getMessage(),
+                                             'Grid submission currently supports one CPU per job '
+                                             f'(requested: {warning}, using: 1).')
 
         self.assertEqual(request.analysis_script, str(analysis_script.resolve()))
         self.assertEqual(request.input_mode, 'dirac-lfn')
@@ -168,7 +178,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertIsNotNone(request.analysis_include_archive)
         self.assertEqual(request.run_arguments, tuple(args.remaining))
         self.assertEqual(request.worker_stride, 5)
-        self.assertEqual(request.worker_ncpus, 2)
+        self.assertEqual(request.worker_ncpus, 1)
         self.assertEqual(request.worker_output_format, 'rntuple')
         self.assertRegex(request.submission_id, r'^\d{8}T\d{6}Z$')
 

@@ -174,15 +174,13 @@ This check does not guarantee compatible CPU instruction sets or system librarie
 Set the ROOT output format used by every worker.
 .TP
 \fB\-j\fR \fINCPUS\fR, \fB\-\-ncpus\fR \fINCPUS\fR, \fB\-\-n\-threads\fR \fINTHREADS\fR
-Request this many CPUs per job and use the same number of ROOT threads.
-Negative values request the maximum number of threads available on the worker node. Zero is rejected.
+Grid submission currently uses one CPU and one ROOT thread per job.
+Negative values or values greater than one are accepted with a warning and
+reduced to one. Zero is rejected.
 The command line overrides
 .BR Analysis.n_threads ;
 the default is one CPU if neither is specified.
-If fewer CPUs are available than requested, workers emit a warning and use
-the available count. Missing or invalid allocation information remains an error.
-In local mode the available CPUs are determined
-from process affinity where supported, otherwise the local CPU count.
+Missing or invalid grid allocation information remains an error.
 .TP
 \fB\-\-stride\fR \fISTRIDE\fR
 Set the event stride used by every worker.

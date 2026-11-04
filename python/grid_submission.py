@@ -66,6 +66,12 @@ def create_grid_submission_request(
             ncpus = validate_n_threads(analysis_class, args.ncpus)
         except ValueError as error:
             raise GridSubmissionError(str(error)) from error
+        if ncpus != 1:
+            LOGGER.warning(
+                'Grid submission currently supports one CPU per job '
+                '(requested: %d, using: 1).', ncpus,
+            )
+            ncpus = 1
         _reject_sample_event_limits(analysis_class)
         if args.lfn_input is not None:
             input_mode = 'dirac-lfn'
