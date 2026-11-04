@@ -255,8 +255,8 @@ def setup_grid_submit_parser(parser):
         '-j', '--ncpus', '--n-threads',
         type=_nonzero_integer,
         default=None,
-        help='CPUs requested per job; negative values use all allocated CPUs '
-             '(default: Analysis.n_threads, otherwise 1)'
+        help='threads per job (currently limited to 1; default: '
+             'Analysis.n_threads, otherwise 1)'
     )
     parser.add_argument(
         '--stride',
