@@ -8,7 +8,7 @@ import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -160,6 +160,7 @@ from dirac_submit_helper import (
     _remove_existing_output,
     _user_lfn_root,
     _write_input_file_list,
+    main,
 )
 from submission import (
     ResolvedSample,
@@ -171,6 +172,99 @@ from submission import (
 
 class DiracSubmitHelperTest(unittest.TestCase):
     '''Exercise the only translation boundary that depends on ILCDIRAC.'''
+
+    def test_confirmation_precedes_deletion_and_submission(self) -> None:
+        request = SubmissionRequest(
+            analysis_script='/work/analysis.py', input_mode='dirac-lfn',
+            input_lfns=('/fcc/data/input.root',), samples=(), files_per_job=1,
+            lfn_sample_name=None, run_arguments=(), output_file='result.root',
+            output_path=None, output_se=None, key4hep_setup='/work/setup.sh',
+            job_name='FCCAnalysis', job_group='test', submit_mode='wms',
+            destination_site=None, submission_id='test', user_build_payload=None,
+        )
+        output_lfn = _output_lfn(plan_jobs(request)[0], '/fcc/user/a/alice')
+        for answer, force, should_submit in (
+            ('n', False, False), ('', False, False),
+            (EOFError(), False, False), ('y', False, True),
+            (None, True, True),
+        ):
+            with self.subTest(answer=answer, force=force):
+                from dataclasses import replace
+                current = replace(request, force=force)
+                events = []
+                dirac = MagicMock()
+                dirac.removeFile.side_effect = lambda lfn: (
+                    events.append(('delete', lfn)) or {'OK': True}
+                )
+                job = MagicMock()
+                job.submit.side_effect = lambda *args, **kwargs: (
+                    events.append(('submit',)) or {'OK': True, 'JobID': 42}
+                )
+                catalog = FakeCatalog()
+                catalog.existing_lfns = {output_lfn}
+                output = StringIO()
+                with patch('dirac_submit_helper._load_request', return_value=current), \
+                     patch('dirac_submit_helper._require_file', side_effect=lambda path, _: path), \
+                     patch('dirac_submit_helper.DiracILC', return_value=dirac), \
+                     patch('dirac_submit_helper.FileCatalog', return_value=catalog), \
+                     patch('dirac_submit_helper._create_job', return_value=job), \
+                     patch('builtins.input', side_effect=(answer if isinstance(answer, Exception) else None),
+                           return_value=answer) as prompt, redirect_stdout(output):
+                    if should_submit:
+                        main()
+                    else:
+                        with self.assertRaises(SystemExit) as cancelled:
+                            main()
+                        self.assertNotEqual(cancelled.exception.code, 0)
+                self.assertIn(output_lfn, output.getvalue())
+                self.assertIn('WARNING: Found existing output files that will be '
+                              'deleted before submission:', output.getvalue())
+                if should_submit:
+                    self.assertEqual(events, [('delete', output_lfn), ('submit',)])
+                    job.dontPromptMe.assert_called_once()
+                    self.assertIn(f'Removing existing output LFN: {output_lfn}',
+                                  output.getvalue())
+                else:
+                    self.assertEqual(events, [])
+                    job.submit.assert_not_called()
+                self.assertEqual(prompt.call_count, 0 if force else 1)
+                if not force:
+                    prompt.assert_called_once_with(
+                        'Proceed with submission and deletion of these files? y/[n]: '
+                    )
+
+    def test_empty_plan_exits_unsuccessfully(self) -> None:
+        with patch('dirac_submit_helper._load_request'), \
+             patch('dirac_submit_helper.plan_jobs', return_value=()):
+            with self.assertRaisesRegex(SystemExit, 'No jobs to submit'):
+                main()
+
+    def test_partial_submission_reports_ids_and_unattempted_jobs(self) -> None:
+        request = SubmissionRequest(
+            analysis_script='/work/analysis.py', input_mode='dirac-lfn',
+            input_lfns=('/fcc/data/a.root', '/fcc/data/b.root', '/fcc/data/c.root'),
+            samples=(), files_per_job=1, lfn_sample_name=None, run_arguments=(),
+            output_file='result.root', output_path=None, output_se=None,
+            key4hep_setup='/work/setup.sh', job_name='FCCAnalysis', job_group='test',
+            submit_mode='wms', destination_site=None, submission_id='test',
+            user_build_payload=None, force=True,
+        )
+        job = MagicMock()
+        job.submit.side_effect = [
+            {'OK': True, 'JobID': 42}, {'OK': False, 'Message': 'rejected'},
+        ]
+        output = StringIO()
+        with patch('dirac_submit_helper._load_request', return_value=request), \
+             patch('dirac_submit_helper._require_file', side_effect=lambda path, _: path), \
+             patch('dirac_submit_helper.DiracILC'), \
+             patch('dirac_submit_helper.FileCatalog', return_value=FakeCatalog()), \
+             patch('dirac_submit_helper._create_job', return_value=job), \
+             redirect_stdout(output):
+            with self.assertRaisesRegex(RuntimeError, '1 remaining job\\(s\\) were not attempted') as error:
+                main()
+        self.assertIn('Submitted DIRAC job IDs: 42', output.getvalue())
+        self.assertIn('rejected', str(error.exception))
+        self.assertEqual(job.submit.call_count, 2)
 
     def test_translates_lfn_plan_into_dirac_job(self) -> None:
         request = SubmissionRequest(
@@ -391,7 +485,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
 
         self.assertEqual(removed, [output_lfn])
         self.assertIn(
-            f'WARNING: Removing existing output LFN: {output_lfn}',
+            f'Removing existing output LFN: {output_lfn}',
             output.getvalue(),
         )
 

@@ -205,13 +205,35 @@ def _remove_existing_output(dirac, catalog, user_lfn_root, planned_job) -> None:
     if not _catalog_file_exists(catalog, output_lfn):
         return
 
-    print(f'WARNING: Removing existing output LFN: {output_lfn}')
+    print(f'Removing existing output LFN: {output_lfn}')
     result = dirac.removeFile(output_lfn)
     if not result or not result.get('OK'):
         message = result.get('Message', result) if result else 'no result returned'
         raise RuntimeError(
             f'Unable to remove existing output LFN {output_lfn}: {message}'
         )
+
+
+def _confirm_submission(existing_outputs: list[str], force: bool) -> bool:
+    '''Confirm submission and any planned deletions before making changes.'''
+    if existing_outputs:
+        print('WARNING: Found existing output files that will be deleted before submission:')
+        for lfn in existing_outputs:
+            print(f'  {lfn}')
+    if force:
+        print('Automatically confirming submission and listed deletions (--force).')
+        return True
+    try:
+        question = ('Proceed with submission and deletion of these files?'
+                    if existing_outputs else 'Proceed with submission?')
+        answer = input(f'{question} y/[n]: ')
+    except EOFError:
+        print('\nSubmission cancelled: confirmation was not provided.')
+        return False
+    if answer.strip().lower() not in ('y', 'yes'):
+        print('Submission cancelled; no files were deleted and no jobs submitted.')
+        return False
+    return True
 
 
 def _print_plan(
@@ -267,6 +289,8 @@ def main() -> None:
     '''Load one request, create all jobs, and submit them to the WMS.'''
     request = _load_request()
     planned_jobs = plan_jobs(request)
+    if not planned_jobs:
+        raise SystemExit('No jobs to submit.')
 
     install_root = Path(__file__).resolve().parents[1]
     worker_wrapper = _require_file(
@@ -286,6 +310,14 @@ def main() -> None:
     dirac = DiracILC()
     user_lfn_root = _user_lfn_root()
     catalog = FileCatalog()
+    existing_outputs = [
+        _output_lfn(job, user_lfn_root)
+        for job in planned_jobs
+        if _catalog_file_exists(catalog, _output_lfn(job, user_lfn_root))
+    ]
+    if not _confirm_submission(existing_outputs, request.force):
+        raise SystemExit(1)
+    confirmed_outputs = set(existing_outputs)
     submitted_job_ids = []
     failures = []
     with tempfile.TemporaryDirectory(prefix='fccanalyses-input-lists-') as directory:
@@ -295,29 +327,30 @@ def main() -> None:
                 f'Submitting planned job {planned_job.index + 1}/{len(planned_jobs)} '
                 f'({planned_job.job_name})'
             )
-            input_file_list = _write_input_file_list(
-                planned_job,
-                input_list_directory,
-            )
-            _remove_existing_output(
-                dirac,
-                catalog,
-                user_lfn_root,
-                planned_job,
-            )
-            result = _create_job(
-                request,
-                planned_job,
-                analysis_script,
-                worker_wrapper,
-                user_build_archive,
-                analysis_include_archive,
-                input_file_list,
-            ).submit(dirac, mode=request.submit_mode)
-            if not result or not result.get('OK'):
-                message = result.get('Message', result) if result else 'no result returned'
-                failures.append(f'{planned_job.job_name}: {message}')
-                continue
+            try:
+                input_file_list = _write_input_file_list(
+                    planned_job,
+                    input_list_directory,
+                )
+                job = _create_job(
+                    request,
+                    planned_job,
+                    analysis_script,
+                    worker_wrapper,
+                    user_build_archive,
+                    analysis_include_archive,
+                    input_file_list,
+                )
+                job.dontPromptMe()
+                if _output_lfn(planned_job, user_lfn_root) in confirmed_outputs:
+                    _remove_existing_output(dirac, catalog, user_lfn_root, planned_job)
+                result = job.submit(dirac, mode=request.submit_mode)
+                if not result or not result.get('OK'):
+                    message = result.get('Message', result) if result else 'no result returned'
+                    raise RuntimeError(str(message))
+            except Exception as error:
+                failures.append(f'{planned_job.job_name}: {error}')
+                break
             submitted_job_ids.append(result.get('JobID', result.get('Value')))
 
     if submitted_job_ids:
@@ -325,8 +358,12 @@ def main() -> None:
     if request.submit_mode == 'local':
         print('Local DIRAC output is in the created Local_<hash>_JobDir directory.')
     if failures:
+        not_attempted = len(planned_jobs) - len(submitted_job_ids) - 1
         raise RuntimeError(
-            'Some DIRAC jobs were not submitted:\n  ' + '\n  '.join(failures)
+            f'Submission stopped after {len(submitted_job_ids)} of '
+            f'{len(planned_jobs)} jobs were submitted. '
+            f'{not_attempted} remaining job(s) were not attempted.\n'
+            'Failed job:\n  ' + '\n  '.join(failures)
         )
 
 

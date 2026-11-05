@@ -179,6 +179,11 @@ def setup_grid_submit_parser(parser):
     '''Define arguments accepted by the DIRAC grid backend.'''
     parser.add_argument('anascript_path', help='path to analysis script')
     parser.add_argument(
+        '--force', action='store_true',
+        help='automatically confirm grid submission and deletion of conflicting '
+             'output files; use with caution'
+    )
+    parser.add_argument(
         '--lfn-input',
         default=None,
         metavar='LFN_LIST',

@@ -135,10 +135,12 @@ class SubmissionRequest:
     worker_stride: int | None = None
     worker_output_format: str | None = None
     worker_ncpus: int | None = None
+    force: bool = False
 
     def to_dict(self) -> dict[str, object]:
         return {
             "analysis_script": self.analysis_script,
+            "force": self.force,
             "input_mode": self.input_mode,
             "input_lfns": list(self.input_lfns),
             "samples": [sample.to_dict() for sample in self.samples],
@@ -191,6 +193,7 @@ class SubmissionRequest:
             user_build_payload = UserBuildPayload.from_dict(user_build_payload)
         return cls(
             analysis_script=payload["analysis_script"],
+            force=payload.get("force", False),
             input_mode=payload["input_mode"],
             input_lfns=tuple(payload["input_lfns"]),
             samples=tuple(ResolvedSample.from_dict(sample) for sample in payload["samples"]),

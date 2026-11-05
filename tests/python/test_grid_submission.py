@@ -113,6 +113,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     '--stride', '5',
                     '--ncpus', '2',
                     '--output-format', 'rntuple',
+                    '--force',
                 ],
             )
 
@@ -174,6 +175,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertEqual(request.output_se, 'CERN-DST-EOS')
         self.assertEqual(request.destination_site, 'LCG.CERN.ch')
         self.assertEqual(request.submit_mode, 'wms')
+        self.assertTrue(request.force)
         self.assertIsNone(request.user_build_payload)
         self.assertIsNotNone(request.analysis_include_archive)
         self.assertEqual(request.run_arguments, tuple(args.remaining))

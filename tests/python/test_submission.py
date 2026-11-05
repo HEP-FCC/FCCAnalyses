@@ -71,6 +71,7 @@ class SubmissionTest(unittest.TestCase):
 
     def test_round_trips_complete_request(self) -> None:
         request = make_xrootd_request(
+            force=True,
             n_chunks=2,
             run_arguments=("--analysis-option", "value"),
             output_path=None,
