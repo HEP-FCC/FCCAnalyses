@@ -81,6 +81,12 @@ In
 mode DIRAC sends the jobs to grid worker nodes; in
 .B local
 mode DIRAC executes them on the submission machine for testing.
+Before submission, the helper lists existing output files that would be
+deleted and asks for confirmation. Declining cancels without submitting jobs
+or deleting files.
+Cancellation, an empty job plan, or a submission failure produces a nonzero
+exit status. On partial failure, submitted job IDs and the number of jobs not
+attempted are reported; review them before retrying.
 
 .SH OPTIONS
 .TP
@@ -132,6 +138,11 @@ If omitted, each output is registered directly in that root.
 .TP
 \fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR
 Override the storage element selected by DIRAC for output data.
+.TP
+\fB\-\-force\fR
+Automatically confirm grid submission, including deletion of existing output.
+Use with caution. Authentication prompts are not automatically answered;
+initialize a valid DIRAC proxy for unattended use.
 .TP
 \fB\-\-files\-per\-job\fR \fICOUNT\fR
 Derive the number of jobs from the number of input files and the requested

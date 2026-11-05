@@ -96,6 +96,7 @@ def create_grid_submission_request(
 
         return SubmissionRequest(
             analysis_script=str(analysis_script),
+            force=getattr(args, 'force', False),
             input_mode=input_mode,
             input_lfns=input_lfns,
             samples=samples,
