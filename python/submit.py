@@ -9,18 +9,17 @@ import importlib
 import argparse
 import shutil
 from batch import send_to_batch
+from grid_submission import GridSubmissionError, submit_grid_submission
 
 
 LOGGER = logging.getLogger('FCCAnalyses.submit')
 
 
 # _____________________________________________________________________________
-def submit_analysis(parser: argparse.ArgumentParser) -> None:
+def submit_analysis(args: argparse.Namespace) -> None:
     '''
     Sub-command entry point.
     '''
-
-    args = parser.parse_args()
 
     # Check to where the analysis will be submitted.
     if args.where == 'ht-condor':
@@ -32,10 +31,6 @@ def submit_analysis(parser: argparse.ArgumentParser) -> None:
 
     elif args.where == 'slurm':
         LOGGER.error('Submission to the Slurm is not yet implemented!\n'
-                     'Aborting...')
-        sys.exit(3)
-    elif args.where == 'grid':
-        LOGGER.error('Submission to the GRID is not yet implemented!\n'
                      'Aborting...')
         sys.exit(3)
 
@@ -61,3 +56,11 @@ def submit_analysis(parser: argparse.ArgumentParser) -> None:
 
     if args.where == 'ht-condor':
         send_to_batch(args, analysis_module)
+
+    elif args.where == 'grid':
+        LOGGER.info('Preparing analysis submission to the grid...')
+        try:
+            submit_grid_submission(args, analysis_module)
+        except GridSubmissionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)

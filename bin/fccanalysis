@@ -7,7 +7,7 @@ import argparse
 import logging
 import sys
 
-from parsers import setup_subparsers
+from parsers import parse_command_arguments, setup_subparsers
 from build_fccanalyses import build_fccanalyses
 from test_fccanalyses import test_fccanalyses
 from pin_fccanalyses import PinFCCAnalyses
@@ -90,7 +90,7 @@ def main():
 
     setup_subparsers(subparsers)
 
-    args, _ = parser.parse_known_args()
+    args = parse_command_arguments(parser)
 
     # Logger settings
     verbosity_level = logging.INFO
@@ -112,21 +112,21 @@ def main():
     logger.addHandler(stderr_stream_handler)
 
     if args.command == 'build':
-        build_fccanalyses(parser)
+        build_fccanalyses(args)
     elif args.command == 'test':
-        test_fccanalyses(parser)
+        test_fccanalyses(args)
     elif args.command == 'pin':
-        PinFCCAnalyses(parser)
+        PinFCCAnalyses(args)
     elif args.command == 'submit':
-        submit_analysis(parser)
+        submit_analysis(args)
     elif args.command == 'final':
-        run_final(parser)
+        run_final(args)
     elif args.command == 'plots':
-        do_plots(parser)
+        do_plots(args)
     elif args.command == 'combine':
-        do_combine(parser)
+        do_combine(args)
     else:
-        run(parser)
+        run(args)
 
 
 # _____________________________________________________________________________
