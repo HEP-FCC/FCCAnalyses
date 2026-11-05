@@ -5,8 +5,6 @@ import sys
 import tempfile
 import types
 import unittest
-from contextlib import redirect_stdout
-from io import StringIO
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -202,28 +200,27 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 )
                 catalog = FakeCatalog()
                 catalog.existing_lfns = {output_lfn}
-                output = StringIO()
                 with patch('dirac_submit_helper._load_request', return_value=current), \
                      patch('dirac_submit_helper._require_file', side_effect=lambda path, _: path), \
                      patch('dirac_submit_helper.DiracILC', return_value=dirac), \
                      patch('dirac_submit_helper.FileCatalog', return_value=catalog), \
                      patch('dirac_submit_helper._create_job', return_value=job), \
                      patch('builtins.input', side_effect=(answer if isinstance(answer, Exception) else None),
-                           return_value=answer) as prompt, redirect_stdout(output):
+                           return_value=answer) as prompt, self.assertLogs('FCCAnalyses.grid_helper', level='INFO') as logs:
                     if should_submit:
                         main()
                     else:
                         with self.assertRaises(SystemExit) as cancelled:
                             main()
                         self.assertNotEqual(cancelled.exception.code, 0)
-                self.assertIn(output_lfn, output.getvalue())
-                self.assertIn('WARNING: Found existing output files that will be '
-                              'deleted before submission:', output.getvalue())
+                self.assertIn(output_lfn, '\n'.join(logs.output))
+                self.assertIn('Found existing output files that will be '
+                              'deleted before submission:', '\n'.join(logs.output))
                 if should_submit:
                     self.assertEqual(events, [('delete', output_lfn), ('submit',)])
                     job.dontPromptMe.assert_called_once()
                     self.assertIn(f'Removing existing output LFN: {output_lfn}',
-                                  output.getvalue())
+                                  '\n'.join(logs.output))
                 else:
                     self.assertEqual(events, [])
                     job.submit.assert_not_called()
@@ -253,16 +250,15 @@ class DiracSubmitHelperTest(unittest.TestCase):
         job.submit.side_effect = [
             {'OK': True, 'JobID': 42}, {'OK': False, 'Message': 'rejected'},
         ]
-        output = StringIO()
         with patch('dirac_submit_helper._load_request', return_value=request), \
              patch('dirac_submit_helper._require_file', side_effect=lambda path, _: path), \
              patch('dirac_submit_helper.DiracILC'), \
              patch('dirac_submit_helper.FileCatalog', return_value=FakeCatalog()), \
              patch('dirac_submit_helper._create_job', return_value=job), \
-             redirect_stdout(output):
+             self.assertLogs('FCCAnalyses.grid_helper', level='INFO') as logs:
             with self.assertRaisesRegex(RuntimeError, '1 remaining job\\(s\\) were not attempted') as error:
                 main()
-        self.assertIn('Submitted DIRAC job IDs: 42', output.getvalue())
+        self.assertIn('Submitted DIRAC job IDs: 42', '\n'.join(logs.output))
         self.assertIn('rejected', str(error.exception))
         self.assertEqual(job.submit.call_count, 2)
 
@@ -474,8 +470,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 removed.append(lfn)
                 return {'OK': True}
 
-        output = StringIO()
-        with redirect_stdout(output):
+        with self.assertLogs('FCCAnalyses.grid_helper', level='INFO') as logs:
             _remove_existing_output(
                 FakeDirac(),
                 FakeCatalog(),
@@ -486,7 +481,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
         self.assertEqual(removed, [output_lfn])
         self.assertIn(
             f'Removing existing output LFN: {output_lfn}',
-            output.getvalue(),
+            '\n'.join(logs.output),
         )
 
     def test_uses_proxy_group_when_config_does_not_define_a_vo(self) -> None:

@@ -5,12 +5,42 @@ has created the supported DIRAC client environment. Keep ILCDIRAC imports in
 this file so the public FCCAnalyses process remains independent of DIRAC.
 '''
 
+import logging
 import os
-from pathlib import Path
 import shlex
+import sys
 import tempfile
+from io import StringIO
+from pathlib import Path
 
 from submission import SubmissionRequest, SubmissionValidationError, plan_jobs
+
+LOGGER = logging.getLogger('FCCAnalyses.grid_helper')
+
+
+class MultiLineFormatter(logging.Formatter):
+    '''
+    Multi-line formatter.
+    '''
+    def get_header_length(self, record):
+        '''
+        Get the header length of a given record.
+        '''
+        return len(super().format(logging.LogRecord(
+            name=record.name,
+            level=record.levelno,
+            pathname=record.pathname,
+            lineno=record.lineno,
+            msg='', args=(), exc_info=None
+        )))
+
+    def format(self, record):
+        '''
+        Format a record with added indentation.
+        '''
+        indent = ' ' * self.get_header_length(record)
+        head, *trailing = super().format(record).splitlines(True)
+        return head + ''.join(indent + line for line in trailing)
 
 # DIRAC configuration, including DIRACSYSCONFIG and ~/.dirac.cfg, is loaded by
 # parseCommandLine(). It must run before importing and using ILCDIRAC APIs.
@@ -205,7 +235,7 @@ def _remove_existing_output(dirac, catalog, user_lfn_root, planned_job) -> None:
     if not _catalog_file_exists(catalog, output_lfn):
         return
 
-    print(f'Removing existing output LFN: {output_lfn}')
+    LOGGER.info('Removing existing output LFN: %s', output_lfn)
     result = dirac.removeFile(output_lfn)
     if not result or not result.get('OK'):
         message = result.get('Message', result) if result else 'no result returned'
@@ -217,21 +247,20 @@ def _remove_existing_output(dirac, catalog, user_lfn_root, planned_job) -> None:
 def _confirm_submission(existing_outputs: list[str], force: bool) -> bool:
     '''Confirm submission and any planned deletions before making changes.'''
     if existing_outputs:
-        print('WARNING: Found existing output files that will be deleted before submission:')
-        for lfn in existing_outputs:
-            print(f'  {lfn}')
+        LOGGER.warning('Found existing output files that will be deleted before submission:\n%s',
+                       '\n'.join(existing_outputs))
     if force:
-        print('Automatically confirming submission and listed deletions (--force).')
+        LOGGER.info('Automatically confirming submission and listed deletions (--force).')
         return True
     try:
         question = ('Proceed with submission and deletion of these files?'
                     if existing_outputs else 'Proceed with submission?')
         answer = input(f'{question} y/[n]: ')
     except EOFError:
-        print('\nSubmission cancelled: confirmation was not provided.')
+        LOGGER.warning('Submission cancelled: confirmation was not provided.')
         return False
     if answer.strip().lower() not in ('y', 'yes'):
-        print('Submission cancelled; no files were deleted and no jobs submitted.')
+        LOGGER.info('Submission cancelled; no files were deleted and no jobs submitted.')
         return False
     return True
 
@@ -243,11 +272,16 @@ def _print_plan(
     local_se: str | None,
 ) -> None:
     '''Print the concrete jobs before they are submitted.'''
-    print('FCCAnalyses grid submission plan:')
-    print(f'  submission ID:   {request.submission_id}')
-    print(f'  analysis script: {analysis_script}')
-    print(f'  input mode:      {request.input_mode}')
-    print(
+    output = StringIO()
+
+    def emit(*args):
+        print(*args, file=output)
+
+    emit('FCCAnalyses grid submission plan:')
+    emit(f'  submission ID:   {request.submission_id}')
+    emit(f'  analysis script: {analysis_script}')
+    emit(f'  input mode:      {request.input_mode}')
+    emit(
         '  input files:     '
         f'{sum(len(job.source_inputs) for job in planned_jobs)}'
     )
@@ -259,30 +293,31 @@ def _print_plan(
         job_grouping = 'one file per job'
     else:
         job_grouping = 'sample chunks'
-    print(f'  job grouping:    {job_grouping}')
-    print(f'  planned jobs:    {len(planned_jobs)}')
-    print(f'  output SE:       {request.output_se or "selected by DIRAC"}')
-    print(f'  destination:     {request.destination_site or "selected by DIRAC"}')
-    print(f'  submission mode: {request.submit_mode}')
+    emit(f'  job grouping:    {job_grouping}')
+    emit(f'  planned jobs:    {len(planned_jobs)}')
+    emit(f'  output SE:       {request.output_se or "selected by DIRAC"}')
+    emit(f'  destination:     {request.destination_site or "selected by DIRAC"}')
+    emit(f'  submission mode: {request.submit_mode}')
     if local_se:
-        print(f'  local SE:        {local_se}')
+        emit(f'  local SE:        {local_se}')
     if request.user_build_payload is not None:
         payload = request.user_build_payload
-        print(
+        emit(
             f'  user build:      {Path(payload.archive_path).name} '
             f'({payload.size_bytes / 1024**2:.1f} MiB)'
         )
     if request.analysis_include_archive is not None:
-        print('  include files:   staged from Analysis.include_paths')
+        emit('  include files:   staged from Analysis.include_paths')
     for planned_job in planned_jobs:
-        print(f'  job {planned_job.index:04d}:')
-        print('    inputs:')
+        emit(f'  job {planned_job.index:04d}:')
+        emit('    inputs:')
         for source_input in planned_job.source_inputs:
-            print(f'      {source_input}')
-        print(
+            emit(f'      {source_input}')
+        emit(
             '    output:        '
             f'{planned_job.output_path or "(user root)"}/{planned_job.output_file}'
         )
+    LOGGER.info('%s', output.getvalue().rstrip())
 
 
 def main() -> None:
@@ -323,7 +358,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix='fccanalyses-input-lists-') as directory:
         input_list_directory = Path(directory)
         for planned_job in planned_jobs:
-            print(
+            LOGGER.info(
                 f'Submitting planned job {planned_job.index + 1}/{len(planned_jobs)} '
                 f'({planned_job.job_name})'
             )
@@ -354,9 +389,9 @@ def main() -> None:
             submitted_job_ids.append(result.get('JobID', result.get('Value')))
 
     if submitted_job_ids:
-        print('Submitted DIRAC job IDs: ' + ', '.join(map(str, submitted_job_ids)))
+        LOGGER.info('Submitted DIRAC job IDs: %s', ', '.join(map(str, submitted_job_ids)))
     if request.submit_mode == 'local':
-        print('Local DIRAC output is in the created Local_<hash>_JobDir directory.')
+        LOGGER.info('Local DIRAC output is in the created Local_<hash>_JobDir directory.')
     if failures:
         not_attempted = len(planned_jobs) - len(submitted_job_ids) - 1
         raise RuntimeError(
@@ -368,4 +403,9 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    logger = logging.getLogger('FCCAnalyses')
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(MultiLineFormatter('----> %(levelname)s: %(message)s'))
+    logger.addHandler(handler)
     main()
