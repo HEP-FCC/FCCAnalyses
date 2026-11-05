@@ -492,16 +492,13 @@ def submit_grid_submission(
         request_path = Path(directory) / 'submission-request.json'
         request.write_json(request_path)
 
-        print(f'Worker Key4hep setup: {request.key4hep_setup}', flush=True)
+        LOGGER.info('Worker Key4hep setup: %s', request.key4hep_setup)
         if user_build_payload is None:
-            print('Worker runtime: FCCAnalyses from the Key4hep stack', flush=True)
+            LOGGER.info('Worker runtime: FCCAnalyses from the Key4hep stack')
         else:
-            print(
-                'Worker runtime: shipped local FCCAnalyses build '
-                f'({user_build_payload.size_bytes / 1024**2:.1f} MiB)',
-                flush=True,
-            )
-        print('Starting isolated DIRAC submission client.', flush=True)
+            LOGGER.info('Worker runtime: shipped local FCCAnalyses build (%.1f MiB)',
+                        user_build_payload.size_bytes / 1024**2)
+        LOGGER.info('Starting isolated DIRAC submission client.')
 
         try:
             subprocess.run(
@@ -510,9 +507,7 @@ def submit_grid_submission(
                 env=_dirac_environment(request_path),
             )
         except subprocess.CalledProcessError as error:
-            raise GridSubmissionError(
-                f'DIRAC submission helper failed with exit code {error.returncode}.'
-            ) from error
+            raise SystemExit(error.returncode) from error
 
 
 def _fccanalyses_root() -> Path:

@@ -51,8 +51,8 @@ setup_dirac() {
 setup_fcc_grid >/dev/null
 setup_dirac
 
-echo "DIRAC submission client is ready."
-echo "  DIRAC setup:         ${DIRAC_SETUP}"
+echo "----> INFO: DIRAC submission client is ready."
+echo "              DIRAC setup: ${DIRAC_SETUP}"
 
 if ! command -v python >/dev/null 2>&1; then
   echo "python is unavailable after sourcing DIRAC" >&2
@@ -60,10 +60,10 @@ if ! command -v python >/dev/null 2>&1; then
 fi
 
 if ! dirac-proxy-info -m >/dev/null 2>&1; then
-  echo "No valid DIRAC proxy found; creating one for group: ${DIRAC_GROUP}"
+  echo "----> INFO: No valid DIRAC proxy found; creating one for group: ${DIRAC_GROUP}"
   dirac-proxy-init -g "${DIRAC_GROUP}"
 else
-  echo "Using an existing valid DIRAC proxy."
+  echo "----> INFO: Using an existing valid DIRAC proxy."
 fi
 
 exec python "${submission_helper}"
