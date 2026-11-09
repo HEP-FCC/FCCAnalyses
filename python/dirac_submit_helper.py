@@ -8,39 +8,15 @@ this file so the public FCCAnalyses process remains independent of DIRAC.
 import logging
 import os
 import shlex
-import sys
 import tempfile
 from io import StringIO
 from pathlib import Path, PurePosixPath
 
+from logging_utils import configure_logging
 from submission import SubmissionRequest, SubmissionValidationError, plan_jobs
 
 LOGGER = logging.getLogger('FCCAnalyses.grid_helper')
 
-
-class MultiLineFormatter(logging.Formatter):
-    '''
-    Multi-line formatter.
-    '''
-    def get_header_length(self, record):
-        '''
-        Get the header length of a given record.
-        '''
-        return len(super().format(logging.LogRecord(
-            name=record.name,
-            level=record.levelno,
-            pathname=record.pathname,
-            lineno=record.lineno,
-            msg='', args=(), exc_info=None
-        )))
-
-    def format(self, record):
-        '''
-        Format a record with added indentation.
-        '''
-        indent = ' ' * self.get_header_length(record)
-        head, *trailing = super().format(record).splitlines(True)
-        return head + ''.join(indent + line for line in trailing)
 
 # DIRAC configuration, including DIRACSYSCONFIG and ~/.dirac.cfg, is loaded by
 # parseCommandLine(). It must run before importing and using ILCDIRAC APIs.
@@ -402,9 +378,5 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    logger = logging.getLogger('FCCAnalyses')
-    logger.setLevel(logging.INFO)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(MultiLineFormatter('----> %(levelname)s: %(message)s'))
-    logger.addHandler(handler)
+    configure_logging()
     main()
