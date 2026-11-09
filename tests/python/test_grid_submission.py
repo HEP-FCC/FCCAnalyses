@@ -174,7 +174,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 with self.subTest(cli=cli, script=script):
                     if script is not None:
                         module.Analysis.n_threads = script
-                    options = ['--lfn-input', str(self.write_lfn_input(root))]
+                    options = ['--input-lfn-list', str(self.write_lfn_input(root))]
                     if cli is not None:
                         options.extend(['-j', str(cli)])
                     cpu_args = self.parse_grid_arguments(str(analysis_script), options)
@@ -221,9 +221,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 [
@@ -246,12 +245,11 @@ class GridSubmissionFrontendTest(unittest.TestCase):
     def test_resolves_analysis_lfn_inputs_and_rejects_mixed_sources(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             lfn_list = self.write_lfn_input(root)
             global_script = root / 'global-lfns.py'
             sample_script = root / 'sample-lfns.py'
             mixed_script = root / 'mixed.py'
-            key4hep_setup.touch()
             self.write_modern_analysis(
                 global_script,
                 f'        self.input_lfn_list = {str(lfn_list)!r}\n',
@@ -361,7 +359,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             self.write_modern_analysis(
                 analysis_script,
                 '        self.samples = {\n'
@@ -370,7 +368,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 '            ]}\n'
                 '        }\n',
             )
-            key4hep_setup.touch()
             args = self.parse_grid_arguments(str(analysis_script), [])
 
             with patch(
@@ -393,9 +390,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 ['--input', 'root://storage.example.org//data/a.root'],
@@ -442,10 +438,9 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             input_list = root / 'inputs.txt'
             self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
             input_list.write_text(
                 'root://storage.example.org//data/a.root\n', encoding='utf-8'
             )

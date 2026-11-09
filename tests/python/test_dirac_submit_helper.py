@@ -181,8 +181,8 @@ class DiracSubmitHelperTest(unittest.TestCase):
     def test_confirmation_precedes_deletion_and_submission(self) -> None:
         request = SubmissionRequest(
             analysis_script='/work/analysis.py', input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/input.root',), samples=(), files_per_job=1,
-            lfn_sample_name=None, run_arguments=(), output_file='result.root',
+            samples=(ResolvedSample(None, None, ('/fcc/data/input.root',), 1, None),),
+            files_per_job=1, run_arguments=(), output_file='result.root',
             output_path=None, output_se=None, key4hep_setup='/work/setup.sh',
             job_name='FCCAnalysis', job_group='test', submit_mode='wms',
             destination_site=None, submission_id='test', user_build_payload=None,
@@ -252,8 +252,9 @@ class DiracSubmitHelperTest(unittest.TestCase):
     def test_partial_submission_reports_ids_and_unattempted_jobs(self) -> None:
         request = SubmissionRequest(
             analysis_script='/work/analysis.py', input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/a.root', '/fcc/data/b.root', '/fcc/data/c.root'),
-            samples=(), files_per_job=1, lfn_sample_name=None, run_arguments=(),
+            samples=(ResolvedSample(None, None, ('/fcc/data/a.root', '/fcc/data/b.root',
+                                                   '/fcc/data/c.root'), 1, None),),
+            files_per_job=1, run_arguments=(),
             output_file='result.root', output_path=None, output_se=None,
             key4hep_setup='/work/setup.sh', job_name='FCCAnalysis', job_group='test',
             submit_mode='wms', destination_site=None, submission_id='test',
@@ -278,8 +279,9 @@ class DiracSubmitHelperTest(unittest.TestCase):
     def test_failed_submission_does_not_restore_deleted_output(self) -> None:
         request = SubmissionRequest(
             analysis_script='/work/analysis.py', input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/a.root', '/fcc/data/b.root'),
-            samples=(), files_per_job=1, lfn_sample_name=None, run_arguments=(),
+            samples=(ResolvedSample(None, None, ('/fcc/data/a.root', '/fcc/data/b.root'),
+                                    1, None),),
+            files_per_job=1, run_arguments=(),
             output_file='result.root', output_path=None, output_se=None,
             key4hep_setup='/work/setup.sh', job_name='FCCAnalysis', job_group='test',
             submit_mode='wms', destination_site=None, submission_id='test',
