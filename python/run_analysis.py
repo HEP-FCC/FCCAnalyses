@@ -13,6 +13,7 @@ from inspect import signature
 import ROOT  # type: ignore
 import cppyy
 from anascript import get_element, get_element_dict, get_attribute
+from input_resolver import InputResolutionError, read_input_file_list, resolve_inputs
 from sample import get_process_info, get_process_dict
 from sample import get_subfile_list, get_chunk_list, get_event_entries
 from utils import generate_graph, save_benchmark
@@ -330,12 +331,20 @@ def run_stages(args, rdf_module, anapath):
 
     # Check if files are specified, and if so run the analysis on it/them (this
     # will exit after)
-    if len(args.files_list) > 0:
+    if args.input is not None or args.input_file_list is not None:
+        try:
+            if args.input is not None:
+                input_files = resolve_inputs(args.input)
+            else:
+                input_files = read_input_file_list(args.input_file_list)
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
         LOGGER.info('Running over files provided in command line argument...')
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(rdf_module, args.files_list, args)
+        run_local(rdf_module, input_files, args)
         sys.exit(0)
 
     # Check if the process list is specified
@@ -786,9 +795,6 @@ def run(args):
     # Adjustments for the old approaches
     if args.progress_bar is None:
         args.progress_bar = True
-
-    if not hasattr(args, 'files_list'):
-        args.files_list = []
 
     if get_element(rdf_module, 'graph', False):
         args.graph = True
