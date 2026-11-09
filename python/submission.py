@@ -88,15 +88,11 @@ class UserBuildPayload:
 
     archive_path: str
     size_bytes: int
-    build_os: str
-    build_arch: str
 
     def to_dict(self) -> dict[str, object]:
         return {
             "archive_path": self.archive_path,
             "size_bytes": self.size_bytes,
-            "build_os": self.build_os,
-            "build_arch": self.build_arch,
         }
 
     @classmethod
@@ -104,8 +100,6 @@ class UserBuildPayload:
         return cls(
             archive_path=payload["archive_path"],
             size_bytes=payload["size_bytes"],
-            build_os=payload["build_os"],
-            build_arch=payload["build_arch"],
         )
 
 
@@ -136,6 +130,7 @@ class SubmissionRequest:
     worker_output_format: str | None = None
     worker_ncpus: int | None = None
     force: bool = False
+    key4hep_release: str | None = None
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -155,6 +150,7 @@ class SubmissionRequest:
             "output_path": self.output_path,
             "output_se": self.output_se,
             "key4hep_setup": self.key4hep_setup,
+            "key4hep_release": self.key4hep_release,
             "job_name": self.job_name,
             "job_group": self.job_group,
             "submit_mode": self.submit_mode,
@@ -208,6 +204,7 @@ class SubmissionRequest:
             output_path=payload["output_path"],
             output_se=payload["output_se"],
             key4hep_setup=payload["key4hep_setup"],
+            key4hep_release=payload["key4hep_release"],
             job_name=payload["job_name"],
             job_group=payload["job_group"],
             submit_mode=payload["submit_mode"],

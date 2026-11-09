@@ -79,8 +79,6 @@ class SubmissionTest(unittest.TestCase):
             user_build_payload=UserBuildPayload(
                 archive_path="/tmp/fccanalyses-payload.tar.gz",
                 size_bytes=12345,
-                build_os='Linux',
-                build_arch='x86_64',
             ),
             analysis_include_archive="/tmp/analysis-includes.tar.gz",
         )

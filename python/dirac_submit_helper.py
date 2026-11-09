@@ -158,12 +158,10 @@ def _create_job(
         '--mode', request.submit_mode,
         '--ncpus', str(ncpus),
     ]
+    if request.key4hep_release is not None:
+        arguments.extend(['--key4hep-release', request.key4hep_release])
     if user_build_archive is not None:
-        arguments.extend([
-            '--payload-archive', user_build_archive.name,
-            '--build-os', request.user_build_payload.build_os,
-            '--build-arch', request.user_build_payload.build_arch,
-        ])
+        arguments.extend(['--payload-archive', user_build_archive.name])
     if analysis_include_archive is not None:
         arguments.extend(['--include-archive', analysis_include_archive.name])
     arguments.extend(['--', *planned_job.run_arguments])

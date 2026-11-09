@@ -73,6 +73,9 @@ and creates a deterministic plan of independent jobs.
 Each job receives the analysis script, its own generated input-file list, and
 any optional analysis helpers or local FCCAnalyses build through its input
 sandbox.
+.PP
+Grid jobs currently require a stable Key4hep release from
+.BR /cvmfs/sw.hsf.org/key4hep .
 
 The submission helper is started in an isolated DIRAC client environment.
 It reuses a valid DIRAC proxy or creates one for the configured DIRAC group.
@@ -175,10 +178,8 @@ The default is
 Package and ship the active locally built FCCAnalyses installation instead of
 using FCCAnalyses from the selected Key4hep stack on the worker.
 The active stack must match the stack used to build the local installation.
-The build is assumed to have been produced on the submission machine.
-Workers check that their operating system and architecture match those of the
-submission machine before starting the shipped runtime, and fail with a
-diagnostic on mismatch.
+Workers source the recorded build setup and check their OS family, major version
+and architecture against that build's platform before starting it.
 This check does not guarantee compatible CPU instruction sets or system libraries.
 .TP
 \fB\-\-output\-format\fR {\fBttree\fR,\fBrntuple\fR}

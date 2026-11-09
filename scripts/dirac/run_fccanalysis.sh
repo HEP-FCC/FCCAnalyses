@@ -11,10 +11,9 @@
 #
 #   --env inherit|clean      Preserve the current environment or re-execute a
 #                            local DIRAC test payload in a minimal one.
-#   --key4hep-setup PATH     Exact Key4hep setup script selected at submission.
+#   --key4hep-setup PATH     Release launcher or exact build setup script.
+#   --key4hep-release ID    Pinned release to select on this worker.
 #   --payload-archive FILE   Staged user-build archive, when one is supplied.
-#   --build-os OS           Submission/build OS, required for a user build.
-#   --build-arch ARCH       Submission/build architecture, required for a user build.
 #   --include-archive FILE   Staged Analysis.include_paths archive, when used.
 #   --mode wms|local        Use the DIRAC allocation or locally available CPUs.
 #   --ncpus COUNT           Requested threads; negative means all allocated CPUs.
@@ -25,14 +24,13 @@
 set -e -o pipefail
 
 usage() {
-  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--mode wms|local] [--ncpus COUNT] [--payload-archive FILE --build-os OS --build-arch ARCH] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
+  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--key4hep-release ID] [--mode wms|local] [--ncpus COUNT] [--payload-archive FILE] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
 }
 
 environment_mode=""
 key4hep_setup=""
+key4hep_release=""
 payload_archive=""
-build_os=""
-build_arch=""
 include_archive=""
 submit_mode="wms"
 requested_cpus="1"
@@ -71,14 +69,13 @@ while [ "$#" -gt 0 ]; do
       payload_archive="$2"
       shift 2
       ;;
-    --build-os|--build-arch|--mode|--ncpus)
+    --key4hep-release|--mode|--ncpus)
       if [ "$#" -lt 2 ] || [ -z "$2" ]; then
         echo "$1 requires a value" >&2
         exit 2
       fi
       case "$1" in
-        --build-os) build_os="$2" ;;
-        --build-arch) build_arch="$2" ;;
+        --key4hep-release) key4hep_release="$2" ;;
         --mode) submit_mode="$2" ;;
         --ncpus) requested_cpus="$2" ;;
       esac
@@ -130,6 +127,10 @@ if [ -z "${key4hep_setup}" ]; then
   echo "--key4hep-setup must name the selected Key4hep setup script" >&2
   exit 2
 fi
+if [ -n "${key4hep_release}" ] && [ -n "${payload_archive}" ]; then
+  echo "A shipped build requires its exact Key4hep setup, not a release selector" >&2
+  exit 2
+fi
 if [ -n "${payload_archive}" ]; then
   case "${payload_archive}" in
     */*|.|..)
@@ -137,28 +138,6 @@ if [ -n "${payload_archive}" ]; then
       exit 2
       ;;
   esac
-  if [ -z "${build_os}" ] || [ -z "${build_arch}" ]; then
-    echo "A shipped user build requires --build-os and --build-arch" >&2
-    exit 2
-  fi
-  normalize_arch() {
-    case "$1" in
-      arm64|aarch64) echo aarch64 ;;
-      amd64|x86_64) echo x86_64 ;;
-      *) echo "$1" ;;
-    esac
-  }
-  worker_os="$(uname -s)"
-  worker_arch="$(uname -m)"
-  if [ "${build_os}" != "${worker_os}" ] || \
-     [ "$(normalize_arch "${build_arch}")" != "$(normalize_arch "${worker_arch}")" ]; then
-    echo "Cannot run the shipped FCCAnalyses build on this worker." >&2
-    echo "  Submission/build platform: ${build_os} ${build_arch}" >&2
-    echo "  Worker platform: ${worker_os} ${worker_arch}" >&2
-    echo "Rebuild and submit from a machine matching the worker platform," >&2
-    echo "or submit without --ship-local-build." >&2
-    exit 1
-  fi
 fi
 if [ ! -r "${key4hep_setup}" ]; then
   echo "Key4hep setup script is not readable: ${key4hep_setup}" >&2
@@ -176,17 +155,16 @@ fi
 if [ "${environment_mode}" = "clean" ]; then
   # Local DIRAC execution inherits the user's client environment. DIRAC has
   # already staged the files, so rerun the payload without that environment.
-  # Pass the selected stack as an argument, rather than relying on an inherited
-  # Key4hep environment variable. The child selects inherited mode solely to
-  # avoid another clean-environment re-execution.
   wrapper_arguments=(
     --env inherit
     --key4hep-setup "${key4hep_setup}"
     --mode "${submit_mode}" --ncpus "${requested_cpus}"
   )
+  if [ -n "${key4hep_release}" ]; then
+    wrapper_arguments+=(--key4hep-release "${key4hep_release}")
+  fi
   if [ -n "${payload_archive}" ]; then
-    wrapper_arguments+=(--payload-archive "${payload_archive}"
-      --build-os "${build_os}" --build-arch "${build_arch}")
+    wrapper_arguments+=(--payload-archive "${payload_archive}")
   fi
   if [ -n "${include_archive}" ]; then
     wrapper_arguments+=(--include-archive "${include_archive}")
@@ -200,6 +178,54 @@ if [ "${environment_mode}" = "clean" ]; then
     TERM="${TERM:-dumb}" \
     PATH="/usr/bin:/bin" \
     /bin/bash "$0" "${wrapper_arguments[@]}" -- "${analysis_script}" "$@"
+fi
+
+if [ -n "${payload_archive}" ]; then
+  # The recorded stack path already identifies the compiled build's target.
+  build_setup="$(readlink -f -- "${key4hep_setup}")"
+  platform_pattern='/(x86_64|amd64|aarch64|arm64)-(almalinux|el|ubuntu)([0-9]+)-[^/]+/'
+  if ! [[ "${build_setup}" =~ ${platform_pattern} ]]; then
+    echo "Cannot determine the shipped build platform from: ${build_setup}" >&2
+    exit 1
+  fi
+  build_arch="${BASH_REMATCH[1]}"
+  build_os="${BASH_REMATCH[2]}${BASH_REMATCH[3]}"
+  build_os="${build_os/#almalinux/el}"
+
+  normalize_arch() {
+    case "$1" in
+      arm64|aarch64) echo aarch64 ;;
+      amd64|x86_64) echo x86_64 ;;
+      *) echo "$1" ;;
+    esac
+  }
+  worker_os_tag() (
+    unset ID ID_LIKE VERSION_ID
+    source /etc/os-release || return 1
+    local major="${VERSION_ID%%.*}"
+    [[ "${major}" =~ ^[0-9]+$ ]] || return 1
+    case "${ID:-}" in
+      ubuntu) printf 'ubuntu%s\n' "${major}" ;;
+      rhel|almalinux|rocky|centos|ol) printf 'el%s\n' "${major}" ;;
+      *)
+        case " ${ID_LIKE:-} " in
+          *" rhel "*) printf 'el%s\n' "${major}" ;;
+          *) return 1 ;;
+        esac
+        ;;
+    esac
+  )
+  worker_os="$(worker_os_tag)" || worker_os=unknown
+  worker_arch="$(uname -m)"
+  if [ "${build_os}" != "${worker_os}" ] || \
+     [ "$(normalize_arch "${build_arch}")" != "$(normalize_arch "${worker_arch}")" ]; then
+    echo "Cannot run the shipped FCCAnalyses build on this worker." >&2
+    echo "  Build platform: ${build_os} ${build_arch}" >&2
+    echo "  Worker platform: ${worker_os} ${worker_arch}" >&2
+    echo "Build FCCAnalyses for the worker platform," >&2
+    echo "or submit without --ship-local-build." >&2
+    exit 1
+  fi
 fi
 
 if [ -n "${include_archive}" ]; then
@@ -274,10 +300,15 @@ if [ -n "${payload_archive}" ]; then
 fi
 
 setup_key4hep() {
-  # This no-argument function prevents sourced setup scripts from seeing the
-  # analysis and FCCAnalyses arguments as their own positional arguments.
-  source "${key4hep_setup}"
+  # Hide analysis arguments from the sourced script.
+  if [ -n "${key4hep_release}" ]; then
+    source "${key4hep_setup}" -r "${key4hep_release}"
+  else
+    source "${key4hep_setup}"
+  fi
 }
+echo "Key4hep setup: ${key4hep_setup}${key4hep_release:+ (release ${key4hep_release})}"
+# Call directly so errexit remains active inside the sourced setup.
 setup_key4hep
 
 if [ -n "${payload_archive}" ]; then
@@ -300,7 +331,6 @@ else
 fi
 
 echo "Working directory: $(pwd)"
-echo "Key4hep setup: ${key4hep_setup}"
 echo "FCCAnalyses runtime: ${runtime_description}"
 echo "fccanalysis executable: ${fccanalysis_command}"
 

@@ -2,7 +2,6 @@
 
 import argparse
 import importlib.util
-import platform
 import sys
 import tarfile
 import tempfile
@@ -20,6 +19,8 @@ sys.path.insert(0, str(REPOSITORY_ROOT / 'python'))
 from grid_submission import (
     GridSubmissionError,
     _create_analysis_include_archive,
+    _key4hep_release_id,
+    _require_key4hep_setup,
     create_grid_submission_request,
     submit_grid_submission,
 )
@@ -29,6 +30,21 @@ from submission import SubmissionRequest, UserBuildPayload
 
 class GridSubmissionFrontendTest(unittest.TestCase):
     '''Exercise parsing, request creation, and the isolated child hand-off.'''
+
+    def setUp(self) -> None:
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        directory = Path(temporary.name).resolve()
+        self.key4hep_root = directory / 'key4hep'
+        self.key4hep_setup = (
+            self.key4hep_root / 'releases' / 'test-release'
+            / 'x86_64-almalinux9-gcc14.2.0-opt' / 'key4hep-stack' / 'setup.sh'
+        )
+        self.key4hep_setup.parent.mkdir(parents=True)
+        self.key4hep_setup.touch()
+        repository = patch('grid_submission.KEY4HEP_ROOT', self.key4hep_root)
+        repository.start()
+        self.addCleanup(repository.stop)
 
     @staticmethod
     def make_submit_parser() -> argparse.ArgumentParser:
@@ -90,11 +106,28 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             'LCG.CERN.ch',
         ]
 
+    def test_rejects_debug_release_for_standard_submission(self) -> None:
+        setup = Path(str(self.key4hep_setup).replace('-opt/', '-dbg/'))
+        with self.assertRaisesRegex(GridSubmissionError, 'Source Key4hep without -d'):
+            _key4hep_release_id(setup)
+
+    def test_rejects_nightly_and_custom_setup(self) -> None:
+        for repository in (
+            '/cvmfs/sw-nightlies.hsf.org/key4hep',
+            '/cvmfs/sft-nightlies.cern.ch/key4hep',
+            '/cvmfs/sw.hsf.org/custom-key4hep',
+        ):
+            setup = Path(repository) / self.key4hep_setup.relative_to(self.key4hep_root)
+            with self.subTest(repository=repository), \
+                 patch('grid_submission._require_file', return_value=setup), \
+                 self.assertRaisesRegex(GridSubmissionError, 'only stable Key4hep releases'):
+                _require_key4hep_setup(str(setup))
+
     def test_parses_lfn_contract_and_creates_request(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             include_file = root / 'helpers' / 'functions.h'
             include_file.parent.mkdir()
             include_file.write_text('int answer() { return 42; }\n', encoding='utf-8')
@@ -102,7 +135,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 analysis_script,
                 '        self.include_paths = ["helpers/functions.h"]\n',
             )
-            key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 [
@@ -128,6 +160,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             self.assertEqual(logs.records[0].getMessage(),
                              'Grid submission currently supports one CPU per job '
                              '(requested: 2, using: 1).')
+            self.assertEqual(request.key4hep_setup, str(self.key4hep_root / 'setup.sh'))
+            self.assertEqual(request.key4hep_release, 'test-release')
 
             with tarfile.open(request.analysis_include_archive) as archive:
                 self.assertEqual(archive.getnames(), ['helpers/functions.h'])
@@ -188,7 +222,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             include_file = root / 'include' / 'functions.h'
             include_file.parent.mkdir()
             include_file.write_text('int answer() { return 42; }\n', encoding='utf-8')
@@ -205,7 +239,6 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 '        }\n',
                 encoding='utf-8',
             )
-            key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 [
@@ -253,9 +286,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script),
                 self.grid_arguments(self.write_lfn_input(root)),
@@ -285,12 +317,11 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             self.write_modern_analysis(
                 analysis_script,
                 '        self.samples = {"signal": {"n-events-max": 10}}\n',
             )
-            key4hep_setup.touch()
             args = self.parse_grid_arguments(
                 str(analysis_script), self.grid_arguments(self.write_lfn_input(root))
             )
@@ -322,9 +353,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
-            key4hep_setup = root / 'setup.sh'
+            key4hep_setup = self.key4hep_setup
             self.write_modern_analysis(analysis_script)
-            key4hep_setup.touch()
             install_root = root.resolve() / 'install'
             runner = install_root / 'scripts' / 'dirac' / 'run_dirac_submission.sh'
             helper = install_root / 'python' / 'dirac_submit_helper.py'
@@ -355,10 +385,9 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 self.assertNotIn('KEY4HEP_STACK', env)
                 request_path = Path(env['FCCANALYSES_SUBMISSION_REQUEST'])
                 request = SubmissionRequest.read_json(request_path)
-                self.assertEqual(request.key4hep_setup, str(key4hep_setup.resolve()))
+                self.assertEqual(request.key4hep_setup, str(key4hep_setup))
+                self.assertIsNone(request.key4hep_release)
                 self.assertIsNotNone(request.user_build_payload)
-                self.assertEqual(request.user_build_payload.build_os, platform.system())
-                self.assertEqual(request.user_build_payload.build_arch, platform.machine())
                 payload_path = Path(request.user_build_payload.archive_path)
                 self.assertTrue(payload_path.is_file())
                 temporary_paths.extend([request_path, payload_path])

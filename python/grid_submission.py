@@ -9,7 +9,6 @@ import argparse
 import logging
 import math
 import os
-import platform
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
@@ -35,6 +34,7 @@ from submission import (
 
 
 LOGGER = logging.getLogger('FCCAnalyses.grid_submission')
+KEY4HEP_ROOT = Path('/cvmfs/sw.hsf.org/key4hep')
 
 class GridSubmissionError(ValueError):
     '''Raised when frontend grid-submission validation fails.'''
@@ -43,13 +43,20 @@ class GridSubmissionError(ValueError):
 def create_grid_submission_request(
     args: argparse.Namespace,
     analysis_module: ModuleType,
-    key4hep_setup: str | None = None,
+    key4hep_setup: str,
     user_build_payload: UserBuildPayload | None = None,
     analysis_include_archive_path: Path | None = None,
 ) -> SubmissionRequest:
     '''Create a backend-neutral grid request from validated CLI arguments.'''
     analysis_script = _require_file(args.anascript_path, 'Analysis script')
-    selected_key4hep_setup = _require_key4hep_setup(key4hep_setup)
+    selected_setup = _require_key4hep_setup(key4hep_setup)
+    if user_build_payload is None:
+        worker_setup = str(KEY4HEP_ROOT / 'setup.sh')
+        release = _key4hep_release_id(selected_setup)
+    else:
+        # Keep the exact path stored in the shipped stack_build record.
+        worker_setup = key4hep_setup
+        release = None
     output_file = _require_single_name(args.output, '--output')
     output_path = _require_catalogue_path(args.output_dir)
     output_se = _require_optional_nonempty_string(args.output_se, '--output-se')
@@ -110,7 +117,8 @@ def create_grid_submission_request(
             output_file=output_file,
             output_path=output_path,
             output_se=output_se,
-            key4hep_setup=str(selected_key4hep_setup),
+            key4hep_setup=worker_setup,
+            key4hep_release=release,
             job_name='FCCAnalyses',
             job_group='FCCAnalyses_Grid',
             submit_mode=args.mode,
@@ -462,7 +470,6 @@ def submit_grid_submission(
 
     with tempfile.TemporaryDirectory(prefix='fccanalyses-dirac-') as directory:
         user_build_payload = None
-        key4hep_setup = None
         if args.ship_local_build:
             try:
                 build = validate_user_build()
@@ -476,9 +483,9 @@ def submit_grid_submission(
             user_build_payload = UserBuildPayload(
                 archive_path=str(archive.path),
                 size_bytes=archive.size_bytes,
-                build_os=platform.system(),
-                build_arch=platform.machine(),
             )
+        else:
+            key4hep_setup = os.environ['KEY4HEP_STACK']
 
         request = create_grid_submission_request(
             args,
@@ -493,6 +500,8 @@ def submit_grid_submission(
         request.write_json(request_path)
 
         LOGGER.info('Worker Key4hep setup: %s', request.key4hep_setup)
+        if request.key4hep_release is not None:
+            LOGGER.info('Worker Key4hep release: %s', request.key4hep_release)
         if user_build_payload is None:
             LOGGER.info('Worker runtime: FCCAnalyses from the Key4hep stack')
         else:
@@ -605,11 +614,27 @@ def _require_optional_nonempty_string(value: object, option: str) -> str | None:
     return value
 
 
-def _require_key4hep_setup(override: str | None) -> Path:
-    path_value = override or os.environ.get('KEY4HEP_STACK')
-    if not path_value:
+def _require_key4hep_setup(path_value: str) -> Path:
+    setup = _require_file(path_value, 'Key4hep setup script')
+    if not setup.is_relative_to(KEY4HEP_ROOT / 'releases'):
         raise GridSubmissionError(
-            'KEY4HEP_STACK is unset. Source the intended Key4hep stack before '
-            'submitting to the grid.'
+            'For now, only stable Key4hep releases are supported for Grid submission.\n'
+            f'Current setup: {setup}\n'
         )
-    return _require_file(path_value, 'Key4hep setup script')
+    return setup
+
+
+def _key4hep_release_id(setup: Path) -> str:
+    '''Read the release identifier immediately after the CVMFS releases directory.'''
+    parts = setup.relative_to(KEY4HEP_ROOT / 'releases').parts
+    if len(parts) < 3:
+        raise GridSubmissionError(
+            f'Cannot identify the Key4hep release from {setup}. '
+            'Source a stable Key4hep release before submitting.'
+        )
+    if not parts[1].endswith('-opt'):
+        raise GridSubmissionError(
+            'Standard Grid submission requires an optimised Key4hep release. '
+            'Source Key4hep without -d before submitting.'
+        )
+    return parts[0]

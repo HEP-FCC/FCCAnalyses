@@ -13,6 +13,7 @@ make_fake_runtime() {
 #!/usr/bin/env bash
 runtime_directory="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 export PATH="${runtime_directory}/bin:${PATH}"
+printf '%s\n' "$@" > setup-arguments.txt
 EOF
   cat > "${temporary_directory}/bin/fccanalysis" <<'EOF'
 #!/usr/bin/env bash
@@ -38,7 +39,7 @@ printf '%s\n' "$@" > payload-arguments.txt
 printf '%s\n' "${CONDA_PREFIX:-unset}" > payload-conda-prefix.txt
 EOF
   chmod +x "${payload_root}/install/bin/fccanalysis"
-  printf '%s\n' "${temporary_directory}/setup.sh" \
+  printf '%s\n' "${build_setup}" \
     > "${payload_root}/.fccana/stack_build"
   tar -czf "${temporary_directory}/fccanalyses-payload.tar.gz" \
     -C "${temporary_directory}/payload" fccanalyses-payload
@@ -62,10 +63,20 @@ assert_file_equals() {
 }
 
 make_fake_runtime
-make_fake_payload
 make_fake_include_archive
-build_os="$(uname -s)"
 build_arch="$(uname -m)"
+cat > "${temporary_directory}/worker-env.sh" <<'EOF'
+source() {
+  local script="$1"
+  shift
+  if [ "${script}" = /etc/os-release ]; then
+    ID=rocky
+    VERSION_ID="${TEST_OS_VERSION:-9.6}"
+  else
+    builtin source "${script}" "$@"
+  fi
+}
+EOF
 # Use an equivalent spelling to exercise architecture normalization too.
 case "${build_arch}" in
   arm64) build_arch=aarch64 ;;
@@ -73,6 +84,12 @@ case "${build_arch}" in
   x86_64) build_arch=amd64 ;;
   amd64) build_arch=x86_64 ;;
 esac
+build_platform="${temporary_directory}/${build_arch}-almalinux9-gcc14-opt"
+mkdir -p "${build_platform}"
+cp "${temporary_directory}/setup.sh" "${build_platform}/setup.sh"
+build_setup="${temporary_directory}/recorded-setup.sh"
+ln -s "${build_platform}/setup.sh" "${build_setup}"
+make_fake_payload
 (
   cd "${temporary_directory}"
   DIRAC_JOB_PROCESSORS=1 CONDA_PREFIX="inherited-conda" \
@@ -87,10 +104,9 @@ assert_file_equals "${temporary_directory}/include/functions.h" $'int answer() {
 
 (
   cd "${temporary_directory}"
-  CONDA_PREFIX="local-dirac-conda" \
-    "${wrapper}" --env clean --mode local --ncpus 1 \
-      --key4hep-setup "${temporary_directory}/setup.sh" \
-      --build-os "${build_os}" --build-arch "${build_arch}" \
+  CONDA_PREFIX="" BASH_ENV="${temporary_directory}/worker-env.sh" \
+    "${wrapper}" --env inherit --mode local --ncpus 1 \
+      --key4hep-setup "${build_setup}" \
       --payload-archive fccanalyses-payload.tar.gz -- analysis.py \
     --input input.root --output output.root --label "two words"
 )
@@ -103,9 +119,22 @@ local_cpus="$(python3 -c 'import os; print(len(os.sched_getaffinity(0)) if hasat
   cd "${temporary_directory}"
   "${wrapper}" --env clean --mode local --ncpus -1 \
     --key4hep-setup "${temporary_directory}/setup.sh" \
+    --key4hep-release 2026-04-08 \
     -- analysis.py -- --ncpus 99
 )
 assert_file_equals "${temporary_directory}/arguments.txt" "$(printf 'run\nanalysis.py\n--ncpus\n%s\n--\n--ncpus\n99' "${local_cpus}")"$'\n'
+assert_file_equals "${temporary_directory}/setup-arguments.txt" $'-r\n2026-04-08\n'
+
+printf '%s\n' false true > "${temporary_directory}/unavailable-release.sh"
+if (
+  cd "${temporary_directory}"
+  PATH="${temporary_directory}/bin:${PATH}" \
+    "${wrapper}" --env inherit --key4hep-setup "${temporary_directory}/unavailable-release.sh" \
+      --key4hep-release 2026-04-08 -- analysis.py > /dev/null
+); then
+  echo "Wrapper continued after Key4hep setup failed" >&2
+  exit 1
+fi
 
 # Allocation failures must stop before the analysis starts.
 for allocation in missing invalid 0; do
@@ -133,26 +162,34 @@ grep -q 'limiting thread count to 1' "${temporary_directory}/cpu-warning.txt"
 assert_file_equals "${temporary_directory}/arguments.txt" $'run\nanalysis.py\n--ncpus\n1\n'
 
 for mismatch in os arch; do
-  expected_os="${build_os}"
+  worker_major=9
   expected_arch="${build_arch}"
   case "${mismatch}" in
-    os) expected_os=UnsupportedOS ;;
-    arch) expected_arch=unsupported-arch ;;
+    os) worker_major=10 ;;
+    arch)
+      case "${build_arch}" in
+        x86_64|amd64) expected_arch=aarch64 ;;
+        *) expected_arch=x86_64 ;;
+      esac
+      ;;
   esac
+  test_setup="${temporary_directory}/${expected_arch}-almalinux9-gcc14-opt/setup.sh"
+  mkdir -p "${test_setup%/*}"
+  touch "${test_setup}"
   if (
     cd "${temporary_directory}"
-    "${wrapper}" --env inherit \
-      --key4hep-setup "${temporary_directory}/missing-setup.sh" \
+    TEST_OS_VERSION="${worker_major}.0" BASH_ENV="${temporary_directory}/worker-env.sh" \
+      "${wrapper}" --env inherit \
+      --key4hep-setup "${test_setup}" \
       --payload-archive fccanalyses-payload.tar.gz \
-      --build-os "${expected_os}" --build-arch "${expected_arch}" \
       -- analysis.py > /dev/null 2> platform-mismatch.txt
   ); then
     echo "Wrapper accepted an incompatible build ${mismatch}" >&2
     exit 1
   fi
   grep -q 'Cannot run the shipped FCCAnalyses build' "${temporary_directory}/platform-mismatch.txt"
-  grep -q "Submission/build platform: ${expected_os} ${expected_arch}" "${temporary_directory}/platform-mismatch.txt"
-  grep -q "Worker platform: $(uname -s) $(uname -m)" "${temporary_directory}/platform-mismatch.txt"
+  grep -q "Build platform: el9 ${expected_arch}" "${temporary_directory}/platform-mismatch.txt"
+  grep -q "Worker platform: el${worker_major} $(uname -m)" "${temporary_directory}/platform-mismatch.txt"
 done
 
 if (
