@@ -15,8 +15,6 @@
 #   --key4hep-release ID    Pinned release to select on this worker.
 #   --payload-archive FILE   Staged user-build archive, when one is supplied.
 #   --include-archive FILE   Staged Analysis.include_paths archive, when used.
-#   --mode wms|local        Use the DIRAC allocation or locally available CPUs.
-#   --ncpus COUNT           Requested threads; negative means all allocated CPUs.
 #
 # Arguments after `--` are opaque FCCAnalyses arguments. The first is the
 # staged analysis script; every remaining argument is forwarded unchanged to
@@ -24,7 +22,7 @@
 set -e -o pipefail
 
 usage() {
-  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--key4hep-release ID] [--mode wms|local] [--ncpus COUNT] [--payload-archive FILE] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
+  echo "Usage: $0 --env inherit|clean --key4hep-setup SETUP_SCRIPT [--key4hep-release ID] [--payload-archive FILE] [--include-archive FILE] -- ANALYSIS_SCRIPT [RUN_ARGUMENT ...]" >&2
 }
 
 environment_mode=""
@@ -32,8 +30,6 @@ key4hep_setup=""
 key4hep_release=""
 payload_archive=""
 include_archive=""
-submit_mode="wms"
-requested_cpus="1"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -69,16 +65,12 @@ while [ "$#" -gt 0 ]; do
       payload_archive="$2"
       shift 2
       ;;
-    --key4hep-release|--mode|--ncpus)
+    --key4hep-release)
       if [ "$#" -lt 2 ] || [ -z "$2" ]; then
         echo "$1 requires a value" >&2
         exit 2
       fi
-      case "$1" in
-        --key4hep-release) key4hep_release="$2" ;;
-        --mode) submit_mode="$2" ;;
-        --ncpus) requested_cpus="$2" ;;
-      esac
+      key4hep_release="$2"
       shift 2
       ;;
     --include-archive)
@@ -158,7 +150,6 @@ if [ "${environment_mode}" = "clean" ]; then
   wrapper_arguments=(
     --env inherit
     --key4hep-setup "${key4hep_setup}"
-    --mode "${submit_mode}" --ncpus "${requested_cpus}"
   )
   if [ -n "${key4hep_release}" ]; then
     wrapper_arguments+=(--key4hep-release "${key4hep_release}")
@@ -334,37 +325,5 @@ echo "Working directory: $(pwd)"
 echo "FCCAnalyses runtime: ${runtime_description}"
 echo "fccanalysis executable: ${fccanalysis_command}"
 
-# Use the selected runtime's Python, and resolve allocation before importing
-# the analysis. Never interpret the opaque analysis arguments after -- here.
-# The submission frontend has already validated the request and mode.
-resolved_cpus="$(python3 - "${requested_cpus}" "${submit_mode}" <<'PY'
-import os
-import sys
-
-try:
-    requested = int(sys.argv[1])
-    try:
-        available = len(os.sched_getaffinity(0))
-    except (AttributeError, OSError, NotImplementedError):
-        available = os.cpu_count()
-    if sys.argv[2] == 'wms':
-        try:
-            allocated = int(os.environ.get('DIRAC_JOB_PROCESSORS', '0'))
-        except ValueError:
-            allocated = 0
-        if allocated < 1:
-            raise ValueError('missing or invalid DIRAC_JOB_PROCESSORS allocation')
-        available = min(available, allocated) if available is not None else allocated
-    if not available:
-        raise ValueError('cannot determine available CPUs')
-    if requested > available:
-        print(f'WARNING: Requested {requested} threads, but only {available} CPUs '
-              f'are available to this job; limiting thread count to {available}.', file=sys.stderr)
-        requested = available
-    print(available if requested < 0 else requested)
-except ValueError as error:
-    sys.exit(f'CPU allocation check failed: {error}')
-PY
-)"
-echo "CPU threads: requested ${requested_cpus}, using ${resolved_cpus} (${submit_mode} mode)"
-"${fccanalysis_command}" run "${analysis_script}" --ncpus "${resolved_cpus}" "$@"
+# DIRAC jobs run with one CPU, regardless of the analysis thread setting.
+"${fccanalysis_command}" run "${analysis_script}" --ncpus 1 "$@"

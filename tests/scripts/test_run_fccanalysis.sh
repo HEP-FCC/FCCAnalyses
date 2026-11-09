@@ -92,8 +92,9 @@ ln -s "${build_platform}/setup.sh" "${build_setup}"
 make_fake_payload
 (
   cd "${temporary_directory}"
-  DIRAC_JOB_PROCESSORS=1 CONDA_PREFIX="inherited-conda" \
-    "${wrapper}" --env inherit --ncpus -1 \
+  unset DIRAC_JOB_PROCESSORS
+  CONDA_PREFIX="inherited-conda" \
+    "${wrapper}" --env inherit \
       --key4hep-setup "${temporary_directory}/setup.sh" \
       --include-archive analysis-includes.tar.gz -- analysis.py \
     --input input.root --output output.root --label "two words"
@@ -105,7 +106,7 @@ assert_file_equals "${temporary_directory}/include/functions.h" $'int answer() {
 (
   cd "${temporary_directory}"
   CONDA_PREFIX="" BASH_ENV="${temporary_directory}/worker-env.sh" \
-    "${wrapper}" --env inherit --mode local --ncpus 1 \
+    "${wrapper}" --env inherit \
       --key4hep-setup "${build_setup}" \
       --payload-archive fccanalyses-payload.tar.gz -- analysis.py \
     --input input.root --output output.root --label "two words"
@@ -114,15 +115,15 @@ assert_file_equals "${temporary_directory}/payload-runtime.txt" $'shipped\n'
 assert_file_equals "${temporary_directory}/payload-arguments.txt" $'run\nanalysis.py\n--ncpus\n1\n--input\ninput.root\n--output\noutput.root\n--label\ntwo words\n'
 assert_file_equals "${temporary_directory}/payload-conda-prefix.txt" $'unset\n'
 
-local_cpus="$(python3 -c 'import os; print(len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else os.cpu_count())')"
 (
   cd "${temporary_directory}"
-  "${wrapper}" --env clean --mode local --ncpus -1 \
+  unset DIRAC_JOB_PROCESSORS
+  "${wrapper}" --env clean \
     --key4hep-setup "${temporary_directory}/setup.sh" \
     --key4hep-release 2026-04-08 \
     -- analysis.py -- --ncpus 99
 )
-assert_file_equals "${temporary_directory}/arguments.txt" "$(printf 'run\nanalysis.py\n--ncpus\n%s\n--\n--ncpus\n99' "${local_cpus}")"$'\n'
+assert_file_equals "${temporary_directory}/arguments.txt" $'run\nanalysis.py\n--ncpus\n1\n--\n--ncpus\n99\n'
 assert_file_equals "${temporary_directory}/setup-arguments.txt" $'-r\n2026-04-08\n'
 
 printf '%s\n' false true > "${temporary_directory}/unavailable-release.sh"
@@ -136,30 +137,16 @@ if (
   exit 1
 fi
 
-# Allocation failures must stop before the analysis starts.
-for allocation in missing invalid 0; do
-  if (
+# The worker must ignore DIRAC allocation metadata and always use one CPU.
+for allocation in invalid 0 8; do
+  (
     cd "${temporary_directory}"
-    export DIRAC_JOB_PROCESSORS="${allocation}"
-    if [ "${allocation}" = missing ]; then unset DIRAC_JOB_PROCESSORS; fi
-    "${wrapper}" --env inherit --ncpus 2 \
+    DIRAC_JOB_PROCESSORS="${allocation}" "${wrapper}" --env inherit \
       --key4hep-setup "${temporary_directory}/setup.sh" \
-      -- analysis.py > /dev/null 2> cpu-allocation.txt
-  ); then
-    echo "Wrapper accepted invalid CPU allocation: ${allocation}" >&2
-    exit 1
-  fi
-  grep -q 'CPU allocation check failed' "${temporary_directory}/cpu-allocation.txt"
+      -- analysis.py > /dev/null
+  )
+  assert_file_equals "${temporary_directory}/arguments.txt" $'run\nanalysis.py\n--ncpus\n1\n'
 done
-(
-  cd "${temporary_directory}"
-  DIRAC_JOB_PROCESSORS=1 "${wrapper}" --env inherit --ncpus 2 \
-    --key4hep-setup "${temporary_directory}/setup.sh" \
-    -- analysis.py > /dev/null 2> cpu-warning.txt
-)
-grep -q 'WARNING: Requested 2 threads' "${temporary_directory}/cpu-warning.txt"
-grep -q 'limiting thread count to 1' "${temporary_directory}/cpu-warning.txt"
-assert_file_equals "${temporary_directory}/arguments.txt" $'run\nanalysis.py\n--ncpus\n1\n'
 
 for mismatch in os arch; do
   worker_major=9

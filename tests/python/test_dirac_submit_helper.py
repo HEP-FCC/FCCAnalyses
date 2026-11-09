@@ -313,7 +313,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 input_file_list,
             )
 
-        self.assertEqual(job.processors, {'numberOfProcessors': 4})
+        self.assertEqual(job.processors, {'numberOfProcessors': 1})
         self.assertEqual(job.name, 'FCCAnalysis-lfn-0000')
         self.assertEqual(job.job_group, 'FCCAnalysis_Run')
         self.assertEqual(
@@ -345,8 +345,6 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 'clean',
                 '--key4hep-setup',
                 '/cvmfs/key4hep/setup.sh',
-                '--mode', 'local',
-                '--ncpus', '4',
                 '--payload-archive',
                 'fccanalyses-payload.tar.gz',
                 '--include-archive',
@@ -409,7 +407,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 input_file_list,
             )
 
-        self.assertEqual(job.processors, {'minNumberOfProcessors': 1})
+        self.assertEqual(job.processors, {'numberOfProcessors': 1})
         self.assertFalse(hasattr(job, 'input_data'))
         self.assertEqual(
             job.output_data, ('result_signal_0000.root', {'OutputPath': 'analysis/results'})
@@ -429,8 +427,6 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 'inherit',
                 '--key4hep-setup',
                 '/cvmfs/key4hep/setup.sh',
-                '--mode', 'wms',
-                '--ncpus', '-1',
                 '--key4hep-release', '2026-04-08',
                 '--include-archive',
                 'analysis-includes.tar.gz',
