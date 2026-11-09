@@ -108,6 +108,31 @@ class SubmitGridTest(unittest.TestCase):
                     parse_command_arguments(parser)
         self.assertEqual(error.exception.code, 2)
 
+    def test_legacy_backend_options_explain_subcommand_syntax(self) -> None:
+        for option in (
+            ['--where', 'ht-condor'], ['--where=ht-condor'],
+            ['-w', 'ht-condor'], ['-wht-condor'], ['-w=ht-condor'],
+        ):
+            with self.subTest(option=option):
+                command = ['fccanalysis', 'submit', *option, 'analysis.py']
+                stderr = StringIO()
+                with patch.object(sys, 'argv', command), redirect_stderr(stderr):
+                    with self.assertRaises(SystemExit) as error:
+                        parse_command_arguments(self.make_submit_parser())
+                self.assertEqual(error.exception.code, 2)
+                self.assertIn("(or '-w') is no longer supported", stderr.getvalue())
+                self.assertIn('fccanalysis submit ht-condor analysis.py', stderr.getvalue())
+
+    def test_legacy_backend_options_after_separator_are_analysis_arguments(self) -> None:
+        custom_arguments = ['-w', 'ht-condor', '--where=grid', '-wht-condor']
+        command = [
+            'fccanalysis', 'submit', 'ht-condor', 'analysis.py',
+            '--', *custom_arguments,
+        ]
+        with patch.object(sys, 'argv', command):
+            args = parse_command_arguments(self.make_submit_parser())
+        self.assertEqual(args.remaining, custom_arguments)
+
 
 if __name__ == '__main__':
     unittest.main()
