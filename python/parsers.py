@@ -169,7 +169,7 @@ def setup_submit_parser(parser):
     setup_grid_submit_parser(grid_parser)
 
     # Sub-parser for Slurm (not yet implemented)
-    slurm_parser = submit_parsers.add_parser(
+    submit_parsers.add_parser(
         'slurm',
         help='submit through Slurm (not yet implemented)',
         description='Submission through Slurm is not yet implemented.'
