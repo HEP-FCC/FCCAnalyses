@@ -248,6 +248,9 @@ def _confirm_submission(existing_outputs: list[str], force: bool) -> bool:
     if existing_outputs:
         LOGGER.warning('Found existing output files that will be deleted before submission:\n%s',
                        '\n'.join(existing_outputs))
+        LOGGER.warning(
+            'Deleted files are not restored if submission or execution fails.'
+        )
     if force:
         LOGGER.info('Automatically confirming submission and listed deletions (--force).')
         return True

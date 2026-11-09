@@ -227,6 +227,8 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 self.assertIn(f'output:        {output_lfn}', '\n'.join(logs.output))
                 self.assertIn('Found existing output files that will be '
                               'deleted before submission:', '\n'.join(logs.output))
+                self.assertIn('Deleted files are not restored if submission or execution fails.',
+                              '\n'.join(logs.output))
                 if should_submit:
                     self.assertEqual(events, [('delete', output_lfn), ('submit',)])
                     job.dontPromptMe.assert_called_once()
@@ -272,6 +274,44 @@ class DiracSubmitHelperTest(unittest.TestCase):
         self.assertIn('Submitted DIRAC job IDs: 42', '\n'.join(logs.output))
         self.assertIn('rejected', str(error.exception))
         self.assertEqual(job.submit.call_count, 2)
+
+    def test_failed_submission_does_not_restore_deleted_output(self) -> None:
+        request = SubmissionRequest(
+            analysis_script='/work/analysis.py', input_mode='dirac-lfn',
+            input_lfns=('/fcc/data/a.root', '/fcc/data/b.root'),
+            samples=(), files_per_job=1, lfn_sample_name=None, run_arguments=(),
+            output_file='result.root', output_path=None, output_se=None,
+            key4hep_setup='/work/setup.sh', job_name='FCCAnalysis', job_group='test',
+            submit_mode='wms', destination_site=None, submission_id='test',
+            user_build_payload=None, force=True,
+        )
+        output_lfn = '/fcc/user/a/alice/result_0000.root'
+        for result in ({'OK': False, 'Message': 'rejected'}, None, {},
+                       RuntimeError('connection failed')):
+            with self.subTest(result=result):
+                dirac = MagicMock()
+                dirac.removeFile.return_value = {'OK': True}
+                job = MagicMock()
+                if isinstance(result, Exception):
+                    job.submit.side_effect = result
+                else:
+                    job.submit.return_value = result
+                catalog = FakeCatalog()
+                catalog.existing_lfns = {output_lfn}
+                with patch('dirac_submit_helper._load_request', return_value=request), \
+                     patch('dirac_submit_helper._require_file', side_effect=lambda path, _: path), \
+                     patch('dirac_submit_helper._user_lfn_root', return_value='/fcc/user/a/alice'), \
+                     patch('dirac_submit_helper.DiracILC', return_value=dirac), \
+                     patch('dirac_submit_helper.FileCatalog', return_value=catalog), \
+                     patch('dirac_submit_helper._create_job', return_value=job) as create_job, \
+                     self.assertLogs('FCCAnalyses.grid_helper', level='INFO'):
+                    with self.assertRaises(RuntimeError) as error:
+                        main()
+                self.assertIn('0 of 2 jobs were submitted', str(error.exception))
+                self.assertIn('1 remaining job(s) were not attempted', str(error.exception))
+                dirac.removeFile.assert_called_once_with(output_lfn)
+                create_job.assert_called_once()
+                job.submit.assert_called_once()
 
     def test_translates_lfn_plan_into_dirac_job(self) -> None:
         request = SubmissionRequest(
