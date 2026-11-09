@@ -57,6 +57,7 @@ class FakeUserJob:
 
     def setOutputData(self, output_file, **options):
         self.output_data = (output_file, options)
+        return {'OK': True}
 
     def setDestination(self, value):
         self.destination = value
@@ -108,6 +109,9 @@ def install_dirac_stubs() -> None:
         'DIRAC.ConfigurationSystem.Client.Helpers.Registry': types.ModuleType(
             'DIRAC.ConfigurationSystem.Client.Helpers.Registry'
         ),
+        'DIRAC.ConfigurationSystem.Client.Helpers.Operations': types.ModuleType(
+            'DIRAC.ConfigurationSystem.Client.Helpers.Operations'
+        ),
         'DIRAC.Resources': types.ModuleType('DIRAC.Resources'),
         'DIRAC.Resources.Catalog': types.ModuleType('DIRAC.Resources.Catalog'),
         'DIRAC.Resources.Catalog.FileCatalog': types.ModuleType(
@@ -140,6 +144,9 @@ def install_dirac_stubs() -> None:
     ]
     modules['DIRAC.ConfigurationSystem.Client.Helpers.Registry'].getVOForGroup = (
         lambda group: 'fcc'
+    )
+    modules['DIRAC.ConfigurationSystem.Client.Helpers.Operations'].Operations = (
+        lambda **kwargs: types.SimpleNamespace(getValue=lambda key, default: default)
     )
     modules['DIRAC.Resources.Catalog.FileCatalog'].FileCatalog = FakeCatalog
     modules['ILCDIRAC.Interfaces.API.DiracILC'].DiracILC = object
@@ -180,7 +187,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
             job_name='FCCAnalysis', job_group='test', submit_mode='wms',
             destination_site=None, submission_id='test', user_build_payload=None,
         )
-        output_lfn = _output_lfn(plan_jobs(request)[0], '/fcc/user/a/alice')
+        output_lfn = '/fcc/users/a/alice/result_0000.root'
         for answer, force, should_submit in (
             ('n', False, False), ('', False, False),
             (EOFError(), False, False), ('y', False, True),
@@ -203,17 +210,21 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 with patch('dirac_submit_helper._load_request', return_value=current), \
                      patch('dirac_submit_helper._require_file', side_effect=lambda path, _: path), \
                      patch('dirac_submit_helper.DiracILC', return_value=dirac), \
+                     patch('dirac_submit_helper.Operations') as operations, \
                      patch('dirac_submit_helper.FileCatalog', return_value=catalog), \
                      patch('dirac_submit_helper._create_job', return_value=job), \
                      patch('builtins.input', side_effect=(answer if isinstance(answer, Exception) else None),
                            return_value=answer) as prompt, self.assertLogs('FCCAnalyses.grid_helper', level='INFO') as logs:
+                    operations.return_value.getValue.return_value = 'users'
                     if should_submit:
                         main()
                     else:
                         with self.assertRaises(SystemExit) as cancelled:
                             main()
                         self.assertNotEqual(cancelled.exception.code, 0)
-                self.assertIn(output_lfn, '\n'.join(logs.output))
+                operations.assert_called_once_with(vo='fcc')
+                operations.return_value.getValue.assert_called_once_with('LFNUserPrefix', 'user')
+                self.assertIn(f'output:        {output_lfn}', '\n'.join(logs.output))
                 self.assertIn('Found existing output files that will be '
                               'deleted before submission:', '\n'.join(logs.output))
                 if should_submit:
@@ -322,6 +333,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
             (
                 'result_0000.root',
                 {
+                    'OutputPath': '.',
                     'OutputSE': 'CERN-DST-EOS',
                 },
             ),
@@ -405,6 +417,9 @@ class DiracSubmitHelperTest(unittest.TestCase):
         self.assertEqual(job.processors, {'minNumberOfProcessors': 1})
         self.assertFalse(hasattr(job, 'input_data'))
         self.assertEqual(
+            job.output_data, ('result_signal_0000.root', {'OutputPath': 'analysis/results'})
+        )
+        self.assertEqual(
             job.input_sandbox,
             [
                 '/work/analysis.py',
@@ -474,8 +489,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
             _remove_existing_output(
                 FakeDirac(),
                 FakeCatalog(),
-                user_lfn_root,
-                planned_job,
+                output_lfn,
             )
 
         self.assertEqual(removed, [output_lfn])

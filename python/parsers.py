@@ -201,7 +201,7 @@ def setup_grid_submit_parser(parser):
         '--output-dir',
         metavar='OUTPUT_DIR',
         default=None,
-        help='directory relative to your GRID catalogue root'
+        help='output directory relative to your DIRAC catalogue root (default: root)'
     )
     parser.add_argument(
         '--output-se',

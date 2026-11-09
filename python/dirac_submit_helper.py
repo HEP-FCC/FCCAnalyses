@@ -11,7 +11,7 @@ import shlex
 import sys
 import tempfile
 from io import StringIO
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from submission import SubmissionRequest, SubmissionValidationError, plan_jobs
 
@@ -50,6 +50,7 @@ Script.parseCommandLine()
 
 from DIRAC import gConfig
 from DIRAC.ConfigurationSystem.Client.Helpers import Registry
+from DIRAC.ConfigurationSystem.Client.Helpers.Operations import Operations
 from DIRAC.Core.Security.ProxyInfo import getProxyInfo
 from DIRAC.Resources.Catalog.FileCatalog import FileCatalog
 from ILCDIRAC.Interfaces.API.DiracILC import DiracILC
@@ -137,12 +138,12 @@ def _create_job(
 
     if planned_job.input_mode == 'dirac-lfn':
         job.setInputData(list(planned_job.source_inputs))
-    output_options = {}
-    if planned_job.output_path is not None:
-        output_options['OutputPath'] = planned_job.output_path
+    output_options = {'OutputPath': _dirac_output_path(planned_job)}
     if request.output_se is not None:
         output_options['OutputSE'] = request.output_se
-    job.setOutputData(planned_job.output_file, **output_options)
+    result = job.setOutputData(planned_job.output_file, **output_options)
+    if not result['OK']:
+        raise RuntimeError(f"Unable to set job output data: {result['Message']}")
     if request.destination_site:
         job.setDestination(request.destination_site)
 
@@ -198,15 +199,22 @@ def _user_lfn_root() -> str:
             'existing output LFN; refusing to submit without overwrite '
             'protection.'
         )
-    return f'/{virtual_organization}/user/{username[0]}/{username}'
+    prefix = Operations(vo=virtual_organization).getValue('LFNUserPrefix', 'user')
+    return f'/{virtual_organization}/{prefix}/{username[0]}/{username}'
+
+
+def _dirac_output_path(planned_job) -> str:
+    '''Return the relative directory to pass to ILCDIRAC.'''
+    # An empty OutputPath selects ILCDIRAC's date/job-ID directory. The
+    # explicit "." instead selects the root after DIRAC normalizes the LFN.
+    return str(PurePosixPath(planned_job.output_path or '.'))
 
 
 def _output_lfn(planned_job, user_lfn_root: str) -> str:
     '''Return the absolute user LFN corresponding to a planned output.'''
-    relative_output = planned_job.output_file
-    if planned_job.output_path is not None:
-        relative_output = f'{planned_job.output_path}/{relative_output}'
-    return f'{user_lfn_root}/{relative_output}'
+    return str(PurePosixPath(
+        user_lfn_root, _dirac_output_path(planned_job), planned_job.output_file
+    ))
 
 
 def _catalog_file_exists(catalog, lfn: str) -> bool:
@@ -229,9 +237,8 @@ def _catalog_file_exists(catalog, lfn: str) -> bool:
     return bool(successful.get(lfn, False))
 
 
-def _remove_existing_output(dirac, catalog, user_lfn_root, planned_job) -> None:
+def _remove_existing_output(dirac, catalog, output_lfn: str) -> None:
     '''Remove a planned output LFN before submitting its replacement job.'''
-    output_lfn = _output_lfn(planned_job, user_lfn_root)
     if not _catalog_file_exists(catalog, output_lfn):
         return
 
@@ -270,6 +277,7 @@ def _print_plan(
     planned_jobs,
     analysis_script: Path,
     local_se: str | None,
+    output_lfns: list[str],
 ) -> None:
     '''Print the concrete jobs before they are submitted.'''
     output = StringIO()
@@ -308,15 +316,12 @@ def _print_plan(
         )
     if request.analysis_include_archive is not None:
         emit('  include files:   staged from Analysis.include_paths')
-    for planned_job in planned_jobs:
+    for planned_job, output_lfn in zip(planned_jobs, output_lfns):
         emit(f'  job {planned_job.index:04d}:')
         emit('    inputs:')
         for source_input in planned_job.source_inputs:
             emit(f'      {source_input}')
-        emit(
-            '    output:        '
-            f'{planned_job.output_path or "(user root)"}/{planned_job.output_file}'
-        )
+        emit(f'    output:        {output_lfn}')
     LOGGER.info('%s', output.getvalue().rstrip())
 
 
@@ -340,15 +345,14 @@ def main() -> None:
     if request.submit_mode == 'local':
         local_se = _require_local_storage_element()
 
-    _print_plan(request, planned_jobs, analysis_script, local_se)
+    user_lfn_root = _user_lfn_root()
+    output_lfns = [_output_lfn(job, user_lfn_root) for job in planned_jobs]
+    _print_plan(request, planned_jobs, analysis_script, local_se, output_lfns)
 
     dirac = DiracILC()
-    user_lfn_root = _user_lfn_root()
     catalog = FileCatalog()
     existing_outputs = [
-        _output_lfn(job, user_lfn_root)
-        for job in planned_jobs
-        if _catalog_file_exists(catalog, _output_lfn(job, user_lfn_root))
+        lfn for lfn in output_lfns if _catalog_file_exists(catalog, lfn)
     ]
     if not _confirm_submission(existing_outputs, request.force):
         raise SystemExit(1)
@@ -357,7 +361,7 @@ def main() -> None:
     failures = []
     with tempfile.TemporaryDirectory(prefix='fccanalyses-input-lists-') as directory:
         input_list_directory = Path(directory)
-        for planned_job in planned_jobs:
+        for planned_job, output_lfn in zip(planned_jobs, output_lfns):
             LOGGER.info(
                 f'Submitting planned job {planned_job.index + 1}/{len(planned_jobs)} '
                 f'({planned_job.job_name})'
@@ -377,8 +381,8 @@ def main() -> None:
                     input_file_list,
                 )
                 job.dontPromptMe()
-                if _output_lfn(planned_job, user_lfn_root) in confirmed_outputs:
-                    _remove_existing_output(dirac, catalog, user_lfn_root, planned_job)
+                if output_lfn in confirmed_outputs:
+                    _remove_existing_output(dirac, catalog, output_lfn)
                 result = job.submit(dirac, mode=request.submit_mode)
                 if not result or not result.get('OK'):
                     message = result.get('Message', result) if result else 'no result returned'
