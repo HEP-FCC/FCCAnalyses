@@ -49,11 +49,15 @@ def _tex(text):
     return '$' + text.replace('#', '\\').replace(' ', '\\ ') + '$'
 
 
+def _visible(hist):
+    return hist.GetXaxis().GetFirst(), hist.GetXaxis().GetLast()
+
+
 def _arrays(hist):
-    num_bins = hist.GetNbinsX()
-    edges = np.array([hist.GetBinLowEdge(i) for i in range(1, num_bins + 2)])
-    values = np.array([hist.GetBinContent(i) for i in range(1, num_bins + 1)])
-    errors = np.array([hist.GetBinError(i) for i in range(1, num_bins + 1)])
+    first, last = _visible(hist)
+    edges = np.array([hist.GetBinLowEdge(i) for i in range(first, last + 2)])
+    values = np.array([hist.GetBinContent(i) for i in range(first, last + 1)])
+    errors = np.array([hist.GetBinError(i) for i in range(first, last + 1)])
     return edges, values, errors
 
 
@@ -74,16 +78,19 @@ def _ratio(numerator, denominator):
                      where=denominator > 0)
 
 
-def _systematics(samples, num_bins):
+def _systematics(samples, first, last):
     '''Signed (up, down) shifts for each source, and total (up, down)'''
+    num_bins = last - first + 1
     sources = {}
     for sample in samples:
         for item in sample.systematics:
-            shifts = np.array([(shift.first, shift.second)
-                               for shift in item.second]).reshape(-1, 2)
+            shifts = np.zeros((last + 1, 2))  # indexed by bin number
+            for bin_number, shift in enumerate(item.second):
+                if bin_number <= last:
+                    shifts[bin_number] = shift.first, shift.second
             source = sources.setdefault(str(item.first),
                                         np.zeros((num_bins, 2)))
-            source[:len(shifts)] += shifts[:num_bins]
+            source += shifts[first:]
     total = np.zeros((num_bins, 2))
     for source in sources.values():
         total[:, 0] += np.maximum(source.max(axis=1), 0.)**2
@@ -127,7 +134,8 @@ class matplotlibPlotter(mplt.MultiPlotter):
         self._sources, self._total_syst = {}, np.zeros((num_bins, 2))
         if options.get('plot-syst-unc', True):
             self._sources, self._total_syst = _systematics(
-                [sample for sample, _ in self._backgrounds], num_bins)
+                [sample for sample, _ in self._backgrounds],
+                *_visible(drawn[0][0].histogram))
         breakdown = (bool(self._sources) or bool(self._data)) and \
             options.get('syst-breakdown', True)
 

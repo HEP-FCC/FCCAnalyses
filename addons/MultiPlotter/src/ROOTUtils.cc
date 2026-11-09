@@ -176,7 +176,7 @@ double max_relative_systematics(const TH1 &nominal,
   for (int bin = nominal.GetXaxis()->GetFirst();
        bin <= nominal.GetXaxis()->GetLast(); ++bin) {
     const auto content = nominal.GetBinContent(bin);
-    if (const size_t i = bin - 1; content > 0. && i < systematics.total.size())
+    if (const size_t i = bin; content > 0. && i < systematics.total.size())
       max_relative =
           std::max({max_relative, systematics.total[i].first / content,
                     systematics.total[i].second / content});
@@ -208,8 +208,9 @@ TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
                stat = nominal.GetBinError(bin),
                half_width = 0.5 * nominal.GetBinWidth(bin);
     const auto [syst_up, syst_down] =
-        static_cast<size_t>(i) < systematics.total.size() ? systematics.total[i]
-                                                          : std::pair{0., 0.};
+        static_cast<size_t>(bin) < systematics.total.size()
+            ? systematics.total[bin]
+            : std::pair{0., 0.};
     auto central = content, up = std::hypot(stat, syst_up),
          down = std::hypot(stat, syst_down);
     if (relative) { // no band for empty bins
@@ -254,7 +255,7 @@ void draw_systematics_breakdown(ROOTCanvas &canvas, const TH1 &nominal,
       const auto content = nominal.GetBinContent(bin);
       up->SetBinContent(bin, offset);
       down->SetBinContent(bin, offset);
-      if (const size_t i = bin - 1; content > 0. && i < shifts.size()) {
+      if (const size_t i = bin; content > 0. && i < shifts.size()) {
         up->SetBinContent(bin, offset + shifts[i].first / content);
         down->SetBinContent(bin, offset + shifts[i].second / content);
       }

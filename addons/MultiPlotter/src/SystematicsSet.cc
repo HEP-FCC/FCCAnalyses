@@ -95,9 +95,9 @@ SystematicsSet::binnedAsymmetricUncertainties() const {
 }
 
 std::vector<SystematicsSet::Values> SystematicsSet::binnedShifts() const {
-  std::vector<Values> shifts;
-  shifts.reserve(nominal_shape->GetNbinsX());
-  for (int i = 1; i <= nominal_shape->GetNbinsX(); ++i)
+  std::vector<Values> shifts; // indexed by bin number, with under/overflow
+  shifts.reserve(nominal_shape->GetNbinsX() + 2);
+  for (int i = 0; i <= nominal_shape->GetNbinsX() + 1; ++i)
     shifts.emplace_back(
         up_shape->GetBinContent(i) - nominal_shape->GetBinContent(i),
         down_shape->GetBinContent(i) - nominal_shape->GetBinContent(i));
