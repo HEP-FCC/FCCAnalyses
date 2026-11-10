@@ -477,6 +477,26 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             ('root://storage.example.org//data/a.root',),
         )
 
+    def test_rejects_malformed_sample_input_files_before_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis_script = root / 'analysis.py'
+            self.write_modern_analysis(
+                analysis_script,
+                '        self.input_dir = "root://storage.example.org//data"\n'
+                '        self.samples = {"signal": {"input-files": "bad.root"}}\n',
+            )
+            args = self.parse_grid_arguments(str(analysis_script), [])
+            with self.assertLogs('FCCAnalyses.run', level='ERROR') as logs, \
+                    patch('grid_submission.resolve_directory') as discover:
+                with self.assertRaisesRegex(GridSubmissionError, 'samples are invalid'):
+                    create_grid_submission_request(
+                        args, self.load_analysis_module(analysis_script),
+                        key4hep_setup=str(self.key4hep_setup),
+                    )
+            self.assertIn('input-files must be a list of strings', logs.output[0])
+            discover.assert_not_called()
+
     def test_resolves_direct_grid_cli_input(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

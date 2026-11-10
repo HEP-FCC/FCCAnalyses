@@ -398,11 +398,14 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
 
         # Check directly provided input files
         input_files = provided_sample_dict.get('input-files')
-        if (isinstance(input_files, list)
-                and all(isinstance(path, str) for path in input_files)):
-            sample_dict['input-files'] = input_files
-        else:
-            sample_dict['input-files'] = None
+        if input_files is not None and (
+            not isinstance(input_files, list)
+            or not all(isinstance(path, str) for path in input_files)
+        ):
+            LOGGER.error('Sample "%s" input-files must be a list of strings!'
+                         '\nAborting...', sample_name)
+            sys.exit(3)
+        sample_dict['input-files'] = input_files
 
         # Check output stem
         if has_valid_string(provided_sample_dict, 'output-stem'):

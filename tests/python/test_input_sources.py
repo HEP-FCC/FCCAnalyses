@@ -71,6 +71,16 @@ class InputSourceTest(unittest.TestCase):
                     (expected, value),
                 )
 
+    def test_malformed_input_files_are_rejected(self):
+        for value in ('one.root', 42, ('one.root',), ['one.root', 42]):
+            with self.subTest(value=value):
+                with self.assertLogs('FCCAnalyses.run', level='ERROR') as logs:
+                    with self.assertRaises(SystemExit) as error:
+                        validate_sample_list({'signal': {'input-files': value}})
+                self.assertEqual(error.exception.code, 3)
+                self.assertIn('signal', logs.output[0])
+                self.assertIn('input-files must be a list of strings', logs.output[0])
+
     def test_input_sources_are_mutually_exclusive(self):
         sample = validate_sample_list({
             'events': {
