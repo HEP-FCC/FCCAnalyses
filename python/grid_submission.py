@@ -89,15 +89,31 @@ def create_grid_submission_request(
             )
             ncpus = 1
         _reject_sample_event_limits(analysis_class)
-        has_cli_input = (
-            args.input is not None or args.input_file_list is not None
-        )
+        has_cli_input = any((
+            args.input is not None,
+            args.input_file_list is not None,
+            args.input_lfn_list is not None,
+        ))
+        if args.sample_name is not None and not has_cli_input:
+            raise GridSubmissionError(
+                '--sample-name requires --input, --input-file-list, '
+                'or --input-lfn-list; script-defined samples retain their names.'
+            )
         sample_name = (
             _require_single_name(args.sample_name, '--sample-name')
             if args.sample_name is not None
-            and (args.input_lfn_list is not None or has_cli_input)
             else None
         )
+        if has_cli_input and (
+            getattr(analysis_class, 'samples', None)
+            or getattr(analysis_class, 'process_list', None)
+            or getattr(analysis_class, 'input_dir', None) is not None
+            or getattr(analysis_class, 'input_lfn_list', None) is not None
+        ):
+            LOGGER.warning(
+                'Command-line input overrides the analysis script input '
+                'configuration, including any sample settings.'
+            )
         if args.input_lfn_list is not None:
             input_mode = 'dirac-lfn'
             samples = (_resolve_grid_cli_lfn_sample(args, sample_name),)
@@ -261,6 +277,11 @@ def _resolve_analysis_samples(
     for sample_name, sample, input_source, input_value in configured_sources:
         if input_source == 'input-lfn-list':
             input_mode = 'dirac-lfn'
+            if sample['fraction'] != 1.0:
+                raise GridSubmissionError(
+                    f'Fraction-based selection is not supported for DIRAC '
+                    f'LFN input (sample {sample_name!r}).'
+                )
             inputs = _read_lfn_input(input_value)
         else:
             input_mode = 'xrootd'

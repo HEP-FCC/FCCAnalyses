@@ -146,6 +146,7 @@ These are catalogue LFNs, not the physical paths or XRootD URLs used by a
 sample's \fIinput-file-list\fR.
 An analysis script can instead set \fBAnalysis.input_lfn_list\fR or a sample's
 \fIinput-lfn-list\fR.
+Fraction-based selection is not supported for LFN samples.
 DIRAC stages each planned job's assigned input data into the worker directory,
 and the generated per-job input-file list refers to the staged filenames.
 Unless explicit grouping is requested, the complete LFN list is assigned to
@@ -200,8 +201,9 @@ This option is mutually exclusive with
 .BR \-\-files\-per\-job .
 .TP
 \fB\-\-sample\-name\fR \fINAME\fR
-Set the optional sample name passed to workers. For direct CLI input, it also
-adds this name to each planned output filename.
+Set the optional sample name passed to workers for direct CLI input. It also
+adds this name to each planned output filename. Script-defined samples retain
+their own names; this option requires a CLI input source.
 .TP
 \fB\-\-site\fR \fISITE\fR
 Restrict the jobs to the named DIRAC computing site.

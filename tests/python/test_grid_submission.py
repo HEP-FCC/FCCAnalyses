@@ -315,6 +315,74 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertEqual(sample_request.samples[0].name, 'signal')
         self.assertEqual(plan_jobs(sample_request)[0].sample_name, 'signal')
 
+    def test_rejects_fraction_for_script_lfn_sample(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis_script = root / 'analysis.py'
+            lfn_list = self.write_lfn_input(root)
+            self.write_modern_analysis(
+                analysis_script,
+                '        self.samples = {"signal": {'
+                f'"input-lfn-list": {str(lfn_list)!r}, "fraction": 0.5'
+                '}}\n',
+            )
+            args = self.parse_grid_arguments(str(analysis_script), [])
+            with self.assertRaisesRegex(
+                GridSubmissionError, 'Fraction-based selection.*signal'
+            ):
+                create_grid_submission_request(
+                    args, self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(self.key4hep_setup),
+                )
+
+    def test_rejects_sample_name_for_script_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            lfn_list = self.write_lfn_input(root)
+            analysis_script = root / 'analysis.py'
+            for body in (
+                f'        self.input_lfn_list = {str(lfn_list)!r}\n',
+                '        self.samples = {"signal": '
+                f'{{"input-lfn-list": {str(lfn_list)!r}}}}}\n',
+            ):
+                with self.subTest(body=body):
+                    self.write_modern_analysis(analysis_script, body)
+                    args = self.parse_grid_arguments(
+                        str(analysis_script), ['--sample-name', 'custom']
+                    )
+                    with self.assertRaisesRegex(GridSubmissionError, '--sample-name requires'):
+                        create_grid_submission_request(
+                            args, self.load_analysis_module(analysis_script),
+                            key4hep_setup=str(self.key4hep_setup),
+                        )
+
+    def test_warns_when_cli_input_overrides_script_samples(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis_script = root / 'analysis.py'
+            lfn_list = self.write_lfn_input(root)
+            input_list = root / 'physical-inputs.txt'
+            input_list.write_text('root://storage.example.org//data/a.root\n',
+                                  encoding='utf-8')
+            self.write_modern_analysis(
+                analysis_script,
+                '        self.samples = {"signal": {"fraction": 0.5}}\n',
+            )
+            for options in (
+                ['--input-lfn-list', str(lfn_list)],
+                ['--input', 'root://storage.example.org//data/a.root'],
+                ['--input-file-list', str(input_list)],
+            ):
+                with self.subTest(options=options):
+                    args = self.parse_grid_arguments(str(analysis_script), options)
+                    with self.assertLogs('FCCAnalyses.grid_submission', level='WARNING') as logs:
+                        request = create_grid_submission_request(
+                            args, self.load_analysis_module(analysis_script),
+                            key4hep_setup=str(self.key4hep_setup),
+                        )
+                    self.assertIn('overrides the analysis script', logs.output[0])
+                    self.assertNotEqual(request.samples[0].name, 'signal')
+
     def test_resolves_analysis_samples_for_xrootd_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
