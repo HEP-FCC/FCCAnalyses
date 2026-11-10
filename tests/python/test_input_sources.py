@@ -11,6 +11,8 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import MagicMock, patch
 
+import numpy  # Load before temporarily patching sys.modules for ROOT.
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'python'))
 
 from anascript import get_sample_input_source, validate_sample_list
@@ -19,6 +21,22 @@ from input_resolver import InputResolutionError
 
 
 class InputSourceTest(unittest.TestCase):
+    def test_eos_mount_options(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        self.assertIsNone(parser.parse_args(['analysis.py']).use_xrootd)
+        with redirect_stderr(StringIO()) as stderr:
+            args = parser.parse_args(['analysis.py', '--use-eos-mount'])
+        self.assertFalse(args.use_xrootd)
+        self.assertEqual(stderr.getvalue(), '')
+        args = parser.parse_args(['analysis.py', '--no-filepath-rewrites'])
+        self.assertTrue(args.deprecated_no_filepath_rewrites)
+        for options in (['--apply-filepath-rewrites'],
+                        ['--use-eos-mount', '--no-filepath-rewrites']):
+            with self.subTest(options=options), redirect_stderr(StringIO()):
+                with self.assertRaises(SystemExit):
+                    parser.parse_args(['analysis.py', *options])
+
     def test_unset_sources_allow_fallback(self):
         sources = ('input-dir', 'input-files', 'input-file-list')
         for provided in ({}, dict.fromkeys(sources)):
@@ -100,6 +118,17 @@ class LegacyInputTest(unittest.TestCase):
         }):
             spec.loader.exec_module(cls.runner)
 
+    def test_deprecated_eos_mount_option_warns_and_disables_rewrites(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        args = parser.parse_args(['missing-analysis.py', '--no-filepath-rewrites'])
+        args.command = 'run'
+        with self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
+            with self.assertRaises(SystemExit):
+                self.runner.run(args)
+        self.assertFalse(args.use_xrootd)
+        self.assertTrue(any('--use-eos-mount' in msg for msg in logs.output))
+
     def test_explicit_inputs_override_process_list(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -154,6 +183,126 @@ class LegacyInputTest(unittest.TestCase):
         self.assertEqual(exit_error.exception.code, 0)
         run_local.assert_called_once_with(module, ['test.root'], args)
         resolve.assert_not_called()
+
+
+class EosRewriteTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        path = Path(__file__).resolve().parents[2] / 'python' / 'run_fccanalysis.py'
+        spec = importlib.util.spec_from_file_location('test_modern_runner', path)
+        cls.runner = importlib.util.module_from_spec(spec)
+        with patch.dict(sys.modules, {'ROOT': MagicMock(), 'cppyy': MagicMock()}):
+            spec.loader.exec_module(cls.runner)
+
+    def test_campaign_rewrites_files_and_fraction_metadata(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        path = '/eos/home-b/bwach/events.root'
+        analysis = SimpleNamespace(
+            campaign='campaign', samples={'signal': {'fraction': 0.5}}
+        )
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            for rewrite in (False, True):
+                command = ['analysis.py', '--output-dir', '/tmp/results']
+                if not rewrite:
+                    command.append('--use-eos-mount')
+                config = self.runner.merge_config(parser.parse_args(command), analysis)
+                expected = (path if not rewrite else
+                            'root://eosuser.cern.ch//eos/user/b/bwach/events.root')
+                with self.subTest(rewrite=rewrite), \
+                        patch.object(self.runner, 'get_files_in_yaml', return_value=(
+                            [path], [{'path': path, 'events-in-ttree': 100}]
+                        )), \
+                        patch.object(self.runner, 'get_subfile_list',
+                                     side_effect=lambda files, counts, fraction: files) as subset:
+                    job = self.runner.generate_jobs(config)[0]
+                subset.assert_called_once_with([expected], [100], 0.5)
+                self.assertEqual(list(job['input-file-list']), [expected])
+
+    def test_cli_input_modes_use_fuse_only_when_requested(self):
+        eos_path = '/eos/home-b/bwach/data'
+        local_file = eos_path + '/a.root'
+        remote_file = 'root://eosuser.cern.ch//eos/user/b/bwach/data/a.root'
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            for use_fuse in (False, True):
+                with self.subTest(use_fuse=use_fuse), \
+                        patch('input_resolver.os.listdir', return_value=['a.root']) as listdir, \
+                        patch('input_resolver.os.path.isfile', return_value=True), \
+                        patch('input_resolver.subprocess.run') as xrdfs:
+                    xrdfs.return_value.stdout = (
+                        '-rw-r--r-- 1 user group 1 /eos/user/b/bwach/data/a.root\n'
+                    )
+                    command = ['analysis.py', '--input', eos_path, '--output', 'out.root']
+                    if use_fuse:
+                        command.append('--use-eos-mount')
+                    args = parser.parse_args(command)
+                    config = self.runner.merge_config(args, SimpleNamespace())
+                    files = self.runner.generate_jobs(config)[0]['input-file-list']
+                    self.assertEqual(files, [local_file if use_fuse else remote_file])
+                    self.assertEqual(listdir.called, use_fuse)
+                    self.assertEqual(xrdfs.called, not use_fuse)
+
+    def test_cli_file_list_keeps_fuse_paths_when_requested(self):
+        path = '/eos/project/f/fccanalyses/events.root'
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        with tempfile.TemporaryDirectory() as directory:
+            listing = Path(directory) / 'inputs.txt'
+            listing.write_text(path + '\n', encoding='utf-8')
+            with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+                for use_fuse in (False, True):
+                    command = ['analysis.py', '--input-file-list', str(listing),
+                               '--output', 'out.root']
+                    if use_fuse:
+                        command.append('--use-eos-mount')
+                    config = self.runner.merge_config(parser.parse_args(command), SimpleNamespace())
+                    expected = path if use_fuse else 'root://eosproject.cern.ch/' + path
+                    self.assertEqual(self.runner.generate_jobs(config)[0]['input-file-list'],
+                                     [expected])
+
+    def test_sample_directory_uses_requested_discovery_mode(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analysis = SimpleNamespace(
+            input_dir='/eos/project/f/project', samples={'signal': {}}
+        )
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            for use_fuse in (False, True):
+                with self.subTest(use_fuse=use_fuse), \
+                        patch('input_resolver.os.listdir', return_value=['a.root']) as listdir, \
+                        patch('input_resolver.os.path.isfile', return_value=True), \
+                        patch('input_resolver.subprocess.run') as xrdfs:
+                    xrdfs.return_value.stdout = (
+                        '-rw-r--r-- 1 user group 1 /eos/project/f/project/signal/a.root\n'
+                    )
+                    command = ['analysis.py', '--output-dir', '/tmp/results']
+                    if use_fuse:
+                        command.append('--use-eos-mount')
+                    config = self.runner.merge_config(parser.parse_args(command), analysis)
+                    job = self.runner.generate_jobs(config)[0]
+                    path = '/eos/project/f/project/signal/a.root'
+                    expected = path if use_fuse else 'root://eosproject.cern.ch/' + path
+                    self.assertEqual(list(job['input-file-list']), [expected])
+                    self.assertEqual(listdir.called, use_fuse)
+                    self.assertEqual(xrdfs.called, not use_fuse)
+
+    def test_test_file_uses_requested_eos_mode(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        path = '/eos/home-b/bwach/events.root'
+        analysis = SimpleNamespace(test_file=path)
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            for use_fuse in (False, True):
+                command = ['analysis.py', '--test']
+                if use_fuse:
+                    command.append('--use-eos-mount')
+                config = self.runner.merge_config(parser.parse_args(command), analysis)
+                expected = (path if use_fuse else
+                            'root://eosuser.cern.ch//eos/user/b/bwach/events.root')
+                self.assertEqual(self.runner.generate_jobs(config)[0]['input-file-list'],
+                                 [expected])
 
 
 if __name__ == '__main__':

@@ -15,6 +15,7 @@ import cppyy
 import numpy as np
 from threading import Thread
 from queue import Queue
+from input_resolver import InputResolutionError, eos_to_xrootd
 
 ROOT.gROOT.SetBatch(True)
 
@@ -504,24 +505,11 @@ def apply_filepath_rewrites(filepath: str) -> str:
     '''
     Apply path rewrites if applicable.
     '''
-    # Stripping leading and trailing white spaces
-    filepath_stripped = filepath.strip()
-    # Stripping leading and trailing slashes
-    filepath_stripped = filepath_stripped.strip('/')
-
-    # Splitting the path along slashes
-    filepath_splitted = filepath_stripped.split('/')
-
-    if len(filepath_splitted) > 1 and filepath_splitted[0] == 'eos':
-        if filepath_splitted[1] == 'experiment':
-            filepath = 'root://eospublic.cern.ch//' + filepath_stripped
-        elif filepath_splitted[1] == 'user':
-            filepath = 'root://eosuser.cern.ch//' + filepath_stripped
-        elif 'home-' in filepath_splitted[1]:
-            filepath = 'root://eosuser.cern.ch//eos/user/' + \
-                       filepath_stripped.replace('eos/home-', '')
-        else:
-            LOGGER.warning('Unknown EOS path type!\nPlease check with the '
-                           'developers as this might impact performance of '
-                           'the analysis.')
+    stripped = filepath.strip().strip('/')
+    if stripped == 'eos' or stripped.startswith('eos/'):
+        try:
+            return eos_to_xrootd('/' + stripped)
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
     return filepath

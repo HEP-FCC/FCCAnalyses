@@ -187,12 +187,14 @@ def _resolve_grid_cli_input_sample(
     '''Resolve one independent XRootD sample supplied on the command line.'''
     try:
         if args.input is not None:
-            input_urls = resolve_inputs(args.input)
+            input_paths = [normalize_input_path(path) for path in args.input]
+            _require_grid_urls(input_paths)
+            input_urls = resolve_inputs(input_paths)
         else:
             input_urls = read_input_file_list(args.input_file_list)
+        _require_grid_urls(input_urls)
     except InputResolutionError as error:
         raise GridSubmissionError(str(error)) from error
-    _require_grid_urls(input_urls)
     return ResolvedSample(
         name=sample_name or 'output',
         output_stem=sample_name,
@@ -311,9 +313,9 @@ def _resolve_grid_sample_inputs(
 ) -> list[str]:
     '''Resolve one configured sample input source to grid-readable URLs.'''
     if input_source == 'input-files':
-        input_urls = [normalize_input_path(path) for path in input_value]
-        _require_grid_urls(input_urls)
-        return resolve_inputs(input_urls)
+        input_paths = [normalize_input_path(path) for path in input_value]
+        _require_grid_urls(input_paths)
+        return resolve_inputs(input_paths)
     if input_source == 'input-file-list':
         input_urls = read_input_file_list(input_value)
         _require_grid_urls(input_urls)

@@ -13,8 +13,9 @@ class InputResolutionError(ValueError):
     '''An input path cannot be resolved.'''
 
 
-def normalize_input_path(path: str) -> str:
-    '''Normalize a string path; configuration types are checked by the caller.'''
+def normalize_input_path(path: str, *,
+                         use_xrootd: bool = True) -> str:
+    '''Normalize a path and optionally convert EOS paths to XRootD URLs.'''
     if not path:
         raise InputResolutionError('The input path is empty.')
     if path.lower().startswith('root:') or '://' in path:
@@ -33,24 +34,33 @@ def normalize_input_path(path: str) -> str:
         return f'root://{url.netloc}{remote_path}'
 
     path = os.path.abspath(os.path.expanduser(path))
-    if path == '/eos' or path.startswith('/eos/'):
-        return _eos_url(path)
+    if (path == '/eos' or path.startswith('/eos/')) and use_xrootd:
+        return eos_to_xrootd(path)
     return path
 
 
-def join_input_path(directory: str, child: str) -> str:
+def join_input_path(directory: str, child: str, *,
+                    use_xrootd: bool = True) -> str:
     '''Join a child path to a local directory or XRootD URL.'''
-    path = normalize_input_path(directory)
+    path = normalize_input_path(
+        directory, use_xrootd=use_xrootd
+    )
     if path.startswith('root://'):
         return path.rstrip('/') + '/' + child
     return os.path.join(path, child)
 
 
-def _eos_url(path: str) -> str:
-    '''Translate the EOS input namespaces used by the repository examples.'''
-    if path.startswith('/eos/experiment/fcc/'):
+def eos_to_xrootd(path: str) -> str:
+    '''Convert a CERN EOS path to its XRootD URL, regardless of local mounts.'''
+    if path == '/eos/experiment' or path.startswith('/eos/experiment/'):
         host = 'eospublic.cern.ch'
-    elif path.startswith('/eos/user/'):
+    elif path == '/eos/user' or path.startswith('/eos/user/'):
+        host = 'eosuser.cern.ch'
+    elif path == '/eos/project' or path.startswith('/eos/project/'):
+        host = 'eosproject.cern.ch'
+    elif path.startswith('/eos/home-'):
+        initial, _, remainder = path[len('/eos/home-'):].partition('/')
+        path = f'/eos/user/{initial}/{remainder}'
         host = 'eosuser.cern.ch'
     else:
         raise InputResolutionError(
@@ -91,9 +101,12 @@ def _list_remote_files(path: str) -> list[str]:
     return files
 
 
-def resolve_directory(directory: str) -> list[str]:
+def resolve_directory(directory: str, *,
+                      use_xrootd: bool = True) -> list[str]:
     '''Find immediate ROOT files in a local, mounted EOS or remote directory.'''
-    path = normalize_input_path(directory)
+    path = normalize_input_path(
+        directory, use_xrootd=use_xrootd
+    )
     if path.startswith('root://'):
         files = _list_remote_files(path)
     else:
@@ -115,19 +128,25 @@ def resolve_directory(directory: str) -> list[str]:
     return sorted(set(files))
 
 
-def resolve_inputs(paths: list[str]) -> list[str]:
+def resolve_inputs(paths: list[str], *,
+                   use_xrootd: bool = True) -> list[str]:
     '''Expand directories; leave individual file access checks to the reader.'''
     files = []
     for value in paths:
-        path = normalize_input_path(value)
+        path = normalize_input_path(
+            value, use_xrootd=use_xrootd
+        )
         if not path.endswith('.root'):
-            files.extend(resolve_directory(path))
+            files.extend(resolve_directory(
+                path, use_xrootd=use_xrootd
+            ))
         else:
             files.append(path)
     return sorted(set(files))
 
 
-def read_input_file_list(filename: str) -> list[str]:
+def read_input_file_list(filename: str, *,
+                         use_xrootd: bool = True) -> list[str]:
     '''Read explicit files, ignoring blanks and full-line comments.
     Relative entries use the working directory, matching the existing runner.
     '''
@@ -138,7 +157,9 @@ def read_input_file_list(filename: str) -> list[str]:
                 path = line.strip()
                 if not path or path.startswith('#'):
                     continue
-                paths.append(normalize_input_path(path))
+                paths.append(normalize_input_path(
+                    path, use_xrootd=use_xrootd
+                ))
     except (OSError, UnicodeError) as error:
         raise InputResolutionError(
             f'Cannot read input list {filename!r}: {error}.'

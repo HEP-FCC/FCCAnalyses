@@ -316,22 +316,20 @@ def setup_run_parser(parser):
         help='analysis name, mostly used for the output path'
     )
 
-    # File-path rewrites
-    filepath_rewrites_group = parser.add_mutually_exclusive_group()
-    filepath_rewrites_group.add_argument(
-        '--apply-filepath-rewrites',
-        action='store_true',
-        default=None,
-        help='Apply path rewrites for files stored on shared file systems',
-        dest='apply_filepath_rewrites'
-    )
-    filepath_rewrites_group.add_argument(
-        '--no-filepath-rewrites',
+    eos_access_group = parser.add_mutually_exclusive_group()
+    eos_access_group.add_argument(
+        '--use-eos-mount',
         action='store_false',
         default=None,
-        help='Do not apply path rewrites for files stored on shared file '
-             'systems',
-        dest='apply_filepath_rewrites'
+        help='Do not convert /eos/... paths to XRootD URLs for discovery or '
+             'processing (modern Analysis scripts only)',
+        dest='use_xrootd'
+    )
+    eos_access_group.add_argument(
+        '--no-filepath-rewrites',
+        action='store_true',
+        help=argparse.SUPPRESS,
+        dest='deprecated_no_filepath_rewrites'
     )
 
     # Independent sample

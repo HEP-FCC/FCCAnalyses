@@ -123,8 +123,9 @@ listed through XRootD and contribute immediate \fI.root\fR files only. The
 backend then applies any sample fraction and divides the resulting file URLs
 into jobs. Workers stream these files directly over XRootD.
 
-Mounted \fI/eos/experiment/fcc/...\fR and \fI/eos/user/...\fR paths are
-converted to CERN XRootD URLs. Other EOS namespaces and non-CERN storage must
+CERN \fI/eos/experiment/...\fR, \fI/eos/user/...\fR,
+\fI/eos/home-<initial>/...\fR, and \fI/eos/project/...\fR paths are
+converted to XRootD URLs before discovery. Other EOS namespaces and non-CERN storage must
 use an explicit URL, for example
 \fBroot://storage.example.org//data/events.root\fR. URLs ending in
 \fI.root\fR name files; other URLs are treated as directories.

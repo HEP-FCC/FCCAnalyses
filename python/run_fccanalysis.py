@@ -16,6 +16,7 @@ from anascript import validate_analysis_class, validate_sample_list
 from input_resolver import (
     InputResolutionError,
     join_input_path,
+    normalize_input_path,
     read_input_file_list,
     resolve_directory,
     resolve_inputs,
@@ -56,20 +57,35 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
             if input_source == 'input-files':
                 LOGGER.info('Will inspect directly provided input files for '
                             'the sample information.')
-                sample_file_list = resolve_inputs(input_value)
+                sample_file_list = resolve_inputs(
+                    input_value,
+                    use_xrootd=config['use-xrootd'],
+                )
             elif input_source == 'input-file-list':
                 LOGGER.info('Will inspect the sample input file list for the '
                             'sample information.')
-                sample_file_list = read_input_file_list(input_value)
+                sample_file_list = read_input_file_list(
+                    input_value,
+                    use_xrootd=config['use-xrootd'],
+                )
             elif input_source == 'sample-input-dir':
                 LOGGER.info('Will inspect the sample input directory for the '
                             'sample information.')
-                sample_file_list = resolve_directory(input_value)
+                sample_file_list = resolve_directory(
+                    input_value,
+                    use_xrootd=config['use-xrootd'],
+                )
             elif input_source == 'global-input-dir':
                 LOGGER.info('Will inspect the global input directory for the '
                             'sample information.')
-                input_dir = join_input_path(input_value, sample_name)
-                sample_file_list = resolve_directory(input_dir)
+                input_dir = join_input_path(
+                    input_value, sample_name,
+                    use_xrootd=config['use-xrootd'],
+                )
+                sample_file_list = resolve_directory(
+                    input_dir,
+                    use_xrootd=config['use-xrootd'],
+                )
             elif input_source == 'campaign':
                 LOGGER.info('Found the sample information in the campaign: %s',
                             input_value)
@@ -96,8 +112,8 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         info_msg += '\n - total number of files in the sample:  ' \
                     f'{len(sample_file_list):,}'
 
-        # Apply file-path rewrites
-        if config['apply-filepath-rewrites']:
+        # Campaign files do not pass through the input resolver.
+        if input_source == 'campaign' and config['use-xrootd']:
             sample_file_list = [apply_filepath_rewrites(fpath) for fpath in
                                 sample_file_list]
             if file_quantities is not None:
@@ -247,12 +263,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
             LOGGER.warning('Samples/processes defined in your analysis script '
                            'will be ignored...')
 
-        # Apply file-path rewrites
-        if config['apply-filepath-rewrites']:
-            input_file_list = [apply_filepath_rewrites(fpath) for fpath in
-                               config['input-file-list']]
-        else:
-            input_file_list = config['input-file-list']
+        input_file_list = config['input-file-list']
 
         # Only one output chunk
         if config['n-chunks'] is None:
@@ -395,15 +406,22 @@ def merge_config(args: argparse.Namespace,
         os.path.abspath(args.anascript_path)
     )
 
+    # Resolve the rewrite policy once for discovery and processing.
+    config['use-xrootd'] = args.use_xrootd is not False
+
     # Input file list
     config['input-file-list'] = None
     try:
         if args.input_file_list is not None:
             config['input-file-list'] = read_input_file_list(
-                args.input_file_list
+                args.input_file_list,
+                use_xrootd=config['use-xrootd'],
             )
         elif args.input is not None:
-            config['input-file-list'] = resolve_inputs(args.input)
+            config['input-file-list'] = resolve_inputs(
+                args.input,
+                use_xrootd=config['use-xrootd'],
+            )
     except InputResolutionError as error:
         LOGGER.error('%s\nAborting...', error)
         sys.exit(3)
@@ -446,6 +464,14 @@ def merge_config(args: argparse.Namespace,
 
         if config['test-file'] is None:
             LOGGER.error('Could not find a test file!\nAborting...')
+            sys.exit(3)
+        try:
+            config['test-file'] = normalize_input_path(
+                config['test-file'],
+                use_xrootd=config['use-xrootd'],
+            )
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
             sys.exit(3)
 
     # Check include header files
@@ -528,11 +554,6 @@ def merge_config(args: argparse.Namespace,
     config['readout-name'] = None
     if hasattr(analysis_class, 'readout_name'):
         config['readout-name'] = analysis_class.readout_name
-
-    # Check whether to apply file-path rewrites
-    config['apply-filepath-rewrites'] = True
-    if args.apply_filepath_rewrites is not None:
-        config['apply-filepath-rewrites'] = args.apply_filepath_rewrites
 
     # Check whether to save benchmark results
     config['bench'] = False

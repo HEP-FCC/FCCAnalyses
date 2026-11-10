@@ -23,6 +23,7 @@ from grid_submission import (
     _read_lfn_input,
     _require_key4hep_setup,
     _create_analysis_instance,
+    _resolve_grid_cli_input_sample,
     _resolve_grid_sample_inputs,
     create_grid_submission_request,
     submit_grid_submission,
@@ -493,6 +494,34 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
         self.assertIn('--input-lfn-list', str(error.exception))
         resolve.assert_not_called()
+
+    def test_grid_discovers_eos_through_xrootd(self) -> None:
+        directory = '/eos/project/f/fccanalyses/data'
+        with patch('input_resolver.os.listdir') as listdir, \
+                patch('input_resolver.subprocess.run') as xrdfs:
+            xrdfs.return_value.stdout = (
+                '-rw-r--r-- 1 user group 1 '
+                '/eos/project/f/fccanalyses/data/a.root\n'
+            )
+            inputs = _resolve_grid_sample_inputs('sample-input-dir', directory,
+                                                 'signal')
+        self.assertEqual(inputs, [
+            'root://eosproject.cern.ch//eos/project/f/fccanalyses/data/a.root',
+        ])
+        xrdfs.assert_called_once()
+        listdir.assert_not_called()
+
+    def test_grid_converts_mounted_eos_files_from_cli_and_list(self) -> None:
+        path = '/eos/home-b/bwach/events.root'
+        expected = 'root://eosuser.cern.ch//eos/user/b/bwach/events.root'
+        with tempfile.TemporaryDirectory() as directory:
+            listing = Path(directory) / 'inputs.txt'
+            listing.write_text(path + '\n', encoding='utf-8')
+            for args in (SimpleNamespace(input=[path], input_file_list=None),
+                         SimpleNamespace(input=None, input_file_list=str(listing))):
+                with self.subTest(args=args):
+                    sample = _resolve_grid_cli_input_sample(args, None)
+                    self.assertEqual(sample.inputs, (expected,))
 
     def test_stages_optional_analysis_includes_in_lfn_mode(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

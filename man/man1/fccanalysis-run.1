@@ -49,9 +49,18 @@ An input path may name a local ROOT file, a local directory, a mounted
 A local or remote path ending in \fI.root\fR names one file; every other path
 is treated as a directory. Remote directories are listed through \fBxrdfs\fR.
 
-Mounted \fI/eos/experiment/fcc/...\fR and \fI/eos/user/...\fR paths are
-translated to their CERN XRootD services. Use an explicit \fBroot://\fR URL
-for other EOS namespaces or for storage outside CERN.
+CERN \fI/eos/experiment/...\fR, \fI/eos/user/...\fR,
+\fI/eos/home-<initial>/...\fR, and \fI/eos/project/...\fR paths are
+translated to XRootD URLs before discovery, even when mounted locally.
+Use an explicit \fBroot://\fR URL for other EOS namespaces or for storage
+outside CERN.
+
+For modern \fBAnalysis\fR scripts, \fB--use-eos-mount\fR keeps EOS
+paths on the local FUSE mount for discovery and reading; there is no automatic
+fallback to XRootD. Explicit \fBroot://\fR URLs remain remote. Legacy
+\fBRDFanalysis\fR scripts always rewrite supported EOS paths.
+The old \fB--no-filepath-rewrites\fR option remains available as a deprecated
+alias for \fB--use-eos-mount\fR.
 
 .SH OPTIONS
 .TP
