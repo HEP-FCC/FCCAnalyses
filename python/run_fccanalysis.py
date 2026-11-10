@@ -15,6 +15,7 @@ from anascript import get_sample_input_source, validate_n_threads
 from anascript import validate_analysis_class, validate_sample_list
 from input_resolver import (
     InputResolutionError,
+    ensure_unique_inputs,
     join_input_path,
     normalize_input_path,
     read_input_file_list,
@@ -96,7 +97,7 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
             else:
                 sample_file_list = None
         except InputResolutionError as error:
-            LOGGER.error('%s\nAborting...', error)
+            LOGGER.error('Sample "%s": %s\nAborting...', sample_name, error)
             sys.exit(3)
 
         if sample_file_list is None:
@@ -121,6 +122,16 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                     fqs | {'path': apply_filepath_rewrites(fqs['path'])}
                     for fqs in file_quantities
                 ]
+
+        if input_source == 'campaign':
+            try:
+                ensure_unique_inputs([
+                    normalize_input_path(path, use_xrootd=config['use-xrootd'])
+                    for path in sample_file_list
+                ])
+            except InputResolutionError as error:
+                LOGGER.error('Sample "%s": %s\nAborting...', sample_name, error)
+                sys.exit(3)
 
         # Reduce the sample by a required fraction
         if 'fraction' in sample_dict:

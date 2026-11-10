@@ -497,6 +497,22 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             self.assertIn('input-files must be a non-empty list', logs.output[0])
             discover.assert_not_called()
 
+    def test_rejects_duplicate_grid_sample_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            analysis_script = Path(directory) / 'analysis.py'
+            path = 'root://storage.example.org//data/a.root'
+            self.write_modern_analysis(
+                analysis_script,
+                '        self.samples = {"signal": '
+                f'{{"input-files": [{path!r}, {path!r}]}}}}\n',
+            )
+            args = self.parse_grid_arguments(str(analysis_script), [])
+            with self.assertRaisesRegex(GridSubmissionError, 'Duplicate input path'):
+                create_grid_submission_request(
+                    args, self.load_analysis_module(analysis_script),
+                    key4hep_setup=str(self.key4hep_setup),
+                )
+
     def test_rejects_malformed_lfn_source_before_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             analysis_script = Path(directory) / 'analysis.py'

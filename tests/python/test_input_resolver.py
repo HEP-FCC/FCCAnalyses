@@ -26,9 +26,11 @@ class InputResolverTest(unittest.TestCase):
             (nested / 'b.root').touch()
             self.assertEqual(resolve_directory(directory), [str(base / 'a file.root')])
             self.assertEqual(
-                resolve_inputs([directory, str(nested), str(base / 'a file.root')]),
+                resolve_inputs([directory, str(nested)]),
                 [str(base / 'a file.root'), str(nested / 'b.root')],
             )
+            with self.assertRaisesRegex(InputResolutionError, 'Duplicate input path'):
+                resolve_inputs([directory, str(base / 'a file.root')])
 
     def test_eos_mapping_and_remote_files(self):
         with patch('input_resolver.subprocess.run') as run:
@@ -94,7 +96,6 @@ class InputResolverTest(unittest.TestCase):
             '-rw------- ganis sf 117334351 2022-08-31 11:46:27 /data/b file.root\n'
             'drwxr-xr-x ganis sf 0 2025-01-26 22:46:35 /data/.sys.v#.a.root\n'
             '-rw------- ganis sf 117209126 2022-08-31 11:46:46 /data/a.root\n'
-            '-rw------- ganis sf 117209126 2022-08-31 11:46:46 /data/a.root\n'
             '-rw------- ganis sf 100 2022-08-31 11:46:49 /data/notes.txt\n'
         )
         for host in ['storage.example.org:1094', 'eosproject.cern.ch']:
@@ -109,10 +110,29 @@ class InputResolverTest(unittest.TestCase):
     def test_file_list(self):
         with tempfile.TemporaryDirectory() as directory:
             listing = Path(directory) / 'inputs.txt'
-            listing.write_text('# comment\n\na file.root\na file.root\n',
+            listing.write_text('# comment\n\na file.root\n',
                                encoding='utf-8')
             self.assertEqual(read_input_file_list(str(listing)),
                              [str(Path('a file.root').absolute())])
+
+    def test_duplicate_inputs_are_rejected_after_normalization(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'one.root'
+            listing = Path(directory) / 'inputs.txt'
+            listing.write_text(f'{path}\n{directory}/./one.root\n', encoding='utf-8')
+            with self.assertRaisesRegex(InputResolutionError, 'Duplicate input path'):
+                read_input_file_list(str(listing))
+            with self.assertRaisesRegex(InputResolutionError, 'Duplicate input path'):
+                resolve_inputs([str(path), str(path)])
+
+    @patch('input_resolver.subprocess.run')
+    def test_duplicate_remote_directory_entries_are_rejected(self, run):
+        run.return_value.stdout = (
+            '-rw------- owner group 1 /data/a.root\n'
+            '-rw------- owner group 1 /data/a.root\n'
+        )
+        with self.assertRaisesRegex(InputResolutionError, 'Duplicate input path'):
+            resolve_directory('root://storage.example.org//data')
 
     def test_invalid_paths(self):
         for path in ['root://', 'root://host', '/eos/unknown/data']:

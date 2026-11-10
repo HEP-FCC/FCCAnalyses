@@ -289,6 +289,44 @@ class EosRewriteTest(unittest.TestCase):
                 subset.assert_called_once_with([expected], [100], 0.5)
                 self.assertEqual(list(job['input-file-list']), [expected])
 
+    def test_duplicate_campaign_input_is_rejected_before_fraction_selection(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analysis = SimpleNamespace(
+            campaign='campaign', samples={'signal': {'fraction': 0.5}}
+        )
+        path = '/eos/home-b/bwach/events.root'
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            config = self.runner.merge_config(
+                parser.parse_args(['analysis.py', '--output-dir', '/tmp/results']),
+                analysis,
+            )
+        with patch.object(self.runner, 'get_files_in_yaml', return_value=(
+                [path, path], [{'path': path, 'events-in-ttree': 100}] * 2
+        )), patch.object(self.runner, 'get_subfile_list') as select:
+            with self.assertLogs('FCCAnalyses.run_analysis', level='ERROR') as logs:
+                with self.assertRaises(SystemExit):
+                    self.runner.generate_jobs(config)
+        self.assertIn('signal', logs.output[0])
+        self.assertIn('Duplicate input path', logs.output[0])
+        select.assert_not_called()
+
+    def test_same_input_may_be_used_by_different_samples(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        path = 'root://storage.example.org//events.root'
+        analysis = SimpleNamespace(samples={
+            'signal': {'input-files': [path]},
+            'background': {'input-files': [path]},
+        })
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            config = self.runner.merge_config(
+                parser.parse_args(['analysis.py', '--output-dir', '/tmp/results']),
+                analysis,
+            )
+        jobs = self.runner.generate_jobs(config)
+        self.assertEqual([list(job['input-file-list']) for job in jobs], [[path], [path]])
+
     def test_normal_runner_rejects_invalid_source_before_fallback(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)

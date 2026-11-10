@@ -282,7 +282,10 @@ def _resolve_analysis_samples(
                     f'Fraction-based selection is not supported for DIRAC '
                     f'LFN input (sample {sample_name!r}).'
                 )
-            inputs = _read_lfn_input(input_value)
+            try:
+                inputs = _read_lfn_input(input_value)
+            except GridSubmissionError as error:
+                raise GridSubmissionError(f'Sample {sample_name!r}: {error}') from error
         else:
             input_mode = 'xrootd'
             try:
@@ -290,7 +293,7 @@ def _resolve_analysis_samples(
                     input_source, input_value, sample_name
                 )
             except InputResolutionError as error:
-                raise GridSubmissionError(str(error)) from error
+                raise GridSubmissionError(f'Sample {sample_name!r}: {error}') from error
             fraction = sample['fraction']
             if fraction < 1.0:
                 inputs = _apply_fraction(inputs, fraction, sample_name)

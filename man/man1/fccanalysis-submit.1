@@ -122,6 +122,7 @@ the global \fBAnalysis.input_dir\fR when they have no source. Directories are
 listed through XRootD and contribute immediate \fI.root\fR files only. The
 backend then applies any sample fraction and divides the resulting file URLs
 into jobs. Workers stream these files directly over XRootD.
+Duplicate input paths within one sample are rejected after path normalization.
 
 CERN \fI/eos/experiment/...\fR, \fI/eos/user/...\fR,
 \fI/eos/home-<initial>/...\fR, and \fI/eos/project/...\fR paths are
@@ -142,6 +143,7 @@ selects LFN mode.
 The named text file must contain one absolute DIRAC logical file name per
 non-empty line. Blank lines and lines beginning with \fB#\fR, optionally
 preceded by whitespace, are ignored.
+Duplicate LFNs within one sample are rejected.
 These are catalogue LFNs, not the physical paths or XRootD URLs used by a
 sample's \fIinput-file-list\fR.
 An analysis script can instead set \fBAnalysis.input_lfn_list\fR or a sample's

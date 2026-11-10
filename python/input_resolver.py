@@ -1,6 +1,6 @@
 '''Shared input resolution for local paths, CERN EOS mounts and XRootD URLs.
 
-Discovery keeps only immediate .root files, sorted and deduplicated. For mixed
+Discovery keeps only immediate .root files, sorted and checked for duplicates. For mixed
 inputs, a path ending in .root is a file; every other path is a directory.
 '''
 
@@ -11,6 +11,15 @@ from urllib.parse import urlsplit
 
 class InputResolutionError(ValueError):
     '''An input path cannot be resolved.'''
+
+
+def ensure_unique_inputs(paths: list[str]) -> None:
+    '''Reject duplicate input paths within one sample.'''
+    seen = set()
+    for path in paths:
+        if path in seen:
+            raise InputResolutionError(f'Duplicate input path: {path}')
+        seen.add(path)
 
 
 def normalize_input_path(path: str, *,
@@ -125,7 +134,8 @@ def resolve_directory(directory: str, *,
             'Input directory contains no immediate .root files. '
             'Check the path; subdirectories are not searched.'
         )
-    return sorted(set(files))
+    ensure_unique_inputs(files)
+    return sorted(files)
 
 
 def resolve_inputs(paths: list[str], *,
@@ -142,7 +152,8 @@ def resolve_inputs(paths: list[str], *,
             ))
         else:
             files.append(path)
-    return sorted(set(files))
+    ensure_unique_inputs(files)
+    return sorted(files)
 
 
 def read_input_file_list(filename: str, *,
@@ -166,4 +177,5 @@ def read_input_file_list(filename: str, *,
         ) from error
     if not paths:
         raise InputResolutionError(f'Input file list {filename!r} is empty.')
-    return sorted(set(paths))
+    ensure_unique_inputs(paths)
+    return sorted(paths)
