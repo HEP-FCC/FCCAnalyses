@@ -32,6 +32,21 @@ class InputResolverTest(unittest.TestCase):
             with self.assertRaisesRegex(InputResolutionError, 'Duplicate input path'):
                 resolve_inputs([directory, str(base / 'a file.root')])
 
+    def test_explicit_order_is_preserved_and_directories_are_sorted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            nested = base / 'inputs'
+            nested.mkdir()
+            for name in ('z.root', 'a.root'):
+                (nested / name).touch()
+            files = [str(base / 'last.root'), str(nested), str(base / 'first.root')]
+            self.assertEqual(resolve_inputs(files), [
+                files[0], str(nested / 'a.root'), str(nested / 'z.root'), files[2],
+            ])
+            listing = base / 'files.txt'
+            listing.write_text(f'{files[0]}\n{files[2]}\n', encoding='utf-8')
+            self.assertEqual(read_input_file_list(str(listing)), [files[0], files[2]])
+
     def test_eos_mapping_and_remote_files(self):
         with patch('input_resolver.subprocess.run') as run:
             for path, host in [

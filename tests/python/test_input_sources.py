@@ -7,6 +7,7 @@ from io import StringIO
 from pathlib import Path
 import sys
 import tempfile
+from threading import Event
 from types import SimpleNamespace
 import unittest
 from unittest.mock import MagicMock, patch
@@ -326,6 +327,40 @@ class EosRewriteTest(unittest.TestCase):
             )
         jobs = self.runner.generate_jobs(config)
         self.assertEqual([list(job['input-file-list']) for job in jobs], [[path], [path]])
+
+    def test_fraction_selection_preserves_input_order_after_parallel_reads(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        paths = [f'root://storage.example.org//{name}.root' for name in ('b', 'a', 'c')]
+        analysis = SimpleNamespace(samples={
+            'signal': {'input-files': paths, 'fraction': 0.5},
+        })
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            config = self.runner.merge_config(
+                parser.parse_args(['analysis.py', '--output-dir', '/tmp/results']),
+                analysis,
+            )
+
+        first_read_done, second_read_done = Event(), Event()
+        completed = []
+
+        def read_quantities(path, result_queue):
+            if path == paths[0] and not first_read_done.wait(timeout=5):
+                raise RuntimeError('First metadata read did not finish')
+            if path == paths[2] and not second_read_done.wait(timeout=5):
+                raise RuntimeError('Second metadata read did not finish')
+            result_queue.put({'path': path, 'events-in-ttree': 100})
+            completed.append(path)
+            if path == paths[1]:
+                first_read_done.set()
+            elif path == paths[0]:
+                second_read_done.set()
+
+        with patch.dict(self.runner.get_file_quantities.__globals__,
+                        {'get_one_file_quantities': read_quantities}):
+            job = self.runner.generate_jobs(config)[0]
+        self.assertEqual(completed, [paths[1], paths[0], paths[2]])
+        self.assertEqual(list(job['input-file-list']), paths[:2])
 
     def test_normal_runner_rejects_invalid_source_before_fallback(self):
         parser = argparse.ArgumentParser()

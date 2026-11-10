@@ -513,6 +513,23 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     key4hep_setup=str(self.key4hep_setup),
                 )
 
+    def test_grid_jobs_preserve_explicit_sample_file_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            analysis_script = Path(directory) / 'analysis.py'
+            paths = [f'root://storage.example.org//{name}.root'
+                     for name in ('b', 'a', 'c')]
+            self.write_modern_analysis(
+                analysis_script,
+                f'        self.samples = {{"signal": {{"input-files": {paths!r}}}}}\n',
+            )
+            args = self.parse_grid_arguments(str(analysis_script), ['--n-chunks', '2'])
+            request = create_grid_submission_request(
+                args, self.load_analysis_module(analysis_script),
+                key4hep_setup=str(self.key4hep_setup),
+            )
+        jobs = plan_jobs(request)
+        self.assertEqual([path for job in jobs for path in job.source_inputs], paths)
+
     def test_rejects_malformed_lfn_source_before_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             analysis_script = Path(directory) / 'analysis.py'

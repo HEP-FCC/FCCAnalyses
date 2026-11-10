@@ -49,6 +49,8 @@ An input path may name a local ROOT file, a local directory, a mounted
 A local or remote path ending in \fI.root\fR names one file; every other path
 is treated as a directory. Remote directories are listed through \fBxrdfs\fR.
 Duplicate input paths within one sample are rejected after path normalization.
+Explicit paths and input-list entries retain their supplied order; files
+discovered within each directory are sorted by path.
 
 CERN \fI/eos/experiment/...\fR, \fI/eos/user/...\fR,
 \fI/eos/home-<initial>/...\fR, and \fI/eos/project/...\fR paths are

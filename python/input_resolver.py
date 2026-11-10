@@ -1,7 +1,8 @@
 '''Shared input resolution for local paths, CERN EOS mounts and XRootD URLs.
 
-Discovery keeps only immediate .root files, sorted and checked for duplicates. For mixed
-inputs, a path ending in .root is a file; every other path is a directory.
+Discovery sorts immediate .root files within each directory and rejects
+duplicates. Explicit inputs retain their order. A path ending in .root is a
+file; every other path is a directory.
 '''
 
 import os
@@ -153,7 +154,7 @@ def resolve_inputs(paths: list[str], *,
         else:
             files.append(path)
     ensure_unique_inputs(files)
-    return sorted(files)
+    return files
 
 
 def read_input_file_list(filename: str, *,
@@ -178,4 +179,4 @@ def read_input_file_list(filename: str, *,
     if not paths:
         raise InputResolutionError(f'Input file list {filename!r} is empty.')
     ensure_unique_inputs(paths)
-    return sorted(paths)
+    return paths

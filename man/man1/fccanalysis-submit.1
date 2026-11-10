@@ -123,6 +123,8 @@ listed through XRootD and contribute immediate \fI.root\fR files only. The
 backend then applies any sample fraction and divides the resulting file URLs
 into jobs. Workers stream these files directly over XRootD.
 Duplicate input paths within one sample are rejected after path normalization.
+Explicit paths and input-list entries retain their supplied order; files
+discovered within each directory are sorted by path before job grouping.
 
 CERN \fI/eos/experiment/...\fR, \fI/eos/user/...\fR,
 \fI/eos/home-<initial>/...\fR, and \fI/eos/project/...\fR paths are

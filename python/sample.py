@@ -14,7 +14,7 @@ import ROOT  # type: ignore
 import cppyy
 import numpy as np
 from threading import Thread
-from queue import Queue
+from queue import Empty, Queue
 from input_resolver import InputResolutionError, eos_to_xrootd
 
 ROOT.gROOT.SetBatch(True)
@@ -439,11 +439,13 @@ def get_file_quantities(file_list: list[str]) -> \
                        'from the files.\nThis might take some time...')
 
     threads = []
-    results: Queue = Queue()
+    result_queues = []
     for filepath in file_list:
+        results: Queue = Queue()
         thread = Thread(target=get_one_file_quantities,
                         args=(filepath, results))
         threads.append(thread)
+        result_queues.append(results)
 
     for thread in threads:
         thread.start()
@@ -451,8 +453,15 @@ def get_file_quantities(file_list: list[str]) -> \
     for thread in threads:
         thread.join()
 
-    return [result for result in results.queue
-            if result['events-in-ttree'] is not None]
+    quantities = []
+    for results in result_queues:
+        try:
+            result = results.get_nowait()
+        except Empty:
+            continue
+        if result['events-in-ttree'] is not None:
+            quantities.append(result)
+    return quantities
 
 
 # _____________________________________________________________________________
