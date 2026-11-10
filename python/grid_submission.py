@@ -146,7 +146,7 @@ def create_grid_submission_request(
 
 
 def _read_lfn_input(path_value: str) -> tuple[str, ...]:
-    '''Read one concrete, whitespace-normalised DIRAC LFN per text-file line.'''
+    '''Read DIRAC LFNs, ignoring blank lines and full-line comments.'''
     path = _require_file(path_value, 'LFN input file')
     if path.suffix != '.txt':
         raise GridSubmissionError('--input-lfn-list must name a .txt file.')
@@ -154,7 +154,7 @@ def _read_lfn_input(path_value: str) -> tuple[str, ...]:
         input_lfns = tuple(
             line.strip()
             for line in path.read_text(encoding='utf-8').splitlines()
-            if line.strip()
+            if line.strip() and not line.lstrip().startswith('#')
         )
     except OSError as error:
         raise GridSubmissionError(f'Cannot read LFN input file: {path}') from error

@@ -139,7 +139,8 @@ Supplying
 .B --input-lfn-list
 selects LFN mode.
 The named text file must contain one absolute DIRAC logical file name per
-non-empty line.
+non-empty line. Blank lines and lines beginning with \fB#\fR, optionally
+preceded by whitespace, are ignored.
 These are catalogue LFNs, not the physical paths or XRootD URLs used by a
 sample's \fIinput-file-list\fR.
 An analysis script can instead set \fBAnalysis.input_lfn_list\fR or a sample's

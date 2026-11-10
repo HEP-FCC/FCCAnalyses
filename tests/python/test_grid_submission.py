@@ -20,6 +20,7 @@ from grid_submission import (
     GridSubmissionError,
     _create_analysis_include_archive,
     _key4hep_release_id,
+    _read_lfn_input,
     _require_key4hep_setup,
     _create_analysis_instance,
     _resolve_grid_sample_inputs,
@@ -107,6 +108,27 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             '--site',
             'LCG.CERN.ch',
         ]
+
+    def test_lfn_list_ignores_comments_and_preserves_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            listing = Path(directory) / 'inputs.txt'
+            listing.write_text(
+                '# first comment\n  /fcc/user/a/alice/b.root  \n'
+                '  # indented comment\n\n/fcc/user/a/alice/a.root\n',
+                encoding='utf-8',
+            )
+            self.assertEqual(_read_lfn_input(str(listing)), (
+                '/fcc/user/a/alice/b.root', '/fcc/user/a/alice/a.root',
+            ))
+            listing.write_text('# comment\n  # another\n', encoding='utf-8')
+            with self.assertRaisesRegex(GridSubmissionError, 'contains no LFNs'):
+                _read_lfn_input(str(listing))
+            listing.write_text(
+                '/fcc/user/a/alice/a.root\n# comment\n/fcc/user/a/alice/a.root\n',
+                encoding='utf-8',
+            )
+            with self.assertRaises(GridSubmissionError):
+                _read_lfn_input(str(listing))
 
     def test_rejects_debug_release_for_standard_submission(self) -> None:
         setup = Path(str(self.key4hep_setup).replace('-opt/', '-dbg/'))
