@@ -268,8 +268,6 @@ def _print_plan(
         job_grouping = f'{request.n_chunks} requested chunks'
     elif request.files_per_job is not None:
         job_grouping = f'{request.files_per_job} files per job'
-    elif request.input_mode == 'dirac-lfn':
-        job_grouping = 'one file per job'
     else:
         job_grouping = 'sample chunks'
     emit(f'  job grouping:    {job_grouping}')

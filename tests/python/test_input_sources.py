@@ -458,6 +458,17 @@ class EosRewriteTest(unittest.TestCase):
                 self.assertEqual(self.runner.generate_jobs(config)[0]['input-file-list'],
                                  [expected])
 
+    def test_https_test_file_is_preserved(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        url = 'https://example.org/events.root'
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            config = self.runner.merge_config(
+                parser.parse_args(['analysis.py', '--test']),
+                SimpleNamespace(test_file=url),
+            )
+        self.assertEqual(self.runner.generate_jobs(config)[0]['input-file-list'], [url])
+
 
 if __name__ == '__main__':
     unittest.main()

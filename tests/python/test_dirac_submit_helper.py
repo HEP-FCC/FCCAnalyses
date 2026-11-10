@@ -162,6 +162,7 @@ install_dirac_stubs()
 from dirac_submit_helper import (
     _create_job,
     _output_lfn,
+    _print_plan,
     _remove_existing_output,
     _user_lfn_root,
     _write_input_file_list,
@@ -177,6 +178,21 @@ from submission import (
 
 class DiracSubmitHelperTest(unittest.TestCase):
     '''Exercise the only translation boundary that depends on ILCDIRAC.'''
+
+    def test_lfn_plan_reports_sample_chunks(self) -> None:
+        request = SubmissionRequest(
+            analysis_script='/work/analysis.py', input_mode='dirac-lfn',
+            samples=(ResolvedSample(None, None, ('/fcc/a.root', '/fcc/b.root'), 1, None),),
+            files_per_job=None, run_arguments=(), output_file='result.root',
+            output_path=None, output_se=None, key4hep_setup='/work/setup.sh',
+            job_name='FCCAnalysis', job_group='test', submit_mode='wms',
+            destination_site=None, submission_id='test', user_build_payload=None,
+        )
+        jobs = plan_jobs(request)
+        self.assertEqual(len(jobs), 1)
+        with self.assertLogs('FCCAnalyses.grid_helper', level='INFO') as logs:
+            _print_plan(request, jobs, Path(request.analysis_script), None, ['/fcc/result.root'])
+        self.assertIn('job grouping:    sample chunks', '\n'.join(logs.output))
 
     def test_confirmation_precedes_deletion_and_submission(self) -> None:
         request = SubmissionRequest(

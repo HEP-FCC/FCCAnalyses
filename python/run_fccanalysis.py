@@ -476,14 +476,15 @@ def merge_config(args: argparse.Namespace,
         if config['test-file'] is None:
             LOGGER.error('Could not find a test file!\nAborting...')
             sys.exit(3)
-        try:
-            config['test-file'] = normalize_input_path(
-                config['test-file'],
-                use_xrootd=config['use-xrootd'],
-            )
-        except InputResolutionError as error:
-            LOGGER.error('%s\nAborting...', error)
-            sys.exit(3)
+        if isinstance(config['test-file'], str) and not config['test-file'].startswith(('http://', 'https://')):
+            try:
+                config['test-file'] = normalize_input_path(
+                    config['test-file'],
+                    use_xrootd=config['use-xrootd'],
+                )
+            except InputResolutionError as error:
+                LOGGER.error('%s\nAborting...', error)
+                sys.exit(3)
 
     # Check include header files
     config['include-paths'] = None
