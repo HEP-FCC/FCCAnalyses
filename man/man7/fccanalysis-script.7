@@ -117,7 +117,8 @@ campaign discovery is not available in that mode. Grid LFN mode can use
 \fIfraction\fR
 .in +4
 The analysis will run over reduced number of input files roughly corresponding
-to the fraction of total events specified\&.
+to the fraction of total events specified\&. The fraction must be greater than
+zero and at most one\&.
 .br
 Default value: 1 (full process sample)
 .in -4
@@ -133,8 +134,8 @@ Default value: None
 .in -4
 \fIinput-files\fR
 .in +4
-List of explicit input file paths or URLs for this process\&. Directory paths
-in this list are expanded to their immediate \fI.root\fR files\&.
+Non-empty list of non-empty input file paths or URLs for this process\&.
+Directory paths in this list are expanded to their immediate \fI.root\fR files\&.
 .br
 Default value: None
 .in -4
@@ -172,8 +173,8 @@ Default value: the sample name
 \fIchunks\fR
 .in +4
 The analysis can be split into several output chunks (useful on distributed
-systems)\&. For grid submission this value can be overridden on the command
-line with either
+systems)\&. The value must be a positive integer\&. For grid submission this
+value can be overridden on the command line with either
 \fB\-\-n\-chunks\fR
 or
 \fB\-\-files\-per\-job\fR\&.
@@ -182,13 +183,15 @@ Default value: 1
 .in -4
 \fIstride\fR
 .in +4
-Specifies how to stride through the events of the sample\&.
+Specifies how to stride through the events of the sample; it must be a positive
+integer\&.
 .br
 Default value: None (no striding)
 .in -4
 \fIn-events-max\fR
 .in +4
-Limits the maximum number of events to process for the sample\&.
+Limits the maximum number of events to process for the sample; it must be a
+non-negative integer\&.
 Grid submission rejects this value because event limits do not compose
 reliably with file-based jobs\&.
 .br

@@ -59,7 +59,7 @@ class InputSourceTest(unittest.TestCase):
 
     def test_explicit_source_prevents_fallback(self):
         for source, value, expected in (
-                ('input-files', [], 'input-files'),
+                ('input-files', ['one.root'], 'input-files'),
                 ('input-file-list', 'inputs.txt', 'input-file-list'),
                 ('input-dir', '/sample', 'sample-input-dir')):
             with self.subTest(source=source):
@@ -79,7 +79,51 @@ class InputSourceTest(unittest.TestCase):
                         validate_sample_list({'signal': {'input-files': value}})
                 self.assertEqual(error.exception.code, 3)
                 self.assertIn('signal', logs.output[0])
-                self.assertIn('input-files must be a list of strings', logs.output[0])
+                self.assertIn('input-files must be a non-empty list', logs.output[0])
+
+    def test_invalid_sample_fields_are_rejected(self):
+        invalid = {
+            'input-dir': ['', '  ', 10],
+            'input_dir': ['', '  ', 10],
+            'input-file-list': ['', '  ', []],
+            'input-lfn-list': ['', '  ', []],
+            'input-files': [[], [''], ['  ']],
+            'output-stem': ['', '  ', 10],
+            'output': ['', '  ', 10],
+            'fraction': ['0.5', True, 0, -0.1, 1.1, float('nan'), float('inf')],
+            'chunks': ['4', True, 0, -1, 1.5],
+            'stride': ['4', True, 0, -1, 1.5],
+            'n-events-max': ['4', True, -1, 1.5],
+        }
+        for field, values in invalid.items():
+            for value in values:
+                with self.subTest(field=field, value=value):
+                    with self.assertLogs('FCCAnalyses.run', level='ERROR') as logs:
+                        with self.assertRaises(SystemExit) as error:
+                            validate_sample_list({'signal': {field: value}})
+                    self.assertEqual(error.exception.code, 3)
+                    self.assertIn('signal', logs.output[-1])
+                    self.assertIn(field, logs.output[-1])
+        with self.assertLogs('FCCAnalyses.run', level='ERROR'):
+            with self.assertRaises(SystemExit):
+                validate_sample_list({'signal': 'not a dictionary'})
+
+    def test_sample_fields_accept_defaults_and_boundary_values(self):
+        fields = ('input-dir', 'input_dir', 'input-file-list', 'input-lfn-list',
+                  'input-files', 'output-stem', 'output', 'fraction', 'chunks',
+                  'stride', 'n-events-max')
+        for field in fields:
+            with self.subTest(field=field):
+                sample = validate_sample_list({'signal': {field: None}})['signal']
+                self.assertEqual(sample['fraction'], 1.0)
+                self.assertEqual(sample['chunks'], 1)
+        sample = validate_sample_list({'signal': {
+            'fraction': 1, 'chunks': 1, 'stride': 1, 'n-events-max': 0,
+        }})['signal']
+        self.assertEqual(sample['fraction'], 1.0)
+        self.assertIsInstance(sample['fraction'], float)
+        self.assertEqual((sample['chunks'], sample['stride'], sample['n-events-max']),
+                         (1, 1, 0))
 
     def test_input_sources_are_mutually_exclusive(self):
         sample = validate_sample_list({
@@ -228,6 +272,17 @@ class EosRewriteTest(unittest.TestCase):
                     job = self.runner.generate_jobs(config)[0]
                 subset.assert_called_once_with([expected], [100], 0.5)
                 self.assertEqual(list(job['input-file-list']), [expected])
+
+    def test_normal_runner_rejects_invalid_source_before_fallback(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analysis = SimpleNamespace(
+            input_dir='/inputs', samples={'signal': {'input-file-list': ''}}
+        )
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            with self.assertLogs('FCCAnalyses.run', level='ERROR'):
+                with self.assertRaises(SystemExit):
+                    self.runner.merge_config(parser.parse_args(['analysis.py']), analysis)
 
     def test_cli_input_modes_use_fuse_only_when_requested(self):
         eos_path = '/eos/home-b/bwach/data'

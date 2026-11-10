@@ -296,43 +296,10 @@ def has_valid_string(dictionary: dict[str, Any], key: str) -> bool:
 
 
 # _____________________________________________________________________________
-def has_valid_float(dictionary: dict[str, Any], key: str) -> bool:
-    '''
-    Checks if the dictionary contains a "valid" float value:
-        - key exists in dictionary
-        - value is not None
-        - value is of float type
-    '''
-    if key not in dictionary:
-        return False
-
-    if dictionary[key] is None:
-        return False
-
-    if isinstance(dictionary[key], float):
-        return True
-
-    return False
-
-
-# _____________________________________________________________________________
-def has_valid_int(dictionary: dict[str, Any], key: str) -> bool:
-    '''
-    Checks if the dictionary contains a "valid" int value:
-        - key exists in dictionary
-        - value is not None
-        - value is of int type
-    '''
-    if key not in dictionary:
-        return False
-
-    if dictionary[key] is None:
-        return False
-
-    if isinstance(dictionary[key], int):
-        return True
-
-    return False
+def _invalid_sample_field(sample_name: str, field: str, expected: str) -> None:
+    LOGGER.error('Sample "%s" %s must be %s!\nAborting...',
+                 sample_name, field, expected)
+    sys.exit(3)
 
 
 # _____________________________________________________________________________
@@ -348,6 +315,9 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
                          'name!\nAborting...')
             sys.exit(3)
 
+        if not isinstance(provided_sample_dict, dict):
+            _invalid_sample_field(sample_name, 'configuration', 'a dictionary')
+
         # Deprecations
         # input_dir
         if 'input_dir' in provided_sample_dict:
@@ -359,6 +329,14 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
                            '"%s" instead of "output"!', sample_name)
 
         sample_dict: dict[str, Any] = {}
+
+        for field in ('input-dir', 'input_dir', 'input-file-list',
+                      'input-lfn-list', 'output-stem', 'output'):
+            value = provided_sample_dict.get(field)
+            if value is not None and (
+                not isinstance(value, str) or not value.strip()
+            ):
+                _invalid_sample_field(sample_name, field, 'a non-empty string')
 
         input_sources = (
             provided_sample_dict.get('input-dir') is not None
@@ -400,11 +378,12 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
         input_files = provided_sample_dict.get('input-files')
         if input_files is not None and (
             not isinstance(input_files, list)
-            or not all(isinstance(path, str) for path in input_files)
+            or not input_files
+            or not all(isinstance(path, str) and path.strip()
+                       for path in input_files)
         ):
-            LOGGER.error('Sample "%s" input-files must be a list of strings!'
-                         '\nAborting...', sample_name)
-            sys.exit(3)
+            _invalid_sample_field(sample_name, 'input-files',
+                                  'a non-empty list of non-empty strings')
         sample_dict['input-files'] = input_files
 
         # Check output stem
@@ -416,28 +395,23 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
             sample_dict['output-stem'] = sample_name
 
         # Check reduction fraction
-        if has_valid_float(provided_sample_dict, 'fraction'):
-            sample_dict['fraction'] = provided_sample_dict['fraction']
-        else:
-            sample_dict['fraction'] = 1.0
+        fraction = provided_sample_dict.get('fraction')
+        if fraction is not None and (
+            type(fraction) not in (int, float) or not 0 < fraction <= 1
+        ):
+            _invalid_sample_field(sample_name, 'fraction',
+                                  'a number greater than 0 and at most 1')
+        sample_dict['fraction'] = 1.0 if fraction is None else float(fraction)
 
         # Check number of chunks
-        if has_valid_int(provided_sample_dict, 'chunks'):
-            sample_dict['chunks'] = provided_sample_dict['chunks']
-        else:
-            sample_dict['chunks'] = 1
-
-        # Check if to stride through the events
-        if has_valid_int(provided_sample_dict, 'stride'):
-            sample_dict['stride'] = provided_sample_dict['stride']
-        else:
-            sample_dict['stride'] = None
-
-        # Check max number of events
-        if has_valid_int(provided_sample_dict, 'n-events-max'):
-            sample_dict['n-events-max'] = provided_sample_dict['n-events-max']
-        else:
-            sample_dict['n-events-max'] = None
+        for field in ('chunks', 'stride', 'n-events-max'):
+            value = provided_sample_dict.get(field)
+            minimum = 0 if field == 'n-events-max' else 1
+            if value is not None and (type(value) is not int or value < minimum):
+                expected = 'a non-negative integer' if minimum == 0 else 'a positive integer'
+                _invalid_sample_field(sample_name, field, expected)
+            sample_dict[field] = (1 if field == 'chunks' and value is None
+                                  else value)
 
         sample_list[sample_name] = sample_dict
 
