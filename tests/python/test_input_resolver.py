@@ -169,6 +169,9 @@ class InputResolverTest(unittest.TestCase):
         )
         with self.assertRaisesRegex(InputResolutionError, 'Permission denied'):
             resolve_directory('root://host//data')
+        run.side_effect = FileNotFoundError('xrdfs')
+        with self.assertRaisesRegex(InputResolutionError, 'xrdfs.*not found.*PATH'):
+            resolve_directory('root://host//data')
 
 
 if __name__ == '__main__':

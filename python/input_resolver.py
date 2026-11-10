@@ -88,6 +88,11 @@ def _list_remote_files(path: str) -> list[str]:
             ['xrdfs', url.netloc, 'ls', '-l', directory],
             check=True, capture_output=True, text=True,
         )
+    except FileNotFoundError as error:
+        raise InputResolutionError(
+            'xrdfs is required to discover XRootD directories but was not found. '
+            'Set up the Key4hep environment and ensure xrdfs is on PATH.'
+        ) from error
     except subprocess.CalledProcessError as error:
         detail = (error.stderr or error.stdout or 'xrdfs failed').strip()
         raise InputResolutionError(
