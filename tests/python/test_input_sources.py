@@ -248,6 +248,22 @@ class EosRewriteTest(unittest.TestCase):
         with patch.dict(sys.modules, {'ROOT': MagicMock(), 'cppyy': MagicMock()}):
             spec.loader.exec_module(cls.runner)
 
+    def test_data_source_uses_configured_value_and_cli_override(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        cases = (
+            (SimpleNamespace(), [], False),
+            (SimpleNamespace(use_data_source=False), [], False),
+            (SimpleNamespace(use_data_source=True), [], True),
+            (SimpleNamespace(use_data_source=False), ['--use-data-source'], True),
+        )
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            for analysis, options, expected in cases:
+                with self.subTest(analysis=analysis, options=options):
+                    args = parser.parse_args(['analysis.py', *options])
+                    config = self.runner.merge_config(args, analysis)
+                    self.assertIs(config['use-data-source'], expected)
+
     def test_campaign_rewrites_files_and_fraction_metadata(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)

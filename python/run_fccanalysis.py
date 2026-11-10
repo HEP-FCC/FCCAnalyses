@@ -523,11 +523,9 @@ def merge_config(args: argparse.Namespace,
         config['stride'] = args.stride
 
     # Check whether to use PODIO DataSource to load the events
-    config['use-data-source'] = False
-    if hasattr(analysis_class, 'use_data_source'):
-        config['use-data-source'] = True
-    if args.use_data_source:
-        config['use-data-source'] = True
+    config['use-data-source'] = (
+        getattr(analysis_class, 'use_data_source', False) or args.use_data_source
+    )
 
     # Check if the progress-bar is enabled
     config['enable-progress-bar'] = True
