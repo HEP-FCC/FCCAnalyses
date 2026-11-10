@@ -17,6 +17,7 @@ from threading import Thread
 from queue import Empty, Queue
 from input_resolver import InputResolutionError, eos_to_xrootd
 
+
 ROOT.gROOT.SetBatch(True)
 
 LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.process_info')

@@ -201,7 +201,7 @@ def setup_grid_submit_parser(parser):
         '--input-lfn-list',
         default=None,
         metavar='LFN_LIST',
-        help='text file containing one DIRAC LFNs'
+        help='text file containing one DIRAC LFN per line'
     )
     parser.add_argument(
         '-o', '--output',
@@ -339,7 +339,7 @@ def setup_run_parser(parser):
         '-i', '--input',
         default=None,
         nargs='+',
-        metavar='INPUT_FILE',
+        metavar='INPUT_PATH',
         help='location(s) of the input ROOT file(s)'
     )
     input_source_group.add_argument(
