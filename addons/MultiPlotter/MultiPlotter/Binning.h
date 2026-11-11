@@ -19,6 +19,7 @@
 #ifndef MultiPlotter_Binning_h
 #define MultiPlotter_Binning_h
 
+#include <algorithm>
 #include <cstddef>
 #include <utility>
 #include <vector>
@@ -26,6 +27,24 @@
 /// Operations on per-bin (up, down) shifts indexed by histogram bin number,
 namespace mplt::binning {
 using Shifts = std::vector<std::pair<float, float>>;
+
+/// Apply rebinning
+inline Shifts rebin(const Shifts &shifts, size_t factor) {
+  if (shifts.size() < 2 || factor < 2)
+    return shifts;
+  const size_t num_bins = shifts.size() - 2, new_num_bins = num_bins / factor;
+  Shifts rebinned(new_num_bins + 2, {0.f, 0.f});
+  // little lambda to account for shifts
+  const auto add = [&rebinned](size_t to, const Shifts::value_type &shift) {
+    rebinned[to].first += shift.first;
+    rebinned[to].second += shift.second;
+  };
+  add(0, shifts.front());                      // start with underflow bin
+  for (size_t bin = 1; bin <= num_bins; ++bin) // bins in "normal" range
+    add(std::min((bin - 1) / factor + 1, new_num_bins + 1), shifts[bin]);
+  add(new_num_bins + 1, shifts.back()); // end with overflow bin
+  return rebinned;
+}
 
 /// Move everything below/above the [first, last] bins range into its edges
 inline Shifts fold_overflow(const Shifts &shifts, size_t first, size_t last) {

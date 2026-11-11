@@ -71,6 +71,19 @@ void MultiPlotter::sortSamples(SortingType sorting_type, bool reverse) {
       stack.sort(sorting_type, reverse);
 }
 
+void MultiPlotter::rebin(int factor) {
+  if (factor < 2)
+    return;
+  for (auto &stack : samples_ | std::views::values)
+    for (auto &sample : stack.samples()) {
+      if (!sample.histogram)
+        continue;
+      sample.histogram->Rebin(factor);
+      for (auto &shifts : sample.systematics | std::views::values)
+        shifts = binning::rebin(shifts, factor);
+    }
+}
+
 void MultiPlotter::setXRange(double min, double max) {
   if (!(min < max))
     throw std::runtime_error("Invalid x-axis range: [" + std::to_string(min) +

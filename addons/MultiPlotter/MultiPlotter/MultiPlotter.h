@@ -39,10 +39,9 @@ public:
   Sample &addPseudoData(bool fluctuate = true, unsigned int seed = 42,
                         const std::string &name = "Pseudo-data");
   void sortSamples(SortingType, bool reverse = false);
-  /// Set x-axis range
-  void setXRange(double min, double max);
-  /// Add the x-axis (under/over)flow bins
-  void addOverflow();
+  void rebin(int factor);                 ///< Apply x-axis rebinning
+  void setXRange(double min, double max); ///< Set x-axis range
+  void addOverflow(); ///< Add the x-axis (under/over)flow bins
   /// List of samples registered for a given category
   const std::vector<Sample> &samples(Sample::Type) const;
 

@@ -42,31 +42,12 @@ void plotItPlotter::plot(std::string_view output_file,
   py::dict options;
   if (options_obj)
     options = py::reinterpret_borrow<py::dict>(options_obj);
-  /*for sig_stacking in config['stack-sig']:
-      plot_params = {'stack-sig': sig_stacking}
-      for xaxis_scaling in config['x-axis-scale-types']:
-          plot_params_x = {**plot_params, 'xaxis': xaxis_scaling}
-          for yaxis_scaling in config['y-axis-scale-types']:
-              plot_params_x_y = {**plot_params_x, 'yaxis': yaxis_scaling}
-              plot_name = var
-              if len(config['stack-sig']) > 1:
-                  plot_name += '_' + sig_stacking
-              if len(config['x-axis-scale-types']) > 1:
-                  plot_name += '_' + xaxis_scaling + 'x'
-              if len(config['y-axis-scale-types']) > 1:
-                  plot_name += '_' + yaxis_scaling + 'y'*/
   options["name"] = std::string{output_file};
   ROOTCanvas canvas(options);
   for (const auto &[coordinates, text] : text_boxes_)
     canvas.addTextBox(coordinates.first, coordinates.second, text);
 
   const auto xaxis_unit = utils::get_with_default(options, "unit", ""s);
-
-  const auto rebinning_factor = utils::get_with_default(options, "rebin", 1.);
-  if (const auto sorting_method =
-          utils::get_with_default(options, "sorting", ""s);
-      sorting_method == "yields") { // TODO
-  }
 
   root::utils::StackSystematics systematics;
   if (utils::get_with_default(options, "plot-syst-unc", true) &&
@@ -86,18 +67,6 @@ void plotItPlotter::plot(std::string_view output_file,
     canvas.split(0.3);
   canvas.mainPad()->cd();
 
-  if (samples_.contains(Sample::Type::background))
-    for (const auto &sample : samples_.at(Sample::Type::background).samples()) {
-      auto *histogram = dynamic_cast<TH1 *>(sample.histogram->Clone());
-      histogram->Scale(sample.weight);
-      double rescaled_integral_uncertainty = 0.,
-             rescaled_integral =
-                 histogram->IntegralAndError(histogram->GetXaxis()->GetFirst(),
-                                             histogram->GetXaxis()->GetLast(),
-                                             rescaled_integral_uncertainty);
-      if (rebinning_factor != 1.) // FIXME float comparisons
-        histogram->Rebin(rebinning_factor);
-    }
   std::unique_ptr<TH1> histogram_data{nullptr}, histogram_ref{nullptr};
   for (const auto &samples_list : samples_ | std::ranges::views::values) {
     if (histogram_ref)
