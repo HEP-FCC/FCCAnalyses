@@ -57,6 +57,7 @@ public:
   Sample &add(Sample &);
 
   const std::vector<Sample> &samples() const { return samples_; }
+  std::vector<Sample> &samples() { return samples_; }
 
   /// Order a given samples category according to a sorting strategy
   void sort(SortingType, bool reverse = false);

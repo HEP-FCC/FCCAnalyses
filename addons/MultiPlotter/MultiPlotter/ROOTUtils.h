@@ -41,10 +41,6 @@ static constexpr std::array<Color_t, 9> colours = {
 
 /// Adjust x- and y-axis labels if a physical unit is specified
 void adjust_labels(TH1 *histogram, std::string_view xaxis_unit);
-/// Add pre/post-range bins to a given histogram
-void add_underflow_overflow_bins(
-    TH1 *histogram, const std::pair<double, double> &range = std::pair(0., 0.),
-    bool propagate_unc = true);
 /// Draw a stack of multiple samples
 /// \return Statistical uncertainty band of the merged samples (if any)
 TH1 *draw_samples_stack(ROOTCanvas &, const Stack &, bool stacked,

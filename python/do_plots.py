@@ -367,6 +367,8 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
     # histograms treatment, before any pseudo-data is generated out of them
     if config.get('x-range'):
         plotter.setXRange(*config['x-range'])
+    if config['show-overflow']:
+        plotter.addOverflow()
     if config['sorting']:
         if config['sorting'] not in ('yield', 'weight', 'name'):
             LOGGER.error('Invalid samples sorting "%s"! Supported strategies: '
@@ -1195,6 +1197,8 @@ def run(args):
     # Samples ordering in each stack: yield, weight or name
     config['sorting'] = getattr(script_module, 'sortSamples', None)
     config['sorting-reverse'] = getattr(script_module, 'sortReverse', False)
+    # (under/over)flow bins
+    config['show-overflow'] = getattr(script_module, 'showOverflow', False)
 
     # Sources of systematic uncertainty, and their display
     config['systematics'] = getattr(script_module, 'systematics', {})

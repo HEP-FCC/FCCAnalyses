@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "MultiPlotter/Binning.h"
 #include "MultiPlotter/MultiPlotter.h"
 
 #include <TH1.h>
@@ -78,6 +79,42 @@ void MultiPlotter::setXRange(double min, double max) {
     for (auto &sample : stack.samples())
       if (sample.histogram)
         sample.histogram->GetXaxis()->SetRangeUser(min, max);
+}
+
+void MultiPlotter::addOverflow() {
+  for (auto &stack : samples_ | std::views::values)
+    for (auto &sample : stack.samples()) {
+      auto *histogram = sample.histogram;
+      if (!histogram)
+        continue;
+      const int first = histogram->GetXaxis()->GetFirst(),
+                last = histogram->GetXaxis()->GetLast(),
+                num_bins = histogram->GetNbinsX();
+      double under = 0., under_sumw2 = 0., over = 0., over_sumw2 = 0.;
+      for (int bin = 0; bin <= num_bins + 1; ++bin) {
+        if (bin >= first && bin <= last)
+          continue;
+        const auto content = histogram->GetBinContent(bin),
+                   error = histogram->GetBinError(bin);
+        (bin < first ? under : over) += content;
+        (bin < first ? under_sumw2 : over_sumw2) += error * error;
+        if (bin >= 1 && bin <= num_bins) {
+          histogram->SetBinContent(bin, 0.);
+          histogram->SetBinError(bin, 0.);
+        }
+      }
+      // not through SetBinContent, which may try to extend the axis
+      histogram->ClearUnderflowAndOverflow();
+      const auto add = [&histogram](int bin, double content, double sumw2) {
+        const auto error = histogram->GetBinError(bin);
+        histogram->SetBinContent(bin, histogram->GetBinContent(bin) + content);
+        histogram->SetBinError(bin, std::sqrt(error * error + sumw2));
+      };
+      add(first, under, under_sumw2);
+      add(last, over, over_sumw2);
+      for (auto &shifts : sample.systematics | std::views::values)
+        shifts = binning::fold_overflow(shifts, first, last);
+    }
 }
 
 const std::vector<Sample> &MultiPlotter::samples(Sample::Type type) const {

@@ -41,6 +41,8 @@ public:
   void sortSamples(SortingType, bool reverse = false);
   /// Set x-axis range
   void setXRange(double min, double max);
+  /// Add the x-axis (under/over)flow bins
+  void addOverflow();
   /// List of samples registered for a given category
   const std::vector<Sample> &samples(Sample::Type) const;
 
