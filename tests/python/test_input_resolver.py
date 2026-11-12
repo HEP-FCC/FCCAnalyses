@@ -16,6 +16,22 @@ from input_resolver import (
 
 
 class InputResolverTest(unittest.TestCase):
+    def test_http_files_and_mixed_inputs(self):
+        urls = ['https://example.org/data.root?token=value',
+                'http://example.org/other.root']
+        local = '/tmp/local.root'
+        self.assertEqual(resolve_inputs([urls[0], local, urls[1]]),
+                         [urls[0], local, urls[1]])
+        with tempfile.TemporaryDirectory() as directory:
+            listing = Path(directory) / 'inputs.txt'
+            listing.write_text('\n'.join(urls), encoding='utf-8')
+            self.assertEqual(read_input_file_list(str(listing)), urls)
+        for path in ('https://', 'https:///data.root', 'https://example.org/'):
+            with self.subTest(path=path), self.assertRaises(InputResolutionError):
+                resolve_inputs([path])
+        with self.assertRaisesRegex(InputResolutionError, 'directory discovery'):
+            resolve_directory('https://example.org/data')
+
     def test_local_inputs(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)

@@ -24,7 +24,7 @@ from input_resolver import (
 )
 from sample import get_subfile_list, get_chunk_list, get_files_in_yaml
 from sample import get_file_quantities
-from sample import apply_filepath_rewrites
+from sample import convert_eos_path_to_xrootd
 from utils import save_benchmark
 from job import Job
 
@@ -115,11 +115,11 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
 
         # Campaign files do not pass through the input resolver.
         if input_source == 'campaign' and config['use-xrootd']:
-            sample_file_list = [apply_filepath_rewrites(fpath) for fpath in
+            sample_file_list = [convert_eos_path_to_xrootd(fpath) for fpath in
                                 sample_file_list]
             if file_quantities is not None:
                 file_quantities = [
-                    fqs | {'path': apply_filepath_rewrites(fqs['path'])}
+                    fqs | {'path': convert_eos_path_to_xrootd(fqs['path'])}
                     for fqs in file_quantities
                 ]
 
@@ -476,7 +476,7 @@ def merge_config(args: argparse.Namespace,
         if config['test-file'] is None:
             LOGGER.error('Could not find a test file!\nAborting...')
             sys.exit(3)
-        if isinstance(config['test-file'], str) and not config['test-file'].startswith(('http://', 'https://')):
+        if isinstance(config['test-file'], str):
             try:
                 config['test-file'] = normalize_input_path(
                     config['test-file'],

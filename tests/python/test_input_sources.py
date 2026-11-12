@@ -469,6 +469,21 @@ class EosRewriteTest(unittest.TestCase):
             )
         self.assertEqual(self.runner.generate_jobs(config)[0]['input-file-list'], [url])
 
+    def test_https_cli_input_and_file_list(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        url = 'https://example.org/events.root'
+        with tempfile.TemporaryDirectory() as directory:
+            listing = Path(directory) / 'inputs.txt'
+            listing.write_text(url + '\n', encoding='utf-8')
+            for arguments in (['--input', url], ['--input-file-list', str(listing)]):
+                with self.subTest(arguments=arguments), \
+                        patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+                    config = self.runner.merge_config(
+                        parser.parse_args(['analysis.py', *arguments]), SimpleNamespace()
+                    )
+                    self.assertEqual(config['input-file-list'], [url])
+
 
 if __name__ == '__main__':
     unittest.main()

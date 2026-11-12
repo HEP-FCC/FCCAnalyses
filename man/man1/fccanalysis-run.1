@@ -21,7 +21,7 @@
 [\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR]
 [\fB\-\-output\-format\fR {\fBttree\fR,\fBrntuple\fR}]
 [\fB\-a\fR \fIANALYSIS_NAME\fR | \fB\-\-analysis\-name\fR \fIANALYSIS_NAME\fR]
-[\fB\-\-apply\-filepath\-rewrites\fR | \fB\-\-no\-filepath\-rewrites\fR]
+[\fB\-\-use\-eos\-mount\fR]
 [\fB\-s\fR \fISAMPLE_NAME\fR | \fB\-\-sample\-name\fR \fISAMPLE_NAME\fR]
 [\fB\-\-n\-chunks\fR \fIN_CHUNKS\fR]
 [\fB\-\-stride\fR \fISTRIDE\fR]
@@ -43,11 +43,12 @@ some aspects of the running with additional global attributes, see
 
 .SH INPUT PATHS
 An input path may name a local ROOT file, a local directory, a mounted
-\fI/eos/...\fR path, or an XRootD URL. Directory discovery keeps immediate
+\fI/eos/...\fR path, an XRootD URL, or an HTTP(S) file URL. Directory discovery keeps immediate
 \fI.root\fR files only; it does not recurse into subdirectories.
 
-A local or remote path ending in \fI.root\fR names one file; every other path
-is treated as a directory. Remote directories are listed through \fBxrdfs\fR.
+HTTP(S) URLs name individual files; HTTP directory discovery is not supported.
+Other paths ending in \fI.root\fR name one file; remaining paths are treated
+as directories. XRootD directories are listed through \fBxrdfs\fR.
 Duplicate input paths within one sample are rejected after path normalization.
 Explicit paths and input-list entries retain their supplied order; files
 discovered within each directory are sorted by path.
@@ -113,8 +114,9 @@ Default: follow the format of the events TTree or RNTuple in the first input fil
 \fB\-a\fR \fIANALYSIS_NAME\fR, \fB\-\-analysis\-name\fR \fIANALYSIS_NAME\fR
 Set analysis name, mostly used for the output path.
 .TP
-.BR \-\-apply\-filepath\-rewrites ", " \-\-no\-filepath\-rewrites
-Apply or disable path rewrites for files stored on shared file systems.
+.B \-\-use\-eos\-mount
+Use mounted EOS paths for discovery and reading in modern Analysis scripts.
+The deprecated \fB--no-filepath-rewrites\fR option is an alias.
 .TP
 \fB\-s\fR \fISAMPLE_NAME\fR, \fB\-\-sample\-name\fR \fISAMPLE_NAME\fR
 Set sample name, mostly used for the output path. Used when running over an

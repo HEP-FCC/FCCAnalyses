@@ -511,9 +511,9 @@ def get_chunk_list(file_list: str, chunks: int):
 
 
 # _____________________________________________________________________________
-def apply_filepath_rewrites(filepath: str) -> str:
+def convert_eos_path_to_xrootd(filepath: str) -> str:
     '''
-    Apply path rewrites if applicable.
+    Convert supported EOS paths to XRootD URLs; leave other paths unchanged.
     '''
     stripped = filepath.strip().strip('/')
     if stripped == 'eos' or stripped.startswith('eos/'):

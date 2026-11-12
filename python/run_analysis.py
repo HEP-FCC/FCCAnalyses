@@ -16,7 +16,7 @@ from anascript import get_element, get_element_dict, get_attribute
 from input_resolver import InputResolutionError, read_input_file_list, resolve_inputs
 from sample import get_process_info, get_process_dict
 from sample import (get_subfile_list, get_chunk_list, get_event_entries,
-                    apply_filepath_rewrites)
+                    convert_eos_path_to_xrootd)
 from utils import generate_graph, save_benchmark
 from run_fccanalysis import run_fccanalysis
 
@@ -174,7 +174,7 @@ def run_local(rdf_module, infile_list, args):
     nevents_local = 0
     for filepath in infile_list:
 
-        filepath = apply_filepath_rewrites(filepath)
+        filepath = convert_eos_path_to_xrootd(filepath)
 
         file_list.push_back(filepath)
         info_msg += f'\t- {filepath}\n'
@@ -514,7 +514,7 @@ def run_histmaker(args, rdf_module, anapath):
         nevents_meta = 0
         for file_name in file_list:
             if not args.use_data_source:
-                file_name = apply_filepath_rewrites(file_name)
+                file_name = convert_eos_path_to_xrootd(file_name)
             file_list_root.push_back(file_name)
             # Skip check for processed events in case of first stage
             if get_element(rdf_module, "prodTag") is None:

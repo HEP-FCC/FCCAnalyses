@@ -635,6 +635,12 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         self.assertIn('--input-lfn-list', str(error.exception))
         resolve.assert_not_called()
 
+    def test_rejects_http_grid_inputs(self) -> None:
+        with self.assertRaisesRegex(GridSubmissionError, 'grid input files and directories'):
+            _resolve_grid_sample_inputs(
+                'input-files', ['https://example.org/input.root'], 'signal'
+            )
+
     def test_grid_discovers_eos_through_xrootd(self) -> None:
         directory = '/eos/project/f/fccanalyses/data'
         with patch('input_resolver.os.listdir') as listdir, \

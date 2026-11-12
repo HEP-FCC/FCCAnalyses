@@ -1,8 +1,8 @@
-'''Shared input resolution for local paths, CERN EOS mounts and XRootD URLs.
+'''Shared input resolution for local paths, CERN EOS mounts and remote URLs.
 
 Discovery sorts immediate .root files within each directory and rejects
-duplicates. Explicit inputs retain their order. A path ending in .root is a
-file; every other path is a directory.
+duplicates. Explicit inputs retain their order. HTTP(S) URLs are file inputs;
+other paths ending in .root are files and remaining paths are directories.
 '''
 
 import os
@@ -28,17 +28,21 @@ def normalize_input_path(path: str, *,
     '''Normalize a path and optionally convert EOS paths to XRootD URLs.'''
     if not path:
         raise InputResolutionError('The input path is empty.')
-    if path.lower().startswith('root:') or '://' in path:
+    if path.lower().startswith(('root:', 'http:', 'https:')) or '://' in path:
         try:
             url = urlsplit(path)
-            if url.scheme != 'root':
-                raise ValueError('the scheme must be root://')
+            if url.scheme not in ('root', 'http', 'https'):
+                raise ValueError('the scheme must be root://, http:// or https://')
             if not url.hostname:
                 raise ValueError('a hostname is required')
             if not url.path.startswith('/'):
                 raise ValueError('an absolute remote path is required')
+            if url.scheme in ('http', 'https'):
+                if url.path.endswith('/'):
+                    raise ValueError('HTTP directory discovery is not supported')
+                return path
         except ValueError as error:
-            raise InputResolutionError(f'Malformed XRootD URL: {error}.') from error
+            raise InputResolutionError(f'Invalid remote input URL: {error}.') from error
         # Accept /path and //path; use //path in the returned URL.
         remote_path = '//' + url.path.lstrip('/')
         return f'root://{url.netloc}{remote_path}'
@@ -122,6 +126,8 @@ def resolve_directory(directory: str, *,
     path = normalize_input_path(
         directory, use_xrootd=use_xrootd
     )
+    if urlsplit(path).scheme in ('http', 'https'):
+        raise InputResolutionError('HTTP directory discovery is not supported.')
     if path.startswith('root://'):
         files = _list_remote_files(path)
     else:
@@ -152,7 +158,9 @@ def resolve_inputs(paths: list[str], *,
         path = normalize_input_path(
             value, use_xrootd=use_xrootd
         )
-        if not path.endswith('.root'):
+        if urlsplit(path).scheme in ('http', 'https'):
+            files.append(path)
+        elif not path.endswith('.root'):
             files.extend(resolve_directory(
                 path, use_xrootd=use_xrootd
             ))
