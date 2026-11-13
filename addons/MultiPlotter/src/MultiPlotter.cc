@@ -72,6 +72,10 @@ void MultiPlotter::sortSamples(SortingType sorting_type, bool reverse) {
 }
 
 void MultiPlotter::rebin(int factor) {
+  if (binning_frozen_)
+    throw std::runtime_error("Distributions can only be rebinned before their "
+                             "x-axis range is set, and before their "
+                             "underflow/overflow bins are added.");
   if (factor < 2)
     return;
   for (auto &stack : samples_ | std::views::values)
@@ -88,6 +92,7 @@ void MultiPlotter::setXRange(double min, double max) {
   if (!(min < max))
     throw std::runtime_error("Invalid x-axis range: [" + std::to_string(min) +
                              ", " + std::to_string(max) + "].");
+  binning_frozen_ = true;
   for (auto &stack : samples_ | std::views::values)
     for (auto &sample : stack.samples())
       if (sample.histogram)
@@ -95,6 +100,7 @@ void MultiPlotter::setXRange(double min, double max) {
 }
 
 void MultiPlotter::addOverflow() {
+  binning_frozen_ = true;
   for (auto &stack : samples_ | std::views::values)
     for (auto &sample : stack.samples()) {
       auto *histogram = sample.histogram;

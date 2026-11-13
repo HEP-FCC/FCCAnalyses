@@ -61,6 +61,7 @@ protected:
   std::unordered_map<Sample::Type, Stack> samples_;
 
   std::vector<std::shared_ptr<TH1>> pseudo_data_; ///< generated pseudo-data
+  bool binning_frozen_{false}; ///< x-axis range or overflow already set?
 
   using BoxCoordinates = std::pair<float, float>;
   std::vector<std::pair<BoxCoordinates, std::vector<std::string>>> text_boxes_;
