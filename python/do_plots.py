@@ -335,12 +335,19 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
     from ROOT.mplt import Sample as smp, plotItPlotter as plotit
     from os.path import join
 
+    if not hsignal and not hbackgrounds:
+        LOGGER.warning('No histograms provided!\n  - plot name: "%s"\n'
+                       'Continuing...', var)
+        return
     if 'ee' in script_module.collider:
         lt = 'FCCAnalyses: FCC-ee Simulation (Delphes)'
         rt = [f'#sqrt{{s}} = {script_module.energy:.1f} GeV', f'{config["int-lumi-label"]}']
     else:
         lt = 'FCCAnalyses: FCC-hh Simulation (Delphes)'
         rt = [f'#sqrt{{s}} = {script_module.energy:.1f} TeV', f'{config["int-lumi-label"]}']
+    # custom label on top, as for the legacy plotter
+    if getattr(script_module, 'customLabel', ''):
+        rt.insert(0, script_module.customLabel)
     # selection-specific label, below the collider and luminosity ones
     extra_label = getattr(script_module, 'extralabel', {}).get(sel)
     if extra_label:

@@ -28,7 +28,7 @@ namespace mplt::utils {
 template <typename T>
 T get_with_default(const pybind11::dict &dict, std::string_view key,
                    T default_value = T()) {
-  if (dict.contains(key))
+  if (dict.contains(key) && !dict[key.data()].is_none())
     return pybind11::cast<T>(dict[key.data()]);
   return default_value;
 }
