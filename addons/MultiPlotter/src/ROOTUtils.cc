@@ -49,14 +49,16 @@ void adjust_labels(TH1 *histogram, std::string_view xaxis_unit) {
 }
 
 TH1 *draw_samples_stack(ROOTCanvas &canvas, const Stack &stack, bool stacked,
-                        Style_t fill_style) {
+                        Style_t fill_style, bool with_stat_band) {
   auto *root_stack = canvas.make<THStack>();
   for (const auto &sample : stack.samples()) {
     if (sample.histogram) // only stack if a histogram is present
       root_stack->Add(sample.histogram, sample.name.data());
   }
-  auto *hist_merged =
-      canvas.make<TH1D>(*dynamic_cast<TH1D *>(merge_samples(stack).release()));
+  TH1 *hist_merged{nullptr};
+  if (with_stat_band)
+    hist_merged = canvas.make<TH1D>(
+        *dynamic_cast<TH1D *>(merge_samples(stack).release()));
   if (hist_merged) {
     hist_merged->SetLineWidth(0);
     hist_merged->SetFillStyle(fill_style);
@@ -149,7 +151,8 @@ TH1D *book_like(ROOTCanvas &canvas, const TH1 &model, const std::string &name) {
 
 TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
                                          const StackSystematics &systematics,
-                                         bool relative, double offset) {
+                                         bool relative, double offset,
+                                         bool with_stat) {
   const int num_bins = nominal.GetNbinsX();
   auto *band = canvas.make<TGraphAsymmErrors>(num_bins);
   for (int i = 0; i < num_bins; ++i) {
@@ -161,8 +164,9 @@ TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
         static_cast<size_t>(bin) < systematics.total.size()
             ? systematics.total[bin]
             : std::pair{0., 0.};
-    auto central = content, up = std::hypot(stat, syst_up),
-         down = std::hypot(stat, syst_down);
+    auto central = content,
+         up = with_stat ? std::hypot(stat, syst_up) : syst_up,
+         down = with_stat ? std::hypot(stat, syst_down) : syst_down;
     if (relative) { // no band for empty bins
       central = offset; // 0: relative uncertainty ; 1: ratio to nominal
       up = content > 0. ? up / content : 0.;

@@ -341,6 +341,10 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
     else:
         lt = 'FCCAnalyses: FCC-hh Simulation (Delphes)'
         rt = [f'#sqrt{{s}} = {script_module.energy:.1f} TeV', f'{config["int-lumi-label"]}']
+    # selection-specific label, below the collider and luminosity ones
+    extra_label = getattr(script_module, 'extralabel', {}).get(sel)
+    if extra_label:
+        rt.append(extra_label)
     if config['plotter'] == 'matplotlib':
         from addons.MultiPlotter.matplotlibPlotter import matplotlibPlotter
         plotter = matplotlibPlotter(lt, rt)

@@ -40,6 +40,9 @@ public:
             PyObject *options) override;
 
 private:
+  /// plot all samples for a given signal stacking strategy
+  void plot(const std::string &output_file, std::string_view output_dir,
+            pybind11::dict options, bool stack_signals);
   /// prepare per-stack histograms before plotting
   void prepareStacksPlotting(ROOTCanvas &, const pybind11::dict &options,
                              size_t num_extra_legend_entries = 0) const;

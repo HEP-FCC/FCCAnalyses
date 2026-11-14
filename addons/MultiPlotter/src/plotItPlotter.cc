@@ -43,7 +43,21 @@ void plotItPlotter::plot(std::string_view output_file,
   py::dict options;
   if (options_obj)
     options = py::reinterpret_borrow<py::dict>(options_obj);
-  options["name"] = std::string{output_file};
+  // one set of plots for each signal stacking strategy
+  const auto stackings = utils::get_with_default(options, "stack-sig",
+                                                 std::vector{"nostack"s});
+  for (const auto &stacking : stackings)
+    plot(stackings.size() > 1 ? std::string{output_file} + "_" + stacking
+                              : std::string{output_file},
+         output_dir, options, stacking == "stack");
+}
+
+void plotItPlotter::plot(const std::string &output_file,
+                         std::string_view output_dir, py::dict options,
+                         bool stack_signals) {
+  options["name"] = output_file;
+  const auto with_stat_unc =
+      utils::get_with_default(options, "plot-stat-unc", true);
   ROOTCanvas canvas(options);
   for (const auto &[coordinates, text] : text_boxes_)
     canvas.addTextBox(coordinates.first, coordinates.second, text);
@@ -63,7 +77,8 @@ void plotItPlotter::plot(std::string_view output_file,
 
   // extra legend entries: stat and stat+syst uncertainty bands, and data
   prepareStacksPlotting(canvas, options,
-                        (systematics.empty() ? 0 : 2) + (has_data ? 1 : 0));
+                        (systematics.empty() ? 0 : with_stat_unc ? 2 : 1) +
+                            (has_data ? 1 : 0));
   if (with_breakdown) // lower pad for the per-source relative uncertainties
     canvas.split(0.3);
   canvas.mainPad()->cd();
@@ -114,7 +129,8 @@ void plotItPlotter::plot(std::string_view output_file,
   if (samples_.contains(Sample::Type::background)) {
     auto &stack = samples_.at(Sample::Type::background);
     auto *stat_band =
-        root::utils::draw_samples_stack(canvas, stack, true, 3004);
+        root::utils::draw_samples_stack(canvas, stack, true, 3004,
+                                        with_stat_unc);
     merged_background = root::utils::merge_samples(stack);
     min_value = std::min(min_value, merged_background->GetMinimum());
     max_value = std::max(max_value, merged_background->GetMaximum());
@@ -122,7 +138,7 @@ void plotItPlotter::plot(std::string_view output_file,
     if (!systematics.empty() && merged_background) {
       // total uncertainty band, on top of the stack
       const auto *total_band = root::utils::draw_uncertainty_band(
-          canvas, *merged_background, systematics, false);
+          canvas, *merged_background, systematics, false, 0., with_stat_unc);
       for (int i = merged_background->GetXaxis()->GetFirst() - 1;
            i < std::min(total_band->GetN(),
                         merged_background->GetXaxis()->GetLast());
@@ -132,17 +148,40 @@ void plotItPlotter::plot(std::string_view output_file,
       if (auto *legend = canvas.legend(); legend) {
         if (stat_band)
           legend->AddEntry(stat_band, "Stat. unc.", "f");
-        legend->AddEntry(total_band, "Total unc.", "f");
+        legend->AddEntry(total_band,
+                         with_stat_unc ? "Total unc." : "Syst. unc.", "f");
       }
     }
   }
   if (samples_.contains(Sample::Type::signal)) {
     auto &stack = samples_.at(Sample::Type::signal);
-    root::utils::draw_samples_stack(canvas, stack, false, 3005);
-    const auto merged = root::utils::merge_samples(stack);
-    min_value = std::min(min_value, merged->GetMinimum());
-    max_value = std::max(max_value, merged->GetMaximum());
-    update_min_positive(*merged);
+    if (stack_signals) {
+      // each signal on top of the backgrounds and of the previous signals
+      const TH1 *previous = merged_background.get();
+      for (const auto &sample : stack.samples()) {
+        auto *source = dynamic_cast<TH1D *>(sample.histogram);
+        if (!source)
+          continue;
+        auto *stacked = canvas.make<TH1D>(*source); // keeps the line style
+        stacked->SetDirectory(nullptr);
+        if (previous)
+          stacked->Add(previous);
+        stacked->Draw("hist,same");
+        previous = stacked;
+      }
+      if (previous && previous != merged_background.get()) {
+        min_value = std::min(min_value, previous->GetMinimum());
+        max_value = std::max(max_value, previous->GetMaximum());
+        update_min_positive(*previous);
+      }
+    } else {
+      root::utils::draw_samples_stack(canvas, stack, false, 3005,
+                                      with_stat_unc);
+      const auto merged = root::utils::merge_samples(stack);
+      min_value = std::min(min_value, merged->GetMinimum());
+      max_value = std::max(max_value, merged->GetMaximum());
+      update_min_positive(*merged);
+    }
   }
   if (histogram_data) { // data points, on top of everything else
     histogram_data->SetMarkerStyle(20);
@@ -219,12 +258,14 @@ void plotItPlotter::plot(std::string_view output_file,
     frame->SetMaximum(centre + 2.4 * max_relative);
     frame->Draw("axis");
 
-    root::utils::draw_uncertainty_band( // stat+syst
-        canvas, *merged_background, systematics, true, centre);
-    auto *stat_band = root::utils::draw_uncertainty_band( // stat only
-        canvas, *merged_background, {}, true, centre);
-    stat_band->SetFillStyle(3004);
-    stat_band->SetFillColor(kGray + 1);
+    root::utils::draw_uncertainty_band( // (stat+)syst
+        canvas, *merged_background, systematics, true, centre, with_stat_unc);
+    if (with_stat_unc) {
+      auto *stat_band = root::utils::draw_uncertainty_band( // stat only
+          canvas, *merged_background, {}, true, centre);
+      stat_band->SetFillStyle(3004);
+      stat_band->SetFillColor(kGray + 1);
+    }
 
     const auto num_sources = std::min(
         systematics.sources.size(),

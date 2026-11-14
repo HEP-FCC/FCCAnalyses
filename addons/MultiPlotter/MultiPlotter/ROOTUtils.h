@@ -44,7 +44,7 @@ void adjust_labels(TH1 *histogram, std::string_view xaxis_unit);
 /// Draw a stack of multiple samples
 /// \return Statistical uncertainty band of the merged samples (if any)
 TH1 *draw_samples_stack(ROOTCanvas &, const Stack &, bool stacked,
-                        Style_t fill_style);
+                        Style_t fill_style, bool with_stat_band = true);
 std::unique_ptr<TH1> merge_samples(const Stack &); ///< Merge all histograms
 
 /// Systematic uncertainties on the total yield of a stack of samples
@@ -64,7 +64,8 @@ TH1D *book_like(ROOTCanvas &, const TH1 &model, const std::string &name);
 /// Draw the stat+syst uncertainty band
 TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &, const TH1 &nominal,
                                          const StackSystematics &,
-                                         bool relative, double offset = 0.);
+                                         bool relative, double offset = 0.,
+                                         bool with_stat = true);
 /// Draw the up/down shifts of systematic uncertainty sources
 /// \param[in] max_sources Maximum number of (leading) sources to be drawn
 void draw_systematics_breakdown(ROOTCanvas &, const TH1 &nominal,
