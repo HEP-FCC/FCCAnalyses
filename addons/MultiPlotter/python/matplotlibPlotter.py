@@ -9,6 +9,7 @@ import numpy as np
 from matplotlib.colors import to_rgba
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
+from matplotlib.transforms import Bbox, BboxTransformTo
 
 import ROOT
 from ROOT import mplt
@@ -248,7 +249,7 @@ class matplotlibPlotter(mplt.MultiPlotter):
             main.set_ylim(*y_range)
         main.set_xlim(edges[0], edges[-1])
         main.set_ylabel(self._ylabel)
-        main.legend(handles, labels, loc='upper right', bbox_to_anchor=(0.98, 0.98))
+        self._draw_legend(figure, main, options, breakdown, handles, labels)
         main.text(1., 1.01, self._experiment_name, style='italic',
                   ha='right', va='bottom', transform=main.transAxes)
         main.text(0.05, 0.95, '\n'.join(_tex(label)
@@ -269,6 +270,27 @@ class matplotlibPlotter(mplt.MultiPlotter):
         last.set_xlabel(self._xlabel)
         figure.align_ylabels()
         return figure
+
+    def _draw_legend(self, figure, main, options, breakdown, handles, labels):
+        kwargs = {}
+        pad_bottom = 0.3 if breakdown else 0.  # main pad, in figure units
+        text_size = options.get('legend-text-size')
+        if text_size:  # fraction of the pad height, as for ROOT
+            kwargs['fontsize'] = text_size * (1. - pad_bottom) * \
+                figure.get_figheight() * 72.
+        position = options.get('leg-position') or [None] * 4
+        if all(coordinate is None for coordinate in position):
+            main.legend(handles, labels, loc='upper right',
+                        bbox_to_anchor=(0.98, 0.98), **kwargs)
+            return
+        defaults = (0.68, 0.86 - 0.04 * len(handles), 0.96, 0.88)
+        x1, y1, x2, y2 = (default if coordinate is None else coordinate
+                          for coordinate, default in zip(position, defaults))
+        pad = BboxTransformTo(Bbox.from_extents(0., pad_bottom, 1., 1.)) + \
+            figure.transFigure
+        main.legend(handles, labels, loc='upper left', borderaxespad=0.,
+                    bbox_to_anchor=(x1, y1, x2 - x1, y2 - y1),
+                    bbox_transform=pad, **kwargs)
 
     def _draw_breakdown(self, axis, options, nominal, stat, total_up,
                         total_down, data):

@@ -41,7 +41,7 @@ public:
 
 private:
   /// prepare per-stack histograms before plotting
-  void prepareStacksPlotting(ROOTCanvas &,
+  void prepareStacksPlotting(ROOTCanvas &, const pybind11::dict &options,
                              size_t num_extra_legend_entries = 0) const;
 };
 } // namespace mplt

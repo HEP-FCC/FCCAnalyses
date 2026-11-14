@@ -25,6 +25,7 @@
 #include <TLatex.h>
 #include <TLegend.h>
 #include <TLine.h>
+#include <array>
 #include <filesystem>
 #include <iostream> //FIXME
 #include <pybind11/stl.h>
@@ -61,7 +62,7 @@ void plotItPlotter::plot(std::string_view output_file,
       utils::get_with_default(options, "syst-breakdown", true);
 
   // extra legend entries: stat and stat+syst uncertainty bands, and data
-  prepareStacksPlotting(canvas,
+  prepareStacksPlotting(canvas, options,
                         (systematics.empty() ? 0 : 2) + (has_data ? 1 : 0));
   if (with_breakdown) // lower pad for the per-source relative uncertainties
     canvas.split(0.3);
@@ -314,15 +315,30 @@ void plotItPlotter::plot(std::string_view output_file,
 }
 
 void plotItPlotter::prepareStacksPlotting(
-    ROOTCanvas &canvas, size_t num_extra_legend_entries) const {
+    ROOTCanvas &canvas, const py::dict &options,
+    size_t num_extra_legend_entries) const {
   canvas.cd();
   size_t num_drawable_histograms = num_extra_legend_entries;
   for (const auto &[sample_type, stack] : samples_)
     if (sample_type == Sample::Type::background ||
         sample_type == Sample::Type::signal)
       num_drawable_histograms += stack.samples().size();
-  auto &legend =
-      canvas.addLegend(0.68, 0.86 - 0.04 * num_drawable_histograms, 0.96, 0.88);
+  std::array<float, 4> position{
+      0.68f, 0.86f - 0.04f * num_drawable_histograms, 0.96f, 0.88f};
+  if (options.contains("leg-position") &&
+      !options["leg-position"].is_none()) {
+    const auto coordinates = py::cast<py::sequence>(options["leg-position"]);
+    for (size_t i = 0; i < std::min(position.size(), py::len(coordinates));
+         ++i)
+      if (!coordinates[i].is_none())
+        position[i] = py::cast<float>(coordinates[i]);
+  }
+  auto &legend = canvas.addLegend(position.at(0), position.at(1),
+                                  position.at(2), position.at(3));
+  if (const auto text_size =
+          utils::get_with_default(options, "legend-text-size", 0.f);
+      text_size > 0.f)
+    legend.SetTextSize(text_size);
   for (const auto &[sample_type, stack] : samples_) { // set colours
     int i = 0;
     for (const auto &sample : stack.samples()) {
