@@ -1,5 +1,6 @@
 '''matplotlib-based plotting utility, with a ROOT-like drawing style'''
 
+import itertools
 import os
 
 import matplotlib
@@ -141,22 +142,26 @@ class matplotlibPlotter(mplt.MultiPlotter):
         breakdown = (bool(self._sources) or bool(self._data)) and \
             options.get('syst-breakdown', True)
 
+        stackings = options.get('stack-sig', ['nostack'])
         y_scalings = options.get('y-axis-scale-types', ['lin'])
         with plt.rc_context(ROOT_STYLE):
-            for x_scaling in options.get('x-axis-scale-types', ['lin']):
-                for y_scaling in y_scalings:
-                    figure = self._draw(options, breakdown,
-                                        x_scaling == 'log', y_scaling == 'log')
-                    name = str(output_file)
-                    if len(y_scalings) > 1:
-                        name += '_' + y_scaling
-                    for fmt in options.get('output-file-types', ['pdf']):
-                        figure.savefig(
-                            os.path.join(str(output_dir), f'{name}.{fmt}'),
-                            transparent=options.get('transparent', False))
-                    plt.close(figure)
+            for stacking, x_scaling, y_scaling in itertools.product(
+                    stackings, options.get('x-axis-scale-types', ['lin']),
+                    y_scalings):
+                figure = self._draw(options, breakdown, x_scaling == 'log',
+                                    y_scaling == 'log', stacking == 'stack')
+                name = str(output_file)
+                if len(stackings) > 1:
+                    name += '_' + stacking
+                if len(y_scalings) > 1:
+                    name += '_' + y_scaling
+                for fmt in options.get('output-file-types', ['pdf']):
+                    figure.savefig(
+                        os.path.join(str(output_dir), f'{name}.{fmt}'),
+                        transparent=options.get('transparent', False))
+                plt.close(figure)
 
-    def _draw(self, options, breakdown, logx, logy):
+    def _draw(self, options, breakdown, logx, logy, stack_signals):
         figure = plt.figure(figsize=(options.get('width', 800) / 100.,
                                      options.get('height', 800) / 100.))
         grid = figure.add_gridspec(
@@ -183,29 +188,35 @@ class matplotlibPlotter(mplt.MultiPlotter):
             handles.append(Patch(facecolor=to_rgba(colour, 0.5),
                                  edgecolor=colour, linewidth=2))
             labels.append(_tex(sample.name))
-        stat = np.sqrt(variance)
+        with_stat = options.get('plot-stat-unc', True)
+        stat = np.sqrt(variance) if with_stat else np.zeros_like(variance)
         total_up = np.hypot(stat, self._total_syst[:, 0])
         total_down = np.hypot(stat, self._total_syst[:, 1])
         if self._backgrounds:
-            band = _band(main, edges, nominal - stat, nominal + stat,
-                         facecolor='none', edgecolor=GREY, hatch='////',
-                         zorder=3)
+            if with_stat:
+                band = _band(main, edges, nominal - stat, nominal + stat,
+                             facecolor='none', edgecolor=GREY, hatch='////',
+                             zorder=3)
             maximum = max(maximum, nominal.max())
             minimum = min(minimum, nominal.min())
             if (nominal > 0).any():
                 min_positive = min(min_positive, nominal[nominal > 0].min())
             if self._sources:
-                handles.append(band)
-                labels.append('Stat. unc.')
+                if with_stat:
+                    handles.append(band)
+                    labels.append('Stat. unc.')
                 handles.append(_band(main, edges, nominal - total_down,
                                      nominal + total_up, facecolor='black',
                                      alpha=0.25, zorder=4))
-                labels.append('Total unc.')
+                labels.append('Total unc.' if with_stat else 'Syst. unc.')
                 maximum = max(maximum, (nominal + total_up).max())
 
+        stacked = nominal.copy()  # signals on top of the backgrounds
         for i, (sample, (_, values, _)) in enumerate(self._signals):
             style = dict(color=_colour(sample.colour), linewidth=2,
                          linestyle=SIGNAL_LINESTYLES[i % len(SIGNAL_LINESTYLES)])
+            if stack_signals:
+                stacked = values = stacked + values
             main.stairs(values, edges, zorder=5, **style)
             handles.append(Line2D([], [], **style))
             signal_handles.append(handles[-1])
@@ -327,9 +338,10 @@ class matplotlibPlotter(mplt.MultiPlotter):
         _band(axis, edges, centre - _ratio(total_down, nominal),
               centre + _ratio(total_up, nominal), facecolor='black',
               alpha=0.25)
-        _band(axis, edges, centre - _ratio(stat, nominal),
-              centre + _ratio(stat, nominal), facecolor='none',
-              edgecolor=GREY, hatch='////')
+        if options.get('plot-stat-unc', True):
+            _band(axis, edges, centre - _ratio(stat, nominal),
+                  centre + _ratio(stat, nominal), facecolor='none',
+                  edgecolor=GREY, hatch='////')
         axis.axhline(centre, color='#666666', linewidth=1)
 
         ranking = sorted(self._sources,
