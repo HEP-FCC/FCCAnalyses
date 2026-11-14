@@ -318,13 +318,15 @@ void plotItPlotter::prepareStacksPlotting(
     ROOTCanvas &canvas, const py::dict &options,
     size_t num_extra_legend_entries) const {
   canvas.cd();
-  size_t num_drawable_histograms = num_extra_legend_entries;
-  for (const auto &[sample_type, stack] : samples_)
-    if (sample_type == Sample::Type::background ||
-        sample_type == Sample::Type::signal)
-      num_drawable_histograms += stack.samples().size();
-  std::array<float, 4> position{
-      0.68f, 0.86f - 0.04f * num_drawable_histograms, 0.96f, 0.88f};
+  const auto split = utils::get_with_default(options, "split-leg", false);
+  size_t num_signals = 0, num_others = num_extra_legend_entries;
+  for (const auto &[sample_type, stack] : samples_) {
+    if (sample_type == Sample::Type::signal)
+      num_signals += stack.samples().size();
+    else if (sample_type == Sample::Type::background)
+      num_others += stack.samples().size();
+  }
+  std::array<float, 4> position{split ? 0.45f : 0.68f, -1.f, 0.96f, 0.88f};
   if (options.contains("leg-position") &&
       !options["leg-position"].is_none()) {
     const auto coordinates = py::cast<py::sequence>(options["leg-position"]);
@@ -333,12 +335,27 @@ void plotItPlotter::prepareStacksPlotting(
       if (!coordinates[i].is_none())
         position[i] = py::cast<float>(coordinates[i]);
   }
-  auto &legend = canvas.addLegend(position.at(0), position.at(1),
-                                  position.at(2), position.at(3));
+  const auto bottom = [&position](size_t num_entries) {
+    return position.at(1) >= 0.f
+               ? position.at(1)
+               : position.at(3) - 0.02f - 0.04f * num_entries;
+  };
+  const auto middle = 0.5f * (position.at(0) + position.at(2));
+  auto &legend = split ? canvas.addLegend(middle, bottom(num_others),
+                                          position.at(2), position.at(3))
+                       : canvas.addLegend(position.at(0),
+                                          bottom(num_signals + num_others),
+                                          position.at(2), position.at(3));
+  auto &signals_legend =
+      split ? canvas.addSecondaryLegend(position.at(0), bottom(num_signals),
+                                        middle, position.at(3))
+            : legend;
   if (const auto text_size =
           utils::get_with_default(options, "legend-text-size", 0.f);
-      text_size > 0.f)
+      text_size > 0.f) {
     legend.SetTextSize(text_size);
+    signals_legend.SetTextSize(text_size);
+  }
   for (const auto &[sample_type, stack] : samples_) { // set colours
     int i = 0;
     for (const auto &sample : stack.samples()) {
@@ -347,7 +364,7 @@ void plotItPlotter::prepareStacksPlotting(
         histogram->SetLineWidth(3);
         if (sample_type == Sample::Type::signal) {
           histogram->SetLineStyle(i + 2); // TODO: list of fallback line styles
-          legend.AddEntry(histogram, sample.name.data(), "l");
+          signals_legend.AddEntry(histogram, sample.name.data(), "l");
           ++i;
         } else if (sample_type == Sample::Type::background) {
           histogram->SetFillColorAlpha(sample.colour, 0.5);

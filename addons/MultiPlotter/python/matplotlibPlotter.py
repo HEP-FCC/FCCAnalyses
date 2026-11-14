@@ -7,6 +7,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import to_rgba
+from matplotlib.legend import Legend
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from matplotlib.transforms import Bbox, BboxTransformTo
@@ -167,7 +168,7 @@ class matplotlibPlotter(mplt.MultiPlotter):
             bottom=options.get('margin_bottom', 0.1))
         main = figure.add_subplot(grid[0])
         edges = self._edges
-        handles, labels = [], []
+        handles, labels, signal_handles = [], [], []
         minimum, maximum, min_positive = 0., 0., np.inf
 
         nominal = np.zeros(len(edges) - 1)
@@ -207,6 +208,7 @@ class matplotlibPlotter(mplt.MultiPlotter):
                          linestyle=SIGNAL_LINESTYLES[i % len(SIGNAL_LINESTYLES)])
             main.stairs(values, edges, zorder=5, **style)
             handles.append(Line2D([], [], **style))
+            signal_handles.append(handles[-1])
             labels.append(_tex(sample.name))
             maximum = max(maximum, values.max())
             minimum = min(minimum, values.min())
@@ -249,7 +251,8 @@ class matplotlibPlotter(mplt.MultiPlotter):
             main.set_ylim(*y_range)
         main.set_xlim(edges[0], edges[-1])
         main.set_ylabel(self._ylabel)
-        self._draw_legend(figure, main, options, breakdown, handles, labels)
+        self._draw_legend(figure, main, options, breakdown, handles, labels,
+                          signal_handles)
         main.text(1., 1.01, self._experiment_name, style='italic',
                   ha='right', va='bottom', transform=main.transAxes)
         main.text(0.05, 0.95, '\n'.join(_tex(label)
@@ -271,7 +274,8 @@ class matplotlibPlotter(mplt.MultiPlotter):
         figure.align_ylabels()
         return figure
 
-    def _draw_legend(self, figure, main, options, breakdown, handles, labels):
+    def _draw_legend(self, figure, main, options, breakdown, handles, labels,
+                     signal_handles):
         kwargs = {}
         pad_bottom = 0.3 if breakdown else 0.  # main pad, in figure units
         text_size = options.get('legend-text-size')
@@ -279,18 +283,42 @@ class matplotlibPlotter(mplt.MultiPlotter):
             kwargs['fontsize'] = text_size * (1. - pad_bottom) * \
                 figure.get_figheight() * 72.
         position = options.get('leg-position') or [None] * 4
-        if all(coordinate is None for coordinate in position):
+        split = options.get('split-leg', False)
+        if not split and all(coordinate is None for coordinate in position):
             main.legend(handles, labels, loc='upper right',
                         bbox_to_anchor=(0.98, 0.98), **kwargs)
             return
-        defaults = (0.68, 0.86 - 0.04 * len(handles), 0.96, 0.88)
+        defaults = (0.45 if split else 0.68, None, 0.96, 0.88)
         x1, y1, x2, y2 = (default if coordinate is None else coordinate
                           for coordinate, default in zip(position, defaults))
-        pad = BboxTransformTo(Bbox.from_extents(0., pad_bottom, 1., 1.)) + \
-            figure.transFigure
-        main.legend(handles, labels, loc='upper left', borderaxespad=0.,
-                    bbox_to_anchor=(x1, y1, x2 - x1, y2 - y1),
-                    bbox_transform=pad, **kwargs)
+        # ROOT pad coordinates include the margins around the frame
+        left, right = (options.get('margin_left', 0.14),
+                       1. - options.get('margin_right', 0.08))
+        low, high = (0.02 if breakdown else options.get('margin_bottom', 0.1),
+                     1. - options.get('margin_top', 0.1))
+        pad = BboxTransformTo(Bbox.from_extents(
+            -left / (right - left), -low / (high - low),
+            (1. - left) / (right - left), (1. - low) / (high - low))) + \
+            main.transAxes
+
+        def draw(entries, left, right):
+            if not entries:
+                return
+            bottom = y2 - 0.02 - 0.04 * len(entries) if y1 is None else y1
+            main.add_artist(Legend(
+                main, *zip(*entries), loc='upper left', borderaxespad=0.,
+                bbox_to_anchor=(left, bottom, right - left, y2 - bottom),
+                bbox_transform=pad, **kwargs))
+
+        entries = list(zip(handles, labels))
+        if not split:
+            draw(entries, x1, x2)
+            return
+        # signals listed apart, in the left half of the legend area
+        signals = [entry for entry in entries if entry[0] in signal_handles]
+        draw(signals, x1, 0.5 * (x1 + x2))
+        draw([entry for entry in entries if entry not in signals],
+             0.5 * (x1 + x2), x2)
 
     def _draw_breakdown(self, axis, options, nominal, stat, total_up,
                         total_down, data):

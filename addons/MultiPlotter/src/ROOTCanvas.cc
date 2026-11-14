@@ -91,6 +91,14 @@ TLegend &ROOTCanvas::addLegend(float x1, float y1, float x2, float y2) {
   return *legend_;
 }
 
+TLegend &ROOTCanvas::addSecondaryLegend(float x1, float y1, float x2,
+                                        float y2) {
+  secondary_legend_ = std::make_unique<TLegend>(x1, y1, x2, y2);
+  secondary_legend_->SetLineWidth(0);
+  secondary_legend_->SetFillStyle(0);
+  return *secondary_legend_;
+}
+
 void ROOTCanvas::split(float lower_fraction) {
   if (upper_pad_) // already split
     return;
@@ -148,6 +156,8 @@ void ROOTCanvas::save(const std::vector<std::string> &formats,
     main_pad->cd();  // legend and text boxes belong to the main pad
     if (legend_)
       legend_->Draw();
+    if (secondary_legend_)
+      secondary_legend_->Draw();
     for (const auto &text_box : text_boxes_) // add registered text boxes
       text_box->Draw("same");
     decorated_ = true;

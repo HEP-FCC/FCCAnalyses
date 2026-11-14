@@ -48,6 +48,7 @@ public:
   TLatex &addTextBox(float x1, float y1, const std::vector<std::string> &);
   TLegend &addLegend(float x1, float y1, float x2, float y2);
   TLegend *legend() { return legend_.get(); }
+  TLegend &addSecondaryLegend(float x1, float y1, float x2, float y2);
 
   /// Split the canvas into main/secondary pads
   void split(float lower_fraction = 0.3);
@@ -66,6 +67,7 @@ private:
   float lower_fraction_{0.f};
   bool decorated_{false}; ///< legend and text boxes already drawn?
   std::unique_ptr<TLegend> legend_;
+  std::unique_ptr<TLegend> secondary_legend_;
   std::vector<std::unique_ptr<TObject>> objects_;
   std::vector<std::unique_ptr<TLatex>> text_boxes_;
 };
