@@ -36,12 +36,15 @@ void adjust_labels(TH1 *histogram, std::string_view xaxis_unit) {
   if (xaxis_unit.empty())
     return;
   if (std::string hist_xlabel{histogram->GetXaxis()->GetTitle()};
-      hist_xlabel.find(" (") == std::string::npos) {
+      hist_xlabel.find(" (") == std::string::npos &&
+      hist_xlabel.find(" [") == std::string::npos) { // not already quoted
     hist_xlabel += " ("s + std::string{xaxis_unit} + ")"s;
     histogram->GetXaxis()->SetTitle(hist_xlabel.data());
   }
   if (std::string hist_ylabel{histogram->GetYaxis()->GetTitle()};
       hist_ylabel.find(" / ") == std::string::npos) {
+    if (hist_ylabel.empty())
+      hist_ylabel = "Events";
     hist_ylabel +=
         Form(" / %g %s", histogram->GetBinWidth(1), xaxis_unit.data());
     histogram->GetYaxis()->SetTitle(hist_ylabel.data());
@@ -167,7 +170,7 @@ TGraphAsymmErrors *draw_uncertainty_band(ROOTCanvas &canvas, const TH1 &nominal,
     auto central = content,
          up = with_stat ? std::hypot(stat, syst_up) : syst_up,
          down = with_stat ? std::hypot(stat, syst_down) : syst_down;
-    if (relative) { // no band for empty bins
+    if (relative) {     // no band for empty bins
       central = offset; // 0: relative uncertainty ; 1: ratio to nominal
       up = content > 0. ? up / content : 0.;
       down = content > 0. ? down / content : 0.;

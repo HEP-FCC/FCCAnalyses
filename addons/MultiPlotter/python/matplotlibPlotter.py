@@ -125,8 +125,16 @@ class matplotlibPlotter(mplt.MultiPlotter):
                                f'for plot with name \'{output_file}\'.')
         self._name = str(output_file)
         self._edges = drawn[0][1][0]
-        self._xlabel = _tex(drawn[0][0].histogram.GetXaxis().GetTitle())
-        self._ylabel = _tex(drawn[0][0].histogram.GetYaxis().GetTitle())
+        self._xlabel = str(drawn[0][0].histogram.GetXaxis().GetTitle())
+        self._ylabel = str(drawn[0][0].histogram.GetYaxis().GetTitle()) or 'Events'
+        unit = options.get('unit')
+        if unit:  # user-defined unit, quoted along with the bin width
+            if ' (' not in self._xlabel and ' [' not in self._xlabel:
+                self._xlabel += f' ({unit})'
+            if ' / ' not in self._ylabel:
+                width = drawn[0][0].histogram.GetBinWidth(1)
+                self._ylabel += f' / {width:g} {unit}'
+        self._xlabel, self._ylabel = _tex(self._xlabel), _tex(self._ylabel)
         self._backgrounds = samples[mplt.Sample.Type.background]
         self._signals = samples[mplt.Sample.Type.signal]
         self._data = [(sample, _arrays(sample.histogram))

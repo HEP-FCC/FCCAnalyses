@@ -20,6 +20,13 @@ variables = ['mz',
              'leptonic_recoil_m',
              'leptonic_recoil_m_zoom',
              'leptonic_recoil_m_zoom2']
+units = {}
+units["mz"] = "GeV"
+units["mz_zoom"] = "GeV"
+units["leptonic_recoil_m"] = "GeV"
+units["leptonic_recoil_m_zoom"] = "GeV"
+units["leptonic_recoil_m_zoom2"] = "GeV"
+
 rebin = [1, 1, 1, 1, 2]  # uniform rebin per variable (optional)
 
 systematics = {}

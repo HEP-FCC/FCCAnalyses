@@ -392,7 +392,10 @@ def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsign
         LOGGER.error('Invalid pseudo-data mode "%s"! Supported modes: toy, '
                      'asimov\nAborting...', config['pseudo-data'])
         sys.exit(3)
-    plotter.plot(var, join(script_module.outdir, sel), config)
+    # options left unset are not passed on: the plotters use their defaults
+    plotter.plot(var, join(script_module.outdir, sel),
+                 {key: value for key, value in config.items()
+                  if value is not None})
 
 
 # _____________________________________________________________________________
@@ -1263,6 +1266,9 @@ def run(args):
                                        ('log-y-range', 'logYRanges')):
                     config[key] = getattr(script_module, attribute,
                                           {}).get(var)
+                # per-variable unit, quoted in the axis labels: {variable: unit}
+                config['unit'] = getattr(script_module, 'units',
+                                         {}).get(var, '')
                 # yields first: the plotter may modify the histograms in place
                 if counter == 0:
                     runPlots(config,
