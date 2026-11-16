@@ -19,6 +19,8 @@
 #ifndef MultiPlotter_ROOTUtils_h
 #define MultiPlotter_ROOTUtils_h
 
+#include <Rtypes.h>
+#include <array>
 #include <memory>
 #include <string>
 #include <string_view>

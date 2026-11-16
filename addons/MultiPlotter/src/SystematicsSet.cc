@@ -112,5 +112,5 @@ float SystematicsSet::totalUncertainty() const {
     const auto syst_unc = std::max(asym_unc.at(i).first, asym_unc.at(i).second);
     total_syst_unc2 += syst_unc * syst_unc;
   }
-  return std::sqrtf(total_syst_unc2);
+  return std::sqrt(total_syst_unc2);
 }

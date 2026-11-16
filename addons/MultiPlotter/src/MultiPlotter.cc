@@ -16,12 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "MultiPlotter/Binning.h"
 #include "MultiPlotter/MultiPlotter.h"
+#include "MultiPlotter/Binning.h"
 
 #include <TH1.h>
 #include <TRandom3.h>
 #include <ranges>
+#include <sstream>
 #include <stdexcept>
 
 using namespace mplt;

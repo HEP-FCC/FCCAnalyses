@@ -11,7 +11,7 @@ formats        = ['png', 'pdf']
 yaxis          = ['lin', 'log']
 stacksig       = ['stack', 'nostack']
 outdir         = 'outputs/FCCee/higgs/mH-recoil/mumu/plots/'
-plotter        = 'matplotlib'
+#plotter        = 'matplotlib'
 #pseudoData     = 'toy'
 #pseudoData     = 'asimov'
 

@@ -16,19 +16,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "MultiPlotter/plotItPlotter.h"
 #include "MultiPlotter/ROOTCanvas.h"
 #include "MultiPlotter/ROOTUtils.h"
 #include "MultiPlotter/Utils.h"
-#include "MultiPlotter/plotItPlotter.h"
 #include <TGraphAsymmErrors.h>
 #include <THStack.h>
 #include <TLatex.h>
 #include <TLegend.h>
 #include <TLine.h>
+#include <algorithm>
 #include <array>
 #include <filesystem>
 #include <iostream> //FIXME
 #include <pybind11/stl.h>
+#include <ranges>
 
 using namespace mplt;
 namespace py = pybind11;
@@ -44,8 +46,8 @@ void plotItPlotter::plot(std::string_view output_file,
   if (options_obj)
     options = py::reinterpret_borrow<py::dict>(options_obj);
   // one set of plots for each signal stacking strategy
-  const auto stackings = utils::get_with_default(options, "stack-sig",
-                                                 std::vector{"nostack"s});
+  const auto stackings =
+      utils::get_with_default(options, "stack-sig", std::vector{"nostack"s});
   for (const auto &stacking : stackings)
     plot(stackings.size() > 1 ? std::string{output_file} + "_" + stacking
                               : std::string{output_file},
@@ -77,7 +79,9 @@ void plotItPlotter::plot(const std::string &output_file,
 
   // extra legend entries: stat and stat+syst uncertainty bands, and data
   prepareStacksPlotting(canvas, options,
-                        (systematics.empty() ? 0 : with_stat_unc ? 2 : 1) +
+                        (systematics.empty() ? 0
+                         : with_stat_unc     ? 2
+                                             : 1) +
                             (has_data ? 1 : 0));
   if (with_breakdown) // lower pad for the per-source relative uncertainties
     canvas.split(0.3);
@@ -128,9 +132,8 @@ void plotItPlotter::plot(const std::string &output_file,
   std::unique_ptr<TH1> merged_background{nullptr};
   if (samples_.contains(Sample::Type::background)) {
     auto &stack = samples_.at(Sample::Type::background);
-    auto *stat_band =
-        root::utils::draw_samples_stack(canvas, stack, true, 3004,
-                                        with_stat_unc);
+    auto *stat_band = root::utils::draw_samples_stack(canvas, stack, true, 3004,
+                                                      with_stat_unc);
     merged_background = root::utils::merge_samples(stack);
     min_value = std::min(min_value, merged_background->GetMinimum());
     max_value = std::max(max_value, merged_background->GetMaximum());
@@ -215,8 +218,7 @@ void plotItPlotter::plot(const std::string &output_file,
       frame->GetXaxis()->SetTitleSize(ref_xaxis->GetTitleSize() * scaling);
       frame->GetXaxis()->SetLabelSize(ref_xaxis->GetLabelSize() * scaling);
       frame->GetXaxis()->SetTickLength(ref_xaxis->GetTickLength() * scaling);
-      frame->GetYaxis()->SetTitle(histogram_data ? "Data / MC"
-                                                 : "Rel. unc.");
+      frame->GetYaxis()->SetTitle(histogram_data ? "Data / MC" : "Rel. unc.");
       frame->GetYaxis()->CenterTitle();
       frame->GetYaxis()->SetTitleSize(ref_yaxis->GetTitleSize() * scaling);
       // a null offset means "automatic", which scales with the title size
@@ -275,9 +277,8 @@ void plotItPlotter::plot(const std::string &output_file,
     legend->SetFillStyle(0);
     legend->SetTextSize(0.09);
     legend->SetNColumns(std::clamp<int>(num_sources, 1, 3));
-    root::utils::draw_systematics_breakdown(canvas, *merged_background,
-                                            systematics, num_sources, *legend,
-                                            centre);
+    root::utils::draw_systematics_breakdown(
+        canvas, *merged_background, systematics, num_sources, *legend, centre);
     auto *zero_line = canvas.make<TLine>(
         frame->GetXaxis()->GetBinLowEdge(frame->GetXaxis()->GetFirst()), centre,
         frame->GetXaxis()->GetBinUpEdge(frame->GetXaxis()->GetLast()), centre);
@@ -368,25 +369,22 @@ void plotItPlotter::prepareStacksPlotting(
       num_others += stack.samples().size();
   }
   std::array<float, 4> position{split ? 0.45f : 0.68f, -1.f, 0.96f, 0.88f};
-  if (options.contains("leg-position") &&
-      !options["leg-position"].is_none()) {
+  if (options.contains("leg-position") && !options["leg-position"].is_none()) {
     const auto coordinates = py::cast<py::sequence>(options["leg-position"]);
-    for (size_t i = 0; i < std::min(position.size(), py::len(coordinates));
-         ++i)
+    for (size_t i = 0; i < std::min(position.size(), py::len(coordinates)); ++i)
       if (!coordinates[i].is_none())
         position[i] = py::cast<float>(coordinates[i]);
   }
   const auto bottom = [&position](size_t num_entries) {
-    return position.at(1) >= 0.f
-               ? position.at(1)
-               : position.at(3) - 0.02f - 0.04f * num_entries;
+    return position.at(1) >= 0.f ? position.at(1)
+                                 : position.at(3) - 0.02f - 0.04f * num_entries;
   };
   const auto middle = 0.5f * (position.at(0) + position.at(2));
-  auto &legend = split ? canvas.addLegend(middle, bottom(num_others),
-                                          position.at(2), position.at(3))
-                       : canvas.addLegend(position.at(0),
-                                          bottom(num_signals + num_others),
-                                          position.at(2), position.at(3));
+  auto &legend =
+      split ? canvas.addLegend(middle, bottom(num_others), position.at(2),
+                               position.at(3))
+            : canvas.addLegend(position.at(0), bottom(num_signals + num_others),
+                               position.at(2), position.at(3));
   auto &signals_legend =
       split ? canvas.addSecondaryLegend(position.at(0), bottom(num_signals),
                                         middle, position.at(3))

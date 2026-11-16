@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "MultiPlotter/ROOTCanvas.h"
 #include "MultiPlotter/ROOTUtils.h"
+#include "MultiPlotter/ROOTCanvas.h"
 #include "MultiPlotter/Sample.h"
 #include <TGraphAsymmErrors.h>
 #include <TH1.h>

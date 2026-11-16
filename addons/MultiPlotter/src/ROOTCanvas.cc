@@ -23,6 +23,7 @@
 #include <TLatex.h>
 #include <TLegend.h>
 #include <iostream>
+#include <sstream>
 
 using namespace mplt;
 using namespace std::string_literals;
