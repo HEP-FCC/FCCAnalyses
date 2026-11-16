@@ -5,8 +5,10 @@
 #include <memory>
 
 namespace FCCAnalyses {
+namespace {
   std::vector<WeaverInterface *> gWeavers;
   bool isSetup = false;
+} // namespace
 
   namespace JetFlavourUtils {
     void setup_weaver(const std::string& onnx_filename,

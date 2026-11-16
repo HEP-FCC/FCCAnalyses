@@ -11,7 +11,9 @@ namespace FCCAnalyses{
 
 namespace CaloNtupleizer{
 
+namespace {
 dd4hep::DDSegmentation::BitFieldCoder* m_decoder;
+} // namespace
 
 void loadGeometry(std::string xmlGeometryPath, std::string readoutName){
   dd4hep::Detector* dd4hepgeo = &(dd4hep::Detector::getInstance());

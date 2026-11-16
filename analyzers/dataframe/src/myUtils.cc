@@ -310,7 +310,9 @@ get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
   return result;
 }
 
+namespace {
 int globalmm=0;
+} // namespace
 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
 merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in) {
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> result;
