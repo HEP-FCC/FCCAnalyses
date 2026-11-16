@@ -186,16 +186,19 @@ class matplotlibPlotter(mplt.MultiPlotter):
 
         nominal = np.zeros(len(edges) - 1)
         variance = np.zeros(len(edges) - 1)
+        cumulated = []
         for sample, (_, values, errors) in self._backgrounds:
             colour = _colour(sample.colour)
-            main.stairs(nominal + values, edges, baseline=nominal, fill=True,
-                        facecolor=to_rgba(colour, 0.5), zorder=1)
             nominal = nominal + values
             variance += errors**2
-            main.stairs(nominal, edges, color=colour, linewidth=2, zorder=2)
+            cumulated.append((nominal, colour))
             handles.append(Patch(facecolor=to_rgba(colour, 0.5),
                                  edgecolor=colour, linewidth=2))
             labels.append(_tex(sample.name))
+        for total, colour in reversed(cumulated):
+            main.stairs(total, edges, fill=True, zorder=1,
+                        facecolor=to_rgba(colour, 0.5))
+            main.stairs(total, edges, color=colour, linewidth=2, zorder=1)
         with_stat = options.get('plot-stat-unc', True)
         stat = np.sqrt(variance) if with_stat else np.zeros_like(variance)
         total_up = np.hypot(stat, self._total_syst[:, 0])

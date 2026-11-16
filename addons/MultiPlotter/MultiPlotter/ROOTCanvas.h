@@ -20,6 +20,7 @@
 #define MultiPlotter_ROOTCanvas_h
 
 #include <TCanvas.h>
+#include <vector>
 
 class TLatex;
 class TLegend;
@@ -66,6 +67,7 @@ private:
   TPad *lower_pad_{nullptr};
   float lower_fraction_{0.f};
   bool decorated_{false}; ///< legend and text boxes already drawn?
+  std::vector<std::pair<TPad *, TObject *>> axis_copies_;
   std::unique_ptr<TLegend> legend_;
   std::unique_ptr<TLegend> secondary_legend_;
   std::vector<std::unique_ptr<TObject>> objects_;

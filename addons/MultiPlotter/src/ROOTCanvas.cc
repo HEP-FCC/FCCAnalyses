@@ -22,6 +22,7 @@
 #include <TGaxis.h>
 #include <TLatex.h>
 #include <TLegend.h>
+#include <TList.h>
 #include <iostream>
 #include <sstream>
 
@@ -141,13 +142,24 @@ void ROOTCanvas::setLogy(bool log) { mainPad()->SetLogy(log); }
 void ROOTCanvas::save(const std::vector<std::string> &formats,
                       std::string_view alternative_name) {
   auto *main_pad = mainPad();
+  for (const auto &[pad, copy] : axis_copies_) {
+    pad->GetListOfPrimitives()->Remove(copy);
+    delete copy;
+  }
+  axis_copies_.clear();
+  const auto redraw_axis = [this](TPad *pad) {
+    pad->cd();
+    auto *primitives = pad->GetListOfPrimitives();
+    const auto num_primitives = primitives->GetSize(); // CepGen hack
+    pad->RedrawAxis();
+    for (auto i = num_primitives; i < primitives->GetSize(); ++i)
+      axis_copies_.emplace_back(pad, primitives->At(i));
+  };
   if (lower_pad_) {
-    lower_pad_->cd();
-    lower_pad_->RedrawAxis();
+    redraw_axis(lower_pad_);
     lower_pad_->Modified();
   }
-  main_pad->cd();
-  main_pad->RedrawAxis();
+  redraw_axis(main_pad);
   main_pad->GetFrame()->SetBorderSize(12);
   main_pad->Modified();
   Modified();
