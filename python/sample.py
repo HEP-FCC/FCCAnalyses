@@ -23,17 +23,33 @@ LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.process_info')
 
 
 # _____________________________________________________________________________
+def get_event_entries(infile) -> int:
+    '''Return the number of events stored in a TTree or RNTuple.'''
+    key = infile.GetKey('events')
+    if not key:
+        raise KeyError('events')
+
+    if 'RNTuple' in key.GetClassName():
+        reader = ROOT.RNTupleReader.Open(infile.Get('events'))
+        return int(reader.GetNEntries())
+
+    tree = infile.Get('events')
+    if not tree or not hasattr(tree, 'GetEntries'):
+        raise KeyError('events')
+    return int(tree.GetEntries())
+
+
+# _____________________________________________________________________________
 def get_entries(inpath: str) -> Optional[int]:
     '''
-    Retrieves number of entries in the "events" TTree from the provided ROOT
-    file.
+    Retrieves number of entries in the "events" dataset from a ROOT file.
     '''
     nevents = None
     with ROOT.TFile(inpath, 'READ') as infile:
         try:
-            nevents = infile.Get("events").GetEntries()
-        except AttributeError:
-            LOGGER.error('Input file is missing "events" TTree!\n  - %s'
+            nevents = get_event_entries(infile)
+        except KeyError:
+            LOGGER.error('Input file is missing "events" TTree or RNTuple!\n  - %s'
                          '\nAborting...', inpath)
             sys.exit(3)
 
@@ -73,9 +89,11 @@ def get_entries_sow(infilepath: str,
     sumOfWeightsTTree = 0.
 
      # check for empty chunk (can this be improved? exception from RDF cannot be caught it seems?)
-    tree = infile.Get("events")
-    if not tree:
-        print("Tree not found in file", infilepath, " possibly empty chunk - continuing with next one.")
+    try:
+        get_event_entries(infile)
+    except KeyError:
+        print("Events dataset not found in file", infilepath,
+              " possibly empty chunk - continuing with next one.")
         infile.Close()
         return processEvents, eventsTTree, processSumOfWeights, sumOfWeightsTTree
 
@@ -439,7 +457,7 @@ def get_one_file_quantities(infilepath: str,
                 pass
 
             try:
-                result['events-in-ttree'] = infile['events'].GetEntries()
+                result['events-in-ttree'] = get_event_entries(infile)
             except KeyError:
                 pass
 

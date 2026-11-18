@@ -14,7 +14,7 @@ import ROOT  # type: ignore
 import cppyy
 from anascript import get_element, get_element_dict, get_attribute
 from sample import get_process_info, get_process_dict
-from sample import get_subfile_list, get_chunk_list
+from sample import get_subfile_list, get_chunk_list, get_event_entries
 from utils import generate_graph, save_benchmark
 from run_fccanalysis import run_fccanalysis
 
@@ -217,9 +217,9 @@ def run_local(rdf_module, infile_list, args):
             pass
 
         try:
-            nevents_local += infile.Get("events").GetEntries()
-        except AttributeError:
-            LOGGER.error('Input file:\n%s\nis missing events TTree!\n'
+            nevents_local += get_event_entries(infile)
+        except KeyError:
+            LOGGER.error('Input file:\n%s\nis missing events TTree or RNTuple!\n'
                          'Aborting...', filepath)
             infile.Close()
             sys.exit(3)

@@ -467,7 +467,7 @@ def merge_config(args: argparse.Namespace,
         config['output-dir'] = args.output_dir
 
     # Check output ROOT file format
-    config['output-format'] = 'ttree'
+    config['output-format'] = None
     if hasattr(analysis_class, 'output_format'):
         config['output-format'] = analysis_class.output_format
     if args.output_format is not None:

@@ -148,12 +148,35 @@ class Job:
     def setup_output(self,
                      output_filepath: str,
                      output_variables: Callable[[], list[str]],
-                     output_format: str = 'ttree') -> None:
+                     output_format: Optional[str] = None) -> None:
         '''
         Setup output of this work unit, output variables and output file path.
+        If no format is specified, use the first input file's events format.
         '''
         self._output_file_path = output_filepath
 
+        if output_format is None:
+            # Inspect the file rather than the dataframe, which may use the
+            # podio data source for either input format.
+            input_path = self._input_file_list[0]
+            try:
+                infile = ROOT.TFile.Open(input_path)
+            except OSError:
+                infile = None
+            if not infile or infile.IsZombie():
+                if infile:
+                    infile.Close()
+                LOGGER.error('Unable to open input file:\n%s\nAborting...',
+                             input_path)
+                sys.exit(3)
+            with infile:
+                key = infile.GetKey('events')
+                if not key:
+                    LOGGER.error('Input file is missing "events" TTree or '
+                                 'RNTuple!\nAborting...')
+                    sys.exit(3)
+                output_format = ('rntuple' if 'RNTuple' in key.GetClassName()
+                                 else 'ttree')
         self._output_format: str = output_format
 
         self._output_variables = output_variables()
@@ -253,6 +276,9 @@ class Job:
             options = ROOT.RDF.RSnapshotOptions()
             if self._output_format == 'rntuple':
                 options.fOutputFormat = ROOT.RDF.ESnapshotOutputFormat.kRNTuple
+            elif hasattr(ROOT.RDF, 'ESnapshotOutputFormat'):
+                # Preserve TTree output if ROOT's default format changes.
+                options.fOutputFormat = ROOT.RDF.ESnapshotOutputFormat.kTTree
 
             final_dframe.Snapshot(
                 "events",

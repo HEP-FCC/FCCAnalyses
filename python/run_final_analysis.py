@@ -17,7 +17,7 @@ from typing import Any, Union
 import ROOT  # type: ignore
 import cppyy  # type: ignore
 from anascript import get_element, get_attribute
-from sample import get_process_dict, get_entries_sow
+from sample import get_process_dict, get_entries_sow, get_event_entries
 from utils import generate_graph
 
 LOGGER = logging.getLogger('FCCAnalyses.run_final')
@@ -41,10 +41,10 @@ def get_entries(infilepath: str) -> tuple[int, int]:
                            'original number of events!')
 
         try:
-            events_in_ttree = infile.Get("events").GetEntries()
-        except AttributeError:
-            LOGGER.error('Input file is missing "events" TTree!\n  - %s'
-                         '\nAborting...')
+            events_in_ttree = get_event_entries(infile)
+        except KeyError:
+            LOGGER.error('Input file is missing "events" TTree or RNTuple!\n  - %s'
+                         '\nAborting...', infilepath)
             sys.exit(3)
 
     return events_processed, events_in_ttree
