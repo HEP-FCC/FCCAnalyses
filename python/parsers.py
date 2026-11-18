@@ -344,7 +344,7 @@ def setup_run_parser(parser):
         help='location(s) of the input ROOT file(s)'
     )
     input_source_group.add_argument(
-        '-f', '--input-file-list',
+        '--input-file-list',
         type=str,
         default=None,
         metavar='LIST_FILE',

@@ -13,15 +13,14 @@
 [\fIANALYSIS ARGUMENTS\fR]
 .PP
 .B fccanalysis submit grid
+.I analysis-script
 [\fB\-h\fR | \fB\-\-help\fR]
-[\fB\-\-input\fR \fIINPUT_PATH\fR [\fIINPUT_PATH\fR ...] |
- \fB\-\-input\-file\-list\fR \fILIST_FILE\fR |
- \fB\-\-input\-lfn\-list\fR \fILFN_LIST\fR]
+[\fB\-\-input\fR \fIINPUT_PATH\fR [\fIINPUT_PATH\fR ...] | \fB\-\-input\-file\-list\fR \fILIST_FILE\fR | \fB\-\-input\-lfn\-list\fR \fILFN_LIST\fR]
 [\fB\-o\fR \fIOUTPUT_FILE\fR]
 [\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR]
 [\fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR]
 [\fB\-\-force\fR]
-[\fB\-\-files\-per\-job\fR \fICOUNT\fR | \fB\-\-n\-chunks\fR \fICOUNT\fR]
+[\fB\-\-files\-per\-job\fR \fICOUNT\fR | \fB\-\-nchunks\fR \fICOUNT\fR]
 [\fB\-\-sample\-name\fR \fINAME\fR]
 [\fB\-\-site\fR \fISITE\fR]
 [\fB\-\-mode\fR {\fBwms\fR,\fBlocal\fR}]
@@ -29,7 +28,6 @@
 [\fB\-\-output\-format\fR {\fBttree\fR,\fBrntuple\fR}]
 [\fB\-j\fR \fINCPUS\fR | \fB\-\-ncpus\fR \fINCPUS\fR | \fB\-\-n\-threads\fR \fINTHREADS\fR]
 [\fB\-\-stride\fR \fISTRIDE\fR]
-.I analysis-script
 [\fB\-\-\fR \fIANALYSIS ARGUMENTS\fR]
 
 .SH DESCRIPTION
@@ -132,6 +130,7 @@ converted to XRootD URLs before discovery. Other EOS namespaces and non-CERN sto
 use an explicit URL, for example
 \fBroot://storage.example.org//data/events.root\fR. URLs ending in
 \fI.root\fR name files; other URLs are treated as directories.
+HTTP(S) URLs are not supported for grid inputs.
 
 Grid jobs receive XRootD URLs, not files from the submitting machine. Local
 paths are therefore rejected in XRootD input mode. This does not apply to
@@ -142,9 +141,8 @@ Campaign discovery is not supported for grid submission.
 Supplying
 .B --input-lfn-list
 selects LFN mode.
-The named text file must contain one absolute DIRAC logical file name per
-non-empty line. Blank lines and lines beginning with \fB#\fR, optionally
-preceded by whitespace, are ignored.
+The named \fI.txt\fR file must contain one absolute DIRAC logical file name per
+non-empty line. Blank lines and lines beginning with \fB#\fR are ignored.
 Duplicate LFNs within one sample are rejected.
 These are catalogue LFNs, not the physical paths or XRootD URLs used by a
 sample's \fIinput-file-list\fR.
@@ -153,23 +151,27 @@ An analysis script can instead set \fBAnalysis.input_lfn_list\fR or a sample's
 Fraction-based selection is not supported for LFN samples.
 DIRAC stages each planned job's assigned input data into the worker directory,
 and the generated per-job input-file list refers to the staged filenames.
-Unless explicit grouping is requested, the complete LFN list is assigned to
-one job.
+By default each sample's complete LFN list is assigned to one job. A sample's
+\fInchunks\fR setting or the command-line grouping options can split it into
+multiple jobs.
 
 .SH GRID OPTIONS
 .TP
 \fB\-\-input\fR \fIINPUT_PATH\fR [\fIINPUT_PATH\fR ...]
-Resolve one independent XRootD input sample from the supplied remote file or
-directory paths. Local paths are rejected.
+Create one independent sample from one or more remote file or directory
+paths. Local paths are rejected.
 .TP
 \fB\-\-input\-file\-list\fR \fILIST_FILE\fR
-Read explicit physical remote file paths or XRootD URLs for one independent
-input sample from a text file. Directory entries are not expanded.
+Create one independent sample from a text file containing physical remote file
+paths or XRootD URLs, one per line. Directory entries are not expanded.
 .TP
 \fB\-\-input\-lfn\-list\fR \fILFN_LIST\fR
-Read input LFNs from a text file instead of resolving XRootD inputs from the
-command line or analysis samples. This cannot be combined with another input
-mode.
+Create one independent sample from a text file containing DIRAC LFNs, one per
+line. DIRAC stages the files for each job.
+.PP
+These input options are mutually exclusive and override input configuration in
+the analysis script. For both list-file options, blank lines and lines
+beginning with \fB#\fR are ignored.
 .TP
 \fB\-o\fR \fIOUTPUT_FILE\fR, \fB\-\-output\fR \fIOUTPUT_FILE\fR
 Set the base output ROOT filename.
@@ -195,9 +197,9 @@ Derive the number of jobs from the number of input files and the requested
 maximum number of files per job.
 This overrides sample-level chunk counts.
 This option is mutually exclusive with
-.BR \-\-n\-chunks .
+.BR \-\-nchunks .
 .TP
-\fB\-\-n\-chunks\fR \fICOUNT\fR
+\fB\-\-nchunks\fR \fICOUNT\fR, \fB\-\-n\-chunks\fR \fICOUNT\fR
 Request this number of jobs/output chunks for each input sample.
 This overrides sample-level chunk counts.
 The actual number of jobs cannot exceed the number of input files.
@@ -276,7 +278,7 @@ Create ten jobs per XRootD sample and restrict them to one DIRAC site:
 .nf
 fccanalysis submit grid analysis.py \e
     --output result.root --output-dir analyses/example \e
-    --n-chunks 10 --site LCG.Example.org
+    --nchunks 10 --site LCG.Example.org
 .fi
 .PP
 Submit a list of DIRAC LFNs in groups of five files:
