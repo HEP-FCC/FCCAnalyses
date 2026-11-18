@@ -94,9 +94,11 @@
   <dd>Set global output directory for the analysis.</dd>
   <dt id="output~3"><a class="permalink" href="#output~3"><b>--output-format</b>
     {<b>ttree</b>, <b>rntuple</b>}</a></dt>
-  <dd>Specify the output ROOT file format.
+  <dd>Specify the output ROOT file format. This option overrides the analysis
+      script's output_format setting.
     <br/>
-    Default value: <b>ttree</b>.</dd>
+    Default: follow the format of the events TTree or RNTuple in the first input
+      file.</dd>
   <dt id="a"><a class="permalink" href="#a"><b>-a</b> <i>ANALYSIS_NAME</i>,
     <b>--analysis-name</b> <i>ANALYSIS_NAME</i></a></dt>
   <dd>Set analysis name, mostly used for the output path.</dd>
