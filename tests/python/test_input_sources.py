@@ -126,6 +126,21 @@ class InputSourceTest(unittest.TestCase):
         self.assertEqual((sample['chunks'], sample['stride'], sample['n-events-max']),
                          (1, 1, 0))
 
+    def test_nchunks_and_legacy_chunks(self):
+        self.assertEqual(validate_sample_list({'signal': {'nchunks': 3}})
+                         ['signal']['chunks'], 3)
+        with self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
+            sample = validate_sample_list({'signal': {'chunks': 2}})['signal']
+        self.assertEqual(sample['chunks'], 2)
+        self.assertIn('nchunks', logs.output[0])
+        for values in ({'nchunks': 0}, {'nchunks': 1, 'chunks': 1}):
+            with self.subTest(values=values), self.assertRaises(SystemExit):
+                validate_sample_list({'signal': values})
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        for option in ('--nchunks', '--n-chunks'):
+            self.assertEqual(parser.parse_args(['analysis.py', option, '4']).n_chunks, 4)
+
     def test_input_sources_are_mutually_exclusive(self):
         sample = validate_sample_list({
             'events': {
@@ -264,6 +279,169 @@ class EosRewriteTest(unittest.TestCase):
                     args = parser.parse_args(['analysis.py', *options])
                     config = self.runner.merge_config(args, analysis)
                     self.assertIs(config['use-data-source'], expected)
+
+    def test_sample_cli_overrides_and_event_limit_precedence(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analysis = SimpleNamespace(nevents=90, samples={
+            'signal': {'input-files': ['one.root', 'two.root'], 'nchunks': 2,
+                       'stride': 2, 'nevents': 30},
+            'background': {'input-files': ['three.root', 'four.root']},
+        })
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            args = parser.parse_args(['analysis.py', '--output-dir', '/tmp/out',
+                                      '--nchunks', '1', '--stride', '5',
+                                      '--nevents', '10'])
+            config = self.runner.merge_config(args, analysis)
+            with self.assertNoLogs('FCCAnalyses.run_analysis', level='WARNING'):
+                jobs = self.runner.generate_jobs(config)
+        self.assertEqual(len(jobs), 2)
+        self.assertEqual([job['stride'] for job in jobs], [5, 5])
+        self.assertEqual([job['n-events-max'] for job in jobs], [10, 10])
+
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            args = parser.parse_args(['analysis.py', '--output-dir', '/tmp/out',
+                                      '--n-chunks', '1'])
+            config = self.runner.merge_config(args, analysis)
+            jobs = self.runner.generate_jobs(config)
+        self.assertEqual([job['n-events-max'] for job in jobs], [30, 90])
+        self.assertEqual([job['stride'] for job in jobs], [2, None])
+
+    def test_nevents_aliases_conflicts_and_invalid_values(self):
+        with self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
+            sample = validate_sample_list({'signal': {'n-events-max': 5}})['signal']
+        self.assertEqual(sample['n-events-max'], 5)
+        self.assertIn('DEPRECATED', logs.output[0])
+        self.assertEqual(validate_sample_list({'signal': {'nevents': 0}})
+                         ['signal']['n-events-max'], 0)
+        for sample in ({'nevents': 1, 'n-events-max': 1}, {'nevents': -1}):
+            with self.subTest(sample=sample), self.assertRaises(SystemExit):
+                validate_sample_list({'signal': sample})
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            with self.assertLogs('FCCAnalyses.run_analysis', level='WARNING'):
+                config = self.runner.merge_config(
+                    parser.parse_args(['analysis.py']), SimpleNamespace(n_events_max=7))
+            self.assertEqual(config['n-events-max'], 7)
+            for analysis in (SimpleNamespace(nevents=1, n_events_max=2),
+                             SimpleNamespace(nevents=-1)):
+                with self.subTest(analysis=analysis), self.assertRaises(SystemExit):
+                    self.runner.merge_config(parser.parse_args(['analysis.py']), analysis)
+
+    def test_direct_single_chunk_preserves_output_and_limit(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        args = parser.parse_args(['analysis.py', '--input', 'one.root',
+                                  '--n-chunks', '1', '--output', 'out.root',
+                                  '--nevents', '5'])
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            job = self.runner.generate_jobs(self.runner.merge_config(args, SimpleNamespace()))[0]
+        self.assertEqual(job['output-file'], 'out.root')
+        self.assertEqual(job['n-events-max'], 5)
+
+    def test_multichunk_ignores_event_limit_with_warning(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analysis = SimpleNamespace(nevents=5, samples={
+            'signal': {'input-files': ['one.root', 'two.root'], 'chunks': 2},
+        })
+        args = parser.parse_args(['analysis.py', '--output-dir', '/tmp/out'])
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            config = self.runner.merge_config(args, analysis)
+            with self.assertLogs('FCCAnalyses.run_analysis', level='WARNING') as logs:
+                jobs = self.runner.generate_jobs(config)
+        self.assertEqual([job['n-events-max'] for job in jobs], [None, None])
+        self.assertIn('Ignoring the setting', '\n'.join(logs.output))
+
+    def test_direct_input_requires_output_directory_only_when_needed(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            for options in (['--input', 'one.root'],
+                            ['--input', 'one.root', 'two.root', '--n-chunks', '2']):
+                with self.subTest(options=options):
+                    config = self.runner.merge_config(
+                        parser.parse_args(['analysis.py', *options]), SimpleNamespace())
+                    with self.assertLogs('FCCAnalyses.run_analysis', level='ERROR') as logs:
+                        with self.assertRaises(SystemExit):
+                            self.runner.generate_jobs(config)
+                    self.assertIn('--output-dir', logs.output[0])
+
+    def test_chunk_and_stride_require_positive_integers(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        for option in ('--n-chunks', '--stride'):
+            for value in ('0', '-1'):
+                with self.subTest(option=option, value=value), redirect_stderr(StringIO()):
+                    with self.assertRaises(SystemExit):
+                        parser.parse_args(['analysis.py', option, value])
+
+    def test_missing_output_dir_and_ignored_options(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analysis = SimpleNamespace(samples={'signal': {'input-files': ['one.root']}})
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            args = parser.parse_args(['analysis.py', '--sample-name', 'ignored',
+                                      '--output', 'ignored.root', '--test-file', 'unused.root'])
+            with self.assertLogs('FCCAnalyses.run_analysis', level='WARNING') as logs:
+                config = self.runner.merge_config(args, analysis)
+                with self.assertRaises(SystemExit):
+                    self.runner.generate_jobs(config)
+            output = '\n'.join(logs.output)
+            self.assertIn('--test-file', output)
+            self.assertIn('--sample-name', output)
+            self.assertIn('output file', output)
+            self.assertIn('Analysis.output_dir', output)
+
+    def test_test_mode_ignores_unused_sample_configuration_without_warning(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        args = parser.parse_args(['analysis.py', '--test', '--n-chunks', '3',
+                                  '--sample-name', 'ignored'])
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            analysis = SimpleNamespace(test_file='test.root', samples={'signal': {'chunks': 'bad'}})
+            config = self.runner.merge_config(args, analysis)
+            with self.assertNoLogs('FCCAnalyses.run_analysis', level='WARNING'):
+                self.runner.generate_jobs(config)
+
+    def test_local_runner_rejects_lfn_without_override_and_in_test_mode(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        for analysis in (SimpleNamespace(input_lfn_list='files.txt'),
+                         SimpleNamespace(samples={'signal': {'input-lfn-list': 'files.txt'}}),
+                         SimpleNamespace(process_list={'signal': {'input-lfn-list': 'files.txt'}})):
+            for options in ([], ['--test'], ['--test', '--input', 'ignored.root']):
+                with self.subTest(analysis=analysis, options=options):
+                    args = parser.parse_args(['analysis.py', *options])
+                    module = SimpleNamespace(Analysis=lambda _: analysis)
+                    with self.assertLogs('FCCAnalyses.run_analysis', level='ERROR') as logs:
+                        with self.assertRaises(SystemExit):
+                            self.runner.run_fccanalysis(args, module)
+                    self.assertIn('input-lfn-list' if not hasattr(analysis, 'input_lfn_list')
+                                  else 'input_lfn_list', logs.output[0])
+
+    def test_worker_file_list_overrides_script_lfn_configuration(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        with tempfile.TemporaryDirectory() as directory:
+            listing = Path(directory) / 'input-files-0000.txt'
+            listing.write_text('staged.root\n', encoding='utf-8')
+            args = parser.parse_args(['analysis.py', '--input-file-list', str(listing),
+                                      '--output', 'output.root'])
+            for analysis in (SimpleNamespace(input_lfn_list='files.txt'),
+                             SimpleNamespace(samples={'signal': {'input-lfn-list': 'files.txt'}})):
+                with self.subTest(analysis=analysis), \
+                        patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}), \
+                        patch.object(self.runner, 'validate_analysis_class', return_value={
+                            'analysis-class': analysis, 'analysis-chain': None,
+                            'output-variables': [],
+                        }), \
+                        patch.object(self.runner, 'global_setup'), \
+                        patch.object(self.runner, 'Job') as job:
+                    job.return_value.get_benchmark_info.return_value = (1, 1.0)
+                    self.runner.run_fccanalysis(args, SimpleNamespace(Analysis=lambda _: analysis))
+                    self.assertEqual(job.call_args.args[0], [str(Path('staged.root').resolve())])
 
     def test_campaign_rewrites_files_and_fraction_metadata(self):
         parser = argparse.ArgumentParser()

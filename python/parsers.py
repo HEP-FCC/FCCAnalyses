@@ -232,12 +232,13 @@ def setup_grid_submit_parser(parser):
             'sample chunks when supplied'
     )
     grouping.add_argument(
-        '--n-chunks',
+        '--nchunks', '--n-chunks',
+        dest='n_chunks',
         type=_positive_integer,
         default=None,
         metavar='COUNT',
         help='requested number of jobs/output chunks; overrides '
-            'sample chunks when supplied'
+            'sample nchunks when supplied'
     )
     parser.add_argument(
         '--sample-name',
@@ -362,11 +363,12 @@ def setup_run_parser(parser):
         default=None,
         help='sample name, mostly used for the output path'
     )
-    independent_sample_group.add_argument(
-        '--n-chunks',
-        type=int,
+    parser.add_argument(
+        '--nchunks', '--n-chunks',
+        dest='n_chunks',
+        type=_positive_integer,
         default=None,
-        help='number of output chunks'
+        help='number of output chunks per sample; overrides sample nchunks'
     )
     parser.add_argument(
         '--nevents', '--n-events',
@@ -376,9 +378,9 @@ def setup_run_parser(parser):
     )
     parser.add_argument(
         '--stride',
-        type=int,
+        type=_positive_integer,
         default=None,
-        help='specify how to stride through the events'
+        help='stride through events; overrides sample stride'
     )
 
     # Testing

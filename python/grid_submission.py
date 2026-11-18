@@ -104,16 +104,6 @@ def create_grid_submission_request(
             if args.sample_name is not None
             else None
         )
-        if has_cli_input and (
-            getattr(analysis_class, 'samples', None)
-            or getattr(analysis_class, 'process_list', None)
-            or getattr(analysis_class, 'input_dir', None) is not None
-            or getattr(analysis_class, 'input_lfn_list', None) is not None
-        ):
-            LOGGER.warning(
-                'Command-line input overrides the analysis script input '
-                'configuration, including any sample settings.'
-            )
         if args.input_lfn_list is not None:
             input_mode = 'dirac-lfn'
             samples = (_resolve_grid_cli_lfn_sample(args, sample_name),)
@@ -304,20 +294,6 @@ def _resolve_analysis_samples(
         )
 
         chunks = sample['chunks']
-        if args.files_per_job is not None and chunks != 1:
-            LOGGER.warning(
-                '--files-per-job overrides chunks=%s for sample %s.',
-                chunks,
-                sample_name,
-            )
-        n_chunks = getattr(args, 'n_chunks', None)
-        if n_chunks is not None and chunks not in (1, n_chunks):
-            LOGGER.warning(
-                '--n-chunks=%s overrides chunks=%s for sample %s.',
-                n_chunks,
-                chunks,
-                sample_name,
-            )
         resolved_samples.append(
             ResolvedSample(
                 name=sample_name,
@@ -467,7 +443,13 @@ def _validated_analysis_samples(analysis_class: Any) -> dict[str, dict[str, Any]
 
 
 def _reject_sample_event_limits(analysis_class: Any) -> None:
-    '''Reject sample event limits with ambiguous multi-job semantics.'''
+    '''Reject event limits with ambiguous multi-job semantics.'''
+    for field in ('nevents', 'n_events_max'):
+        if getattr(analysis_class, field, None) is not None:
+            raise GridSubmissionError(
+                f'Analysis.{field} is not supported for grid submission '
+                'because samples may be split across multiple jobs.'
+            )
     provided_samples = getattr(
         analysis_class,
         'samples',
@@ -476,12 +458,14 @@ def _reject_sample_event_limits(analysis_class: Any) -> None:
     if not isinstance(provided_samples, dict):
         return
     for sample_name, sample in provided_samples.items():
-        if isinstance(sample, dict) and sample.get('n-events-max') is not None:
-            raise GridSubmissionError(
-                'Sample-level n-events-max is not supported for grid '
-                f'submission (sample {sample_name!r}) because one sample '
-                'may be split across multiple jobs.'
-            )
+        if isinstance(sample, dict):
+            for field in ('nevents', 'n-events-max'):
+                if sample.get(field) is not None:
+                    raise GridSubmissionError(
+                        f'Sample-level {field} is not supported for grid '
+                        f'submission (sample {sample_name!r}) because one sample '
+                        'may be split across multiple jobs.'
+                    )
 
 
 def _apply_fraction(

@@ -21,6 +21,7 @@ from grid_submission import (
     _create_analysis_include_archive,
     _key4hep_release_id,
     _read_lfn_input,
+    _reject_sample_event_limits,
     _require_key4hep_setup,
     _create_analysis_instance,
     _resolve_grid_cli_input_sample,
@@ -356,7 +357,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                             key4hep_setup=str(self.key4hep_setup),
                         )
 
-    def test_warns_when_cli_input_overrides_script_samples(self) -> None:
+    def test_cli_input_overrides_script_samples_without_warning(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
@@ -375,12 +376,11 @@ class GridSubmissionFrontendTest(unittest.TestCase):
             ):
                 with self.subTest(options=options):
                     args = self.parse_grid_arguments(str(analysis_script), options)
-                    with self.assertLogs('FCCAnalyses.grid_submission', level='WARNING') as logs:
+                    with self.assertNoLogs('FCCAnalyses.grid_submission', level='WARNING'):
                         request = create_grid_submission_request(
                             args, self.load_analysis_module(analysis_script),
                             key4hep_setup=str(self.key4hep_setup),
                         )
-                    self.assertIn('overrides the analysis script', logs.output[0])
                     self.assertNotEqual(request.samples[0].name, 'signal')
 
     def test_resolves_analysis_samples_for_xrootd_mode(self) -> None:
@@ -399,7 +399,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 '        self.input_dir = "/eos/experiment/fcc/test"\n'
                 '        self.include_paths = ["include/functions.h"]\n'
                 '        self.samples = {\n'
-                '            "signal": {"chunks": 2, "stride": 3},\n'
+                '            "signal": {"nchunks": 2, "stride": 3},\n'
                 '            "background": {},\n'
                 '        }\n',
                 encoding='utf-8',
@@ -409,7 +409,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 [
                     '--output', 'analysis.root',
                     '--output-dir', 'analysis/results',
-                    '--n-chunks', '2',
+                    '--nchunks', '2',
                 ],
             )
 
@@ -748,6 +748,16 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     self.load_analysis_module(analysis_script),
                     key4hep_setup=str(key4hep_setup),
                 )
+
+    def test_rejects_all_event_limit_spellings(self) -> None:
+        for analysis in (
+            SimpleNamespace(nevents=1),
+            SimpleNamespace(n_events_max=1),
+            SimpleNamespace(samples={'signal': {'nevents': 1}}),
+            SimpleNamespace(samples={'signal': {'n-events-max': 1}}),
+        ):
+            with self.subTest(analysis=analysis), self.assertRaises(GridSubmissionError):
+                _reject_sample_event_limits(analysis)
 
     def test_rejects_include_paths_outside_analysis_directory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

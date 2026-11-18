@@ -403,15 +403,39 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
                                   'a number greater than 0 and at most 1')
         sample_dict['fraction'] = 1.0 if fraction is None else float(fraction)
 
-        # Check number of chunks
-        for field in ('chunks', 'stride', 'n-events-max'):
-            value = provided_sample_dict.get(field)
-            minimum = 0 if field == 'n-events-max' else 1
-            if value is not None and (type(value) is not int or value < minimum):
-                expected = 'a non-negative integer' if minimum == 0 else 'a positive integer'
-                _invalid_sample_field(sample_name, field, expected)
-            sample_dict[field] = (1 if field == 'chunks' and value is None
-                                  else value)
+        # Check number of chunks and stride
+        nchunks = provided_sample_dict.get('nchunks')
+        old_chunks = provided_sample_dict.get('chunks')
+        if old_chunks is not None:
+            LOGGER.warning('[DEPRECATED] Use "nchunks" instead of '
+                           '"chunks" for sample "%s".', sample_name)
+            if nchunks is not None:
+                _invalid_sample_field(sample_name, 'chunk count',
+                                      'specified only once')
+            nchunks = old_chunks
+        if nchunks is not None and (type(nchunks) is not int or nchunks < 1):
+            field = 'chunks' if old_chunks is not None else 'nchunks'
+            _invalid_sample_field(sample_name, field, 'a positive integer')
+        sample_dict['chunks'] = 1 if nchunks is None else nchunks
+
+        stride = provided_sample_dict.get('stride')
+        if stride is not None and (type(stride) is not int or stride < 1):
+            _invalid_sample_field(sample_name, 'stride', 'a positive integer')
+        sample_dict['stride'] = stride
+
+        nevents = provided_sample_dict.get('nevents')
+        old_nevents = provided_sample_dict.get('n-events-max')
+        if old_nevents is not None:
+            LOGGER.warning('[DEPRECATED] Use "nevents" instead of '
+                           '"n-events-max" for sample "%s".', sample_name)
+            if nevents is not None:
+                _invalid_sample_field(sample_name, 'event limit',
+                                      'specified only once')
+            nevents = old_nevents
+        if nevents is not None and (type(nevents) is not int or nevents < 0):
+            field = 'n-events-max' if old_nevents is not None else 'nevents'
+            _invalid_sample_field(sample_name, field, 'a non-negative integer')
+        sample_dict['n-events-max'] = nevents
 
         sample_list[sample_name] = sample_dict
 

@@ -34,6 +34,16 @@ ROOT.gROOT.SetBatch(True)
 LOGGER = logging.getLogger('FCCAnalyses.run_analysis')
 
 
+def _require_output_dir(config: dict[str, Any]) -> None:
+    directory = config['output-dir']
+    if isinstance(directory, os.PathLike):
+        directory = os.fspath(directory)
+    if not isinstance(directory, str) or not directory.strip():
+        LOGGER.error('An output directory is required. Set Analysis.output_dir '
+                     'or pass --output-dir.\nAborting...')
+        sys.exit(3)
+
+
 # _____________________________________________________________________________
 def generate_sample_jobs(config: dict[str, Any]) -> \
         list[dict[str, Union[int, float, str]]]:
@@ -191,6 +201,9 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                              'integer!\nAborting...')
                 sys.exit(3)
 
+        if config['n-chunks'] is not None:
+            n_chunks = config['n-chunks']
+
         if n_chunks > len(sample_file_list):
             LOGGER.warning('Can\'t split input sample of %i files into '
                            '%i output chunks!\nAdjusting the number of output '
@@ -205,19 +218,24 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                     f'            {len(chunks_list):,}'
 
         # Maximum number of events
-        n_events_max = None
-        if sample_dict['n-events-max'] is not None:
+        n_events_max = config['cli-nevents']
+        if n_events_max is None:
+            n_events_max = sample_dict['n-events-max']
+        if n_events_max is None:
+            n_events_max = config['n-events-max']
+        if n_events_max is not None:
             if n_chunks > 1:
                 LOGGER.warning('Specifying maximum number of events is '
                                'not supported in case of multiple output '
                                'chunks.\nIgnoring the setting...')
+                n_events_max = None
             else:
-                n_events_max = sample_dict['n-events-max']
                 info_msg += '\n - Maximum number of events:  ' \
                             f'           {n_events_max}'
 
         # Stride through the sample
-        stride = sample_dict['stride']
+        stride = (config['stride'] if config['stride'] is not None
+                  else sample_dict['stride'])
         if stride is not None:
             info_msg += '\n - Number of events to stride:  ' \
                         f'         {stride}'
@@ -251,10 +269,6 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
     if config['test-file'] is not None:
         LOGGER.info('Generating test job...')
 
-        if config['samples'] is not None:
-            LOGGER.warning('Samples/processes defined in your analysis script '
-                           'will be ignored...')
-
         job: dict[str, Any] = {}
         job['name'] = 'test'
         job['input-file-list'] = [config['test-file']]
@@ -270,14 +284,10 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
     if config['input-file-list'] is not None:
         LOGGER.info('Generating jobs for independent sample...')
 
-        if config['samples'] is not None:
-            LOGGER.warning('Samples/processes defined in your analysis script '
-                           'will be ignored...')
-
         input_file_list = config['input-file-list']
 
         # Only one output chunk
-        if config['n-chunks'] is None:
+        if config['n-chunks'] in (None, 1):
             job = {}
             if config['sample-name'] is not None:
                 sample_name = config['sample-name']
@@ -289,6 +299,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
             if config['output-file'] is not None:
                 job['output-file'] = config['output-file']
             else:
+                _require_output_dir(config)
                 job['output-file'] = os.path.join(
                     config['output-dir'],
                     sample_name,
@@ -301,6 +312,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
 
         # Multiple output chunks
         n_chunks = config['n-chunks']
+        _require_output_dir(config)
 
         if n_chunks > len(input_file_list):
             LOGGER.error('Can\'t split input sample of %i files into '
@@ -347,6 +359,13 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
     if config['samples'] is None:
         LOGGER.info('Could not find sample definitions to run!\nAborting...')
         sys.exit(3)
+
+    if config['sample-name'] is not None:
+        LOGGER.warning('--sample-name has no effect for script-defined samples.')
+    if config['output-file'] is not None:
+        LOGGER.warning('The explicit output file has no effect for '
+                       'script-defined samples; use output-stem instead.')
+    _require_output_dir(config)
 
     if len(config['samples']) == 1:
         LOGGER.info('Found one sample defined in the analysis.')
@@ -445,10 +464,11 @@ def merge_config(args: argparse.Namespace,
 
     # Check for sample list
     config['samples'] = None
-    if hasattr(analysis_class, 'process_list'):
-        config['samples'] = validate_sample_list(analysis_class.process_list)
-    if hasattr(analysis_class, 'samples'):
-        config['samples'] = validate_sample_list(analysis_class.samples)
+    if args.test is None:
+        if hasattr(analysis_class, 'process_list'):
+            config['samples'] = validate_sample_list(analysis_class.process_list)
+        if hasattr(analysis_class, 'samples'):
+            config['samples'] = validate_sample_list(analysis_class.samples)
 
     if config['samples'] == {}:
         LOGGER.warning('Provided samples dictionary contains no elements!')
@@ -468,6 +488,8 @@ def merge_config(args: argparse.Namespace,
 
     # Check whether a test is run
     config['test-file'] = None
+    if args.test is None and args.test_file is not None:
+        LOGGER.warning('--test-file has no effect without --test.')
     if args.test is not None:
         if hasattr(analysis_class, 'test_file'):
             config['test-file'] = analysis_class.test_file
@@ -526,9 +548,23 @@ def merge_config(args: argparse.Namespace,
         config['n-chunks'] = args.n_chunks
 
     # Check number of events to be run over
-    config['n-events-max'] = None
-    if args.nevents is not None:
-        config['n-events-max'] = args.nevents
+    script_nevents = getattr(analysis_class, 'nevents', None)
+    old_nevents = getattr(analysis_class, 'n_events_max', None)
+    if old_nevents is not None:
+        LOGGER.warning('[DEPRECATED] Use Analysis.nevents instead of '
+                       'Analysis.n_events_max.')
+        if script_nevents is not None:
+            LOGGER.error('Specify only one of Analysis.nevents and '
+                         'Analysis.n_events_max.\nAborting...')
+            sys.exit(3)
+        script_nevents = old_nevents
+    for value in (script_nevents, args.nevents):
+        if value is not None and (type(value) is not int or value < 0):
+            LOGGER.error('The event limit must be a non-negative integer.\nAborting...')
+            sys.exit(3)
+    config['cli-nevents'] = args.nevents
+    config['n-events-max'] = (args.nevents if args.nevents is not None
+                              else script_nevents)
 
     # Check if stride through the sample
     config['stride'] = None
@@ -646,18 +682,21 @@ def run_fccanalysis(args, anascript_module) -> None:
     # Also, execute the "constructor" of the analysis class
     LOGGER.info('Initializing analysis class...')
     analysis_class = anascript_module.Analysis(vars(args))
-    cli_input_override = (
-        args.input is not None or args.input_file_list is not None
-    )
-    if (
-        not cli_input_override
-        and getattr(analysis_class, 'input_lfn_list', None) is not None
-    ):
-        LOGGER.error(
-            'Analysis.input_lfn_list is supported only by grid submission.\n'
-            'Aborting...'
-        )
-        sys.exit(3)
+    cli_input_override = args.input is not None or args.input_file_list is not None
+    if args.test is not None or not cli_input_override:
+        if getattr(analysis_class, 'input_lfn_list', None) is not None:
+            LOGGER.error('Analysis.input_lfn_list is supported only by grid '
+                         'submission.\nAborting...')
+            sys.exit(3)
+        for attribute in ('samples', 'process_list'):
+            samples = getattr(analysis_class, attribute, None)
+            if isinstance(samples, dict) and any(
+                isinstance(sample, dict) and sample.get('input-lfn-list') is not None
+                for sample in samples.values()
+            ):
+                LOGGER.error('Sample input-lfn-list is supported only by grid '
+                             'submission.\nAborting...')
+                sys.exit(3)
     try:
         config |= validate_analysis_class(analysis_class)
     except ValueError as error:
@@ -667,16 +706,6 @@ def run_fccanalysis(args, anascript_module) -> None:
     LOGGER.info('Setting run parameters...')
     # Merge configuration from command line arguments and analysis class
     config |= merge_config(args, config['analysis-class'])
-    if not cli_input_override and config['samples'] is not None and any(
-        sample['input-lfn-list'] is not None
-        for sample in config['samples'].values()
-    ):
-        LOGGER.error(
-            'Sample input-lfn-list is supported only by grid submission.\n'
-            'Aborting...'
-        )
-        sys.exit(3)
-
     # Set number of threads, load header files, ...
     global_setup(config)
 
