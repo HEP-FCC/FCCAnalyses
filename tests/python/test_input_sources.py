@@ -442,6 +442,25 @@ class EosRewriteTest(unittest.TestCase):
                     self.assertEqual(listdir.called, use_fuse)
                     self.assertEqual(xrdfs.called, not use_fuse)
 
+    def test_test_mode_does_not_resolve_direct_inputs(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analysis = SimpleNamespace(test_file='test.root')
+        with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
+            for options in (['--input', 'missing-directory'],
+                            ['--input-file-list', 'missing-list.txt']):
+                with self.subTest(options=options), \
+                        patch.object(self.runner, 'resolve_inputs') as resolve, \
+                        patch.object(self.runner, 'read_input_file_list') as read:
+                    args = parser.parse_args(['analysis.py', '--test', *options])
+                    config = self.runner.merge_config(args, analysis)
+                    self.assertEqual(
+                        self.runner.generate_jobs(config)[0]['input-file-list'],
+                        [str(Path('test.root').resolve())],
+                    )
+                    resolve.assert_not_called()
+                    read.assert_not_called()
+
     def test_test_file_uses_requested_eos_mode(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)

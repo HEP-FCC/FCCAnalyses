@@ -422,20 +422,21 @@ def merge_config(args: argparse.Namespace,
 
     # Input file list
     config['input-file-list'] = None
-    try:
-        if args.input_file_list is not None:
-            config['input-file-list'] = read_input_file_list(
-                args.input_file_list,
-                use_xrootd=config['use-xrootd'],
-            )
-        elif args.input is not None:
-            config['input-file-list'] = resolve_inputs(
-                args.input,
-                use_xrootd=config['use-xrootd'],
-            )
-    except InputResolutionError as error:
-        LOGGER.error('%s\nAborting...', error)
-        sys.exit(3)
+    if args.test is None:
+        try:
+            if args.input_file_list is not None:
+                config['input-file-list'] = read_input_file_list(
+                    args.input_file_list,
+                    use_xrootd=config['use-xrootd'],
+                )
+            elif args.input is not None:
+                config['input-file-list'] = resolve_inputs(
+                    args.input,
+                    use_xrootd=config['use-xrootd'],
+                )
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
 
     # Check for sample name
     config['sample-name'] = None
