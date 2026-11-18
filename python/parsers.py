@@ -51,7 +51,7 @@ def _positive_integer(value):
 
 
 def _nonzero_integer(value):
-    '''Parse a thread count; negative values select all allocated CPUs.'''
+    '''Parse a nonzero integer command-line value.'''
     parsed = int(value)
     if parsed == 0:
         raise argparse.ArgumentTypeError('thread count must not be zero')

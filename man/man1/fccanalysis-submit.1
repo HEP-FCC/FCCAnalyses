@@ -18,6 +18,7 @@
 [\fB\-o\fR \fIOUTPUT_FILE\fR]
 [\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR]
 [\fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR]
+[\fB\-\-force\fR]
 [\fB\-\-files\-per\-job\fR \fICOUNT\fR | \fB\-\-n\-chunks\fR \fICOUNT\fR]
 [\fB\-\-sample\-name\fR \fINAME\fR]
 [\fB\-\-site\fR \fISITE\fR]
@@ -76,6 +77,8 @@ sandbox.
 .PP
 Grid jobs currently require a stable Key4hep release from
 .BR /cvmfs/sw.hsf.org/key4hep .
+When using FCCAnalyses from the Key4hep stack, source the optimised release without
+.BR \-d .
 
 The submission helper is started in an isolated DIRAC client environment.
 It reuses a valid DIRAC proxy or creates one for the configured DIRAC group.
@@ -194,9 +197,7 @@ Grid submission currently uses one CPU and one ROOT thread per job.
 Negative values or values greater than one are accepted with a warning and
 reduced to one. Zero is rejected.
 The command line overrides
-.BR Analysis.n_threads ;
-the default is one CPU if neither is specified.
-Missing or invalid grid allocation information remains an error.
+.BR Analysis.n_threads .
 .TP
 \fB\-\-stride\fR \fISTRIDE\fR
 Set the event stride used by every worker.
@@ -215,8 +216,10 @@ uses the user's catalogue root.
 DIRAC chooses the storage element unless
 .B \-\-output\-se
 is supplied.
-Before submitting a job, the backend checks for its planned output LFN and
-removes an existing file to prevent a registration collision.
+Before submission, the backend checks planned output LFNs and asks for
+confirmation before removing existing files. The
+.B \-\-force
+option skips this confirmation.
 
 .SH GRID EXAMPLES
 Submit analysis-defined EOS/XRootD samples to the grid:
