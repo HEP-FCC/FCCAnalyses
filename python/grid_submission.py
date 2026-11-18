@@ -485,7 +485,12 @@ def submit_grid_submission(
                 size_bytes=archive.size_bytes,
             )
         else:
-            key4hep_setup = os.environ['KEY4HEP_STACK']
+            key4hep_setup = os.environ.get('KEY4HEP_STACK')
+            if not key4hep_setup:
+                raise GridSubmissionError(
+                    'KEY4HEP_STACK is unset. Source the intended Key4hep stack '
+                    'before submitting to the grid.'
+                )
 
         request = create_grid_submission_request(
             args,
