@@ -28,31 +28,75 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>fccanalysis submit</b> [<b>-h</b> | <b>--help</b>] [<b>--w</b>
-    <i>SYSTEM</i>] <b>analysis-script</b> -- [<i>ANALYSIS ARGUMENTS</i>]</p>
+<p class="Pp"><b>fccanalysis submit ht-condor</b> [<b>-h</b> | <b>--help</b>]
+    <i>analysis-script</i> <b>--</b> [<i>ANALYSIS ARGUMENTS</i>]</p>
+<p class="Pp"><b>fccanalysis submit grid</b> [<b>-h</b> | <b>--help</b>]
+    [<b>--lfn-input</b> <i>LFN_LIST</i>] [<b>-o</b> <i>OUTPUT_FILE</i>]
+    [<b>--output-dir</b> <i>OUTPUT_DIR</i>] [<b>--output-se</b>
+    <i>STORAGE_ELEMENT</i>] [<b>--force</b>] [<b>--files-per-job</b>
+    <i>COUNT</i> | <b>--n-chunks</b> <i>COUNT</i>] [<b>--sample-name</b>
+    <i>NAME</i>] [<b>--site</b> <i>SITE</i>] [<b>--mode</b>
+    {<b>wms</b>,<b>local</b>}] [<b>--ship-local-build</b>]
+    [<b>--output-format</b> {<b>ttree</b>,<b>rntuple</b>}] [<b>-j</b>
+    <i>NCPUS</i> | <b>--ncpus</b> <i>NCPUS</i> | <b>--n-threads</b>
+    <i>NTHREADS</i>] [<b>--stride</b> <i>STRIDE</i>] <i>analysis-script</i>
+    [<b>--</b> <i>ANALYSIS ARGUMENTS</i>]</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp"><b>fccanalysis-submit</b> will submit analysis provided in the
-    analysis script to the distributed system of choice. Currently only CERN's
-    HTCondor is supported.</p>
+<p class="Pp"><b>fccanalysis submit</b> submits the analysis defined by
+    <i>analysis-script</i> to the selected backend. The supported backends are
+    CERN HTCondor and the DIRAC-managed grid. Slurm is recognized but is not yet
+    implemented.</p>
+<p class="Pp">The former <b>fccanalysis submit analysis.py --where BACKEND</b>
+    syntax is no longer supported. Specify the backend immediately after
+    <b>submit</b>, for example <b>fccanalysis submit ht-condor analysis.py</b>
+    or <b>fccanalysis submit grid analysis.py [grid options]</b>.</p>
+<p class="Pp"></p>
 <section class="Ss">
 <h2 class="Ss" id="HTCondor"><a class="permalink" href="#HTCondor">HTCondor</a></h2>
 <p class="Pp">The mechanism of submission of the jobs to the HTCondor depends on
     the filesystem which hosts the code of the FCCAnalyses. If the code is
     hosted on the AFS the jobs are submitted using shared filesystem mechanism,
-    otherwise spool mechanism is used.</p>
+    otherwise spool mechanism is used. Custom analysis arguments must follow the
+    <b>--</b> separator.</p>
 <p class="Pp">Here is an overview where the output of the jobs can be saved
-    depending on where the FCCAnalyses code is hosted:
-  <br/>
-   | Hosted on \ Output to | AFS | EOS |
-  <br/>
-   | --------------------- | --- | --- |
-  <br/>
-   | AFS | x | x |
-  <br/>
-   | EOS | 0 | x |</p>
+    depending on where the FCCAnalyses code is hosted:</p>
+<pre>
+<br/>
+  | Hosted on \ Output to | AFS | EOS |
+<br/>
+  | --------------------- | --- | --- |
+<br/>
+  |                   AFS |  x  |  x  |
+<br/>
+  |                   EOS |  0  |  x  |</pre>
+<p class="Pp"></p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="DIRAC_grid"><a class="permalink" href="#DIRAC_grid">DIRAC
+  grid</a></h2>
+<p class="Pp">The grid backend first constructs the modern <b>Analysis</b>
+    object from the analysis script, resolves and validates all selected inputs,
+    and creates a deterministic plan of independent jobs. Each job receives the
+    analysis script, its own generated input-file list, and any optional
+    analysis helpers or local FCCAnalyses build through its input sandbox.</p>
+<p class="Pp">Grid jobs currently require a stable Key4hep release from
+    <b>/cvmfs/sw.hsf.org/key4hep</b>. When using FCCAnalyses from the Key4hep
+    stack, source the optimised release without <b>-d</b>.</p>
+<p class="Pp">The submission helper is started in an isolated DIRAC client
+    environment. It reuses a valid DIRAC proxy or creates one for the configured
+    DIRAC group. In <b>wms</b> mode DIRAC sends the jobs to grid worker nodes;
+    in <b>local</b> mode DIRAC executes them on the submission machine for
+    testing. Before submission, the helper lists existing output files that
+    would be deleted and asks for confirmation. Declining cancels without
+    submitting jobs or deleting files. Each confirmed existing output is deleted
+    immediately before its replacement job is submitted. Deleted files are not
+    restored if submission or execution fails. Cancellation, an empty job plan,
+    or a submission failure produces a nonzero exit status. On partial failure,
+    submitted job IDs and the number of jobs not attempted are reported; review
+    them before retrying.</p>
 <p class="Pp"></p>
 </section>
 </section>
@@ -63,10 +107,6 @@
   <dd>Path to the analysis script.</dd>
   <dt id="h"><a class="permalink" href="#h"><b>-h</b>, <b>--help</b></a></dt>
   <dd>Prints short help message and exits.</dd>
-  <dt id="w"><a class="permalink" href="#w"><b>-w</b> <i>SYSTEM</i>,
-    <b>--where</b> <i>SYSTEM</i></a></dt>
-  <dd>Where to submit the analysis. Currently, only &quot;ht-condor&quot;
-      supported.</dd>
   <dt id="ANALYSIS"><a class="permalink" href="#ANALYSIS"><i>ANALYSIS
     ARGUMENTS</i></a></dt>
   <dd>Command line arguments which will not be parsed by the framework and will
@@ -76,9 +116,148 @@
 </dl>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="GRID_INPUT_MODES"><a class="permalink" href="#GRID_INPUT_MODES">GRID
+  INPUT MODES</a></h1>
+<section class="Ss">
+<h2 class="Ss" id="XRootD_input"><a class="permalink" href="#XRootD_input">XRootD
+  input</a></h2>
+<p class="Pp">This is the default grid input mode. The backend reads
+    <b>Analysis.samples</b> and the global or per-sample input directories,
+    lists their immediate ROOT files using XRootD, applies any sample fraction,
+    and divides the resulting file URLs into jobs. Workers stream these files
+    directly over XRootD. Campaign discovery is not supported for grid
+    submission.</p>
+<p class="Pp"></p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="DIRAC_LFN_input"><a class="permalink" href="#DIRAC_LFN_input">DIRAC
+  LFN input</a></h2>
+<p class="Pp">Supplying <b>--lfn-input</b> selects LFN mode. The named text file
+    must contain one absolute DIRAC logical file name per non-empty line. DIRAC
+    stages each planned job's assigned input data into the worker directory, and
+    the generated per-job input-file list refers to the staged filenames. Unless
+    explicit grouping is requested, one LFN is assigned to each job.</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="GRID_OPTIONS"><a class="permalink" href="#GRID_OPTIONS">GRID
+  OPTIONS</a></h1>
+<dl class="Bl-tag">
+  <dt id="lfn"><a class="permalink" href="#lfn"><b>--lfn-input</b>
+    <i>LFN_LIST</i></a></dt>
+  <dd>Read input LFNs from a text file instead of resolving XRootD inputs from
+      the analysis samples.</dd>
+  <dt id="o"><a class="permalink" href="#o"><b>-o</b> <i>OUTPUT_FILE</i>,
+    <b>--output</b> <i>OUTPUT_FILE</i></a></dt>
+  <dd>Set the base output ROOT filename. Each planned output is given a
+      deterministic sample and job-number suffix. The default is
+      <b>output.root</b>.</dd>
+  <dt id="output"><a class="permalink" href="#output"><b>--output-dir</b>
+    <i>OUTPUT_DIR</i></a></dt>
+  <dd>Set the output directory relative to the user's DIRAC catalogue root. If
+      omitted, each output is registered directly in that root.</dd>
+  <dt id="output~2"><a class="permalink" href="#output~2"><b>--output-se</b>
+    <i>STORAGE_ELEMENT</i></a></dt>
+  <dd>Override the storage element selected by DIRAC for output data.</dd>
+  <dt id="force"><a class="permalink" href="#force"><b>--force</b></a></dt>
+  <dd>Automatically confirm grid submission, including deletion of existing
+      output. Deleted files are not restored if submission or execution fails.
+      Use with caution. Authentication prompts are not automatically answered;
+      initialize a valid DIRAC proxy for unattended use.</dd>
+  <dt id="files"><a class="permalink" href="#files"><b>--files-per-job</b>
+    <i>COUNT</i></a></dt>
+  <dd>Derive the number of jobs from the number of input files and the requested
+      maximum number of files per job. For XRootD input this overrides
+      sample-level chunk counts. This option is mutually exclusive with
+      <b>--n-chunks</b>.</dd>
+  <dt id="n"><a class="permalink" href="#n"><b>--n-chunks</b>
+    <i>COUNT</i></a></dt>
+  <dd>Request this number of jobs/output chunks for each XRootD sample or across
+      the complete LFN input list. For XRootD input this overrides sample-level
+      chunk counts. The actual number of jobs cannot exceed the number of input
+      files. This option is mutually exclusive with <b>--files-per-job</b>.</dd>
+  <dt id="sample"><a class="permalink" href="#sample"><b>--sample-name</b>
+    <i>NAME</i></a></dt>
+  <dd>Set the optional sample name passed to workers in LFN input mode.</dd>
+  <dt id="site"><a class="permalink" href="#site"><b>--site</b>
+    <i>SITE</i></a></dt>
+  <dd>Restrict the jobs to the named DIRAC computing site.</dd>
+  <dt id="mode"><a class="permalink" href="#mode"><b>--mode</b>
+    {<b>wms</b>,<b>local</b>}</a></dt>
+  <dd>Submit through the DIRAC workload management system or execute through
+      DIRAC on the submission machine. The default is <b>wms</b>.</dd>
+  <dt id="ship"><a class="permalink" href="#ship"><b>--ship-local-build</b></a></dt>
+  <dd>Package and ship the active locally built FCCAnalyses installation instead
+      of using FCCAnalyses from the selected Key4hep stack on the worker. The
+      active stack must match the stack used to build the local installation.
+      Workers source the recorded build setup and check their OS family, major
+      version and architecture against that build's platform before starting it.
+      This check does not guarantee compatible CPU instruction sets or system
+      libraries.</dd>
+  <dt id="output~3"><a class="permalink" href="#output~3"><b>--output-format</b>
+    {<b>ttree</b>,<b>rntuple</b>}</a></dt>
+  <dd>Set the ROOT output format used by every worker.</dd>
+  <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>NCPUS</i>,
+    <b>--ncpus</b> <i>NCPUS</i>, <b>--n-threads</b> <i>NTHREADS</i></a></dt>
+  <dd>Grid submission currently uses one CPU and one ROOT thread per job.
+      Negative values or values greater than one are accepted with a warning and
+      reduced to one. Zero is rejected. The command line overrides
+      <b>Analysis.n_threads</b>.</dd>
+  <dt id="stride"><a class="permalink" href="#stride"><b>--stride</b>
+    <i>STRIDE</i></a></dt>
+  <dd>Set the event stride used by every worker. This overrides a sample-level
+      stride.</dd>
+  <dt id="ANALYSIS~2"><a class="permalink" href="#ANALYSIS~2"><b>--</b>
+    <i>ANALYSIS ARGUMENTS</i></a></dt>
+  <dd>Pass all following values as custom arguments to the analysis script on
+      every worker. They are placed after the worker's own command separator and
+      cannot change planned inputs, outputs, or supported worker options.
+    <p class="Pp"></p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="GRID_OUTPUT"><a class="permalink" href="#GRID_OUTPUT">GRID
+  OUTPUT</a></h1>
+<p class="Pp">Each job registers its ROOT output below the optional
+    <i>OUTPUT_DIR</i> in the user's DIRAC catalogue namespace. Without an output
+    directory, DIRAC uses the user's catalogue root. DIRAC chooses the storage
+    element unless <b>--output-se</b> is supplied. Before submission, the
+    backend checks planned output LFNs and asks for confirmation before removing
+    existing files. The <b>--force</b> option skips this confirmation.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="GRID_EXAMPLES"><a class="permalink" href="#GRID_EXAMPLES">GRID
+  EXAMPLES</a></h1>
+<p class="Pp">Submit analysis-defined EOS/XRootD samples to the grid:</p>
+<pre>fccanalysis submit grid analysis.py \
+<br/>
+    --output result.root --output-dir analyses/example</pre>
+<p class="Pp">Create ten jobs per XRootD sample and restrict them to one DIRAC
+    site:</p>
+<pre>fccanalysis submit grid analysis.py \
+<br/>
+    --output result.root --output-dir analyses/example \
+<br/>
+    --n-chunks 10 --site LCG.Example.org</pre>
+<p class="Pp">Submit a list of DIRAC LFNs in groups of five files:</p>
+<pre>fccanalysis submit grid analysis.py --lfn-input inputs.txt \
+<br/>
+    --output result.root --output-dir analyses/example \
+<br/>
+    --files-per-job 5</pre>
+<p class="Pp">Pass an event stride to every worker invocation:</p>
+<pre>fccanalysis submit grid analysis.py \
+<br/>
+    --output result.root --output-dir analyses/example --stride 10</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<p class="Pp">fccanalysis(1), fccanalysis-script(7)</p>
+<p class="Pp">fccanalysis(1), fccanalysis-run(1), fccanalysis-script(7)</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -120,7 +299,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">14 May 2025</td>
+    <td class="foot-date">14 Sep 2026</td>
     <td class="foot-os">0.13.1</td>
   </tr>
 </table>

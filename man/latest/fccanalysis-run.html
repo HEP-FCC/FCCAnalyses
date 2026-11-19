@@ -69,7 +69,8 @@
     ...]</a></dt>
   <dd>Directly specify input ROOT files for the analysis. Takes precedence over
       the files provided in a file list or the files determined from the
-      <b>process_list</b> of the analysis.</dd>
+      <b>samples</b> attribute (or its deprecated <b>process_list</b> alias) of
+      the analysis.</dd>
   <dt id="files"><a class="permalink" href="#files"><b>--files-list</b>
     <i>INPUT_FILE</i> [<i>INPUT_FILE</i> ...]</a></dt>
   <dd>[DEPRECATED] Directly specify input ROOT files for the analysis.</dd>
@@ -77,8 +78,9 @@
     <i>LIST_FILE</i></a></dt>
   <dd>Specify file containing list of input ROOT files to be used for the
       analysis. Takes precedence over the files determined from the
-      <b>process_list</b> of the analysis. Each input ROOT file needs to be on a
-      separate line. Lines starting with &quot;#&quot; are ignored.</dd>
+      <b>samples</b> attribute (or its deprecated <b>process_list</b> alias) of
+      the analysis. Each input ROOT file needs to be on a separate line. Lines
+      starting with &quot;#&quot; are ignored.</dd>
   <dt id="output"><a class="permalink" href="#output"><b>--output</b>
     <i>OUTPUT</i></a></dt>
   <dd>Specify output file name, otherwise dataset name used.</dd>
@@ -197,7 +199,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">12 June 2025</td>
+    <td class="foot-date">14 Sep 2026</td>
     <td class="foot-os">0.13.1</td>
   </tr>
 </table>

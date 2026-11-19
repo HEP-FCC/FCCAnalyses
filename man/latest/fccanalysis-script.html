@@ -164,9 +164,10 @@
     can/should add the following attributes to the <i>Analysis</i> class in
     order to control the behavior of the analysis.</p>
 <dl class="Bl-tag">
-  <dt id="process_list"><a class="permalink" href="#process_list"><b>process_list</b>
+  <dt id="samples"><a class="permalink" href="#samples"><b>samples</b>
     (mandatory)</a></dt>
-  <dd>Dictionary of process samples to be run over. Each process can have
+  <dd>Dictionary of process samples to be run over. <b>Analysis.process_list</b>
+      is deprecated; use <b>Analysis.samples</b> instead. Each sample can have
       several parameters:
     <br/>
     <i>fraction</i>
@@ -176,26 +177,30 @@
     <br/>
     Default value: 1 (full process sample)
     <br/>
-    <i>input_dir</i>
+    <i>input-dir</i>
     <br/>
     Specifies the location of the process different from the globally set one.
       This overrides both prod_tag and input_dir attributes of the analysis
-      script.
+      script. For grid XRootD submission, provide an EOS path or XRootD
+      directory URL. The deprecated spelling <i>input_dir</i> remains accepted
+      as a compatibility alias.
     <br/>
     Default value: None
     <br/>
-    <i>output</i>
+    <i>output-stem</i>
     <br/>
     Specifies the stem for the output file(s). The stem will be used to create
       output directory if there is more than one chunk or as a filename if there
-      is only one.
+      is only one. The deprecated spelling <i>output</i> remains accepted as a
+      compatibility alias.
     <br/>
-    Default value: output.root
+    Default value: the sample name
     <br/>
     <i>chunks</i>
     <br/>
     The analysis can be split into several output chunks (useful on distributed
-      systems).
+      systems). For grid submission this value can be overridden on the command
+      line with either <b>--n-chunks</b> or <b>--files-per-job</b>.
     <br/>
     Default value: 1
     <br/>
@@ -207,17 +212,19 @@
     <br/>
     <i>n-events-max</i>
     <br/>
-    Limits the maximum number of events to process for the sample.
+    Limits the maximum number of events to process for the sample. Grid
+      submission rejects this value because event limits do not compose reliably
+      with file-based jobs.
     <br/>
     Default value: None (no limit)</dd>
   <dt id="prod_tag"><a class="permalink" href="#prod_tag"><b>prod_tag</b>
     (mandatory)</a></dt>
-  <dd>Provides information where to find input files. There are several way how
+  <dd>Provides information where to find input files. There are several ways how
       to find the information, one of them uses YAML file which is being
       searched for in the sub-folders of $FCCDICTSDIR.</dd>
   <dt id="output_dir"><a class="permalink" href="#output_dir"><b>output_dir</b>
     (mandatory)</a></dt>
-  <dd>User can specify the directory for the output files.</dd>
+  <dd>Specifies the directory for the output files.</dd>
   <dt id="output_format"><a class="permalink" href="#output_format"><b>output_format</b>
     (optional)</a></dt>
   <dd>Specifies the output ROOT file format. Accepted values are <b>ttree</b>
@@ -225,6 +232,10 @@
     <br/>
     Default: follow the format of the events TTree or RNTuple in the first input
       file. An explicit command-line option overrides this setting.</dd>
+  <dt id="input_dir"><a class="permalink" href="#input_dir"><b>input_dir</b></a></dt>
+  <dd>Global directory containing sample subdirectories. For grid XRootD
+      submission this must be an EOS path or XRootD directory URL; a
+      sample-level <i>input-dir</i> overrides this value.</dd>
   <dt id="analysis_name"><a class="permalink" href="#analysis_name"><b>analysis_name</b>
     (optional)</a></dt>
   <dd>Optional name for the analysis
@@ -236,9 +247,11 @@
       threads available on the machine specify -1.
     <br/>
     Default value: 1</dd>
-  <dt id="inlude_paths"><a class="permalink" href="#inlude_paths"><b>inlude_paths</b>
+  <dt id="include_paths"><a class="permalink" href="#include_paths"><b>include_paths</b>
     (optional)</a></dt>
-  <dd>Specify additional include header files to be JIT compiled.
+  <dd>Specify additional local header files to be JIT compiled. During grid
+      submission, relative paths are resolved below the analysis-script
+      directory and shipped to every worker through the input sandbox.
     <br/>
     Default value: None</dd>
   <dt id="batch_queue"><a class="permalink" href="#batch_queue"><b>batch_queue</b>
@@ -313,7 +326,7 @@
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<p class="Pp">fccanalysis(1), fccanalysis-run(1)</p>
+<p class="Pp">fccanalysis(1), fccanalysis-run(1), fccanalysis-submit(1)</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -355,7 +368,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">12 Nov 2025</td>
+    <td class="foot-date">14 Sep 2026</td>
     <td class="foot-os">0.13.1</td>
   </tr>
 </table>
