@@ -46,8 +46,9 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>> get_SV
     std::vector<int> i_jetconsti = jet_consti[j];
     for (int ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
-      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
-	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
+      if (std::find(i_jetconsti.begin(), i_jetconsti.end(),
+                    reco_ind_tracks[ctr]) != i_jetconsti.end()) {
+        np_tracks.push_back(tracks[ctr]); // separate tracks by jet
       }
     }
     
@@ -693,15 +694,19 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
     std::vector<int> i_jetconsti = jet_consti[j];
     for (int ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
-      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
-	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
+      if (std::find(i_jetconsti.begin(), i_jetconsti.end(),
+                    reco_ind_tracks[ctr]) != i_jetconsti.end()) {
+        np_tracks.push_back(tracks[ctr]); // separate tracks by jet
       }
     }
     
     if(debug_me) std::cout<<"primary tracks removed; there are "<<np_tracks.size()<<" non-primary tracks in jet#"<<j+1<<std::endl;
 
     int nTr = np_tracks.size();
-    if(nTr<2) continue;    
+    if (nTr < 2) {
+      np_tracks.clear();
+      continue;
+    }
     ROOT::VecOps::RVec<bool> isInV0(nTr, false);
     //
     for(unsigned int i=0; i<nTr-1; i++) {
