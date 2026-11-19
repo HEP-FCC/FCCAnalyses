@@ -11,11 +11,20 @@ import argparse
 from typing import Any, Optional, Union
 
 import ROOT  # type: ignore
-from anascript import validate_n_threads, validate_analysis_class, validate_sample_list
-from sample import get_file_list, get_subfile_list, get_chunk_list
-from sample import get_files_in_dir, get_files_in_yaml
+from anascript import get_sample_input_source, validate_n_threads
+from anascript import validate_analysis_class, validate_sample_list
+from input_resolver import (
+    InputResolutionError,
+    ensure_unique_inputs,
+    join_input_path,
+    normalize_input_path,
+    read_input_file_list,
+    resolve_directory,
+    resolve_inputs,
+)
+from sample import get_subfile_list, get_chunk_list, get_files_in_yaml
 from sample import get_file_quantities
-from sample import apply_filepath_rewrites
+from sample import convert_eos_path_to_xrootd
 from utils import save_benchmark
 from job import Job
 
@@ -23,6 +32,16 @@ from job import Job
 ROOT.gROOT.SetBatch(True)
 
 LOGGER = logging.getLogger('FCCAnalyses.run_analysis')
+
+
+def _require_output_dir(config: dict[str, Any]) -> None:
+    directory = config['output-dir']
+    if isinstance(directory, os.PathLike):
+        directory = os.fspath(directory)
+    if not isinstance(directory, str) or not directory.strip():
+        LOGGER.error('An output directory is required. Set Analysis.output_dir '
+                     'or pass --output-dir.\nAborting...')
+        sys.exit(3)
 
 
 # _____________________________________________________________________________
@@ -42,46 +61,54 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         file_quantities: Optional[list[dict[str,
                                             Union[int, float, str]]]] = None
 
-        # Check if input directory is provided
-        if 'input-dir' in sample_dict:
-            if isinstance(sample_dict['input-dir'], str):
-                LOGGER.info('Will inspect the sample input directory for the '
-                            'sample information.')
-                sample_file_list = get_files_in_dir(sample_dict['input-dir'])
-
-        # Check if file list is provided
-        if 'input-file-list' in sample_dict:
-            if isinstance(sample_dict['input-file-list'], str):
+        input_source, input_value = get_sample_input_source(
+            sample_dict, config['input-dir'], config['campaign']
+        )
+        try:
+            if input_source == 'input-files':
+                LOGGER.info('Will inspect directly provided input files for '
+                            'the sample information.')
+                sample_file_list = resolve_inputs(
+                    input_value,
+                    use_xrootd=config['use-xrootd'],
+                )
+            elif input_source == 'input-file-list':
                 LOGGER.info('Will inspect the sample input file list for the '
                             'sample information.')
-                sample_file_list = \
-                    get_file_list(sample_dict['input-file-list'])
-
-        # Check if files are provided
-        if 'input-files' in sample_dict:
-            if isinstance(sample_dict['input-files'], list):
-                if all(isinstance(x, str) for x in sample_dict['input-files']):
-                    LOGGER.info('Will inspect directly provided input files '
-                                'for the sample information.')
-                    sample_file_list = sample_dict['input-files']
-
-        # Using globally set input directory or campaign / production tag
-        if sample_file_list is None:
-            if config['input-dir'] is not None:
+                sample_file_list = read_input_file_list(
+                    input_value,
+                    use_xrootd=config['use-xrootd'],
+                )
+            elif input_source == 'sample-input-dir':
+                LOGGER.info('Will inspect the sample input directory for the '
+                            'sample information.')
+                sample_file_list = resolve_directory(
+                    input_value,
+                    use_xrootd=config['use-xrootd'],
+                )
+            elif input_source == 'global-input-dir':
                 LOGGER.info('Will inspect the global input directory for the '
                             'sample information.')
-                sample_file_list = get_files_in_dir(
-                    os.path.join(config['input-dir'], sample_name)
+                input_dir = join_input_path(
+                    input_value, sample_name,
+                    use_xrootd=config['use-xrootd'],
                 )
-            elif config['campaign'] is not None:
+                sample_file_list = resolve_directory(
+                    input_dir,
+                    use_xrootd=config['use-xrootd'],
+                )
+            elif input_source == 'campaign':
                 LOGGER.info('Found the sample information in the campaign: %s',
-                            config['campaign'])
+                            input_value)
                 sample_file_list, file_quantities = get_files_in_yaml(
                     sample_name,
-                    config['campaign']
+                    input_value
                 )
             else:
                 sample_file_list = None
+        except InputResolutionError as error:
+            LOGGER.error('Sample "%s": %s\nAborting...', sample_name, error)
+            sys.exit(3)
 
         if sample_file_list is None:
             LOGGER.error('Could not determine the input file list for the '
@@ -96,15 +123,25 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         info_msg += '\n - total number of files in the sample:  ' \
                     f'{len(sample_file_list):,}'
 
-        # Apply file-path rewrites
-        if config['apply-filepath-rewrites']:
-            sample_file_list = [apply_filepath_rewrites(fpath) for fpath in
+        # Campaign files do not pass through the input resolver.
+        if input_source == 'campaign' and config['use-xrootd']:
+            sample_file_list = [convert_eos_path_to_xrootd(fpath) for fpath in
                                 sample_file_list]
             if file_quantities is not None:
                 file_quantities = [
-                    fqs | {'path': apply_filepath_rewrites(fqs['path'])}
+                    fqs | {'path': convert_eos_path_to_xrootd(fqs['path'])}
                     for fqs in file_quantities
                 ]
+
+        if input_source == 'campaign':
+            try:
+                ensure_unique_inputs([
+                    normalize_input_path(path, use_xrootd=config['use-xrootd'])
+                    for path in sample_file_list
+                ])
+            except InputResolutionError as error:
+                LOGGER.error('Sample "%s": %s\nAborting...', sample_name, error)
+                sys.exit(3)
 
         # Reduce the sample by a required fraction
         if 'fraction' in sample_dict:
@@ -143,7 +180,7 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         # Output directory
         output_stem = sample_name
         if 'output' in sample_dict:
-            LOGGER.warning('[DEPRECIATED] please use \'output-stem\' instead '
+            LOGGER.warning('[DEPRECATED] please use \'output-stem\' instead '
                            'of \'output\' to specify different sample output '
                            'directory.')
             output_stem = sample_dict['output']
@@ -164,6 +201,9 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                              'integer!\nAborting...')
                 sys.exit(3)
 
+        if config['n-chunks'] is not None:
+            n_chunks = config['n-chunks']
+
         if n_chunks > len(sample_file_list):
             LOGGER.warning('Can\'t split input sample of %i files into '
                            '%i output chunks!\nAdjusting the number of output '
@@ -178,19 +218,24 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                     f'            {len(chunks_list):,}'
 
         # Maximum number of events
-        n_events_max = None
-        if sample_dict['n-events-max'] is not None:
+        n_events_max = config['cli-nevents']
+        if n_events_max is None:
+            n_events_max = sample_dict['n-events-max']
+        if n_events_max is None:
+            n_events_max = config['n-events-max']
+        if n_events_max is not None:
             if n_chunks > 1:
                 LOGGER.warning('Specifying maximum number of events is '
                                'not supported in case of multiple output '
                                'chunks.\nIgnoring the setting...')
+                n_events_max = None
             else:
-                n_events_max = sample_dict['n-events-max']
                 info_msg += '\n - Maximum number of events:  ' \
                             f'           {n_events_max}'
 
         # Stride through the sample
-        stride = sample_dict['stride']
+        stride = (config['stride'] if config['stride'] is not None
+                  else sample_dict['stride'])
         if stride is not None:
             info_msg += '\n - Number of events to stride:  ' \
                         f'         {stride}'
@@ -224,10 +269,6 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
     if config['test-file'] is not None:
         LOGGER.info('Generating test job...')
 
-        if config['samples'] is not None:
-            LOGGER.warning('Samples/processes defined in your analysis script '
-                           'will be ignored...')
-
         job: dict[str, Any] = {}
         job['name'] = 'test'
         job['input-file-list'] = [config['test-file']]
@@ -243,19 +284,10 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
     if config['input-file-list'] is not None:
         LOGGER.info('Generating jobs for independent sample...')
 
-        if config['samples'] is not None:
-            LOGGER.warning('Samples/processes defined in your analysis script '
-                           'will be ignored...')
-
-        # Apply file-path rewrites
-        if config['apply-filepath-rewrites']:
-            input_file_list = [apply_filepath_rewrites(fpath) for fpath in
-                               config['input-file-list']]
-        else:
-            input_file_list = config['input-file-list']
+        input_file_list = config['input-file-list']
 
         # Only one output chunk
-        if config['n-chunks'] is None:
+        if config['n-chunks'] in (None, 1):
             job = {}
             if config['sample-name'] is not None:
                 sample_name = config['sample-name']
@@ -267,6 +299,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
             if config['output-file'] is not None:
                 job['output-file'] = config['output-file']
             else:
+                _require_output_dir(config)
                 job['output-file'] = os.path.join(
                     config['output-dir'],
                     sample_name,
@@ -279,6 +312,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
 
         # Multiple output chunks
         n_chunks = config['n-chunks']
+        _require_output_dir(config)
 
         if n_chunks > len(input_file_list):
             LOGGER.error('Can\'t split input sample of %i files into '
@@ -326,6 +360,13 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
         LOGGER.info('Could not find sample definitions to run!\nAborting...')
         sys.exit(3)
 
+    if config['sample-name'] is not None:
+        LOGGER.warning('--sample-name has no effect for script-defined samples.')
+    if config['output-file'] is not None:
+        LOGGER.warning('The explicit output file has no effect for '
+                       'script-defined samples; use output-stem instead.')
+    _require_output_dir(config)
+
     if len(config['samples']) == 1:
         LOGGER.info('Found one sample defined in the analysis.')
     else:
@@ -351,10 +392,6 @@ def merge_config(args: argparse.Namespace,
         sys.exit(3)
 
     # Deprecations
-    if args.files_list is not None:
-        LOGGER.error('--files-list CLI argument is no longer supported, use '
-                     '--i/--input instead!\nAborting...')
-        sys.exit(3)
     if hasattr(analysis_class, 'process_list'):
         LOGGER.warning('[DEPRECATED] Please use "samples" instead of '
                        '"process_list"!')
@@ -399,12 +436,26 @@ def merge_config(args: argparse.Namespace,
         os.path.abspath(args.anascript_path)
     )
 
+    # Resolve the rewrite policy once for discovery and processing.
+    config['use-xrootd'] = args.use_xrootd is not False
+
     # Input file list
     config['input-file-list'] = None
-    if args.input_file_list is not None:
-        config['input-file-list'] = get_file_list(args.input_file_list)
-    if args.input is not None:
-        config['input-file-list'] = args.input
+    if args.test is None:
+        try:
+            if args.input_file_list is not None:
+                config['input-file-list'] = read_input_file_list(
+                    args.input_file_list,
+                    use_xrootd=config['use-xrootd'],
+                )
+            elif args.input is not None:
+                config['input-file-list'] = resolve_inputs(
+                    args.input,
+                    use_xrootd=config['use-xrootd'],
+                )
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
 
     # Check for sample name
     config['sample-name'] = None
@@ -413,10 +464,11 @@ def merge_config(args: argparse.Namespace,
 
     # Check for sample list
     config['samples'] = None
-    if hasattr(analysis_class, 'process_list'):
-        config['samples'] = validate_sample_list(analysis_class.process_list)
-    if hasattr(analysis_class, 'samples'):
-        config['samples'] = validate_sample_list(analysis_class.samples)
+    if args.test is None:
+        if hasattr(analysis_class, 'process_list'):
+            config['samples'] = validate_sample_list(analysis_class.process_list)
+        if hasattr(analysis_class, 'samples'):
+            config['samples'] = validate_sample_list(analysis_class.samples)
 
     if config['samples'] == {}:
         LOGGER.warning('Provided samples dictionary contains no elements!')
@@ -436,6 +488,8 @@ def merge_config(args: argparse.Namespace,
 
     # Check whether a test is run
     config['test-file'] = None
+    if args.test is None and args.test_file is not None:
+        LOGGER.warning('--test-file has no effect without --test.')
     if args.test is not None:
         if hasattr(analysis_class, 'test_file'):
             config['test-file'] = analysis_class.test_file
@@ -445,6 +499,15 @@ def merge_config(args: argparse.Namespace,
         if config['test-file'] is None:
             LOGGER.error('Could not find a test file!\nAborting...')
             sys.exit(3)
+        if isinstance(config['test-file'], str):
+            try:
+                config['test-file'] = normalize_input_path(
+                    config['test-file'],
+                    use_xrootd=config['use-xrootd'],
+                )
+            except InputResolutionError as error:
+                LOGGER.error('%s\nAborting...', error)
+                sys.exit(3)
 
     # Check include header files
     config['include-paths'] = None
@@ -485,9 +548,23 @@ def merge_config(args: argparse.Namespace,
         config['n-chunks'] = args.n_chunks
 
     # Check number of events to be run over
-    config['n-events-max'] = None
-    if args.nevents is not None:
-        config['n-events-max'] = args.nevents
+    script_nevents = getattr(analysis_class, 'nevents', None)
+    old_nevents = getattr(analysis_class, 'n_events_max', None)
+    if old_nevents is not None:
+        LOGGER.warning('[DEPRECATED] Use Analysis.nevents instead of '
+                       'Analysis.n_events_max.')
+        if script_nevents is not None:
+            LOGGER.error('Specify only one of Analysis.nevents and '
+                         'Analysis.n_events_max.\nAborting...')
+            sys.exit(3)
+        script_nevents = old_nevents
+    for value in (script_nevents, args.nevents):
+        if value is not None and (type(value) is not int or value < 0):
+            LOGGER.error('The event limit must be a non-negative integer.\nAborting...')
+            sys.exit(3)
+    config['cli-nevents'] = args.nevents
+    config['n-events-max'] = (args.nevents if args.nevents is not None
+                              else script_nevents)
 
     # Check if stride through the sample
     config['stride'] = None
@@ -495,11 +572,9 @@ def merge_config(args: argparse.Namespace,
         config['stride'] = args.stride
 
     # Check whether to use PODIO DataSource to load the events
-    config['use-data-source'] = False
-    if hasattr(analysis_class, 'use_data_source'):
-        config['use-data-source'] = True
-    if args.use_data_source:
-        config['use-data-source'] = True
+    config['use-data-source'] = (
+        getattr(analysis_class, 'use_data_source', False) or args.use_data_source
+    )
 
     # Check if the progress-bar is enabled
     config['enable-progress-bar'] = True
@@ -526,11 +601,6 @@ def merge_config(args: argparse.Namespace,
     config['readout-name'] = None
     if hasattr(analysis_class, 'readout_name'):
         config['readout-name'] = analysis_class.readout_name
-
-    # Check whether to apply file-path rewrites
-    config['apply-filepath-rewrites'] = True
-    if args.apply_filepath_rewrites is not None:
-        config['apply-filepath-rewrites'] = args.apply_filepath_rewrites
 
     # Check whether to save benchmark results
     config['bench'] = False
@@ -612,6 +682,21 @@ def run_fccanalysis(args, anascript_module) -> None:
     # Also, execute the "constructor" of the analysis class
     LOGGER.info('Initializing analysis class...')
     analysis_class = anascript_module.Analysis(vars(args))
+    cli_input_override = args.input is not None or args.input_file_list is not None
+    if args.test is not None or not cli_input_override:
+        if getattr(analysis_class, 'input_lfn_list', None) is not None:
+            LOGGER.error('Analysis.input_lfn_list is supported only by grid '
+                         'submission.\nAborting...')
+            sys.exit(3)
+        for attribute in ('samples', 'process_list'):
+            samples = getattr(analysis_class, attribute, None)
+            if isinstance(samples, dict) and any(
+                isinstance(sample, dict) and sample.get('input-lfn-list') is not None
+                for sample in samples.values()
+            ):
+                LOGGER.error('Sample input-lfn-list is supported only by grid '
+                             'submission.\nAborting...')
+                sys.exit(3)
     try:
         config |= validate_analysis_class(analysis_class)
     except ValueError as error:
@@ -621,7 +706,6 @@ def run_fccanalysis(args, anascript_module) -> None:
     LOGGER.info('Setting run parameters...')
     # Merge configuration from command line arguments and analysis class
     config |= merge_config(args, config['analysis-class'])
-
     # Set number of threads, load header files, ...
     global_setup(config)
 

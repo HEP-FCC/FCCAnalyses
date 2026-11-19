@@ -162,6 +162,7 @@ install_dirac_stubs()
 from dirac_submit_helper import (
     _create_job,
     _output_lfn,
+    _print_plan,
     _remove_existing_output,
     _user_lfn_root,
     _write_input_file_list,
@@ -178,11 +179,26 @@ from submission import (
 class DiracSubmitHelperTest(unittest.TestCase):
     '''Exercise the only translation boundary that depends on ILCDIRAC.'''
 
+    def test_lfn_plan_reports_sample_chunks(self) -> None:
+        request = SubmissionRequest(
+            analysis_script='/work/analysis.py', input_mode='dirac-lfn',
+            samples=(ResolvedSample(None, None, ('/fcc/a.root', '/fcc/b.root'), 1, None),),
+            files_per_job=None, run_arguments=(), output_file='result.root',
+            output_path=None, output_se=None, key4hep_setup='/work/setup.sh',
+            job_name='FCCAnalysis', job_group='test', submit_mode='wms',
+            destination_site=None, submission_id='test', user_build_payload=None,
+        )
+        jobs = plan_jobs(request)
+        self.assertEqual(len(jobs), 1)
+        with self.assertLogs('FCCAnalyses.grid_helper', level='INFO') as logs:
+            _print_plan(request, jobs, Path(request.analysis_script), None, ['/fcc/result.root'])
+        self.assertIn('job grouping:    sample chunks', '\n'.join(logs.output))
+
     def test_confirmation_precedes_deletion_and_submission(self) -> None:
         request = SubmissionRequest(
             analysis_script='/work/analysis.py', input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/input.root',), samples=(), files_per_job=1,
-            lfn_sample_name=None, run_arguments=(), output_file='result.root',
+            samples=(ResolvedSample(None, None, ('/fcc/data/input.root',), 1, None),),
+            files_per_job=1, run_arguments=(), output_file='result.root',
             output_path=None, output_se=None, key4hep_setup='/work/setup.sh',
             job_name='FCCAnalysis', job_group='test', submit_mode='wms',
             destination_site=None, submission_id='test', user_build_payload=None,
@@ -252,8 +268,9 @@ class DiracSubmitHelperTest(unittest.TestCase):
     def test_partial_submission_reports_ids_and_unattempted_jobs(self) -> None:
         request = SubmissionRequest(
             analysis_script='/work/analysis.py', input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/a.root', '/fcc/data/b.root', '/fcc/data/c.root'),
-            samples=(), files_per_job=1, lfn_sample_name=None, run_arguments=(),
+            samples=(ResolvedSample(None, None, ('/fcc/data/a.root', '/fcc/data/b.root',
+                                                   '/fcc/data/c.root'), 1, None),),
+            files_per_job=1, run_arguments=(),
             output_file='result.root', output_path=None, output_se=None,
             key4hep_setup='/work/setup.sh', job_name='FCCAnalysis', job_group='test',
             submit_mode='wms', destination_site=None, submission_id='test',
@@ -278,8 +295,9 @@ class DiracSubmitHelperTest(unittest.TestCase):
     def test_failed_submission_does_not_restore_deleted_output(self) -> None:
         request = SubmissionRequest(
             analysis_script='/work/analysis.py', input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/a.root', '/fcc/data/b.root'),
-            samples=(), files_per_job=1, lfn_sample_name=None, run_arguments=(),
+            samples=(ResolvedSample(None, None, ('/fcc/data/a.root', '/fcc/data/b.root'),
+                                    1, None),),
+            files_per_job=1, run_arguments=(),
             output_file='result.root', output_path=None, output_se=None,
             key4hep_setup='/work/setup.sh', job_name='FCCAnalysis', job_group='test',
             submit_mode='wms', destination_site=None, submission_id='test',
@@ -317,10 +335,16 @@ class DiracSubmitHelperTest(unittest.TestCase):
         request = SubmissionRequest(
             analysis_script='/work/analysis.py',
             input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/input.root',),
-            samples=(),
+            samples=(
+                ResolvedSample(
+                    name=None,
+                    output_stem=None,
+                    inputs=('/fcc/data/input.root',),
+                    chunks=1,
+                    stride=None,
+                ),
+            ),
             files_per_job=1,
-            lfn_sample_name=None,
             run_arguments=(),
             output_file='result.root',
             output_path=None,
@@ -402,18 +426,16 @@ class DiracSubmitHelperTest(unittest.TestCase):
         request = SubmissionRequest(
             analysis_script='/work/analysis.py',
             input_mode='xrootd',
-            input_lfns=(),
             samples=(
                 ResolvedSample(
                     name='signal',
                     output_stem='signal',
-                    input_urls=('root://eospublic.cern.ch//eos/experiment/fcc/a.root',),
+                    inputs=('root://eospublic.cern.ch//eos/experiment/fcc/a.root',),
                     chunks=1,
                     stride=4,
                 ),
             ),
             files_per_job=None,
-            lfn_sample_name=None,
             run_arguments=('--analysis-option', 'value'),
             output_file='result.root',
             output_path='analysis/results',
@@ -490,10 +512,16 @@ class DiracSubmitHelperTest(unittest.TestCase):
         request = SubmissionRequest(
             analysis_script='/work/analysis.py',
             input_mode='dirac-lfn',
-            input_lfns=('/fcc/data/input.root',),
-            samples=(),
+            samples=(
+                ResolvedSample(
+                    name=None,
+                    output_stem=None,
+                    inputs=('/fcc/data/input.root',),
+                    chunks=1,
+                    stride=None,
+                ),
+            ),
             files_per_job=1,
-            lfn_sample_name=None,
             run_arguments=(),
             output_file='result.root',
             output_path='analysis/results',

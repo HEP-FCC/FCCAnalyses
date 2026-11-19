@@ -36,11 +36,11 @@ class InputGroup:
 
 @dataclass(frozen=True)
 class ResolvedSample:
-    """One analysis sample resolved to ordered XRootD URLs by the frontend."""
+    """One analysis sample resolved to concrete frontend-validated inputs."""
 
-    name: str
-    output_stem: str
-    input_urls: tuple[str, ...]
+    name: str | None
+    output_stem: str | None
+    inputs: tuple[str, ...]
     chunks: int
     stride: int | None
 
@@ -49,7 +49,7 @@ class ResolvedSample:
         return {
             "name": self.name,
             "output_stem": self.output_stem,
-            "input_urls": list(self.input_urls),
+            "inputs": list(self.inputs),
             "chunks": self.chunks,
             "stride": self.stride,
         }
@@ -60,7 +60,7 @@ class ResolvedSample:
         return cls(
             name=payload["name"],
             output_stem=payload["output_stem"],
-            input_urls=tuple(payload["input_urls"]),
+            inputs=tuple(payload["inputs"]),
             chunks=payload["chunks"],
             stride=payload["stride"],
         )
@@ -109,10 +109,8 @@ class SubmissionRequest:
 
     analysis_script: str
     input_mode: InputMode
-    input_lfns: tuple[str, ...]
     samples: tuple[ResolvedSample, ...]
     files_per_job: int | None
-    lfn_sample_name: str | None
     run_arguments: tuple[str, ...]
     output_file: str
     output_path: str | None
@@ -137,11 +135,9 @@ class SubmissionRequest:
             "analysis_script": self.analysis_script,
             "force": self.force,
             "input_mode": self.input_mode,
-            "input_lfns": list(self.input_lfns),
             "samples": [sample.to_dict() for sample in self.samples],
             "files_per_job": self.files_per_job,
             "n_chunks": self.n_chunks,
-            "lfn_sample_name": self.lfn_sample_name,
             "run_arguments": list(self.run_arguments),
             "worker_stride": self.worker_stride,
             "worker_output_format": self.worker_output_format,
@@ -191,11 +187,11 @@ class SubmissionRequest:
             analysis_script=payload["analysis_script"],
             force=payload.get("force", False),
             input_mode=payload["input_mode"],
-            input_lfns=tuple(payload["input_lfns"]),
-            samples=tuple(ResolvedSample.from_dict(sample) for sample in payload["samples"]),
+            samples=tuple(
+                ResolvedSample.from_dict(sample) for sample in payload["samples"]
+            ),
             files_per_job=payload["files_per_job"],
             n_chunks=payload["n_chunks"],
-            lfn_sample_name=payload["lfn_sample_name"],
             run_arguments=tuple(payload["run_arguments"]),
             worker_stride=payload["worker_stride"],
             worker_output_format=payload["worker_output_format"],
@@ -275,55 +271,54 @@ def plan_jobs(request: SubmissionRequest) -> tuple[PlannedJob, ...]:
 
 
 def _plan_input_groups(request: SubmissionRequest) -> list[dict[str, object]]:
-    if request.input_mode == "dirac-lfn":
-        groups = group_input_lfns(
-            request.input_lfns,
-            files_per_job=request.files_per_job,
-            n_chunks=request.n_chunks,
-        )
-        return [
-            {
-                "sample_name": request.lfn_sample_name,
-                "output_stem": None,
-                "source_inputs": group.lfns,
-                "worker_inputs": group.staged_filenames,
-                "stride": None,
-            }
-            for group in groups
-        ]
-
     job_specs = []
     for sample in request.samples:
-        groups = _group_inputs(
-            sample.input_urls,
-            n_chunks=request.n_chunks,
-            files_per_job=request.files_per_job,
-            default_chunks=sample.chunks,
-        )
+        if request.input_mode == "dirac-lfn":
+            groups = _group_input_lfns(
+                sample.inputs,
+                files_per_job=request.files_per_job,
+                n_chunks=request.n_chunks,
+                default_chunks=sample.chunks,
+            )
+        else:
+            groups = _group_inputs(
+                sample.inputs,
+                n_chunks=request.n_chunks,
+                files_per_job=request.files_per_job,
+                default_chunks=sample.chunks,
+            )
         for group in groups:
+            source_inputs = (
+                group.lfns if request.input_mode == "dirac-lfn" else group
+            )
+            worker_inputs = (
+                group.staged_filenames if request.input_mode == "dirac-lfn"
+                else group
+            )
             job_specs.append(
                 {
                     "sample_name": sample.name,
                     "output_stem": sample.output_stem,
-                    "source_inputs": group,
-                    "worker_inputs": group,
+                    "source_inputs": source_inputs,
+                    "worker_inputs": worker_inputs,
                     "stride": sample.stride,
                 }
             )
     return job_specs
 
 
-def group_input_lfns(
+def _group_input_lfns(
     input_lfns: Sequence[str],
     files_per_job: int | None = None,
     n_chunks: int | None = None,
+    default_chunks: int = 1,
 ) -> tuple[InputGroup, ...]:
     """Group frontend-validated LFNs and detect staged filename collisions."""
     grouped_lfns = _group_inputs(
         input_lfns,
         n_chunks=n_chunks,
         files_per_job=files_per_job,
-        default_chunks=len(input_lfns),
+        default_chunks=default_chunks,
     )
 
     groups = []

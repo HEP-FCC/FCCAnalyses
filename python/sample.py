@@ -14,7 +14,8 @@ import ROOT  # type: ignore
 import cppyy
 import numpy as np
 from threading import Thread
-from queue import Queue
+from queue import Empty, Queue
+from input_resolver import InputResolutionError, eos_to_xrootd
 
 
 ROOT.gROOT.SetBatch(True)
@@ -295,54 +296,6 @@ def get_process_dict_dirs() -> list[str]:
 
 
 # _____________________________________________________________________________
-def get_file_list(file_list_path: str) -> list[str]:
-    '''
-    Loads file list from the provided file.
-    '''
-    if not os.path.isfile(file_list_path):
-        LOGGER.error('Provided file containing list of ROOT files could not '
-                     'be found!\nAborting...')
-        sys.exit(3)
-
-    with open(file_list_path, 'r', encoding='utf-8') as lstfile:
-        file_list = [line.strip() for line in lstfile]
-
-    # remove empty lines
-    file_list = [line for line in file_list if line]
-
-    # remove commented out lines
-    file_list = [line for line in file_list if line[0] != '#']
-
-    if not file_list:
-        LOGGER.error('Provided file containing list of ROOT files is empty or '
-                     'does not contain valid lines!\nAborting...')
-        sys.exit(3)
-
-    return file_list
-
-
-# _____________________________________________________________________________
-def get_files_in_dir(dir_path: str) -> Optional[list[str]]:
-    '''
-    Finds ROOT files in the provided directory.
-    '''
-
-    if not os.path.isdir(dir_path):
-        LOGGER.error('Can\'t access the sample directory!\n - %s\nAborting...',
-                     dir_path)
-        sys.exit(3)
-
-    files = [os.path.join(dir_path, f) for f in os.listdir(dir_path) if
-             os.path.isfile(os.path.join(dir_path, f)) and
-             f.endswith('.root')]
-
-    if not files:
-        return None
-
-    return files
-
-
-# _____________________________________________________________________________
 def get_files_in_yaml(sample_name: str,
                       campaign: str) -> Optional[list[str]]:
     '''
@@ -487,11 +440,13 @@ def get_file_quantities(file_list: list[str]) -> \
                        'from the files.\nThis might take some time...')
 
     threads = []
-    results: Queue = Queue()
+    result_queues = []
     for filepath in file_list:
+        results: Queue = Queue()
         thread = Thread(target=get_one_file_quantities,
                         args=(filepath, results))
         threads.append(thread)
+        result_queues.append(results)
 
     for thread in threads:
         thread.start()
@@ -499,8 +454,15 @@ def get_file_quantities(file_list: list[str]) -> \
     for thread in threads:
         thread.join()
 
-    return [result for result in results.queue
-            if result['events-in-ttree'] is not None]
+    quantities = []
+    for results in result_queues:
+        try:
+            result = results.get_nowait()
+        except Empty:
+            continue
+        if result['events-in-ttree'] is not None:
+            quantities.append(result)
+    return quantities
 
 
 # _____________________________________________________________________________
@@ -549,28 +511,15 @@ def get_chunk_list(file_list: str, chunks: int):
 
 
 # _____________________________________________________________________________
-def apply_filepath_rewrites(filepath: str) -> str:
+def convert_eos_path_to_xrootd(filepath: str) -> str:
     '''
-    Apply path rewrites if applicable.
+    Convert supported EOS paths to XRootD URLs; leave other paths unchanged.
     '''
-    # Stripping leading and trailing white spaces
-    filepath_stripped = filepath.strip()
-    # Stripping leading and trailing slashes
-    filepath_stripped = filepath_stripped.strip('/')
-
-    # Splitting the path along slashes
-    filepath_splitted = filepath_stripped.split('/')
-
-    if len(filepath_splitted) > 1 and filepath_splitted[0] == 'eos':
-        if filepath_splitted[1] == 'experiment':
-            filepath = 'root://eospublic.cern.ch//' + filepath_stripped
-        elif filepath_splitted[1] == 'user':
-            filepath = 'root://eosuser.cern.ch//' + filepath_stripped
-        elif 'home-' in filepath_splitted[1]:
-            filepath = 'root://eosuser.cern.ch//eos/user/' + \
-                       filepath_stripped.replace('eos/home-', '')
-        else:
-            LOGGER.warning('Unknown EOS path type!\nPlease check with the '
-                           'developers as this might impact performance of '
-                           'the analysis.')
+    stripped = filepath.strip().strip('/')
+    if stripped == 'eos' or stripped.startswith('eos/'):
+        try:
+            return eos_to_xrootd('/' + stripped)
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
     return filepath

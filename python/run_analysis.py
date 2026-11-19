@@ -13,8 +13,10 @@ from inspect import signature
 import ROOT  # type: ignore
 import cppyy
 from anascript import get_element, get_element_dict, get_attribute
+from input_resolver import InputResolutionError, read_input_file_list, resolve_inputs
 from sample import get_process_info, get_process_dict
-from sample import get_subfile_list, get_chunk_list, get_event_entries
+from sample import (get_subfile_list, get_chunk_list, get_event_entries,
+                    convert_eos_path_to_xrootd)
 from utils import generate_graph, save_benchmark
 from run_fccanalysis import run_fccanalysis
 
@@ -158,34 +160,6 @@ def run_rdf(rdf_module,
 
 
 # _____________________________________________________________________________
-def apply_filepath_rewrites(filepath: str) -> str:
-    '''
-    Apply path rewrites if applicable.
-    '''
-    # Stripping leading and trailing white spaces
-    filepath_stripped = filepath.strip()
-    # Stripping leading and trailing slashes
-    filepath_stripped = filepath_stripped.strip('/')
-
-    # Splitting the path along slashes
-    filepath_splitted = filepath_stripped.split('/')
-
-    if len(filepath_splitted) > 1 and filepath_splitted[0] == 'eos':
-        if filepath_splitted[1] == 'experiment':
-            filepath = 'root://eospublic.cern.ch//' + filepath_stripped
-        elif filepath_splitted[1] == 'user':
-            filepath = 'root://eosuser.cern.ch//' + filepath_stripped
-        elif 'home-' in filepath_splitted[1]:
-            filepath = 'root://eosuser.cern.ch//eos/user/' + \
-                       filepath_stripped.replace('eos/home-', '')
-        else:
-            LOGGER.warning('Unknown EOS path type!\nPlease check with the '
-                           'developers as this might impact performance of '
-                           'the analysis.')
-    return filepath
-
-
-# _____________________________________________________________________________
 def run_local(rdf_module, infile_list, args):
     '''
     Run analysis locally.
@@ -200,7 +174,7 @@ def run_local(rdf_module, infile_list, args):
     nevents_local = 0
     for filepath in infile_list:
 
-        filepath = apply_filepath_rewrites(filepath)
+        filepath = convert_eos_path_to_xrootd(filepath)
 
         file_list.push_back(filepath)
         info_msg += f'\t- {filepath}\n'
@@ -330,12 +304,20 @@ def run_stages(args, rdf_module, anapath):
 
     # Check if files are specified, and if so run the analysis on it/them (this
     # will exit after)
-    if len(args.files_list) > 0:
+    if args.input is not None or args.input_file_list is not None:
+        try:
+            if args.input is not None:
+                input_files = resolve_inputs(args.input)
+            else:
+                input_files = read_input_file_list(args.input_file_list)
+        except InputResolutionError as error:
+            LOGGER.error('%s\nAborting...', error)
+            sys.exit(3)
         LOGGER.info('Running over files provided in command line argument...')
         directory, _ = os.path.split(args.output)
         if directory:
             os.system(f'mkdir -p {directory}')
-        run_local(rdf_module, args.files_list, args)
+        run_local(rdf_module, input_files, args)
         sys.exit(0)
 
     # Check if the process list is specified
@@ -532,7 +514,7 @@ def run_histmaker(args, rdf_module, anapath):
         nevents_meta = 0
         for file_name in file_list:
             if not args.use_data_source:
-                file_name = apply_filepath_rewrites(file_name)
+                file_name = convert_eos_path_to_xrootd(file_name)
             file_list_root.push_back(file_name)
             # Skip check for processed events in case of first stage
             if get_element(rdf_module, "prodTag") is None:
@@ -704,6 +686,11 @@ def run(args):
         LOGGER.error('Unknown sub-command "%s"!\nAborting...')
         sys.exit(3)
 
+    if args.deprecated_no_filepath_rewrites:
+        LOGGER.warning('--no-filepath-rewrites is deprecated; '
+                       'use --use-eos-mount instead.')
+        args.use_xrootd = False
+
     # Work with absolute path of the analysis script
     anapath = os.path.abspath(args.anascript_path)
 
@@ -786,9 +773,6 @@ def run(args):
     # Adjustments for the old approaches
     if args.progress_bar is None:
         args.progress_bar = True
-
-    if args.files_list is None:
-        args.files_list = []
 
     if get_element(rdf_module, 'graph', False):
         args.graph = True

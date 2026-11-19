@@ -96,7 +96,7 @@ In case of running the FCCAnalysis in the staged style user can/should add the
 following attributes to the \fIAnalysis\fR class in order to control the
 behavior of the analysis.
 .TP
-\fBsamples\fR (mandatory)
+\fBsamples\fR
 Dictionary of process samples to be run over.
 \fBAnalysis.process_list\fR
 is deprecated; use
@@ -104,21 +104,63 @@ is deprecated; use
 instead.
 Each sample can have several parameters:
 .br
+Set at most one of \fIinput-dir\fR, \fIinput-files\fR,
+\fIinput-file-list\fR, and \fIinput-lfn-list\fR for a sample. A per-sample
+input source overrides the
+global \fBinput_dir\fR. For the normal runner, the global directory overrides
+campaign discovery, and command-line input options override analysis-script
+input configuration. The local runner rejects LFN configuration unless direct
+command-line input overrides it; test mode always rejects LFN configuration.
+Grid XRootD mode uses per-sample or global sources;
+campaign discovery is not available in that mode. Grid LFN mode can use
+\fB--input-lfn-list\fR, \fBAnalysis.input_lfn_list\fR, or per-sample
+\fIinput-lfn-list\fR. One submission cannot mix LFN and XRootD input.
+Duplicate input paths or LFNs within one sample are rejected.
+Explicit file paths and list entries retain their supplied order; files found
+within a directory are sorted by path.
+.br
 \fIfraction\fR
 .in +4
-The analysis will run over reduced number of input files roughly corresponding
-to the fraction of total events specified\&.
+Selects whole input files to approximate the requested fraction of total
+events\&. The fraction must be greater than zero and at most one\&.
+For DIRAC LFN input, fractions other than 1 are not supported\&.
 .br
-Default value: 1 (full process sample)
+Default value: 1 (process full sample)
 .in -4
 \fIinput-dir\fR
 .in +4
-Specifies the location of the process different from the globally set one\&.
-This overrides both prod_tag and input_dir attributes of the analysis script\&.
-For grid XRootD submission, provide an EOS path or XRootD directory URL\&.
+Specifies a directory for the process instead of the global one\&. For grid
+XRootD submission, provide a supported EOS path or an XRootD directory URL\&.
 The deprecated spelling
 \fIinput_dir\fR
 remains accepted as a compatibility alias\&.
+.br
+Default value: None
+.in -4
+\fIinput-files\fR
+.in +4
+Non-empty list of non-empty input file paths or URLs for this process\&.
+Directory paths in this list are expanded to their immediate \fI.root\fR files\&.
+.br
+Default value: None
+.in -4
+\fIinput-file-list\fR
+.in +4
+Path to a text file containing one explicit input file path or URL per line\&.
+Directory entries are not expanded\&. Blank lines and lines beginning with
+"#" are ignored\&.
+This list contains physical file paths or URLs, not DIRAC LFNs. For registered
+grid files, use the submission option \fB--input-lfn-list\fR instead\&.
+.br
+Default value: None
+.in -4
+\fIinput-lfn-list\fR
+.in +4
+Path to a \fI.txt\fR file containing one DIRAC LFN per line. Blank lines and
+lines beginning with \fB#\fR are ignored.
+This is available only
+for grid submission. All samples in one grid submission must use either LFN
+input or physical XRootD input; mixing the two is rejected.
 .br
 Default value: None
 .in -4
@@ -133,38 +175,45 @@ remains accepted as a compatibility alias\&.
 .br
 Default value: the sample name
 .in -4
-\fIchunks\fR
+\fInchunks\fR
 .in +4
 The analysis can be split into several output chunks (useful on distributed
-systems)\&. For grid submission this value can be overridden on the command
-line with either
-\fB\-\-n\-chunks\fR
+systems)\&. The value must be a positive integer\&. For grid submission this
+value can be overridden on the command line with either
+\fB\-\-nchunks\fR
 or
 \fB\-\-files\-per\-job\fR\&.
+The deprecated spelling \fIchunks\fR remains accepted\&.
 .br
 Default value: 1
 .in -4
 \fIstride\fR
 .in +4
-Specifies how to stride through the events of the sample\&.
+Specifies how to stride through the events of the sample; it must be a positive
+integer\&.
 .br
 Default value: None (no striding)
 .in -4
-\fIn-events-max\fR
+\fInevents\fR
 .in +4
-Limits the maximum number of events to process for the sample\&.
-Grid submission rejects this value because event limits do not compose
-reliably with file-based jobs\&.
+Limits the maximum number of events to process for the sample; it must be a
+non-negative integer\&.
+The command-line \fB--nevents\fR option overrides this setting. Limits are
+ignored with a warning for multiple chunks. Grid submission rejects event
+limits because they do not compose reliably with file-based jobs\&.
+The deprecated spelling \fIn-events-max\fR remains accepted\&.
 .br
 Default value: None (no limit)
 .TP
-\fBprod_tag\fR (mandatory)
-Provides information where to find input files. There are several ways how to
-find the information, one of them uses YAML file which is being searched for in
-the sub-folders of $FCCDICTSDIR\&.
+\fBcampaign\fR (optional)
+Specifies the campaign used to discover sample input files when neither a
+per-sample input source nor a global \fBinput_dir\fR is provided\&. Not supported for grid submission\&.
+\fBprod_tag\fR is deprecated; use \fBcampaign\fR instead\&.
 .TP
-\fBoutput_dir\fR (mandatory)
-Specifies the directory for the output files\&.
+\fBoutput_dir\fR (optional)
+Specifies the directory for local output files\&. Required for script-defined
+samples and for direct input without a single explicit output file; it can
+also be supplied with \fB--output-dir\fR. Test mode does not require it\&.
 .TP
 \fBoutput_format\fR (optional)
 Specifies the output ROOT file format. Accepted values are \fBttree\fR and \fBrntuple\fR.
@@ -172,12 +221,18 @@ Specifies the output ROOT file format. Accepted values are \fBttree\fR and \fBrn
 Default: follow the format of the events TTree or RNTuple in the first input file.
 An explicit command-line option overrides this setting.
 .TP
-\fBinput_dir\fR
+\fBinput_dir\fR (optional)
 Global directory containing sample subdirectories\&.
 For grid XRootD submission this must be an EOS path or XRootD directory URL;
-a sample-level
-\fIinput-dir\fR
-overrides this value\&.
+it overrides campaign discovery and is overridden by a per-sample input
+source\&.
+.TP
+\fBinput_lfn_list\fR (optional)
+Path to a \fI.txt\fR file containing DIRAC LFNs for grid submission\&. It
+defines one independent input sample and cannot be combined with script-defined
+samples or \fBinput_dir\fR. Command-line input overrides this setting; without
+an override, the local runner rejects LFN configurations\&. Test mode always
+rejects LFN configurations\&.
 .TP
 \fBanalysis_name\fR (optional)
 Optional name for the analysis
@@ -251,15 +306,10 @@ and all normalisation factors calculated with sum of weights accordingly\&.
 .br
 Default value: False
 .TP
-.B proc_dict
-This variable controls which process dictionary will be used. It can be either
-simple file name, absolute path or url. In the case of simple filename, the file
-is being searched for first in the working directory and then at the locations
-indicated in the $FCCDICTSDIR environment variable.
-.TP
-.B n_events_max
-Allows to limit the amount of events to be processed. The limit is applied per
-sample.
+\fBnevents\fR (optional)
+Maximum number of events per sample. A per-sample \fInevents\fR or the
+command-line \fB--nevents\fR option takes precedence. Grid submission rejects
+this setting. The deprecated spelling \fBn_events_max\fR remains accepted\&.
 .PP
 This section is under construction. You are invited to help :)
 

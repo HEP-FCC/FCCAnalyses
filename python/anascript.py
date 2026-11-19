@@ -296,43 +296,10 @@ def has_valid_string(dictionary: dict[str, Any], key: str) -> bool:
 
 
 # _____________________________________________________________________________
-def has_valid_float(dictionary: dict[str, Any], key: str) -> bool:
-    '''
-    Checks if the dictionary contains a "valid" float value:
-        - key exists in dictionary
-        - value is not None
-        - value is of float type
-    '''
-    if key not in dictionary:
-        return False
-
-    if dictionary[key] is None:
-        return False
-
-    if isinstance(dictionary[key], float):
-        return True
-
-    return False
-
-
-# _____________________________________________________________________________
-def has_valid_int(dictionary: dict[str, Any], key: str) -> bool:
-    '''
-    Checks if the dictionary contains a "valid" int value:
-        - key exists in dictionary
-        - value is not None
-        - value is of int type
-    '''
-    if key not in dictionary:
-        return False
-
-    if dictionary[key] is None:
-        return False
-
-    if isinstance(dictionary[key], int):
-        return True
-
-    return False
+def _invalid_sample_field(sample_name: str, field: str, expected: str) -> None:
+    LOGGER.error('Sample "%s" %s must be %s!\nAborting...',
+                 sample_name, field, expected)
+    sys.exit(3)
 
 
 # _____________________________________________________________________________
@@ -348,6 +315,9 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
                          'name!\nAborting...')
             sys.exit(3)
 
+        if not isinstance(provided_sample_dict, dict):
+            _invalid_sample_field(sample_name, 'configuration', 'a dictionary')
+
         # Deprecations
         # input_dir
         if 'input_dir' in provided_sample_dict:
@@ -360,6 +330,29 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
 
         sample_dict: dict[str, Any] = {}
 
+        for field in ('input-dir', 'input_dir', 'input-file-list',
+                      'input-lfn-list', 'output-stem', 'output'):
+            value = provided_sample_dict.get(field)
+            if value is not None and (
+                not isinstance(value, str) or not value.strip()
+            ):
+                _invalid_sample_field(sample_name, field, 'a non-empty string')
+
+        input_sources = (
+            provided_sample_dict.get('input-dir') is not None
+            or provided_sample_dict.get('input_dir') is not None,
+            provided_sample_dict.get('input-files') is not None,
+            provided_sample_dict.get('input-file-list') is not None,
+            provided_sample_dict.get('input-lfn-list') is not None,
+        )
+        if sum(input_sources) > 1:
+            LOGGER.error(
+                'Sample "%s" defines more than one input source. Use only '
+                'one of "input-dir", "input-files", "input-file-list" or '
+                '"input-lfn-list".', sample_name
+            )
+            sys.exit(3)
+
         # Check input dir
         if has_valid_string(provided_sample_dict, 'input-dir'):
             sample_dict['input-dir'] = provided_sample_dict['input-dir']
@@ -367,6 +360,31 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
             sample_dict['input-dir'] = provided_sample_dict['input_dir']
         else:
             sample_dict['input-dir'] = None
+
+        # Check input file list
+        if has_valid_string(provided_sample_dict, 'input-file-list'):
+            sample_dict['input-file-list'] = \
+                provided_sample_dict['input-file-list']
+        else:
+            sample_dict['input-file-list'] = None
+
+        if has_valid_string(provided_sample_dict, 'input-lfn-list'):
+            sample_dict['input-lfn-list'] = \
+                provided_sample_dict['input-lfn-list']
+        else:
+            sample_dict['input-lfn-list'] = None
+
+        # Check directly provided input files
+        input_files = provided_sample_dict.get('input-files')
+        if input_files is not None and (
+            not isinstance(input_files, list)
+            or not input_files
+            or not all(isinstance(path, str) and path.strip()
+                       for path in input_files)
+        ):
+            _invalid_sample_field(sample_name, 'input-files',
+                                  'a non-empty list of non-empty strings')
+        sample_dict['input-files'] = input_files
 
         # Check output stem
         if has_valid_string(provided_sample_dict, 'output-stem'):
@@ -377,28 +395,47 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
             sample_dict['output-stem'] = sample_name
 
         # Check reduction fraction
-        if has_valid_float(provided_sample_dict, 'fraction'):
-            sample_dict['fraction'] = provided_sample_dict['fraction']
-        else:
-            sample_dict['fraction'] = 1.0
+        fraction = provided_sample_dict.get('fraction')
+        if fraction is not None and (
+            type(fraction) not in (int, float) or not 0 < fraction <= 1
+        ):
+            _invalid_sample_field(sample_name, 'fraction',
+                                  'a number greater than 0 and at most 1')
+        sample_dict['fraction'] = 1.0 if fraction is None else float(fraction)
 
-        # Check number of chunks
-        if has_valid_int(provided_sample_dict, 'chunks'):
-            sample_dict['chunks'] = provided_sample_dict['chunks']
-        else:
-            sample_dict['chunks'] = 1
+        # Check number of chunks and stride
+        nchunks = provided_sample_dict.get('nchunks')
+        old_chunks = provided_sample_dict.get('chunks')
+        if old_chunks is not None:
+            LOGGER.warning('[DEPRECATED] Use "nchunks" instead of '
+                           '"chunks" for sample "%s".', sample_name)
+            if nchunks is not None:
+                _invalid_sample_field(sample_name, 'chunk count',
+                                      'specified only once')
+            nchunks = old_chunks
+        if nchunks is not None and (type(nchunks) is not int or nchunks < 1):
+            field = 'chunks' if old_chunks is not None else 'nchunks'
+            _invalid_sample_field(sample_name, field, 'a positive integer')
+        sample_dict['chunks'] = 1 if nchunks is None else nchunks
 
-        # Check if to stride through the events
-        if has_valid_int(provided_sample_dict, 'stride'):
-            sample_dict['stride'] = provided_sample_dict['stride']
-        else:
-            sample_dict['stride'] = None
+        stride = provided_sample_dict.get('stride')
+        if stride is not None and (type(stride) is not int or stride < 1):
+            _invalid_sample_field(sample_name, 'stride', 'a positive integer')
+        sample_dict['stride'] = stride
 
-        # Check max number of events
-        if has_valid_int(provided_sample_dict, 'n-events-max'):
-            sample_dict['n-events-max'] = provided_sample_dict['n-events-max']
-        else:
-            sample_dict['n-events-max'] = None
+        nevents = provided_sample_dict.get('nevents')
+        old_nevents = provided_sample_dict.get('n-events-max')
+        if old_nevents is not None:
+            LOGGER.warning('[DEPRECATED] Use "nevents" instead of '
+                           '"n-events-max" for sample "%s".', sample_name)
+            if nevents is not None:
+                _invalid_sample_field(sample_name, 'event limit',
+                                      'specified only once')
+            nevents = old_nevents
+        if nevents is not None and (type(nevents) is not int or nevents < 0):
+            field = 'n-events-max' if old_nevents is not None else 'nevents'
+            _invalid_sample_field(sample_name, field, 'a non-negative integer')
+        sample_dict['n-events-max'] = nevents
 
         sample_list[sample_name] = sample_dict
 
@@ -414,6 +451,25 @@ def validate_n_threads(analysis_class: Any, cli_override: int | None = None) -> 
     if type(n_threads) is not int or n_threads == 0:
         raise ValueError('Thread count must be a nonzero integer.')
     return n_threads
+
+
+# _____________________________________________________________________________
+def get_sample_input_source(sample_dict: dict[str, Any], input_dir: Any,
+                            campaign: Any) -> tuple[Any, Any]:
+    '''Return the configured input source in prioritized order.'''
+    if sample_dict.get('input-files') is not None:
+        return 'input-files', sample_dict['input-files']
+    if sample_dict.get('input-file-list') is not None:
+        return 'input-file-list', sample_dict['input-file-list']
+    if sample_dict.get('input-lfn-list') is not None:
+        return 'input-lfn-list', sample_dict['input-lfn-list']
+    if sample_dict.get('input-dir') is not None:
+        return 'sample-input-dir', sample_dict['input-dir']
+    if input_dir is not None:
+        return 'global-input-dir', input_dir
+    if campaign is not None:
+        return 'campaign', campaign
+    return None, None
 
 
 def validate_analysis_class(analysis_class: Any) -> dict[str, Any]:

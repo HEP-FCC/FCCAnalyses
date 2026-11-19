@@ -15,7 +15,7 @@ from submission import (
     SubmissionRequest,
     SubmissionValidationError,
     UserBuildPayload,
-    group_input_lfns,
+    _group_input_lfns,
     plan_jobs,
 )
 
@@ -24,10 +24,16 @@ def make_request(**overrides: object) -> SubmissionRequest:
     values: dict[str, object] = {
         "analysis_script": "/work/analysis.py",
         "input_mode": "dirac-lfn",
-        "input_lfns": ("/fcc/data/input.root",),
-        "samples": (),
+        "samples": (
+            ResolvedSample(
+                name=None,
+                output_stem=None,
+                inputs=("/fcc/data/input.root",),
+                chunks=1,
+                stride=None,
+            ),
+        ),
         "files_per_job": 1,
-        "lfn_sample_name": None,
         "run_arguments": (),
         "output_file": "result.root",
         "output_path": "analysis/results",
@@ -47,12 +53,11 @@ def make_request(**overrides: object) -> SubmissionRequest:
 def make_xrootd_request(**overrides: object) -> SubmissionRequest:
     values: dict[str, object] = {
         "input_mode": "xrootd",
-        "input_lfns": (),
         "samples": (
             ResolvedSample(
                 name="signal",
                 output_stem="signal",
-                input_urls=(
+                inputs=(
                     "root://eospublic.cern.ch//eos/experiment/fcc/signal/a.root",
                 ),
                 chunks=1,
@@ -60,7 +65,6 @@ def make_xrootd_request(**overrides: object) -> SubmissionRequest:
             ),
         ),
         "files_per_job": None,
-        "lfn_sample_name": None,
     }
     values.update(overrides)
     return make_request(**values)
@@ -94,15 +98,18 @@ class SubmissionTest(unittest.TestCase):
             SubmissionValidationError,
             "collide after basename staging",
         ):
-            group_input_lfns(lfns, files_per_job=2)
+            _group_input_lfns(lfns, files_per_job=2)
 
     def test_plans_grouped_lfn_worker_jobs(self) -> None:
         request = make_request(
-            input_lfns=tuple(
-                f"/fcc/data/input-{index}.root" for index in range(5)
-            ),
+            samples=(ResolvedSample(
+                name="custom-lfn-sample",
+                output_stem=None,
+                inputs=tuple(f"/fcc/data/input-{index}.root" for index in range(5)),
+                chunks=1,
+                stride=None,
+            ),),
             files_per_job=2,
-            lfn_sample_name="custom-lfn-sample",
             run_arguments=("--analysis-option", "value"),
             worker_stride=7,
         )
@@ -147,9 +154,13 @@ class SubmissionTest(unittest.TestCase):
 
     def test_plans_balanced_lfn_chunks(self) -> None:
         request = make_request(
-            input_lfns=tuple(
-                f"/fcc/data/input-{index}.root" for index in range(5)
-            ),
+            samples=(ResolvedSample(
+                name=None,
+                output_stem=None,
+                inputs=tuple(f"/fcc/data/input-{index}.root" for index in range(5)),
+                chunks=1,
+                stride=None,
+            ),),
             files_per_job=None,
             n_chunks=3,
         )
@@ -175,7 +186,7 @@ class SubmissionTest(unittest.TestCase):
                 ResolvedSample(
                     name="signal",
                     output_stem="sig",
-                    input_urls=(
+                    inputs=(
                         "root://eospublic.cern.ch//eos/experiment/fcc/signal/a.root",
                         "root://eospublic.cern.ch//eos/experiment/fcc/signal/b.root",
                         "root://eospublic.cern.ch//eos/experiment/fcc/signal/c.root",
@@ -186,7 +197,7 @@ class SubmissionTest(unittest.TestCase):
                 ResolvedSample(
                     name="background",
                     output_stem="background",
-                    input_urls=(
+                    inputs=(
                         "root://eospublic.cern.ch//eos/experiment/fcc/background/a.root",
                     ),
                     chunks=1,
@@ -223,7 +234,7 @@ class SubmissionTest(unittest.TestCase):
                 ResolvedSample(
                     name="signal",
                     output_stem="signal",
-                    input_urls=tuple(
+                    inputs=tuple(
                         f"root://eospublic.cern.ch//eos/experiment/fcc/signal/{index}.root"
                         for index in range(5)
                     ),
@@ -244,7 +255,7 @@ class SubmissionTest(unittest.TestCase):
                 ResolvedSample(
                     name="signal",
                     output_stem="signal",
-                    input_urls=tuple(
+                    inputs=tuple(
                         f"root://eospublic.cern.ch//eos/experiment/fcc/signal/{index}.root"
                         for index in range(5)
                     ),
@@ -254,7 +265,7 @@ class SubmissionTest(unittest.TestCase):
                 ResolvedSample(
                     name="background",
                     output_stem="background",
-                    input_urls=tuple(
+                    inputs=tuple(
                         f"root://eospublic.cern.ch//eos/experiment/fcc/background/{index}.root"
                         for index in range(4)
                     ),
