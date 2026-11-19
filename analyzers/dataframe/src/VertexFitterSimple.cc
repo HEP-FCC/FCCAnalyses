@@ -18,6 +18,7 @@ namespace FCCAnalyses {
 
 namespace VertexFitterSimple {
 
+namespace {
 int supress_stdout() {
   fflush(stdout);
 
@@ -36,6 +37,7 @@ void resume_stdout(int fd) {
   close(fd);
   std::cout << std::flush;
 }
+} // namespace
 
 // -----------------------------------------------------------------------------
 

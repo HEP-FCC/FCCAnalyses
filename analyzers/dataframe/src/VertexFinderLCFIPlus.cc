@@ -9,7 +9,7 @@ namespace FCCAnalyses{
 
 namespace VertexFinderLCFIPlus{
 
-bool debug_me = false;
+const bool debug_me = false;
 // if particle masses defined in a dedicated file, call those rather than defining here
 const double m_pi = 0.13957039; // pi+- mass [GeV]
 const double m_p  = 0.93827208; // p+- mass [GeV]

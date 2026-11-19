@@ -5,7 +5,9 @@
 #include <memory>
 
 namespace FCCAnalyses {
-  std::unique_ptr<WeaverInterface> gWeaver2;
+namespace {
+std::unique_ptr<WeaverInterface> gWeaver2;
+} // namespace
 
   namespace WeaverUtils {
     void setup_weaver(const std::string& onnx_filename,
