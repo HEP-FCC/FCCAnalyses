@@ -6,7 +6,7 @@
 
 namespace FCCAnalyses {
 namespace {
-  std::unique_ptr<WeaverInterface> gWeaver2;
+std::unique_ptr<WeaverInterface> gWeaver2;
 } // namespace
 
   namespace WeaverUtils {

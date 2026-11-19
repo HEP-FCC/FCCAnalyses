@@ -6,8 +6,8 @@
 
 namespace FCCAnalyses {
 namespace {
-  std::vector<WeaverInterface *> gWeavers;
-  bool isSetup = false;
+std::vector<WeaverInterface *> gWeavers;
+bool isSetup = false;
 } // namespace
 
   namespace JetFlavourUtils {
