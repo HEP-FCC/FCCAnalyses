@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795080094989,
+  "lastUpdate": 1795080097255,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -61783,6 +61783,76 @@ window.BENCHMARK_DATA = {
             "value": 5.235302209854126,
             "range": "10",
             "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "benedikt.wach@cern.ch",
+            "name": "Benedikt Wach",
+            "username": "bndikt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4f6e4907f046139fa75ff8892cb7228817f85220",
+          "message": "Merge pull request #270 from kjvbrt/rmvdt\n\nRemoving Vdt includes",
+          "timestamp": "2026-11-19T10:11:02+01:00",
+          "tree_id": "d9bf7ae9c624140eae8af1a83dcbd1298cee3f2a",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/4f6e4907f046139fa75ff8892cb7228817f85220"
+        },
+        "date": 1795080096694,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 31.00421387247089,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 13.107197132800627,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 9.714191404985765,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 13.759237810531838,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 4.835570302707012,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/weaver/stage1.py",
+            "value": 4.348964078532451,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/stages_source.py",
+            "value": 17.799300988850526,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/analysis_stage1.py",
+            "value": 19.101094070897265,
+            "range": "1000",
+            "unit": "Evt/s",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
