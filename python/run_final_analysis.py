@@ -394,6 +394,14 @@ def run(rdf_module, config, args) -> None:
         LOGGER.error('No histograms defined!\nAborting...')
         sys.exit(3)
 
+    do_terminal_dump = get_attribute(rdf_module, "doTerminalDump", False)
+    if do_terminal_dump:
+        try:
+            import plotext as plt
+        except ModuleNotFoundError:
+            LOGGER.error("plotext module was not found. Disabling the terminal dump.")
+            do_terminal_dump = False
+
     # Check whether to scale the results to the luminosity
     do_scale = get_attribute(rdf_module, "doScale", True)
     if do_scale:
@@ -640,6 +648,14 @@ def run(rdf_module, config, args) -> None:
                                           'fccanalysis_graph.dot')
             generate_graph(dframe, graph_path)
             args.graph = False
+
+        if do_terminal_dump:
+            cut_labels, n_events, n_events_raw = zip(*[(cut_name, cut_result["n_events"], cut_result["n_events_raw"]) \
+                                                     for cut_name, cut_result in results[process_name].items()])
+            plt.simple_bar(cut_labels, n_events, width=100, title="Weighted events passing cut")
+            plt.show()
+            plt.simple_bar(cut_labels, n_events_raw, width=100, title="Unweighted events passing cut")
+            plt.show()
 
         # And save everything
         LOGGER.info('Saving the outputs...')
