@@ -36,12 +36,10 @@ def run_subprocess(command: list[str], run_dir: str) -> None:
         sys.exit(0)
 
 
-def build_fccanalyses(mainparser) -> None:
+def build_fccanalyses(args) -> None:
     '''
     Main build steering function
     '''
-    args = mainparser.parse_args()
-
     if 'FCCANA_LOCAL_DIR' not in os.environ:
         LOGGER.error('Local FCCAnalyses environment not set up correctly!\n'
                      'Building of the FCCAnalyses is available only '

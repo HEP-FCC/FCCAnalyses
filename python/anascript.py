@@ -405,6 +405,17 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
     return sample_list
 
 
+def validate_n_threads(analysis_class: Any, cli_override: int | None = None) -> int:
+    '''Resolve and validate CLI override, Analysis.n_threads, or default one.'''
+    n_threads = (
+        cli_override if cli_override is not None
+        else getattr(analysis_class, 'n_threads', 1)
+    )
+    if type(n_threads) is not int or n_threads == 0:
+        raise ValueError('Thread count must be a nonzero integer.')
+    return n_threads
+
+
 def validate_analysis_class(analysis_class: Any) -> dict[str, Any]:
     '''
     Validate an instance of the Analysis class.
@@ -419,23 +430,19 @@ def validate_analysis_class(analysis_class: Any) -> dict[str, Any]:
     # Deprecations
     if hasattr(analysis_class, 'run_batch'):
         if analysis_class.run_batch:
-            LOGGER.error('run_batch analysis attribute is no longer '
-                         'supported, use "fccanalysis submit" instead!\n'
-                         'Aborting...')
-            sys.exit(3)
+            raise ValueError('run_batch analysis attribute is no longer '
+                             'supported, use "fccanalysis submit" instead!')
 
     # Check if the analysis chain is provided
     if hasattr(analysis_class, 'analyzers'):
         config['analysis-chain'] = analysis_class.analyzers
     else:
-        LOGGER.error('Analysis chain not provided!\nAborting...')
-        sys.exit(3)
+        raise ValueError('Analysis chain not provided!')
 
     # Check the output variables
     if hasattr(analysis_class, 'output'):
         config['output-variables'] = analysis_class.output
     else:
-        LOGGER.error('Analysis output variables not provided!\nAborting...')
-        sys.exit(3)
+        raise ValueError('Analysis output variables not provided!')
 
     return config
