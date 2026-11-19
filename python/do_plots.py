@@ -280,6 +280,132 @@ def mapHistosFromHistmaker(config: dict[str, Any],
 
 
 # _____________________________________________________________________________
+def book_systematics(config: dict[str, Any], sample, sample_name: str,
+                     var: str, sel: str) -> None:
+    '''Book one source of systematics for a sample.'''
+    from ROOT import mplt
+
+    syst_types = {'constant': mplt.SystematicsType.constant,
+                  'lognormal': mplt.SystematicsType.log_normal,
+                  'shape': mplt.SystematicsType.shape}
+    def normalise_systematics(syst_name: str, syst_def) -> dict[str, Any]:
+        if isinstance(syst_def, dict):
+            return syst_def
+        if isinstance(syst_def, (tuple, list)) and len(syst_def) in (2, 3) and \
+                isinstance(syst_def[0], str):
+            normalised: dict[str, Any] = {'type': syst_def[0]}
+            if isinstance(syst_def[1], dict):
+                normalised.update(syst_def[1])
+            elif isinstance(syst_def[1], (int, float)):
+                key = 'prior' if syst_def[0] == 'lognormal' else 'value'
+                normalised[key] = float(syst_def[1])
+            else:
+                normalised = {}
+            if normalised:
+                if len(syst_def) == 3:
+                    normalised['samples'] = list(syst_def[2])
+                return normalised
+        LOGGER.error('Systematics "%s" has an unsupported definition: %r\n'
+                     'Expected a dictionary such as '
+                     '{"type": "constant", "value": 1.01}\nAborting...',
+                     syst_name, syst_def)
+        sys.exit(3)
+    for syst_name, syst_def in config.get('systematics', {}).items():
+        syst_def = normalise_systematics(syst_name, syst_def)
+        if 'samples' in syst_def and sample_name not in syst_def['samples']:
+            continue
+        if syst_def.get('type') not in syst_types:
+            LOGGER.error('Systematics "%s" has an invalid type "%s"! Supported '
+                         'types: %s\nAborting...', syst_name,
+                         syst_def.get('type'), ', '.join(syst_types))
+            sys.exit(3)
+        params = {key: value for key, value in syst_def.items()
+                  if key not in ('type', 'samples')}
+        # shapes may be specific to a sample/variable/selection
+        for key in ('inputFilename', 'shapeUp', 'shapeDown'):
+            if key in params:
+                params[key] = params[key].format(sample=sample_name,
+                                                 variable=var,
+                                                 selection=sel)
+        sample.addSystematics(syst_name, syst_types[syst_def['type']], params)
+
+
+# _____________________________________________________________________________
+def runPlotsNew(config: dict[str, Any], var: str, sel: str, script_module, hsignal, hbackgrounds):
+    from ROOT.mplt import Sample as smp, plotItPlotter as plotit
+    from os.path import join
+
+    if not hsignal and not hbackgrounds:
+        LOGGER.warning('No histograms provided!\n  - plot name: "%s"\n'
+                       'Continuing...', var)
+        return
+    if 'ee' in script_module.collider:
+        lt = 'FCCAnalyses: FCC-ee Simulation (Delphes)'
+        rt = [f'#sqrt{{s}} = {script_module.energy:.1f} GeV', f'{config["int-lumi-label"]}']
+    else:
+        lt = 'FCCAnalyses: FCC-hh Simulation (Delphes)'
+        rt = [f'#sqrt{{s}} = {script_module.energy:.1f} TeV', f'{config["int-lumi-label"]}']
+    # custom label on top, as for the legacy plotter
+    if getattr(script_module, 'customLabel', ''):
+        rt.insert(0, script_module.customLabel)
+    # selection-specific label, below the collider and luminosity ones
+    extra_label = getattr(script_module, 'extralabel', {}).get(sel)
+    if extra_label:
+        rt.append(extra_label)
+    if config['plotter'] == 'matplotlib':
+        from addons.MultiPlotter.matplotlibPlotter import matplotlibPlotter
+        plotter = matplotlibPlotter(lt, rt)
+    else:
+        plotter = plotit.plotItPlotter(lt, rt)
+    for hsig in hsignal:
+        sample = smp.Sample()
+        sample.type = smp.Type.signal
+        sample.name = hsig  #TODO
+        sample.histogram = hsignal[hsig][0]
+        sample.weight = 1.  #TODO
+        sample.colour = script_module.colors[hsig]
+        book_systematics(config, sample, hsig, var, sel)
+        plotter.addSample(sample)
+    for hbkg in hbackgrounds:
+        sample = smp.Sample()
+        sample.type = smp.Type.background
+        sample.name = hbkg  #TODO
+        sample.histogram = hbackgrounds[hbkg][0]
+        sample.weight = 1.  #TODO
+        sample.colour = script_module.colors[hbkg]
+        book_systematics(config, sample, hbkg, var, sel)
+        plotter.addSample(sample)
+    # histograms treatment, before any pseudo-data is generated out of them
+    if config.get('x-range'):
+        plotter.setXRange(*config['x-range'])
+    if config['show-overflow']:
+        plotter.addOverflow()
+    if config['sorting']:
+        if config['sorting'] not in ('yield', 'weight', 'name'):
+            LOGGER.error('Invalid samples sorting "%s"! Supported strategies: '
+                         'yield, weight, name\nAborting...', config['sorting'])
+            sys.exit(3)
+        plotter.sortSamples(getattr(ROOT.mplt.SortingType, config['sorting']),
+                            config['sorting-reverse'])
+    if config['pseudo-data'] in ('toy', 'asimov') and not hbackgrounds:
+        LOGGER.warning('No background for plot "%s": pseudo-data not '
+                       'generated.', var)
+    elif config['pseudo-data'] in ('toy', 'asimov'):
+        if config['pseudo-data'] == 'toy':
+            plotter.addPseudoData(True, config['pseudo-data-seed'], 'Pseudo-data (toy)')
+        else:
+            plotter.addPseudoData(False, 0, 'Pseudo-data (Asimov)')
+    elif config['pseudo-data']:
+        LOGGER.error('Invalid pseudo-data mode "%s"! Supported modes: toy, '
+                     'asimov\nAborting...', config['pseudo-data'])
+        sys.exit(3)
+    # options left unset are not passed on: the plotters use their defaults
+    plotter.plot(var, join(script_module.outdir, sel),
+                 {key: value for key, value in config.items()
+                  if value is not None})
+
+
+# _____________________________________________________________________________
 def runPlots(config: dict[str, Any],
              args,
              var,
@@ -1075,6 +1201,25 @@ def run(args):
     if hasattr(script_module, 'plotStatUnc'):
         config['plot-stat-unc'] = script_module.plotStatUnc
 
+    # Plotting: plotIt (ROOT) or matplotlib
+    config['plotter'] = getattr(script_module, 'plotter', 'plotIt')
+
+    # Pseudo-data: toy (Poisson) or asimov (expected yields)
+    config['pseudo-data'] = getattr(script_module, 'pseudoData', None)
+    config['pseudo-data-seed'] = getattr(script_module, 'pseudoDataSeed', 1)
+
+    # Samples ordering in each stack: yield, weight or name
+    config['sorting'] = getattr(script_module, 'sortSamples', None)
+    config['sorting-reverse'] = getattr(script_module, 'sortReverse', False)
+    # (under/over)flow bins
+    config['show-overflow'] = getattr(script_module, 'showOverflow', False)
+
+    # Sources of systematic uncertainty, and their display
+    config['systematics'] = getattr(script_module, 'systematics', {})
+    config['plot-syst-unc'] = getattr(script_module, 'plotSystUnc', True)
+    config['syst-breakdown'] = getattr(script_module, 'systBreakdown', True)
+    config['syst-max-sources'] = getattr(script_module, 'systMaxSources', 6)
+
     config['legend-text-size'] = 0.035
     if hasattr(script_module, 'legendTextSize'):
         config['legend-text-size'] = script_module.legendTextSize
@@ -1122,14 +1267,16 @@ def run(args):
                                                    sel,
                                                    config,
                                                    rebin=rebin_tmp)
-                runPlots(config,
-                         args,
-                         var + "_" + label,
-                         sel,
-                         script_module,
-                         hsignal,
-                         hbackgrounds,
-                         script_module.extralabel[sel])
+                # per-variable axis ranges: {variable: (min, max)}
+                for key, attribute in (('x-range', 'xRanges'),
+                                       ('y-range', 'yRanges'),
+                                       ('log-y-range', 'logYRanges')):
+                    config[key] = getattr(script_module, attribute,
+                                          {}).get(var)
+                # per-variable unit, quoted in the axis labels: {variable: unit}
+                config['unit'] = getattr(script_module, 'units',
+                                         {}).get(var, '')
+                # yields first: the plotter may modify the histograms in place
                 if counter == 0:
                     runPlots(config,
                              args,
@@ -1139,6 +1286,7 @@ def run(args):
                              hsignal,
                              hbackgrounds,
                              script_module.extralabel[sel])
+                runPlotsNew(config, var + "_" + label, sel, script_module, hsignal, hbackgrounds)
         counter += 1
 
 
