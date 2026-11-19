@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795104962464,
+  "lastUpdate": 1795104967011,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -61933,6 +61933,76 @@ window.BENCHMARK_DATA = {
             "value": 7.47409987449646,
             "range": "10",
             "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "22276694+jmcarcell@users.noreply.github.com",
+            "name": "Juan Miguel Carceller",
+            "username": "jmcarcell"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18c7b2c1edd7c4fb66aed9e256361222936e6ff4",
+          "message": "Use unnamed namespaces for file-local globals and helpers (#582)\n\n* Use unnamed namespaces for file-local globals and helpers\n\n* Make debug_me const instead of using an unnamed namespace\n\n* Apply clang-format\n\n---------\n\nCo-authored-by: Juan Miguel Carceller <jmcarcell@users.noreply.github.com>\nCo-authored-by: Juraj Smiesko <juraj.smiesko@cern.ch>",
+          "timestamp": "2026-11-19T16:50:42+01:00",
+          "tree_id": "a433bdded358a29b1d8e3d17265ba1f5d584691e",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/18c7b2c1edd7c4fb66aed9e256361222936e6ff4"
+        },
+        "date": 1795104965335,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 21.00400374198717,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 9.901657510343282,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 7.655085742244385,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 10.386293325056597,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.49320509252733,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/weaver/stage1.py",
+            "value": 3.4073392114042087,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/stages_source.py",
+            "value": 13.64531093877392,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/analysis_stage1.py",
+            "value": 13.37953756026536,
+            "range": "1000",
+            "unit": "Evt/s",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
