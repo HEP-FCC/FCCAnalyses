@@ -401,7 +401,10 @@ ROOT::VecOps::RVec<bool> isV0(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
       if(t_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
       t_pair[1] = np_tracks[j];
 
-      ROOT::VecOps::RVec<double> V0_cand = get_V0candidate(V0, t_pair, PV, false);
+      // chi2 = false: the chi2 cut (9.) is unused here; seedFit = false keeps
+      // the SV finder's V0 veto on the previous fit
+      ROOT::VecOps::RVec<double> V0_cand =
+          get_V0candidate(V0, t_pair, PV, false, 9., false); // seedFit = false
 
       // Ks
       if(V0_cand[0]>isKs[0] && V0_cand[0]<isKs[1] && V0_cand[4]>isKs[2] && V0_cand[5]>isKs[3]) {
@@ -440,10 +443,10 @@ ROOT::VecOps::RVec<bool> isV0(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
 //** V0 Reconstruction **//
 ///////////////////////////
 
-VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
-				      VertexingUtils::FCCAnalysesVertex PV,
-				      bool tight,
-				      double chi2_cut) {
+VertexingUtils::FCCAnalysesV0
+get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
+        VertexingUtils::FCCAnalysesVertex PV, bool tight, double chi2_cut,
+        bool seedFit) {
   // V0 reconstruction
   // if(tight)  -> tight constraints
   // if(!tight) -> loose constraints
@@ -482,7 +485,8 @@ VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np
       if(tr_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
       tr_pair[1] = np_tracks[j];
 
-      ROOT::VecOps::RVec<double> V0_cand = get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut);
+      ROOT::VecOps::RVec<double> V0_cand =
+          get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut, seedFit);
       if(V0_cand[0] == -1) continue;
       
       // Ks
@@ -537,12 +541,13 @@ VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np
   return result;
 }
 
-VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
-				      VertexingUtils::FCCAnalysesVertex PV,
-				      double Ks_invM_low, double Ks_invM_high, double Ks_dis, double Ks_cosAng,
-				      double Lambda_invM_low, double Lambda_invM_high, double Lambda_dis, double Lambda_cosAng,
-				      double Gamma_invM_low, double Gamma_invM_high, double Gamma_dis, double Gamma_cosAng,
-				      double chi2_cut) {
+VertexingUtils::FCCAnalysesV0
+get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
+        VertexingUtils::FCCAnalysesVertex PV, double Ks_invM_low,
+        double Ks_invM_high, double Ks_dis, double Ks_cosAng,
+        double Lambda_invM_low, double Lambda_invM_high, double Lambda_dis,
+        double Lambda_cosAng, double Gamma_invM_low, double Gamma_invM_high,
+        double Gamma_dis, double Gamma_cosAng, double chi2_cut, bool seedFit) {
   // V0 reconstruction
   // by default set to the tight set of constraints
 
@@ -580,7 +585,8 @@ VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np
       if(tr_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
       tr_pair[1] = np_tracks[j];
 
-      ROOT::VecOps::RVec<double> V0_cand = get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut);
+      ROOT::VecOps::RVec<double> V0_cand =
+          get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut, seedFit);
       if(V0_cand[0] == -1) continue;
       
       // Ks
@@ -635,14 +641,14 @@ VertexingUtils::FCCAnalysesV0 get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np
   return result;
 }
 
-VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-					  ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
-					  ROOT::VecOps::RVec<bool> isInPrimary,
-					  ROOT::VecOps::RVec<fastjet::PseudoJet> jets,
-					  std::vector<std::vector<int>> jet_consti,
-					  VertexingUtils::FCCAnalysesVertex PV,
-					  bool tight,
-					  double chi2_cut) {
+VertexingUtils::FCCAnalysesV0 get_V0s_jet(
+    ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+    ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
+    ROOT::VecOps::RVec<bool> isInPrimary,
+    ROOT::VecOps::RVec<fastjet::PseudoJet> jets,
+    std::vector<std::vector<int>> jet_consti,
+    VertexingUtils::FCCAnalysesVertex PV, bool tight, double chi2_cut,
+    bool seedFit) {
   // V0 reconstruction after jet clustering
   // if(tight)  -> tight constraints
   // if(!tight) -> loose constraints
@@ -712,56 +718,65 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
 	if(isInV0[j] == true) continue; // don't pair a track if it already forms a V0
 	if(tr_pair[0].omega * np_tracks[j].omega > 0) continue; // don't pair tracks with same charge (same sign curvature = same sign charge)
 	tr_pair[1] = np_tracks[j];
-	
-	ROOT::VecOps::RVec<double> V0_cand = get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut);
-	if(V0_cand[0] == -1) continue;
-	
-	// Ks
-	if(V0_cand[0]>isKs[0] && V0_cand[0]<isKs[1] && V0_cand[4]>isKs[2] && V0_cand[5]>isKs[3]) {
-	  if(debug_me) std::cout<<"Found a Ks"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(310);
-	  invM.push_back(V0_cand[0]);
-	  i_nSV++;
-	  break;
-	}
-	  
-	// Lambda0
-	else if(V0_cand[1]>isLambda0[0] && V0_cand[1]<isLambda0[1] && V0_cand[4]>isLambda0[2] && V0_cand[5]>isLambda0[3]) {
-	  if(debug_me) std::cout<<"Found a Lambda0"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(3122);
-	  invM.push_back(V0_cand[1]);
-	  i_nSV++;
-	  break;
-	}
-	else if(V0_cand[2]>isLambda0[0] && V0_cand[2]<isLambda0[1] && V0_cand[4]>isLambda0[2] && V0_cand[5]>isLambda0[3]) {
-	  if(debug_me) std::cout<<"Found a Lambda0"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(3122);
-	  invM.push_back(V0_cand[2]);
-	  i_nSV++;
-	  break;
-	}
-	
-	// photon conversion
-	else if(V0_cand[3]<isGamma[1] && V0_cand[4]>isGamma[2] && V0_cand[5]>isGamma[3]) {
-	  if(debug_me) std::cout<<"Found a Photon coversion"<<std::endl;
-	  isInV0[i] = true;
-	  isInV0[j] = true;
-	  vtx.push_back(V0_vtx);
-	  pdgAbs.push_back(22);
-	  invM.push_back(V0_cand[3]);
-	  i_nSV++;
-	  break;
-	}
-	//      
+
+        ROOT::VecOps::RVec<double> V0_cand =
+            get_V0candidate(V0_vtx, tr_pair, PV, true, chi2_cut, seedFit);
+        if (V0_cand[0] == -1)
+          continue;
+
+        // Ks
+        if (V0_cand[0] > isKs[0] && V0_cand[0] < isKs[1] &&
+            V0_cand[4] > isKs[2] && V0_cand[5] > isKs[3]) {
+          if (debug_me)
+            std::cout << "Found a Ks" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(310);
+          invM.push_back(V0_cand[0]);
+          i_nSV++;
+          break;
+        }
+
+        // Lambda0
+        else if (V0_cand[1] > isLambda0[0] && V0_cand[1] < isLambda0[1] &&
+                 V0_cand[4] > isLambda0[2] && V0_cand[5] > isLambda0[3]) {
+          if (debug_me)
+            std::cout << "Found a Lambda0" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(3122);
+          invM.push_back(V0_cand[1]);
+          i_nSV++;
+          break;
+        } else if (V0_cand[2] > isLambda0[0] && V0_cand[2] < isLambda0[1] &&
+                   V0_cand[4] > isLambda0[2] && V0_cand[5] > isLambda0[3]) {
+          if (debug_me)
+            std::cout << "Found a Lambda0" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(3122);
+          invM.push_back(V0_cand[2]);
+          i_nSV++;
+          break;
+        }
+
+        // photon conversion
+        else if (V0_cand[3] < isGamma[1] && V0_cand[4] > isGamma[2] &&
+                 V0_cand[5] > isGamma[3]) {
+          if (debug_me)
+            std::cout << "Found a Photon coversion" << std::endl;
+          isInV0[i] = true;
+          isInV0[j] = true;
+          vtx.push_back(V0_vtx);
+          pdgAbs.push_back(22);
+          invM.push_back(V0_cand[3]);
+          i_nSV++;
+          break;
+        }
+        //
       }
     }
 
@@ -779,12 +794,11 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(ROOT::VecOps::RVec<edm4hep::Reconstruc
 }
 
 //
-ROOT::VecOps::RVec<double> get_V0candidate(VertexingUtils::FCCAnalysesVertex &V0_vtx,
-					   ROOT::VecOps::RVec<edm4hep::TrackState> tr_pair,
-					   VertexingUtils::FCCAnalysesVertex PV,
-					   bool chi2,
-					   double chi2_cut)
-{
+ROOT::VecOps::RVec<double>
+get_V0candidate(VertexingUtils::FCCAnalysesVertex &V0_vtx,
+                ROOT::VecOps::RVec<edm4hep::TrackState> tr_pair,
+                VertexingUtils::FCCAnalysesVertex PV, bool chi2,
+                double chi2_cut, bool seedFit) {
   // get invariant mass, distance from PV, and colliniarity variables for all V0 candidates
   
   // [0] -> invM_Ks [GeV]
@@ -798,8 +812,11 @@ ROOT::VecOps::RVec<double> get_V0candidate(VertexingUtils::FCCAnalysesVertex &V0
   ROOT::VecOps::RVec<double> result(6, -1);
 
   edm4hep::Vector3f r_PV = PV.vertex.position; // in mm
-  
-  V0_vtx = VertexFitterSimple::VertexFitter_Tk(2, tr_pair);
+
+  if (seedFit)
+    V0_vtx = VertexFitterSimple::VertexFitter_2Tk_seeded(2, tr_pair);
+  else
+    V0_vtx = VertexFitterSimple::VertexFitter_Tk(2, tr_pair);
 
   if(chi2) {
     // constraint on chi2: chi2 < cut (9)

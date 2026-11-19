@@ -113,32 +113,46 @@ namespace VertexFinderLCFIPlus{
   /** returns V0s reconstructed from a set of tracks (as an FCCAnalysesV0 object)
    *  constraint thresholds can be chosen out of two sets
    */
-  VertexingUtils::FCCAnalysesV0 get_V0s( ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
-					 VertexingUtils::FCCAnalysesVertex PV,
-					 bool tight,
-					 double chi2_cut=9. ) ;
+  /// seedFit (default true): each track pair is fitted with
+  /// VertexFitterSimple::VertexFitter_2Tk_seeded, i.e. started at the crossing
+  /// points of the two transverse track circles, keeping the lower chi2. This
+  /// recovers V0s that decay far from the origin, where the fit started at
+  /// the points of closest approach often converges to a wrong solution, and
+  /// costs about twice the CPU time. seedFit = false restores the previous fit
+  /// (VertexFitter_Tk with its default start). seedFit is the last argument, so
+  /// chi2_cut must be given as well: get_V0s(np_tracks, PV, true, 9., false).
+  VertexingUtils::FCCAnalysesV0
+  get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
+          VertexingUtils::FCCAnalysesVertex PV, bool tight,
+          double chi2_cut = 9., bool seedFit = true);
 
   /** returns V0s reconstructed from a set of tracks (as an FCCAnalysesV0 object)
    *  constraint thresholds can be set manually
    */
-  VertexingUtils::FCCAnalysesV0 get_V0s( ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
-					 VertexingUtils::FCCAnalysesVertex PV,
-					 double Ks_invM_low=0.493, double Ks_invM_high=0.503, double Ks_dis=0.5, double Ks_cosAng=0.999,
-					 double Lambda_invM_low=1.111, double Lambda_invM_high=1.121, double Lambda_dis=0.5, double Lambda_cosAng=0.99995,
-					 double Gamma_invM_low=0., double Gamma_invM_high=0.005, double Gamma_dis=9, double Gamma_cosAng=0.99995,
-					 double chi2_cut=9. ) ;
+  /// seedFit: as for get_V0s above; all the preceding arguments must be given.
+  VertexingUtils::FCCAnalysesV0
+  get_V0s(ROOT::VecOps::RVec<edm4hep::TrackState> np_tracks,
+          VertexingUtils::FCCAnalysesVertex PV, double Ks_invM_low = 0.493,
+          double Ks_invM_high = 0.503, double Ks_dis = 0.5,
+          double Ks_cosAng = 0.999, double Lambda_invM_low = 1.111,
+          double Lambda_invM_high = 1.121, double Lambda_dis = 0.5,
+          double Lambda_cosAng = 0.99995, double Gamma_invM_low = 0.,
+          double Gamma_invM_high = 0.005, double Gamma_dis = 9,
+          double Gamma_cosAng = 0.99995, double chi2_cut = 9.,
+          bool seedFit = true);
 
   /** returns V0s reconstructed in each jet of the event (as an FCCAnalysesV0 object)
    *  need to perform jet clustering before calling this function
    */
-  VertexingUtils::FCCAnalysesV0 get_V0s_jet( ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
-					     ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
-					     ROOT::VecOps::RVec<bool> isInPrimary,
-					     ROOT::VecOps::RVec<fastjet::PseudoJet> jets,
-					     std::vector<std::vector<int>> jet_consti,
-					     VertexingUtils::FCCAnalysesVertex PV,
-					     bool tight = true,
-					     double chi2_cut=9. );
+  /// seedFit: as for get_V0s above; tight and chi2_cut must be given as well.
+  VertexingUtils::FCCAnalysesV0 get_V0s_jet(
+      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recoparticles,
+      ROOT::VecOps::RVec<edm4hep::TrackState> thetracks,
+      ROOT::VecOps::RVec<bool> isInPrimary,
+      ROOT::VecOps::RVec<fastjet::PseudoJet> jets,
+      std::vector<std::vector<int>> jet_consti,
+      VertexingUtils::FCCAnalysesVertex PV, bool tight = true,
+      double chi2_cut = 9., bool seedFit = true);
 
   /** returns invariant mass, distance from PV, and colliniarity variables for all V0 candidates
    *  [0] -> invM_Ks [GeV]
@@ -150,11 +164,13 @@ namespace VertexFinderLCFIPlus{
    *  boolean check for if chi2 constraint needs to be checked
    *  skip the candidate with output size 0 - doesn't pass the chi2 cut
    */
-  ROOT::VecOps::RVec<double> get_V0candidate( VertexingUtils::FCCAnalysesVertex &V0_vtx,
-					      ROOT::VecOps::RVec<edm4hep::TrackState> tr_pair,
-					      VertexingUtils::FCCAnalysesVertex PV,
-					      bool chi2,
-					      double chi2_cut=9. );
+  /// seedFit (default true): pair fit as in get_V0s; false: the previous fit
+  /// (VertexFitter_Tk), as used by isV0 and thereby by the SV finder.
+  ROOT::VecOps::RVec<double>
+  get_V0candidate(VertexingUtils::FCCAnalysesVertex &V0_vtx,
+                  ROOT::VecOps::RVec<edm4hep::TrackState> tr_pair,
+                  VertexingUtils::FCCAnalysesVertex PV, bool chi2,
+                  double chi2_cut = 9., bool seedFit = true);
 
   /** functions to fill constraint thresholds
    *  tight  -> tight constraints

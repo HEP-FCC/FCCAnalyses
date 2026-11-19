@@ -161,6 +161,21 @@ namespace VertexingUtils{
    */
   double get_trackE( edm4hep::TrackState track ) ;
 
+  /** returns the transverse radii [mm] of the points where the transverse
+   *  circles of two tracks cross, in the frame of the track parameters (that of
+   *  the vertex position of VertexFitterSimple::VertexFitter_Tk): candidate
+   *  start radii of a two-track vertex fit (see
+   *  VertexFitterSimple::VertexFitter_2Tk_seeded)
+   *  2 entries (ascending) -> the circles cross
+   *  1 entry -> the circles touch or do not cross: midpoint of the two closest
+   *  points of the circles
+   *  0 entries -> undefined (concentric circles, omega = 0, non-finite
+   *  parameters)
+   */
+  ROOT::VecOps::RVec<double>
+  get_circleCrossingRadii(edm4hep::TrackState track1,
+                          edm4hep::TrackState track2);
+
   ///////////////////////////////////////////////////
   /// V0 Reconstruction
   /// Return the number of reconstructed V0s
