@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795105432594,
+  "lastUpdate": 1795105434848,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -62083,6 +62083,76 @@ window.BENCHMARK_DATA = {
             "value": 4.354320764541626,
             "range": "10",
             "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "benedikt.wach@cern.ch",
+            "name": "Benedikt Wach",
+            "username": "bndikt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9eaef264f57a6ed0745894be47678debdcbd1d09",
+          "message": "feat: add DIRAC grid submission support (#538)\n\n* Add DIRAC grid submission support\n\n* Fix grid output existence check for missing LFNs\n\n* Document DIRAC grid submission\n\n* Reuse shared analysis loading for grid submission\n\n* Modernize type annotations in grid submission modules\n\n* Streamline grid submission tests\n\n* Scope grid Python tests to explicit modules\n\n* Consolidate command-line argument parsing\n\n* Clarify grid worker argument handling\n\n* Require a separator for HTCondor custom arguments\n\n* Refine grid submission request handling\n\n* Install grid submission scripts with FCCAnalyses\n\n* Explain migration from submit --where to backend subcommands\n\n* Trim and consolidate grid submission tests\n\n* Check shipped build OS and architecture on grid workers\n\n* Resolve grid stride override before creating worker arguments\n\n* Match grid CPU allocations to analysis thread requests\n\n* Validate analysis structure before grid submission\n\n* Warn when input files limit requested grid chunks\n\n* Remove stale submission request versioning references\n\n* Limit grid submission to one CPU per job\n\n* Confirm grid submissions and support unattended runs\n\n* Format grid submission messages consistently\n\n* Default grid outputs to the DIRAC user root\n\n* Pin Key4hep releases for grid jobs and check shipped builds\n\n* Simplify DIRAC jobs to single-CPU execution\n\n* Clarify output deletion before grid submission\n\n* Handle legacy short backend option in submit migration error\n\n* Share logging setup between FCCAnalyses and DIRAC\n\n* Remove unused Slurm parser variable\n\n* Drop stray README blank line\n\n* Report missing Key4hep setup for grid submission\n\n* Clarify grid submission documentation",
+          "timestamp": "2026-11-19T17:14:00+01:00",
+          "tree_id": "f45602c9fc088e4da573f3de46f922d5a03ed93f",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/9eaef264f57a6ed0745894be47678debdcbd1d09"
+        },
+        "date": 1795105434213,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "prod | Events processed per second: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 38.562912062981894,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 16.07370097004691,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 12.640567524564668,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 16.749055478043655,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 6.0542192395782015,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: examples/FCCee/weaver/stage1.py",
+            "value": 5.368812201194263,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/stages_source.py",
+            "value": 22.17093780445498,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "prod | Events processed per second: /Package/examples/data_source/analysis_stage1.py",
+            "value": 22.96569440045074,
+            "range": "1000",
+            "unit": "Evt/s",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
