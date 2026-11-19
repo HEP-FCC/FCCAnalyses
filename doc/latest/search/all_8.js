@@ -389,8 +389,5 @@ var searchData=
   ['gettruthtauleps_386',['getTruthTauLeps',['../namespaceAnalysisFCChh.html#aefeab1bc7d3413577ee88b96c923a7f3',1,'AnalysisFCChh']]],
   ['gettruthzll_387',['getTruthZll',['../namespaceAnalysisFCChh.html#aed9ad8c92f0418e9aab1a4888cf8f194',1,'AnalysisFCChh']]],
   ['gety_388',['getY',['../namespaceFCCAnalyses_01_1_1PodioSource_01_1_1ReconstructedParticle.html#ad0864fb83745752c274e83a3d8be12d3',1,'FCCAnalyses ::PodioSource ::ReconstructedParticle']]],
-  ['globalmm_389',['globalmm',['../namespaceFCCAnalyses_1_1myUtils.html#acb83e14905e0e5a24e422db97849c32f',1,'FCCAnalyses::myUtils']]],
-  ['gmother_5find_390',['gmother_ind',['../structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertexMC.html#a58bc47d2f1c4aef3cddf0ddfe91c0bdd',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertexMC']]],
-  ['gweaver2_391',['gWeaver2',['../namespaceFCCAnalyses.html#a297716b181abd8c1c5f0f1cd079876bf',1,'FCCAnalyses']]],
-  ['gweavers_392',['gWeavers',['../namespaceFCCAnalyses.html#a3fed8fa694d7905bd9ad079e81b58ef4',1,'FCCAnalyses']]]
+  ['gmother_5find_389',['gmother_ind',['../structFCCAnalyses_1_1VertexingUtils_1_1FCCAnalysesVertexMC.html#a58bc47d2f1c4aef3cddf0ddfe91c0bdd',1,'FCCAnalyses::VertexingUtils::FCCAnalysesVertexMC']]]
 ];
