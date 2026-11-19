@@ -26,6 +26,8 @@ jobs:
                    -v /cvmfs:/cvmfs:shared \
                    -d ghcr.io/key4hep/key4hep-images/alma9:latest \
                    /bin/bash
+    - name: Install systemd runtime library
+      run: docker exec CI_container dnf install -y systemd-libs
     - name: CMake Configure
       run: |
         docker exec CI_container /bin/bash -c 'cd Package;\
