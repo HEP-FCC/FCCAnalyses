@@ -36,7 +36,6 @@ if(BUILD_TESTING)
     # add all unit tests
     add_executable(onnxruntime-unittest test/onnxtest.cpp)
     target_link_libraries(onnxruntime-unittest PUBLIC FCCAnalyses gfortran PRIVATE Catch2::Catch2WithMain ONNXRuntime)
-    target_include_directories(onnxruntime-unittest PUBLIC ${VDT_INCLUDE_DIR})
     target_compile_definitions(onnxruntime-unittest PUBLIC "-DTEST_INPUT_DATA_DIR=${TEST_INPUT_DATA_DIR}")
     include(Catch)
     catch_discover_tests(onnxruntime-unittest
