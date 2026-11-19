@@ -61,6 +61,7 @@ class analysis():
                .Define("nPrimaryTracks", "ReconstructedParticle::get_n(MC_PrimaryTracks_RP)")
 
                # Reconstruct the vertex from these primary tracks :
+               # VertexFitter( Primary, recoparticles, alltracks, BeamSpotConstraint, sigmax, sigmay, sigmaz, bsc_x, bsc_y, bsc_z, ComputeMomentaAtVertex )
                .Define("VertexObject_primaryTracks",  "VertexFitterSimple::VertexFitter ( 1, MC_PrimaryTracks_RP, EFlowTrack_1, false, 0., 0., 0., 0., 0., 0., false) ")
                .Define("Vertex_primaryTracks",   "VertexingUtils::get_VertexData( VertexObject_primaryTracks )")   # primary vertex, in mm
 
