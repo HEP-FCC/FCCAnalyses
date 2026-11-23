@@ -21,15 +21,17 @@ def parse_command_arguments(parser: argparse.ArgumentParser) -> argparse.Namespa
             '  fccanalysis submit grid analysis.py [grid options]\n'
             "See 'fccanalysis submit --help' for available backends."
         )
+    args = parser.parse_args(framework_arguments)
+    if args.command == 'run' and args.test_file is not None and not args.test:
+        parser.error('--test-file requires --test')
+
     try:
         separator_index = arguments.index('--')
     except ValueError:
-        args = parser.parse_args(arguments)
         if not hasattr(args, 'remaining'):
             args.remaining = []
         return args
 
-    args = parser.parse_args(arguments[:separator_index])
     args.remaining = arguments[separator_index + 1:]
     accepts_custom_arguments = args.command in {'run', 'submit'}
     if args.remaining and not accepts_custom_arguments:
@@ -395,7 +397,7 @@ def setup_run_parser(parser):
         '--test-file',
         type=str,
         default=None,
-        help='test file to use'
+        help='test file for modern Analysis scripts (requires --test)'
     )
 
     test_group.add_argument(

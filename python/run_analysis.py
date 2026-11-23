@@ -686,6 +686,12 @@ def run(args):
         LOGGER.error('Unknown sub-command "%s"!\nAborting...')
         sys.exit(3)
 
+    if args.test:
+        if args.input is not None:
+            LOGGER.warning('--input has no effect with --test.')
+        elif args.input_file_list is not None:
+            LOGGER.warning('--input-file-list has no effect with --test.')
+
     if args.deprecated_no_filepath_rewrites:
         LOGGER.warning('--no-filepath-rewrites is deprecated; '
                        'use --use-eos-mount instead.')

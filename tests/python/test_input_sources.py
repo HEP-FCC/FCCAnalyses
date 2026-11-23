@@ -18,11 +18,28 @@ import numpy  # Load before temporarily patching sys.modules for ROOT.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'python'))
 
 from anascript import get_sample_input_source, validate_sample_list
-from parsers import setup_run_parser
+from parsers import parse_command_arguments, setup_run_parser
 from input_resolver import InputResolutionError
 
 
 class InputSourceTest(unittest.TestCase):
+    def test_cli_test_file_requires_test_mode(self):
+        parser = argparse.ArgumentParser()
+        commands = parser.add_subparsers(dest='command')
+        setup_run_parser(commands.add_parser('run'))
+        argv = ['fccanalysis', 'run', 'analysis.py', '--test-file', 'test.root']
+        for remaining in ([], ['--', '--custom-option']):
+            with self.subTest(remaining=remaining), \
+                    patch.object(sys, 'argv', argv + remaining), \
+                    redirect_stderr(StringIO()) as stderr, \
+                    self.assertRaises(SystemExit) as error:
+                parse_command_arguments(parser)
+            self.assertEqual(error.exception.code, 2)
+            self.assertIn('--test-file requires --test', stderr.getvalue())
+
+        with patch.object(sys, 'argv', argv + ['--test']):
+            self.assertEqual(parse_command_arguments(parser).test_file, 'test.root')
+
     def test_eos_mount_options(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)
@@ -206,6 +223,25 @@ class LegacyInputTest(unittest.TestCase):
                 self.runner.run(args)
         self.assertFalse(args.use_xrootd)
         self.assertTrue(any('--use-eos-mount' in msg for msg in logs.output))
+
+    def test_run_warns_about_cli_input_skipped_in_test_mode(self):
+        parser = argparse.ArgumentParser()
+        parser.set_defaults(verbose=False, more_verbose=False, most_verbose=False)
+        commands = parser.add_subparsers(dest='command')
+        setup_run_parser(commands.add_parser('run'))
+        with tempfile.TemporaryDirectory() as directory:
+            analysis = Path(directory) / 'analysis.py'
+            analysis.write_text('class Analysis: pass\n', encoding='utf-8')
+            for option in ('--input', '--input-file-list'):
+                with self.subTest(option=option), \
+                        patch.object(self.runner, 'run_fccanalysis') as run_modern, \
+                        self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
+                    args = parser.parse_args(['run', str(analysis), '--test',
+                                              option, 'unused'])
+                    self.runner.run(args)
+                run_modern.assert_called_once()
+                self.assertEqual([record.getMessage() for record in logs.records],
+                                 [f'{option} has no effect with --test.'])
 
     def test_explicit_inputs_override_process_list(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -397,13 +433,12 @@ class EosRewriteTest(unittest.TestCase):
         analysis = SimpleNamespace(samples={'signal': {'input-files': ['one.root']}})
         with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
             args = parser.parse_args(['analysis.py', '--sample-name', 'ignored',
-                                      '--output', 'ignored.root', '--test-file', 'unused.root'])
+                                      '--output', 'ignored.root'])
             with self.assertLogs('FCCAnalyses.run_analysis', level='WARNING') as logs:
                 config = self.runner.merge_config(args, analysis)
                 with self.assertRaises(SystemExit):
                     self.runner.generate_jobs(config)
             output = '\n'.join(logs.output)
-            self.assertIn('--test-file', output)
             self.assertIn('--sample-name', output)
             self.assertIn('output file', output)
             self.assertIn('Analysis.output_dir', output)

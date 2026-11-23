@@ -99,6 +99,7 @@ Limits are ignored with a warning when a sample has multiple chunks\&.
 .TP
 .B \-\-test
 Run over the test file in a single job\&.
+If \fB--input\fR or \fB--input-file-list\fR is supplied, it is ignored with a warning.
 .TP
 .B \-\-use-data-source
 Load events through podio::DataSource\&.
@@ -130,7 +131,8 @@ Split each sample into \fIN_CHUNKS\fR output files, overriding sample chunks.
 Specify how to stride through events, overriding sample stride settings.
 .TP
 \fB\-\-test\-file\fR \fITEST_FILE\fR
-Specify the test file to use when running with \fB\-\-test\fR.
+Specify the test file for modern \fBAnalysis\fR scripts. This option requires
+\fB\-\-test\fR.
 .TP
 .B \-\-bench
 Output benchmark results to a JSON file\&.

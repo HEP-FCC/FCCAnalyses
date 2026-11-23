@@ -506,8 +506,6 @@ def merge_config(args: argparse.Namespace,
 
     # Check whether a test is run
     config['test-file'] = None
-    if args.test is None and args.test_file is not None:
-        LOGGER.warning('--test-file has no effect without --test.')
     if args.test is not None:
         if hasattr(analysis_class, 'test_file'):
             config['test-file'] = analysis_class.test_file
