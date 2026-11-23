@@ -61,10 +61,10 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
         file_quantities: Optional[list[dict[str,
                                             Union[int, float, str]]]] = None
 
-        input_source, input_value = get_sample_input_source(
-            sample_dict, config['input-dir'], config['campaign']
-        )
         try:
+            input_source, input_value = get_sample_input_source(
+                sample_dict, config['input-dir'], config['campaign']
+            )
             if input_source == 'input-files':
                 LOGGER.info('Will inspect directly provided input files for '
                             'the sample information.')

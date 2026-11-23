@@ -246,17 +246,15 @@ def _resolve_analysis_samples(
 
     samples = _validated_analysis_samples(analysis_class)
     input_dir = getattr(analysis_class, 'input_dir', None)
-    if input_dir is not None and not isinstance(input_dir, str):
-        raise GridSubmissionError('Analysis.input_dir must be a string.')
 
-    configured_sources = tuple(
-        (
-            sample_name,
-            sample,
-            *get_sample_input_source(sample, input_dir, None),
-        )
-        for sample_name, sample in samples.items()
-    )
+    configured_sources = []
+    for sample_name, sample in samples.items():
+        try:
+            source, value = get_sample_input_source(sample, input_dir, None)
+        except InputResolutionError as error:
+            raise GridSubmissionError(f'Sample {sample_name!r}: {error}') from error
+        configured_sources.append((sample_name, sample, source, value))
+
     input_modes = {
         'dirac-lfn' if source == 'input-lfn-list' else 'xrootd'
         for _, _, source, _ in configured_sources

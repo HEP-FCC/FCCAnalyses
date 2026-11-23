@@ -7,6 +7,8 @@ import sys
 import logging
 from typing import Any
 
+from input_resolver import InputResolutionError
+
 
 LOGGER: logging.Logger = logging.getLogger('FCCAnalyses.run')
 
@@ -477,6 +479,8 @@ def get_sample_input_source(sample_dict: dict[str, Any], input_dir: Any,
     if sample_dict.get('input-dir') is not None:
         return 'sample-input-dir', sample_dict['input-dir']
     if input_dir is not None:
+        if not isinstance(input_dir, str) or not input_dir.strip():
+            raise InputResolutionError('Analysis.input_dir must be a non-empty string.')
         return 'global-input-dir', input_dir
     if campaign is not None:
         return 'campaign', campaign

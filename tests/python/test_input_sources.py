@@ -69,9 +69,16 @@ class InputSourceTest(unittest.TestCase):
                     'events': {source: value},
                 })['events']
                 self.assertEqual(
-                    get_sample_input_source(sample, '/inputs', 'campaign'),
+                    get_sample_input_source(sample, 42, 'campaign'),
                     (expected, value),
                 )
+
+    def test_invalid_global_input_dir_prevents_campaign_fallback(self):
+        for value in ('', '  ', 42):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(InputResolutionError,
+                                            r'Analysis\.input_dir must be a non-empty string'):
+                    get_sample_input_source({}, value, 'campaign')
 
     def test_malformed_input_files_are_rejected(self):
         for value in ('one.root', 42, ('one.root',), ['one.root', 42]):
