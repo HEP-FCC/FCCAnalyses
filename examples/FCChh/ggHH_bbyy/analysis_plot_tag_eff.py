@@ -23,7 +23,7 @@ class Analysis():
         # Mandatory: List of processes to run over
         self.process_list = {
             # # Add your processes like this: 
-            ## '<name of process>':{'fraction':<fraction of events to run over>, 'chunks':<number of chunks to split the output into>, 'output':<name of the output file> }, 
+            ## '<name of process>':{'fraction':<fraction of events to run over>, 'n-chunks':<number of chunks to split the output into>, 'output-stem':<name of the output file> },
             # # - <name of process> needs to correspond either the name of the input .root file, or the name of a directory containing root files 
             # # If you want to process only part of the events, split the output into chunks or give a different name to the output use the optional arguments
             # # or leave blank to use defaults = run the full statistics in one output file named the same as the process:

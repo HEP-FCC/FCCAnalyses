@@ -137,34 +137,35 @@ class InputSourceTest(unittest.TestCase):
     def test_sample_fields_accept_defaults_and_boundary_values(self):
         fields = ('input-dir', 'input_dir', 'input-file-list', 'input-lfn-list',
                   'input-files', 'output-stem', 'output', 'fraction', 'chunks',
-                  'stride', 'n-events-max')
+                  'stride', 'n-events-max', 'n-chunks', 'n-events')
         for field in fields:
             with self.subTest(field=field):
                 sample = validate_sample_list({'signal': {field: None}})['signal']
                 self.assertEqual(sample['fraction'], 1.0)
-                self.assertIsNone(sample['chunks'])
+                self.assertIsNone(sample['n-chunks'])
         sample = validate_sample_list({'signal': {
             'fraction': 1, 'chunks': 1, 'stride': 1, 'n-events-max': 0,
         }})['signal']
         self.assertEqual(sample['fraction'], 1.0)
         self.assertIsInstance(sample['fraction'], float)
-        self.assertEqual((sample['chunks'], sample['stride'], sample['n-events-max']),
+        self.assertEqual((sample['n-chunks'], sample['stride'], sample['n-events']),
                          (1, 1, 0))
 
-    def test_nchunks_and_legacy_chunks(self):
-        self.assertEqual(validate_sample_list({'signal': {'nchunks': 3}})
-                         ['signal']['chunks'], 3)
+    def test_n_chunks_and_legacy_chunks(self):
+        self.assertEqual(validate_sample_list({'signal': {'n-chunks': 3}})
+                         ['signal']['n-chunks'], 3)
         with self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
             sample = validate_sample_list({'signal': {'chunks': 2}})['signal']
-        self.assertEqual(sample['chunks'], 2)
-        self.assertIn('nchunks', logs.output[0])
-        for values in ({'nchunks': 0}, {'nchunks': 1, 'chunks': 1}):
+        self.assertEqual(sample['n-chunks'], 2)
+        self.assertIn('n-chunks', logs.output[0])
+        for values in ({'n-chunks': 0}, {'n-chunks': 1, 'chunks': 1}):
             with self.subTest(values=values), self.assertRaises(SystemExit):
                 validate_sample_list({'signal': values})
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)
-        for option in ('--nchunks', '--n-chunks'):
-            self.assertEqual(parser.parse_args(['analysis.py', option, '4']).n_chunks, 4)
+        self.assertEqual(parser.parse_args(['analysis.py', '--n-chunks', '4']).n_chunks, 4)
+        with redirect_stderr(StringIO()), self.assertRaises(SystemExit):
+            parser.parse_args(['analysis.py', '--nchunks', '4'])
 
     def test_input_sources_are_mutually_exclusive(self):
         sample = validate_sample_list({
@@ -327,22 +328,22 @@ class EosRewriteTest(unittest.TestCase):
     def test_sample_cli_overrides_and_event_limit_precedence(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)
-        analysis = SimpleNamespace(nevents=90, samples={
-            'signal': {'input-files': ['one.root', 'two.root'], 'nchunks': 1,
-                       'stride': 2, 'nevents': 30},
+        analysis = SimpleNamespace(n_events=90, samples={
+            'signal': {'input-files': ['one.root', 'two.root'], 'n-chunks': 1,
+                       'stride': 2, 'n-events': 30},
             'background': {'input-files': ['three.root', 'four.root']},
         })
         with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):
             args = parser.parse_args(['analysis.py', '--output-dir', '/tmp/out',
-                                      '--nchunks', '1', '--stride', '5',
-                                      '--nevents', '10'])
+                                      '--n-chunks', '1', '--stride', '5',
+                                      '--n-events', '10'])
             config = self.runner.merge_config(args, analysis)
             with self.assertLogs('FCCAnalyses.run_analysis', level='DEBUG') as logs:
                 jobs = self.runner.generate_jobs(config)
         self.assertEqual(
             [record.getMessage() for record in logs.records
-             if 'overrides sample nchunks' in record.getMessage()],
-            ['--nchunks=1 overrides sample nchunks=1 for signal.'],
+             if 'overrides sample n-chunks' in record.getMessage()],
+            ['--n-chunks=1 overrides sample n-chunks=1 for signal.'],
         )
         self.assertFalse(any(record.levelno >= logging.WARNING for record in logs.records))
         self.assertEqual(len(jobs), 2)
@@ -357,14 +358,14 @@ class EosRewriteTest(unittest.TestCase):
         self.assertEqual([job['n-events-max'] for job in jobs], [30, 90])
         self.assertEqual([job['stride'] for job in jobs], [2, None])
 
-    def test_nevents_aliases_conflicts_and_invalid_values(self):
+    def test_n_events_aliases_conflicts_and_invalid_values(self):
         with self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
             sample = validate_sample_list({'signal': {'n-events-max': 5}})['signal']
-        self.assertEqual(sample['n-events-max'], 5)
+        self.assertEqual(sample['n-events'], 5)
         self.assertIn('DEPRECATED', logs.output[0])
-        self.assertEqual(validate_sample_list({'signal': {'nevents': 0}})
-                         ['signal']['n-events-max'], 0)
-        for sample in ({'nevents': 1, 'n-events-max': 1}, {'nevents': -1}):
+        self.assertEqual(validate_sample_list({'signal': {'n-events': 0}})
+                         ['signal']['n-events'], 0)
+        for sample in ({'n-events': 1, 'n-events-max': 1}, {'n-events': -1}):
             with self.subTest(sample=sample), self.assertRaises(SystemExit):
                 validate_sample_list({'signal': sample})
         parser = argparse.ArgumentParser()
@@ -374,8 +375,8 @@ class EosRewriteTest(unittest.TestCase):
                 config = self.runner.merge_config(
                     parser.parse_args(['analysis.py']), SimpleNamespace(n_events_max=7))
             self.assertEqual(config['n-events-max'], 7)
-            for analysis in (SimpleNamespace(nevents=1, n_events_max=2),
-                             SimpleNamespace(nevents=-1)):
+            for analysis in (SimpleNamespace(n_events=1, n_events_max=2),
+                             SimpleNamespace(n_events=-1)):
                 with self.subTest(analysis=analysis), self.assertRaises(SystemExit):
                     self.runner.merge_config(parser.parse_args(['analysis.py']), analysis)
 
@@ -393,8 +394,8 @@ class EosRewriteTest(unittest.TestCase):
     def test_multichunk_ignores_event_limit_with_warning(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)
-        analysis = SimpleNamespace(nevents=5, samples={
-            'signal': {'input-files': ['one.root', 'two.root'], 'chunks': 2},
+        analysis = SimpleNamespace(n_events=5, samples={
+            'signal': {'input-files': ['one.root', 'two.root'], 'n-chunks': 2},
         })
         args = parser.parse_args(['analysis.py', '--output-dir', '/tmp/out'])
         with patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}):

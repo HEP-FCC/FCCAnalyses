@@ -12,7 +12,7 @@
 [\fB\-i\fR \fIINPUT_PATH\fR [\fIINPUT_PATH\fR ...] | \fB\-\-input\fR \fIINPUT_PATH\fR [\fIINPUT_PATH\fR ...] |
 \fB\-\-input\-file\-list\fR \fILIST_FILE\fR]
 [\fB\-\-output\fR \fIOUTPUT\fR]
-[\fB\-\-nevents\fR \fINEVENTS\fR]
+[\fB\-\-n\-events\fR \fINEVENTS\fR]
 [\fB\-\-test\fR]
 [\fB\-\-bench\fR]
 [\fB\-j\fR NCPUS | \fB\-\-ncpus\fR \fINCPUS\fR | \fB\-\-n-threads\fR \fINTHREADS\fR]
@@ -24,7 +24,7 @@
 [\fB\-a\fR \fIANALYSIS_NAME\fR | \fB\-\-analysis\-name\fR \fIANALYSIS_NAME\fR]
 [\fB\-\-use\-eos\-mount\fR]
 [\fB\-s\fR \fISAMPLE_NAME\fR | \fB\-\-sample\-name\fR \fISAMPLE_NAME\fR]
-[\fB\-\-nchunks\fR \fIN_CHUNKS\fR]
+[\fB\-\-n\-chunks\fR \fIN_CHUNKS\fR]
 [\fB\-\-stride\fR \fISTRIDE\fR]
 [\fB\-\-test\-file\fR \fITEST_FILE\fR]
 [\fB\-\-\fR \fIANALYSIS ARGUMENTS\fR]
@@ -93,7 +93,7 @@ Blank lines and lines beginning with "#" are ignored\&.
 Specify an output file for test mode or an independent sample with one chunk.
 Script-defined samples use their output stems and output directory instead.
 .TP
-\fB\-\-nevents\fR \fINEVENTS\fR, \fB\-\-n\-events\fR \fINEVENTS\fR
+\fB\-\-n\-events\fR \fINEVENTS\fR, \fB\-\-nevents\fR \fINEVENTS\fR
 Specify the maximum number of events per sample, overriding script settings.
 Limits are ignored with a warning when a sample has multiple chunks\&.
 .TP
@@ -124,7 +124,7 @@ The deprecated \fB--no-filepath-rewrites\fR option remains as an alias.
 Set sample name, mostly used for the output path. Used when running over an
 independent sample (i.e. without a sample list).
 .TP
-\fB\-\-nchunks\fR \fIN_CHUNKS\fR, \fB\-\-n\-chunks\fR \fIN_CHUNKS\fR
+\fB\-\-n\-chunks\fR \fIN_CHUNKS\fR
 Split each sample into \fIN_CHUNKS\fR output files, overriding sample chunks.
 .TP
 \fB\-\-stride\fR \fISTRIDE\fR

@@ -20,7 +20,7 @@
 [\fB\-\-output\-dir\fR \fIOUTPUT_DIR\fR]
 [\fB\-\-output\-se\fR \fISTORAGE_ELEMENT\fR]
 [\fB\-\-force\fR]
-[\fB\-\-files\-per\-job\fR \fICOUNT\fR | \fB\-\-nchunks\fR \fICOUNT\fR]
+[\fB\-\-files\-per\-job\fR \fICOUNT\fR | \fB\-\-n\-chunks\fR \fICOUNT\fR]
 [\fB\-\-sample\-name\fR \fINAME\fR]
 [\fB\-\-site\fR \fISITE\fR]
 [\fB\-\-mode\fR {\fBwms\fR,\fBlocal\fR}]
@@ -152,7 +152,7 @@ Fraction-based selection is not supported for LFN samples.
 DIRAC stages each planned job's assigned input data into the worker directory,
 and the generated per-job input-file list refers to the staged filenames.
 By default each sample's complete LFN list is assigned to one job. A sample's
-\fInchunks\fR setting or the command-line grouping options can split it into
+\fIn-chunks\fR setting or the command-line grouping options can split it into
 multiple jobs.
 
 .SH GRID OPTIONS
@@ -197,9 +197,9 @@ Derive the number of jobs from the number of input files and the requested
 maximum number of files per job.
 This overrides sample-level chunk counts.
 This option is mutually exclusive with
-.BR \-\-nchunks .
+.BR \-\-n\-chunks .
 .TP
-\fB\-\-nchunks\fR \fICOUNT\fR, \fB\-\-n\-chunks\fR \fICOUNT\fR
+\fB\-\-n\-chunks\fR \fICOUNT\fR
 Request this number of jobs/output chunks for each input sample.
 This overrides sample-level chunk counts.
 The actual number of jobs cannot exceed the number of input files.
@@ -278,7 +278,7 @@ Create ten jobs per XRootD sample and restrict them to one DIRAC site:
 .nf
 fccanalysis submit grid analysis.py \e
     --output result.root --output-dir analyses/example \e
-    --nchunks 10 --site LCG.Example.org
+    --n-chunks 10 --site LCG.Example.org
 .fi
 .PP
 Submit a list of DIRAC LFNs in groups of five files:

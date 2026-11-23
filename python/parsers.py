@@ -231,16 +231,16 @@ def setup_grid_submit_parser(parser):
         default=None,
         metavar='COUNT',
         help='number of input files processed by each grid job; overrides '
-            'sample chunks when supplied'
+            'sample n-chunks when supplied'
     )
     grouping.add_argument(
-        '--nchunks', '--n-chunks',
+        '--n-chunks',
         dest='n_chunks',
         type=_positive_integer,
         default=None,
         metavar='COUNT',
         help='requested number of jobs/output chunks; overrides '
-            'sample nchunks when supplied'
+            'sample n-chunks when supplied'
     )
     parser.add_argument(
         '--sample-name',
@@ -366,14 +366,15 @@ def setup_run_parser(parser):
         help='sample name, mostly used for the output path'
     )
     parser.add_argument(
-        '--nchunks', '--n-chunks',
+        '--n-chunks',
         dest='n_chunks',
         type=_positive_integer,
         default=None,
-        help='number of output chunks per sample; overrides sample nchunks'
+        help='number of output chunks per sample; overrides sample n-chunks'
     )
     parser.add_argument(
-        '--nevents', '--n-events',
+        '--n-events', '--nevents',
+        dest='nevents',
         type=int,
         default=None,
         help='specify max number of events to process'

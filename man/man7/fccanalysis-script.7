@@ -175,12 +175,12 @@ remains accepted as a compatibility alias\&.
 .br
 Default value: the sample name
 .in -4
-\fInchunks\fR
+\fIn-chunks\fR
 .in +4
 The analysis can be split into several output chunks (useful on distributed
 systems)\&. The value must be a positive integer\&. For grid submission this
 value can be overridden on the command line with either
-\fB\-\-nchunks\fR
+\fB\-\-n\-chunks\fR
 or
 \fB\-\-files\-per\-job\fR\&.
 The deprecated spelling \fIchunks\fR remains accepted\&.
@@ -194,11 +194,11 @@ integer\&.
 .br
 Default value: None (no striding)
 .in -4
-\fInevents\fR
+\fIn-events\fR
 .in +4
 Limits the maximum number of events to process for the sample; it must be a
 non-negative integer\&.
-The command-line \fB--nevents\fR option overrides this setting. Limits are
+The command-line \fB--n-events\fR option overrides this setting. Limits are
 ignored with a warning for multiple chunks. Grid submission rejects event
 limits because they do not compose reliably with file-based jobs\&.
 The deprecated spelling \fIn-events-max\fR remains accepted\&.
@@ -306,9 +306,9 @@ and all normalisation factors calculated with sum of weights accordingly\&.
 .br
 Default value: False
 .TP
-\fBnevents\fR (optional)
-Maximum number of events per sample. A per-sample \fInevents\fR or the
-command-line \fB--nevents\fR option takes precedence. Grid submission rejects
+\fBn_events\fR (optional)
+Maximum number of events per sample. A per-sample \fIn-events\fR or the
+command-line \fB--n-events\fR option takes precedence. Grid submission rejects
 this setting. The deprecated spelling \fBn_events_max\fR remains accepted\&.
 .PP
 This section is under construction. You are invited to help :)

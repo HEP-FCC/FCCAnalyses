@@ -30,11 +30,11 @@ class Analysis():
             # Run over 50% of the statistics and save output into two files
             # named <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
             # Number of input files needs to be larger that number of chunks
-            'p8_ee_WW_ecm240': {'fraction': 0.5, 'chunks': 2},
+            'p8_ee_WW_ecm240': {'fraction': 0.5, 'n-chunks': 2},
             # Run over 20% of the statistics and save output into one file
             # named <outputDir>/p8_ee_ZH_ecm240_out_f02.root
             'p8_ee_ZH_ecm240': {'fraction': 0.2,
-                                'output': 'p8_ee_ZH_ecm240_out_f02'}
+                                'output-stem': 'p8_ee_ZH_ecm240_out_f02'}
         }
 
         # Mandatory: Production tag when running over the centrally produced

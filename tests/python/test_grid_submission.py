@@ -399,7 +399,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 '        self.input_dir = "/eos/experiment/fcc/test"\n'
                 '        self.include_paths = ["include/functions.h"]\n'
                 '        self.samples = {\n'
-                '            "signal": {"nchunks": 2, "stride": 3},\n'
+                '            "signal": {"n-chunks": 2, "stride": 3},\n'
                 '            "background": {},\n'
                 '        }\n',
                 encoding='utf-8',
@@ -409,7 +409,7 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 [
                     '--output', 'analysis.root',
                     '--output-dir', 'analysis/results',
-                    '--nchunks', '2',
+                    '--n-chunks', '2',
                 ],
             )
 
@@ -433,8 +433,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 )
             self.assertEqual(
                 [record.getMessage() for record in logs.records
-                 if 'overrides sample nchunks' in record.getMessage()],
-                ['--nchunks=2 overrides sample nchunks=2 for signal.'],
+                 if 'overrides sample n-chunks' in record.getMessage()],
+                ['--n-chunks=2 overrides sample n-chunks=2 for signal.'],
             )
             with tarfile.open(request.analysis_include_archive) as archive:
                 self.assertEqual(archive.getnames(), ['include/functions.h'])
@@ -757,9 +757,9 @@ class GridSubmissionFrontendTest(unittest.TestCase):
 
     def test_rejects_all_event_limit_spellings(self) -> None:
         for analysis in (
-            SimpleNamespace(nevents=1),
+            SimpleNamespace(n_events=1),
             SimpleNamespace(n_events_max=1),
-            SimpleNamespace(samples={'signal': {'nevents': 1}}),
+            SimpleNamespace(samples={'signal': {'n-events': 1}}),
             SimpleNamespace(samples={'signal': {'n-events-max': 1}}),
         ):
             with self.subTest(analysis=analysis), self.assertRaises(GridSubmissionError):

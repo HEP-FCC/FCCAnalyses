@@ -295,13 +295,13 @@ def _resolve_analysis_samples(
             sample_name,
         )
 
-        chunks = sample['chunks']
+        chunks = sample['n-chunks']
         if chunks is not None:
             if args.files_per_job is not None:
-                LOGGER.debug('--files-per-job=%s overrides sample nchunks=%s for %s.',
+                LOGGER.debug('--files-per-job=%s overrides sample n-chunks=%s for %s.',
                              args.files_per_job, chunks, sample_name)
             elif n_chunks is not None:
-                LOGGER.debug('--nchunks=%s overrides sample nchunks=%s for %s.',
+                LOGGER.debug('--n-chunks=%s overrides sample n-chunks=%s for %s.',
                              n_chunks, chunks, sample_name)
         if args.stride is not None and sample['stride'] is not None:
             LOGGER.debug('--stride=%s overrides sample stride=%s for %s.',
@@ -456,7 +456,7 @@ def _validated_analysis_samples(analysis_class: Any) -> dict[str, dict[str, Any]
 
 def _reject_sample_event_limits(analysis_class: Any) -> None:
     '''Reject event limits with ambiguous multi-job semantics.'''
-    for field in ('nevents', 'n_events_max'):
+    for field in ('n_events', 'n_events_max'):
         if getattr(analysis_class, field, None) is not None:
             raise GridSubmissionError(
                 f'Analysis.{field} is not supported for grid submission '
@@ -471,7 +471,7 @@ def _reject_sample_event_limits(analysis_class: Any) -> None:
         return
     for sample_name, sample in provided_samples.items():
         if isinstance(sample, dict):
-            for field in ('nevents', 'n-events-max'):
+            for field in ('n-events', 'n-events-max'):
                 if sample.get(field) is not None:
                     raise GridSubmissionError(
                         f'Sample-level {field} is not supported for grid '

@@ -27,9 +27,9 @@ class Analysis():
         self.process_list = {
             # Run over the full statistics in 20 jobs per dataset and save the
             # output into <outputDir>/p8_ee_??_ecm240/chunk<N>.root
-            'p8_ee_ZZ_ecm240': {'chunks': 20},
-            'p8_ee_WW_ecm240': {'chunks': 20},
-            'p8_ee_ZH_ecm240': {'chunks': 20}
+            'p8_ee_ZZ_ecm240': {'n-chunks': 20},
+            'p8_ee_WW_ecm240': {'n-chunks': 20},
+            'p8_ee_ZH_ecm240': {'n-chunks': 20}
         }
 
         # Mandatory: Production tag when running over the centrally produced

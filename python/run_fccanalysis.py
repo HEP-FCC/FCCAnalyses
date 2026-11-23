@@ -192,11 +192,11 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                         f'          {output_stem}'
 
         # Split into chunks
-        sample_chunks = sample_dict.get('chunks')
+        sample_chunks = sample_dict['n-chunks']
         n_chunks = sample_chunks or 1
         if config['n-chunks'] is not None:
             if sample_chunks is not None:
-                LOGGER.debug('--nchunks=%s overrides sample nchunks=%s for %s.',
+                LOGGER.debug('--n-chunks=%s overrides sample n-chunks=%s for %s.',
                              config['n-chunks'], sample_chunks, sample_name)
             n_chunks = config['n-chunks']
 
@@ -214,7 +214,7 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                     f'            {len(chunks_list):,}'
 
         # Maximum number of events
-        sample_nevents = sample_dict['n-events-max']
+        sample_nevents = sample_dict['n-events']
         script_nevents = (sample_nevents if sample_nevents is not None
                           else config['script-nevents'])
         cli_nevents = config['cli-nevents']
@@ -227,7 +227,8 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                 n_events_max = None
             else:
                 if cli_nevents is not None and script_nevents is not None:
-                    LOGGER.debug('--nevents=%s overrides nevents=%s for sample %s.',
+                    LOGGER.debug('--n-events=%s overrides the script event limit '
+                                 '%s for sample %s.',
                                  cli_nevents, script_nevents, sample_name)
                 info_msg += '\n - Maximum number of events:  ' \
                             f'           {n_events_max}'
@@ -273,7 +274,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
         cli_nevents = config['cli-nevents']
         script_nevents = config['script-nevents']
         if cli_nevents is not None and script_nevents is not None:
-            LOGGER.debug('--nevents=%s overrides Analysis.nevents=%s.',
+            LOGGER.debug('--n-events=%s overrides Analysis.n_events=%s.',
                          cli_nevents, script_nevents)
 
         job: dict[str, Any] = {}
@@ -298,7 +299,7 @@ def generate_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
             cli_nevents = config['cli-nevents']
             script_nevents = config['script-nevents']
             if cli_nevents is not None and script_nevents is not None:
-                LOGGER.debug('--nevents=%s overrides Analysis.nevents=%s.',
+                LOGGER.debug('--n-events=%s overrides Analysis.n_events=%s.',
                              cli_nevents, script_nevents)
             job = {}
             if config['sample-name'] is not None:
@@ -564,13 +565,13 @@ def merge_config(args: argparse.Namespace,
         config['n-chunks'] = args.n_chunks
 
     # Check number of events to be run over
-    script_nevents = getattr(analysis_class, 'nevents', None)
+    script_nevents = getattr(analysis_class, 'n_events', None)
     old_nevents = getattr(analysis_class, 'n_events_max', None)
     if old_nevents is not None:
-        LOGGER.warning('[DEPRECATED] Use Analysis.nevents instead of '
+        LOGGER.warning('[DEPRECATED] Use Analysis.n_events instead of '
                        'Analysis.n_events_max.')
         if script_nevents is not None:
-            LOGGER.error('Specify only one of Analysis.nevents and '
+            LOGGER.error('Specify only one of Analysis.n_events and '
                          'Analysis.n_events_max.\nAborting...')
             sys.exit(3)
         script_nevents = old_nevents
