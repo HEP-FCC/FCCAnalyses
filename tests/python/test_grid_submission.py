@@ -423,13 +423,19 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                     'root://eospublic.cern.ch//eos/experiment/fcc/test/background/a.root',
                 ]
 
-            with patch('grid_submission.resolve_directory', side_effect=discover):
+            with patch('grid_submission.resolve_directory', side_effect=discover), \
+                    self.assertLogs('FCCAnalyses.grid_submission', level='DEBUG') as logs:
                 request = create_grid_submission_request(
                     args,
                     self.load_analysis_module(analysis_script),
                     key4hep_setup=str(key4hep_setup),
                     analysis_include_archive_path=root / 'includes.tar.gz',
                 )
+            self.assertEqual(
+                [record.getMessage() for record in logs.records
+                 if 'overrides sample nchunks' in record.getMessage()],
+                ['--nchunks=2 overrides sample nchunks=2 for signal.'],
+            )
             with tarfile.open(request.analysis_include_archive) as archive:
                 self.assertEqual(archive.getnames(), ['include/functions.h'])
                 archived_file = archive.extractfile('include/functions.h')

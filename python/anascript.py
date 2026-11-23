@@ -416,7 +416,7 @@ def validate_sample_list(provided_sample_list: dict[str, dict[str, Any]]):
         if nchunks is not None and (type(nchunks) is not int or nchunks < 1):
             field = 'chunks' if old_chunks is not None else 'nchunks'
             _invalid_sample_field(sample_name, field, 'a positive integer')
-        sample_dict['chunks'] = 1 if nchunks is None else nchunks
+        sample_dict['chunks'] = nchunks
 
         stride = provided_sample_dict.get('stride')
         if stride is not None and (type(stride) is not int or stride < 1):
@@ -451,6 +451,17 @@ def validate_n_threads(analysis_class: Any, cli_override: int | None = None) -> 
     if type(n_threads) is not int or n_threads == 0:
         raise ValueError('Thread count must be a nonzero integer.')
     return n_threads
+
+
+# _____________________________________________________________________________
+def has_script_input(analysis_class: Any) -> bool:
+    '''Check for script input configuration shared by local and grid runs.'''
+    return bool(
+        getattr(analysis_class, 'samples', None)
+        or getattr(analysis_class, 'process_list', None)
+        or getattr(analysis_class, 'input_dir', None) is not None
+        or getattr(analysis_class, 'input_lfn_list', None) is not None
+    )
 
 
 # _____________________________________________________________________________

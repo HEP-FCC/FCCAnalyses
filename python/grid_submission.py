@@ -17,8 +17,8 @@ from types import ModuleType
 from typing import Any
 
 from anascript import (
-    get_sample_input_source, validate_analysis_class, validate_n_threads,
-    validate_sample_list,
+    get_sample_input_source, has_script_input, validate_analysis_class,
+    validate_n_threads, validate_sample_list,
 )
 from input_resolver import (
     InputResolutionError,
@@ -104,6 +104,9 @@ def create_grid_submission_request(
             if args.sample_name is not None
             else None
         )
+        if has_cli_input and has_script_input(analysis_class):
+            LOGGER.debug('Command-line input overrides the analysis script input '
+                         'configuration, including any sample settings.')
         if args.input_lfn_list is not None:
             input_mode = 'dirac-lfn'
             samples = (_resolve_grid_cli_lfn_sample(args, sample_name),)
@@ -264,6 +267,7 @@ def _resolve_analysis_samples(
         )
 
     resolved_samples = []
+    n_chunks = getattr(args, 'n_chunks', None)
     for sample_name, sample, input_source, input_value in configured_sources:
         if input_source == 'input-lfn-list':
             input_mode = 'dirac-lfn'
@@ -294,12 +298,22 @@ def _resolve_analysis_samples(
         )
 
         chunks = sample['chunks']
+        if chunks is not None:
+            if args.files_per_job is not None:
+                LOGGER.debug('--files-per-job=%s overrides sample nchunks=%s for %s.',
+                             args.files_per_job, chunks, sample_name)
+            elif n_chunks is not None:
+                LOGGER.debug('--nchunks=%s overrides sample nchunks=%s for %s.',
+                             n_chunks, chunks, sample_name)
+        if args.stride is not None and sample['stride'] is not None:
+            LOGGER.debug('--stride=%s overrides sample stride=%s for %s.',
+                         args.stride, sample['stride'], sample_name)
         resolved_samples.append(
             ResolvedSample(
                 name=sample_name,
                 output_stem=sample['output-stem'],
                 inputs=tuple(inputs),
-                chunks=chunks,
+                chunks=chunks or 1,
                 stride=sample['stride'],
             )
         )

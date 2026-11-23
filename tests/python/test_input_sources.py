@@ -2,6 +2,7 @@
 
 import argparse
 import importlib.util
+import logging
 from contextlib import redirect_stderr
 from io import StringIO
 from pathlib import Path
@@ -117,7 +118,7 @@ class InputSourceTest(unittest.TestCase):
             with self.subTest(field=field):
                 sample = validate_sample_list({'signal': {field: None}})['signal']
                 self.assertEqual(sample['fraction'], 1.0)
-                self.assertEqual(sample['chunks'], 1)
+                self.assertIsNone(sample['chunks'])
         sample = validate_sample_list({'signal': {
             'fraction': 1, 'chunks': 1, 'stride': 1, 'n-events-max': 0,
         }})['signal']
@@ -284,7 +285,7 @@ class EosRewriteTest(unittest.TestCase):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)
         analysis = SimpleNamespace(nevents=90, samples={
-            'signal': {'input-files': ['one.root', 'two.root'], 'nchunks': 2,
+            'signal': {'input-files': ['one.root', 'two.root'], 'nchunks': 1,
                        'stride': 2, 'nevents': 30},
             'background': {'input-files': ['three.root', 'four.root']},
         })
@@ -293,8 +294,14 @@ class EosRewriteTest(unittest.TestCase):
                                       '--nchunks', '1', '--stride', '5',
                                       '--nevents', '10'])
             config = self.runner.merge_config(args, analysis)
-            with self.assertNoLogs('FCCAnalyses.run_analysis', level='WARNING'):
+            with self.assertLogs('FCCAnalyses.run_analysis', level='DEBUG') as logs:
                 jobs = self.runner.generate_jobs(config)
+        self.assertEqual(
+            [record.getMessage() for record in logs.records
+             if 'overrides sample nchunks' in record.getMessage()],
+            ['--nchunks=1 overrides sample nchunks=1 for signal.'],
+        )
+        self.assertFalse(any(record.levelno >= logging.WARNING for record in logs.records))
         self.assertEqual(len(jobs), 2)
         self.assertEqual([job['stride'] for job in jobs], [5, 5])
         self.assertEqual([job['n-events-max'] for job in jobs], [10, 10])
