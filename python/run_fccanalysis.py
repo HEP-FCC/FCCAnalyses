@@ -177,17 +177,8 @@ def generate_sample_jobs(config: dict[str, Any]) -> \
                 info_msg += '\n - number of files after reduction:  ' \
                             f'    {len(sample_file_list):,}'
 
-        # Output directory
-        output_stem = sample_name
-        if 'output' in sample_dict:
-            LOGGER.warning('[DEPRECATED] please use \'output-stem\' instead '
-                           'of \'output\' to specify different sample output '
-                           'directory.')
-            output_stem = sample_dict['output']
-            info_msg += '\n - custom output stem set to:  ' \
-                        f'          {output_stem}'
-        if 'output-stem' in sample_dict:
-            output_stem = sample_dict['output-stem']
+        output_stem = sample_dict['output-stem']
+        if output_stem != sample_name:
             info_msg += '\n - custom output stem set to:  ' \
                         f'          {output_stem}'
 
