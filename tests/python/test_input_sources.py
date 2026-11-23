@@ -405,21 +405,50 @@ class EosRewriteTest(unittest.TestCase):
             with self.assertNoLogs('FCCAnalyses.run_analysis', level='WARNING'):
                 self.runner.generate_jobs(config)
 
-    def test_local_runner_rejects_lfn_without_override_and_in_test_mode(self):
+    def test_local_runner_rejects_lfn_without_override(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)
         for analysis in (SimpleNamespace(input_lfn_list='files.txt'),
                          SimpleNamespace(samples={'signal': {'input-lfn-list': 'files.txt'}}),
                          SimpleNamespace(process_list={'signal': {'input-lfn-list': 'files.txt'}})):
-            for options in ([], ['--test'], ['--test', '--input', 'ignored.root']):
-                with self.subTest(analysis=analysis, options=options):
-                    args = parser.parse_args(['analysis.py', *options])
-                    module = SimpleNamespace(Analysis=lambda _: analysis)
-                    with self.assertLogs('FCCAnalyses.run_analysis', level='ERROR') as logs:
-                        with self.assertRaises(SystemExit):
-                            self.runner.run_fccanalysis(args, module)
-                    self.assertIn('input-lfn-list' if not hasattr(analysis, 'input_lfn_list')
-                                  else 'input_lfn_list', logs.output[0])
+            with self.subTest(analysis=analysis):
+                args = parser.parse_args(['analysis.py'])
+                module = SimpleNamespace(Analysis=lambda _: analysis)
+                with self.assertLogs('FCCAnalyses.run_analysis', level='ERROR') as logs:
+                    with self.assertRaises(SystemExit):
+                        self.runner.run_fccanalysis(args, module)
+                self.assertIn('input-lfn-list' if not hasattr(analysis, 'input_lfn_list')
+                              else 'input_lfn_list', logs.output[0])
+
+    def test_test_mode_uses_physical_file_with_script_lfn_inputs(self):
+        parser = argparse.ArgumentParser()
+        setup_run_parser(parser)
+        analyses = (
+            SimpleNamespace(test_file='test.root', input_lfn_list='missing-lfns.txt'),
+            SimpleNamespace(test_file='test.root', samples={
+                'signal': {'input-lfn-list': 'missing-lfns.txt'}}),
+            SimpleNamespace(test_file='test.root', process_list={
+                'signal': {'input-lfn-list': 'missing-lfns.txt'}}),
+        )
+        for analysis in analyses:
+            for options in ([], ['--input', 'ignored-directory'],
+                            ['--input-file-list', 'missing-inputs.txt']):
+                with self.subTest(analysis=analysis, options=options), \
+                        patch.dict('os.environ', {'KEY4HEP_STACK': '/cvmfs/sw.hsf.org/almalinux9'}), \
+                        patch.object(self.runner, 'validate_analysis_class', return_value={
+                            'analysis-class': analysis, 'analysis-chain': None,
+                            'output-variables': [],
+                        }), \
+                        patch.object(self.runner, 'global_setup'), \
+                        patch.object(self.runner, 'resolve_inputs') as resolve, \
+                        patch.object(self.runner, 'read_input_file_list') as read, \
+                        patch.object(self.runner, 'Job') as job:
+                    args = parser.parse_args(['analysis.py', '--test', *options])
+                    job.return_value.get_benchmark_info.return_value = (1, 1.0)
+                    self.runner.run_fccanalysis(args, SimpleNamespace(Analysis=lambda _: analysis))
+                    self.assertEqual(job.call_args.args[0], [str(Path('test.root').resolve())])
+                    resolve.assert_not_called()
+                    read.assert_not_called()
 
     def test_worker_file_list_overrides_script_lfn_configuration(self):
         parser = argparse.ArgumentParser()

@@ -683,7 +683,7 @@ def run_fccanalysis(args, anascript_module) -> None:
     LOGGER.info('Initializing analysis class...')
     analysis_class = anascript_module.Analysis(vars(args))
     cli_input_override = args.input is not None or args.input_file_list is not None
-    if args.test is not None or not cli_input_override:
+    if args.test is None and not cli_input_override:
         if getattr(analysis_class, 'input_lfn_list', None) is not None:
             LOGGER.error('Analysis.input_lfn_list is supported only by grid '
                          'submission.\nAborting...')

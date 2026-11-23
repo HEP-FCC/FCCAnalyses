@@ -110,7 +110,7 @@ input source overrides the
 global \fBinput_dir\fR. For the normal runner, the global directory overrides
 campaign discovery, and command-line input options override analysis-script
 input configuration. The local runner rejects LFN configuration unless direct
-command-line input overrides it; test mode always rejects LFN configuration.
+command-line input overrides it or test mode uses a separate test file.
 Grid XRootD mode uses per-sample or global sources;
 campaign discovery is not available in that mode. Grid LFN mode can use
 \fB--input-lfn-list\fR, \fBAnalysis.input_lfn_list\fR, or per-sample
@@ -231,8 +231,8 @@ source\&.
 Path to a \fI.txt\fR file containing DIRAC LFNs for grid submission\&. It
 defines one independent input sample and cannot be combined with script-defined
 samples or \fBinput_dir\fR. Command-line input overrides this setting; without
-an override, the local runner rejects LFN configurations\&. Test mode always
-rejects LFN configurations\&.
+an override, the local runner rejects LFN configurations except in test mode,
+which uses a separate test file\&.
 .TP
 \fBanalysis_name\fR (optional)
 Optional name for the analysis
