@@ -27,22 +27,20 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>fccanalysis run</b> [<b>-h</b> | <b>--help</b>] [<b>-i</b>
-    <i>INPUT_FILE</i> [<i>INPUT_FILE</i> ...], <b>--input</b> <i>INPUT_FILE</i>
-    [<i>INPUT_FILE</i> ...]] [<b>--files-list</b> <i>INPUT_FILE</i>
-    [<i>INPUT_FILE</i> ...]] [<b>-f</b> <i>LIST_FILE</i>,
+<p class="Pp"><b>fccanalysis run</b> <b>analysis-script</b> [<b>-h</b> |
+    <b>--help</b>] [<b>-i</b> <i>INPUT_PATH</i> [<i>INPUT_PATH</i> ...] |
+    <b>--input</b> <i>INPUT_PATH</i> [<i>INPUT_PATH</i> ...] |
     <b>--input-file-list</b> <i>LIST_FILE</i>] [<b>--output</b> <i>OUTPUT</i>]
-    [<b>--nevents</b> <i>NEVENTS</i>] [<b>--test</b>] [<b>--bench</b>]
+    [<b>--n-events</b> <i>NEVENTS</i>] [<b>--test</b>] [<b>--bench</b>]
     [<b>-j</b> NCPUS | <b>--ncpus</b> <i>NCPUS</i> | <b>--n-threads</b>
     <i>NTHREADS</i>] [<b>-g</b>] [<b>--graph-path</b> <i>GRAPH_PATH</i>]
     [<b>--use-data-source</b>] [<b>--output-dir</b> <i>OUTPUT_DIR</i>]
     [<b>--output-format</b> {<b>ttree</b>,<b>rntuple</b>}] [<b>-a</b>
     <i>ANALYSIS_NAME</i> | <b>--analysis-name</b> <i>ANALYSIS_NAME</i>]
-    [<b>--apply-filepath-rewrites</b> | <b>--no-filepath-rewrites</b>]
-    [<b>-s</b> <i>SAMPLE_NAME</i> | <b>--sample-name</b> <i>SAMPLE_NAME</i>]
-    [<b>--n-chunks</b> <i>N_CHUNKS</i>] [<b>--stride</b> <i>STRIDE</i>]
-    [<b>--test-file</b> <i>TEST_FILE</i>] <b>analysis-script</b> -- [<i>ANALYSIS
-    ARGUMENTS</i>]</p>
+    [<b>--use-eos-mount</b>] [<b>-s</b> <i>SAMPLE_NAME</i> |
+    <b>--sample-name</b> <i>SAMPLE_NAME</i>] [<b>--n-chunks</b> <i>N_CHUNKS</i>]
+    [<b>--stride</b> <i>STRIDE</i>] [<b>--test-file</b> <i>TEST_FILE</i>]
+    [<b>--</b> <i>ANALYSIS ARGUMENTS</i>]</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -58,37 +56,71 @@
 <p class="Pp"></p>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="INPUT_PATHS"><a class="permalink" href="#INPUT_PATHS">INPUT
+  PATHS</a></h1>
+<p class="Pp">An input path may name a local ROOT file, a local directory, a
+    mounted <i>/eos/...</i> path, an XRootD URL, or an HTTP(S) file URL.
+    Directory discovery keeps immediate <i>.root</i> files only; it does not
+    recurse into subdirectories.</p>
+<p class="Pp">HTTP(S) URLs name individual files; HTTP directory discovery is
+    not supported. Other paths ending in <i>.root</i> name one file; remaining
+    paths are treated as directories. XRootD directories are listed through
+    <b>xrdfs</b>. For XRootD URLs, the <i>.root</i> suffix is checked before the
+    query string. File queries are preserved. Directory discovery requires URLs
+    without queries. Duplicate input paths within one sample are rejected after
+    path normalization. Explicit paths and input-list entries retain their
+    supplied order; files discovered within each directory are sorted by
+  path.</p>
+<p class="Pp">CERN <i>/eos/experiment/...</i>, <i>/eos/user/...</i>,
+    <i>/eos/home-&lt;initial&gt;/...</i>, and <i>/eos/project/...</i> paths are
+    translated to XRootD URLs before discovery, even when mounted locally. Use
+    an explicit <b>root://</b> URL for other EOS namespaces or for storage
+    outside CERN.</p>
+<p class="Pp">For modern <b>Analysis</b> scripts, <b>--use-eos-mount</b> keeps
+    EOS paths on the local FUSE mount for discovery and reading; there is no
+    automatic fallback to XRootD. Explicit <b>root://</b> URLs remain remote.
+    Legacy <b>RDFanalysis</b> scripts always rewrite supported EOS paths. The
+    old <b>--no-filepath-rewrites</b> option remains available as a deprecated
+    alias for <b>--use-eos-mount</b>. The <b>--apply-filepath-rewrites</b>
+    option remains accepted with a deprecation warning.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
 <dl class="Bl-tag">
   <dt id="analysis-script"><a class="permalink" href="#analysis-script"><b>analysis-script</b></a></dt>
   <dd>Path to analysis script.</dd>
   <dt id="h"><a class="permalink" href="#h"><b>-h</b>, <b>--help</b></a></dt>
   <dd>Prints short help message and exits.</dd>
-  <dt id="i"><a class="permalink" href="#i"><b>-i</b> <i>INPUT_FILE</i>
-    [<i>INPUT_FILE</i> ...], <b>--input</b> <i>INPUT_FILE</i> [<i>INPUT_FILE</i>
+  <dt id="i"><a class="permalink" href="#i"><b>-i</b> <i>INPUT_PATH</i>
+    [<i>INPUT_PATH</i> ...], <b>--input</b> <i>INPUT_PATH</i> [<i>INPUT_PATH</i>
     ...]</a></dt>
-  <dd>Directly specify input ROOT files for the analysis. Takes precedence over
-      the files provided in a file list or the files determined from the
-      <b>samples</b> attribute (or its deprecated <b>process_list</b> alias) of
-      the analysis.</dd>
-  <dt id="files"><a class="permalink" href="#files"><b>--files-list</b>
-    <i>INPUT_FILE</i> [<i>INPUT_FILE</i> ...]</a></dt>
-  <dd>[DEPRECATED] Directly specify input ROOT files for the analysis.</dd>
+  <dd>Directly specify one or more input paths. See INPUT PATHS for supported
+      files and directories. This option cannot be combined with
+      <b>--input-file-list</b>. It takes precedence over the files determined
+      from the <b>samples</b> attribute (or its deprecated <b>process_list</b>
+      alias) of the analysis.</dd>
   <dt id="input"><a class="permalink" href="#input"><b>--input-file-list</b>
     <i>LIST_FILE</i></a></dt>
-  <dd>Specify file containing list of input ROOT files to be used for the
-      analysis. Takes precedence over the files determined from the
-      <b>samples</b> attribute (or its deprecated <b>process_list</b> alias) of
-      the analysis. Each input ROOT file needs to be on a separate line. Lines
-      starting with &quot;#&quot; are ignored.</dd>
+  <dd>Specify file containing list of input ROOT files. This option cannot be
+      combined with <b>--input</b>. It takes precedence over the files
+      determined from the <b>samples</b> attribute (or its deprecated
+      <b>process_list</b> alias) of the analysis. Each input ROOT file needs to
+      be on a separate line. Directory entries are not expanded. Blank lines and
+      lines beginning with &quot;#&quot; are ignored.</dd>
   <dt id="output"><a class="permalink" href="#output"><b>--output</b>
     <i>OUTPUT</i></a></dt>
-  <dd>Specify output file name, otherwise dataset name used.</dd>
-  <dt id="nevents"><a class="permalink" href="#nevents"><b>--nevents</b>
-    <i>NEVENTS</i>, <b>--n-events</b> <i>NEVENTS</i></a></dt>
-  <dd>Specify max number of events to process.</dd>
+  <dd>Specify an output file for test mode or an independent sample with one
+      chunk. Script-defined samples use their output stems and output directory
+      instead.</dd>
+  <dt id="n"><a class="permalink" href="#n"><b>--n-events</b> <i>NEVENTS</i>,
+    <b>--nevents</b> <i>NEVENTS</i></a></dt>
+  <dd>Specify the maximum number of events per sample, overriding script
+      settings. Limits are ignored with a warning when a sample has multiple
+      chunks.</dd>
   <dt id="test"><a class="permalink" href="#test"><b>--test</b></a></dt>
-  <dd>Run over the test file.</dd>
+  <dd>Run over the test file in a single job. If <b>--input</b> or
+      <b>--input-file-list</b> is supplied, it is ignored with a warning.</dd>
   <dt id="use-data-source"><a class="permalink" href="#use-data-source"><b>--use-data-source</b></a></dt>
   <dd>Load events through podio::DataSource.</dd>
   <dt id="output~2"><a class="permalink" href="#output~2"><b>--output-dir</b>
@@ -104,24 +136,26 @@
   <dt id="a"><a class="permalink" href="#a"><b>-a</b> <i>ANALYSIS_NAME</i>,
     <b>--analysis-name</b> <i>ANALYSIS_NAME</i></a></dt>
   <dd>Set analysis name, mostly used for the output path.</dd>
-  <dt id="apply"><a class="permalink" href="#apply"><b>--apply-filepath-rewrites</b>,
-    <b>--no-filepath-rewrites</b></a></dt>
-  <dd>Apply or disable path rewrites for files stored on shared file
-    systems.</dd>
+  <dt id="use"><a class="permalink" href="#use"><b>--use-eos-mount</b></a></dt>
+  <dd>Use mounted EOS paths for discovery and reading in modern Analysis
+      scripts. The deprecated <b>--no-filepath-rewrites</b> option remains as an
+      alias.</dd>
   <dt id="s"><a class="permalink" href="#s"><b>-s</b> <i>SAMPLE_NAME</i>,
     <b>--sample-name</b> <i>SAMPLE_NAME</i></a></dt>
   <dd>Set sample name, mostly used for the output path. Used when running over
       an independent sample (i.e. without a sample list).</dd>
-  <dt id="n"><a class="permalink" href="#n"><b>--n-chunks</b>
+  <dt id="n~2"><a class="permalink" href="#n~2"><b>--n-chunks</b>
     <i>N_CHUNKS</i></a></dt>
-  <dd>Split the output into <i>N_CHUNKS</i> files. Used only when running over a
-      test file or an independent sample.</dd>
+  <dd>Request <i>N_CHUNKS</i> output chunks per sample for modern
+      <b>Analysis</b> scripts, overriding the sample's <i>n-chunks</i>
+    setting.</dd>
   <dt id="stride"><a class="permalink" href="#stride"><b>--stride</b>
     <i>STRIDE</i></a></dt>
-  <dd>Specify how to stride through the events. Used only when running over a
-      test file or an independent sample.</dd>
+  <dd>Set the event stride for modern <b>Analysis</b> scripts, overriding the
+      sample's <i>stride</i> setting.</dd>
   <dt><b>--test-file</b> <i>TEST_FILE</i></dt>
-  <dd>Specify the test file to use when running with <b>--test</b>.</dd>
+  <dd>Specify the test file for modern <b>Analysis</b> scripts. This option
+      requires <b>--test</b>.</dd>
   <dt id="bench"><a class="permalink" href="#bench"><b>--bench</b></a></dt>
   <dd>Output benchmark results to a JSON file.</dd>
   <dt id="j"><a class="permalink" href="#j"><b>-j</b> <i>NCPUS</i>,
