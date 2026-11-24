@@ -13,7 +13,9 @@ from inspect import signature
 import ROOT  # type: ignore
 import cppyy
 from anascript import get_element, get_element_dict, get_attribute
-from input_resolver import InputResolutionError, read_input_file_list, resolve_inputs
+from input_resolver import (
+    InputResolutionError, read_input_file_list, redact_input_query, resolve_inputs,
+)
 from sample import get_process_info, get_process_dict
 from sample import (get_subfile_list, get_chunk_list, get_event_entries,
                     convert_eos_path_to_xrootd)
@@ -177,12 +179,14 @@ def run_local(rdf_module, infile_list, args):
         filepath = convert_eos_path_to_xrootd(filepath)
 
         file_list.push_back(filepath)
-        info_msg += f'\t- {filepath}\n'
+        display_path = redact_input_query(filepath)
+        info_msg += f'\t- {display_path}\n'
         try:
             infile = ROOT.TFile.Open(filepath, 'READ')
         except OSError as excp:
             LOGGER.error('While opening input file:\n%s\nan error '
-                         'occurred:\n%s\nAborting...', filepath, excp)
+                         'occurred:\n%s\nAborting...', display_path,
+                         str(excp).replace(filepath, display_path))
             sys.exit(3)
 
         try:
@@ -194,7 +198,7 @@ def run_local(rdf_module, infile_list, args):
             nevents_local += get_event_entries(infile)
         except KeyError:
             LOGGER.error('Input file:\n%s\nis missing events TTree or RNTuple!\n'
-                         'Aborting...', filepath)
+                         'Aborting...', display_path)
             infile.Close()
             sys.exit(3)
         infile.Close()

@@ -128,8 +128,9 @@ CERN \fI/eos/experiment/...\fR, \fI/eos/user/...\fR,
 \fI/eos/home-<initial>/...\fR, and \fI/eos/project/...\fR paths are
 converted to XRootD URLs before discovery. Other EOS namespaces and non-CERN storage must
 use an explicit URL, for example
-\fBroot://storage.example.org//data/events.root\fR. URLs ending in
-\fI.root\fR name files; other URLs are treated as directories.
+\fBroot://storage.example.org//data/events.root\fR. URLs whose path ends in
+\fI.root\fR name files; other URLs are treated as directories. File queries
+are preserved. Directory discovery requires URLs without queries.
 HTTP(S) URLs are not supported for grid inputs.
 
 Grid jobs receive XRootD URLs, not files from the submitting machine. Local

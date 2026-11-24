@@ -604,15 +604,14 @@ class GridSubmissionFrontendTest(unittest.TestCase):
         )
 
     def test_resolves_direct_grid_cli_input_file_list(self) -> None:
+        input_url = 'root://storage.example.org//data/a.root?xrd.wantprot=unix'
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             analysis_script = root / 'analysis.py'
             key4hep_setup = self.key4hep_setup
             input_list = root / 'inputs.txt'
             self.write_modern_analysis(analysis_script)
-            input_list.write_text(
-                'root://storage.example.org//data/a.root\n', encoding='utf-8'
-            )
+            input_list.write_text(input_url + '\n', encoding='utf-8')
             args = self.parse_grid_arguments(
                 str(analysis_script), ['--input-file-list', str(input_list)]
             )
@@ -623,10 +622,8 @@ class GridSubmissionFrontendTest(unittest.TestCase):
                 key4hep_setup=str(key4hep_setup),
             )
 
-        self.assertEqual(
-            request.samples[0].inputs,
-            ('root://storage.example.org//data/a.root',),
-        )
+        self.assertEqual(request.samples[0].inputs, (input_url,))
+        self.assertEqual(plan_jobs(request)[0].worker_file_list_entries, (input_url,))
 
     def test_rejects_local_grid_input_files(self) -> None:
         with patch('grid_submission.resolve_inputs') as resolve:

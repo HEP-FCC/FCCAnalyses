@@ -1,8 +1,8 @@
 '''Shared input resolution for local paths, CERN EOS mounts and remote URLs.
 
 Discovery sorts immediate .root files within each directory and rejects
-duplicates. Explicit inputs retain their order. HTTP(S) URLs are file inputs;
-other paths ending in .root are files and remaining paths are directories.
+duplicates. Explicit inputs retain their order. HTTP(S) URLs are file inputs.
+Other inputs are files if their path ends in .root, otherwise directories.
 '''
 
 import os
@@ -14,12 +14,19 @@ class InputResolutionError(ValueError):
     '''An input path cannot be resolved.'''
 
 
+def redact_input_query(path: str) -> str:
+    '''Return an input path for diagnostics without URL query parameters.'''
+    if path.lower().startswith(('root://', 'http://', 'https://')):
+        return path.partition('?')[0]
+    return path
+
+
 def ensure_unique_inputs(paths: list[str]) -> None:
     '''Reject duplicate input paths within one sample.'''
     seen = set()
     for path in paths:
         if path in seen:
-            raise InputResolutionError(f'Duplicate input path: {path}')
+            raise InputResolutionError(f'Duplicate input path: {redact_input_query(path)}')
         seen.add(path)
 
 
@@ -45,7 +52,7 @@ def normalize_input_path(path: str, *,
             raise InputResolutionError(f'Invalid remote input URL: {error}.') from error
         # Accept /path and //path; use //path in the returned URL.
         remote_path = '//' + url.path.lstrip('/')
-        return f'root://{url.netloc}{remote_path}'
+        return url._replace(path=remote_path, fragment='').geturl()
 
     path = os.path.abspath(os.path.expanduser(path))
     if (path == '/eos' or path.startswith('/eos/')) and use_xrootd:
@@ -60,7 +67,8 @@ def join_input_path(directory: str, child: str, *,
         directory, use_xrootd=use_xrootd
     )
     if path.startswith('root://'):
-        return path.rstrip('/') + '/' + child
+        url = urlsplit(path)
+        return url._replace(path=url.path.rstrip('/') + '/' + child).geturl()
     return os.path.join(path, child)
 
 
@@ -86,6 +94,10 @@ def eos_to_xrootd(path: str) -> str:
 
 def _list_remote_files(path: str) -> list[str]:
     url = urlsplit(path)
+    if url.query:
+        raise InputResolutionError(
+            'XRootD directory discovery does not support URL query strings.'
+        )
     directory = '/' + url.path.lstrip('/')
     try:
         result = subprocess.run(
@@ -158,9 +170,11 @@ def resolve_inputs(paths: list[str], *,
         path = normalize_input_path(
             value, use_xrootd=use_xrootd
         )
-        if urlsplit(path).scheme in ('http', 'https'):
+        url = urlsplit(path)
+        file_path = url.path if url.scheme == 'root' else path
+        if url.scheme in ('http', 'https'):
             files.append(path)
-        elif not path.endswith('.root'):
+        elif not file_path.endswith('.root'):
             files.extend(resolve_directory(
                 path, use_xrootd=use_xrootd
             ))

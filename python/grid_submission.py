@@ -22,8 +22,10 @@ from anascript import (
 )
 from input_resolver import (
     InputResolutionError,
+    join_input_path,
     normalize_input_path,
     read_input_file_list,
+    redact_input_query,
     resolve_directory,
     resolve_inputs,
 )
@@ -333,9 +335,10 @@ def _resolve_grid_sample_inputs(
         _require_grid_urls(input_urls)
         return input_urls
     if input_source in {'sample-input-dir', 'global-input-dir'}:
-        directory = normalize_input_path(input_value)
         if input_source == 'global-input-dir':
-            directory = directory.rstrip('/') + '/' + sample_name
+            directory = join_input_path(input_value, sample_name)
+        else:
+            directory = normalize_input_path(input_value)
         _require_grid_urls([directory])
         return resolve_directory(directory)
     raise GridSubmissionError(
@@ -519,13 +522,16 @@ def _event_count(url: str) -> int:
         raise GridSubmissionError(
             'ROOT is unavailable for fraction-based XRootD planning.'
         ) from error
-    input_file = ROOT.TFile.Open(url, 'READ')
+    try:
+        input_file = ROOT.TFile.Open(url, 'READ')
+    except OSError:
+        input_file = None
     if not input_file or input_file.IsZombie():
-        raise GridSubmissionError(f'Cannot open XRootD input file: {url}')
+        raise GridSubmissionError(f'Cannot open XRootD input file: {redact_input_query(url)}')
     try:
         events = input_file.Get('events')
         if events is None:
-            raise GridSubmissionError(f'Input file has no events tree: {url}')
+            raise GridSubmissionError(f'Input file has no events tree: {redact_input_query(url)}')
         return int(events.GetEntries())
     finally:
         input_file.Close()

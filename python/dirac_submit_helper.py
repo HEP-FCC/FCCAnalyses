@@ -12,6 +12,7 @@ import tempfile
 from io import StringIO
 from pathlib import Path, PurePosixPath
 
+from input_resolver import redact_input_query
 from logging_utils import configure_logging
 from submission import SubmissionRequest, SubmissionValidationError, plan_jobs
 
@@ -289,7 +290,7 @@ def _print_plan(
         emit(f'  job {planned_job.index:04d}:')
         emit('    inputs:')
         for source_input in planned_job.source_inputs:
-            emit(f'      {source_input}')
+            emit(f'      {redact_input_query(source_input)}')
         emit(f'    output:        {output_lfn}')
     LOGGER.info('%s', output.getvalue().rstrip())
 

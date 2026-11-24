@@ -10,8 +10,8 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'python'))
 
 from input_resolver import (
-    InputResolutionError, eos_to_xrootd, normalize_input_path, read_input_file_list,
-    resolve_directory, resolve_inputs,
+    InputResolutionError, eos_to_xrootd, join_input_path, normalize_input_path,
+    read_input_file_list, resolve_directory, resolve_inputs,
 )
 
 
@@ -73,6 +73,32 @@ class InputResolverTest(unittest.TestCase):
             self.assertEqual(resolve_inputs(['root://example.org/data/a.root']),
                              ['root://example.org//data/a.root'])
             run.assert_not_called()
+
+    def test_xrootd_file_query_is_preserved(self):
+        query = '?xrd.wantprot=unix&authz=example%2Bvalue'
+        url = 'root://example.org/data/a.root' + query
+        expected = 'root://example.org//data/a.root' + query
+        with patch('input_resolver.subprocess.run') as xrdfs:
+            self.assertEqual(resolve_inputs([url]), [expected])
+            with self.assertRaisesRegex(InputResolutionError, 'Duplicate input path') as duplicate:
+                resolve_inputs([url, expected])
+            self.assertNotIn('authz', str(duplicate.exception))
+            xrdfs.assert_not_called()
+        with tempfile.TemporaryDirectory() as directory:
+            listing = Path(directory) / 'inputs.txt'
+            listing.write_text(url + '\n', encoding='utf-8')
+            self.assertEqual(read_input_file_list(str(listing)), [expected])
+
+    def test_xrootd_directory_query_is_rejected_before_listing(self):
+        url = 'root://example.org/data?value=a.root'
+        joined = join_input_path(url, 'signal')
+        self.assertEqual(joined, 'root://example.org//data/signal?value=a.root')
+        with patch('input_resolver.subprocess.run') as xrdfs:
+            with self.assertRaisesRegex(InputResolutionError, 'directory discovery.*query'):
+                resolve_inputs([url])
+            with self.assertRaisesRegex(InputResolutionError, 'directory discovery.*query'):
+                resolve_directory(joined)
+            xrdfs.assert_not_called()
 
     def test_eos_redirector_mappings(self):
         for path, expected in (

@@ -48,6 +48,8 @@ keeps immediate \fI.root\fR files only; it does not recurse into subdirectories.
 HTTP(S) URLs name individual files; HTTP directory discovery is not supported.
 Other paths ending in \fI.root\fR name one file; remaining paths are treated
 as directories. XRootD directories are listed through \fBxrdfs\fR.
+For XRootD URLs, the \fI.root\fR suffix is checked before the query string.
+File queries are preserved. Directory discovery requires URLs without queries.
 Duplicate input paths within one sample are rejected after path normalization.
 Explicit paths and input-list entries retain their supplied order; files
 discovered within each directory are sorted by path.

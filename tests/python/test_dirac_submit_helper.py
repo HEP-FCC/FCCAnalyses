@@ -423,6 +423,8 @@ class DiracSubmitHelperTest(unittest.TestCase):
         )
 
     def test_translates_xrootd_plan_without_dirac_input_data(self) -> None:
+        input_path = 'root://eospublic.cern.ch//eos/experiment/fcc/a.root'
+        input_url = input_path + '?authz=example-token'
         request = SubmissionRequest(
             analysis_script='/work/analysis.py',
             input_mode='xrootd',
@@ -430,7 +432,7 @@ class DiracSubmitHelperTest(unittest.TestCase):
                 ResolvedSample(
                     name='signal',
                     output_stem='signal',
-                    inputs=('root://eospublic.cern.ch//eos/experiment/fcc/a.root',),
+                    inputs=(input_url,),
                     chunks=1,
                     stride=4,
                 ),
@@ -452,12 +454,17 @@ class DiracSubmitHelperTest(unittest.TestCase):
             analysis_include_archive='/tmp/analysis-includes.tar.gz',
         )
         planned_job = plan_jobs(request)[0]
+        with self.assertLogs('FCCAnalyses.grid_helper', level='INFO') as logs:
+            _print_plan(request, (planned_job,), Path(request.analysis_script),
+                        None, ['/fcc/result.root'])
+        self.assertIn(input_path, logs.output[0])
+        self.assertNotIn('authz', logs.output[0])
 
         with tempfile.TemporaryDirectory() as directory:
             input_file_list = _write_input_file_list(planned_job, Path(directory))
             self.assertEqual(
                 input_file_list.read_text(),
-                'root://eospublic.cern.ch//eos/experiment/fcc/a.root\n',
+                input_url + '\n',
             )
             job = _create_job(
                 request,

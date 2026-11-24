@@ -15,7 +15,7 @@ import cppyy
 import numpy as np
 from threading import Thread
 from queue import Empty, Queue
-from input_resolver import InputResolutionError, eos_to_xrootd
+from input_resolver import InputResolutionError, eos_to_xrootd, redact_input_query
 
 
 ROOT.gROOT.SetBatch(True)
@@ -51,7 +51,7 @@ def get_entries(inpath: str) -> Optional[int]:
             nevents = get_event_entries(infile)
         except KeyError:
             LOGGER.error('Input file is missing "events" TTree or RNTuple!\n  - %s'
-                         '\nAborting...', inpath)
+                         '\nAborting...', redact_input_query(inpath))
             sys.exit(3)
 
     return nevents
@@ -93,7 +93,7 @@ def get_entries_sow(infilepath: str,
     try:
         get_event_entries(infile)
     except KeyError:
-        print("Events dataset not found in file", infilepath,
+        print("Events dataset not found in file", redact_input_query(infilepath),
               " possibly empty chunk - continuing with next one.")
         infile.Close()
         return processEvents, eventsTTree, processSumOfWeights, sumOfWeightsTTree
