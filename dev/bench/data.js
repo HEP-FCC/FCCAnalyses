@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795532476042,
+  "lastUpdate": 1795532477875,
   "repoUrl": "https://github.com/HEP-FCC/FCCAnalyses",
   "entries": {
     "Benchmark": [
@@ -62463,6 +62463,76 @@ window.BENCHMARK_DATA = {
             "value": 5.914620876312256,
             "range": "10",
             "unit": "Seconds",
+            "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "benedikt.wach@cern.ch",
+            "name": "Benedikt Wach",
+            "username": "bndikt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eaeb9a9c7bc92087ec3d7acf4fe2eaa56636f818",
+          "message": "Consolidate input resolution between the runner and grid submission (#557)\n\nThis PR consolidates physical input resolution for `fccanalysis run` and\n`fccanalysis submit grid`. It builds on the DIRAC grid submission\nbackend merged in #538.\n\n### Input resolution\n\n- Use a shared resolver for local paths, CERN EOS paths, and XRootD\nURLs. Local runs also accept HTTP(S) file URLs. Directory discovery\nincludes only immediate `.root` files and sorts them by path. Explicit\npaths and file-list entries retain their supplied order, and duplicate\nnormalized inputs within a sample are rejected.\n- Convert supported `/eos/experiment/`, `/eos/user/`, `/eos/home-*`, and\n`/eos/project/` paths to XRootD by default. Modern local runs can use\n`--use-eos-mount` for discovery and reading through the FUSE mount.\n`--no-filepath-rewrites` remains a deprecated alias, and\n`--apply-filepath-rewrites` remains accepted with a deprecation warning.\n- Preserve query strings on XRootD file URLs and omit them from input\ndiagnostics and grid plan logs. XRootD directory discovery uses `xrdfs`,\nrejects URLs with query strings, and reports when `xrdfs` is missing.\n- Resolve inputs in this order: CLI input, one per-sample input source,\n`Analysis.input_dir`, then campaign discovery for local runs. Validate\nthe global directory setting when a sample uses it. `--input` and\nper-sample `input-files` can expand directories. Physical file lists\ncontain explicit files and skip blank lines and full-line comments.\n- Restore explicit input for legacy staged `RDFanalysis` scripts through\n`--input` and `--input-file-list`. Remove `--files-list` and the `-f`\nshorthand.\n\n### Grid submission\n\n- Add mutually exclusive `--input`, `--input-file-list`, and\n`--input-lfn-list` options. The last replaces `--lfn-input`. Physical\ngrid inputs must resolve to XRootD URLs. `--sample-name` applies to\ndirect CLI input and also labels the output files.\n- Accept DIRAC LFN lists through `Analysis.input_lfn_list` or per-sample\n`input-lfn-list`. LFN lists skip blank lines and full-line comments.\n- Use a common per-sample job planner for XRootD and LFN inputs. Each\nsubmission uses one input mode. Workers stream physical inputs over\nXRootD, and DIRAC stages LFNs for each job. LFN samples default to one\njob per sample and can be split with `--files-per-job`, `--n-chunks`, or\nthe sample’s `n-chunks` setting. Fraction-based selection is available\nfor physical grid inputs.\n\n### Local runner and configuration\n\n- In modern analyses, `--test` uses a dedicated test file and skips\nnormal input discovery, including configured LFNs. Supplying `--input`\nor `--input-file-list` with `--test` emits a warning. `--test-file`\nrequires `--test`.\n- Standardize on `--n-events`, `Analysis.n_events`, and the sample keys\n`n-events` and `n-chunks`. Keep `--nevents` as a CLI alias and accept\nthe older script spellings with deprecation warnings.\n- Apply CLI overrides for chunk counts, stride, and event limits in the\nmodern local runner. Event limits apply to single-chunk jobs and are\nignored with a warning for multi-chunk runs. Grid submission rejects\nscript-level event limits.\n- Require an output directory when the runner constructs output\nfilenames. Warn when script-defined samples ignore an explicit output\nfile or sample name, and report custom output stems only when they\ndiffer from the sample name. Honor the configured value of\n`Analysis.use_data_source`.\n\n### Tests and documentation\n\nUpdate the run, submit, and analysis-script man pages and migrate\naffected examples. Add resolver and input-selection tests, register them\nwith CTest.\n\nAll 107 Python unit tests and both grid shell-wrapper tests passed\nlocally.",
+          "timestamp": "2026-11-24T15:47:43+01:00",
+          "tree_id": "7882123017150fe473c4bc6706c6a31f65e90ba3",
+          "url": "https://github.com/HEP-FCC/FCCAnalyses/commit/eaeb9a9c7bc92087ec3d7acf4fe2eaa56636f818"
+        },
+        "date": 1795532475357,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "nightly | Events processed per second: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py",
+            "value": 29.38295091329239,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/FCCee/higgs/mH-recoil/mumu/analysis_stage1.py"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/higgs/mH-recoil/ee/analysis_stage1.py",
+            "value": 11.376242799704706,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/flavour/Bc2TauNu/analysis_B2TauNu_truth.py",
+            "value": 8.17362610358609,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/test/jet_constituents.py",
+            "value": 12.276192317053797,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/vertex_lcfiplus/analysis_V0.py",
+            "value": 3.913033106404125,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: examples/FCCee/weaver/stage1.py",
+            "value": 4.621100272095211,
+            "unit": "Evt/s"
+          },
+          {
+            "name": "nightly | Events processed per second: /Package/examples/data_source/stages_source.py",
+            "value": 11.284947270103016,
+            "range": "1000",
+            "unit": "Evt/s",
+            "extra": "Analysis path: /Package/examples/data_source/stages_source.py"
+          },
+          {
+            "name": "nightly | Events processed per second: /Package/examples/data_source/analysis_stage1.py",
+            "value": 16.435451308723923,
+            "range": "1000",
+            "unit": "Evt/s",
             "extra": "Analysis path: /Package/examples/data_source/analysis_stage1.py"
           }
         ]
