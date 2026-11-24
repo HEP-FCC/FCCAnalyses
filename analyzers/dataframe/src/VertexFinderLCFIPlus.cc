@@ -46,8 +46,9 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>> get_SV
     std::vector<int> i_jetconsti = jet_consti[j];
     for (int ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
-      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
-	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
+      if (std::find(i_jetconsti.begin(), i_jetconsti.end(),
+                    reco_ind_tracks[ctr]) != i_jetconsti.end()) {
+        np_tracks.push_back(tracks[ctr]); // separate tracks by jet
       }
     }
     
@@ -335,7 +336,9 @@ bool check_constraints(VertexingUtils::FCCAnalysesVertex vtx,
   bool result = true;
 
   int nTr = tracks.size();  // no of tracks
-  
+  if (vtx.ntracks != nTr)
+    return false; // the fitter dropped a track (bad covariance): no valid fit
+
   // Constraints
   // chi2 < cut (9)
   double chi2 = vtx.vertex.chi2; // normalised
@@ -699,15 +702,19 @@ VertexingUtils::FCCAnalysesV0 get_V0s_jet(
     std::vector<int> i_jetconsti = jet_consti[j];
     for (int ctr=0; ctr<tracks.size(); ctr++) {
       if(isInPrimary[ctr]) continue; // remove primary tracks
-      if(std::find(i_jetconsti.begin(), i_jetconsti.end(), reco_ind_tracks[ctr]) == i_jetconsti.end()) {
-	np_tracks.push_back(tracks[ctr]); // separate tracks by jet
+      if (std::find(i_jetconsti.begin(), i_jetconsti.end(),
+                    reco_ind_tracks[ctr]) != i_jetconsti.end()) {
+        np_tracks.push_back(tracks[ctr]); // separate tracks by jet
       }
     }
     
     if(debug_me) std::cout<<"primary tracks removed; there are "<<np_tracks.size()<<" non-primary tracks in jet#"<<j+1<<std::endl;
 
     int nTr = np_tracks.size();
-    if(nTr<2) continue;    
+    if (nTr < 2) {
+      np_tracks.clear();
+      continue;
+    }
     ROOT::VecOps::RVec<bool> isInV0(nTr, false);
     //
     for(unsigned int i=0; i<nTr-1; i++) {
@@ -817,6 +824,8 @@ get_V0candidate(VertexingUtils::FCCAnalysesVertex &V0_vtx,
     V0_vtx = VertexFitterSimple::VertexFitter_2Tk_seeded(2, tr_pair);
   else
     V0_vtx = VertexFitterSimple::VertexFitter_Tk(2, tr_pair);
+  if (V0_vtx.ntracks != 2)
+    return result; // the fitter dropped a track (bad covariance): no valid fit
 
   if(chi2) {
     // constraint on chi2: chi2 < cut (9)
