@@ -313,9 +313,7 @@ def send_sample(config: dict[str, Any],
         fraction = sample_dict['fraction']
 
     # Determine the number of chunks the output will be split into
-    chunks = 1
-    if 'chunks' in sample_dict:
-        chunks = sample_dict['chunks']
+    chunks = sample_dict.get('n-chunks') or 1
 
     # Obtain full list of input files
     file_list, event_list = get_process_info(sample_name,

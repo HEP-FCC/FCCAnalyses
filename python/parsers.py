@@ -21,15 +21,17 @@ def parse_command_arguments(parser: argparse.ArgumentParser) -> argparse.Namespa
             '  fccanalysis submit grid analysis.py [grid options]\n'
             "See 'fccanalysis submit --help' for available backends."
         )
+    args = parser.parse_args(framework_arguments)
+    if args.command == 'run' and args.test_file is not None and not args.test:
+        parser.error('--test-file requires --test')
+
     try:
         separator_index = arguments.index('--')
     except ValueError:
-        args = parser.parse_args(arguments)
         if not hasattr(args, 'remaining'):
             args.remaining = []
         return args
 
-    args = parser.parse_args(arguments[:separator_index])
     args.remaining = arguments[separator_index + 1:]
     accepts_custom_arguments = args.command in {'run', 'submit'}
     if args.remaining and not accepts_custom_arguments:
@@ -183,19 +185,32 @@ def setup_grid_submit_parser(parser):
         help='automatically confirm grid submission and deletion of conflicting '
              'output files; use with caution'
     )
-    parser.add_argument(
-        '--lfn-input',
+    input_mode = parser.add_mutually_exclusive_group()
+    input_mode.add_argument(
+        '--input',
+        default=None,
+        nargs='+',
+        metavar='INPUT_PATH',
+        help='remote file or directory path(s)'
+    )
+    input_mode.add_argument(
+        '--input-file-list',
+        default=None,
+        metavar='LIST_FILE',
+        help='text file containing physical remote input paths'
+    )
+    input_mode.add_argument(
+        '--input-lfn-list',
         default=None,
         metavar='LFN_LIST',
-        help='text file containing one DIRAC LFN per line; selects LFN input '
-        'mode instead of XRootD input'
+        help='text file containing one DIRAC LFN per line'
     )
     parser.add_argument(
         '-o', '--output',
         type=str,
         metavar='OUTPUT_FILE',
         default='output.root',
-        help='base output ROOT filename (default: output.root; suffixed per job)'
+        help='base output ROOT filename (suffixed per job)'
     )
     parser.add_argument(
         '--output-dir',
@@ -216,22 +231,22 @@ def setup_grid_submit_parser(parser):
         default=None,
         metavar='COUNT',
         help='number of input files processed by each grid job; overrides '
-        'sample chunks when supplied'
+            'sample n-chunks when supplied'
     )
     grouping.add_argument(
         '--n-chunks',
+        dest='n_chunks',
         type=_positive_integer,
         default=None,
         metavar='COUNT',
-        help='requested number of jobs/output chunks per XRootD sample or '
-        'across the complete LFN input list; overrides sample chunks when '
-        'supplied'
+        help='requested number of jobs/output chunks; overrides '
+            'sample n-chunks when supplied'
     )
     parser.add_argument(
         '--sample-name',
         default=None,
         metavar='NAME',
-        help='optional sample name forwarded to workers in LFN input mode'
+        help='optional label for a direct CLI input sample and its output file'
     )
     parser.add_argument(
         '--site',
@@ -304,42 +319,40 @@ def setup_run_parser(parser):
         help='analysis name, mostly used for the output path'
     )
 
-    # File-path rewrites
-    filepath_rewrites_group = parser.add_mutually_exclusive_group()
-    filepath_rewrites_group.add_argument(
-        '--apply-filepath-rewrites',
-        action='store_true',
-        default=None,
-        help='Apply path rewrites for files stored on shared file systems',
-        dest='apply_filepath_rewrites'
-    )
-    filepath_rewrites_group.add_argument(
-        '--no-filepath-rewrites',
+    eos_access_group = parser.add_mutually_exclusive_group()
+    eos_access_group.add_argument(
+        '--use-eos-mount',
         action='store_false',
         default=None,
-        help='Do not apply path rewrites for files stored on shared file '
-             'systems',
-        dest='apply_filepath_rewrites'
+        help='Do not convert /eos/... paths to XRootD URLs for discovery or '
+             'processing (modern Analysis scripts only)',
+        dest='use_xrootd'
+    )
+    eos_access_group.add_argument(
+        '--no-filepath-rewrites',
+        action='store_true',
+        help=argparse.SUPPRESS,
+        dest='deprecated_no_filepath_rewrites'
+    )
+    eos_access_group.add_argument(
+        '--apply-filepath-rewrites',
+        action='store_true',
+        help=argparse.SUPPRESS,
+        dest='deprecated_apply_filepath_rewrites'
     )
 
     # Independent sample
     independent_sample_group = parser.add_argument_group('Independent sample')
-    independent_sample_group.add_argument(
+    input_source_group = independent_sample_group.add_mutually_exclusive_group()
+    input_source_group.add_argument(
         '-i', '--input',
         default=None,
         nargs='+',
-        metavar='INPUT_FILE',
+        metavar='INPUT_PATH',
         help='location(s) of the input ROOT file(s)'
     )
-    independent_sample_group.add_argument(
-        '--files-list',
-        default=None,
-        nargs='+',
-        metavar='INPUT_FILE',
-        help='[DEPRECATED] location(s) of the input ROOT file(s)'
-    )
-    independent_sample_group.add_argument(
-        '-f', '--input-file-list',
+    input_source_group.add_argument(
+        '--input-file-list',
         type=str,
         default=None,
         metavar='LIST_FILE',
@@ -358,23 +371,25 @@ def setup_run_parser(parser):
         default=None,
         help='sample name, mostly used for the output path'
     )
-    independent_sample_group.add_argument(
+    parser.add_argument(
         '--n-chunks',
-        type=int,
+        dest='n_chunks',
+        type=_positive_integer,
         default=None,
-        help='number of output chunks'
+        help='number of output chunks per sample; overrides sample n-chunks'
     )
     parser.add_argument(
-        '--nevents', '--n-events',
+        '--n-events', '--nevents',
+        dest='nevents',
         type=int,
         default=None,
         help='specify max number of events to process'
     )
     parser.add_argument(
         '--stride',
-        type=int,
+        type=_positive_integer,
         default=None,
-        help='specify how to stride through the events'
+        help='stride through events; overrides sample stride'
     )
 
     # Testing
@@ -389,7 +404,7 @@ def setup_run_parser(parser):
         '--test-file',
         type=str,
         default=None,
-        help='test file to use'
+        help='test file for modern Analysis scripts (requires --test)'
     )
 
     test_group.add_argument(

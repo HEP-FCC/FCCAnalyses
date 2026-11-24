@@ -26,7 +26,7 @@ truth label from the `H{f}{f}` token in the input file name (e.g. `..._Hbb_...` 
 # stage 1 — per-event features + labels
 fccanalysis run examples/FCCee/weaver/stage1.py \
     --output stage1_Hbb.root \
-    --files-list <edm4hep>/wzp6_ee_nunuH_Hbb_ecm240/events_*.root --ncpus 8
+    --input <edm4hep>/wzp6_ee_nunuH_Hbb_ecm240/events_*.root --ncpus 8
 
 # stage 2 — flatten to a per-jet ntuple over event range [N_i, N_f)
 python examples/FCCee/weaver/stage2.py stage1_Hbb.root stage2_Hbb.root 0 100000
@@ -45,7 +45,7 @@ each entry of the stage2 `tree` is one jet, its constituents stored as fixed-len
 # per-flavour inference ntuples (7 scores per jet) — one run per flavour sample
 fccanalysis run examples/FCCee/weaver/analysis_inference.py \
     --output <dir>/wzp6_ee_nunuH_Hbb_ecm240/events.root \
-    --files-list <edm4hep>/wzp6_ee_nunuH_Hbb_ecm240/events_*.root --ncpus 8
+    --input <edm4hep>/wzp6_ee_nunuH_Hbb_ecm240/events_*.root --ncpus 8
 
 # ROC curves from those score trees (edit the model dirs at the top of the script)
 python examples/FCCee/weaver/plot_rocs.py         # full statistics, multi-threaded

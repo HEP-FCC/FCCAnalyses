@@ -15,7 +15,7 @@ class Analysis():
     def __init__(self, _):
         # list of processes (mandatory)
         self.process_list = {
-            'p8_ee_WW_ecm240': {'output': 'p8_ee_WW_ecm240_out'}
+            'p8_ee_WW_ecm240': {'output-stem': 'p8_ee_WW_ecm240_out'}
         }
 
         # Production tag when running over EDM4Hep centrally produced events,

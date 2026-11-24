@@ -13,6 +13,7 @@ from collections.abc import Callable
 
 import ROOT  # type: ignore
 import cppyy  # type: ignore
+from input_resolver import redact_input_query
 from sample import get_one_file_quantities
 from utils import generate_graph
 
@@ -81,7 +82,7 @@ class Job:
         for filepath in infile_list:
             self._input_file_list.append(filepath)
 
-            info_msg += f'  - {filepath}\n'
+            info_msg += f'  - {redact_input_query(filepath)}\n'
 
             thread = Thread(target=get_one_file_quantities,
                             args=(filepath, results))
@@ -167,7 +168,7 @@ class Job:
                 if infile:
                     infile.Close()
                 LOGGER.error('Unable to open input file:\n%s\nAborting...',
-                             input_path)
+                             redact_input_query(input_path))
                 sys.exit(3)
             with infile:
                 key = infile.GetKey('events')

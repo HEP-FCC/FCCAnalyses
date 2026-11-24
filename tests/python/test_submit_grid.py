@@ -46,7 +46,7 @@ class SubmitGridTest(unittest.TestCase):
                 'submit',
                 'grid',
                 str(analysis_script),
-                '--lfn-input', '/tmp/input-lfns.txt',
+                '--input-lfn-list', '/tmp/input-lfns.txt',
                 '--output', 'analysis.root',
                 '--output-dir', 'analysis/results',
                 '--stride', '5',
@@ -62,7 +62,7 @@ class SubmitGridTest(unittest.TestCase):
         self.assertTrue(hasattr(analysis_module, 'Analysis'))
         self.assertEqual(analysis_module.__file__, str(analysis_script))
         self.assertEqual(args.anascript_path, str(analysis_script))
-        self.assertEqual(args.lfn_input, '/tmp/input-lfns.txt')
+        self.assertEqual(args.input_lfn_list, '/tmp/input-lfns.txt')
         self.assertEqual(args.output, 'analysis.root')
         self.assertIsNone(args.output_se)
         self.assertEqual(args.stride, 5)

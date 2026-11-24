@@ -58,7 +58,7 @@ def main():
             edm_files = "{}/{}/*.root".format(indir, sample_f)
             nev_opt = " --nevents {}".format(nev) if nev > 0 else ""
             cmd_stage1 = (
-                "fccanalysis run examples/FCCee/weaver/stage1.py --output {} --files-list {} --ncpus {}{}".format(
+                "fccanalysis run examples/FCCee/weaver/stage1.py --output {} --input {} --ncpus {}{}".format(
                     stage1_files[f], edm_files, ncpus, nev_opt
                 )
             )
