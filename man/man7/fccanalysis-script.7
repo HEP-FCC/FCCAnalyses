@@ -149,8 +149,8 @@ Default value: None
 Path to a text file containing one explicit input file path or URL per line\&.
 Directory entries are not expanded\&. Blank lines and lines beginning with
 "#" are ignored\&.
-This list contains physical file paths or URLs, not DIRAC LFNs. For registered
-grid files, use the submission option \fB--input-lfn-list\fR instead\&.
+This list contains physical file paths or URLs. For DIRAC LFNs, use the
+sample's \fIinput-lfn-list\fR setting\&.
 .br
 Default value: None
 .in -4
@@ -166,9 +166,9 @@ Default value: None
 .in -4
 \fIoutput-stem\fR
 .in +4
-Specifies the stem for the output file(s)\&. The stem will be used to create
-output directory if there is more than one chunk or as a filename if there is
-only one\&.
+For local runs, each chunk is written to
+\fI<output_dir>/<stem>/<stem>-chunk-<index>.root\fR, with indices starting at
+zero. Grid submission includes the stem in each output filename suffix.
 The deprecated spelling
 \fIoutput\fR
 remains accepted as a compatibility alias\&.
@@ -177,12 +177,9 @@ Default value: the sample name
 .in -4
 \fIn-chunks\fR
 .in +4
-The analysis can be split into several output chunks (useful on distributed
-systems)\&. The value must be a positive integer\&. For grid submission this
-value can be overridden on the command line with either
-\fB\-\-n\-chunks\fR
-or
-\fB\-\-files\-per\-job\fR\&.
+Number of output chunks for the sample. The value must be a positive integer.
+\fB\-\-n\-chunks\fR overrides this setting. Grid submission can also override
+it with \fB\-\-files\-per\-job\fR.
 The deprecated spelling \fIchunks\fR remains accepted\&.
 .br
 Default value: 1
@@ -276,11 +273,10 @@ Type of the EOS proxy to be used.
 Default value: user
 .TP
 \fBtest_file\fR (optional)
-Location of the test file provided as a string (\fBstr\fR) or a template
-(\fBstring.Template\fR). In case of the template two variables are supported:
-\fB$key4hep_os\fR and \fB$key4hep_stack\fR.
-.br
-Default value: empty string
+Location of the file used with \fB\-\-test\fR. Accepts a string or a
+\fBstring.Template\fR with \fB$key4hep_os\fR, \fB$key4hep_stack\fR, and
+\fB$date\fR. The \fB\-\-test\-file\fR option overrides this setting.
+If neither is set, test mode reports an error.
 .TP
 \fBgraph\fR (optional)
 The computational graph of the analysis will be generated.
