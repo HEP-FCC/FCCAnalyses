@@ -700,6 +700,9 @@ def run(args):
         LOGGER.warning('--no-filepath-rewrites is deprecated; '
                        'use --use-eos-mount instead.')
         args.use_xrootd = False
+    elif args.deprecated_apply_filepath_rewrites:
+        LOGGER.warning('--apply-filepath-rewrites is deprecated. Supported EOS '
+                       'paths are converted to XRootD URLs by default.')
 
     # Work with absolute path of the analysis script
     anapath = os.path.abspath(args.anascript_path)

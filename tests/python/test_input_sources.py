@@ -50,8 +50,13 @@ class InputSourceTest(unittest.TestCase):
         self.assertEqual(stderr.getvalue(), '')
         args = parser.parse_args(['analysis.py', '--no-filepath-rewrites'])
         self.assertTrue(args.deprecated_no_filepath_rewrites)
-        for options in (['--apply-filepath-rewrites'],
-                        ['--use-eos-mount', '--no-filepath-rewrites']):
+        args = parser.parse_args(['analysis.py', '--apply-filepath-rewrites'])
+        self.assertTrue(args.deprecated_apply_filepath_rewrites)
+        self.assertIsNone(args.use_xrootd)
+        self.assertNotIn('--apply-filepath-rewrites', parser.format_help())
+        for options in (['--use-eos-mount', '--no-filepath-rewrites'],
+                        ['--use-eos-mount', '--apply-filepath-rewrites'],
+                        ['--no-filepath-rewrites', '--apply-filepath-rewrites']):
             with self.subTest(options=options), redirect_stderr(StringIO()):
                 with self.assertRaises(SystemExit):
                     parser.parse_args(['analysis.py', *options])
@@ -214,16 +219,22 @@ class LegacyInputTest(unittest.TestCase):
         }):
             spec.loader.exec_module(cls.runner)
 
-    def test_deprecated_eos_mount_option_warns_and_disables_rewrites(self):
+    def test_deprecated_eos_options_warn_and_respect_the_default(self):
         parser = argparse.ArgumentParser()
         setup_run_parser(parser)
-        args = parser.parse_args(['missing-analysis.py', '--no-filepath-rewrites'])
-        args.command = 'run'
-        with self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
-            with self.assertRaises(SystemExit):
-                self.runner.run(args)
-        self.assertFalse(args.use_xrootd)
-        self.assertTrue(any('--use-eos-mount' in msg for msg in logs.output))
+        for flag, expected, guidance in (
+            ('--no-filepath-rewrites', False, '--use-eos-mount'),
+            ('--apply-filepath-rewrites', None, 'XRootD URLs by default'),
+        ):
+            with self.subTest(flag=flag):
+                args = parser.parse_args(['missing-analysis.py', flag])
+                args.command = 'run'
+                with self.assertLogs('FCCAnalyses.run', level='WARNING') as logs:
+                    with self.assertRaises(SystemExit):
+                        self.runner.run(args)
+                self.assertIs(args.use_xrootd, expected)
+                self.assertIn(f'{flag} is deprecated', logs.output[0])
+                self.assertIn(guidance, logs.output[0])
 
     def test_run_warns_about_cli_input_skipped_in_test_mode(self):
         parser = argparse.ArgumentParser()

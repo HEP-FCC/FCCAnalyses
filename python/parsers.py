@@ -334,6 +334,12 @@ def setup_run_parser(parser):
         help=argparse.SUPPRESS,
         dest='deprecated_no_filepath_rewrites'
     )
+    eos_access_group.add_argument(
+        '--apply-filepath-rewrites',
+        action='store_true',
+        help=argparse.SUPPRESS,
+        dest='deprecated_apply_filepath_rewrites'
+    )
 
     # Independent sample
     independent_sample_group = parser.add_argument_group('Independent sample')
