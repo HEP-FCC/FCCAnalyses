@@ -3,6 +3,8 @@
 
 #include "TrkUtil.h" // from delphes
 
+#include <iostream>
+
 namespace FCCAnalyses {
 
 namespace VertexingUtils {
@@ -930,6 +932,24 @@ get_dR_SV_obj(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
   return result;
 }
 
+// nSV_jet needs one entry per jet, summing to the number of vertices;
+// otherwise print a warning (on stderr) and return false
+static bool check_nSV_jet(const char *caller,
+                          const ROOT::VecOps::RVec<FCCAnalysesVertex> &vertices,
+                          const ROOT::VecOps::RVec<int> &nSV_jet,
+                          const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets) {
+  const int nSV_sum = ROOT::VecOps::Sum(nSV_jet);
+  if (nSV_jet.size() == jets.size() &&
+      nSV_sum == static_cast<int>(vertices.size()))
+    return true;
+  std::cerr << "VertexingUtils::" << caller
+            << ": inconsistent inputs, returning an empty vector -- nSV_jet: "
+            << nSV_jet.size() << " entries summing to " << nSV_sum
+            << ", jets: " << jets.size() << ", vertices: " << vertices.size()
+            << std::endl;
+  return false;
+}
+
 // vector of polar angle (theta) of all reconstructed vertices wrt jet axis
 // (SV.vtx or V0.vtx)
 ROOT::VecOps::RVec<double>
@@ -938,9 +958,9 @@ get_relTheta_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
                 ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
-  // nSV_jet needs one entry per jet, summing to the number of vertices
-  if (nSV_jet.empty() || nSV_jet.size() != jets.size() ||
-      ROOT::VecOps::Sum(nSV_jet) != static_cast<int>(vertices.size()))
+  // no vertices (e.g. no jets) is consistent: return quietly
+  if (!check_nSV_jet("get_relTheta_SV", vertices, nSV_jet, jets) ||
+      vertices.empty())
     return result;
 
   unsigned int j = 0;
@@ -970,9 +990,9 @@ get_relPhi_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
               ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
-  // nSV_jet needs one entry per jet, summing to the number of vertices
-  if (nSV_jet.empty() || nSV_jet.size() != jets.size() ||
-      ROOT::VecOps::Sum(nSV_jet) != static_cast<int>(vertices.size()))
+  // no vertices (e.g. no jets) is consistent: return quietly
+  if (!check_nSV_jet("get_relPhi_SV", vertices, nSV_jet, jets) ||
+      vertices.empty())
     return result;
 
   unsigned int j = 0;

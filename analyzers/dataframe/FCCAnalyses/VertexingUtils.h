@@ -216,7 +216,7 @@ namespace VertexingUtils{
 
   /// Return polar angle (theta) of all reconstructed vertices wrt jets (or V0.vtx)
   /** nSV_jet must have one entry per jet, summing to the number of vertices;
-   *  otherwise an empty vector is returned
+   *  otherwise a warning is printed and an empty vector is returned
    */
   ROOT::VecOps::RVec<double> get_relTheta_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
 					      ROOT::VecOps::RVec<int> nSV_jet,
@@ -224,7 +224,7 @@ namespace VertexingUtils{
 
   /// Return azimuthal angle (phi) of all reconstructed vertices wrt jets (or V0.vtx)
   /** nSV_jet must have one entry per jet, summing to the number of vertices;
-   *  otherwise an empty vector is returned
+   *  otherwise a warning is printed and an empty vector is returned
    */
   ROOT::VecOps::RVec<double> get_relPhi_SV( ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
 					    ROOT::VecOps::RVec<int> nSV_jet,
