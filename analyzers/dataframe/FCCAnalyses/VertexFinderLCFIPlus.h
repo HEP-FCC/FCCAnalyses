@@ -92,7 +92,8 @@ namespace VertexFinderLCFIPlus{
    *  default constraint check is that for finding vertex seed
    *  seed=true -> constraints for seed; seed=false -> constraints for adding tracks
    */
-  /// returns false if the fit did not use all input tracks
+  /// returns false if the fit did not use all input tracks or has a
+  /// non-finite track momentum at the vertex
   bool check_constraints( VertexingUtils::FCCAnalysesVertex vtx,
 			  ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
 			  VertexingUtils::FCCAnalysesVertex PV,
@@ -151,7 +152,8 @@ namespace VertexFinderLCFIPlus{
    *  [5] -> r.p [unit vector]
    *  boolean check for if chi2 constraint needs to be checked
    *  all six entries are -1 if the fit drops a track
-   *  (ill-conditioned covariance) or fails the chi2 cut
+   *  (ill-conditioned covariance), fails the chi2 cut or has a non-finite
+   *  track momentum at the vertex
    */
   ROOT::VecOps::RVec<double> get_V0candidate( VertexingUtils::FCCAnalysesVertex &V0_vtx,
 					      ROOT::VecOps::RVec<edm4hep::TrackState> tr_pair,
