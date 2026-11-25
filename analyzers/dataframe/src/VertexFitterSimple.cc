@@ -266,6 +266,22 @@ VertexFitter_Tk(int Primary, ROOT::VecOps::RVec<edm4hep::TrackState> tracks,
     VertexMore theVertexMore(&theVertexFit, Units_mm);
     for (Int_t i = 0; i < Ntr; i++) {
       TVector3 ptrack_at_vertex = theVertexMore.GetMomentum(i);
+      // Delphes before delphes/delphes#125 (key4hep 2024-03-10) takes
+      // s = asin(sinS), which folds past a quarter turn (cosS < 0): rebuild
+      // the momentum with atan2(sinS, cosS), the phase newer Delphes gives
+      // for a vertex on the track circle. If |sinS| > 1 the momentum stays
+      // NaN and the LCFIPlus V0 and SV finders reject the fit.
+      TVectorD par = theVertexFit.GetNewPar(i);
+      double D = par(0), phi0 = par(1), C = par(2);
+      double sinS = 2. * C * (x(0) * std::cos(phi0) + x(1) * std::sin(phi0));
+      double cosS =
+          1. - 2. * C * (-x(0) * std::sin(phi0) + x(1) * std::cos(phi0) - D);
+      if (cosS < 0. && std::abs(sinS) <= 1.) {
+        ptrack_at_vertex = VertexingUtils::ParToP(par); // momentum at s = 0
+        if (Units_mm)
+          ptrack_at_vertex *= 1.e-3; // ParToP expects C in 1/m
+        ptrack_at_vertex.RotateZ(std::atan2(sinS, cosS));
+      }
       updated_track_momentum_at_vertex.push_back(ptrack_at_vertex);
     }
   }

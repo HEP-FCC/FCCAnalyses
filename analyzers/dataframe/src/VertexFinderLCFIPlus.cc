@@ -338,6 +338,11 @@ bool check_constraints(VertexingUtils::FCCAnalysesVertex vtx,
   int nTr = tracks.size();  // no of tracks
   if (vtx.ntracks != nTr)
     return false; // the fitter dropped a track (bad covariance): no valid fit
+  // non-finite track momenta at the vertex (vertex too far off a track
+  // circle) would pass the mass cuts below, as NaN comparisons are false
+  for (const TVector3 &p : vtx.updated_track_momentum_at_vertex)
+    if (!std::isfinite(p.Mag2()))
+      return false;
 
   // Constraints
   // chi2 < cut (9)
@@ -815,7 +820,13 @@ ROOT::VecOps::RVec<double> get_V0candidate(VertexingUtils::FCCAnalysesVertex &V0
     double chi2_V0 = V0_vtx.vertex.chi2; // normalised but nDOF=1
     if(chi2_V0 >= chi2_cut) return result;
   }
-  
+
+  // non-finite track momenta at the vertex (vertex too far off a track
+  // circle): no valid candidate
+  for (const TVector3 &p : V0_vtx.updated_track_momentum_at_vertex)
+    if (!std::isfinite(p.Mag2()))
+      return result;
+
   // invariant masses for V0 candidates
   result[0] = VertexingUtils::get_invM_pairs(V0_vtx, m_pi, m_pi);
   result[1] = VertexingUtils::get_invM_pairs(V0_vtx, m_pi, m_p);
