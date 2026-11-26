@@ -4,6 +4,8 @@
 
 #include "TrkUtil.h" // from delphes
 
+#include <iostream>
+
 namespace FCCAnalyses {
 
 namespace VertexingUtils {
@@ -474,6 +476,8 @@ double get_invM_pairs(FCCAnalysesVertex vertex, double m1, double m2) {
   TLorentzVector p4_vtx;
   double m[2] = {m1, m2};
   int nTr = p_tracks.size();
+  if (nTr > 2)
+    return -1; // not defined for more than two tracks
 
   for (int i = 0; i < nTr; i++) {
     TLorentzVector p4_tr;
@@ -500,6 +504,10 @@ get_invM_pairs(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices, double m1,
     TLorentzVector p4_vtx;
     double m[2] = {m1, m2};
     int nTr = p_tracks.size();
+    if (nTr > 2) {
+      result.push_back(-1); // not defined for more than two tracks
+      continue;
+    }
 
     for (int i = 0; i < nTr; i++) {
       TLorentzVector p4_tr;
@@ -818,7 +826,7 @@ get_pointingangle_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
     edm4hep::Vector3f r_vtx = ivtx.vertex.position; // in mm
     edm4hep::Vector3f r_PV = PV.vertex.position;    // in mm
 
-    TVector3 r_vtx_PV(r_vtx[0] - r_vtx[0], r_vtx[1] - r_PV[1],
+    TVector3 r_vtx_PV(r_vtx[0] - r_PV[0], r_vtx[1] - r_PV[1],
                       r_vtx[2] - r_PV[2]);
 
     double pDOTr = p_sum.Dot(r_vtx_PV);
@@ -932,6 +940,24 @@ get_dR_SV_obj(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
   return result;
 }
 
+// nSV_jet needs one entry per jet, summing to the number of vertices;
+// otherwise print a warning (on stderr) and return false
+static bool check_nSV_jet(const char *caller,
+                          const ROOT::VecOps::RVec<FCCAnalysesVertex> &vertices,
+                          const ROOT::VecOps::RVec<int> &nSV_jet,
+                          const ROOT::VecOps::RVec<fastjet::PseudoJet> &jets) {
+  const int nSV_sum = ROOT::VecOps::Sum(nSV_jet);
+  if (nSV_jet.size() == jets.size() &&
+      nSV_sum == static_cast<int>(vertices.size()))
+    return true;
+  std::cerr << "VertexingUtils::" << caller
+            << ": inconsistent inputs, returning an empty vector -- nSV_jet: "
+            << nSV_jet.size() << " entries summing to " << nSV_sum
+            << ", jets: " << jets.size() << ", vertices: " << vertices.size()
+            << std::endl;
+  return false;
+}
+
 // vector of polar angle (theta) of all reconstructed vertices wrt jet axis
 // (SV.vtx or V0.vtx)
 ROOT::VecOps::RVec<double>
@@ -940,6 +966,11 @@ get_relTheta_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
                 ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
+  // no vertices (e.g. no jets) is consistent: return quietly
+  if (!check_nSV_jet("get_relTheta_SV", vertices, nSV_jet, jets) ||
+      vertices.empty())
+    return result;
+
   std::size_t j = 0;
   std::size_t nSV = static_cast<std::size_t>(nSV_jet[0]);
   for (std::size_t i = 0; i < vertices.size(); i++) {
@@ -947,7 +978,7 @@ get_relTheta_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
     TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1],
                  ivtx.vertex.position[2]);
 
-    if (i >= nSV) {
+    while (i >= nSV) {
       j++;
       nSV += static_cast<std::size_t>(nSV_jet[j]);
     }
@@ -967,6 +998,11 @@ get_relPhi_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
               ROOT::VecOps::RVec<fastjet::PseudoJet> jets) {
   ROOT::VecOps::RVec<double> result;
 
+  // no vertices (e.g. no jets) is consistent: return quietly
+  if (!check_nSV_jet("get_relPhi_SV", vertices, nSV_jet, jets) ||
+      vertices.empty())
+    return result;
+
   std::size_t j = 0;
   std::size_t nSV = static_cast<std::size_t>(nSV_jet[0]);
   for (std::size_t i = 0; i < vertices.size(); i++) {
@@ -974,7 +1010,7 @@ get_relPhi_SV(ROOT::VecOps::RVec<FCCAnalysesVertex> vertices,
     TVector3 xyz(ivtx.vertex.position[0], ivtx.vertex.position[1],
                  ivtx.vertex.position[2]);
 
-    if (i >= nSV) {
+    while (i >= nSV) {
       j++;
       nSV += static_cast<std::size_t>(nSV_jet[j]);
     }
@@ -1354,7 +1390,7 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<double>> get_pointingangle_SV(
 
       edm4hep::Vector3f r_vtx = ivtx.vertex.position; // in mm
 
-      TVector3 r_vtx_PV(r_vtx[0] - r_vtx[0], r_vtx[1] - r_PV[1],
+      TVector3 r_vtx_PV(r_vtx[0] - r_PV[0], r_vtx[1] - r_PV[1],
                         r_vtx[2] - r_PV[2]);
 
       double pDOTr = p_sum.Dot(r_vtx_PV);
