@@ -57,7 +57,7 @@ class RDFanalysis():
                     "ReconstructedParticle2Track::getTK_n(RecoedPrimaryTracks)")
             # the final primary vertex:
             .Define("PrimaryVertexObject",
-                    "VertexFitterSimple::VertexFitter_Tk(1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300)")
+                    "VertexFitterSimple::VertexFitter_Tk(1, RecoedPrimaryTracks, true, 4.5, 20e-3, 300, 0., 0., 0., false)")
             .Define("PrimaryVertex",
                     "VertexingUtils::get_VertexData(PrimaryVertexObject)")
 
