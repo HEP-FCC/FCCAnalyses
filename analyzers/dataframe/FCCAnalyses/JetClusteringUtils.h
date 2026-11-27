@@ -7,6 +7,7 @@
 
 #include "FastJet/JetClustering.h"
 #include "fastjet/JetDefinition.hh"
+#include "fastjet/contrib/FlavInfo.hh"
 
 #include "TRandom3.h"
 
@@ -41,6 +42,48 @@ namespace FCCAnalyses {
                                                         const ROOT::VecOps::RVec<float>& py,
                                                         const ROOT::VecOps::RVec<float>& pz,
                                                         const ROOT::VecOps::RVec<float>& m);
+
+    /** Set fastjet pseudoJet with flavour information (from the PDG IDs), as
+     * needed by the flavour-aware jet clustering.
+     */
+    std::vector<fastjet::PseudoJet> set_pseudoJets_flav(const ROOT::VecOps::RVec<float>& px,
+                                                        const ROOT::VecOps::RVec<float>& py,
+                                                        const ROOT::VecOps::RVec<float>& pz,
+                                                        const ROOT::VecOps::RVec<float>& e,
+                                                        const ROOT::VecOps::RVec<int>& pdg);
+
+    /** Set fastjet pseudoJet with flavour information (from the PDG IDs) using
+     * px, py, pz and m. See set_pseudoJets_xyzm and set_pseudoJets_flav.
+     */
+    std::vector<fastjet::PseudoJet> set_pseudoJets_xyzm_flav(const ROOT::VecOps::RVec<float>& px,
+                                                             const ROOT::VecOps::RVec<float>& py,
+                                                             const ROOT::VecOps::RVec<float>& pz,
+                                                             const ROOT::VecOps::RVec<float>& m,
+                                                             const ROOT::VecOps::RVec<int>& pdg);
+
+    /** Get jet flavour description, e.g. "b bbar". Jets need to come from a
+     * flavour-aware clustering. */
+    ROOT::VecOps::RVec<std::string> get_flavours(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+    /** Get the net number of quarks of a given flavour in the jets (quarks minus
+     * antiquarks). Flavour index iflv runs from 1=d to 6=t. Jets need to come
+     * from a flavour-aware clustering. */
+    ROOT::VecOps::RVec<int> get_flavour_content(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in, int iflv);
+
+    /** Get jet d quark content. Details. */
+    ROOT::VecOps::RVec<int> get_d_content(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+    /** Get jet u quark content. Details. */
+    ROOT::VecOps::RVec<int> get_u_content(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+    /** Get jet s quark content. Details. */
+    ROOT::VecOps::RVec<int> get_s_content(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+    /** Get jet c quark content. Details. */
+    ROOT::VecOps::RVec<int> get_c_content(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
+
+    /** Get jet b quark content. Details. */
+    ROOT::VecOps::RVec<int> get_b_content(const ROOT::VecOps::RVec<fastjet::PseudoJet>& in);
 
     /** Get fastjet pseudoJet after reconstruction from FCCAnalyses jets*/
     ROOT::VecOps::RVec<fastjet::PseudoJet> get_pseudoJets(const JetClustering::FCCAnalysesJet& in);

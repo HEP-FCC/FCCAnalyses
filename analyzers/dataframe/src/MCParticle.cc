@@ -37,6 +37,141 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData>  sel_pdgID::operator() (ROOT::VecOps
   return result;
 }
 
+namespace {
+// The daughters relations in the Particle collection are not reliable (they
+// can contain unrelated particles and miss others), while the parents
+// relations are. All daughters are therefore derived from the parents: d is a
+// daughter of i if i is among the parents of d.
+std::vector<std::vector<int>> daughters_from_parents(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                     const ROOT::VecOps::RVec<int>& parents) {
+  std::vector<std::vector<int>> result(in.size());
+  for (std::size_t d = 0; d < in.size(); ++d) {
+    for (unsigned int ip = in[d].parents_begin; ip < in[d].parents_end; ++ip) {
+      result[parents[ip]].push_back(d);
+    }
+  }
+  return result;
+}
+
+bool has_pdgID(const edm4hep::MCParticleData& p, const std::vector<int>& pdgs) {
+  return std::find(pdgs.begin(), pdgs.end(), p.PDG) != pdgs.end();
+}
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_by_indices(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                           const std::set<int>& indices) {
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  result.reserve(indices.size());
+  for (auto i : indices) {
+    result.emplace_back( in[i] );
+  }
+  return result;
+}
+}  // namespace
+
+sel_daughters_of_pdgID::sel_daughters_of_pdgID(int arg_pdg) : m_pdgs({arg_pdg}) {};
+sel_daughters_of_pdgID::sel_daughters_of_pdgID(std::vector<int> arg_pdgs) : m_pdgs(std::move(arg_pdgs)) {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_daughters_of_pdgID::operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                                                const ROOT::VecOps::RVec<int>& parents) {
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> result;
+  for (auto & d : in) {
+    for (unsigned int ip = d.parents_begin; ip < d.parents_end; ++ip) {
+      if ( has_pdgID(in[parents[ip]], m_pdgs) ) {
+        result.emplace_back(d);
+        break;
+      }
+    }
+  }
+  return result;
+}
+
+sel_parents_of_pdgID::sel_parents_of_pdgID(int arg_pdg) : m_pdgs({arg_pdg}) {};
+sel_parents_of_pdgID::sel_parents_of_pdgID(std::vector<int> arg_pdgs) : m_pdgs(std::move(arg_pdgs)) {};
+ROOT::VecOps::RVec<edm4hep::MCParticleData> sel_parents_of_pdgID::operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                                              const ROOT::VecOps::RVec<int>& parents) {
+  std::set<int> indices;
+  for (auto & p : in) {
+    if ( !has_pdgID(p, m_pdgs) ) continue;
+    for (unsigned int ip = p.parents_begin; ip < p.parents_end; ++ip) {
+      indices.insert( parents[ip] );
+    }
+  }
+  return sel_by_indices(in, indices);
+}
+
+namespace {
+bool is_hadronisation(const edm4hep::MCParticleData& p) {
+  return has_pdgID(p, hadronisation_pdgIDs);
+}
+
+// whether any (strict) descendant of particle i is a hadronisation entry,
+// memoised in state: 0 = not visited, 1 = being visited, 2 = no, 3 = yes
+bool feeds_hadronisation(std::size_t i,
+                         const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                         const std::vector<std::vector<int>>& daughters,
+                         std::vector<char>& state) {
+  if (state[i] >= 2) return state[i] == 3;
+  if (state[i] == 1) return false;  // protect against cycles in the record
+  state[i] = 1;
+  bool result = false;
+  for (auto d : daughters[i]) {
+    result = is_hadronisation(in[d]) || feeds_hadronisation(d, in, daughters, state);
+    if (result) break;
+  }
+  state[i] = result ? 3 : 2;
+  return result;
+}
+
+// whether any (strict) ancestor of particle i is a hadronisation entry,
+// memoised in state as for feeds_hadronisation
+bool from_hadronisation(std::size_t i,
+                        const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                        const ROOT::VecOps::RVec<int>& parents,
+                        std::vector<char>& state) {
+  if (state[i] >= 2) return state[i] == 3;
+  if (state[i] == 1) return false;  // protect against cycles in the record
+  state[i] = 1;
+  bool result = false;
+  for (unsigned int ip = in[i].parents_begin; ip < in[i].parents_end; ++ip) {
+    const std::size_t p = parents[ip];
+    result = is_hadronisation(in[p]) || from_hadronisation(p, in, parents, state);
+    if (result) break;
+  }
+  state[i] = result ? 3 : 2;
+  return result;
+}
+}  // namespace
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> get_primary_hadrons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                                const ROOT::VecOps::RVec<int>& parents) {
+  const auto daughters = daughters_from_parents(in, parents);
+  std::vector<char> state(in.size(), 0);
+  std::set<int> indices;
+  for (std::size_t i = 0; i < in.size(); ++i) {
+    if ( !is_hadronisation(in[i]) ) continue;
+    for (auto d : daughters[i]) {
+      if ( is_hadronisation(in[d]) || feeds_hadronisation(d, in, daughters, state) ) continue;
+      indices.insert(d);
+    }
+  }
+  return sel_by_indices(in, indices);
+}
+
+ROOT::VecOps::RVec<edm4hep::MCParticleData> get_hadronisation_partons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                                      const ROOT::VecOps::RVec<int>& parents) {
+  std::vector<char> state(in.size(), 0);
+  std::set<int> indices;
+  for (std::size_t i = 0; i < in.size(); ++i) {
+    if ( !is_hadronisation(in[i]) ) continue;
+    for (unsigned int ip = in[i].parents_begin; ip < in[i].parents_end; ++ip) {
+      const int p = parents[ip];
+      // skip partons coming out of an earlier hadronisation step
+      if ( is_hadronisation(in[p]) || from_hadronisation(p, in, parents, state) ) continue;
+      indices.insert(p);
+    }
+  }
+  return sel_by_indices(in, indices);
+}
+
 
 
 get_decay::get_decay(int arg_mother, int arg_daughters, bool arg_inf){m_mother=arg_mother; m_daughters=arg_daughters; m_inf=arg_inf;};

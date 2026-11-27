@@ -52,6 +52,52 @@ namespace MCParticle{
     ROOT::VecOps::RVec<edm4hep::MCParticleData>  operator() (ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
   };
 
+  // Note: the daughters relations of the Particle collection are not reliable
+  // (they can contain unrelated particles and miss others), so the functions
+  // below derive the daughters from the parents relations only and all take
+  // the parents block (_Particle_parents.index).
+
+  /// select the direct daughters of all MCParticles with the given PDG id(s),
+  /// e.g. {91, 92} (Pythia cluster and string). Each daughter is selected only
+  /// once, in the order of the Particle block.
+  struct sel_daughters_of_pdgID {
+    sel_daughters_of_pdgID(int arg_pdg);
+    sel_daughters_of_pdgID(std::vector<int> arg_pdgs);
+    std::vector<int> m_pdgs = {92};
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                            const ROOT::VecOps::RVec<int>& parents);
+  };
+
+  /// select the direct parents of all MCParticles with the given PDG id(s),
+  /// e.g. {91, 92} (Pythia cluster and string). Each parent is selected only
+  /// once, in the order of the Particle block.
+  struct sel_parents_of_pdgID {
+    sel_parents_of_pdgID(int arg_pdg);
+    sel_parents_of_pdgID(std::vector<int> arg_pdgs);
+    std::vector<int> m_pdgs = {92};
+    ROOT::VecOps::RVec<edm4hep::MCParticleData> operator() (const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                            const ROOT::VecOps::RVec<int>& parents);
+  };
+
+  /// PDG ids of the Pythia hadronisation entries: cluster, string and
+  /// independent fragmentation
+  const std::vector<int> hadronisation_pdgIDs = {91, 92, 93};
+
+  /// get the primary hadrons, i.e. the hadrons directly after hadronisation,
+  /// before they decay. Takes the daughters of the last hadronisation step:
+  /// daughters of a hadronisation entry that themselves feed into another
+  /// hadronisation entry (e.g. partons or onia emitted by a cluster) are skipped,
+  /// as their energy is contained in the hadrons of the later step.
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> get_primary_hadrons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                                  const ROOT::VecOps::RVec<int>& parents);
+
+  /// get the final partons entering the hadronisation, i.e. the parents of the
+  /// hadronisation entries. Parents that themselves come out of a hadronisation
+  /// entry (e.g. a recoil gluon emitted by a cluster) are skipped, as their
+  /// energy is contained in the partons entering that earlier step.
+  ROOT::VecOps::RVec<edm4hep::MCParticleData> get_hadronisation_partons(const ROOT::VecOps::RVec<edm4hep::MCParticleData>& in,
+                                                                        const ROOT::VecOps::RVec<int>& parents);
+
   /// get MC history tree for a given MCParticle index
   struct get_tree{
     get_tree(int arg_index);
