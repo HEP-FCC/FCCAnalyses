@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "RVersion.h"
+#include "ROOT/RVersion.hxx"
 
 tmva_helper_xgb::tmva_helper_xgb(const std::string &filename,
                                  [[maybe_unused]] const std::string &name,

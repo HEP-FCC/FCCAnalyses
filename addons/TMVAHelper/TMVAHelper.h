@@ -3,7 +3,7 @@
 
 // ROOT
 #include "ROOT/RVec.hxx"
-#include "RVersion.h"
+#include "ROOT/RVersion.hxx"
 #include "TMVA/RBDT.hxx"
 
 // TBB
