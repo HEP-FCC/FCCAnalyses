@@ -5,14 +5,17 @@
 #include "RVersion.h"
 
 tmva_helper_xgb::tmva_helper_xgb(const std::string &filename,
-                                 const std::string &name,
+                                 [[maybe_unused]] const std::string &name,
                                  const unsigned int nslots) {
 
   const unsigned int nslots_actual = std::max(nslots, 1U);
   m_interpreters.reserve(nslots_actual);
   for (unsigned int islot = 0; islot < nslots_actual; ++islot) {
 
-#if ROOT_VERSION_CODE >= ROOT_VERSION(6, 32, 0)
+#if ROOT_VERSION_CODE >= ROOT_VERSION(6, 42, 0)
+    m_interpreters.emplace_back(
+        TMVA::Experimental::RBDT::LoadXGBoost(filename));
+#elif ROOT_VERSION_CODE >= ROOT_VERSION(6, 32, 0)
     m_interpreters.emplace_back(TMVA::Experimental::RBDT(name, filename));
 #else
     m_interpreters.emplace_back(TMVA::Experimental::RBDT<>(name, filename));
